@@ -42,6 +42,11 @@ META_PATTERNS = [
     r'paywall',
     r'subscribe to continue',
     r'become a member',
+    # References / citations paragraphs — not trade descriptions
+    r'^Primary sources?:',
+    r'^(?:All )?(?:sources?|references?|citations?|data):',
+    r'https?://\S+.*https?://\S+.*https?://\S+',  # paragraph is mostly URLs
+    r'(?:Bloomberg|Reuters|FT|WSJ|CNBC|SEC|CFTC) —.*(?:Bloomberg|Reuters|FT|WSJ|CNBC|SEC|CFTC) —',
 ]
 
 # Patterns that indicate a REAL trade (need at least one)

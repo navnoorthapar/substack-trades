@@ -251,7 +251,10 @@ def process_article(post):
                 'article_url': url,
                 'article_date': date,
                 'trade_description': para[:800],
-                'instruments': find_instruments(context),
+                # Instruments detected from the paragraph itself only — not the wider context,
+                # to avoid inheriting instrument tags from adjacent paragraphs.
+                # Context is kept for thesis/underlying/quant which span multiple sentences.
+                'instruments': find_instruments(para),
                 'direction': classify_direction(para),
                 'underlying': extract_underlying(context),
                 'edge_or_thesis': extract_thesis(context),
