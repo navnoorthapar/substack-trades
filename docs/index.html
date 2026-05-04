@@ -16,21 +16,37 @@
   --muted:#666;
   --dim:#444;
   --accent:#22c55e;
-  --accent-dim:#14532d;
   --long:#22c55e;
   --short:#ef4444;
   --arb:#60a5fa;
   --ls:#a78bfa;
+  --header-bg:rgba(0,0,0,0.92);
   --font-mono:'SF Mono','Fira Code','Cascadia Code',monospace;
   --font-sans:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
 }
-html{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:14px;line-height:1.5}
+html.light{
+  --bg:#f8f8f8;
+  --surface:#fff;
+  --card:#fff;
+  --border:#e4e4e4;
+  --border2:#d0d0d0;
+  --text:#111;
+  --muted:#888;
+  --dim:#bbb;
+  --accent:#16a34a;
+  --long:#16a34a;
+  --short:#dc2626;
+  --arb:#2563eb;
+  --ls:#7c3aed;
+  --header-bg:rgba(248,248,248,0.95);
+}
+html{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:14px;line-height:1.5;transition:background .2s,color .2s}
 body{min-height:100vh;display:flex;flex-direction:column}
 
 /* ── TOP BAR ── */
 header{
   position:sticky;top:0;z-index:100;
-  background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);
+  background:var(--header-bg);backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
   padding:0 24px;
   display:flex;align-items:center;gap:20px;height:56px;
@@ -98,7 +114,7 @@ main{flex:1;padding:20px 24px;max-width:960px;}
   padding:14px 16px;cursor:pointer;
   display:flex;align-items:flex-start;gap:12px;
 }
-.article-header:hover .article-title{color:#fff}
+.article-header:hover .article-title{color:var(--accent)}
 .article-meta{
   font-family:var(--font-mono);font-size:10px;color:var(--muted);
   white-space:nowrap;padding-top:2px;
@@ -116,6 +132,7 @@ main{flex:1;padding:20px 24px;max-width:960px;}
   padding:2px 7px;border-radius:3px;
   border:1px solid;
 }
+/* dark tag colours */
 .tag-equity{color:#60a5fa;border-color:#1e3a5f;background:#0a1929}
 .tag-volatility{color:#f59e0b;border-color:#44300a;background:#1a1000}
 .tag-option{color:#a78bfa;border-color:#3b2a6e;background:#150f29}
@@ -133,6 +150,23 @@ main{flex:1;padding:20px 24px;max-width:960px;}
 .dir-short{color:var(--short);border-color:#4a1515;background:#1a0606}
 .dir-arb{color:var(--arb);border-color:#1e3a5f;background:#0a1929}
 .dir-ls{color:var(--ls);border-color:#3b2a6e;background:#150f29}
+/* light mode tag overrides */
+html.light .tag-equity{background:#eff6ff;border-color:#bfdbfe}
+html.light .tag-volatility{background:#fffbeb;border-color:#fde68a}
+html.light .tag-option{background:#f5f3ff;border-color:#ddd6fe}
+html.light .tag-bond{background:#f0fdf4;border-color:#bbf7d0}
+html.light .tag-futures{background:#fff7ed;border-color:#fed7aa}
+html.light .tag-commodity{background:#fefce8;border-color:#fef08a}
+html.light .tag-FX{background:#f0f9ff;border-color:#bae6fd}
+html.light .tag-repo{background:#f8fafc;border-color:#cbd5e1}
+html.light .tag-swap{background:#faf5ff;border-color:#e9d5ff}
+html.light .tag-CDS{background:#fef2f2;border-color:#fecaca}
+html.light .tag-prediction_market{background:#f0fdf4;border-color:#bbf7d0}
+html.light .tag-weather_derivative{background:#f0f9ff;border-color:#bae6fd}
+html.light .dir-long{background:#f0fdf4;border-color:#bbf7d0}
+html.light .dir-short{background:#fef2f2;border-color:#fecaca}
+html.light .dir-arb{background:#eff6ff;border-color:#bfdbfe}
+html.light .dir-ls{background:#f5f3ff;border-color:#ddd6fe}
 .trade-badge{
   margin-left:auto;flex-shrink:0;
   font-family:var(--font-mono);font-size:10px;color:var(--muted);
@@ -162,11 +196,12 @@ main{flex:1;padding:20px 24px;max-width:960px;}
 .trade-row1{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
 .trade-desc{font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:6px}
 .trade-field{font-size:11px;color:var(--muted);margin-top:4px}
-.trade-field b{color:#aaa;font-weight:500}
+.trade-field b{color:var(--text);font-weight:500;opacity:.7}
 .trade-quant{
   font-family:var(--font-mono);font-size:11px;
-  color:#fbbf24;margin-top:4px;
+  color:#d97706;margin-top:4px;
 }
+html.light .trade-quant{color:#b45309}
 .trade-outcome{font-size:11px;color:var(--accent);margin-top:4px;font-style:italic}
 
 /* ── EMPTY STATE ── */
@@ -188,10 +223,15 @@ main{flex:1;padding:20px 24px;max-width:960px;}
     <span><b id="stat-articles">0</b> articles</span>
     <span><b id="stat-trades">0</b> trades</span>
     <span><b id="stat-range">—</b></span>
-    <span style="margin-left:8px;color:var(--dim)">updated 2026-05-04 09:00 UTC</span>
+    <span style="margin-left:8px;color:var(--dim)">updated 2026-05-04 09:05 UTC</span>
   </div>
   <div class="spacer"></div>
   <input id="search" type="text" placeholder="Search articles, funds, instruments…" autocomplete="off" spellcheck="false">
+  <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light / dark" style="
+    background:var(--surface);border:1px solid var(--border2);color:var(--muted);
+    cursor:pointer;border-radius:6px;padding:0 10px;height:34px;font-size:13px;
+    font-family:var(--font-sans);white-space:nowrap;transition:background .15s,color .15s;
+  ">&#9788; Light</button>
 </header>
 
 <div class="layout">
@@ -419,6 +459,19 @@ function renderStats() {
   document.getElementById('stat-trades').textContent = DATA.reduce((s, a) => s + a.trade_count, 0).toLocaleString();
   document.getElementById('stat-range').textContent = dates[0] + ' → ' + dates[dates.length - 1];
 }
+
+// ── Theme toggle ──
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  document.getElementById('theme-toggle').innerHTML = isLight ? '&#9790; Dark' : '&#9788; Light';
+}
+(function () {
+  if (localStorage.getItem('theme') === 'light') {
+    document.documentElement.classList.add('light');
+    document.getElementById('theme-toggle').innerHTML = '&#9790; Dark';
+  }
+})();
 
 // ── Init ──
 renderStats();
