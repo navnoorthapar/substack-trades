@@ -263,6 +263,30 @@ html.light .trade-quant{{color:#b45309}}
 ::-webkit-scrollbar-track{{background:transparent}}
 ::-webkit-scrollbar-thumb{{background:var(--border2);border-radius:3px}}
 ::-webkit-scrollbar-thumb:hover{{background:var(--dim)}}
+
+/* ── MOBILE ── */
+#filter-toggle{{display:none;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border2);color:var(--muted);cursor:pointer;border-radius:6px;padding:0 10px;height:34px;font-size:13px;font-family:var(--font-sans);white-space:nowrap;transition:background .15s,color .15s;}}
+@media(max-width:768px){{
+  header{{flex-wrap:wrap;height:auto;padding:10px 16px;gap:8px;}}
+  .brand{{flex:1 1 auto}}
+  .stats-bar,.spacer{{display:none}}
+  #search{{order:10;width:100%;}}
+  #filter-toggle{{display:flex}}
+  .layout{{flex-direction:column}}
+  aside{{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);padding:12px 16px;display:none;}}
+  aside.open{{display:block}}
+  .filter-group{{margin-bottom:16px}}
+  main{{padding:12px 16px;max-width:100%;}}
+  .result-count{{margin-bottom:10px;}}
+  .article-header{{padding:12px 14px;gap:8px;flex-wrap:wrap;}}
+  .article-meta{{display:flex;flex-direction:row;gap:8px;white-space:nowrap;font-size:9px;flex:0 0 100%;order:3;padding-top:0;}}
+  .article-date,.article-words{{display:inline;margin:0;}}
+  .article-body{{flex:1 1 calc(100% - 90px);}}
+  .article-title{{font-size:13px;}}
+  .trade-badge{{font-size:9px;padding:2px 6px;}}
+  .trade-item{{padding:10px 14px;}}
+  .trade-desc{{font-size:12px;}}
+}}
 </style>
 </head>
 <body>
@@ -282,6 +306,7 @@ html.light .trade-quant{{color:#b45309}}
     cursor:pointer;border-radius:6px;padding:0 10px;height:34px;font-size:13px;
     font-family:var(--font-sans);white-space:nowrap;transition:background .15s,color .15s;
   ">&#9788; Light</button>
+  <button id="filter-toggle" onclick="toggleFilters()">&#9776; Filters</button>
 </header>
 
 <div class="layout">
@@ -508,6 +533,14 @@ function renderStats() {{
   document.getElementById('stat-articles').textContent = DATA.length;
   document.getElementById('stat-trades').textContent = DATA.reduce((s, a) => s + a.trade_count, 0).toLocaleString();
   document.getElementById('stat-range').textContent = dates[0] + ' → ' + dates[dates.length - 1];
+}}
+
+// ── Filter panel (mobile) ──
+function toggleFilters() {{
+  const aside = document.querySelector('aside');
+  aside.classList.toggle('open');
+  const open = aside.classList.contains('open');
+  document.getElementById('filter-toggle').innerHTML = open ? '&#10005; Close' : '&#9776; Filters';
 }}
 
 // ── Theme toggle ──
