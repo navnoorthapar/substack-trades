@@ -20,7 +20,9 @@ DIRECTION_SHORT = r'\b(shorted|shorting|went short|goes short|entered short|sold
 DIRECTION_ARB = r'\b(arbitrage[d]?|arb(?:ed)?|relative value|pairs trade|basis trade|convergence trade|spread trade|market neutral|merger arb|risk arb|event.driven)\b'
 
 INSTRUMENTS = {
-    'bond': r'\b(bond[s]?|note[s]?|gilt[s]?|treasury|treasuries|t.bond[s]?|t.note[s]?|corporate bond[s]?|sovereign bond[s]?|IG bond[s]?|HY bond[s]?|high.yield bond[s]?|investment.grade bond[s]?|junk bond[s]?)\b',
+    # "note/notes" removed — matches "researchers' note", footnotes, URLs.
+    # Replaced with specific bond-note forms that only appear in financial context.
+    'bond': r'\b(bond[s]?|gilt[s]?|treasury(?!\s+(?:stock|shares?|department|secretary))|treasuries|t\.bond[s]?|t\.note[s]?|treasury note[s]?|senior note[s]?|convertible note[s]?|subordinated note[s]?|floating rate note[s]?|promissory note[s]?|unsecured note[s]?|secured note[s]?|corporate bond[s]?|sovereign bond[s]?|IG bond[s]?|HY bond[s]?|high.yield bond[s]?|investment.grade bond[s]?|junk bond[s]?|government bond[s]?)\b',
     'CDS': r'\b(CDS|credit default swap[s]?|credit protection|CDX|iTraxx|LCDS)\b',
     # Removed: standalone put/call/spread/cap/floor (too broad — "credit spread", "market cap", "cash flow")
     'option': r'\b(option[s]?|put option[s]?|call option[s]?|straddle[s]?|strangle[s]?|collar[s]?|butterfly spread|condor spread|warrant[s]?|swaption[s]?|put spread[s]?|call spread[s]?|protective put|covered call|exotic option)\b',

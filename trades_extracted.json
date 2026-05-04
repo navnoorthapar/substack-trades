@@ -5,7 +5,6 @@
     "article_date": "2026-04-24",
     "trade_description": "The HSE researchers’ note on market composition is the key institutional insight: “This market remains relatively unknown to outside investors, and most skin investments come from actual players.” The $4+ billion market is dominated by retail, with zero institutional competitive pressure. Research published in Frontiers in Artificial Intelligence demonstrated that peer-to-peer price discrepancies across platforms create systematic, exploitable short-term arbitrage opportunities — the same structural inefficiency that quant funds exploit in less-liquid equity markets.",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "arbitrage/relative value",
@@ -847,20 +846,6 @@
     "article_title": "India’s Oil-War Market Crisis: 30-Day Nifty Outlook, RBI April 2026 MPC Decision, and Emergency Portfolio Liquidation Framework",
     "article_url": "https://navnoorbawa.substack.com/p/indias-oil-war-market-crisis-30-day",
     "article_date": "2026-03-26",
-    "trade_description": "What has changed since March 20: Five days of violent price action have partially validated the bear thesis (March 23 crash: −2.60% Nifty close, ₹15 lakh crore wiped intraday), partially activated the diplomatic trigger (March 24–25: Trump 5-day halt, 15-point ceasefire plan sent via Pakistan, Iran conditionally opening Hormuz), and introduced two new structural variables — S&P Global’s upward revision of India FY27 GDP to 7.1% (+20bps, not +40bps as initially circulated; the +40bps revision is for FY26), and the STT hike on F&O effective April 1 (a direct cost increase for the derivatives hedge strategy in this note). All four are incorporated below.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "changed since March 20: Five days of violent price action have partially validated the bear thesis (March 23 crash: −2.",
-    "any_quant_detail": "2.60%, 7.1%, 20bps, 40bps",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "India’s Oil-War Market Crisis: 30-Day Nifty Outlook, RBI April 2026 MPC Decision, and Emergency Portfolio Liquidation Framework",
-    "article_url": "https://navnoorbawa.substack.com/p/indias-oil-war-market-crisis-30-day",
-    "article_date": "2026-03-26",
     "trade_description": "On March 24, FIIs sold ₹8,010 crore while DIIs bought ₹5,867 crore. https://upstox.com/news/market-news/stocks/nifty-50-sensex-today-wall-street-cues-fii-activity-key-things-to-know-before-markets-open-on-march-25/article-191232/ The SIP machine does not stop. It absorbs. It does not generate rallies.",
     "instruments": [
       "equity"
@@ -891,7 +876,6 @@
     "article_date": "2026-03-26",
     "trade_description": "TWAP for all active liquidation now. India VIX hit a 52-week high of 27.17 on March 23. March 23 saw intraday swings of 800+ Nifty points. Any VWAP algo that front-loaded morning volume sold at the session’s worst prices. As Talos Research notes: “In unstable or regime-shifting conditions, volume forecasting error becomes a risk factor in itself, which is where TWAP’s robustness becomes valuable.” https://www.talos.com/insights/vwap-or-twap-for-crypto-execution-a-market-impact-perspective Switch to VWAP only after VIX sustainably retreats below 18 and intraday volume patterns normalise. https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/trade-strategy-execution",
     "instruments": [
-      "bond",
       "volatility"
     ],
     "direction": "unspecified",
@@ -1007,7 +991,6 @@
     "article_date": "2026-03-22",
     "trade_description": "The short answers: The 30-day market outlook is not an oil trade — it is a leverage unwind trade expressed through energy prices, with record hedge fund gross leverage of 292.8% (Goldman Sachs prime brokerage, December 2025) sitting on top of a supply shock that has permanently repriced rate sensitivity to oil by a factor of three. The April FOMC is a dot-plot binary: one more participant shifting to “hold through 2026” pushes the median to zero cuts and reprices the entire front end. The liquidation problem fails before the first trade is placed — because 73.8% of hedge fund repo borrowing runs at zero haircut (Federal Reserve FEDS Notes, 2023), meaning the cash buffer that appears on paper has already been pledged as collateral. The mechanism for surviving this begins with repo term stru",
     "instruments": [
-      "bond",
       "commodity",
       "repo"
     ],
@@ -1023,27 +1006,12 @@
     "article_date": "2026-03-22",
     "trade_description": "JPMorgan’s data puts quant funds at 645% gross leverage and multi-strategy funds at 444% — confirmed directly from the Reuters primary source: https://www.investing.com/news/stock-market-news/hedge-funds-double-down-using-nearrecord-leverage-in-quest-to-boost-returns-4388757 (note: Hedgeweek’s summary had these reversed, but the Reuters original text reads “Quantitative and multi-strategy funds’ leverage at the end of last month averaged 645.3% and 444.3%, respectively”): https://www.hedgeweek.com/hedge-funds-push-leverage-towards-record-highs-as-managers-chase-returns/",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "292.8%, 645%, 444%, 645.3%, 444.3%, at 645, at 444",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "The BIS-linked SUERF paper from January 2026 provides the academic grounding: hedge funds’ leverage-targeting behavior is procyclical — they sell assets as prices fall to maintain leverage ratios, amplifying the initial shock: https://www.suerf.org/publications/suerf-policy-notes-and-briefs/understanding-hedge-fund-leverage-targeting-and-fire-sales/",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "prices fall to maintain leverage ratios, amplifying the initial shock: https://www.",
-    "any_quant_detail": "645.3%, 444.3%",
     "outcome_if_mentioned": null
   },
   {
@@ -1084,20 +1052,6 @@
     "instruments": [
       "equity",
       "commodity"
-    ],
-    "direction": "unspecified",
-    "underlying": "but because the fund",
-    "edge_or_thesis": "of bad execution — but because the fund’s funding structure breaks before a single position is sold.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "The BIS-FSB-SUERF January 2026 policy brief documents it precisely: https://www.suerf.org/publications/suerf-policy-notes-and-briefs/understanding-hedge-fund-leverage-targeting-and-fire-sales/",
-    "instruments": [
-      "bond"
     ],
     "direction": "unspecified",
     "underlying": "but because the fund",
@@ -1182,7 +1136,6 @@
     "article_date": "2026-03-22",
     "trade_description": "The BIS-linked SUERF paper confirms the directionality: hedge funds engage in procyclical leverage targeting — they are forced to sell into falling markets, which is exactly what an oil shock + rate repricing + crowded positioning produces. Source: https://www.suerf.org/publications/suerf-policy-notes-and-briefs/understanding-hedge-fund-leverage-targeting-and-fire-sales/",
     "instruments": [
-      "bond",
       "commodity"
     ],
     "direction": "unspecified",
@@ -1224,20 +1177,6 @@
     "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
     "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
     "article_date": "2026-03-22",
-    "trade_description": "This research took a significant amount of time in data collection, verification, and analysis across Federal Reserve FEDS Notes, BIS-FSB policy briefs, OFR hedge fund monitor data, primary Fed statements, and live market sources. Every number above is sourced and confirmed.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "OFR Brent",
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
     "trade_description": "Reuters/Investing.com — JPMorgan HF Leverage (quants 645.3%, multi-strat 444.3%): https://www.investing.com/news/stock-market-news/hedge-funds-double-down-using-nearrecord-leverage-in-quest-to-boost-returns-4388757",
     "instruments": [
       "equity"
@@ -1246,20 +1185,6 @@
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "645.3%, 444.3%, at 444.3",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "SUERF/BIS/FSB — HF Leverage Targeting and Fire Sales (Jan 2026): https://www.suerf.org/publications/suerf-policy-notes-and-briefs/understanding-hedge-fund-leverage-targeting-and-fire-sales/",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
     "outcome_if_mentioned": null
   },
   {
@@ -1546,23 +1471,8 @@
     "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
     "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
     "article_date": "2026-03-16",
-    "trade_description": "The Federal Reserve’s post-mortem (April 28, 2023) confirmed the hedge removal in 2022 and the existence of material HTM unrealised losses. The precise figures — approximately $15.9 billion in HTM unrealised losses at Q3 2022 and a duration gap of approximately 5.7 years — come from SVB’s own Q3 2022 10-Q disclosures and were the basis of Martin’s public thesis; the Fed review corroborates the magnitude and confirms structural fatality once rates continued rising. Finalyse’s post-crisis technical analysis notes the bank had chosen to remove hedges to boost short-term net interest income, trading long-term solvency for quarterly earnings optics.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "accelerating withdrawal risk; and the bank had publicly disclosed the removal of its interest rate hedges in 2022.",
-    "any_quant_detail": "$15.9 billion",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
-    "article_date": "2026-03-16",
     "trade_description": "→ Note disclosed hedge removal: management removed interest rate swaps in 2022, explicitly disclosed in the annual report to boost net interest income",
     "instruments": [
-      "bond",
       "swap"
     ],
     "direction": "unspecified",
@@ -2020,20 +1930,6 @@
     "article_title": "How BlackRock’s ESG Retreat Triggered $100 Billion in Pension Exits and $1.5 Billion in Short Profits",
     "article_url": "https://navnoorbawa.substack.com/p/how-blackrocks-esg-retreat-triggered",
     "article_date": "2026-03-11",
-    "trade_description": "James Hanbury, a partner at Odey managing approximately $1.3 billion, sent an investor note — seen by the FT — on Norwegian hydrogen group Nel ASA. In it, he wrote that “there is no obvious valuation support with Nel”, describing the company as “lossmaking, cash consumptive” with a failure to “win material contracts or partnerships,” adding that its “medium-term capex needs are not fully funded.” Helikon Investments, Odey, and WorldQuant all held disclosed short positions against Nel, which had risen from NKr5 to NKr35 before falling back to NKr11 — a near-70% collapse from its peak that rewarded funds that had shorted at the high.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "short",
-    "underlying": "on Norwegian hydrogen group; based Plato Investment Management",
-    "edge_or_thesis": null,
-    "any_quant_detail": "$1.3 billion, $111 million, 31%, 70%",
-    "outcome_if_mentioned": "returned 31% net after fees in 2023 (per Anaconda company communications) — the year those positions paid out most fully."
-  },
-  {
-    "article_title": "How BlackRock’s ESG Retreat Triggered $100 Billion in Pension Exits and $1.5 Billion in Short Profits",
-    "article_url": "https://navnoorbawa.substack.com/p/how-blackrocks-esg-retreat-triggered",
-    "article_date": "2026-03-11",
     "trade_description": "BlackRock’s iShares ESG Aware MSCI USA ETF (ESGU) alone lost $9.3 billion in 2023 and continued bleeding into 2024 — its sixth consecutive quarter of outflows as of Q2 2024.",
     "instruments": [
       "equity"
@@ -2064,7 +1960,6 @@
     "article_date": "2026-03-09",
     "trade_description": "Morningstar confirmed that Starbucks shares surged 25% on August 13, 2024 — the company’s best single-day percentage move in its history. Morningstar’s concurrent analyst note put the intraday gain at exactly 24.5%. Axios and Nasdaq independently confirmed the 25% surge, with Chipotle simultaneously dropping 7.5% on Niccol’s departure. Elliott’s stake was valued at approximately $1.9 billion at the time, according to Nasdaq reporting. A 25% gain on a $1.9 billion position represents approximately $475 million in paper gains in a single session.",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "unspecified",
@@ -2972,20 +2867,6 @@
     "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
     "article_url": "https://navnoorbawa.substack.com/p/the-trade-war-dividend-druckenmillers",
     "article_date": "2026-03-05",
-    "trade_description": "The global hedge fund industry delivered a 12.6% average annual return in 2025 — its strongest year since the Global Financial Crisis. That average, however, is almost useless. The same tariff environment — US trade-weighted tariffs jumping from 2.4% to 18.4%, the WTO projecting trade contraction, Liberation Day erasing approximately $5–6 trillion in global market value in two sessions (Reuters reported $5 trillion in S&P losses; the AMRO analytical note cited below uses $6 trillion; figures vary by data vendor and which markets are included) — produced a 45% return for one fund, a 34% record for another, and a -15% drawdown for a manager who is widely considered among the world’s best.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "the Global Financial Crisis.",
-    "any_quant_detail": "$5 trillion, $6 trillion, 12.6%, 2.4%, 18.4%, 45%, 34%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
-    "article_url": "https://navnoorbawa.substack.com/p/the-trade-war-dividend-druckenmillers",
-    "article_date": "2026-03-05",
     "trade_description": "This is worth dwelling on because of who Bill Ackman is. In February–March 2020, he turned $27 million into approximately $2.6 billion in 30 days by buying credit default swaps on the CDX IG, CDX HY, and ITRAXX Main (European investment-grade) indices at near-all-time-tight spreads of roughly 50 basis points — before COVID sent spreads exploding. That trade required three moves: identifying a massive compression of vol pricing a binary risk, choosing liquid index CDS over individual credits for sizing, and exiting on March 23, 2020, the exact day the Fed announced unlimited QE. In 2025, no such hedge existed. The same manager who executed one of the most famous asymmetric hedges in market history entered the most telegraphed tariff regime in decades completely unprotected.",
     "instruments": [
       "CDS"
@@ -3016,7 +2897,6 @@
     "article_date": "2026-03-05",
     "trade_description": "The Teva trade — the non-macro alpha source: In the Morgan Stanley Hard Lessons interview, Druckenmiller walked through this directly. In mid-2024, AI stocks were “disturbingly heated” and he was looking for dislocations. His team brought him Teva Pharmaceuticals — “apparently, if you didn’t know what was going on, a boring generic drug company out of Israel, selling at six times earnings.” Teva was transitioning from generics to biosimilars. Value holders hadn’t repriced it; growth investors hadn’t discovered it. He bought in the mid-$16 range. The stock doubled to $32. (Note: specific price figures are reported in secondary coverage of the interview; the Morgan Stanley video itself does not display a transcript with exact figures.) Zero tariff exposure. Pure investor-base dislocation, fo",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "long",
@@ -3640,7 +3520,6 @@
     "article_date": "2026-03-02",
     "trade_description": "CNBC reported on February 20 that Hartnett had published a note analyzing historical crisis data from World War II through the Israel-Hamas War: “Of the major asset classes, crude oil led the way, with a median rally of more than 18% three months after a geopolitical event. This week alone, oil prices jumped more than 5% as investors priced in a growing likelihood of military action.” Gold posted a median gain of approximately 6% over the same three-month horizon. US stocks added less than 5%.",
     "instruments": [
-      "bond",
       "equity",
       "commodity"
     ],
@@ -3816,7 +3695,6 @@
     "article_date": "2026-03-02",
     "trade_description": "Goldman Sachs, in a fresh Sunday note before markets opened: Goldman’s energy team led by Daan Struyven estimated the real-time war risk premium in crude at $18 per barrel — equivalent, in their modeling, to “the fair value effect of a six-week full halt in Strait of Hormuz flows”. Wood Mackenzie separately projected oil potentially exceeding $100 per barrel if tanker flows are not quickly restored, with their SVP Alan Gelder noting it is “plausible that it takes a few weeks for export flows to re-establish themselves in the most optimistic scenario”. The options book that owned $90 and $100 calls — accumulated over eight weeks of systematic buying — is still open.",
     "instruments": [
-      "bond",
       "option",
       "commodity"
     ],
@@ -4143,7 +4021,6 @@
     "article_date": "2026-02-27",
     "trade_description": "Most coverage of the Korean retail investor surge in 2025 stops at the spectacle. This piece goes further — tracing five distinct institutional strategies across primary sources: the KSD’s near-daily public order flow data, SEC 13F accumulation-and-exit cycles documented in IonQ, EMJ Capital’s manufactured retail momentum, the Roundhill MEME ETF’s date-certain arbitrage, and the 15-year contrarian signal hiding in Acadian’s Squid Game paper. Drawn from 13F filings, Goldman Sachs research, JPMorgan client notes, Bloomberg interviews, and investor letters.",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "arbitrage/relative value",
@@ -4164,20 +4041,6 @@
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "$12M, $111M, $12 million, $111 million, 400%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "Korea’s $170 Billion Retail Wave Broadcast Its Own Signal. The 13F Filings, Goldman Research, JPMorgan Notes, and 15 Years of KSD Data Show Exactly How Institutional Money Read It — ",
-    "article_url": "https://navnoorbawa.substack.com/p/koreas-170-billion-retail-wave-broadcast",
-    "article_date": "2026-02-27",
-    "trade_description": "That December 2024 case was not an isolated event but the proof-of-concept for an environment that would run throughout 2025. Two macro indicators confirmed the institutional window was open for months: Goldman Sachs’ Speculative Trading Indicator spiked in July 2025 to its highest level since around 2021, per Goldman’s research note, and Goldman’s basket of most-shorted names rose 60% since April 2025 versus 28% for the S&P 500 over the same period. This macro environment told institutions that the runway for Korean retail-driven momentum was long — and the five strategies below show exactly how they used it.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "short",
-    "underlying": "S&P 500",
-    "edge_or_thesis": "not an isolated event but the proof-of-concept for an environment that would run throughout 2025.",
-    "any_quant_detail": "400%, 60%, 28%",
     "outcome_if_mentioned": null
   },
   {
@@ -4286,7 +4149,6 @@
     "article_date": "2026-02-27",
     "trade_description": "The cascade: CNBC confirmed a 127% closing gain on October 20, 2025 — the largest single-day gain in the company’s history — then a further 146% on October 21 as Walmart announced expanded distribution. (Note: some outlets reported an intraday figure of 75% earlier in the session on October 20; the official closing change was 127%, per CNBC, Benzinga, and GuruFocus.) The FT confirmed that South Korean retail investors purchased $239.2 million of BYND shares during October — amplifying the ETF-driven mandatory buying.",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "long",
@@ -4344,25 +4206,10 @@
     "article_date": "2026-02-27",
     "trade_description": "JPMorgan’s client note from September 11, 2025, reported by CNBC, identified four stocks exhibiting the documented setup — high social media activity, high retail buying, and high hedge fund short concentration simultaneously: Hims & Hers Health, ImmunityBio, Rocket Companies, and SoundHound AI. The bank’s exact language: “We are flagging a few stocks that are heavily mentioned on Social Media and have high Retail buying as well as high Hedge fund Shorting. These stocks may experience unexpected flows in case of increased activity.”",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "short",
     "underlying": "and high well as high",
-    "edge_or_thesis": "well as high Hedge fund Shorting.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "Korea’s $170 Billion Retail Wave Broadcast Its Own Signal. The 13F Filings, Goldman Research, JPMorgan Notes, and 15 Years of KSD Data Show Exactly How Institutional Money Read It — ",
-    "article_url": "https://navnoorbawa.substack.com/p/koreas-170-billion-retail-wave-broadcast",
-    "article_date": "2026-02-27",
-    "trade_description": "This note functioned simultaneously as a warning to short sellers and a setup map for long-momentum players. Institutions that had consumed both Goldman’s basket data and JPMorgan’s watchlist had, by September 2025, a continuously refreshed list of names where Korean and retail accumulation was converging with high hedge fund short concentration — the exact preconditions that had preceded every major squeeze of the preceding 12 months.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "short",
-    "underlying": "well as high converging with high and the fund",
     "edge_or_thesis": "well as high Hedge fund Shorting.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null
@@ -5313,7 +5160,6 @@
     "article_date": "2026-02-21",
     "trade_description": "Oracle’s 5-year credit default swap spread rose from approximately 36 basis points in June 2025 to 128 basis points by December 3 — the highest level since March 2009, per ICE Data Services prices cited by Bloomberg. That December 3 reading was the closing level after some compression from an earlier intraday peak: Bondblox confirmed the CDS had hit its highest level since 2009, with the peak print reaching approximately 139 basis points at its widest. The arithmetic across sources reconciles cleanly: Voya Investment Management, which publicly named Oracle the preferred AI capex cycle hedge in its December 2025 research note, stated the CDS had risen “roughly 310% since end of June, pushing perceived credit risk to a 16-year high.” A 310% move from 36 basis points implies a peak of approxi",
     "instruments": [
-      "bond",
       "CDS"
     ],
     "direction": "unspecified",
@@ -5554,20 +5400,6 @@
     "outcome_if_mentioned": null
   },
   {
-    "article_title": "Kem One: Apollo’s €600M Acquisition Collapsed to 2 Cents as China Flooded Europe with Cheap PVC — Inside the Hedge Fund War Between Three Shorts and Two Rescue Lenders",
-    "article_url": "https://navnoorbawa.substack.com/p/kem-one-apollos-600m-acquisition",
-    "article_date": "2026-02-20",
-    "trade_description": "The legal mechanics are the entire game. The intercreditor agreement requires 90% bondholder consent to “expressly subordinate the notes” — a threshold the ~66% ad hoc group cannot clear. However, 50.01% simple majority consent suffices for amendments to “application of collateral enforcement proceeds.” The uptier would therefore be structured as a collateral enforcement amendment rather than direct subordination — a pathway that has been used in US distressed markets but remains more contentious under European documentation norms, where creditor-on-creditor manoeuvres of this kind have less established precedent.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "uptier its existing bond holdings; bondholders left outside the group; ad hoc group",
-    "edge_or_thesis": null,
-    "any_quant_detail": "90%, 66%, 50.01%, 25%, at 25",
-    "outcome_if_mentioned": null
-  },
-  {
     "article_title": "How Druckenmiller, Rokos, and Vista Front-Ran Brazil’s R$33B Institutional Flood — The Complete 2026 Macro Trade Anatomy",
     "article_url": "https://navnoorbawa.substack.com/p/how-druckenmiller-rokos-and-vista",
     "article_date": "2026-02-19",
@@ -5602,7 +5434,6 @@
     "article_date": "2026-02-19",
     "trade_description": "The Brazil position: 3.55 million EWZ shares valued at approximately $113 million, constituting 2.51% of Duquesne’s disclosed portfolio, confirmed across SEC EDGAR, Fintel, StockCircle, and Benzinga’s filing analysis. On top of the equity stake, Druckenmiller added EWZ call options — buying convexity rather than linear exposure, the same structural mechanic used in the 1992 sterling short. Note that 13F filings do not disclose strike prices, expiry dates, or contract counts for options positions; the existence of the call position is confirmed by Benzinga’s analysis, but its precise structure cannot be reconstructed from public filings alone.",
     "instruments": [
-      "bond",
       "option",
       "equity"
     ],
@@ -6108,7 +5939,6 @@
     "article_date": "2026-02-18",
     "trade_description": "A critical technical note on Universa’s reported returns, essential for accurate interpretation: The figures reported are returns on required invested capital — the small options allocation — not on total portfolio AUM. The options position itself showed a return of approximately 3,612% in March 2020 and 4,144% for Q1 2020 on the allocated premium, as confirmed by Bloomberg’s reporting on the investor letter. On a full reference portfolio basis (3.3% Universa + 96.7% S&P 500), Universa documented +0.4% in March 2020 versus −12.4% for a pure S&P 500 portfolio — that is the real-world portfolio impact.",
     "instruments": [
-      "bond",
       "option"
     ],
     "direction": "unspecified",
@@ -9259,27 +9089,12 @@
     "article_date": "2026-01-15",
     "trade_description": "Sources verified January 2026. All hyperlinks lead directly to Federal Reserve research (FEDS Notes, Financial Stability Reports), BIS publications (Schrimpf, Shin, Sushko 2020), SEC filings and press releases, CFTC Commitments of Traders data, NY Fed speeches (Perli 2025) and documentation, OFR Hedge Fund Monitor and working papers, and market infrastructure providers (CME Group, DTCC). Scale figures ($1.85T Cayman holdings, $2.5T repo, $173B March 2020 sales), regulatory timelines (Dec 2026/June 2027 clearing deadlines), and historical unwind data cross-verified against multiple primary sources. Firm participation assessments based on industry reporting and market intelligence; specific trader attributions and proprietary performance figures cannot be independently verified through publi",
     "instruments": [
-      "bond",
       "repo"
     ],
     "direction": "unspecified",
     "underlying": "OFR CME Group; Cayman holdings",
     "edge_or_thesis": null,
     "any_quant_detail": "$1.85T, $2.5T, $173B",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "How Nick Train Lost £16 Billion in 4 Years (And Kept Buying)",
-    "article_url": "https://navnoorbawa.substack.com/p/how-nick-train-lost-16-billion-in",
-    "article_date": "2026-01-14",
-    "trade_description": "Note: Hargreaves Lansdown was sold April 2025 after £5.4bn PE takeover. Total NAV: £1,032.1 million.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "Portfolio holdings",
-    "edge_or_thesis": "sold April 2025 after £5.",
-    "any_quant_detail": null,
     "outcome_if_mentioned": null
   },
   {
@@ -9368,48 +9183,6 @@
     "outcome_if_mentioned": null
   },
   {
-    "article_title": "I Mapped Every Entry-Level Position to Portfolio Manager at 600+ Hedge Funds (Verified Salaries: $115K-$700K, PM Timeline: 5–15 Years)",
-    "article_url": "https://navnoorbawa.substack.com/p/i-mapped-every-entry-level-position",
-    "article_date": "2026-01-11",
-    "trade_description": "Methodology Note: The 600+ figure represents firms where we identified specific entry-level roles (analyst, trader, quant researcher, software engineer) through public career pages, job postings, or industry databases. This is not the total number of hedge funds globally it is the subset with documented graduate recruitment programs.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$175B, $500M",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "I Mapped Every Entry-Level Position to Portfolio Manager at 600+ Hedge Funds (Verified Salaries: $115K-$700K, PM Timeline: 5–15 Years)",
-    "article_url": "https://navnoorbawa.substack.com/p/i-mapped-every-entry-level-position",
-    "article_date": "2026-01-11",
-    "trade_description": "Note: AUM represents total firm assets across hedge funds and asset management products",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "products Arrowstreet Capital",
-    "edge_or_thesis": null,
-    "any_quant_detail": "$216B",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "I Mapped Every Entry-Level Position to Portfolio Manager at 600+ Hedge Funds (Verified Salaries: $115K-$700K, PM Timeline: 5–15 Years)",
-    "article_url": "https://navnoorbawa.substack.com/p/i-mapped-every-entry-level-position",
-    "article_date": "2026-01-11",
-    "trade_description": "Note: AUM figures marked “(est.)” are industry estimates; “(public filings)” indicates publicly-traded firm disclosures.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null
-  },
-  {
     "article_title": "How One Trader Made $1 Billion in One Month Betting Against the Fed",
     "article_url": "https://navnoorbawa.substack.com/p/how-one-trader-made-1-billion-in",
     "article_date": "2026-01-11",
@@ -9458,7 +9231,6 @@
     "article_date": "2026-01-10",
     "trade_description": "Example: 1,000 contract short position\nEntry: 1,000 contracts × 5,000 oz × $48.37 = $241.85M notional\nExit: 1,000 contracts × 5,000 oz × $52.00 = $260.00M notional\n───────────────────────────────────────────────────────────────\nGross Loss: ($18.15M)\nInitial Margin Requirement: ~10% = $24.2M\nMargin Call Trigger: +7.5% adverse move\n───────────────────────────────────────────────────────────────\nAt December 2025 peak ($83/oz):\nTheoretical Loss: ($173.15M) per 1,000 contracts\nLoss/Margin Ratio: 7.15x\nConvexity note: Silver shorts exhibit negative convexity. In backwardated markets with inventory stress, gamma (rate of delta change) accelerates against short positions as available physical silver concentrates.",
     "instruments": [
-      "bond",
       "commodity"
     ],
     "direction": "short",
@@ -9493,20 +9265,6 @@
     "underlying": "Founded SAC Capital",
     "edge_or_thesis": null,
     "any_quant_detail": "$23.4B, $800M, $17.5B, $3.0B, $26.2B",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "I Analyzed 40 Hedge Fund Billionaires: Here’s the Exact Career Path That Made Them $500B",
-    "article_url": "https://navnoorbawa.substack.com/p/i-analyzed-40-hedge-fund-billionaires",
-    "article_date": "2026-01-09",
-    "trade_description": "Note: Multi-manager hedge funds increased analyst base salaries 40–120% in 2024–2026 to compete with prop trading firms. Point72’s base salary jumped from ~$85k to $125k; Millennium raised entry floors from ~$80k to $100k-$150k.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "120%",
     "outcome_if_mentioned": null
   },
   {
@@ -9671,7 +9429,6 @@
     "article_date": "2026-01-06",
     "trade_description": "Methodology Note: Performance figures are based on media reports citing BlueCrest sources and court documents. As a private family office, BlueCrest does not publish audited financial statements. Profit calculations (e.g., the ~$6B figure for 2022) are arithmetic estimates based on reported capital and returns, not disclosed audited figures. The 13F filings represent only US long equity/options positions and exclude the firm’s primary fixed income, FX, and derivatives strategies. Forbes earnings estimates are based on their proprietary methodology using realized gains and allocable performance fees.",
     "instruments": [
-      "bond",
       "option",
       "equity"
     ],
@@ -10059,20 +9816,6 @@
     "outcome_if_mentioned": null
   },
   {
-    "article_title": "How Millennium, Citadel & Point72 Structure Pods: Team Economics Behind $428B Multi-Manager Industry",
-    "article_url": "https://navnoorbawa.substack.com/p/how-millennium-citadel-and-point72",
-    "article_date": "2025-12-28",
-    "trade_description": "Methodology Note: Multi-strategy AUM figures ($428B for 2025; $369B for 2023; approximately $134B for 2017) sourced from Goldman Sachs “Multiplier Effect” reporting (November 2025) and Hedge Fund Alpha. Growth statistics (175% vs 13%, 2017–2023) from Goldman Sachs Prime Services and SS&C Technologies analysis. Headcount data reflects SEC Form ADV filings (March-April 2024) aggregated by eFinancialCareers; firm websites may show higher current figures (e.g., Millennium shows 6,500+ as of November 2025). Individual firm employee counts are snapshots from specific filing dates. External allocation figures (up to $55B deployed to 60–100+ managers) represent total deployed capital as reported by With Intelligence (September 2025), not incremental annual flows. Acceptance rate data from Business",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "anager and represent total deployed capital",
-    "edge_or_thesis": "reported by With Intelligence (September 2025), not incremental annual flows.",
-    "any_quant_detail": "$428B, $369B, $134B, $55B, 175%, 13%",
-    "outcome_if_mentioned": null
-  },
-  {
     "article_title": "Inside Cliff Asness’s $35B Quarter: The Multi-Factor Math Behind Micron (+412%) and Walmart (+188%)",
     "article_url": "https://navnoorbawa.substack.com/p/inside-cliff-asnesss-35b-quarter",
     "article_date": "2025-12-27",
@@ -10140,20 +9883,6 @@
     "underlying": "improvement in capital; utilization per Goldman Sa; crypto; Bitcoin",
     "edge_or_thesis": null,
     "any_quant_detail": "$3.5B, 1.5%, 22%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "Millennium’s $234B Q3 Portfolio: $20B NVDA Position, $7.4B External Allocations, and What 330 Pods Actually Trade",
-    "article_url": "https://navnoorbawa.substack.com/p/millenniums-234b-q3-portfolio-20b",
-    "article_date": "2025-12-26",
-    "trade_description": "Note: External SMA allocations reported by trade press (Hedgeweek, Bloomberg); these deployments do not appear in 13F filings as they are managed under Millennium’s custodial umbrella.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "Armar Capital",
-    "edge_or_thesis": "they are managed under Millennium’s custodial umbrella.",
-    "any_quant_detail": "$850M",
     "outcome_if_mentioned": null
   },
   {
@@ -11054,7 +10783,6 @@
     "article_date": "2025-12-19",
     "trade_description": "Dallas Fed research quantifies basis trades’ sensitivity to funding shocks: a 40–50 basis point increase in repo rates would induce only a 3-tick (0.09%) basis move over a three-month delivery horizon (Dallas Fed Economic Letter, July 2025). This is relatively modest. Monthly basis volatility averages 3 ticks under normal conditions. However, the analysis notes that “dealer intermediation capacity” matters more than funding costs. If dealers withdraw balance sheet capacity, hedge funds cannot obtain financing at any reasonable price, forcing immediate deleveraging regardless of rate levels.",
     "instruments": [
-      "bond",
       "repo"
     ],
     "direction": "unspecified",
@@ -11360,20 +11088,6 @@
     "article_title": "Millennium Management’s Multi-Strategy Trading Architecture: Four Core Strategies Behind 14% Annualized Returns",
     "article_url": "https://navnoorbawa.substack.com/p/millennium-managements-multi-strategy",
     "article_date": "2025-12-17",
-    "trade_description": "Note: Millennium returned 13.61% with 4.82 Sharpe in 2021, with 61% winning days",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "13.61%, 61%",
-    "outcome_if_mentioned": "returned 13.61% with 4."
-  },
-  {
-    "article_title": "Millennium Management’s Multi-Strategy Trading Architecture: Four Core Strategies Behind 14% Annualized Returns",
-    "article_url": "https://navnoorbawa.substack.com/p/millennium-managements-multi-strategy",
-    "article_date": "2025-12-17",
     "trade_description": "Business Insider on never-lose-money strategy: https://markets.businessinsider.com/news/stocks/hedge-fund-strategy-never-lose-money-in-the-stock-market-2024-10",
     "instruments": [
       "equity"
@@ -11504,7 +11218,6 @@
     "article_date": "2025-12-13",
     "trade_description": "The 1/√τ factor in the denominator means that as τ → 0, gamma rises without bound for ATM strikes. From pure time decay, moving from 7 days to 1 day to expiration increases effective gamma by approximately √7 ≈ 2.65x. [Macroption — Black-Scholes Formula and Greeks] Combined with implied-volatility compression and open-interest concentration around major strikes, the effective market-level gamma impact can amplify 5–10x in the final 72 hours before expiration. [StrikeWatch — Options Expiration Cycle: OPEX, Gamma Dynamics, Assignment and Pin Risk] As the Black-Scholes PDE makes explicit, this creates a direct tug-of-war: over any infinitesimal time interval, the loss from theta and the gain from the gamma term must offset each other, so that the result is a return at the riskless rate — mean",
     "instruments": [
-      "bond",
       "option"
     ],
     "direction": "unspecified",
@@ -12160,20 +11873,6 @@
     "article_title": "Market-Making in Derivatives Crushes Directional Hedge Fund Trading: A $20B Revenue Gap",
     "article_url": "https://navnoorbawa.substack.com/p/market-making-in-derivatives-crushes",
     "article_date": "2025-12-08",
-    "trade_description": "Methodological Note: This analysis compares market-maker net trading revenue (proprietary capital deployment) against hedge fund gross investor returns (AUM-based performance). While these are different metrics, the comparison illuminates fundamental business model differences: market-makers monetize flow and spreads with minimal directional exposure, while hedge funds generate alpha through directional bets subject to capacity constraints and 2/20 fee structures.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "proprietary capital; against",
-    "edge_or_thesis": null,
-    "any_quant_detail": "$30.2B, $20.5B",
-    "outcome_if_mentioned": "generated $30.2B in combined trading revenue — roughly triple the absolute returns generated by comparable multi-strategy hedge funds."
-  },
-  {
-    "article_title": "Market-Making in Derivatives Crushes Directional Hedge Fund Trading: A $20B Revenue Gap",
-    "article_url": "https://navnoorbawa.substack.com/p/market-making-in-derivatives-crushes",
-    "article_date": "2025-12-08",
     "trade_description": "Volatility Arbitrage: Profiting from implied vs. realized volatility discrepancies",
     "instruments": [
       "volatility"
@@ -12218,7 +11917,6 @@
     "article_date": "2025-12-07",
     "trade_description": "Goldman Sachs reported (in a November 2025 client note seen by Reuters) that hedge funds accelerated UK equity sales beginning late October 2024, initially targeting domestically-revenue-focused companies before extending to UK-listed multinationals.[¹] The net long-short ratio for UK-exposed equities fell to its lowest level since mid-2023 as funds anticipated that Chancellor Rachel Reeves’ £40 billion tax package would compress earnings for companies reliant on the UK economy.",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "long",
@@ -12794,20 +12492,6 @@
     "outcome_if_mentioned": null
   },
   {
-    "article_title": "How Hedge Funds Made (Then Lost) Billions Timing $220B in Predictable Index Flows",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-then-lost-billions",
-    "article_date": "2025-11-24",
-    "trade_description": "Verification Note: All trading volumes, loss figures, dates, and academic estimates have been cross-referenced against primary sources including FTSE Russell official releases, Bloomberg terminal data, academic papers (Chen et al., Madhavan), and exchange announcements from Nasdaq and NYSE. The 2022 event details are corroborated by contemporaneous financial reporting from Bloomberg, Business Insider, and Yahoo Finance. The March 2025 Millennium losses are sourced from Bloomberg’s primary reporting.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "FTSE; Nasdaq",
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null
-  },
-  {
     "article_title": "I Added Transaction Costs to My Goldman Sachs Backtest. The 49% Return Became a -9.6% Loss.",
     "article_url": "https://navnoorbawa.substack.com/p/i-added-transaction-costs-to-my-goldman",
     "article_date": "2025-11-23",
@@ -13039,7 +12723,6 @@
     "article_date": "2025-11-17",
     "trade_description": "Each pod produces noisy signals; Kelly-weighting across low-correlation strategies extracts signal from aggregate noise. Mathematical framework:\n\nIf 10 pods each deliver Sharpe 1.5 with 0.2 average correlation:\n\nPortfolio Sharpe ≈ 1.5 × √(10/(1+9×0.2)) ≈ 2.9\n\nThis amplification justifies 2–3x leverage to reach 15–20% target returns.\n\n2024 P&L breakdown (estimated):\n\nSystematic: 8–10% contribution\n\nDiscretionary equity: 6–8%\n\nMacro/Credit: 3–5%\n\nTotal: ~19% on $35–41B average AUM ≈ $6.7B profit\n\nRecent Portfolio Activity: Q3 2025\n\nPoint72’s Q3 2025 13F filing (September 30, 2025) shows significant portfolio repositioning. Major additions (per 13F aggregators):\n\nNVIDIA: +$774M\n\nArista Networks: +$743M\n\nMicrosoft: +$506M\n\nBiogen: +$462M (top position at 1.94% allocation)\n\nAmazon: +$385M\n\nNew ",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "unspecified",
@@ -13350,20 +13033,6 @@
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "$5.90M, $4.68M, 0.24%, 73%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "The $2M Arbitrageur Playbook: Reverse Engineering Top Performer Strategies",
-    "article_url": "https://navnoorbawa.substack.com/p/the-2m-arbitrageur-playbook-reverse",
-    "article_date": "2025-11-05",
-    "trade_description": "Reverse-Engineered Detection Algorithm\ndef detect_negrisk_opportunities(markets, capital_pool):\n “”“\n Derived from documented opportunity characteristics:\n - 662 NegRisk markets with arbitrage (AFT Section 6.2)\n - Deviation threshold > $0.02 after costs\n - Liquidity constraint by minimum across conditions\n “”“\n opportunities = []\n \n for market in markets:\n # NegRisk markets only (N≥3 conditions)\n if len(market.conditions) < 3:\n continue\n \n # Probability sum deviation\n prob_sum = sum(c.price for c in market.conditions)\n deviation = abs(1.0 - prob_sum)\n \n # Filter: deviation must exceed transaction costs\n if deviation < 0.02:\n continue\n \n # Liquidity constraint\n min_liquidity = min(\n min(c.yes_liquidity, c.no_liquidity) \n for c in market.conditions\n )\n \n if min_liquidity < 100: # Minimum dep",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "75%, 62%",
     "outcome_if_mentioned": null
   },
   {
@@ -13923,27 +13592,12 @@
     "article_date": "2025-10-30",
     "trade_description": "The normalization of rates after years of zero-percent policy meant this equation finally worked favorably. Industry commentary notes: “In a 0% interest world, shorting stocks yielded no benefit — cash collateral earned nothing — but today short-sale proceeds can be invested at risk-free rates, earning positive short rebates that add carry to convert-arb trades.”[⁵]",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "arbitrage/relative value",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "5%, 0%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "How Hedge Funds Generated 30% Returns in the Convertible Arbitrage Boom of 2025",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-generated-30-returns",
-    "article_date": "2025-10-30",
-    "trade_description": "Important note: LMR Partners has not publicly disclosed internal P&L attribution. The following represents the author’s estimates based on typical convertible arbitrage performance mechanics and 2024–2025 market conditions.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": "not publicly disclosed internal P&L attribution.",
-    "any_quant_detail": "30%",
     "outcome_if_mentioned": null
   },
   {
@@ -14282,23 +13936,8 @@
     "article_title": "How Markov Processes Print Money in Market Chaos: The $400B Strategy That Profited From COVID’s Crash",
     "article_url": "https://navnoorbawa.substack.com/p/how-markov-processes-print-money",
     "article_date": "2025-10-23",
-    "trade_description": "HFRX Global Hedge Fund Index: -5.88% in March 2020, -6.90% YTD through March (Source: HFR Performance Notes)",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "HFRX Global",
-    "edge_or_thesis": null,
-    "any_quant_detail": "1.94%, 1.88%, 5.88%, 6.90%, 9.5%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "How Markov Processes Print Money in Market Chaos: The $400B Strategy That Profited From COVID’s Crash",
-    "article_url": "https://navnoorbawa.substack.com/p/how-markov-processes-print-money",
-    "article_date": "2025-10-23",
     "trade_description": "HFRI Equity Hedge: -9.5% to -9.58% in March 2020 (Source: HFR Performance Notes)",
     "instruments": [
-      "bond",
       "equity"
     ],
     "direction": "unspecified",
@@ -14691,20 +14330,6 @@
     ],
     "direction": "arbitrage/relative value",
     "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "The Martingale Paradox: Why Mathematically “Perfect” Trading Strategies Fail in Real Markets",
-    "article_url": "https://navnoorbawa.substack.com/p/the-martingale-paradox-why-mathematically",
-    "article_date": "2025-10-16",
-    "trade_description": "President’s Working Group on Financial Markets. (1999). “Hedge Funds, Leverage, and the Lessons of Long-Term Capital Management.” U.S. Treasury Department.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "Term Capital Management; Working Group",
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null
@@ -15104,34 +14729,6 @@
     "article_title": "The DeepSeek Shock: How Systematic Hedge Funds Profited While Fundamentals Lost Billions",
     "article_url": "https://navnoorbawa.substack.com/p/the-deepseek-shock-how-systematic",
     "article_date": "2025-10-12",
-    "trade_description": "Goldman Sachs trading desk data, as reported by Reuters and other financial media, indicated fundamental hedge funds fell approximately 1.1% on January 27.[4] Note: These specific performance figures, while widely cited in industry reports, cannot be independently verified through public sources. Readers with access to Goldman Sachs Prime Brokerage reports may confirm.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "reported by Reuters and other financial media, indicated fundamental hedge funds fell approximately 1.",
-    "any_quant_detail": "1.1%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "The DeepSeek Shock: How Systematic Hedge Funds Profited While Fundamentals Lost Billions",
-    "article_url": "https://navnoorbawa.substack.com/p/the-deepseek-shock-how-systematic",
-    "article_date": "2025-10-12",
-    "trade_description": "The same Goldman Sachs data showed systematic managers — employing algorithmic models based on price trends and volatility — gained approximately 1.7% on January 27.[4] Note: As with fundamental performance, this specific figure cannot be independently verified but is consistent with systematic strategy behavior during volatility events.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "1.7%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "The DeepSeek Shock: How Systematic Hedge Funds Profited While Fundamentals Lost Billions",
-    "article_url": "https://navnoorbawa.substack.com/p/the-deepseek-shock-how-systematic",
-    "article_date": "2025-10-12",
     "trade_description": "DeepSeek was founded in May 2023 by Liang Wenfeng, who also co-founded and runs High-Flyer Capital Management, a quantitative hedge fund.[25][26] High-Flyer employs AI-driven strategies, using deep neural networks to predict stock price movements.",
     "instruments": [
       "equity"
@@ -15174,20 +14771,6 @@
     "article_title": "When Hedge Funds Lost Money While Markets Hit All-Time Highs: The October 2025 Crowding Crisis",
     "article_url": "https://navnoorbawa.substack.com/p/when-hedge-funds-lost-money-while",
     "article_date": "2025-10-11",
-    "trade_description": "According to a Goldman Sachs prime brokerage client note reported by Reuters on October 7, systematic hedge funds dropped approximately 1.8% across four consecutive trading sessions. The magnitude marks their worst four-day performance period in nearly two years.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "S&P 500",
-    "edge_or_thesis": null,
-    "any_quant_detail": "1.8%, at 6,753.72",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "When Hedge Funds Lost Money While Markets Hit All-Time Highs: The October 2025 Crowding Crisis",
-    "article_url": "https://navnoorbawa.substack.com/p/when-hedge-funds-lost-money-while",
-    "article_date": "2025-10-11",
     "trade_description": "AMD shares jumped 34% on October 6 following its multi-year AI chip supply deal with OpenAI — the company’s largest single-day gain in over nine years, adding approximately $80 billion in market capitalization",
     "instruments": [
       "equity"
@@ -15210,20 +14793,6 @@
     "underlying": "unwind requires examining systematic fund; documented that",
     "edge_or_thesis": null,
     "any_quant_detail": "$3.1 trillion, $2.0 trillion, $1.1 trillion",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "When Hedge Funds Lost Money While Markets Hit All-Time Highs: The October 2025 Crowding Crisis",
-    "article_url": "https://navnoorbawa.substack.com/p/when-hedge-funds-lost-money-while",
-    "article_date": "2025-10-11",
-    "trade_description": "Every quantitative claim, date, and market level in this analysis has been cross-checked against at least two independent primary sources. Where data originates from proprietary research (Goldman Sachs client notes), this limitation is explicitly disclosed. Academic research claims reference peer-reviewed publications or established industry research.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "been cross-checked against at least two independent primary sources.",
-    "any_quant_detail": null,
     "outcome_if_mentioned": null
   },
   {
@@ -15368,20 +14937,6 @@
     "underlying": "billion loss at Man Group; Man Group; US Treasury",
     "edge_or_thesis": null,
     "any_quant_detail": "$5.6 billion, $6 billion, 15%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "How Bridgewater’s Pure Alpha Captured 26.2% Returns from Tariff Volatility: A Quantitative Breakdown",
-    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewaters-pure-alpha-captured",
-    "article_date": "2025-10-07",
-    "trade_description": "Between structural reforms, nimble position sizing and a clear regime-detection framework, Bridgewater Associates’ Pure Alpha generated 26.2% year-to-date through 29 September 2025. This note lays out the trade mechanics, the regime signals that mattered, and a compact performance attribution that a quant researcher can use as a replicable blueprint for thinking about volatility capture across assets.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "a replicable blueprint for thinking about volatility capture across assets.",
-    "any_quant_detail": "26.2%",
     "outcome_if_mentioned": null
   },
   {
@@ -15542,20 +15097,6 @@
     "underlying": "According to The S&P 500",
     "edge_or_thesis": "never envisaged as a product… While US equities were in the early stages of the tech bubble, Ray and others began propounding the concepts of balance.",
     "any_quant_detail": null,
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "Inside Bridgewater’s Pure Alpha: How Systematic Macro Translates Economic Views Into Portfolio Positions",
-    "article_url": "https://navnoorbawa.substack.com/p/inside-bridgewaters-pure-alpha-how",
-    "article_date": "2025-10-04",
-    "trade_description": "Pure Alpha’s 26% return in 2025 suggests successful regime identification. The Hedge Fund Journal notes Bridgewater “views markets through the lens of behavioural and market paradigms, which often last around a decade.”",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "The",
-    "edge_or_thesis": null,
-    "any_quant_detail": "26%",
     "outcome_if_mentioned": null
   },
   {
@@ -15989,20 +15530,6 @@
     "underlying": "HFRI Fund; Private Fund; Cayman Islands",
     "edge_or_thesis": null,
     "any_quant_detail": "$8.2 trillion, 1.42%, 53.6%, 31.6%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "How a 46-Year Hedge Fund Dynasty Died on Zoom",
-    "article_url": "https://navnoorbawa.substack.com/p/the-george-weiss-collapse-how-a-46",
-    "article_date": "2025-09-28",
-    "trade_description": "Prior to bankruptcy, Mr. Weiss had entered into a Forbearance Agreement with Jefferies and Leucadia on February 12, 2024, attempting to restructure $53 million in debts tied to a 2018 Strategic Relationship Agreement (SRA) and two Note Purchase Agreements (NPAs).",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "long",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$3.1 Billion, $500 Million, $53 million",
     "outcome_if_mentioned": null
   },
   {
@@ -16503,20 +16030,6 @@
     "underlying": "billion in assets under management; the fund",
     "edge_or_thesis": "a co-founder of Brevan Howard, he generated over $4 billion in profits trading interest rate securities, including $1.",
     "any_quant_detail": "$19 billion, $4 billion, $1.27 billion, 20%",
-    "outcome_if_mentioned": null
-  },
-  {
-    "article_title": "How Chris Rokos Made $1 Billion in a Single Day: Deconstructing the Trump Trade",
-    "article_url": "https://navnoorbawa.substack.com/p/how-chris-rokos-made-1-billion-in",
-    "article_date": "2025-09-15",
-    "trade_description": "Methodology Note: All financial data verified against multiple primary sources including Bloomberg, Reuters, WSJ, and court documents. Core claims about Rokos' $1 billion profit and fund performance confirmed across authoritative outlets. Historical performance figures (such as Rokos' $1.27 billion profit in 2011) verified through Bloomberg reporting and legal filings. Some specific intraday market movements represent consolidated reporting where exact figures vary slightly across sources.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": "billion profit and fund",
-    "edge_or_thesis": null,
-    "any_quant_detail": "$1 billion, $1.27 billion",
     "outcome_if_mentioned": null
   },
   {
