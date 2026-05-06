@@ -22,18 +22,27 @@ jobs:
           python-version: '3.11'
 
       - name: Fetch posts from Substack
-        run: python fetch_all_posts.py
+        id: fetch
+        run: |
+          python fetch_all_posts.py
+          COUNT=$(python -c "import json; print(len(json.load(open('all_posts.json'))))")
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+          echo "Fetched $COUNT posts"
 
       - name: Extract trades
+        if: steps.fetch.outputs.count != '0'
         run: python extract_trades.py
 
       - name: Filter & deduplicate trades
+        if: steps.fetch.outputs.count != '0'
         run: python filter_trades.py
 
       - name: Build site
+        if: steps.fetch.outputs.count != '0'
         run: python build_site.py
 
       - name: Commit and push if anything changed
+        if: steps.fetch.outputs.count != '0'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
