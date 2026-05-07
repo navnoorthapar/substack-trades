@@ -9,35 +9,25 @@ ROOT     = Path(__file__).parent
 DOCS_DIR = ROOT / 'docs'
 DOCS_DIR.mkdir(exist_ok=True)
 
-with open(ROOT / 'all_posts.json') as f:
-    posts = json.load(f)
-
 with open(ROOT / 'trades_extracted.json') as f:
     trades = json.load(f)
 
 BUILT_AT = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
 
-# Group trades by article URL
+# Group trades by article URL — no dependency on all_posts.json
 trades_by_url = defaultdict(list)
 for t in trades:
     trades_by_url[t['article_url']].append(t)
 
-# Build article records (only fields the site needs)
 articles = []
-for post in posts:
-    url = f"https://navnoorbawa.substack.com/p/{post['slug']}"
-    article_trades = trades_by_url.get(url, [])
-
-    # Collect instruments across all trades for this article
+for url, article_trades in trades_by_url.items():
+    first = article_trades[0]
     instruments = sorted({i for t in article_trades for i in t.get('instruments', [])})
     directions  = sorted({t.get('direction', '') for t in article_trades if t.get('direction') and t.get('direction') != 'unspecified'})
-
     articles.append({
-        'title':       post['title'],
-        'date':        post['post_date'][:10],
+        'title':       first.get('article_title', url),
+        'date':        (first.get('article_date') or '1970-01-01')[:10],
         'url':         url,
-        'wordcount':   post['wordcount'],
-        'preview':     post['body_text'][:400].strip(),
         'instruments': instruments,
         'directions':  directions,
         'trade_count': len(article_trades),
@@ -377,8 +367,7 @@ function matchesQuery(art, q) {{
   if (!q) return true;
   const haystack = [
     art.title,
-    art.preview,
-    ...art.trades.map(t => [t.trade_description, t.underlying, t.edge_or_thesis, t.outcome_if_mentioned].join(' '))
+    ...art.trades.map(t => [t.trade_description, t.underlying, t.edge_or_thesis, t.outcome_if_mentioned, t.fund_name_if_mentioned].join(' '))
   ].join(' ').toLowerCase();
   return q.toLowerCase().split(' ').filter(Boolean).every(w => haystack.includes(w));
 }}
@@ -450,7 +439,6 @@ function buildCard(art, trades) {{
     <div class="article-header" onclick="toggleCard(this.parentElement)">
       <div class="article-meta">
         <span class="article-date">${{art.date}}</span>
-        <span class="article-words">${{(art.wordcount||0).toLocaleString()}}w</span>
       </div>
       <div class="article-body">
         <div class="article-title">${{esc(art.title)}}</div>

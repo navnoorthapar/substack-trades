@@ -1,15 +1,17 @@
 name: Update Trade Intelligence
 
 on:
-  schedule:
-    - cron: '0 8 * * *'   # Daily at 8am UTC
-  workflow_dispatch:        # Manual trigger from GitHub UI
+  push:
+    branches: [main]
+    paths:
+      - 'trades_extracted.json'   # only rebuild when data actually changes
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  update:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,35 +23,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Fetch posts from Substack
-        id: fetch
-        run: |
-          python fetch_all_posts.py
-          COUNT=$(python -c "import json; print(len(json.load(open('all_posts.json'))))")
-          echo "count=$COUNT" >> $GITHUB_OUTPUT
-          echo "Fetched $COUNT posts"
-
-      - name: Extract trades
-        if: steps.fetch.outputs.count != '0'
-        run: python extract_trades.py
-
-      - name: Filter & deduplicate trades
-        if: steps.fetch.outputs.count != '0'
-        run: python filter_trades.py
-
       - name: Build site
-        if: steps.fetch.outputs.count != '0'
         run: python build_site.py
 
-      - name: Commit and push if anything changed
-        if: steps.fetch.outputs.count != '0'
+      - name: Commit rebuilt site if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add trades_extracted.json docs/index.html
+          git add docs/index.html
           if git diff --staged --quiet; then
-            echo "No changes — site is already up to date."
+            echo "No changes."
           else
-            git commit -m "auto-update $(date -u '+%Y-%m-%d')"
+            git commit -m "rebuild site $(date -u '+%Y-%m-%d')"
             git push
           fi
