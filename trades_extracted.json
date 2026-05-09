@@ -1,5 +1,132 @@
 [
   {
+    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "article_date": "2026-05-08",
+    "trade_description": "Marcos López de Prado’s institutional affiliation on the VPIN Flash Crash paper is significant: he is listed as “head of High Frequency Futures at Tudor Investment Corporation in Greenwich, CT.” This means the Volume-Synchronized Probability of Informed Trading (VPIN) metric was developed inside an active hedge fund, with access to live trading data, by someone with operational responsibility for high-frequency futures strategies. The paper was published in the Journal of Portfolio Management (Vol. 37, No. 2, Winter 2011).",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": "live inside an active the Journal of Portfolio Management",
+    "edge_or_thesis": "working inside a live hedge fund when he published it.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "article_date": "2026-05-08",
+    "trade_description": "The enforcement document also quantifies Citadel’s market position at the time: the SEC order states that Citadel’s processing of retail equity orders “accounts on average for approximately 35% of the average daily volume of retail equity shares traded in the U.S. markets.” Roughly one-third of all US retail equity flow was running through algorithms that were using a real-time information advantage over the customers whose orders they were processing. This is the regulatory record of what market making alpha from information asymmetry looks like when it crosses compliance boundaries.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "running through algorithms that were using a real-time information advantage over the customers whose orders they were processing.",
+    "any_quant_detail": "$22.6 million, 35%",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "article_date": "2026-05-08",
+    "trade_description": "The complaint’s financial disclosures were extraordinary. BNN Bloomberg’s reporting on the court hearing confirmed that the India options strategy was revealed inadvertently by Millennium’s own counsel — who apologized upon doing so — and that a Jane Street attorney stated the strategy “was one of the firm’s most lucrative.” Judge Paul Engelmayer confirmed on record that Jane Street claimed the strategy generated approximately $1 billion in 2023 profits.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "one of the firm’s most lucrative.",
+    "any_quant_detail": "$1 billion, 50%",
+    "outcome_if_mentioned": "generated approximately $1 billion in 2023 profits."
+  },
+  {
+    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "article_date": "2026-05-08",
+    "trade_description": "The litigation’s deepest relevance for market making analysis is structural: it publicly established that a single options strategy — concentrated in a single national derivatives market — generated $1 billion in profits in one year for a firm that makes markets across thousands of instruments globally. The case settled before its mechanics were fully disclosed. The docket remains Jane Street Group LLC v. Millennium Management LLC, 24 cv 02783, SDNY.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": "docket remains Jane Street Group; Millennium Management",
+    "edge_or_thesis": "confirmed by Reuters.",
+    "any_quant_detail": "$566 million, $1 billion",
+    "outcome_if_mentioned": "generated $1 billion in profits in one year for a firm that makes markets across thousands of instruments globally."
+  },
+  {
+    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "article_date": "2026-05-08",
+    "trade_description": "The CFTC press release dated April 20, 2012, covering a consent order entered by Chief Judge Loretta A. Preska of the SDNY, documented that Optiver and its traders engaged in 19 separate instances of manipulation over 11 days in March 2007, targeting NYMEX crude oil, heating oil, and gasoline futures. The mechanism: Optiver deployed a rapid-fire execution tool internally nicknamed “The Hammer” to execute large volumes of orders during the final minutes of trading, moving the settlement price — the price at which futures contracts are marked for daily P&L and final delivery — in the direction of pre-existing positions. The settlement included a $13 million civil monetary penalty plus $1 million in disgorgement, totaling $14 million.",
+    "instruments": [
+      "futures",
+      "commodity"
+    ],
+    "direction": "unspecified",
+    "underlying": "crude oil",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$13 million, $1 million, $14 million",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "article_date": "2026-05-08",
+    "trade_description": "The structural lesson is not primarily about the manipulation itself but about what it reveals regarding the mechanics of settlement-adjacent trading. Futures settlement prices are calculated from actual trades in a defined closing window. A market maker or principal trader with substantial derivatives positions has an inherent financial interest in where settlement falls. When the aggregate position is large enough and the settlement window is thin enough, the economics can favor trading in the underlying to move settlement — even at a loss on those trades — because the gain on the derivatives book outweighs the cost.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "an inherent financial interest in where settlement falls.",
+    "any_quant_detail": "$13 million, $1 million, $14 million",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "article_date": "2026-05-08",
+    "trade_description": "The enforcement cases — Citadel’s SIP arbitrage, Optiver’s banging the close, Jane Street’s India options concentration — collectively define the outer boundary of permissible market making. What the voluntary disclosures and academic record show is the mechanism operating well inside that boundary.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "35%",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "article_date": "2026-05-08",
+    "trade_description": "The regulatory dimension of capacity compression is the most structurally uncertain. Payment for order flow was banned by the EU under MiFIR amendments that entered into force on March 28, 2024, subject to a transitional phase-out period extending to June 30, 2026 for certain member states. India’s SEBI actions against Jane Street in 2025 introduced regulatory uncertainty around structured expiry-day options positioning in developing derivatives markets. The CFTC’s FY2023 enforcement results documented 96 enforcement actions and $4.3 billion in penalties — evidence that the regulatory cost of running near the line of permissible market making conduct has become materially non-zero.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "become materially non-zero.",
+    "any_quant_detail": "$4.3 billion",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "article_date": "2026-05-08",
+    "trade_description": "Jane Street and Millennium Settle India Options Trade Secrets Case — BNN Bloomberg",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$567 Million",
+    "outcome_if_mentioned": null
+  },
+  {
     "article_title": "Axie Infinity, CS2 Skins, and Roblox: How Hedge Funds Built Gaming Currency Alpha — and the Three Mispriced Opportunities They Are Still Missing",
     "article_url": "https://navnoorbawa.substack.com/p/axie-infinity-cs2-skins-and-roblox",
     "article_date": "2026-04-24",
