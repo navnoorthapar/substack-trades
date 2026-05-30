@@ -22,14 +22,10 @@ for t in trades:
 articles = []
 for url, article_trades in trades_by_url.items():
     first = article_trades[0]
-    instruments = sorted({i for t in article_trades for i in t.get('instruments', [])})
-    directions  = sorted({t.get('direction', '') for t in article_trades if t.get('direction') and t.get('direction') != 'unspecified'})
     articles.append({
         'title':       first.get('article_title', url),
         'date':        (first.get('article_date') or '1970-01-01')[:10],
         'url':         url,
-        'instruments': instruments,
-        'directions':  directions,
         'trade_count': len(article_trades),
         'trades':      article_trades,
     })
@@ -160,7 +156,6 @@ main{{flex:1;padding:20px 24px;max-width:960px;}}
   white-space:nowrap;padding-top:2px;
 }}
 .article-date{{display:block}}
-.article-words{{display:block;margin-top:2px}}
 .article-body{{flex:1;min-width:0}}
 .article-title{{
   font-size:13.5px;font-weight:500;color:var(--text);
@@ -243,6 +238,7 @@ html.light .dir-ls{{background:#f5f3ff;border-color:#ddd6fe}}
 }}
 html.light .trade-quant{{color:#b45309}}
 .trade-outcome{{font-size:11px;color:var(--accent);margin-top:4px;font-style:italic}}
+.trade-outcome-loss{{font-size:11px;color:var(--short);margin-top:4px;font-style:italic}}
 
 /* ── EMPTY STATE ── */
 .empty{{text-align:center;padding:80px 20px;color:var(--muted)}}
@@ -270,7 +266,7 @@ html.light .trade-quant{{color:#b45309}}
   .result-count{{margin-bottom:10px;}}
   .article-header{{padding:12px 14px;gap:8px;flex-wrap:wrap;}}
   .article-meta{{display:flex;flex-direction:row;gap:8px;white-space:nowrap;font-size:9px;flex:0 0 100%;order:3;padding-top:0;}}
-  .article-date,.article-words{{display:inline;margin:0;}}
+  .article-date{{display:inline;margin:0;}}
   .article-body{{flex:1 1 calc(100% - 90px);}}
   .article-title{{font-size:13px;}}
   .trade-badge{{font-size:9px;padding:2px 6px;}}
@@ -363,11 +359,12 @@ function tradeMatchesInst(t, inst) {{
   if (inst === 'all') return true;
   return (t.instruments || []).includes(inst);
 }}
-function matchesQuery(art, q) {{
+function matchesQuery(art, q, trades) {{
   if (!q) return true;
+  const src = trades || art.trades;
   const haystack = [
     art.title,
-    ...art.trades.map(t => [t.trade_description, t.underlying, t.edge_or_thesis, t.outcome_if_mentioned, t.fund_name_if_mentioned].join(' '))
+    ...src.map(t => [t.trade_description, t.underlying, t.edge_or_thesis, t.outcome_if_mentioned].join(' '))
   ].join(' ').toLowerCase();
   return q.toLowerCase().split(' ').filter(Boolean).every(w => haystack.includes(w));
 }}
@@ -379,17 +376,21 @@ function filteredTrades(art) {{
 function render() {{
   const feed = document.getElementById('feed');
   const q = query.trim();
+  const filtersActive = activeDir !== 'all' || activeInst !== 'all';
+
+  const tradeCache = new Map();
+  for (const art of DATA) {{
+    tradeCache.set(art, filtersActive ? filteredTrades(art) : art.trades);
+  }}
 
   const visible = DATA.filter(art => {{
-    if (!matchesQuery(art, q)) return false;
-    if (activeDir !== 'all' || activeInst !== 'all') {{
-      return filteredTrades(art).length > 0;
-    }}
-    return true;
+    const trades = tradeCache.get(art);
+    if (filtersActive && trades.length === 0) return false;
+    return matchesQuery(art, q, trades);
   }});
 
   document.getElementById('result-count').textContent =
-    `${{visible.length}} article${{visible.length !== 1 ? 's' : ''}} · ${{visible.reduce((s, a) => s + (activeDir !== 'all' || activeInst !== 'all' ? filteredTrades(a).length : a.trade_count), 0)}} trades`;
+    `${{visible.length}} article${{visible.length !== 1 ? 's' : ''}} · ${{visible.reduce((s, a) => s + tradeCache.get(a).length, 0)}} trades`;
 
   feed.innerHTML = '';
   if (visible.length === 0) {{
@@ -398,8 +399,7 @@ function render() {{
   }}
 
   for (const art of visible) {{
-    const trades = (activeDir !== 'all' || activeInst !== 'all') ? filteredTrades(art) : art.trades;
-    const card = buildCard(art, trades);
+    const card = buildCard(art, tradeCache.get(art));
     feed.appendChild(card);
   }}
 }}
@@ -455,6 +455,10 @@ function buildCard(art, trades) {{
   return div;
 }}
 
+function isLossOutcome(s) {{
+  return /\b(lost|loss(?:es)?|losing|declined?|fell|fall|blew.?up|wiped|bankrupt|collapse[d]?|down \$|negative return|drawdown)\b/i.test(s);
+}}
+
 function buildTrade(t) {{
   const dc = dirClass(t.direction);
   const dirBadge = dc ? `<span class="dir-tag ${{dc}}">${{dirLabel(t.direction)}}</span>` : '';
@@ -464,7 +468,8 @@ function buildTrade(t) {{
   const underlying = t.underlying ? `<div class="trade-field"><b>Underlying:</b> ${{esc(t.underlying)}}</div>` : '';
   const thesis  = t.edge_or_thesis ? `<div class="trade-field"><b>Edge / Thesis:</b> ${{esc(t.edge_or_thesis)}}</div>` : '';
   const quant   = t.any_quant_detail ? `<div class="trade-quant">&#9670; ${{esc(t.any_quant_detail)}}</div>` : '';
-  const outcome = t.outcome_if_mentioned ? `<div class="trade-outcome">&#10003; ${{esc(t.outcome_if_mentioned)}}</div>` : '';
+  const outLoss = t.outcome_if_mentioned && isLossOutcome(t.outcome_if_mentioned);
+  const outcome = t.outcome_if_mentioned ? `<div class="${{outLoss ? 'trade-outcome-loss' : 'trade-outcome'}}">${{outLoss ? '&#10007;' : '&#10003;'}} ${{esc(t.outcome_if_mentioned)}}</div>` : '';
 
   return `<div class="trade-item">
     <div class="trade-row1">${{dirBadge}}${{instTags}}</div>
@@ -548,7 +553,7 @@ function toggleTheme() {{
 renderStats();
 updateCounts();
 render();
-document.getElementById('search').focus();
+if (window.innerWidth > 768) document.getElementById('search').focus();
 </script>
 </body>
 </html>"""
