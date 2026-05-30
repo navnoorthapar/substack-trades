@@ -21,10 +21,16 @@ for t in trades:
 
 articles = []
 for url, article_trades in trades_by_url.items():
+    if not url:          # skip trades with no URL — would render href="None"
+        continue
     first = article_trades[0]
+    title = first.get('article_title') or url   # None title would display as "null"
+    date  = (first.get('article_date') or '')[:10]
+    if len(date) != 10:                          # malformed date → sort to bottom
+        date = '1970-01-01'
     articles.append({
-        'title':       first.get('article_title', url),
-        'date':        (first.get('article_date') or '1970-01-01')[:10],
+        'title':       title,
+        'date':        date,
         'url':         url,
         'trade_count': len(article_trades),
         'trades':      article_trades,
@@ -97,7 +103,7 @@ header{{
   border-radius:6px;color:var(--text);font-size:13px;padding:0 12px;
   outline:none;font-family:var(--font-sans);
 }}
-#search:focus{{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,197,94,.15)}}
+#search:focus{{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 20%,transparent)}}
 #search::placeholder{{color:var(--dim)}}
 
 /* ── LAYOUT ── */
@@ -456,7 +462,7 @@ function buildCard(art, trades) {{
 }}
 
 function isLossOutcome(s) {{
-  return /\b(lost|loss(?:es)?|losing|declined?|fell|fall|blew.?up|wiped|bankrupt|collapse[d]?|down \$|negative return|drawdown)\b/i.test(s);
+  return /\b(lost|loss(?:es)?|losing|declined?|fell|fall|blew.?up|wiped|bankrupt|collapse[d]?|down \\$|negative return|drawdown)\b/i.test(s);
 }}
 
 function buildTrade(t) {{
@@ -522,10 +528,10 @@ document.getElementById('search').addEventListener('input', e => {{
 
 // ── Stats ──
 function renderStats() {{
-  const dates = DATA.map(a => a.date).sort();
+  const dates = DATA.map(a => a.date).filter(d => d > '2020-01-01').sort();
   document.getElementById('stat-articles').textContent = DATA.length;
   document.getElementById('stat-trades').textContent = DATA.reduce((s, a) => s + a.trade_count, 0).toLocaleString();
-  document.getElementById('stat-range').textContent = dates[0] + ' → ' + dates[dates.length - 1];
+  document.getElementById('stat-range').textContent = dates.length ? dates[0] + ' → ' + dates[dates.length - 1] : '—';
 }}
 
 // ── Filter panel (mobile) ──

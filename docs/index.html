@@ -61,7 +61,7 @@ header{
   border-radius:6px;color:var(--text);font-size:13px;padding:0 12px;
   outline:none;font-family:var(--font-sans);
 }
-#search:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,197,94,.15)}
+#search:focus{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 20%,transparent)}
 #search::placeholder{color:var(--dim)}
 
 /* ── LAYOUT ── */
@@ -247,7 +247,7 @@ html.light .trade-quant{color:#b45309}
     <span><b id="stat-articles">0</b> articles</span>
     <span><b id="stat-trades">0</b> trades</span>
     <span><b id="stat-range">—</b></span>
-    <span style="margin-left:8px;color:var(--dim)">updated 2026-05-30 16:51 UTC</span>
+    <span style="margin-left:8px;color:var(--dim)">updated 2026-05-30 17:00 UTC</span>
   </div>
   <div class="spacer"></div>
   <input id="search" type="text" placeholder="Search articles, funds, instruments…" autocomplete="off" spellcheck="false">
@@ -486,10 +486,10 @@ document.getElementById('search').addEventListener('input', e => {
 
 // ── Stats ──
 function renderStats() {
-  const dates = DATA.map(a => a.date).sort();
+  const dates = DATA.map(a => a.date).filter(d => d > '2020-01-01').sort();
   document.getElementById('stat-articles').textContent = DATA.length;
   document.getElementById('stat-trades').textContent = DATA.reduce((s, a) => s + a.trade_count, 0).toLocaleString();
-  document.getElementById('stat-range').textContent = dates[0] + ' → ' + dates[dates.length - 1];
+  document.getElementById('stat-range').textContent = dates.length ? dates[0] + ' → ' + dates[dates.length - 1] : '—';
 }
 
 // ── Filter panel (mobile) ──

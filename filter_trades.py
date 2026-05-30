@@ -133,6 +133,7 @@ def main():
         trades = json.load(f)
 
     print(f"Original trade count: {len(trades)}")
+    total_articles_processed = len({t.get('article_url') for t in trades if t.get('article_url')})
 
     # Step 1: Remove false positives
     filtered = [t for t in trades if not is_false_positive(t)]
@@ -176,7 +177,7 @@ def main():
     print(f'\n{"="*60}')
     print('FINAL SUMMARY')
     print(f'{"="*60}')
-    print(f'Total articles processed: 194')
+    print(f'Total articles processed: {total_articles_processed}')
     print(f'Total trades found:       {len(unique)}')
     print(f'Articles with trades:     {len(articles)}')
     print()
