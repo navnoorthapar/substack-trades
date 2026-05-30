@@ -1,5 +1,263 @@
 [
   {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "The EIA report also documents the specific structural dislocation mechanism that created value for market makers: the Brent-WTI spread widened from approximately $4 per barrel at the start of Q1, peaked at $25 per barrel on March 31, and averaged $11 per barrel for the month — the highest Brent-WTI spread in over five years — reflecting elevated shipping costs and reduced oil flows near the Strait of Hormuz pressing on Brent specifically while US inventories and SPR releases cushioned WTI. This Brent-WTI dislocation, combined with steep backwardation in crude forward curves, created persistent cross-instrument mispricings that a unified, multi-asset market-making book could arbitrage continuously across the quarter.",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": "Brent; WTI",
+    "edge_or_thesis": "at approximately $73 per barrel before the war, and subsequently reached a wartime high of $126.",
+    "any_quant_detail": "at $25 per barrel",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "In August 2025, Global Trading reported that among major wholesale market makers, HRT posted the lowest (best) share-weighted median execution quality (E/Q) ratio at 0.315, with Susquehanna (SIG) next at 0.335 — both clear of their competitive field — while Citadel Securities showed the most pronounced deterioration in the month, with its median E/Q worsening from 0.405 to 0.515. The E/Q measure, derived from SEC Rule 605 mandatory monthly disclosures, is the spread realized by market makers versus the NBBO midpoint divided by the prevailing NBBO spread — so a reading of 0 is a trade at midprice and 1 is a trade at the NBBO. HRT’s 0.315 versus SIG’s 0.335 represents a material advantage; both outperformed Citadel at 0.515 by a substantial margin. HRT’s own Rule 605 filings, disclosed month",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "at 0.315,, at 0.335, at 0.515",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "SEBI’s interim order, numbered WTM/AN/MRD/MRD-SEC-3/31516/2025-26 and dated July 3, 2025, is a 105-page document describing trading surveillance across 18 derivative expiry days between January 2023 and March 2025. The document lists two strategies: an “Intra-day Index Manipulation” strategy observed on 15 days, and an “Extended Marking the Close” strategy observed on the remaining 3 days — the latter also appearing in NIFTY options in May 2025. The order’s background section states explicitly that SEBI initiated its preliminary examination based on April 2024 media reports about the Jane Street-Millennium lawsuit, which had inadvertently disclosed that Jane Street’s strategy involved India options.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "Between 9:15 AM and 11:46 AM, Jane Street purchased Bank Nifty constituent stocks and futures worth approximately ₹4,370 crore while simultaneously selling Bank Nifty options for approximately ₹32,115 crore. After noon, Jane Street sold Bank Nifty futures worth approximately ₹5,372 crore, creating a peak short position of approximately ₹46,620 crore in Bank Nifty index options, and the index closed near 46,064.45 — Jane Street made a profit of approximately ₹735 crore in the options segment and an intraday loss of approximately ₹61.6 crore in cash and futures, for a net gain of approximately ₹673.4 crore on that single expiry day.",
+    "instruments": [
+      "option",
+      "equity",
+      "futures"
+    ],
+    "direction": "long/short",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "On July 10, 2024, Jane Street sold Bank Nifty futures worth approximately ₹2,800 crore and created a short position of approximately ₹44,154 crore in Bank Nifty options, with the resulting softening of the index closing generating a profit of approximately ₹225 crore.",
+    "instruments": [
+      "option",
+      "futures"
+    ],
+    "direction": "short",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "Jane Street filed its complaint against Millennium Management and former traders Douglas Schadewald and Daniel Spottiswood in the Southern District of New York in April 2024 under civil case number 24-cv-02783 before Judge Paul Engelmayer, with preliminary motions recorded under miscellaneous docket 1:24-mc-00175 on CourtListener. The strategy involved India options and had generated $1 billion in profits for Jane Street in 2023, a disclosure that emerged when lawyers for both sides inadvertently identified the market during a court hearing, as Bloomberg reported.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": "its complaint against Millennium Management",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$1 billion, 50%",
+    "outcome_if_mentioned": "generated $1 billion in profits for Jane Street in 2023, a disclosure that emerged when lawyers for both sides inadvertently identified the market during a court hearing, as Bloomberg reported."
+  },
+  {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "Jane Street alleged that its profits from the strategy fell approximately 50% in March 2024 after Millennium began using the same approach. Schadewald and Spottiswood disputed this, with defendants arguing that Jane Street’s India options team actually posted record results in the months after they departed, per previously sealed motions released in redacted form. The case was settled on mutually agreeable terms and dismissed by December 2024 according to a federal court filing, with terms undisclosed.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "settled on mutually agreeable terms and dismissed by December 2024 according to a federal court filing, with terms undisclosed.",
+    "any_quant_detail": "$1 billion, 50%",
+    "outcome_if_mentioned": "generated $1 billion in profits for Jane Street in 2023, a disclosure that emerged when lawyers for both sides inadvertently identified the market during a court hearing, as Bloomberg reported."
+  },
+  {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "Regulatory extraterritoriality. Business Standard reported in June 2025 that SEBI had shared details of its investigation of Jane Street with the US SEC, establishing cross-jurisdictional precedent for review of expiry-day HFT mechanics. The India case demonstrated a compounding litigation risk: the lawsuit Jane Street initiated to protect its strategy became the trigger for regulatory scrutiny that cost approximately $564 million (₹4,843.57 crore) and market access, as confirmed by Business Standard’s July 14, 2025 deposit announcement. As these firms expand into Brazil, Taiwan, and other markets with growing derivatives ecosystems, the regulatory risk profile scales with each new geography — and the discovery footprint of any future litigation could again invite scrutiny.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "confirmed by Business Standard’s July 14, 2025 deposit announcement.",
+    "any_quant_detail": "$1 billion, $564 million",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "The alpha HRT and Jane Street are generating in Q1 2026 is not mysterious. It is the product of accurate short-term price prediction, applied at a scale that converts a sub-percentage-point statistical edge into tens of billions of annual revenue through compounding across millions of daily transactions. The EIA confirms the Iran war created the precise structural environment these models were built to exploit: the largest quarterly oil price increase on an inflation-adjusted basis in data going back to 1988, sustained for weeks, with cross-asset dislocations that required hours to reprice rather than milliseconds.",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "itself a record across any quarter in the firm’s documented history.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "A Nomura Trader Made $10,284 Spoofing ¥400 Billion in JGB Orders. BlueCrest Hired Him for the Alpha Inside.",
+    "article_url": "https://navnoorbawa.substack.com/p/a-nomura-trader-made-10284-spoofing",
+    "article_date": "2026-05-23",
+    "trade_description": "A Nomura managing director spent five hours manufacturing order book pressure with more than ¥400 billion in phantom JGB futures orders. Regulators caught it three years later. Hedge funds spent the better part of two years trying and failing to hire him. Then BlueCrest did — and the regulatory filings explain exactly why.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": "that BlueCrest Capital Management; JGB",
+    "edge_or_thesis": "a portfolio manager, most readers filed it as an eyebrow-raising personnel note.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "A Nomura Trader Made $10,284 Spoofing ¥400 Billion in JGB Orders. BlueCrest Hired Him for the Alpha Inside.",
+    "article_url": "https://navnoorbawa.substack.com/p/a-nomura-trader-made-10284-spoofing",
+    "article_date": "2026-05-23",
+    "trade_description": "This is not an isolated failure. Reuters confirmed at the time of the SESC recommendation that “there have been four previous instances of alleged market manipulation by securities firms trading in Japanese government bond futures, with the FSA imposing fines on Citigroup in 2019 and Mitsubishi UFJ Morgan Stanley Securities in 2018.” The SESC’s 2019 enforcement filing against Citigroup Global Markets Limited reveals near-identical mechanics: layered orders in 10-year JGB December 2018 futures on the Osaka Exchange, across two overnight sessions, with executions of 311 units bought and 277 units sold against more than 11,900 units of phantom orders (7,603 on the buy side, 4,341 on the sell side).",
+    "instruments": [
+      "bond",
+      "futures"
+    ],
+    "direction": "long",
+    "underlying": "Japan Exchange Group; JGB",
+    "edge_or_thesis": "entirely retrospective.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "A Nomura Trader Made $10,284 Spoofing ¥400 Billion in JGB Orders. BlueCrest Hired Him for the Alpha Inside.",
+    "article_url": "https://navnoorbawa.substack.com/p/a-nomura-trader-made-10284-spoofing",
+    "article_date": "2026-05-23",
+    "trade_description": "As of July 2025, ten months before the BlueCrest hire was confirmed, Sawada had been writing his defense in coffee shops between trading equities for his own account. Hedge funds had come close to hiring him, but offers had fallen through or been withdrawn. The same article notes that other JGB futures market participants had limited sympathy, and that Sawada himself acknowledged: “Looking at the numbers alone, one would naturally conclude, ‘Yeah, this guy was clearly doing it.’”",
+    "instruments": [
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": "JGB",
+    "edge_or_thesis": "a Managing Director on Nomura’s JGB trading desk, but they still can’t find a job, then you know there’s a story there.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "A Nomura Trader Made $10,284 Spoofing ¥400 Billion in JGB Orders. BlueCrest Hired Him for the Alpha Inside.",
+    "article_url": "https://navnoorbawa.substack.com/p/a-nomura-trader-made-10284-spoofing",
+    "article_date": "2026-05-23",
+    "trade_description": "That July 2025 employment context is the quantified basis of the talent arbitrage. Sawada carried knowledge of the JGB futures order book — its microstructure, flow patterns, surveillance blind spots, and auction cycle behaviors — ordinarily worth a significant premium in a market where, per the same article, JGB traders were being pursued by competing employers willing to make hotel-room pitches at exorbitant pay. His regulatory history deflated his clearing price to zero in the conventional market. BlueCrest cleared it.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": "JGB",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "A Nomura Trader Made $10,284 Spoofing ¥400 Billion in JGB Orders. BlueCrest Hired Him for the Alpha Inside.",
+    "article_url": "https://navnoorbawa.substack.com/p/a-nomura-trader-made-10284-spoofing",
+    "article_date": "2026-05-23",
+    "trade_description": "The trading structure that mandate enabled is documented in Platt’s own interview with Jack Schwager, quoted in Hedge Fund Market Wizards and reproduced in practitioner summaries: portfolio managers receive a capital allocation, keep a substantial share of PnL, and face a strict asymmetric stop: “If a trader loses 3 percent, he has to give me back half of his trading line. If he loses another 3 percent of the remaining half, that’s it. His book is auctioned.” The ideal hire, Platt explains, is someone who gets up “at seven o’clock on Sunday morning when his kids are still in bed, and logs onto a poker site so that he can pick off the U.S. drunks coming home on Saturday night” — a pure edge-seeker, permanently without institutional constraint.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": "quoted in",
+    "edge_or_thesis": "hired a decade later.",
+    "any_quant_detail": "50%, 54%, 95%, 153%, 20%",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "A Nomura Trader Made $10,284 Spoofing ¥400 Billion in JGB Orders. BlueCrest Hired Him for the Alpha Inside.",
+    "article_url": "https://navnoorbawa.substack.com/p/a-nomura-trader-made-10284-spoofing",
+    "article_date": "2026-05-23",
+    "trade_description": "The inverse of that detection framework is the alpha framework. A practitioner who spent years building and canceling thousands of JGB futures orders — including the dual-direction layering pattern that generated 2,466 sell orders and 1,619 buy orders against only 462 actual fills in each direction — has experiential knowledge of exactly when displayed order book depth is manufactured rather than genuine. That knowledge cannot be recovered from historical data or academic literature. It exists as pattern recognition built through thousands of sessions of execution in the specific microstructure of the Osaka Exchange JGB futures contract.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": "JGB",
+    "edge_or_thesis": "well as cyclical patterns in market depth and cancellations.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "The Cramér-Rao Bound Killed LTCM. It’s Why the SEC Just Fined Two Sigma $90M.",
+    "article_url": "https://navnoorbawa.substack.com/p/the-cramer-rao-bound-killed-ltcm",
+    "article_date": "2026-05-16",
+    "trade_description": "The empirical numbers from the paper, derived from a 1965 to 2020 sample of US equity returns covering both individual stocks and a panel of 1,273 characteristics-sorted portfolios plus 49 industry portfolios, are stark. The authors find that “only 7.58% and 1.12% of individual stocks’ alpha estimates have t-statistics greater than 2.0 and 3.0, respectively, in absolute values”, that the cross-sectional R-squared of regressing alphas on observable characteristics averages “around 8%” for individual stocks, that a latent factor model captures roughly 35% of cross-sectional variation at the portfolio level, and crucially that “the optimal feasible arbitrage portfolios yield moderately low annualized Sharpe ratios below 0.7. In contrast, the infeasible Sharpe ratios are considerably higher, a",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "high as 16 in some sample periods for individual stocks, and ranging from 5 to 20 for portfolios”.",
+    "any_quant_detail": "7.58%, 1.12%, 8%, 35%, 3%",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "The Cramér-Rao Bound Killed LTCM. It’s Why the SEC Just Fined Two Sigma $90M.",
+    "article_url": "https://navnoorbawa.substack.com/p/the-cramer-rao-bound-killed-ltcm",
+    "article_date": "2026-05-16",
+    "trade_description": "The second clean case is in stochastic volatility calibration. Oliver Pfante and Nils Bertschinger of the Frankfurt Institute for Advanced Studies derived Fisher Information matrices for European option prices in the Heston model, fitting the likelihood on the constituents of the VIX (S&P 500 puts and calls with 23 to 37 days to expiration). The Frontiers paper documents that because the diagonal of the FIM is built from squared Vega, and because Vega collapses for at-the-money options when realized variance drops below roughly √v = 3%, the Cramér-Rao lower bound on the volatility estimate diverges in low-vol regimes. The arXiv version of the paper states the operational implication directly: “if volatility drops below a critical value, inferences from option prices become impossible becau",
+    "instruments": [
+      "option",
+      "volatility"
+    ],
+    "direction": "unspecified",
+    "underlying": "VIX; S&P 500",
+    "edge_or_thesis": "Vega, the derivative of a European option w.",
+    "any_quant_detail": "3%",
+    "outcome_if_mentioned": null
+  },
+  {
+    "article_title": "The Cramér-Rao Bound Killed LTCM. It’s Why the SEC Just Fined Two Sigma $90M.",
+    "article_url": "https://navnoorbawa.substack.com/p/the-cramer-rao-bound-killed-ltcm",
+    "article_date": "2026-05-16",
+    "trade_description": "The August 2007 quant meltdown is the canonical case where multiple funds had effectively the same posterior over the same parameter set, and discovered it in three days. Amir Khandani and Andrew Lo’s NBER Working Paper 14465 documents that “during the week of August 6, 2007, a number of quantitative long/short equity hedge funds experienced unprecedented losses” and hypothesises that this was the result of “a coordinated deleveraging of similarly constructed portfolios” causing “a temporary dislocation in the market”. Using simulated returns of long/short equity portfolios based on five valuation factors, the authors find evidence that “the unwinding of these portfolios began in July 2007 and continued until the end of 2007”.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "the result of “a coordinated deleveraging of similarly constructed portfolios” causing “a temporary dislocation in the market”.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null
+  },
+  {
     "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
     "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
     "article_date": "2026-05-08",
