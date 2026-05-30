@@ -47,6 +47,19 @@ META_PATTERNS = [
     r'^(?:All )?(?:sources?|references?|citations?|data):',
     r'https?://\S+.*https?://\S+.*https?://\S+',  # paragraph is mostly URLs
     r'(?:Bloomberg|Reuters|FT|WSJ|CNBC|SEC|CFTC) —.*(?:Bloomberg|Reuters|FT|WSJ|CNBC|SEC|CFTC) —',
+    # News-source attribution lines — headline not a trade description
+    r'^(?:Bloomberg|Reuters|FT|WSJ|CNBC|Hedgeweek|BNN|BIS|Financial Times|CityAM|Barron\'s|MarketWatch)\s*[—–-]\s',
+    # Section header bullets inside longer breakdowns
+    r'^(?:→|►|•|·)\s*(?:Instrument|Strategy|Trade Setup|Trade Anatomy|Definition|Execution|Note|Hedge|Step)\s*[—–:\s]',
+    # "Trade 3 —", "Trade Anatomy —" style headers
+    r'^Trade (?:\d+|Anatomy|Setup|Structure|Profile|Case)\s*[—–-]',
+    # "The six strategies above document..." meta-commentary sentences
+    r'^(?:The )?(?:six|five|four|three|two|seven|eight|nine|ten|eleven|twelve) (?:strategies|trades|methods|approaches|techniques|ways)\b',
+    # Educational examples clearly flagged as such
+    r'^Example:\s',
+    r'^(?:This|The) (?:following|above|below) (?:example|illustration|diagram|table|chart)',
+    # News headline with trailing source attribution (not a trade description)
+    r'[—–-]\s*(?:Bloomberg|Reuters|FT|WSJ|CNBC|Hedgeweek|BNN Bloomberg|BIS|Financial Times|MarketWatch|CityAM)\s*$',
 ]
 
 # Patterns that indicate a REAL trade (need at least one)

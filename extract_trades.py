@@ -15,8 +15,8 @@ OUTPUT_PATH = ROOT / 'trades_extracted.json'
 
 # ─── Pattern libraries ────────────────────────────────────────────────────────
 
-DIRECTION_LONG = r'\b(went long|goes long|entered long|long position|net long|build\w* (?:a )?long|built (?:a )?long|bullish|upside bet|leveraged long|bought|purchase[d]?|acqui(?:red|res))\b'
-DIRECTION_SHORT = r'\b(shorted|shorting|went short|goes short|entered short|sold short|short position|net short|short seller[s]?|bet against|CDS buy|bearish)\b'
+DIRECTION_LONG = r'\b(went long|goes long|entered long|long position|net long|build\w* (?:a )?long|built (?:a )?long|bullish|upside bet|leveraged long|bought|purchase[d]?|acqui(?:red|res)|long exposure|long (?:the|bias)|long call[s]?|accumulated|added (?:to )?(?:the )?(?:long|position|stake|holdings?|exposure)|increased (?:the )?(?:long|position|stake|holdings?|exposure)|deployed (?:capital )?(?:into|to|in)|allocated (?:capital )?to)\b'
+DIRECTION_SHORT = r'\b(shorted|shorting|went short|goes short|entered short|sold short|short position|net short|short seller[s]?|bet against|CDS buy|bearish|short exposure|leveraged short|short bias|short(?:ed)? (?:the|bonds?|equities|stocks?|currencies?|dollar|sterling|yen|euro|pound)|took (?:a )?short|built (?:a )?short|bought put[s]?|put buyer[s]?)\b'
 DIRECTION_ARB = r'\b(arbitrage[d]?|arb(?:ed)?|relative value|pairs trade|basis trade|convergence trade|spread trade|market neutral|merger arb|risk arb|event[\s\-]driven)\b'
 
 INSTRUMENTS = {
@@ -43,6 +43,8 @@ INSTRUMENTS = {
 
 QUANT_PATTERNS = [
     r'\$[\d,]+(?:\.\d+)?\s*(?:billion|million|trillion|bn|mn|trn|B|M|T)\b',
+    r'[₹£€¥]\s*[\d,]+(?:\.\d+)?\s*(?:billion|million|trillion|crore|lakh|bn|mn|B|M)\b',
+    r'[\d,]+(?:\.\d+)?\s*(?:crore|lakh)\b',
     r'[\d,]+(?:\.\d+)?\s*(?:billion|million|trillion|bn|mn|trn)\s+(?:dollars?|euros?|pounds?|yen)',
     r'[\d.]+%',
     r'[\d,]+\s*basis points?',
@@ -89,10 +91,47 @@ FUND_NAMES_RE = re.compile(
     re.IGNORECASE
 )
 
+# Normalize long-form / firm names to canonical short names
+_FUND_CANONICAL = {
+    'bill ackman': 'Ackman',
+    'george soros': 'Soros',
+    'john paulson': 'Paulson',
+    'stanley druckenmiller': 'Druckenmiller',
+    'david einhorn': 'Einhorn / Greenlight',
+    'david tepper': 'Tepper / Appaloosa',
+    'ken griffin': 'Griffin / Citadel',
+    'steve cohen': 'Cohen / Point72',
+    'ray dalio': 'Dalio / Bridgewater',
+    'jim simons': 'Simons / Renaissance',
+    'seth klarman': 'Klarman / Baupost',
+    'paul tudor jones': 'Tudor Jones',
+    'julian robertson': 'Robertson / Tiger',
+    'lee ainslie': 'Ainslie / Maverick',
+    'louis bacon': 'Bacon / Moore',
+    'alan howard': 'Howard / Brevan',
+    'dan loeb': 'Loeb / Third Point',
+    'howard marks': 'Marks / Oaktree',
+    'elliott management': 'Elliott',
+    'elliott associates': 'Elliott',
+    'renaissance technologies': 'Renaissance',
+    'long-term capital management': 'LTCM',
+    'greenlight capital': 'Einhorn / Greenlight',
+    'appaloosa management': 'Tepper / Appaloosa',
+    'baupost group': 'Klarman / Baupost',
+    'oaktree capital': 'Marks / Oaktree',
+    'tiger global': 'Tiger',
+    'tiger management': 'Tiger',
+    'maverick capital': 'Ainslie / Maverick',
+    'pershing square': 'Ackman / Pershing',
+}
+
 def extract_fund_name(text):
-    """Return first hedge fund or manager name found in text, or None."""
+    """Return first hedge fund or manager name found in text, canonicalized."""
     m = FUND_NAMES_RE.search(text)
-    return m.group(1) if m else None
+    if not m:
+        return None
+    name = m.group(1)
+    return _FUND_CANONICAL.get(name.lower(), name)
 
 # Sentence-level trade trigger keywords
 TRADE_TRIGGERS = [
@@ -120,10 +159,14 @@ def classify_direction(text):
     # Strip common false-positive phrases before matching
     cleaned = re.sub(r'\bshort[\s\-](?:term|dated|run|fall|sighted|hand|list|cut|age|change|selling)\b', '', text, flags=re.IGNORECASE)
     cleaned = re.sub(r'\blong[\s\-](?:term|run|dated|standing|time|only|awaited|haul|lasting|suffering)\b', '', cleaned, flags=re.IGNORECASE)
+    # "long put(s)" = owning puts = bearish; neutralize to avoid false long signal
+    has_long_put = bool(re.search(r'\blong\s+put[s]?\b', cleaned, re.IGNORECASE))
+    if has_long_put:
+        cleaned = re.sub(r'\blong\s+put[s]?\b', 'OWNED_PUT', cleaned, flags=re.IGNORECASE)
     if re.search(DIRECTION_ARB, cleaned, re.IGNORECASE):
         return 'arbitrage/relative value'
     long_match  = re.search(DIRECTION_LONG,  cleaned, re.IGNORECASE)
-    short_match = re.search(DIRECTION_SHORT, cleaned, re.IGNORECASE)
+    short_match = re.search(DIRECTION_SHORT, cleaned, re.IGNORECASE) or has_long_put
     if long_match and short_match:
         return 'long/short'
     if long_match:
@@ -185,6 +228,9 @@ def extract_underlying(text):
     patterns = [
         r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3}(?:\s+(?:Inc|Corp|Ltd|plc|Group|Holdings|Capital|Management|Fund|AG|SA|SE|NV|Co))\.?)\b',
         r'\b(S&P\s*500|Nasdaq|FTSE|DAX|Nikkei|Hang Seng|Russell\s*\d+|MSCI|CDX|iTraxx|VIX)\b',
+        r'\b(Bank Nifty|Nifty\s*50|BSE Sensex|Hang Seng|Nikkei 225|ASX 200|CAC 40|Euro Stoxx|STOXX 50|STOXX 600)\b',
+        r'\b(TLT|SPY|QQQ|IWM|HYG|LQD|GLD|SLV|USO|XLE|XLF|XLK|EEM|GDX|VXX|UVXY)\b',
+        r'\b(TTF|EUA|CCA|JGB|OAT|BTP)\b',
         r'\b(US\s*(?:Treasury|10-year|2-year|30-year)|UK\s*Gilt|German\s*Bund|JGB|Italian\s*BTP|Greek\s*bond)\b',
         r'\b(WTI|Brent|crude oil|natural gas|gold|silver|copper|wheat|corn|soybeans)\b',
         r'\b(USD|EUR|GBP|JPY|CHF|AUD|CAD|CNY|EM currencies?)\b',
@@ -286,7 +332,7 @@ def process_article(post):
                 'edge_or_thesis': extract_thesis(context),
                 'any_quant_detail': extract_quant_details(context),
                 'outcome_if_mentioned': extract_outcome(context),
-                'fund_name_if_mentioned': extract_fund_name(context),
+                'fund_name_if_mentioned': extract_fund_name(context) or extract_fund_name(title),
             }
             trades.append(trade)
 
@@ -306,7 +352,7 @@ def process_article(post):
                     'edge_or_thesis': extract_thesis(block),
                     'any_quant_detail': extract_quant_details(block),
                     'outcome_if_mentioned': extract_outcome(block),
-                    'fund_name_if_mentioned': extract_fund_name(block),
+                    'fund_name_if_mentioned': extract_fund_name(block) or extract_fund_name(title),
                 }
                 trades.append(trade)
 

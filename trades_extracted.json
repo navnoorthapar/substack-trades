@@ -55,9 +55,9 @@
       "futures"
     ],
     "direction": "long/short",
-    "underlying": null,
+    "underlying": "Bank Nifty",
     "edge_or_thesis": null,
-    "any_quant_detail": null,
+    "any_quant_detail": "₹4,370 crore, ₹32,115 crore, ₹5,372 crore, ₹46,620 crore, ₹735 crore, 4,370 crore, 32,115 crore, 5,372 crore, 46,620 crore, 735 crore",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -71,9 +71,9 @@
       "futures"
     ],
     "direction": "short",
-    "underlying": null,
+    "underlying": "Bank Nifty",
     "edge_or_thesis": null,
-    "any_quant_detail": null,
+    "any_quant_detail": "₹735 crore, ₹61.6 crore, ₹673.4 crore, ₹2,800 crore, ₹44,154 crore, 735 crore, 61.6 crore, 673.4 crore, 2,800 crore, 44,154 crore",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -133,7 +133,7 @@
     "direction": "unspecified",
     "underlying": "that BlueCrest Capital Management; JGB",
     "edge_or_thesis": "a portfolio manager, most readers filed it as an eyebrow-raising personnel note.",
-    "any_quant_detail": null,
+    "any_quant_detail": "¥400 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "BlueCrest"
   },
@@ -151,7 +151,7 @@
     "edge_or_thesis": "entirely retrospective.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "BlueCrest"
   },
   {
     "article_title": "A Nomura Trader Made $10,284 Spoofing ¥400 Billion in JGB Orders. BlueCrest Hired Him for the Alpha Inside.",
@@ -197,7 +197,7 @@
     "edge_or_thesis": "hired a decade later.",
     "any_quant_detail": "50%, 54%, 95%, 153%, 20%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "BlueCrest"
   },
   {
     "article_title": "A Nomura Trader Made $10,284 Spoofing ¥400 Billion in JGB Orders. BlueCrest Hired Him for the Alpha Inside.",
@@ -212,7 +212,7 @@
     "edge_or_thesis": "well as cyclical patterns in market depth and cancellations.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "BlueCrest"
   },
   {
     "article_title": "The Cramér-Rao Bound Killed LTCM. It’s Why the SEC Just Fined Two Sigma $90M.",
@@ -227,7 +227,7 @@
     "edge_or_thesis": "high as 16 in some sample periods for individual stocks, and ranging from 5 to 20 for portfolios”.",
     "any_quant_detail": "7.58%, 1.12%, 8%, 35%, 3%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "LTCM"
   },
   {
     "article_title": "The Cramér-Rao Bound Killed LTCM. It’s Why the SEC Just Fined Two Sigma $90M.",
@@ -243,7 +243,7 @@
     "edge_or_thesis": "Vega, the derivative of a European option w.",
     "any_quant_detail": "3%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "LTCM"
   },
   {
     "article_title": "The Cramér-Rao Bound Killed LTCM. It’s Why the SEC Just Fined Two Sigma $90M.",
@@ -258,7 +258,7 @@
     "edge_or_thesis": "the result of “a coordinated deleveraging of similarly constructed portfolios” causing “a temporary dislocation in the market”.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "LTCM"
   },
   {
     "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
@@ -314,9 +314,9 @@
       "option"
     ],
     "direction": "unspecified",
-    "underlying": "docket remains Jane Street Group; Millennium Management",
+    "underlying": "docket remains Jane Street Group; Millennium Management; Nifty 50",
     "edge_or_thesis": "confirmed by Reuters.",
-    "any_quant_detail": "$566 million, $1 billion",
+    "any_quant_detail": "$566 million, $1 billion, ₹4,843 crore, 4,843 crore",
     "outcome_if_mentioned": "generated $1 billion in profits in one year for a firm that makes markets across thousands of instruments globally.",
     "fund_name_if_mentioned": "Millennium"
   },
@@ -362,7 +362,7 @@
     "direction": "arbitrage/relative value",
     "underlying": null,
     "edge_or_thesis": null,
-    "any_quant_detail": "35%",
+    "any_quant_detail": "£1.1 billion, 35%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Citadel"
   },
@@ -380,21 +380,6 @@
     "any_quant_detail": "$4.3 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
-    "article_url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
-    "article_date": "2026-05-08",
-    "trade_description": "Jane Street and Millennium Settle India Options Trade Secrets Case — BNN Bloomberg",
-    "instruments": [
-      "option"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$567 Million",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "Axie Infinity, CS2 Skins, and Roblox: How Hedge Funds Built Gaming Currency Alpha — and the Three Mispriced Opportunities They Are Still Missing",
@@ -437,7 +422,7 @@
     "direction": "unspecified",
     "underlying": "before any capital; had engaged SoftBank senior management",
     "edge_or_thesis": "“working constructively on solutions to help SoftBank materially and sustainably reduce its discount to intrinsic value.",
-    "any_quant_detail": "$150bn, $2 billion, $15 billion, 8.2%, 19%",
+    "any_quant_detail": "$150bn, $2 billion, $15 billion, ¥4.5 trillion, 8.2%, 19%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -454,7 +439,7 @@
     "edge_or_thesis": "led by Nabeel Bhanji — the same partner who led the 2020 campaign.",
     "any_quant_detail": "$2 billion, $15 billion, $1 billion, 5%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Tiger Global"
+    "fund_name_if_mentioned": "Tiger"
   },
   {
     "article_title": "How Hedge Funds Made Billions From SoftBank: Five Structural Trades From the NAV Discount to the Nasdaq Whale",
@@ -511,10 +496,10 @@
       "equity",
       "volatility"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "focused Any fund",
     "edge_or_thesis": "“a classic ‘tail wags the dog’ feedback loop.",
-    "any_quant_detail": "$3.7 billion, $5.6 billion, $1.3 billion",
+    "any_quant_detail": "$3.7 billion, $5.6 billion, $1.3 billion, ¥150 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -529,7 +514,7 @@
     "direction": "unspecified",
     "underlying": "Any fund; SB Management",
     "edge_or_thesis": "a mechanical fingerprint of concentrated directional buying.",
-    "any_quant_detail": "$3.7 billion, $5.6 billion, $1.3 billion, $17 billion, $1 billion",
+    "any_quant_detail": "$3.7 billion, $5.6 billion, $1.3 billion, $17 billion, $1 billion, ¥150 billion",
     "outcome_if_mentioned": "lost $1.3 billion (¥150 billion), which he disclosed directly on a quarterly earnings call.",
     "fund_name_if_mentioned": null
   },
@@ -616,7 +601,7 @@
     "instruments": [
       "FX"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "operations of the Quantum Fund; macro fund; S&P 500",
     "edge_or_thesis": "not been traced to a contemporaneous primary document.",
     "any_quant_detail": "$3 billion, 60%, 11.4%, 11%",
@@ -748,13 +733,14 @@
     "article_title": "Non-Deliverable Forwards (NDFs) and Emerging Market Currency Alpha: How Hedge Funds Profit, How Banks Manipulated the Fix, and Why Three Sovereign Markets Banned the Trade",
     "article_url": "https://navnoorbawa.substack.com/p/non-deliverable-forwards-ndfs-and",
     "article_date": "2026-04-07",
-    "trade_description": "The six strategies above document how hedge funds generate alpha by trading NDF contracts. This section addresses a structurally separate but directly related question: what happened to the fixing rates those contracts settled against. The answer, documented in court-admissible regulatory orders, is that major bank counterparties manipulated those rates — with measurable consequences for any fund relying on settlement integrity.",
+    "trade_description": "Peer-reviewed confirmation appears in the Journal of Futures Markets (Behera, Ranjan & Chinoy, 2022): “There are unidirectional mean spillovers from NDF markets to onshore spot, forward, and futures markets during the post-taper tantrum period.” A fund short the INR NDF during May–August 2013 was positioned in the price-discovery market — not following, but leading.",
     "instruments": [
+      "futures",
       "FX"
     ],
-    "direction": "unspecified",
-    "underlying": "measurable consequences for any fund",
-    "edge_or_thesis": null,
+    "direction": "short",
+    "underlying": null,
+    "edge_or_thesis": "positioned in the price-discovery market — not following, but leading.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
@@ -847,7 +833,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "27.5%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "George Soros"
+    "fund_name_if_mentioned": "Soros"
   },
   {
     "article_title": "Non-Deliverable Forwards (NDFs) and Emerging Market Currency Alpha: How Hedge Funds Profit, How Banks Manipulated the Fix, and Why Three Sovereign Markets Banned the Trade",
@@ -969,21 +955,6 @@
     "any_quant_detail": "$466.9M, $193.8M, 8.99%, 0.41%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Citadel"
-  },
-  {
-    "article_title": "How Hedge Funds Turned Defense Stocks Into Their Best Trade of 2022: Pre-Invasion CEO Signals, SEC 13F Forensics, Three Documented Thesis Structures, and the European Asymmetry That Returned 1,700%",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-turned-defense-stocks",
-    "article_date": "2026-04-03",
-    "trade_description": "Bloomberg — Goldman Prime Brokerage: Hedge Funds Add Defensive Stocks at Fastest Pace in 8 Months",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": "Nasdaq",
-    "edge_or_thesis": null,
-    "any_quant_detail": "1399%, 866%, 800%, 509%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
   },
   {
     "article_title": "Iran War Hedge Fund Alpha Map: Every Winner, Every Loser, and the Complete Insider Trading Evidence — Pre-War CFTC Crude Positioning, the Three-Driver Bond Selloff, Six Winning Structures",
@@ -1198,8 +1169,8 @@
       "commodity",
       "volatility"
     ],
-    "direction": "unspecified",
-    "underlying": "The fund; Gold; gold",
+    "direction": "long/short",
+    "underlying": "The fund; GLD; Gold; gold",
     "edge_or_thesis": "Structural Defence Jain Global posted approximately +0.",
     "any_quant_detail": "$5.15 billion, 0.1%, 3.5%, 24%, 1%",
     "outcome_if_mentioned": null,
@@ -1294,7 +1265,7 @@
     "direction": "long",
     "underlying": null,
     "edge_or_thesis": null,
-    "any_quant_detail": "10%",
+    "any_quant_detail": "₹8,010 crore, ₹5,867 crore, ₹29,000 crore, 8,010 crore, 5,867 crore, 29,000 crore, 10%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -1356,7 +1327,7 @@
     "direction": "long",
     "underlying": "Brent",
     "edge_or_thesis": "partially eased since March 20.",
-    "any_quant_detail": "50%, 45%, 150bps",
+    "any_quant_detail": "₹1,05,029 crore, 1,05,029 crore, 50%, 45%, 150bps",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -1692,7 +1663,7 @@
     "instruments": [
       "CDS"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": null,
     "edge_or_thesis": "reviewed in 2007 as a result of the speculation on dirham revaluation during the years 2007–2008.",
     "any_quant_detail": "10%, 12%",
@@ -1765,6 +1736,21 @@
     "article_title": "The Desert Playbook: How Hedge Funds Extracted Alpha from Dubai — AED Peg Speculation, Dubai World CDS, Nakheel Distressed Sukuk, Emaar Equity Proxy, and DIFC Tax Arbitrage (2007–2026)",
     "article_url": "https://navnoorbawa.substack.com/p/the-desert-playbook-how-hedge-funds",
     "article_date": "2026-03-19",
+    "trade_description": "AGBI’s November 2023 sector analysis confirmed that Emaar Properties and its subsidiary Emaar Development were described by Arqaam Capital’s analyst Mohamad Haidar as “the only real choices for risk-averse equity traders seeking exposure to Dubai real estate” — competitors including Union Properties and Deyaar carried multi-billion dirham accumulated losses, while DAMAC had delisted from public markets in March 2022. Emaar’s dominance is structural: the firm maintained approximately 30% market share of Dubai residential sales while growing revenue 25% year-on-year as of mid-2023, and its nine-month 2023 net profit reached AED 8.24 billion, up 42% year-on-year, with margins expanding as price increases outpaced roughly 7% construction cost inflation — per Arqaam Capital estimates cited by A",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": "were described by Arqaam Capital; per Arqaam Capital",
+    "edge_or_thesis": "of mid-2023, and its nine-month 2023 net profit reached AED 8.",
+    "any_quant_detail": "30%, 25%, 42%, 7%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "The Desert Playbook: How Hedge Funds Extracted Alpha from Dubai — AED Peg Speculation, Dubai World CDS, Nakheel Distressed Sukuk, Emaar Equity Proxy, and DIFC Tax Arbitrage (2007–2026)",
+    "article_url": "https://navnoorbawa.substack.com/p/the-desert-playbook-how-hedge-funds",
+    "article_date": "2026-03-19",
     "trade_description": "The return profile from the COVID entry point was exceptional. Traders interviewed by eFinancialCareers in March 2026 explicitly described the Emaar trade: “From Covid Low of March 2020, it returned 4x in 3.5 years, more than the best real estate deal one could get. And was liquid all the way.” The NAV gap made the entry compelling: Arqaam Capital estimated Emaar’s NAV at $37.6 billion against a market capitalisation of approximately $16.8 billion as of mid-2023 — a 55% discount to intrinsic value, even after the post-COVID rally. Emaar’s Wikipedia financial history documents that the stock had traded at deep discounts to its 2005 all-time highs for years — meaning the 2020 entry came after a decade of institutional underperformance had washed out weak holders.",
     "instruments": [
       "equity"
@@ -1819,7 +1805,7 @@
     "direction": "arbitrage/relative value",
     "underlying": "trillion in offshore Hayman Capital; Japan macro fund",
     "edge_or_thesis": null,
-    "any_quant_detail": "$1.85 trillion, $1.32 billion, $1 billion, 250%",
+    "any_quant_detail": "$1.85 trillion, $1.32 billion, $1 billion, £25 billion, 250%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "LTCM"
   },
@@ -1908,21 +1894,6 @@
     "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
     "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
     "article_date": "2026-03-16",
-    "trade_description": "Trade Anatomy — Treasury Basis (Citadel / Millennium / ExodusPoint Pod Structure)",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$100B, 60%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Citadel"
-  },
-  {
-    "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
-    "article_date": "2026-03-16",
     "trade_description": "The systemic dimension is fully documented. The Journal of Monetary Economics 2025 paper by Barth and Kahn documents that in March 2020, as COVID triggered repo margin spikes, basis traders sold approximately $100 billion in Treasuries — prompting the Federal Reserve to accelerate its scheduled Treasury purchases beginning March 13, 2020, and then announce emergency QE of at least $500 billion in Treasuries on March 15, 2020 (the Sunday FOMC emergency statement). The NY Fed’s March 12 operating statement shows the March 13 purchases were framed as reserve management; the full emergency programme was declared on March 15. The Federal Reserve FEDS 2021-038 paper by Kruttli, Monin, Petrasek and Watugala confirms: hedge fund gross U.S. Treasury exposures doubled from 2018 to February 2020 to $",
     "instruments": [
       "bond",
@@ -1955,21 +1926,6 @@
     "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
     "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
     "article_date": "2026-03-16",
-    "trade_description": "→ Note disclosed hedge removal: management removed interest rate swaps in 2022, explicitly disclosed in the annual report to boost net interest income",
-    "instruments": [
-      "swap"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$15.9B, $11.5B",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
-    "article_date": "2026-03-16",
     "trade_description": "In August 2023, Bill Ackman disclosed via X that Pershing Square was “short in size” on 30-year US Treasuries — implemented through options rather than outright bond shorts. But the fuller story is in the Pershing Square 1H 2023 investor letter, publicly available on Seeking Alpha. The letter states explicitly: “We continue to hedge the risk of a rise in 30-year Treasury rates because we remain concerned about the risk of higher long-term interest rates on equity valuations... We believe that long-term interest rates can continue to rise substantially from current levels... If inflation declines and stabilises at 3%, above the Fed’s target of 2%, 30-year Treasury yields could reach or exceed 5.5%.”",
     "instruments": [
       "bond",
@@ -1981,7 +1937,7 @@
     "edge_or_thesis": "“short in size” on 30-year US Treasuries — implemented through options rather than outright bond shorts.",
     "any_quant_detail": "3%, 2%, 5.5%, at 3",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Pershing Square"
+    "fund_name_if_mentioned": "Ackman / Pershing"
   },
   {
     "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
@@ -1998,22 +1954,6 @@
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Ackman"
-  },
-  {
-    "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
-    "article_date": "2026-03-16",
-    "trade_description": "→ Instrument: Long put options on 30-year Treasuries / TLT — defined downside (premium paid), convex upside if yields rise (confirmed in CNBC interview, August 3, 2023)",
-    "instruments": [
-      "bond",
-      "option"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Pershing Square"
   },
   {
     "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
@@ -2042,7 +1982,7 @@
     "direction": "short",
     "underlying": null,
     "edge_or_thesis": "structural inflation plays.",
-    "any_quant_detail": "30%",
+    "any_quant_detail": "£25 billion, £65 billion, 30%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2057,7 +1997,7 @@
     "direction": "long",
     "underlying": "Pension fund; Hayman Capital; Japan Macro Fund; UK gilt",
     "edge_or_thesis": null,
-    "any_quant_detail": "90%",
+    "any_quant_detail": "£500 billion, 90%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2072,8 +2012,23 @@
     "direction": "long",
     "underlying": "Hayman Capital; Japan Macro Fund; Japan Macro Opportunities Fund",
     "edge_or_thesis": "broken at the national level.",
-    "any_quant_detail": null,
+    "any_quant_detail": "¥44.3 trillion, ¥60 trillion",
     "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
+    "article_date": "2026-03-16",
+    "trade_description": "Execution, per Bass’s own Hoover Institution interview: two-thirds of fund capital was deployed in JGB put options (bounded loss, limited to premium paid), and one-third in short yen / long dollar positions via FX forwards and options. When Abenomics launched and the yen depreciated from ¥85 to ¥120, the currency leg generated the returns — “many multiples” of the one-third allocated. The JGB option leg expired worthless or near-worthless. The fund returned 250% overall. The Kyle Bass Wikipedia entry corroborates: this fund returned capital to investors after the Japanese yen depreciated 40% from 2012 to 2015. The Harvard Business School case study on Hayman Capital (Greenwood, Messina & Dourdeville, 2012) documents the full investment thesis and its origins.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "long/short",
+    "underlying": "thirds of fund capital; The fund; this fund returned capital; JGB",
+    "edge_or_thesis": "ever been in its history, and through the convention of Black-Scholes, the optionality on that bond is the cheapest it has ever been.",
+    "any_quant_detail": "250%, 40%",
+    "outcome_if_mentioned": "returned 250% overall.",
     "fund_name_if_mentioned": null
   },
   {
@@ -2178,7 +2133,7 @@
       "equity"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": "and every index fund; from the researchers and fund",
+    "underlying": "and every index fund; from the researchers and fund; SPY; QQQ",
     "edge_or_thesis": "made it the most predictable large-lot actor in global equity markets.",
     "any_quant_detail": "$1.625 billion",
     "outcome_if_mentioned": null,
@@ -2192,7 +2147,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "Every Vanguard fund; S&P 500",
     "edge_or_thesis": "passive funds are forced to sell.",
     "any_quant_detail": null,
@@ -2344,7 +2299,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "Scion Asset Management; S&P 500; Nasdaq",
+    "underlying": "Scion Asset Management; S&P 500; Nasdaq; SPY; QQQ",
     "edge_or_thesis": "was published, he filed his trade.",
     "any_quant_detail": "$886 million, $739 million",
     "outcome_if_mentioned": null,
@@ -2360,7 +2315,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "S&P 500; Nasdaq",
+    "underlying": "S&P 500; Nasdaq; SPY; QQQ",
     "edge_or_thesis": null,
     "any_quant_detail": "$886 million, $739 million, $1.625 billion",
     "outcome_if_mentioned": null,
@@ -2412,22 +2367,6 @@
     "fund_name_if_mentioned": null
   },
   {
-    "article_title": "The Index Fund Toll Booth: How Hedge Funds Systematically Extract Billions from Passive Investors",
-    "article_url": "https://navnoorbawa.substack.com/p/the-index-fund-toll-booth-how-hedge",
-    "article_date": "2026-03-13",
-    "trade_description": "BIS — The Anatomy of Bond ETF Arbitrage: https://www.bis.org/publ/qtrpdf/r_qt2103d.htm",
-    "instruments": [
-      "bond",
-      "equity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
     "article_title": "How BlackRock’s ESG Retreat Triggered $100 Billion in Pension Exits and $1.5 Billion in Short Profits",
     "article_url": "https://navnoorbawa.substack.com/p/how-blackrocks-esg-retreat-triggered",
     "article_date": "2026-03-11",
@@ -2435,12 +2374,27 @@
     "instruments": [
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "compelled by pension fund; distinct categories of with fund",
     "edge_or_thesis": null,
     "any_quant_detail": "$9 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "How BlackRock’s ESG Retreat Triggered $100 Billion in Pension Exits and $1.5 Billion in Short Profits",
+    "article_url": "https://navnoorbawa.substack.com/p/how-blackrocks-esg-retreat-triggered",
+    "article_date": "2026-03-11",
+    "trade_description": "Renaud Saleur, founder of Geneva-based Anaconda Invest and a former trader at Soros Fund Management’s Quantum fund, told the FT in January 2022 that “the end game this year will be to short the Ark-type of stocks in solar and hydrogen.” His live positions, disclosed in that same interview, were:",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "short",
+    "underlying": "former trader at Soros Fund; Quantum fund",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Soros"
   },
   {
     "article_title": "How BlackRock’s ESG Retreat Triggered $100 Billion in Pension Exits and $1.5 Billion in Short Profits",
@@ -2470,7 +2424,7 @@
     "edge_or_thesis": "a mechanical forced-selling event, not a fundamental repricing.",
     "any_quant_detail": "$1.9 billion, $475 million",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Elliott Management"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "Elliott Management, Azoria, and the ESG Forced-Selling Short: How the ‘Anti-Woke Trade’ Actually Worked — Four Case Studies, Every Claim Sourced",
@@ -2485,7 +2439,7 @@
     "edge_or_thesis": "valued at approximately $1.",
     "any_quant_detail": "$1.9 billion, $475 million, 25%, 24.5%, 7.5%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "Elliott Management, Azoria, and the ESG Forced-Selling Short: How the ‘Anti-Woke Trade’ Actually Worked — Four Case Studies, Every Claim Sourced",
@@ -2501,7 +2455,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "18.9%, 19.8%, at 9",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "Elliott Management, Azoria, and the ESG Forced-Selling Short: How the ‘Anti-Woke Trade’ Actually Worked — Four Case Studies, Every Claim Sourced",
@@ -2516,7 +2470,7 @@
     "edge_or_thesis": "not an election-day anomaly.",
     "any_quant_detail": "at 2024",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "Elliott Management, Azoria, and the ESG Forced-Selling Short: How the ‘Anti-Woke Trade’ Actually Worked — Four Case Studies, Every Claim Sourced",
@@ -2531,7 +2485,7 @@
     "edge_or_thesis": "a meaningful contributing component across all of them.",
     "any_quant_detail": "$16 million, 19.7%, 35%, 25%, 75,000 shares",
     "outcome_if_mentioned": "returned 19.7% for the year.",
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "Elliott Management, Azoria, and the ESG Forced-Selling Short: How the ‘Anti-Woke Trade’ Actually Worked — Four Case Studies, Every Claim Sourced",
@@ -2546,7 +2500,7 @@
     "edge_or_thesis": "not invented in 2024.",
     "any_quant_detail": "$40 million, $12.5 million, 0.02%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "The 2022 UK Gilt Market Crisis: How Hedge Funds Pre-Positioned £65 Billion and Extracted Billions — Five Funds, Seven Strategies, Every Claim Sourced to the Bank of England and BIS",
@@ -2576,7 +2530,7 @@
     "direction": "unspecified",
     "underlying": "UK gilt",
     "edge_or_thesis": "gilts were sold, yields rose further.",
-    "any_quant_detail": "6.87%",
+    "any_quant_detail": "£300 billion, 6.87%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2592,7 +2546,7 @@
     "direction": "unspecified",
     "underlying": "UK gilt",
     "edge_or_thesis": "repo collateral on September 22.",
-    "any_quant_detail": "6.87%, 80%",
+    "any_quant_detail": "£36 billion, 6.87%, 80%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2607,7 +2561,7 @@
     "direction": "unspecified",
     "underlying": "reports that Odey Asset Management",
     "edge_or_thesis": "repo collateral on September 22.",
-    "any_quant_detail": "6.87%, 80%, 145%",
+    "any_quant_detail": "£36 billion, 6.87%, 80%, 145%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Odey"
   },
@@ -2622,7 +2576,7 @@
     "direction": "unspecified",
     "underlying": "reports that Odey Asset Management",
     "edge_or_thesis": "already up 145% for the year before the speech — the position was fully built months earlier.",
-    "any_quant_detail": "145%",
+    "any_quant_detail": "£36 billion, £70 billion, 145%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Odey"
   },
@@ -2637,7 +2591,7 @@
     "direction": "unspecified",
     "underlying": "more of their gilt holdings",
     "edge_or_thesis": "early as September 23 that LDIs would be forced to liquidate “very large quantities of gilts.",
-    "any_quant_detail": "44%",
+    "any_quant_detail": "£3.76 billion, £8.60 billion, 44%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2652,7 +2606,7 @@
     "direction": "long",
     "underlying": null,
     "edge_or_thesis": "prime brokers to hedge funds.",
-    "any_quant_detail": "44%",
+    "any_quant_detail": "£3.76 billion, £8.60 billion, £5 billion, 44%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2667,7 +2621,7 @@
     "direction": "long",
     "underlying": null,
     "edge_or_thesis": null,
-    "any_quant_detail": "20%, 100 basis points",
+    "any_quant_detail": "£5 billion, £3.76bn, £19.3 billion, £12.1bn, £7.2bn, 20%, 100 basis points",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2679,10 +2633,10 @@
     "instruments": [
       "bond"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "stated that Odey European Inc; of the fund; The fund",
     "edge_or_thesis": "on the order of €2 billion.",
-    "any_quant_detail": "500%, 0.5%, At 500",
+    "any_quant_detail": "€402 million, €400 million, €2 billion, 500%, 0.5%, At 500",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Odey"
   },
@@ -2697,7 +2651,7 @@
     "direction": "short",
     "underlying": null,
     "edge_or_thesis": "on the order of €2 billion.",
-    "any_quant_detail": "500%, 0.5%, 40%, 100 basis point, At 500",
+    "any_quant_detail": "€402 million, €400 million, €2 billion, 500%, 0.5%, 40%, 100 basis point, At 500",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Odey"
   },
@@ -2728,7 +2682,7 @@
     "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": "Already On Bank of England Staff Working Paper No.",
-    "any_quant_detail": null,
+    "any_quant_detail": "£65 Billion, £65 billion, £19.3 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2743,7 +2697,7 @@
     "direction": "unspecified",
     "underlying": "indicative of the",
     "edge_or_thesis": "“indicative of the hedge fund sector adopting short positions in the gilt market prior to the crisis.",
-    "any_quant_detail": null,
+    "any_quant_detail": "£65 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2759,7 +2713,7 @@
     "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": "more than three times larger than the BoE’s entire crisis intervention of £19.",
-    "any_quant_detail": null,
+    "any_quant_detail": "£65 billion, £19.3 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2774,7 +2728,7 @@
     "direction": "long",
     "underlying": null,
     "edge_or_thesis": null,
-    "any_quant_detail": null,
+    "any_quant_detail": "£3.76 Billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2789,7 +2743,7 @@
     "direction": "long",
     "underlying": null,
     "edge_or_thesis": "purchased on the morning of September 28, in the hours before the Bank’s intervention announcement.",
-    "any_quant_detail": "44%",
+    "any_quant_detail": "£8.60 billion, £3.76 billion, 44%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2804,7 +2758,7 @@
     "direction": "long",
     "underlying": "working paper confirms BlueCrest Capital Management",
     "edge_or_thesis": "to maximise the return from such an activity.",
-    "any_quant_detail": "153%",
+    "any_quant_detail": "£5 billion, £3.76 billion, 153%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "BlueCrest"
   },
@@ -2844,6 +2798,21 @@
     "article_title": "The 2022 UK Gilt Market Crisis: How Hedge Funds Pre-Positioned £65 Billion and Extracted Billions — Five Funds, Seven Strategies, Every Claim Sourced to the Bank of England and BIS",
     "article_url": "https://navnoorbawa.substack.com/p/the-2022-uk-gilt-market-crisis-how",
     "article_date": "2026-03-07",
+    "trade_description": "Rotterdam-based Transtrend, managing $6.3 billion in assets, held short sterling positions across multiple currency pairs and short UK fixed income instruments. By late September 2022, combined bets had contributed to the fund being approximately 30% up for the year. When the LDI crisis accelerated the gilt selloff, systematic funds that had been short gilts for months saw that trend confirm violently — without a single discretionary decision.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "short",
+    "underlying": "had contributed to the fund",
+    "edge_or_thesis": "simply the event that confirmed the signal and accelerated the drawdown.",
+    "any_quant_detail": "$6.3 billion, 30%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "The 2022 UK Gilt Market Crisis: How Hedge Funds Pre-Positioned £65 Billion and Extracted Billions — Five Funds, Seven Strategies, Every Claim Sourced to the Bank of England and BIS",
+    "article_url": "https://navnoorbawa.substack.com/p/the-2022-uk-gilt-market-crisis-how",
+    "article_date": "2026-03-07",
     "trade_description": "01 — Pre-positioning was structural, not opportunistic. The BoE working paper’s £65 billion net repo short was built over months before September 23. The mini-budget did not create the trade — it confirmed it. Alpha came from thesis construction and position-building, not from reacting to events in real time.",
     "instruments": [
       "repo"
@@ -2851,7 +2820,7 @@
     "direction": "unspecified",
     "underlying": "more of their gilt holdings",
     "edge_or_thesis": "structural, not opportunistic.",
-    "any_quant_detail": null,
+    "any_quant_detail": "£65 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2866,7 +2835,7 @@
     "direction": "unspecified",
     "underlying": "more of their gilt holdings",
     "edge_or_thesis": "construction and position-building, not from reacting to events in real time.",
-    "any_quant_detail": "6.87%",
+    "any_quant_detail": "£8.6 billion, 6.87%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2881,7 +2850,7 @@
     "direction": "unspecified",
     "underlying": "publicly cautioned that",
     "edge_or_thesis": "publicly cautioned that hedge fund activity could “propagate liquidity stress” in UK markets.",
-    "any_quant_detail": "6.87%",
+    "any_quant_detail": "£8.6 billion, £591 million, 6.87%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2896,7 +2865,7 @@
     "direction": "arbitrage/relative value",
     "underlying": "publicly cautioned that",
     "edge_or_thesis": "publicly cautioned that hedge fund activity could “propagate liquidity stress” in UK markets.",
-    "any_quant_detail": "6.87%",
+    "any_quant_detail": "£8.6 billion, £591 million, 6.87%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2911,9 +2880,9 @@
     "direction": "short",
     "underlying": "George Soros and Quantum Fund; leveraged traders assembled more capital",
     "edge_or_thesis": null,
-    "any_quant_detail": "$10 billion, $22 billion",
+    "any_quant_detail": "$10 billion, $22 billion, £1 billion, £3.14 billion, £3.3bn",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "George Soros"
+    "fund_name_if_mentioned": "Soros"
   },
   {
     "article_title": "The 2022 UK Gilt Market Crisis: How Hedge Funds Pre-Positioned £65 Billion and Extracted Billions — Five Funds, Seven Strategies, Every Claim Sourced to the Bank of England and BIS",
@@ -2926,7 +2895,7 @@
     "direction": "long",
     "underlying": "leveraged traders assembled more capital",
     "edge_or_thesis": null,
-    "any_quant_detail": "$22 billion",
+    "any_quant_detail": "$22 billion, £1 billion, £3.14 billion, £3.3bn, £19.3 billion, £65 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Soros"
   },
@@ -2942,7 +2911,7 @@
     "direction": "unspecified",
     "underlying": "constrained fund",
     "edge_or_thesis": "from different structural positions.",
-    "any_quant_detail": "500%",
+    "any_quant_detail": "£65 billion, £3.76 billion, £65bn, 500%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -2955,7 +2924,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "Precious Metals Fund; Gold; Silver; gold",
+    "underlying": "Precious Metals Fund; GLD; Gold; Silver; gold",
     "edge_or_thesis": "called “by far the biggest winner” in Einhorn’s own investor letter.",
     "any_quant_detail": "$34 billion, 65%, 144%, 33%, 92%, 49%",
     "outcome_if_mentioned": null,
@@ -2974,7 +2943,7 @@
     "edge_or_thesis": "not a momentum trade.",
     "any_quant_detail": "$79 billion, 65.0%, at 65.0",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "Gold +65%, Silver +144% in 2025: How Bridgewater, Crescat, Greenlight, Tudor Jones, and Druckenmiller Made Their Biggest Precious Metals Calls",
@@ -2989,7 +2958,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Greenlight Capital"
+    "fund_name_if_mentioned": "Einhorn / Greenlight"
   },
   {
     "article_title": "Gold +65%, Silver +144% in 2025: How Bridgewater, Crescat, Greenlight, Tudor Jones, and Druckenmiller Made Their Biggest Precious Metals Calls",
@@ -3001,7 +2970,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "Tudor Investment Corp; while trimming holdings; style holdings; Gold; gold",
+    "underlying": "Tudor Investment Corp; while trimming holdings; style holdings; GLD; Gold",
     "edge_or_thesis": "a thesis declared a full year before the 2025 rally peaked.",
     "any_quant_detail": "$57.48 billion, 49%, 64%",
     "outcome_if_mentioned": null,
@@ -3066,7 +3035,7 @@
     "edge_or_thesis": "not a directional gold bet.",
     "any_quant_detail": "$79 Billion",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "Gold +65%, Silver +144% in 2025: How Bridgewater, Crescat, Greenlight, Tudor Jones, and Druckenmiller Made Their Biggest Precious Metals Calls",
@@ -3082,7 +3051,7 @@
     "edge_or_thesis": "not a directional gold bet.",
     "any_quant_detail": "$79 billion",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "Gold +65%, Silver +144% in 2025: How Bridgewater, Crescat, Greenlight, Tudor Jones, and Druckenmiller Made Their Biggest Precious Metals Calls",
@@ -3097,7 +3066,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "40%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "Gold +65%, Silver +144% in 2025: How Bridgewater, Crescat, Greenlight, Tudor Jones, and Druckenmiller Made Their Biggest Precious Metals Calls",
@@ -3113,7 +3082,7 @@
     "edge_or_thesis": "a “critical metal” providing an industrial demand floor beneath the monetary narrative, a dual structure that sustained the longer-term hold thesis.",
     "any_quant_detail": "$40 billion",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "Gold +65%, Silver +144% in 2025: How Bridgewater, Crescat, Greenlight, Tudor Jones, and Druckenmiller Made Their Biggest Precious Metals Calls",
@@ -3125,7 +3094,7 @@
       "commodity"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": "letter full text Motley Fool Tudor Investment Corp; Crescat Capital; gold",
+    "underlying": "letter full text Motley Fool Tudor Investment Corp; Crescat Capital; GLD; gold",
     "edge_or_thesis": "CNBC $40B silver ETP inflows H1 2025 AInvest Gold 65.",
     "any_quant_detail": "$79B, $40B, 8.2%, 11.9%, 49%, 92%, 33%",
     "outcome_if_mentioned": null,
@@ -3247,7 +3216,7 @@
     "instruments": [
       "option"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "the fund",
     "edge_or_thesis": "Inevitable The trade itself generated real returns through 2013.",
     "any_quant_detail": "$50 million, $150 Million",
@@ -3295,7 +3264,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "or",
     "edge_or_thesis": "a “defensive equity” or hedge fund replacement.",
     "any_quant_detail": null,
@@ -3314,7 +3283,7 @@
     "direction": "unspecified",
     "underlying": "According to Resonanz Capital; Assenagon Asset Management; S&P 500",
     "edge_or_thesis": "historically averaged approximately 7 percentage points (S&P 500 implied correlation at 39.",
-    "any_quant_detail": "39.5%, 32.5%, at 39.5, at 32.5",
+    "any_quant_detail": "€1 billion, 39.5%, 32.5%, at 39.5, at 32.5",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -3332,7 +3301,7 @@
     "direction": "unspecified",
     "underlying": "Assenagon Asset Management; Fulcrum Asset Management; S&P 500",
     "edge_or_thesis": null,
-    "any_quant_detail": "39.5%, 32.5%, at 39.5, at 32.5, at 2.5",
+    "any_quant_detail": "€1 billion, 39.5%, 32.5%, at 39.5, at 32.5, at 2.5",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -3442,7 +3411,7 @@
     "edge_or_thesis": "of who Bill Ackman is.",
     "any_quant_detail": "$27 million, $2.6 billion, 20%, 15%, 3%, 1.2%, 6.8%, 50 basis points",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Bill Ackman"
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
@@ -3478,6 +3447,23 @@
     "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
     "article_url": "https://navnoorbawa.substack.com/p/the-trade-war-dividend-druckenmillers",
     "article_date": "2026-03-05",
+    "trade_description": "The overall framework: Druckenmiller told CNBC on April 6, 2025 that he does not support tariffs exceeding 10%, in response to his prior January 2025 CNBC interview being shared on X. He opposed the policy — but his book (short dollar, long copper, long gold, short bonds, long non-US equity) was a direct expression of the tariff regime’s consequences.",
+    "instruments": [
+      "bond",
+      "equity",
+      "commodity"
+    ],
+    "direction": "short",
+    "underlying": "copper; gold",
+    "edge_or_thesis": "been dead for 10 or 15 years,” he said in the interview.",
+    "any_quant_detail": "10%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Duquesne"
+  },
+  {
+    "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
+    "article_url": "https://navnoorbawa.substack.com/p/the-trade-war-dividend-druckenmillers",
+    "article_date": "2026-03-05",
     "trade_description": "The mechanical engine: Pure Alpha runs 30–40 simultaneous positions across bonds, currencies, equities, and commodities. Each position is sized not by conviction but by risk contribution — every position scaled to contribute an equal proportion of portfolio volatility. Historical correlations of 0.19 to equities, 0.15 to bonds, 0.07 to hedge fund peers. What the tariff regime provided was exactly what this architecture is built to exploit: persistent bond-equity correlation breakdown, dollar weakness, commodity dislocations, cross-currency dislocations — all simultaneously and persistently.",
     "instruments": [
       "bond",
@@ -3507,7 +3493,7 @@
     "edge_or_thesis": "2022 — the same setup that had already burned short-vol investors in February and April.",
     "any_quant_detail": "9.52%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
@@ -3522,7 +3508,7 @@
     "edge_or_thesis": "2022 — the same setup that had already burned short-vol investors in February and April.",
     "any_quant_detail": "9.52%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
@@ -3537,7 +3523,7 @@
     "edge_or_thesis": "caused hedge funds to unwind the basis trade.",
     "any_quant_detail": "100x leverage",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
@@ -3555,7 +3541,23 @@
     "edge_or_thesis": "caused hedge funds to unwind the basis trade.",
     "any_quant_detail": "$3.1 trillion, 294%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
+  },
+  {
+    "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
+    "article_url": "https://navnoorbawa.substack.com/p/the-trade-war-dividend-druckenmillers",
+    "article_date": "2026-03-05",
+    "trade_description": "The architecture explains the outcome. Pod shops manage risk via tight team-level drawdown limits — typically 2–3% before a book gets cut. The correct tariff macro trade in Q1 2025 required: long gold, short dollar, long volatility, potentially long non-US equities — all of which could have drawn down 2–3% before Liberation Day validated the thesis. A pod team running that combination in January–March 2025 would have been stopped out weeks before April 2 delivered the payoff. The trade required patient capital and conviction-based sizing that pod shop architecture structurally cannot accommodate.",
+    "instruments": [
+      "equity",
+      "commodity"
+    ],
+    "direction": "short",
+    "underlying": "The trade required patient capital; Melqart Asset Management; S&P 500; gold",
+    "edge_or_thesis": null,
+    "any_quant_detail": "16.97%, 17.9%, 3%, 28.2%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "D.E. Shaw"
   },
   {
     "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
@@ -3566,10 +3568,25 @@
       "bond",
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "reducing foreign capital; gold",
     "edge_or_thesis": "US-China bilateral flows contracted.",
     "any_quant_detail": "72%, 30%, 15%, at 72",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Druckenmiller"
+  },
+  {
+    "article_title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
+    "article_url": "https://navnoorbawa.substack.com/p/the-trade-war-dividend-druckenmillers",
+    "article_date": "2026-03-05",
+    "trade_description": "Druckenmiller’s book — short dollar, long copper, long gold, long Japan and Korea — is live. Jones’s blow-off top scenario is positioned. Bridgewater’s systematic diversification has no reason to unwind in a regime of “easing monetary policy and transformation of technology,” as Jensen put it.",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "short",
+    "underlying": "copper; gold",
+    "edge_or_thesis": "no reason to unwind in a regime of “easing monetary policy and transformation of technology,” as Jensen put it.",
+    "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Druckenmiller"
   },
@@ -3586,7 +3603,7 @@
     "edge_or_thesis": "sold through Swiss-based trading houses.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3679,7 +3696,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$2.3B, $4B, $15.1B, $13.2B, $8.7B",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3694,7 +3711,7 @@
     "edge_or_thesis": "priced at global rates (Asian refiners hungry for discounted feedstock).",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3709,7 +3726,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$14.8 billion, $2.4 billion, $501 million, $200 million",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3724,7 +3741,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "at 1.24, at $55, at $85",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3739,7 +3756,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "27%, 5%, at 1.24, at $55, at $85",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3752,9 +3769,9 @@
     "direction": "arbitrage/relative value",
     "underlying": null,
     "edge_or_thesis": "legal under existing EU law — a regulatory gap that persisted for years.",
-    "any_quant_detail": "$13 billion",
+    "any_quant_detail": "$13 billion, €724 million",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3769,7 +3786,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3826,11 +3843,11 @@
       "option"
     ],
     "direction": "long",
-    "underlying": null,
+    "underlying": "TTF",
     "edge_or_thesis": null,
-    "any_quant_detail": null,
+    "any_quant_detail": "€350M",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3842,11 +3859,11 @@
       "volatility"
     ],
     "direction": "unspecified",
-    "underlying": "natural gas",
+    "underlying": "TTF; natural gas",
     "edge_or_thesis": "European gas storage had filled to record levels by autumn 2023 without Russian supply.",
-    "any_quant_detail": "23%",
+    "any_quant_detail": "€350M, 23%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3862,7 +3879,7 @@
     "edge_or_thesis": "captured in commodity markets.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3878,7 +3895,7 @@
     "edge_or_thesis": "the companies were insolvent, but because Western institutions could no longer legally hold them.",
     "any_quant_detail": "30 cents on the dollar, at 10",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3894,7 +3911,7 @@
     "edge_or_thesis": "simultaneously active in CDS markets on names including Evraz, Gazprom, and Lukoil.",
     "any_quant_detail": "30 cents on the dollar, at 10",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3907,7 +3924,7 @@
     "direction": "unspecified",
     "underlying": "Andurand Commodities Discretionary Enhanced Fund",
     "edge_or_thesis": "not a commodity trade at all.",
-    "any_quant_detail": "162%, 54.7%",
+    "any_quant_detail": "€350M, 162%, 54.7%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Andurand"
   },
@@ -3924,7 +3941,7 @@
     "edge_or_thesis": "operated in this paradigm since 1979.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3939,7 +3956,7 @@
     "edge_or_thesis": "operated in this paradigm since 1979.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
@@ -3954,7 +3971,7 @@
     "edge_or_thesis": "Fed research, Bloomberg transcripts, CEO interviews, and ship-tracking databases.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Securities Class Action Settlements: The $15 Billion Recovery Pool 79% of Hedge Funds Are Surrendering to Their Competitors",
@@ -4152,7 +4169,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "the United States Oil Fund; Ultra Bloomberg Crude Oil fund; This fund; Crude Oil",
+    "underlying": "the United States Oil Fund; Ultra Bloomberg Crude Oil fund; This fund; USO; Crude Oil",
     "edge_or_thesis": null,
     "any_quant_detail": "4.9%, 8.3%, 98%",
     "outcome_if_mentioned": null,
@@ -4169,7 +4186,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "Oil Fund; Ultra Bloomberg Crude Oil fund; This fund; Crude Oil",
+    "underlying": "Oil Fund; Ultra Bloomberg Crude Oil fund; This fund; USO; Crude Oil",
     "edge_or_thesis": "hostilities broke out.",
     "any_quant_detail": "4.9%, 8.3%, 98%, 14%",
     "outcome_if_mentioned": null,
@@ -4214,7 +4231,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": null,
+    "underlying": "TTF",
     "edge_or_thesis": "a structural withdrawal from commercial insurance, not a military blockade.",
     "any_quant_detail": "30.7%, 45.7%",
     "outcome_if_mentioned": null,
@@ -4291,7 +4308,7 @@
       "option",
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": null,
     "edge_or_thesis": "approximately $79–80 — below the Kpler base case, reflecting the partial buffer from OPEC spare capacity and Chinese strategic reserves.",
     "any_quant_detail": "at $18 per barrel",
@@ -4383,24 +4400,9 @@
       "equity"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": "The profitable trade for the fund; Nasdaq",
+    "underlying": "The profitable trade for the fund; Nasdaq; QQQ",
     "edge_or_thesis": "widely reported in the press due to the size of the flows it created.",
     "any_quant_detail": "$300 billion, $200 billion, 48%, 55%, 43%, 20%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "How Hedge Funds Systematically Profit From European Market Structure: Index Rebalancing Arbitrage, Merger Arb, and MiFID II — Named Funds, Exact Trades, Hard Numbers",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-systematically-profit",
-    "article_date": "2026-03-01",
-    "trade_description": "Trade 3 — CRH NYSE Primary Listing (September 25, 2023): 20% Gain, 72M Shares, Named Buyers",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": "profitable trade for the fund",
-    "edge_or_thesis": "widely reported in the press due to the size of the flows it created.",
-    "any_quant_detail": "20%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -4551,9 +4553,9 @@
     "direction": "unspecified",
     "underlying": "before any capital",
     "edge_or_thesis": "from the Japanese investments in 2025 will total about $812 million and the interest cost of our yen-denominated debt will be about $135 million.",
-    "any_quant_detail": "$812 million, $135 million, $677 million, $2.3 billion, $850 million, 0.5%, 3%, 4%",
+    "any_quant_detail": "$812 million, $135 million, $677 million, $2.3 billion, $850 million, ¥1.3 trillion, 0.5%, 3%, 4%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Buffett"
   },
   {
     "article_title": "The Three Trades Inside Japan’s HALO Position: Buffett’s Yen Carry, Elliott’s Governance Arbitrage, and the 1,400% Cable Company Nobody Covered",
@@ -4581,9 +4583,9 @@
     "direction": "unspecified",
     "underlying": "Elliott Management",
     "edge_or_thesis": "external leverage across every position: Mitsui Fudosan (February 2024): Elliott built at least a 2.",
-    "any_quant_detail": "$6.74 billion, $3.6 billion, 2.5%, 11.8%, 20%, 5.03%",
+    "any_quant_detail": "$6.74 billion, $3.6 billion, ¥1 trillion, 2.5%, 11.8%, 20%, 5.03%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Elliott Management"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "The Three Trades Inside Japan’s HALO Position: Buffett’s Yen Carry, Elliott’s Governance Arbitrage, and the 1,400% Cable Company Nobody Covered",
@@ -4596,9 +4598,9 @@
     "direction": "unspecified",
     "underlying": "Sumitomo Corp",
     "edge_or_thesis": "(November 2024): Elliott disclosed a 5.",
-    "any_quant_detail": "20%, 5.03%, 15%",
+    "any_quant_detail": "¥1.5 trillion, 20%, 5.03%, 15%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Buffett"
   },
   {
     "article_title": "The Three Trades Inside Japan’s HALO Position: Buffett’s Yen Carry, Elliott’s Governance Arbitrage, and the 1,400% Cable Company Nobody Covered",
@@ -4613,7 +4615,7 @@
     "edge_or_thesis": "kept quiet on most of its Japan investments” — meaning public positions represent a floor, not the ceiling, of Elliott’s exposure.",
     "any_quant_detail": "$6.1 billion, $800 million, 8.4%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Buffett"
   },
   {
     "article_title": "The Three Trades Inside Japan’s HALO Position: Buffett’s Yen Carry, Elliott’s Governance Arbitrage, and the 1,400% Cable Company Nobody Covered",
@@ -4627,7 +4629,7 @@
     "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": "turbine facility in the US — built to support AI energy demand, and almost certainly dependent on Japanese machinery and materials.",
-    "any_quant_detail": "0.5%, 1.0%",
+    "any_quant_detail": "¥1.3 trillion, 0.5%, 1.0%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Buffett"
   },
@@ -4674,7 +4676,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$227.9 million, $303.9 million, 100%, 25.7%, 5,079,700 shares, 6,773,950 shares",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Renaissance Technologies"
+    "fund_name_if_mentioned": "Renaissance"
   },
   {
     "article_title": "Korea’s $170 Billion Retail Wave Broadcast Its Own Signal. The 13F Filings, Goldman Research, JPMorgan Notes, and 15 Years of KSD Data Show Exactly How Institutional Money Read It — ",
@@ -4901,21 +4903,6 @@
     "underlying": null,
     "edge_or_thesis": "a salaried worker, given low interest rates.",
     "any_quant_detail": "30%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Korea’s $170 Billion Retail Wave Broadcast Its Own Signal. The 13F Filings, Goldman Research, JPMorgan Notes, and 15 Years of KSD Data Show Exactly How Institutional Money Read It — ",
-    "article_url": "https://navnoorbawa.substack.com/p/koreas-170-billion-retail-wave-broadcast",
-    "article_date": "2026-02-27",
-    "trade_description": "Eight trades. Five winning. Three losing. All documented. Renaissance’s 404.7% accumulation and 100% exit. EMJ’s manufactured momentum mechanics. The BYND ETF arbitrage structure. The .5B in documented short seller losses. And the 15-year Korean retail losing pattern — explained as a replicable edge, not just a statistic.",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": "a replicable edge, not just a statistic.",
-    "any_quant_detail": "404.7%, 100%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -5213,7 +5200,7 @@
       "futures"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": null,
+    "underlying": "SPY; QQQ",
     "edge_or_thesis": "allowed to drift freely for the entire duration of the halt.",
     "any_quant_detail": "0.3%, 0.4%",
     "outcome_if_mentioned": null,
@@ -5229,7 +5216,7 @@
       "futures"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": "gold",
+    "underlying": "Euro Stoxx; SPY; QQQ; gold",
     "edge_or_thesis": "required — only the certainty that the two legs would ultimately reconverge.",
     "any_quant_detail": "0.3%, 0.4%, at 7",
     "outcome_if_mentioned": null,
@@ -5309,7 +5296,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "block trade in CME Group",
+    "underlying": "block trade in CME Group; EUA",
     "edge_or_thesis": null,
     "any_quant_detail": "87%, 25%, at $5.40, 200 contracts",
     "outcome_if_mentioned": null,
@@ -5324,7 +5311,7 @@
       "futures"
     ],
     "direction": "unspecified",
-    "underlying": "block trade in CME Group; Climate and Energy Transition Fund; with the fund",
+    "underlying": "block trade in CME Group; Climate and Energy Transition Fund; with the fund; EUA",
     "edge_or_thesis": "what Andurand was building simultaneously in the EU Emissions Trading System.",
     "any_quant_detail": "25%, at $5.40, 200 contracts",
     "outcome_if_mentioned": null,
@@ -5339,7 +5326,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "Climate and Energy Transition Fund; with the fund; Andurand Commodities Discretionary Enhanced Fund",
+    "underlying": "Climate and Energy Transition Fund; with the fund; Andurand Commodities Discretionary Enhanced Fund; EUA",
     "edge_or_thesis": "what Andurand was building simultaneously in the EU Emissions Trading System.",
     "any_quant_detail": "87%, 28%",
     "outcome_if_mentioned": "returned 87% in 2021. | returned 28% by January 2022 and won “New Macro Fund of the Year” at EuroHedge 2022.",
@@ -5354,11 +5341,11 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "structural foundation of every fund",
+    "underlying": "structural foundation of every fund; EUA",
     "edge_or_thesis": "were auctioned, generating approximately €39 billion for EU member states.",
-    "any_quant_detail": "51%, 6%, 25%",
+    "any_quant_detail": "€39 billion, 51%, 6%, 25%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
@@ -5370,7 +5357,7 @@
       "futures"
     ],
     "direction": "unspecified",
-    "underlying": null,
+    "underlying": "EUA; CCA",
     "edge_or_thesis": "February 2026 demonstrated.",
     "any_quant_detail": "$1 trillion, 6%, 25%",
     "outcome_if_mentioned": null,
@@ -5386,7 +5373,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "Andurand Commodities Discretionary Enhanced Fund",
+    "underlying": "Andurand Commodities Discretionary Enhanced Fund; EUA",
     "edge_or_thesis": "were permanently invalidated after the MSR exceeded its fixed threshold.",
     "any_quant_detail": "87%, 162%",
     "outcome_if_mentioned": "returned 87% that year, and 162% in the first half of 2022 — though by then energy and oil were major contributors as well.",
@@ -5405,7 +5392,7 @@
     "edge_or_thesis": "relative value, and seasonal patterns.",
     "any_quant_detail": "$500 million, 3.78%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
@@ -5416,11 +5403,11 @@
       "commodity"
     ],
     "direction": "long",
-    "underlying": "ompiled by Resonanz Capital; the HFRX Global The fund; MSCI; Brent",
+    "underlying": "ompiled by Resonanz Capital; the HFRX Global The fund; MSCI; EUA",
     "edge_or_thesis": null,
     "any_quant_detail": "9%, 4.4%, 14.9%, 6.2%, 100%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
@@ -5433,11 +5420,11 @@
       "commodity"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": "Structural Signal The three fund",
+    "underlying": "Structural Signal The three fund; EUA",
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
@@ -5448,11 +5435,11 @@
       "commodity"
     ],
     "direction": "long",
-    "underlying": null,
+    "underlying": "EUA",
     "edge_or_thesis": "historically extreme: gross long contracts stood near 109,000, far above the 2018–2025 historical average of approximately 60,000 contracts.",
     "any_quant_detail": "60,000 contracts",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
@@ -5463,11 +5450,11 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "The fund",
+    "underlying": "The fund; EUA",
     "edge_or_thesis": "the market digested the policy risk in full.",
     "any_quant_detail": "6.5%, 25%, 23%, 16%, 7%, 60,000 contracts",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
@@ -5478,11 +5465,11 @@
       "commodity"
     ],
     "direction": "long/short",
-    "underlying": null,
+    "underlying": "EUA",
     "edge_or_thesis": "remained intact and the repricing reflected political risk premium, not a structural breakdown.",
     "any_quant_detail": "25%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
@@ -5497,7 +5484,7 @@
     "edge_or_thesis": "genuine momentum: as of late 2025, over 90 bilateral Article 6.",
     "any_quant_detail": "90%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
@@ -5508,7 +5495,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "Resonanz Capital; The Kepos Capital",
+    "underlying": "Resonanz Capital; The Kepos Capital; EUA",
     "edge_or_thesis": "€65/tonne, matching ESMA’s directly reported figure.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -5603,7 +5590,7 @@
     "edge_or_thesis": "businesses in North America, with a portfolio of storage and transportation assets serving more than 450 clients.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Ken Griffin"
+    "fund_name_if_mentioned": "Griffin / Citadel"
   },
   {
     "article_title": "The Energy Trading Edge: How Hedge Funds Built the Infrastructure to Extract Billions From Energy Markets — While Oil Majors Watched",
@@ -5629,7 +5616,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": null,
+    "underlying": "TTF",
     "edge_or_thesis": "supplies across the U.",
     "any_quant_detail": "$8 Billion",
     "outcome_if_mentioned": null,
@@ -5765,7 +5752,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "The flagship fund; The Discretionary Enhanced Fund; copper",
+    "underlying": "The flagship fund; The Discretionary Enhanced Fund; EUA; copper",
     "edge_or_thesis": "indeterminate, he rotated to copper and cocoa — markets with structurally different supply dynamics offering cleaner opportunities.",
     "any_quant_detail": "183%, 10%, 50%",
     "outcome_if_mentioned": null,
@@ -5813,7 +5800,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "LNG energy infrastructure natural gas",
+    "underlying": "LNG energy infrastructure TTF; EUA",
     "edge_or_thesis": null,
     "any_quant_detail": "$8 billion",
     "outcome_if_mentioned": null,
@@ -5883,21 +5870,6 @@
     "article_title": "US Investment-Grade Spreads Hit 30-Year Lows as a $400 Billion AI Bond Wave Arrives. Vanguard Says Investors Are Full. Here Is What the Smart Money Was Already Doing — and Five Trades That Follow.",
     "article_url": "https://navnoorbawa.substack.com/p/us-investment-grade-spreads-hit-30",
     "article_date": "2026-02-21",
-    "trade_description": "Trade 4 — Receiver Swaps Paired With Long CDX Protection: The Macro Paired Hedge",
-    "instruments": [
-      "CDS"
-    ],
-    "direction": "unspecified",
-    "underlying": "CDX; iTraxx",
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "US Investment-Grade Spreads Hit 30-Year Lows as a $400 Billion AI Bond Wave Arrives. Vanguard Says Investors Are Full. Here Is What the Smart Money Was Already Doing — and Five Trades That Follow.",
-    "article_url": "https://navnoorbawa.substack.com/p/us-investment-grade-spreads-hit-30",
-    "article_date": "2026-02-21",
     "trade_description": "Narayanan’s third stated strategy — increasing interest rate duration in anticipation of Fed accommodation — pairs with the credit short as a two-leg macro hedge: receive fixed in 10-year or 30-year USD interest rate swaps while holding long CDX IG protection. Both legs pay in the same scenario: a growth shock severe enough to force Fed accommodation, where credit spreads widen and long-end Treasuries rally simultaneously in a flight-to-quality move.",
     "instruments": [
       "bond",
@@ -5958,23 +5930,6 @@
     "fund_name_if_mentioned": "Bridgewater"
   },
   {
-    "article_title": "US Investment-Grade Spreads Hit 30-Year Lows as a $400 Billion AI Bond Wave Arrives. Vanguard Says Investors Are Full. Here Is What the Smart Money Was Already Doing — and Five Trades That Follow.",
-    "article_url": "https://navnoorbawa.substack.com/p/us-investment-grade-spreads-hit-30",
-    "article_date": "2026-02-21",
-    "trade_description": "Five trades capture the alpha embedded in this sequence. The Oracle CDS leg was already executed and largely closed before Narayanan spoke. The CDX investment-grade payer swaption, the geographic basis, the paired duration hedge, and the Apollo-documented hyperscaler-vs-industrial dispersion trade remain live. All five are anchored to verifiable, sourced primary data from Bloomberg, IFR, Apollo, Breckinridge, Bridgewater, Janus Henderson, AllianceBernstein, J.P. Morgan, and TD Securities.",
-    "instruments": [
-      "CDS",
-      "option",
-      "volatility"
-    ],
-    "direction": "unspecified",
-    "underlying": "CDX",
-    "edge_or_thesis": "already executed and largely closed before Narayanan spoke.",
-    "any_quant_detail": "$400 billion, $57 billion, 11%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Bridgewater"
-  },
-  {
     "article_title": "Kem One: Apollo’s €600M Acquisition Collapsed to 2 Cents as China Flooded Europe with Cheap PVC — Inside the Hedge Fund War Between Three Shorts and Two Rescue Lenders",
     "article_url": "https://navnoorbawa.substack.com/p/kem-one-apollos-600m-acquisition",
     "article_date": "2026-02-20",
@@ -5985,7 +5940,7 @@
     "direction": "short",
     "underlying": null,
     "edge_or_thesis": null,
-    "any_quant_detail": "50.01%, at 2",
+    "any_quant_detail": "€230M, 50.01%, at 2",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -6000,7 +5955,7 @@
     "direction": "long",
     "underlying": "producer that Apollo Global Management; Lune Holdings",
     "edge_or_thesis": "watched deteriorate into near-total impairment since.",
-    "any_quant_detail": "5.625%, at 2, at 68",
+    "any_quant_detail": "€704 million, €600 million, €104 million, €450 million, 5.625%, at 2, at 68",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -6014,7 +5969,7 @@
       "CDS",
       "swap"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "where the fund; cash bond on the fund; Sona Asset Management",
     "edge_or_thesis": "the bonds fell from 70 cents to roughly 2 cents.",
     "any_quant_detail": null,
@@ -6092,7 +6047,7 @@
     "direction": "unspecified",
     "underlying": "flagship Monarch Capital",
     "edge_or_thesis": "a senior secured facility with an initial draw of €120 million and an additional €80 million available over 18 months.",
-    "any_quant_detail": "$4.7 billion, $3.5 billion, 75%, 25%, at 75, at 25",
+    "any_quant_detail": "$4.7 billion, $3.5 billion, €200 million, €120 million, €80 million, €450 million, €150 million, 75%, 25%, at 75, at 25",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -6183,7 +6138,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "Rokos Capital Management; billion macro fund; it one of the fund",
+    "underlying": "Rokos Capital Management; billion macro fund; it one of the fund; QQQ",
     "edge_or_thesis": "the headline entry, but it was not the largest or the earliest.",
     "any_quant_detail": "$23 billion, $332 million, 21%, 31%",
     "outcome_if_mentioned": null,
@@ -6203,7 +6158,7 @@
     "edge_or_thesis": "that motivates the Brazil rotation.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "How Druckenmiller, Rokos, and Vista Front-Ran Brazil’s R$33B Institutional Flood — The Complete 2026 Macro Trade Anatomy",
@@ -6218,7 +6173,7 @@
     "edge_or_thesis": "“strategic positioning” rather than “hot money,” signalling a structural shift in allocator confidence rather than short-term speculation.",
     "any_quant_detail": "$32.1 billion, $20.3 billion, 12.56%, 9.7%, 20%",
     "outcome_if_mentioned": "up 9.7% in dollar terms.",
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "How Druckenmiller, Rokos, and Vista Front-Ran Brazil’s R$33B Institutional Flood — The Complete 2026 Macro Trade Anatomy",
@@ -6233,7 +6188,7 @@
     "edge_or_thesis": "documented by Global X ETFs in their 2025 Brazil research, the MSCI Brazil Index traded at just 6.",
     "any_quant_detail": "33%, 20%, 16%, 7.6%, 15.00%, at 14.75",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "How Druckenmiller, Rokos, and Vista Front-Ran Brazil’s R$33B Institutional Flood — The Complete 2026 Macro Trade Anatomy",
@@ -6249,7 +6204,7 @@
     "edge_or_thesis": "duration, and the rate-cut cycle itself becomes an additional equity tailwind as domestic discount rates compress.",
     "any_quant_detail": "11.25%, 16%, 46.9%, 7%, 20%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "How Druckenmiller, Rokos, and Vista Front-Ran Brazil’s R$33B Institutional Flood — The Complete 2026 Macro Trade Anatomy",
@@ -6261,12 +6216,12 @@
       "equity",
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "cycle belongs to Vista Capital; Multiestrategia fund; crude oil",
     "edge_or_thesis": "inception and the strongest monthly gain in the Bloomberg index tracking Brazilian hedge funds since 2007, per Hedgeweek.",
     "any_quant_detail": "$109 billion, 37%, 19%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "How Druckenmiller, Rokos, and Vista Front-Ran Brazil’s R$33B Institutional Flood — The Complete 2026 Macro Trade Anatomy",
@@ -6282,7 +6237,7 @@
     "edge_or_thesis": "relative value trades and long LatAm currency positions versus USD.",
     "any_quant_detail": "15%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "How Druckenmiller, Rokos, and Vista Front-Ran Brazil’s R$33B Institutional Flood — The Complete 2026 Macro Trade Anatomy",
@@ -6439,7 +6394,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6455,7 +6410,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6470,7 +6425,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "25%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6486,7 +6441,7 @@
     "edge_or_thesis": "unambiguous: the delta-hedged long strategy consistently underperforms zero.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6502,7 +6457,7 @@
     "edge_or_thesis": "unambiguous: the delta-hedged long strategy consistently underperforms zero.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6517,7 +6472,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6533,7 +6488,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6548,7 +6503,7 @@
     "edge_or_thesis": "divergence that BS cannot see, and the fat tails that BS structurally underprices.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Ken Griffin"
+    "fund_name_if_mentioned": "Griffin / Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6648,7 +6603,7 @@
     "edge_or_thesis": "the gap between what BS-calibrated equity vol implied and what Merton’s credit model implied for forward default probability.",
     "any_quant_detail": "$1 billion, $500 million, 25.5%, 99%",
     "outcome_if_mentioned": "returned 99% in March 2020 alone.",
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6664,7 +6619,7 @@
     "edge_or_thesis": "its log-normal distribution assigns low probability to crashes.",
     "any_quant_detail": "3.3%, 96.7%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6679,7 +6634,7 @@
     "edge_or_thesis": "he believes the true fat-tailed distribution assigns materially higher probability to tail events than BS acknowledges.",
     "any_quant_detail": "612%, 144%, 3.3%, 96.7%, 0.4%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6694,7 +6649,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6709,7 +6664,7 @@
     "edge_or_thesis": "since converged to zero, well before COVID.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6742,7 +6697,7 @@
     "edge_or_thesis": "been competed toward fair value.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6758,7 +6713,7 @@
     "edge_or_thesis": "been competed toward fair value.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6789,7 +6744,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6805,7 +6760,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Ken Griffin"
+    "fund_name_if_mentioned": "Griffin / Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6820,7 +6775,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$1B, $500M, 25.5%, 99%, 144%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
@@ -6836,7 +6791,7 @@
     "edge_or_thesis": "capital structure arbitrage via credit default swaps — confirmed by the Risk.",
     "any_quant_detail": "612%, 144%, 100%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "Inside CoStar’s $3 Billion Homes.com Proxy Fight: Third Point, D.E. Shaw, and the $10 Billion Value Dispute — A Verified, Both-Sides Analysis",
@@ -6913,7 +6868,7 @@
     "edge_or_thesis": "at CoStar is not a stock tip.",
     "any_quant_detail": "$2 billion, $400 million, $3 billion, $80 million",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Third Point"
   },
   {
     "article_title": "Mason Capital Management: From Ascent’s Bankruptcy to $6B Continuation Fund Fight — A Playbook for Event-Driven Returns",
@@ -6927,6 +6882,21 @@
     "underlying": "Mike Martino founded Mason Capital; Minerals Group; billion continuation fund",
     "edge_or_thesis": null,
     "any_quant_detail": "$50 million, $13 billion, $1.47 billion, $5.5 billion, $1.2 Billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Mason Capital Management: From Ascent’s Bankruptcy to $6B Continuation Fund Fight — A Playbook for Event-Driven Returns",
+    "article_url": "https://navnoorbawa.substack.com/p/mason-capital-management-from-ascents",
+    "article_date": "2026-02-16",
+    "trade_description": "The prepackaged restructuring eliminated execution uncertainty. 78% of first lien holders and 79% of second lien holders voted to approve the plan before filing, converting all $1.2 billion in secured debt to equity in the reorganized entity. Mason, which had accumulated positions in the distressed loans during pre-bankruptcy trading, emerged 45 days later on March 30, 2018 as an equity stakeholder in a deleveraged company.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": "ortland Capital; Ascent Resources Marcellus Holdings; natural gas",
+    "edge_or_thesis": "natural gas prices declined.",
+    "any_quant_detail": "$1.2 billion, 78%, 79%, 70 cents on the dollar",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -6964,6 +6934,21 @@
     "article_title": "Mason Capital Management: From Ascent’s Bankruptcy to $6B Continuation Fund Fight — A Playbook for Event-Driven Returns",
     "article_url": "https://navnoorbawa.substack.com/p/mason-capital-management-from-ascents",
     "article_date": "2026-02-16",
+    "trade_description": "While the Ascent campaign demonstrates Mason’s ability to challenge private equity conflicts in U.S. courts, the firm’s Samsung C&T arbitration showcases its willingness to deploy cross-border legal mechanisms for value realization. Mason’s most quantifiable realized return came through international investment arbitration against South Korea. The firm accumulated a 2.18% stake in Samsung C&T before the company’s July 2015 merger with Cheil Industries. Mason alleged government improperly pressured the National Pension Service — Samsung C&T’s largest shareholder with 11.21% — to approve the merger benefiting Samsung’s founding Lee family at minority shareholders’ expense. The merger succeeded by only 0.54% margin.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$200 million, 2.18%, 11.21%, 0.54%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Mason Capital Management: From Ascent’s Bankruptcy to $6B Continuation Fund Fight — A Playbook for Event-Driven Returns",
+    "article_url": "https://navnoorbawa.substack.com/p/mason-capital-management-from-ascents",
+    "article_date": "2026-02-16",
     "trade_description": "Distressed Debt Conversion with Loan-to-Own Execution: Purchase senior secured debt of overleveraged companies at 50–80 cents on the dollar during pre-bankruptcy distress. Participate actively in creditor committee negotiations to shape reorganization plans favorable to senior creditors. Convert debt claims to equity at par value in the reorganized entity. If the deleveraged company’s enterprise value exceeds face amount of converted debt, capture 100–200%+ returns. Ascent’s $1.2 billion debt converted to 100% equity ownership in an asset now valued at $5.5–6 billion represents approximately 7.6–8.3x multiple (664–733% gross returns) over seven years, assuming average 60 cent purchase prices.",
     "instruments": [
       "equity"
@@ -6987,6 +6972,36 @@
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "$54 million, $491 million",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Mason Capital Management: From Ascent’s Bankruptcy to $6B Continuation Fund Fight — A Playbook for Event-Driven Returns",
+    "article_url": "https://navnoorbawa.substack.com/p/mason-capital-management-from-ascents",
+    "article_date": "2026-02-16",
+    "trade_description": "Concentrated Portfolio Construction: With only six disclosed public equity positions totaling $491 million as of Q3 2025, Mason operates with extreme concentration enabling deep fundamental analysis impossible for diversified portfolios. This concentration is strategic, not accidental — each position represents months of research, legal preparation, and engagement before capital deployment. The firm’s Form ADV indicates $1.47 billion in total AUM as of April 2025, suggesting substantial capital deployed in private companies like Ascent, distressed debt not requiring public disclosure, and special situations outside 13F reporting requirements. This structure allows 10–25% position sizing that would constitute career risk for institutional portfolio managers operating within diversified mand",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": "and engagement before capital; suggesting substantial capital",
+    "edge_or_thesis": "of Q3 2025, Mason operates with extreme concentration enabling deep fundamental analysis impossible for diversified portfolios.",
+    "any_quant_detail": "$54 million, $491 million, $1.47 billion, 25%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Mason Capital Management: From Ascent’s Bankruptcy to $6B Continuation Fund Fight — A Playbook for Event-Driven Returns",
+    "article_url": "https://navnoorbawa.substack.com/p/mason-capital-management-from-ascents",
+    "article_date": "2026-02-16",
+    "trade_description": "Mason Capital Management operates with approximately 18 investment professionals managing concentrated positions across distressed debt, bankruptcy situations, activist campaigns, and special situations. The firm’s reported AUM of $1.47 billion as of April 2025 reflects significant decline from the approximate $13 billion peak in the mid-2010s, though exact performance attribution remains undisclosed. Current disclosed equity positions represent 100% concentration in top holdings, suggesting substantial capital deployed in non-public situations.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": "activist scrutiny when meaningful capital; Mason Capital Management; concentration in top holdings",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$1.47 billion, $13 billion, 100%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -7543,7 +7558,7 @@
     "edge_or_thesis": "GSE release from conservatorship — were among top contributors.",
     "any_quant_detail": "$15.1 billion, $749 million, 33%, 30%, 20.19%, 34%, 60%, at $40, at $15.1",
     "outcome_if_mentioned": "returned 20.19% in 2025.",
-    "fund_name_if_mentioned": "Tiger Global"
+    "fund_name_if_mentioned": "Tiger"
   },
   {
     "article_title": "2025 Hedge Fund Performance Analysis: Complete Industry Report on Returns, Strategies, and Systemic Risk",
@@ -7573,7 +7588,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "645%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Stanley Druckenmiller"
+    "fund_name_if_mentioned": "Druckenmiller"
   },
   {
     "article_title": "2025 Hedge Fund Performance Analysis: Complete Industry Report on Returns, Strategies, and Systemic Risk",
@@ -7604,7 +7619,7 @@
     "edge_or_thesis": "protection against policy shocks and fiscal deficits.",
     "any_quant_detail": "$136.2 billion, $50 billion, 55%, 47%, 48.5%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Ray Dalio"
+    "fund_name_if_mentioned": "Dalio / Bridgewater"
   },
   {
     "article_title": "2025 Hedge Fund Performance Analysis: Complete Industry Report on Returns, Strategies, and Systemic Risk",
@@ -7621,7 +7636,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$50 billion, $50B, 48.5%, 55%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Ray Dalio"
+    "fund_name_if_mentioned": "Dalio / Bridgewater"
   },
   {
     "article_title": "2025 Hedge Fund Performance Analysis: Complete Industry Report on Returns, Strategies, and Systemic Risk",
@@ -7636,7 +7651,7 @@
     "edge_or_thesis": "hedge funds delivered increasingly correlated returns with public equity markets (0.",
     "any_quant_detail": "$50B, $18.9B, $24B, 55%, 33%, 1.35%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Ray Dalio"
+    "fund_name_if_mentioned": "Dalio / Bridgewater"
   },
   {
     "article_title": "2025 Hedge Fund Performance Analysis: Complete Industry Report on Returns, Strategies, and Systemic Risk",
@@ -7709,9 +7724,9 @@
     "direction": "unspecified",
     "underlying": "Elliott Management; the deep capital",
     "edge_or_thesis": null,
-    "any_quant_detail": null,
+    "any_quant_detail": "€700 million, €303 million, €504 million",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Elliott Management"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "Elliott Management’s AC Milan Investment Analysis (2017–2026): €700M Deployed, €1.2B Exit, €120M+ Vendor Loan Interest — Complete Financial Breakdown",
@@ -7724,9 +7739,9 @@
     "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": "Independent Profit Center By providing ~€550 million vendor financing at ~7%, Elliott created a second compounding profit center.",
-    "any_quant_detail": "7%",
+    "any_quant_detail": "€550 million, €504 million, 7%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "Elliott Management’s AC Milan Investment Analysis (2017–2026): €700M Deployed, €1.2B Exit, €120M+ Vendor Loan Interest — Complete Financial Breakdown",
@@ -7739,9 +7754,9 @@
     "direction": "unspecified",
     "underlying": "million in capital",
     "edge_or_thesis": null,
-    "any_quant_detail": "12%",
+    "any_quant_detail": "€303 million, €710.25 million, €1.2 billion, €700M, €500M, 12%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "Alphabet’s $20 Billion Bond Offering: Spread Compression, 100-Year Sterling Bond, and the AI Infrastructure Financing Trade",
@@ -7907,7 +7922,7 @@
       "volatility"
     ],
     "direction": "unspecified",
-    "underlying": null,
+    "underlying": "Euro Stoxx",
     "edge_or_thesis": "2000, they found 80% of three-month calls expiring in-the-money were overpriced due to the gap between implied and realized volatility.",
     "any_quant_detail": "80%",
     "outcome_if_mentioned": null,
@@ -8067,7 +8082,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "9.99%, 4.99%, 19.99%, at $0.0001 per share, at 9.99, at $3.9999",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Point72"
   },
   {
     "article_title": "From Soros’s $2B Win to LTCM’s $4.6B Loss: The Complete Emerging Markets Hedge Fund Playbook",
@@ -8082,7 +8097,7 @@
     "edge_or_thesis": "Argentine bonds under Milei.",
     "any_quant_detail": "$2.4 billion, $4.6 billion, $2 billion, 52%",
     "outcome_if_mentioned": "lost $4.6 billion in four months on Russian bonds. | returned 52% in 2024 betting on Argentine bonds under Milei.",
-    "fund_name_if_mentioned": "George Soros"
+    "fund_name_if_mentioned": "Soros"
   },
   {
     "article_title": "From Soros’s $2B Win to LTCM’s $4.6B Loss: The Complete Emerging Markets Hedge Fund Playbook",
@@ -8097,7 +8112,7 @@
     "edge_or_thesis": "Argentine bonds under Milei.",
     "any_quant_detail": "$2.4 billion, $4.6 billion, $2 billion, $250 billion, 52%, 95%, 16.8%, 200x leverage",
     "outcome_if_mentioned": "lost $4.6 billion in four months on Russian bonds. | returned 52% in 2024 betting on Argentine bonds under Milei.",
-    "fund_name_if_mentioned": "Elliott Management"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "From Soros’s $2B Win to LTCM’s $4.6B Loss: The Complete Emerging Markets Hedge Fund Playbook",
@@ -8112,7 +8127,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$117 million, at $0.19",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Soros"
   },
   {
     "article_title": "From Soros’s $2B Win to LTCM’s $4.6B Loss: The Complete Emerging Markets Hedge Fund Playbook",
@@ -8127,7 +8142,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$4.65 billion, $2.4 billion, $730 million, 60%, 340%, 52%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Soros"
   },
   {
     "article_title": "From Soros’s $2B Win to LTCM’s $4.6B Loss: The Complete Emerging Markets Hedge Fund Playbook",
@@ -8163,6 +8178,21 @@
     "article_title": "From Soros’s $2B Win to LTCM’s $4.6B Loss: The Complete Emerging Markets Hedge Fund Playbook",
     "article_url": "https://navnoorbawa.substack.com/p/from-soross-2b-win-to-ltcms-46b-loss",
     "article_date": "2026-02-05",
+    "trade_description": "Position: Massive short yen exposure as part of broader carry trade strategy at $20–22 billion peak AUM.",
+    "instruments": [
+      "FX"
+    ],
+    "direction": "short",
+    "underlying": null,
+    "edge_or_thesis": "part of broader carry trade strategy at $20–22 billion peak AUM.",
+    "any_quant_detail": "$1.3 trillion, $3.625 billion, $2 billion, $20B, $6.5B, 5%, at $20",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Soros"
+  },
+  {
+    "article_title": "From Soros’s $2B Win to LTCM’s $4.6B Loss: The Complete Emerging Markets Hedge Fund Playbook",
+    "article_url": "https://navnoorbawa.substack.com/p/from-soross-2b-win-to-ltcms-46b-loss",
+    "article_date": "2026-02-05",
     "trade_description": "As Bank for International Settlements NDF research documents, 60–80% of emerging market NDF volume is speculative, driven significantly by hedge fund capital. This isn’t an anomaly to be arbitraged away — it’s a permanent feature of markets where information travels slowly, volatility runs high, and most investors lack the capital patience for multi-year holding periods.",
     "instruments": [
       "FX"
@@ -8172,7 +8202,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$2.4 billion, 80%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Soros"
   },
   {
     "article_title": "How Hedge Funds Made Billions in Gaming: Distressed Debt, Activist Campaigns & REIT Strategies",
@@ -8202,7 +8232,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$200 million, 95%, 98%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "How Hedge Funds Made Billions in China: Muddy Waters’ 11,260-Hour Luckin Investigation, Bridgewater’s 35% Return, and the Trades That Actually Worked",
@@ -8217,7 +8247,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$2.3 billion, 70%, at $500, at 70",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "John Paulson"
+    "fund_name_if_mentioned": "Paulson"
   },
   {
     "article_title": "How Hedge Funds Made Billions in China: Muddy Waters’ 11,260-Hour Luckin Investigation, Bridgewater’s 35% Return, and the Trades That Actually Worked",
@@ -8232,7 +8262,7 @@
     "edge_or_thesis": "overstated by 27x and 2009 revenue by 40x.",
     "any_quant_detail": "11%, 78%, at 2008",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "How Hedge Funds Made Billions in China: Muddy Waters’ 11,260-Hour Luckin Investigation, Bridgewater’s 35% Return, and the Trades That Actually Worked",
@@ -8247,7 +8277,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "98%, 2 cents on the dollar",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "How Hedge Funds Made Billions in China: Muddy Waters’ 11,260-Hour Luckin Investigation, Bridgewater’s 35% Return, and the Trades That Actually Worked",
@@ -8263,7 +8293,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "98%, 319%, 2 cents on the dollar",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "How Hedge Funds Made Billions in China: Muddy Waters’ 11,260-Hour Luckin Investigation, Bridgewater’s 35% Return, and the Trades That Actually Worked",
@@ -8291,7 +8321,7 @@
     "direction": "unspecified",
     "underlying": "Odey Asset Management; BlueCrest Capital Management; and Rokos Capital Management; UK Gilt",
     "edge_or_thesis": null,
-    "any_quant_detail": "193%, 153%, 51%",
+    "any_quant_detail": "£70 billion, £19.3 billion, £36 billion, 193%, 153%, 51%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Odey"
   },
@@ -8324,7 +8354,7 @@
     "edge_or_thesis": "liquidity providers during forced selling.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Odey"
   },
   {
     "article_title": "Odey’s 193% Return Explained: How Hedge Funds Profited From UK Gilt Crisis While Bank of England Purchased £19.3 Billion (2022 LDI Breakdown)",
@@ -8338,9 +8368,9 @@
     "direction": "arbitrage/relative value",
     "underlying": null,
     "edge_or_thesis": "gilt yields spiked, mark-to-market losses on their hedges required immediate cash collateral posting.",
-    "any_quant_detail": null,
+    "any_quant_detail": "£36 billion",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Odey"
   },
   {
     "article_title": "Odey’s 193% Return Explained: How Hedge Funds Profited From UK Gilt Crisis While Bank of England Purchased £19.3 Billion (2022 LDI Breakdown)",
@@ -8353,9 +8383,9 @@
     "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
-    "any_quant_detail": null,
+    "any_quant_detail": "£36 billion, £65 billion",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Odey"
   },
   {
     "article_title": "Odey’s 193% Return Explained: How Hedge Funds Profited From UK Gilt Crisis While Bank of England Purchased £19.3 Billion (2022 LDI Breakdown)",
@@ -8369,7 +8399,7 @@
     "direction": "unspecified",
     "underlying": "Rokos Capital",
     "edge_or_thesis": null,
-    "any_quant_detail": "51%",
+    "any_quant_detail": "£65 billion, 51%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Rokos"
   },
@@ -8384,7 +8414,7 @@
     "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": "the UK economy faced recession — creating a policy divergence that would drive yields higher.",
-    "any_quant_detail": null,
+    "any_quant_detail": "£45 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "BlueCrest"
   },
@@ -8430,7 +8460,7 @@
     "direction": "unspecified",
     "underlying": "funds operating with external capital",
     "edge_or_thesis": null,
-    "any_quant_detail": "4x leverage",
+    "any_quant_detail": "£36 billion, £45 billion, 4x leverage",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Rokos"
   },
@@ -8523,7 +8553,7 @@
     "edge_or_thesis": "sponsor through founder shares and warrants.",
     "any_quant_detail": "$750 million, $4 billion, 98%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Bill Ackman"
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "Inside Deutsche Bank’s $10B Collapse: The Trades That Built and Destroyed Germany’s Largest Bank",
@@ -8615,9 +8645,9 @@
     "direction": "short",
     "underlying": "of capital; gold",
     "edge_or_thesis": "surgical: short European banks on Brexit uncertainty, especially the most leveraged one.",
-    "any_quant_detail": "50%, 0.51%, 14%",
+    "any_quant_detail": "€100 million, 50%, 0.51%, 14%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "George Soros"
+    "fund_name_if_mentioned": "Soros"
   },
   {
     "article_title": "Inside Deutsche Bank’s $10B Collapse: The Trades That Built and Destroyed Germany’s Largest Bank",
@@ -8645,7 +8675,7 @@
     "direction": "long",
     "underlying": null,
     "edge_or_thesis": null,
-    "any_quant_detail": "$5.4 billion, $2B, $7.2 billion, $3.1 billion, $4.1 billion, 70%, 7.5%, 11.5%",
+    "any_quant_detail": "$5.4 billion, $2B, $7.2 billion, $3.1 billion, $4.1 billion, €3B, 70%, 7.5%, 11.5%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -8705,7 +8735,7 @@
     "direction": "unspecified",
     "underlying": "External capital",
     "edge_or_thesis": null,
-    "any_quant_detail": "$3.5B, $1.8B, $1B, $200M, $10.5B",
+    "any_quant_detail": "$3.5B, $1.8B, $1B, $200M, $10.5B, €100M, €40B, €30B",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Soros"
   },
@@ -8768,7 +8798,7 @@
     "edge_or_thesis": "profitable in 80% of quarters, accumulating $4.",
     "any_quant_detail": "$100 million, $4.4 billion, $7.4 billion, $318.5 billion, 80%, 38%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "How Elite Traders Made $250B from Commodities (2022-2023): Citadel’s $8B, Vitol’s $15B, and the Verified Strategies Behind Record Profits",
@@ -8783,7 +8813,7 @@
     "edge_or_thesis": "positioned correctly but regulatory intervention crystallized zero returns.",
     "any_quant_detail": "$12 billion, $456 million, $6.4 billion, $3.5 billion",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Elliott Associates"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "How Elite Traders Made $250B from Commodities (2022-2023): Citadel’s $8B, Vitol’s $15B, and the Verified Strategies Behind Record Profits",
@@ -8798,7 +8828,7 @@
     "edge_or_thesis": "companies are particularly interesting” due to “ill-conceived energy policies” and “well-intentioned but disastrous ESG initiatives.",
     "any_quant_detail": "$30 billion, $36.6 billion, 21.91%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Dan Loeb"
+    "fund_name_if_mentioned": "Loeb / Third Point"
   },
   {
     "article_title": "How Elite Traders Made $250B from Commodities (2022-2023): Citadel’s $8B, Vitol’s $15B, and the Verified Strategies Behind Record Profits",
@@ -8813,7 +8843,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$1.9 billion",
     "outcome_if_mentioned": "made $1.9 billion from grain and soybeans in Q1 2022.",
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "How Elite Traders Made $250B from Commodities (2022-2023): Citadel’s $8B, Vitol’s $15B, and the Verified Strategies Behind Record Profits",
@@ -9013,7 +9043,7 @@
     "edge_or_thesis": "ultra-low COMEX inventories combined with speculative longs created a short squeeze.",
     "any_quant_detail": "93.4%, 39%",
     "outcome_if_mentioned": "returned 93.4% for calendar 2025, with holdings in KGHM, Lundin Mining, Boliden, Hudbay, Freeport, and Southern Copper.",
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "Copper TC/RCs Hit -$60: Why Andurand Predicts $40,000 and Currie Calls It His ‘Highest Conviction Trade Ever’",
@@ -9028,7 +9058,7 @@
     "edge_or_thesis": "ultra-low COMEX inventories combined with speculative longs created a short squeeze.",
     "any_quant_detail": "$300 million, 80%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Andurand"
   },
   {
     "article_title": "$20 Billion in 3 Credit Trades: How Ackman, Paulson & Elliott Made History (With Exact Mechanics)",
@@ -9044,7 +9074,7 @@
     "edge_or_thesis": "COVID-19 emerged from China, Bill Ackman recognized structural vulnerability in corporate credit markets.",
     "any_quant_detail": "$27 Million, $2.6 Billion, 50 basis points",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Bill Ackman"
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "$20 Billion in 3 Credit Trades: How Ackman, Paulson & Elliott Made History (With Exact Mechanics)",
@@ -9059,7 +9089,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$27 million, 50 basis points",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Pershing Square"
+    "fund_name_if_mentioned": "Ackman / Pershing"
   },
   {
     "article_title": "$20 Billion in 3 Credit Trades: How Ackman, Paulson & Elliott Made History (With Exact Mechanics)",
@@ -9074,7 +9104,22 @@
     "edge_or_thesis": "packaging increasingly risky mortgages into AAA-rated bonds, creating massive profit opportunities for those willing to bet against the structure.",
     "any_quant_detail": "$15 Billion",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "John Paulson"
+    "fund_name_if_mentioned": "Paulson"
+  },
+  {
+    "article_title": "$20 Billion in 3 Credit Trades: How Ackman, Paulson & Elliott Made History (With Exact Mechanics)",
+    "article_url": "https://navnoorbawa.substack.com/p/20-billion-in-3-credit-trades-how",
+    "article_date": "2026-01-23",
+    "trade_description": "Scale: Paulson accumulated billions in notional CDS exposure across hundreds of specific mortgage pools, focusing on 2005-2006 vintage subprime loans with deteriorating underwriting standards.",
+    "instruments": [
+      "CDS"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "1%, 100%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Paulson"
   },
   {
     "article_title": "$20 Billion in 3 Credit Trades: How Ackman, Paulson & Elliott Made History (With Exact Mechanics)",
@@ -9089,7 +9134,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$617 million, 30 cents on the dollar, at 30",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Elliott Management"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "$20 Billion in 3 Credit Trades: How Ackman, Paulson & Elliott Made History (With Exact Mechanics)",
@@ -9104,7 +9149,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "20%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "$20 Billion in 3 Credit Trades: How Ackman, Paulson & Elliott Made History (With Exact Mechanics)",
@@ -9119,21 +9164,6 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Ackman"
-  },
-  {
-    "article_title": "$20 Billion in 3 Credit Trades: How Ackman, Paulson & Elliott Made History (With Exact Mechanics)",
-    "article_url": "https://navnoorbawa.substack.com/p/20-billion-in-3-credit-trades-how",
-    "article_date": "2026-01-23",
-    "trade_description": "The three trades that generated $20 billion—Ackman’s $2.6B COVID hedge, Paulson’s $15B subprime short, Elliott’s $2.4B Argentina recovery—share a common DNA:",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "defined but upside was explosive.",
-    "any_quant_detail": "$20 billion, $2.6B, $15B, $2.4B, $27M, 1%, 100%",
-    "outcome_if_mentioned": "generated $20 billion—Ackman’s $2.",
     "fund_name_if_mentioned": "Ackman"
   },
   {
@@ -9332,7 +9362,7 @@
     "edge_or_thesis": "dealers bought underlying to hedge short call positions.",
     "any_quant_detail": "$2.75B, $7B, $2.33B, 97%, 80x return",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies",
@@ -9347,7 +9377,7 @@
     "edge_or_thesis": "dealers bought underlying to hedge short call positions.",
     "any_quant_detail": "$2.75B, $7B, $2.33B, $3.24B, $463M, 97%, 42.15%, 4.15%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies",
@@ -9363,7 +9393,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$812M, $14M, $130M, 82%, 7.2%, 75%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies",
@@ -9379,7 +9409,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$130M, $150M, $2B, 7.2%, 75%, 20%, 115%, 97%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies",
@@ -9395,7 +9425,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$1 trillion, $4.8B, $600M, $3.65B, 22%, 21%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Long-Term Capital Management"
+    "fund_name_if_mentioned": "LTCM"
   },
   {
     "article_title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies",
@@ -9411,7 +9441,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$600M, $3.65B, 22%, 21%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies",
@@ -9428,7 +9458,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$5.5B, $2.85B, $10B, 22%, 21%, 6x leverage",
     "outcome_if_mentioned": "lost $5.5B, Nomura $2.",
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies",
@@ -9445,7 +9475,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$5.5B, $2.85B, $10B, 6x leverage",
     "outcome_if_mentioned": "lost $5.5B, Nomura $2.",
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies",
@@ -9461,7 +9491,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "20%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "TCI Fund Management 2025: Inside Chris Hohn’s Record $18.9 Billion Year — Complete Portfolio, Trade Prices, and Activist Tactics",
@@ -9643,7 +9673,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$125.4B, $2.4 billion, $10 billion, 3%, 15%, 4%, 40%",
     "outcome_if_mentioned": "earned $2.4 billion on approximately $117–177 million in distressed bonds purchased post-2001 default.",
-    "fund_name_if_mentioned": "Elliott Management"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "How Hedge Funds Made $5B+ From Sovereign Debt: Argentina, Greece & Ukraine Case Studies",
@@ -9658,7 +9688,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$2.4 billion, $10 billion, $2.4B, 270%, 35%",
     "outcome_if_mentioned": "earned $2.4 billion on approximately $117–177 million in distressed bonds purchased post-2001 default.",
-    "fund_name_if_mentioned": "Elliott Management"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "How Hedge Funds Made $5B+ From Sovereign Debt: Argentina, Greece & Ukraine Case Studies",
@@ -9672,9 +9702,9 @@
     "direction": "unspecified",
     "underlying": "Elliott Management",
     "edge_or_thesis": null,
-    "any_quant_detail": "270%",
+    "any_quant_detail": "€1.33B, 270%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Elliott Management"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "Florida Captured 11% of New Hedge Fund Launches in 2024. Here’s Why Dubai Hit 102 Funds and London Needs 474K Sq Ft",
@@ -9792,7 +9822,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "accelerates demand for bank capital; S&P 500; Gold",
+    "underlying": "accelerates demand for bank capital; S&P 500; SPY; EEM; Gold",
     "edge_or_thesis": null,
     "any_quant_detail": "$5B, $1.39B, $629M, $5.15B, $1B, 3%, 5%",
     "outcome_if_mentioned": null,
@@ -10176,6 +10206,36 @@
     "article_title": "Eight Banks Paid $1.3B for Silver Manipulation. Then in 2025, Silver Hit $83 and Shorts Collapsed.",
     "article_url": "https://navnoorbawa.substack.com/p/eight-banks-paid-13b-for-silver-manipulation",
     "article_date": "2026-01-10",
+    "trade_description": "Estimated gold short exposure: ~$1.5B mark-to-market impact (based on ~$200/oz move)",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "short",
+    "underlying": "gold; silver",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$1.5B, $1.2B",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Eight Banks Paid $1.3B for Silver Manipulation. Then in 2025, Silver Hit $83 and Shorts Collapsed.",
+    "article_url": "https://navnoorbawa.substack.com/p/eight-banks-paid-13b-for-silver-manipulation",
+    "article_date": "2026-01-10",
+    "trade_description": "Estimated silver short exposure: ~$1.2B mark-to-market impact (based on ~$7/oz move)",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "short",
+    "underlying": "gold; silver",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$1.5B, $1.2B, $2.7B",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Eight Banks Paid $1.3B for Silver Manipulation. Then in 2025, Silver Hit $83 and Shorts Collapsed.",
+    "article_url": "https://navnoorbawa.substack.com/p/eight-banks-paid-13b-for-silver-manipulation",
+    "article_date": "2026-01-10",
     "trade_description": "Current position (December 2025): JPMorgan flipped net long. Market data sources and CFTC reports indicate JPMorgan held substantial silver positions as of late December 2025:",
     "instruments": [
       "commodity"
@@ -10191,27 +10251,12 @@
     "article_title": "Eight Banks Paid $1.3B for Silver Manipulation. Then in 2025, Silver Hit $83 and Shorts Collapsed.",
     "article_url": "https://navnoorbawa.substack.com/p/eight-banks-paid-13b-for-silver-manipulation",
     "article_date": "2026-01-10",
-    "trade_description": "Example: 1,000 contract short position\nEntry: 1,000 contracts × 5,000 oz × $48.37 = $241.85M notional\nExit: 1,000 contracts × 5,000 oz × $52.00 = $260.00M notional\n───────────────────────────────────────────────────────────────\nGross Loss: ($18.15M)\nInitial Margin Requirement: ~10% = $24.2M\nMargin Call Trigger: +7.5% adverse move\n───────────────────────────────────────────────────────────────\nAt December 2025 peak ($83/oz):\nTheoretical Loss: ($173.15M) per 1,000 contracts\nLoss/Margin Ratio: 7.15x\nConvexity note: Silver shorts exhibit negative convexity. In backwardated markets with inventory stress, gamma (rate of delta change) accelerates against short positions as available physical silver concentrates.",
-    "instruments": [
-      "commodity"
-    ],
-    "direction": "short",
-    "underlying": "Silver; silver",
-    "edge_or_thesis": "available physical silver concentrates.",
-    "any_quant_detail": "$241.85M, $260.00M, $18.15M, $24.2M, $173.15M, 10%, 7.5%, 1,000 contract, 1,000 contracts",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Eight Banks Paid $1.3B for Silver Manipulation. Then in 2025, Silver Hit $83 and Shorts Collapsed.",
-    "article_url": "https://navnoorbawa.substack.com/p/eight-banks-paid-13b-for-silver-manipulation",
-    "article_date": "2026-01-10",
     "trade_description": "4. Basel III capital arbitrage\n85% RSF charge on unallocated positions versus 0–50% on allocated gold creates regulatory arbitrage. Banks have structural incentive to minimize paper exposure.",
     "instruments": [
       "commodity"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": "Basel III capital; gold",
+    "underlying": "Basel III capital; SLV; gold",
     "edge_or_thesis": "option valuation\nSLV’s ability to suspend share creation represents an embedded lookback option.",
     "any_quant_detail": "85%, 50%, 10%",
     "outcome_if_mentioned": null,
@@ -10230,7 +10275,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$23.4B, $800M, $17.5B, $3.0B, $26.2B",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Steve Cohen"
+    "fund_name_if_mentioned": "Cohen / Point72"
   },
   {
     "article_title": "BlueCrest +73%, Renaissance -14.39% October: Inside 2025’s Nuclear Trade and Quant Catastrophe",
@@ -10275,7 +10320,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$1B, 57%, 475%, 90%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "BlueCrest"
   },
   {
     "article_title": "BlueCrest +73%, Renaissance -14.39% October: Inside 2025’s Nuclear Trade and Quant Catastrophe",
@@ -10290,7 +10335,22 @@
     "edge_or_thesis": "peaking capacity complementing nuclear baseload.",
     "any_quant_detail": "$4B, $63.2B, 82%, 260%, 93.4%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "BlueCrest"
+  },
+  {
+    "article_title": "BlueCrest +73%, Renaissance -14.39% October: Inside 2025’s Nuclear Trade and Quant Catastrophe",
+    "article_url": "https://navnoorbawa.substack.com/p/bluecrest-73-renaissance-1439-october",
+    "article_date": "2026-01-08",
+    "trade_description": "AppLovin (APP): +115.8%\nMillennium increased stake by over 2M shares during 2025.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": "Magnetar Capital",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$73B, $21B, $11.9B, $4B, 50%, 115.8%, at $11.9",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "BlueCrest +73%, Renaissance -14.39% October: Inside 2025’s Nuclear Trade and Quant Catastrophe",
@@ -10335,6 +10395,21 @@
     "underlying": "quality Altana Credit Opportunities Fund",
     "edge_or_thesis": "2020, gained ~30% in the first few trading days of 2026 (Bloomberg reported).",
     "any_quant_detail": "$60 billion, 27%, 100%, 30%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "How Hedge Funds Made 30% in the First Days of 2026 on Venezuela’s Distressed Debt",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-30-in-the-first",
+    "article_date": "2026-01-07",
+    "trade_description": "Market-implied recovery (42 cents): Current bond prices imply significant haircuts on both principal and accrued interest. With bonds defaulted since 2017, unpaid interest has accumulated substantially, raising total creditor claims well above original face value. At 42 cents, markets price in severe losses across all claim components.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "2017, unpaid interest has accumulated substantially, raising total creditor claims well above original face value.",
+    "any_quant_detail": "27%, 30%, 100%, 20%, At 42",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -10430,7 +10505,7 @@
     "edge_or_thesis": "inception (December 1991), Pure Alpha I (12% volatility target) has averaged approximately 11.",
     "any_quant_detail": "$92B, 12%, 11.4%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "Bridgewater’s Pure Alpha Returned 33% in 2025. Here’s the Exact System Behind It.",
@@ -10456,7 +10531,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "Asset Management",
+    "underlying": "Asset Management; SPY; QQQ",
     "edge_or_thesis": null,
     "any_quant_detail": "$41.5B, $4.49 billion, $3.52B, $969M, 19%, 17.5%, 15.1%, 10.2%, 15%",
     "outcome_if_mentioned": null,
@@ -10599,7 +10674,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "D.E. Shaw"
   },
   {
     "article_title": "36% Returns: How D.E. Shaw Beat Citadel & Millennium to Top 2024",
@@ -10614,7 +10689,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "10.6%, 21%, 85%, 5.3%, at $95, at $120, at $93, 8 shares",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "D.E. Shaw"
   },
   {
     "article_title": "36% Returns: How D.E. Shaw Beat Citadel & Millennium to Top 2024",
@@ -10630,7 +10705,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "35%, 25%, 20%, 15%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "D.E. Shaw"
   },
   {
     "article_title": "Inside the $168B Systematic Fund Making Money While Others Lose (Man AHL)",
@@ -10769,7 +10844,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "How Millennium, Citadel & Point72 Structure Pods: Team Economics Behind $428B Multi-Manager Industry",
@@ -10785,7 +10860,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "How Millennium, Citadel & Point72 Structure Pods: Team Economics Behind $428B Multi-Manager Industry",
@@ -10801,7 +10876,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$55 billion",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "How Millennium, Citadel & Point72 Structure Pods: Team Economics Behind $428B Multi-Manager Industry",
@@ -10872,11 +10947,11 @@
       "equity"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": null,
+    "underlying": "IWM",
     "edge_or_thesis": null,
     "any_quant_detail": "$5.8B, $7.3B, $3.6B, $3B",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "Millennium’s $234B Q3 Portfolio: $20B NVDA Position, $7.4B External Allocations, and What 330 Pods Actually Trade",
@@ -10890,6 +10965,21 @@
     "underlying": "improvement in capital; utilization per Goldman Sa; crypto; Bitcoin",
     "edge_or_thesis": null,
     "any_quant_detail": "$3.5B, 1.5%, 22%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Millennium"
+  },
+  {
+    "article_title": "Millennium’s $234B Q3 Portfolio: $20B NVDA Position, $7.4B External Allocations, and What 330 Pods Actually Trade",
+    "article_url": "https://navnoorbawa.substack.com/p/millenniums-234b-q3-portfolio-20b",
+    "article_date": "2025-12-26",
+    "trade_description": "External allocations are alpha infrastructure, not passive diversification. $7.4B deployed to 4 specialized managers (Asia, Europe, global equities) extends Millennium’s reach into strategies internal pods can’t efficiently access. SMAs enable cross-margining, turning external managers into integrated components of the risk system.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": "Risk management; IWM",
+    "edge_or_thesis": "enable cross-margining, turning external managers into integrated components of the risk system.",
+    "any_quant_detail": "$3.4B, $3B, $7.3B, $7.4B, $900M, 1.3%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Millennium"
   },
@@ -11007,7 +11097,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "long/short",
     "underlying": "The group",
     "edge_or_thesis": null,
     "any_quant_detail": "$50 million, 0.67%",
@@ -11164,7 +11254,7 @@
     "edge_or_thesis": "of September 2009, taking equity stakes in management companies rather than just fund performance fees.",
     "any_quant_detail": "$6.5B, $22B, 31.7%, 25%, at $6.5",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Robertson / Tiger"
   },
   {
     "article_title": "How Julian Robertson’s $22B Hedge Fund Spawned 200+ Firms (38 He Seeded Directly)",
@@ -11179,7 +11269,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$36B, $10B, $6B, 30%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Tiger Global"
+    "fund_name_if_mentioned": "Tiger"
   },
   {
     "article_title": "How Julian Robertson’s $22B Hedge Fund Spawned 200+ Firms (38 He Seeded Directly)",
@@ -11210,7 +11300,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$1B, $7B, at $3, at $0.10",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Robertson / Tiger"
   },
   {
     "article_title": "How Julian Robertson’s $22B Hedge Fund Spawned 200+ Firms (38 He Seeded Directly)",
@@ -11225,7 +11315,7 @@
     "edge_or_thesis": "(government intervention, restructuring, M&A).",
     "any_quant_detail": "$1B, $7B, $4B, 5%, 200%, at $3, at $0.10",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Robertson / Tiger"
   },
   {
     "article_title": "How Julian Robertson’s $22B Hedge Fund Spawned 200+ Firms (38 He Seeded Directly)",
@@ -11255,7 +11345,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$676M",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Robertson / Tiger"
   },
   {
     "article_title": "How Julian Robertson’s $22B Hedge Fund Spawned 200+ Firms (38 He Seeded Directly)",
@@ -11270,7 +11360,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$22B, 100%, 25%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Tiger Management"
+    "fund_name_if_mentioned": "Tiger"
   },
   {
     "article_title": "How Hedge Funds Generated 2.62% Alpha in 2024: Short Rebates, Dispersion Trades, and the $15B Alternative Data Surge",
@@ -11299,6 +11389,21 @@
     "underlying": "S&P 500",
     "edge_or_thesis": "2008, alternative data spending surges toward $15.",
     "any_quant_detail": "$15.4 billion, $2.5 billion, 33%, 95%, 170 basis points, 100 basis points, 50bp",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "How Hedge Funds Generated 2.62% Alpha in 2024: Short Rebates, Dispersion Trades, and the $15B Alternative Data Surge",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-generated-262-alpha",
+    "article_date": "2025-12-21",
+    "trade_description": "P&L Impact: A fund with 60% gross short exposure earns approximately 5% on 60% of NAV (short rebate) while paying roughly 1.5% in dividends and 50bp spread. This nets approximately 180–210bp annually before any price movement. Long/short equity managers during high Fed funds periods (above 5%) generate average monthly returns 100+ basis points higher than during low-rate environments (Morgan Stanley).",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "short",
+    "underlying": "the return to normal capital",
+    "edge_or_thesis": null,
+    "any_quant_detail": "60%, 5%, 1.5%, 50bp, 210bp",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -11526,22 +11631,6 @@
     "article_title": "The $1.85 Trillion Arbitrage: How Hedge Funds Profit From Forward Mispricings",
     "article_url": "https://navnoorbawa.substack.com/p/the-185-trillion-arbitrage-how-hedge",
     "article_date": "2025-12-20",
-    "trade_description": "Example: If WTI crude spot trades at $68/barrel, 6-month futures at $72, and total carry costs equal $2.50, gross arbitrage profit is $1.50/barrel (2.2% over 6 months, approximately 4.4% annualized).",
-    "instruments": [
-      "futures",
-      "commodity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": "WTI",
-    "edge_or_thesis": null,
-    "any_quant_detail": "2.2%, 4.4%, at $68, at $72,",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "The $1.85 Trillion Arbitrage: How Hedge Funds Profit From Forward Mispricings",
-    "article_url": "https://navnoorbawa.substack.com/p/the-185-trillion-arbitrage-how-hedge",
-    "article_date": "2025-12-20",
     "trade_description": "CTAs and commodity-focused hedge funds manage $300+ billion systematically harvesting roll yields across energy, agricultural, and metal futures. Physical storage plays require operational infrastructure; financial arbitrage via futures spreads avoids delivery but accepts mark-to-market risk.",
     "instruments": [
       "futures",
@@ -11712,7 +11801,7 @@
       "futures",
       "repo"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "$1 trillion, 28%",
@@ -11824,7 +11913,7 @@
     "instruments": [
       "repo"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "10%, 25 basis points, at 25",
@@ -12080,7 +12169,7 @@
     "edge_or_thesis": "crash probabilities updated daily.",
     "any_quant_detail": "76%, 22.6%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Renaissance Technologies"
+    "fund_name_if_mentioned": "Renaissance"
   },
   {
     "article_title": "Why Renaissance’s Medallion Made 76% While Their Own RIEF Lost 22.6% in 2020",
@@ -12111,7 +12200,7 @@
     "edge_or_thesis": "mispricings in embedded optionality.",
     "any_quant_detail": "7%, 5x leverage, , share",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "Millennium Management’s Multi-Strategy Trading Architecture: Four Core Strategies Behind 14% Annualized Returns",
@@ -12126,7 +12215,7 @@
     "edge_or_thesis": "mispricings in embedded optionality.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "Millennium Management’s Multi-Strategy Trading Architecture: Four Core Strategies Behind 14% Annualized Returns",
@@ -12141,7 +12230,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "Millennium Management’s Multi-Strategy Trading Architecture: Four Core Strategies Behind 14% Annualized Returns",
@@ -12232,7 +12321,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "645%, 30%, 14%, at 5",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Millennium"
   },
   {
     "article_title": "Market-Neutral Funds Returned 7.21% in 2024. Most Were Accidentally Long Momentum.",
@@ -12491,7 +12580,7 @@
       "volatility"
     ],
     "direction": "unspecified",
-    "underlying": "on capital",
+    "underlying": "on capital; SPY",
     "edge_or_thesis": "the event’s impact is diluted across more time.",
     "any_quant_detail": "20%, 69.6%, 2.1%, 100%",
     "outcome_if_mentioned": null,
@@ -13053,7 +13142,7 @@
     "direction": "long",
     "underlying": "demonstrates how sophisticated capital",
     "edge_or_thesis": "mid-2023 as funds anticipated that Chancellor Rachel Reeves’ £40 billion tax package would compress earnings for companies reliant on the UK economy.",
-    "any_quant_detail": "13.8%, 15%",
+    "any_quant_detail": "£40 billion, 13.8%, 15%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -13328,7 +13417,7 @@
     "direction": "short",
     "underlying": null,
     "edge_or_thesis": "executed in August 2014 as the Portuguese bank collapsed.",
-    "any_quant_detail": "19%",
+    "any_quant_detail": "€1.9 billion, 19%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -13420,7 +13509,7 @@
     "edge_or_thesis": "1988 (Cornell Capital Group) — built its edge not through stock-picking but through signal mining at industrial scale.",
     "any_quant_detail": "12%, 6%, 66%, at 6",
     "outcome_if_mentioned": "returned 12% in H1 2025 while discretionary stock-pickers lagged at 6% (Goldman Sachs via Reuters).",
-    "fund_name_if_mentioned": "Renaissance Technologies"
+    "fund_name_if_mentioned": "Renaissance"
   },
   {
     "article_title": "Quant-Discovered vs. Discretionary Trades: How Hedge Funds Actually Find Alpha",
@@ -13435,7 +13524,7 @@
     "edge_or_thesis": "1988 (Cornell Capital Group) — built its edge not through stock-picking but through signal mining at industrial scale.",
     "any_quant_detail": "$8B, $60B, 66%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Renaissance Technologies"
+    "fund_name_if_mentioned": "Renaissance"
   },
   {
     "article_title": "Quant-Discovered vs. Discretionary Trades: How Hedge Funds Actually Find Alpha",
@@ -13667,15 +13756,14 @@
     "article_title": "I Added Transaction Costs to My Goldman Sachs Backtest. The 49% Return Became a -9.6% Loss.",
     "article_url": "https://navnoorbawa.substack.com/p/i-added-transaction-costs-to-my-goldman",
     "article_date": "2025-11-23",
-    "trade_description": "Example: AAPL October 2024\nStock: $175.00\nSell: Nov $192.50 call (10% OTM)\nGARCH vol: 24%\nVIX scalar: 1.05 (slightly elevated)\nSkew-adjusted IV: 26%\nMid price: $2.80\n- Slippage (2%): $2.74\n- Commission: $2.73 (premium collected)\nExit (30 days):\nStock: $182.00 (up 4%)\nCall expires worthless\nCost to close: $0\nPosition P&L:\n Stock gain: $7.00\n Premium kept: $2.73\n Total: $9.73 / $175 = 5.6% monthly\nWhy It Works:",
+    "trade_description": "Impact: OTM put buyers in v3.0 still pay too little; OTM call sellers collect too much premium. This overstates covered call returns by ~0.3–0.5%/month.",
     "instruments": [
-      "equity",
-      "volatility"
+      "option"
     ],
-    "direction": "unspecified",
-    "underlying": "VIX",
-    "edge_or_thesis": null,
-    "any_quant_detail": "1.27%, 15%, 62.5%, 10%, 24%",
+    "direction": "short",
+    "underlying": "SPY",
+    "edge_or_thesis": "steep put skew; meme stocks have call skew.",
+    "any_quant_detail": "15%, 0.5%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -13812,7 +13900,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "1%, 15.1%, 7.4%, 770bp",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Citadel"
   },
   {
     "article_title": "How Major Hedge Funds Value Crypto: Trading Market Structure While Traditional Valuation Fails",
@@ -13995,7 +14083,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "D.E. Shaw"
   },
   {
     "article_title": "D.E. Shaw’s 1998 Crisis: How a $372 Million Loss Built a $65 Billion Quant Giant",
@@ -14129,7 +14217,7 @@
       "FX"
     ],
     "direction": "unspecified",
-    "underlying": "billion in Nikkei; S&P 500; USD; JPY",
+    "underlying": "billion in Nikkei; S&P 500; Nikkei 225; USD",
     "edge_or_thesis": "leveraged positions unwound.",
     "any_quant_detail": "$160 billion, $500 billion, 0.25%, 7%, 12.4%, 3%",
     "outcome_if_mentioned": null,
@@ -14148,7 +14236,7 @@
     "direction": "unspecified",
     "underlying": "VIX",
     "edge_or_thesis": "1990 inception, exceeding November 2008’s 80.",
-    "any_quant_detail": "974%, 543%, 6%, 100%, at 82.69",
+    "any_quant_detail": "€495M, €262.3M, 974%, 543%, 6%, 100%, at 82.69",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -14163,7 +14251,7 @@
     "direction": "unspecified",
     "underlying": "VIX",
     "edge_or_thesis": "1990 inception, exceeding November 2008’s 80.",
-    "any_quant_detail": "6%, 100%, 80%, 76%, at 82.69",
+    "any_quant_detail": "€441.6B, 6%, 100%, 80%, 76%, at 82.69",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -14177,7 +14265,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": null,
+    "underlying": "LQD",
     "edge_or_thesis": "constituent bond spreads widened 3–5x.",
     "any_quant_detail": "40%, 25%",
     "outcome_if_mentioned": null,
@@ -14192,9 +14280,9 @@
       "equity"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": "trading capital; excess regulatory capital",
+    "underlying": "trading capital; excess regulatory capital; LQD",
     "edge_or_thesis": null,
-    "any_quant_detail": "5%, 65%, 25%, 2 bps, 50 bps, at $95,, at $100.",
+    "any_quant_detail": "€771M, €273M, €323.7M, €11.7M, 5%, 65%, 25%, 2 bps, 50 bps, at $95,, at $100.",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -14208,7 +14296,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": null,
+    "underlying": "LQD",
     "edge_or_thesis": null,
     "any_quant_detail": "80%",
     "outcome_if_mentioned": null,
@@ -14224,7 +14312,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": null,
+    "underlying": "LQD",
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -15187,7 +15275,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Amaranth"
   },
   {
     "article_title": "How Misusing the Sharpe Ratio Cost Hedge Funds $150+ Billion — Twice",
@@ -15232,7 +15320,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Long-Term Capital Management"
+    "fund_name_if_mentioned": "LTCM"
   },
   {
     "article_title": "How Misusing the Sharpe Ratio Cost Hedge Funds $150+ Billion — Twice",
@@ -16034,7 +16122,7 @@
     "edge_or_thesis": "a notable performer in 2025, benefiting from structural market dynamics.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Balyasny"
   },
   {
     "article_title": "How Multi-Strategy Funds Generated 10% Returns in 2025: Inside Balyasny’s Pod Allocation Model",
@@ -16050,7 +16138,7 @@
     "edge_or_thesis": "bonds approached maturity, producing attractive arbitrage setups.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Balyasny"
   },
   {
     "article_title": "How Multi-Strategy Funds Generated 10% Returns in 2025: Inside Balyasny’s Pod Allocation Model",
@@ -16066,7 +16154,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Balyasny"
   },
   {
     "article_title": "Anatomy of a $468 Million Collapse: How Pierre Andurand Lost 52% in Four Months",
@@ -16173,7 +16261,7 @@
     "edge_or_thesis": "1933) — produced a fast, sharp volatility regime change that unfolded in days rather than weeks.",
     "any_quant_detail": "$92.1 billion, 18.6%, at 18.6",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "How Bridgewater’s Pure Alpha Captured 26.2% Returns from Tariff Volatility: A Quantitative Breakdown",
@@ -16188,7 +16276,7 @@
     "edge_or_thesis": "a regime flip and increase cross-asset hedges.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Bridgewater"
   },
   {
     "article_title": "Statistical Arbitrage: The Quant Strategy Seeing Record Inflows",
@@ -16391,22 +16479,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "50.75%, 0.02%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Renaissance Technologies: The $100 Billion Built on Statistical Arbitrage",
-    "article_url": "https://navnoorbawa.substack.com/p/renaissance-technologies-the-100",
-    "article_date": "2025-10-02",
-    "trade_description": "Example: A human trader might notice that a stock “usually” bounces at a certain price level and base trading decisions on that observation. Renaissance’s models would quantify exactly how often this occurs, under what conditions, with what statistical confidence, accounting for changing market conditions — then trade only when the edge exceeded all costs.",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Renaissance"
   },
   {
     "article_title": "Renaissance Technologies: The $100 Billion Built on Statistical Arbitrage",
@@ -16421,7 +16494,7 @@
     "edge_or_thesis": "approximately 17–19 percentage points.",
     "any_quant_detail": "$10 billion, $6.6 billion, $50 billion, 66%, 20%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
+    "fund_name_if_mentioned": "Renaissance"
   },
   {
     "article_title": "The Pod Shop Revolution: How Multi-Strategy Funds Generated 13.6% Returns While Markets Stumbled",
@@ -16541,7 +16614,7 @@
     "edge_or_thesis": "spreading beyond China.",
     "any_quant_detail": "0.5%, 3.2%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Bill Ackman"
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "The $27 Million Bet That Returned $2.6 Billion: Deconstructing the Greatest Hedge Fund Trade in Modern History",
@@ -16636,7 +16709,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$27M, $2.6B, $2.3B, 526%, 70.2%, 34%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Pershing Square"
+    "fund_name_if_mentioned": "Ackman / Pershing"
   },
   {
     "article_title": "The $27 Million Bet That Returned $2.6 Billion: Deconstructing the Greatest Hedge Fund Trade in Modern History",
@@ -16668,7 +16741,7 @@
     "edge_or_thesis": "was identifiable prospectively.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Bill Ackman"
+    "fund_name_if_mentioned": "Ackman"
   },
   {
     "article_title": "The $4.74 Trillion Inflection Point: Your Complete Guide to Launching a Hedge Fund in 2025’s Golden Era",
@@ -16761,7 +16834,7 @@
     "edge_or_thesis": "was proving prescient.",
     "any_quant_detail": "$15 billion, $60 billion",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Elliott Management"
+    "fund_name_if_mentioned": "Elliott"
   },
   {
     "article_title": "The $20 Billion Meltdown: How Two Junior Traders Broke the World’s Oldest Metal Exchange",
@@ -17215,7 +17288,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$1.6 billion, $20 billion, 8%",
     "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Renaissance Technologies"
+    "fund_name_if_mentioned": "Renaissance"
   },
   {
     "article_title": "RIEF’s $1.6 Billion Liberation Day Disaster: How Trump’s Tariff Shock Broke Renaissance’s Quant Models",
@@ -17613,7 +17686,7 @@
     "edge_or_thesis": null,
     "any_quant_detail": "$20 billion",
     "outcome_if_mentioned": "lost $20 billion in two days through total return swap leverage that created 30:1 position sizing and broke multiple prime brokerages.",
-    "fund_name_if_mentioned": "Renaissance Technologies"
+    "fund_name_if_mentioned": "Renaissance"
   },
   {
     "article_title": "The $650M Volmageddon Collapse: How LJM's Leveraged Short Vol Strategy Imploded in 48 Hours",
@@ -17654,7 +17727,7 @@
     "instruments": [
       "futures"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "VIX",
     "edge_or_thesis": "investors pay extra for downside protection.",
     "any_quant_detail": null,

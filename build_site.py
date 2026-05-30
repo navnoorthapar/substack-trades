@@ -38,6 +38,32 @@ for url, article_trades in trades_by_url.items():
 
 articles.sort(key=lambda x: x['date'], reverse=True)
 
+# ── Top funds for sidebar filter ──────────────────────────────────────────────
+import re as _re
+fund_counts = {}
+for t in trades:
+    fn = t.get('fund_name_if_mentioned')
+    if fn:
+        fund_counts[fn] = fund_counts.get(fn, 0) + 1
+top_funds = sorted(fund_counts.items(), key=lambda x: -x[1])[:12]
+
+def _fid(name):
+    return _re.sub(r'[^a-zA-Z0-9]', '_', name)
+
+_fund_btns = [
+    '<button class="filter-btn active" data-fund="all" onclick="setFund(this)">'
+    '<span class="dot dot-all"></span> All <span class="count" id="cnt-fund-all"></span>'
+    '</button>'
+]
+for fn, _ in top_funds:
+    fn_esc = fn.replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;').replace('>', '&gt;')
+    _fund_btns.append(
+        f'<button class="filter-btn" data-fund="{fn_esc}" onclick="setFund(this)">'
+        f'{fn_esc} <span class="count" id="cnt-fund-{_fid(fn)}"></span>'
+        f'</button>'
+    )
+fund_filter_html = '\n    '.join(_fund_btns)
+
 data_json = json.dumps(articles, ensure_ascii=False)
 
 HTML = f"""<!DOCTYPE html>
@@ -290,6 +316,7 @@ html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
   <div class="stats-bar">
     <span><b id="stat-articles">0</b> articles</span>
     <span><b id="stat-trades">0</b> trades</span>
+    <span><b id="stat-funds">0</b> funds</span>
     <span><b id="stat-range">—</b></span>
     <span style="margin-left:8px;color:var(--dim)">updated {BUILT_AT}</span>
   </div>
@@ -305,6 +332,11 @@ html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
 
 <div class="layout">
 <aside>
+  <div class="filter-group">
+    <span class="filter-label">Fund</span>
+    {fund_filter_html}
+  </div>
+
   <div class="filter-group">
     <span class="filter-label">Direction</span>
     <button class="filter-btn active" data-dir="all" onclick="setDir(this)">
@@ -356,6 +388,7 @@ const DATA = {data_json};
 // ── State ──
 let activeDir  = 'all';
 let activeInst = 'all';
+let activeFund = 'all';
 let query      = '';
 
 // ── Filter & Render ──
@@ -366,6 +399,10 @@ function tradeMatchesDir(t, dir) {{
 function tradeMatchesInst(t, inst) {{
   if (inst === 'all') return true;
   return (t.instruments || []).includes(inst);
+}}
+function tradeMatchesFund(t, fund) {{
+  if (fund === 'all') return true;
+  return (t.fund_name_if_mentioned || '').toLowerCase() === fund.toLowerCase();
 }}
 function matchesQuery(art, q, trades) {{
   if (!q) return true;
@@ -378,13 +415,17 @@ function matchesQuery(art, q, trades) {{
 }}
 
 function filteredTrades(art) {{
-  return art.trades.filter(t => tradeMatchesDir(t, activeDir) && tradeMatchesInst(t, activeInst));
+  return art.trades.filter(t =>
+    tradeMatchesDir(t, activeDir) &&
+    tradeMatchesInst(t, activeInst) &&
+    tradeMatchesFund(t, activeFund)
+  );
 }}
 
 function render() {{
   const feed = document.getElementById('feed');
   const q = query.trim();
-  const filtersActive = activeDir !== 'all' || activeInst !== 'all';
+  const filtersActive = activeDir !== 'all' || activeInst !== 'all' || activeFund !== 'all';
 
   const tradeCache = new Map();
   for (const art of DATA) {{
@@ -515,6 +556,15 @@ function updateCounts() {{
       ? DATA.reduce((s, a) => s + a.trade_count, 0)
       : DATA.reduce((s, a) => s + a.trades.filter(t => tradeMatchesInst(t, i)).length, 0);
   }}
+  // Fund counts — iterate over DOM buttons so it auto-handles whatever the Python injected
+  document.querySelectorAll('[data-fund]').forEach(btn => {{
+    const fund = btn.dataset.fund;
+    const el = btn.querySelector('.count');
+    if (!el) return;
+    el.textContent = fund === 'all'
+      ? DATA.reduce((s, a) => s + a.trade_count, 0)
+      : DATA.reduce((s, a) => s + a.trades.filter(t => tradeMatchesFund(t, fund)).length, 0);
+  }});
 }}
 
 function setDir(btn) {{
@@ -529,6 +579,12 @@ function setInst(btn) {{
   activeInst = btn.dataset.inst;
   render();
 }}
+function setFund(btn) {{
+  document.querySelectorAll('[data-fund]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFund = btn.dataset.fund;
+  render();
+}}
 
 // ── URL hash state (shareable / bookmarkable filters) ──
 function updateHash() {{
@@ -536,6 +592,7 @@ function updateHash() {{
   if (query) p.set('q', query);
   if (activeDir !== 'all') p.set('dir', activeDir);
   if (activeInst !== 'all') p.set('inst', activeInst);
+  if (activeFund !== 'all') p.set('fund', activeFund);
   const s = p.toString();
   history.replaceState(null, '', s ? '#' + s : location.pathname + location.search);
 }}
@@ -552,6 +609,8 @@ function renderStats() {{
   const dates = DATA.map(a => a.date).filter(d => d > '2020-01-01').sort();
   document.getElementById('stat-articles').textContent = DATA.length;
   document.getElementById('stat-trades').textContent = DATA.reduce((s, a) => s + a.trade_count, 0).toLocaleString();
+  const fundCount = new Set(DATA.flatMap(a => a.trades.map(t => t.fund_name_if_mentioned).filter(Boolean))).size;
+  document.getElementById('stat-funds').textContent = fundCount;
   document.getElementById('stat-range').textContent = dates.length ? fmtDate(dates[0]) + ' → ' + fmtDate(dates[dates.length - 1]) : '—';
 }}
 
@@ -606,6 +665,10 @@ document.addEventListener('keydown', e => {{
   if (p.has('inst')) {{
     activeInst = p.get('inst');
     document.querySelectorAll('[data-inst]').forEach(b => b.classList.toggle('active', b.dataset.inst === activeInst));
+  }}
+  if (p.has('fund')) {{
+    activeFund = p.get('fund');
+    document.querySelectorAll('[data-fund]').forEach(b => b.classList.toggle('active', b.dataset.fund === activeFund));
   }}
 }})();
 renderStats();
