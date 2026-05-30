@@ -245,6 +245,8 @@ html.light .dir-ls{{background:#f5f3ff;border-color:#ddd6fe}}
 html.light .trade-quant{{color:#b45309}}
 .trade-outcome{{font-size:11px;color:var(--accent);margin-top:4px;font-style:italic}}
 .trade-outcome-loss{{font-size:11px;color:var(--short);margin-top:4px;font-style:italic}}
+.fund-tag{{font-size:10px;font-family:var(--font-mono);padding:2px 7px;border-radius:3px;color:var(--accent);border:1px solid;border-color:#14532d;background:#052012;margin-right:4px}}
+html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
 
 /* ── EMPTY STATE ── */
 .empty{{text-align:center;padding:80px 20px;color:var(--muted)}}
@@ -370,7 +372,7 @@ function matchesQuery(art, q, trades) {{
   const src = trades || art.trades;
   const haystack = [
     art.title,
-    ...src.map(t => [t.trade_description, t.underlying, t.edge_or_thesis, t.outcome_if_mentioned].join(' '))
+    ...src.map(t => [t.trade_description, t.underlying, t.edge_or_thesis, t.outcome_if_mentioned, t.fund_name_if_mentioned].join(' '))
   ].join(' ').toLowerCase();
   return q.toLowerCase().split(' ').filter(Boolean).every(w => haystack.includes(w));
 }}
@@ -408,6 +410,7 @@ function render() {{
     const card = buildCard(art, tradeCache.get(art));
     feed.appendChild(card);
   }}
+  updateHash();
 }}
 
 function dirClass(dir) {{
@@ -427,6 +430,13 @@ function esc(s) {{
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }}
 
+const _MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDate(s) {{
+  if (!s || s === '1970-01-01') return '—';
+  const [y, m, d] = s.split('-').map(Number);
+  return `${{_MONTHS[m-1]}} ${{d}}, ${{y}}`;
+}}
+
 function buildCard(art, trades) {{
   const div = document.createElement('div');
   div.className = 'article-card';
@@ -444,7 +454,7 @@ function buildCard(art, trades) {{
   div.innerHTML = `
     <div class="article-header" onclick="toggleCard(this.parentElement)">
       <div class="article-meta">
-        <span class="article-date">${{art.date}}</span>
+        <span class="article-date">${{fmtDate(art.date)}}</span>
       </div>
       <div class="article-body">
         <div class="article-title">${{esc(art.title)}}</div>
@@ -469,6 +479,7 @@ function buildTrade(t) {{
   const dc = dirClass(t.direction);
   const dirBadge = dc ? `<span class="dir-tag ${{dc}}">${{dirLabel(t.direction)}}</span>` : '';
   const instTags = (t.instruments || []).map(i => `<span class="tag tag-${{i}}">${{i}}</span>`).join('');
+  const fundTag  = t.fund_name_if_mentioned ? `<span class="fund-tag">${{esc(t.fund_name_if_mentioned)}}</span>` : '';
 
   const desc    = esc(t.trade_description || '');
   const underlying = t.underlying ? `<div class="trade-field"><b>Underlying:</b> ${{esc(t.underlying)}}</div>` : '';
@@ -478,7 +489,7 @@ function buildTrade(t) {{
   const outcome = t.outcome_if_mentioned ? `<div class="${{outLoss ? 'trade-outcome-loss' : 'trade-outcome'}}">${{outLoss ? '&#10007;' : '&#10003;'}} ${{esc(t.outcome_if_mentioned)}}</div>` : '';
 
   return `<div class="trade-item">
-    <div class="trade-row1">${{dirBadge}}${{instTags}}</div>
+    <div class="trade-row1">${{fundTag}}${{dirBadge}}${{instTags}}</div>
     <div class="trade-desc">${{desc}}</div>
     ${{underlying}}${{thesis}}${{quant}}${{outcome}}
   </div>`;
@@ -519,6 +530,16 @@ function setInst(btn) {{
   render();
 }}
 
+// ── URL hash state (shareable / bookmarkable filters) ──
+function updateHash() {{
+  const p = new URLSearchParams();
+  if (query) p.set('q', query);
+  if (activeDir !== 'all') p.set('dir', activeDir);
+  if (activeInst !== 'all') p.set('inst', activeInst);
+  const s = p.toString();
+  history.replaceState(null, '', s ? '#' + s : location.pathname + location.search);
+}}
+
 // ── Search ──
 let searchTimer;
 document.getElementById('search').addEventListener('input', e => {{
@@ -531,7 +552,7 @@ function renderStats() {{
   const dates = DATA.map(a => a.date).filter(d => d > '2020-01-01').sort();
   document.getElementById('stat-articles').textContent = DATA.length;
   document.getElementById('stat-trades').textContent = DATA.reduce((s, a) => s + a.trade_count, 0).toLocaleString();
-  document.getElementById('stat-range').textContent = dates.length ? dates[0] + ' → ' + dates[dates.length - 1] : '—';
+  document.getElementById('stat-range').textContent = dates.length ? fmtDate(dates[0]) + ' → ' + fmtDate(dates[dates.length - 1]) : '—';
 }}
 
 // ── Filter panel (mobile) ──
@@ -555,7 +576,38 @@ function toggleTheme() {{
   }}
 }})();
 
+// ── Keyboard shortcuts ──
+document.addEventListener('keydown', e => {{
+  const s = document.getElementById('search');
+  if (e.key === '/' && document.activeElement !== s) {{
+    e.preventDefault();
+    s.focus();
+  }}
+  if (e.key === 'Escape') {{
+    if (query) {{
+      s.value = '';
+      query = '';
+      render();
+    }}
+    if (document.activeElement === s) s.blur();
+  }}
+}});
+
 // ── Init ──
+(function initFromHash() {{
+  const hash = location.hash.slice(1);
+  if (!hash) return;
+  const p = new URLSearchParams(hash);
+  if (p.has('q')) {{ query = p.get('q'); document.getElementById('search').value = query; }}
+  if (p.has('dir')) {{
+    activeDir = p.get('dir');
+    document.querySelectorAll('[data-dir]').forEach(b => b.classList.toggle('active', b.dataset.dir === activeDir));
+  }}
+  if (p.has('inst')) {{
+    activeInst = p.get('inst');
+    document.querySelectorAll('[data-inst]').forEach(b => b.classList.toggle('active', b.dataset.inst === activeInst));
+  }}
+}})();
 renderStats();
 updateCounts();
 render();

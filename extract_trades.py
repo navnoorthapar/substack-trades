@@ -17,7 +17,7 @@ OUTPUT_PATH = ROOT / 'trades_extracted.json'
 
 DIRECTION_LONG = r'\b(went long|goes long|entered long|long position|net long|build\w* (?:a )?long|built (?:a )?long|bullish|upside bet|leveraged long|bought|purchase[d]?|acqui(?:red|res))\b'
 DIRECTION_SHORT = r'\b(shorted|shorting|went short|goes short|entered short|sold short|short position|net short|short seller[s]?|bet against|CDS buy|bearish)\b'
-DIRECTION_ARB = r'\b(arbitrage[d]?|arb(?:ed)?|relative value|pairs trade|basis trade|convergence trade|spread trade|market neutral|merger arb|risk arb|event.driven)\b'
+DIRECTION_ARB = r'\b(arbitrage[d]?|arb(?:ed)?|relative value|pairs trade|basis trade|convergence trade|spread trade|market neutral|merger arb|risk arb|event[\s\-]driven)\b'
 
 INSTRUMENTS = {
     # "note/notes" removed — matches "researchers' note", footnotes, URLs.
@@ -27,7 +27,7 @@ INSTRUMENTS = {
     # Removed: standalone put/call/spread/cap/floor (too broad — "credit spread", "market cap", "cash flow")
     'option': r'\b(option[s]?|put option[s]?|call option[s]?|straddle[s]?|strangle[s]?|collar[s]?|butterfly spread|condor spread|warrant[s]?|swaption[s]?|put spread[s]?|call spread[s]?|protective put|covered call|exotic option)\b',
     'equity': r'\b(stock[s]?|share[s]?|equity|equities|common stock|preferred stock|ADR[s]?|GDR[s]?|ETF[s]?|index fund[s]?)\b',
-    'futures': r'\b(futures?|future contract[s]?|commodity future[s]?|financial future[s]?)\b',
+    'futures': r'\b(futures|future contracts?|commodity futures?|financial futures?)\b',
     # Removed standalone "swap" — too generic. Require context word or specific form.
     'swap': r'\b(interest rate swap[s]?|IRS swap|TRS|total return swap[s]?|variance swap[s]?|volatility swap[s]?|cross.currency swap[s]?|credit swap[s]?|swap (?:position|trade|desk|book)|swapped (?:into|out|the))\b',
     # Removed: dollar/USD/EUR/GBP/JPY/CNY/CHF/yen/euro/pound — these are price denominations not FX trades
@@ -58,6 +58,41 @@ QUANT_PATTERNS = [
     r'notional\s+(?:of\s+)?[\d,$]+',
     r'P[&/]?L\s+of\s+[\$\d,.]+'
 ]
+
+# ─── Hedge fund / manager name extraction ──────────────────────────────────────
+_FUND_NAMES = [
+    # Iconic managers (last name)
+    'Soros', 'Ackman', 'Paulson', 'Druckenmiller', 'Buffett', 'Einhorn',
+    'Tepper', 'Griffin', 'Cohen', 'Dalio', 'Simons', 'Loeb', 'Bacon',
+    'Andurand', 'Odey', 'Rokos', 'Klarman', 'Howard',
+    # Full-name variants
+    'Stanley Druckenmiller', 'Bill Ackman', 'George Soros', 'John Paulson',
+    'David Einhorn', 'David Tepper', 'Ken Griffin', 'Steve Cohen',
+    'Ray Dalio', 'Jim Simons', 'Seth Klarman', 'Paul Tudor Jones',
+    'Julian Robertson', 'Lee Ainslie', 'Louis Bacon', 'Alan Howard',
+    'Dan Loeb', 'Howard Marks',
+    # Fund / firm names
+    'Bridgewater', 'Citadel', 'Millennium', 'Point72', 'Renaissance Technologies',
+    'BlueCrest', 'Elliott Management', 'Elliott Associates',
+    'Tiger Global', 'Tiger Management', 'LTCM', 'Long-Term Capital Management',
+    'Amaranth', 'Two Sigma', 'D.E. Shaw', 'Viking Global', 'Lone Pine',
+    'Third Point', 'Balyasny', 'AQR', 'Winton', 'Aspect Capital',
+    'Brevan Howard', 'Man Group', 'Tudor Investment', 'Glenview', 'Coatue',
+    'Maverick Capital', 'Pershing Square', 'Greenlight Capital',
+    'Appaloosa Management', 'Baupost Group', 'Moore Capital', 'Highbridge',
+    'Farallon', 'Canyon Capital', 'Caxton', 'King Street', 'Centerbridge',
+    'Oaktree Capital', 'Duquesne',
+]
+# Longest-first so multi-word names match before single-word prefixes
+FUND_NAMES_RE = re.compile(
+    r'\b(' + '|'.join(re.escape(n) for n in sorted(_FUND_NAMES, key=len, reverse=True)) + r')\b',
+    re.IGNORECASE
+)
+
+def extract_fund_name(text):
+    """Return first hedge fund or manager name found in text, or None."""
+    m = FUND_NAMES_RE.search(text)
+    return m.group(1) if m else None
 
 # Sentence-level trade trigger keywords
 TRADE_TRIGGERS = [
@@ -218,18 +253,7 @@ def process_article(post):
     date = post.get('post_date', '')[:10]
 
     if not text or len(text) < 200:
-        return [{
-            'article_title': title,
-            'article_url': url,
-            'article_date': date,
-            'trade_description': 'No substantial content available',
-            'instruments': [],
-            'direction': None,
-            'underlying': None,
-            'edge_or_thesis': None,
-            'any_quant_detail': None,
-            'outcome_if_mentioned': None,
-        }]
+        return []
 
     # Split text into paragraphs
     paragraphs = [p.strip() for p in text.split('\n\n') if p.strip() and len(p.strip()) > 50]
@@ -262,6 +286,7 @@ def process_article(post):
                 'edge_or_thesis': extract_thesis(context),
                 'any_quant_detail': extract_quant_details(context),
                 'outcome_if_mentioned': extract_outcome(context),
+                'fund_name_if_mentioned': extract_fund_name(context),
             }
             trades.append(trade)
 
@@ -281,23 +306,12 @@ def process_article(post):
                     'edge_or_thesis': extract_thesis(block),
                     'any_quant_detail': extract_quant_details(block),
                     'outcome_if_mentioned': extract_outcome(block),
+                    'fund_name_if_mentioned': extract_fund_name(block),
                 }
                 trades.append(trade)
 
-    # If still no trades, return a placeholder
     if not trades:
-        trades.append({
-            'article_title': title,
-            'article_url': url,
-            'article_date': date,
-            'trade_description': f'No specific trades identified in article ({len(text)} chars of content)',
-            'instruments': [],
-            'direction': None,
-            'underlying': None,
-            'edge_or_thesis': None,
-            'any_quant_detail': extract_quant_details(text),
-            'outcome_if_mentioned': extract_outcome(text),
-        })
+        return []
 
     # Deduplicate by trade_description
     seen_descs = set()
