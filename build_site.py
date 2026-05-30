@@ -17,7 +17,7 @@ BUILT_AT = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
 # Group trades by article URL — no dependency on all_posts.json
 trades_by_url = defaultdict(list)
 for t in trades:
-    trades_by_url[t['article_url']].append(t)
+    trades_by_url[t.get('article_url', '')].append(t)
 
 articles = []
 for url, article_trades in trades_by_url.items():
@@ -59,6 +59,7 @@ for fn, _ in top_funds:
     fn_esc = fn.replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;').replace('>', '&gt;')
     _fund_btns.append(
         f'<button class="filter-btn" data-fund="{fn_esc}" onclick="setFund(this)">'
+        f'<span class="dot" style="background:var(--accent);opacity:.4"></span>'
         f'{fn_esc} <span class="count" id="cnt-fund-{_fid(fn)}"></span>'
         f'</button>'
     )
@@ -441,6 +442,8 @@ function render() {{
   document.getElementById('result-count').textContent =
     `${{visible.length}} article${{visible.length !== 1 ? 's' : ''}} · ${{visible.reduce((s, a) => s + tradeCache.get(a).length, 0)}} trades`;
 
+  updateHash();
+
   feed.innerHTML = '';
   if (visible.length === 0) {{
     feed.innerHTML = '<div class="empty"><h2>No results</h2><p>Try a different search or filter.</p></div>';
@@ -451,7 +454,6 @@ function render() {{
     const card = buildCard(art, tradeCache.get(art));
     feed.appendChild(card);
   }}
-  updateHash();
 }}
 
 function dirClass(dir) {{
@@ -483,7 +485,7 @@ function buildCard(art, trades) {{
   div.className = 'article-card';
 
   // Instruments from filtered trades
-  const insts = [...new Set(trades.flatMap(t => t.instruments || []))].sort();
+  const insts = [...new Set(trades.flatMap(t => t.instruments || []))].filter(i => i !== 'unspecified').sort();
   const dirs  = [...new Set(trades.map(t => t.direction).filter(d => d && d !== 'unspecified'))].sort();
 
   const instTags = insts.map(i => `<span class="tag tag-${{i}}">${{i}}</span>`).join('');
