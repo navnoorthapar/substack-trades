@@ -1,35 +1,57 @@
 #!/usr/bin/env bash
-# Run the full pipeline locally and push updated data + site to GitHub.
-# Usage: ./refresh.sh
+# Full pipeline: fetch → extract → filter → build → push.
+# Safe to call multiple times per day — skips if already ran in last 20 hours.
 set -e
 
 cd "$(dirname "$0")"
 
+LAST_RUN_FILE="$HOME/.substack_trades_last_run"
+
+# Skip if already ran successfully in the last 20 hours
+if [ -f "$LAST_RUN_FILE" ]; then
+    LAST=$(cat "$LAST_RUN_FILE")
+    NOW=$(date +%s)
+    DIFF=$(( NOW - LAST ))
+    if [ "$DIFF" -lt 72000 ]; then
+        echo "Already ran $(( DIFF / 3600 ))h ago — skipping."
+        exit 0
+    fi
+fi
+
 echo "=== Fetching posts from Substack ==="
-python fetch_all_posts.py
+python3 fetch_all_posts.py
 
 echo ""
 echo "=== Extracting trades ==="
-python extract_trades.py
+python3 extract_trades.py
 
 echo ""
 echo "=== Filtering & deduplicating ==="
-python filter_trades.py
+python3 filter_trades.py
+
+# Only rebuild + push if trades_extracted.json actually changed
+git add trades_extracted.json
+if git diff --staged --quiet; then
+    echo "No new trades since last run."
+    git restore --staged trades_extracted.json 2>/dev/null || true
+    # Still mark as ran so we don't hammer Substack again today
+    date +%s > "$LAST_RUN_FILE"
+    exit 0
+fi
 
 echo ""
 echo "=== Building site ==="
-python build_site.py
+python3 build_site.py
 
 echo ""
 echo "=== Committing and pushing ==="
 git add trades_extracted.json docs/index.html
-if git diff --staged --quiet; then
-  echo "No changes since last run."
-else
-  TRADE_COUNT=$(python -c "import json; print(len(json.load(open('trades_extracted.json'))))")
-  git commit -m "update: ${TRADE_COUNT} trades ($(date -u '+%Y-%m-%d'))"
-  git push origin main
-  echo ""
-  echo "Done. Site will be live in ~1 minute at:"
-  echo "https://navnoorthapar.github.io/substack-trades/"
-fi
+TRADE_COUNT=$(python3 -c "import json; print(len(json.load(open('trades_extracted.json'))))")
+git commit -m "update: ${TRADE_COUNT} trades ($(date -u '+%Y-%m-%d'))"
+git push origin main
+
+date +%s > "$LAST_RUN_FILE"
+
+echo ""
+echo "Done — ${TRADE_COUNT} trades live at:"
+echo "https://navnoorthapar.github.io/substack-trades/"
