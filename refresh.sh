@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Full pipeline: fetch → extract → filter → build → push.
+# Full pipeline: fetch → extract → filter → resolve-directions → build → push.
 #
 # This is the AUTOMATED refresh, run from this Mac by the LaunchAgent
 # com.navnoor.substacktrades at 9am / 1pm / 8pm. It must run here (a residential
@@ -39,6 +39,12 @@ python3 extract_trades.py
 echo ""
 echo "=== Filtering & deduplicating ==="
 python3 filter_trades.py
+
+echo ""
+echo "=== Resolving residual directions (regex+LLM hybrid; no-ops without an API key) ==="
+# Optional + fail-safe: never let this stage abort the pipeline (it already
+# swallows its own errors, but guard set -e regardless).
+python3 llm_direction.py || echo "(direction resolver skipped/failed — keeping regex output)"
 
 # Only rebuild + push if trades_extracted.json actually changed
 git add trades_extracted.json
