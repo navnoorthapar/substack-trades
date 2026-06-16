@@ -1,5 +1,190 @@
 [
   {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "A Google software engineer made $1.2 million on Polymarket in seven weeks by trading on an internal marketing publication he previewed through a confidential company tool. A Special Forces master sergeant converted $33,000 in seven days of bets into $409,000 in profits by trading on a classified operation he was helping to plan. Both made the same tactical error: they assumed a blockchain venue’s pseudonymous wallet structure provided cover. Both were wrong. For a sophisticated desk, the interesting question is not about the defendants. It is about why these payoffs are so large in the first place, and whether the structural conditions that made insider trading so profitable also create legitimate, scalable edge.",
+    "instruments": [
+      "prediction_market"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$1.2 million",
+    "outcome_if_mentioned": "made $1.2 million on Polymarket in seven weeks by trading on an internal marketing publication he previewed through a confidential company tool.",
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "Their paper, “Unravelling the Probabilistic Forest: Arbitrage in Prediction Markets,” presented at the 7th Conference on Advances in Financial Technologies (AFT 2025), analyzed 86 million bets across 17,218 Polymarket conditions using on-chain historical order book data covering April 2024 to April 2025. They found two distinct arbitrage forms.",
+    "instruments": [
+      "prediction_market"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "exactly one outcome resolves true and pays $1.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "Market Rebalancing Arbitrage (intra-market): Polymarket guarantees that the prices of all outcomes in a condition must sum to $1.00 because exactly one outcome resolves true and pays $1.00. When the combined cost of YES and NO dips below $1.00, a trader buying both sides locks in guaranteed profit regardless of resolution. The realized profit formula is:\nNet Profit = (1 - Price_YES - Price_NO) - (Taker Fees + Network Gas)",
+    "instruments": [
+      "prediction_market"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "exactly one outcome resolves true and pays $1.",
+    "any_quant_detail": "2%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "Combinatorial Arbitrage (inter-market): Prediction markets with a logical dependency, for example “Team A wins by 2+ goals” implies “Team A wins,” create constraints on the joint state space. When markets price these correlated outcomes inconsistently, buying the logically implied position against the overpriced one generates profit. Saguillo et al. address the identification problem via a heuristic reduction from a naïve O(2^{n+m}) comparison space using topical similarity and combinatorial relationships.",
+    "instruments": [
+      "prediction_market"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "and platform fees, making execution infrastructure the primary bottleneck, not identification of the opportunity.",
+    "any_quant_detail": "$40 million, 2%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "Susquehanna Government Products, LLLP, a market-making affiliate of Susquehanna International Group, became the first dedicated institutional market maker on Kalshi on April 3, 2024, per the official Business Wire announcement. Kalshi CEO Tarek Mansour described the move as unlocking “institutional grade liquidity” that “changes everything.” The strategic logic is identical to Susquehanna’s options business: post continuous two-sided quotes, remain delta-neutral to event outcomes, extract the bid-ask spread per resolved contract. SIG, which traded more than $1.5 trillion in ETFs globally on an annual basis as of 2018, according to public records, and which Kalshi’s own announcement states trades approximately $2 trillion yearly, set up a dedicated trading division for event contracts, the ",
+    "instruments": [
+      "option",
+      "equity",
+      "prediction_market"
+    ],
+    "direction": "unspecified",
+    "underlying": "affiliate of Susquehanna International Group",
+    "edge_or_thesis": "unlocking “institutional grade liquidity” that “changes everything.",
+    "any_quant_detail": "$1.5 trillion, $2 trillion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "In March 2026, BitGo Prime and Susquehanna Crypto launched an institutional OTC offering giving eligible hedge funds, family offices, and ultra-high-net-worth clients access to listed prediction markets using crypto or stablecoin collateral already held on BitGo’s platform. Susquehanna Crypto CEO Chase Lax called prediction markets “a genuine institutional asset class” in the official announcement.",
+    "instruments": [
+      "prediction_market"
+    ],
+    "direction": "unspecified",
+    "underlying": "AQR Capital Management; Crypto; crypto",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "AQR"
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "The core distinction between prediction market instruments and conventional derivatives is precise: options hedge price risk (how far something moves), while event contracts hedge outcome risk (whether something happens at all). They are not substitutes but complementary layers of the factor stack, addressing a risk dimension that derivatives cannot isolate directly.",
+    "instruments": [
+      "option",
+      "prediction_market"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "Event-driven pairs: A desk trading semiconductor equities can take a position on relative regulatory outcomes and delta-hedge against the correlated equity basket, isolating the regulatory risk factor in a way not achievable with conventional instruments.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": "Marex Group",
+    "edge_or_thesis": "a second source on market-implied probability, particularly when options skew may be distorted by hedging flows from other participants.",
+    "any_quant_detail": "$10 million",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "Structured product packaging: In April 2026, Marex Group issued the world’s first bond-like note linked to a prediction market outcome, per Bloomberg. The $10 million issuance, sold to a Swiss institutional client and restricted to non-U.S. jurisdictions due to regulatory constraints, pays a 7% coupon if Nvidia remains the world’s largest company by market cap in one year and returns principal otherwise. Marex hedges its exposure by taking positions directly on Kalshi as odds shift, capturing the spread between the coupon offered to investors and the cost of hedging. Marex Solutions CEO Nilesh Jethwa stated the firm will “effectively build our own prediction market structured products, and then leverage Kalshi and other exchanges to replicate that”. Robert Romano, head of structured produc",
+    "instruments": [
+      "bond",
+      "prediction_market"
+    ],
+    "direction": "unspecified",
+    "underlying": "Marex Group",
+    "edge_or_thesis": "regulatory constraints, pays a 7% coupon if Nvidia remains the world’s largest company by market cap in one year and returns principal otherwise.",
+    "any_quant_detail": "$10 million, 7%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "Separately, Tradeweb Markets took a minority stake in Kalshi to embed prediction markets into its institutional client workflows, and Clear Street partnered with Kalshi to give hedge funds direct access to event contracts.",
+    "instruments": [
+      "prediction_market"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "at TP ICAP, called it a potential first of many.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "The money laundering counts in the Spagnuolo case are triggered by his post-settlement crypto mechanics. Per the criminal complaint as reported by BleepingComputer, on or about December 10, 2025, the AlphaRaccoon Polymarket account sent approximately 5.045 million USDC.e, representing the full account balance including the original stake and not only the $1.2M profit, to an external wallet. Blockchain data then showed subsequent transactions with a decentralized swapping service and a cryptocurrency privacy service designed to remove wallet addresses from the blockchain, before funds reached an Italian payment processor account opened with Spagnuolo’s government ID. Maximum exposure: 10 years on the commodities count and 20 years each on wire fraud and money laundering, per the DOJ press r",
+    "instruments": [
+      "commodity",
+      "prediction_market"
+    ],
+    "direction": "unspecified",
+    "underlying": "crypto",
+    "edge_or_thesis": "reported by BleepingComputer, on or about December 10, 2025, the AlphaRaccoon Polymarket account sent approximately 5.",
+    "any_quant_detail": "$1.2M",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "article_date": "2026-06-06",
+    "trade_description": "The alpha in prediction markets is real, academically documented, and concentrated in three mechanisms: structural arbitrage (Saguillo et al.’s $40M extracted from pure mispricing in one year), market-making spread capture (Susquehanna’s model, now extended by Jump), and cross-asset signal use and structured product packaging (Marex’s Nvidia note as the first executed proof of concept). None of these three require MNPI. All three are execution-intensive and currently capacity-constrained.",
+    "instruments": [
+      "prediction_market"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "the same exposure as Spagnuolo.",
+    "any_quant_detail": "$40M, $143 million",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
     "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
     "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
     "article_date": "2026-05-29",
@@ -28,6 +213,21 @@
     "any_quant_detail": "at 0.315,, at 0.335, at 0.515",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Citadel"
+  },
+  {
+    "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "article_date": "2026-05-29",
+    "trade_description": "A caveat the public reporting does not resolve, and one that materially affects how repeatable the quarter looks: the $16.1 billion is described as trading revenue, but Reuters notes it was partly buoyed by these private stakes. Mark-to-market gains on illiquid venture positions are a fundamentally different income source from repeatable spread capture, and the public figures do not break out how much of the $16.1 billion is each. The two should not be read as one number. The timing, however, bounds the contamination: the largest markups — Anthropic’s step toward a $900 billion-plus valuation and the $1 billion CoreWeave equity purchase — are both late-April 2026 events that fall in Q2, not Q1, and so do not inflate this quarter’s headline figure. What touches Q1 specifically is the quarte",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": "highly capital; efficient relative to standalone fund",
+    "edge_or_thesis": "trading revenue, but Reuters notes it was partly buoyed by these private stakes.",
+    "any_quant_detail": "$16.1 billion, $900 billion, $1 billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
   },
   {
     "article_title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",

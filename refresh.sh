@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Full pipeline: fetch → extract → filter → build → push.
-# Safe to call multiple times per day — skips if already ran in last 20 hours.
+#
+# NOTE: Automated refreshes now run in the cloud via
+# .github/workflows/update.yml (twice daily, no Mac required). This script is a
+# MANUAL fallback to force an immediate refresh from your machine. Safe to call
+# multiple times per day — skips if it already ran successfully in the last 20h.
 set -e
 
 cd "$(dirname "$0")"
@@ -17,6 +21,11 @@ if [ -f "$LAST_RUN_FILE" ]; then
         exit 0
     fi
 fi
+
+# Start from the latest main so a manual run rebases onto any cloud commits
+# instead of failing to push with a non-fast-forward error.
+echo "=== Syncing with origin/main ==="
+git pull --rebase --autostash origin main || true
 
 echo "=== Fetching posts from Substack ==="
 python3 fetch_all_posts.py
