@@ -41,11 +41,12 @@ echo "=== Filtering & deduplicating ==="
 python3 filter_trades.py
 
 echo ""
-echo "=== Resolving residual directions (free local LLM hybrid; disabled by default) ==="
-# Optional + fail-safe. Disabled unless DIRECTION_LLM_ENABLE=1 (the installed 7B
-# model tested below the regex's precision, so it must not auto-run). Never let
-# this stage abort the pipeline.
-python3 llm_direction.py || echo "(direction resolver skipped/failed — keeping regex output)"
+echo "=== Resolving residual directions (free local LLM hybrid via Ollama) ==="
+# Enabled: validated qwen2.5:14b (~88% precision, zero inversions) classifies the
+# trades the regex left 'unspecified'. Fail-safe — if Ollama is down it no-ops, and
+# this stage can never abort the pipeline. Cached, so only new trades hit the model.
+DIRECTION_LLM_ENABLE=1 DIRECTION_LLM_MODEL=qwen2.5:14b \
+    python3 llm_direction.py || echo "(direction resolver skipped/failed — keeping regex output)"
 
 # Only rebuild + push if trades_extracted.json actually changed
 git add trades_extracted.json

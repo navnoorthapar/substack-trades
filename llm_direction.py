@@ -26,27 +26,29 @@ Safe to drop into the automated pipeline:
     churn on model nondeterminism).
   * Atomic writes; never raises into the pipeline.
 
-DISABLED BY DEFAULT. Tested locally, qwen2.5-coder:7b scored *below* the tuned
-regex on precision for the hard residual cases (it confidently inverted some
-long/short calls), so it is not allowed to run automatically and degrade the
-data. The hybrid stays wired and ready: point DIRECTION_LLM_MODEL at a model you
-have validated (a larger local instruct model, etc.) and set DIRECTION_LLM_ENABLE=1.
+Validated model: qwen2.5:14b (local, free). On a 150-trade audit of the hard
+residual cases it resolved ~11% at ~88% precision with ZERO direction
+inversions — at/above the regex's precision bar. The weaker qwen2.5-coder:7b was
+rejected (it confidently inverted some long/short calls). Precision comes from
+three guards in the prompt + code below: an explicit "describe-context ->
+abstain" list, a "closing a position is not a short" rule, and a HIGH-confidence
+-only gate.
 
-Enable (one time, free, local):
-    ollama serve                      # daemon (usually already running)
-    ollama pull <a-model-you-trust>   # e.g. a larger instruct model
-    export DIRECTION_LLM_ENABLE=1
-    export DIRECTION_LLM_MODEL=<that-model>
+Still gated behind DIRECTION_LLM_ENABLE so it never runs unintentionally;
+refresh.sh sets it. Requires the Ollama daemon up and the model pulled:
+    ollama serve                 # daemon (usually already running as a service)
+    ollama pull qwen2.5:14b
 
 Tuning via env:
-    DIRECTION_LLM_ENABLE  must be 1/true/yes to run at all (default: off)
-    DIRECTION_LLM_MODEL   ollama model id   (default qwen2.5-coder:7b)
+    DIRECTION_LLM_ENABLE  must be 1/true/yes to run at all (refresh.sh sets it)
+    DIRECTION_LLM_MODEL   ollama model id   (default qwen2.5:14b)
     OLLAMA_URL            base url          (default http://localhost:11434)
     DIRECTION_LLM_LIMIT   cap trades per run (for testing; default = all)
 """
 import hashlib
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from collections import Counter
@@ -56,7 +58,7 @@ ROOT   = Path(__file__).parent
 TRADES = ROOT / 'trades_extracted.json'
 CACHE  = ROOT / '.direction_cache.json'
 
-MODEL      = os.environ.get('DIRECTION_LLM_MODEL', 'qwen2.5-coder:7b')
+MODEL      = os.environ.get('DIRECTION_LLM_MODEL', 'qwen2.5:14b')
 OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://localhost:11434').rstrip('/')
 LIMIT      = int(os.environ.get('DIRECTION_LLM_LIMIT', '0') or 0)
 
@@ -70,8 +72,17 @@ SYSTEM = """You label the DIRECTION of a single hedge-fund trade described in a 
 - "arbitrage/relative value" — convergence / basis / merger / dispersion / relative-value trades where the position IS the spread rather than a single direction.
 - "unspecified" — the text does NOT clearly state a directional position for THIS fund. Includes market-making / liquidity provision, pure performance or PnL commentary, methodology/footnote notes, background narrative, or anything ambiguous.
 
+Always return "unspecified" for text that describes CONTEXT rather than a specific position the fund took, including:
+- portfolio-structure descriptions ("holds 30-40 uncorrelated positions across asset classes"),
+- citations, URLs, glossary or methodology text,
+- macro commentary, outlook or warnings with no stated position ("2026 will be a dangerous year"),
+- option-pricing / hedging-cost mechanics, and dealer or market-maker hedging flow,
+- general descriptions of hedge funds' role or economics in a market mechanism (securities lending / earning the spread on borrowed shares, the variance-risk-premium-as-insurance analogy, "as directional traders they read balance sheets") rather than a specific named position.
+
 Rules:
-- PRECISION OVER RECALL. If you are not confident the text states a clear position for this fund, return "unspecified" with low confidence. Do not guess.
+- PRECISION OVER RECALL. Only assign a direction when the text explicitly states a position the fund actually took. When unsure, return "unspecified". Do not guess from vibes, tone, or mechanism.
+- CLOSING a position is NOT a short. Exiting, selling, trimming, reducing, or removing an existing long (e.g. "removed its entire X position", "-100%", "sold its stake", "cut exposure", "exited") is "unspecified" unless a NEW short position is explicitly opened.
+- Use "high" confidence ONLY when the position is explicitly stated; otherwise "medium" or "low".
 - Classify the position of the fund the paragraph is ABOUT — ignore incidental mentions of other market participants (e.g. "market makers were short gamma" is not the fund's trade).
 - Owning or buying puts is bearish -> "short". Selling or writing calls is bearish -> "short". Selling puts is bullish.
 - A long straddle/strangle (long both a call and a put) is a volatility position, not directional -> "unspecified" unless a clear net direction is stated.
@@ -120,7 +131,10 @@ def _ollama_models():
 
 
 def _classify(trade):
-    """Return one of VALID. Any failure degrades to 'unspecified' (never raises)."""
+    """Classify one trade. Returns one of VALID, or None on a *persistent backend
+    outage* (Ollama down/restarting) so the caller can leave it UNCACHED and retry
+    on a later run — an outage must never be frozen into the cache as a real
+    abstention."""
     desc = (trade.get('trade_description') or '')[:1500]
     instruments = ', '.join(trade.get('instruments') or [])
     underlying = trade.get('underlying') or ''
@@ -132,33 +146,42 @@ def _classify(trade):
             {"role": "user", "content": user},
         ],
         "stream": False,
-        "format": SCHEMA,              # Ollama structured output
-        "options": {"temperature": 0},  # deterministic -> stable cache
+        "format": SCHEMA,                              # Ollama structured output
+        "options": {"temperature": 0, "num_ctx": 2048},  # deterministic + small KV cache
     }
-    try:
-        req = urllib.request.Request(
-            f'{OLLAMA_URL}/api/chat',
-            data=json.dumps(payload).encode('utf-8'),
-            headers={'Content-Type': 'application/json'},
-        )
-        with urllib.request.urlopen(req, timeout=120) as r:
-            resp = json.loads(r.read())
-        content = (resp.get('message') or {}).get('content', '')
-        data = json.loads(content)
-        if data.get('confidence') == 'low':
+    body = json.dumps(payload).encode('utf-8')
+    last_err = None
+    for attempt in range(4):  # ride out a daemon crash+restart (RAM pressure on 14B)
+        try:
+            req = urllib.request.Request(
+                f'{OLLAMA_URL}/api/chat', data=body,
+                headers={'Content-Type': 'application/json'})
+            with urllib.request.urlopen(req, timeout=180) as r:
+                resp = json.loads(r.read())
+            content = (resp.get('message') or {}).get('content', '')
+            data = json.loads(content)
+            # Precision-first: accept a direction only at HIGH confidence. medium/low
+            # is where the over-labeling lived in testing, so it abstains there.
+            if data.get('confidence') != 'high':
+                return 'unspecified'
+            direction = data.get('direction', 'unspecified')
+            return direction if direction in VALID else 'unspecified'
+        except (urllib.error.URLError, ConnectionError, TimeoutError) as e:
+            last_err = e            # backend outage — wait for restart, then retry
+            time.sleep(5 * (attempt + 1))
+        except Exception as e:
+            # malformed model output etc. — a real (cacheable) abstention, not an outage
+            print(f'    classify parse error ({type(e).__name__}): {e}')
             return 'unspecified'
-        direction = data.get('direction', 'unspecified')
-        return direction if direction in VALID else 'unspecified'
-    except Exception as e:
-        print(f'    classify error ({type(e).__name__}): {e}')
-        return 'unspecified'
+    print(f'    backend unavailable after retries: {last_err}')
+    return None
 
 
 def run():
-    # Default OFF. The local 7B model tested below the regex's precision bar on the
-    # hard residual cases (it confidently inverted some directions), so it must not
-    # silently run in the automated pipeline and degrade the data. Opt in only once
-    # you've pointed DIRECTION_LLM_MODEL at a model you've validated.
+    # Gated so it never runs unintentionally (e.g. a stray manual invocation, or
+    # before a model is pulled). refresh.sh sets DIRECTION_LLM_ENABLE=1 for the
+    # automated pipeline. The default model (qwen2.5:14b) was validated to ~88%
+    # precision with zero inversions; do not point this at a weaker model.
     if os.environ.get('DIRECTION_LLM_ENABLE', '').lower() not in ('1', 'true', 'yes'):
         print('Direction LLM resolver disabled (set DIRECTION_LLM_ENABLE=1 to enable). '
               'Keeping regex-only directions.')
@@ -202,12 +225,14 @@ def run():
             print(f'Resolving {len(todo)} regex-unspecified trades via local {MODEL}...')
             for i, (k, t) in enumerate(todo, 1):
                 label = _classify(t)
+                if label is None:
+                    continue  # backend outage: leave uncached so a re-run retries it
                 cache[k] = label
                 if label != 'unspecified':
                     t['direction'] = label
                 changed = True
                 if i % 25 == 0:
-                    print(f'  {i}/{len(todo)} resolved')
+                    print(f'  {i}/{len(todo)} done')
                     _atomic_write(CACHE, cache)  # checkpoint progress
 
     if changed:

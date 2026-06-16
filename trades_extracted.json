@@ -831,7 +831,7 @@
     "instruments": [
       "FX"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "EM currencies",
     "edge_or_thesis": "the forwards are still like 0.",
     "any_quant_detail": "$5bn, $15bn, 0.75%",
@@ -846,7 +846,7 @@
     "instruments": [
       "FX"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "EM currencies; USD",
     "edge_or_thesis": "the binding constraint.",
     "any_quant_detail": "0.75%",
@@ -892,7 +892,7 @@
     "instruments": [
       "FX"
     ],
-    "direction": "unspecified",
+    "direction": "arbitrage/relative value",
     "underlying": null,
     "edge_or_thesis": "both an onshore deliverable forward market and an offshore NDF market, the two prices frequently diverge — sometimes by hundreds of basis points.",
     "any_quant_detail": null,
@@ -1304,7 +1304,7 @@
     "instruments": [
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "SLGI Asset Management; crude oil",
     "edge_or_thesis": "a 33-week high before the first bomb fell.",
     "any_quant_detail": null,
@@ -1958,7 +1958,7 @@
       "bond",
       "CDS"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": null,
     "edge_or_thesis": "already trading at a 20% discount to face value in the secondary market.",
     "any_quant_detail": "40%, 60%, 10%, 20%",
@@ -2225,7 +2225,7 @@
       "option",
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": null,
     "edge_or_thesis": "“short in size” on 30-year US Treasuries — implemented through options rather than outright bond shorts.",
     "any_quant_detail": "3%, 2%, 5.5%, at 3",
@@ -2412,7 +2412,7 @@
       "bond",
       "futures"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "LDI fund; pension fund",
     "edge_or_thesis": "directional traders, they read public balance sheets more carefully than regulators and position before the constraint triggers (SVB short, Japan yen).",
     "any_quant_detail": "$1 trillion, 3%, 4.5%, 10bps, 50bps",
@@ -2457,7 +2457,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "arbitrage/relative value",
     "underlying": "Every Vanguard fund; S&P 500",
     "edge_or_thesis": "passive funds are forced to sell.",
     "any_quant_detail": null,
@@ -2776,7 +2776,7 @@
       "equity",
       "prediction_market"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "any",
     "edge_or_thesis": null,
     "any_quant_detail": "18.9%, 19.8%, at 9",
@@ -2989,7 +2989,7 @@
     "instruments": [
       "bond"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "Reuters reported the fund",
     "edge_or_thesis": "already up 53% by end of March 2022, six months before the mini-budget.",
     "any_quant_detail": "5%, 4.5%, 60%, 500%, 53%, 400bp, At 500, at 145, at 193",
@@ -3005,7 +3005,7 @@
       "bond",
       "repo"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": null,
     "edge_or_thesis": "Already On Bank of England Staff Working Paper No.",
     "any_quant_detail": "£65 Billion, £65 billion, £19.3 billion",
@@ -3020,7 +3020,7 @@
     "instruments": [
       "bond"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "indicative of the",
     "edge_or_thesis": "“indicative of the hedge fund sector adopting short positions in the gilt market prior to the crisis.",
     "any_quant_detail": "£65 billion",
@@ -3234,7 +3234,7 @@
       "bond",
       "repo"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "constrained fund",
     "edge_or_thesis": "from different structural positions.",
     "any_quant_detail": "£65 billion, £3.76 billion, £65bn, 500%",
@@ -3512,7 +3512,7 @@
     "instruments": [
       "option"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "$20.5 Billion, $14.2 billion",
@@ -3640,7 +3640,7 @@
       "option",
       "volatility"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "Ostrum Asset Management; winner of The",
     "edge_or_thesis": null,
     "any_quant_detail": "0.06%, 0.10%",
@@ -3747,7 +3747,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": null,
     "edge_or_thesis": "CNN Business reported in June 2025, Ackman is among the largest holders of common shares in both companies.",
     "any_quant_detail": "1.2%, 6.8%, 20.9%, 33.9%, 227%",
@@ -3844,7 +3844,7 @@
     "instruments": [
       "volatility"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "VIX",
     "edge_or_thesis": "2022 — the same setup that had already burned short-vol investors in February and April.",
     "any_quant_detail": "9.52%",
@@ -4413,7 +4413,7 @@
     "instruments": [
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "Brent",
     "edge_or_thesis": "early January 2026,” with traders abandoning the supply-glut narrative in favor of geopolitical-disruption pricing.",
     "any_quant_detail": "$4 billion",
@@ -4664,7 +4664,7 @@
     "instruments": [
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "Brent; Gold",
     "edge_or_thesis": "not scrambling to buy.",
     "any_quant_detail": "at $2, at $5,408",
@@ -5759,7 +5759,7 @@
       "futures",
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "Andurand Commodities Discretionary Enhanced Fund; EUA",
     "edge_or_thesis": "were permanently invalidated after the MSR exceeded its fixed threshold.",
     "any_quant_detail": "87%, 162%",
@@ -6246,7 +6246,7 @@
     "instruments": [
       "CDS"
     ],
-    "direction": "unspecified",
+    "direction": "arbitrage/relative value",
     "underlying": "iTraxx; CDX",
     "edge_or_thesis": "US spreads widen relative to European spreads.",
     "any_quant_detail": "$400 billion",
@@ -6263,7 +6263,7 @@
       "CDS",
       "swap"
     ],
-    "direction": "unspecified",
+    "direction": "long/short",
     "underlying": "CDX; USD",
     "edge_or_thesis": "a two-leg macro hedge: receive fixed in 10-year or 30-year USD interest rate swaps while holding long CDX IG protection.",
     "any_quant_detail": null,
@@ -6493,7 +6493,7 @@
     "instruments": [
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "$73 million",
@@ -7031,7 +7031,7 @@
       "CDS",
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "the fund; The flagship Capital Master Fund",
     "edge_or_thesis": "the gap between what BS-calibrated equity vol implied and what Merton’s credit model implied for forward default probability.",
     "any_quant_detail": "$1 billion, $500 million, 25.5%, 99%",
@@ -7678,7 +7678,7 @@
     "instruments": [
       "CDS"
     ],
-    "direction": "unspecified",
+    "direction": "arbitrage/relative value",
     "underlying": "Sabre Corp; CDX",
     "edge_or_thesis": null,
     "any_quant_detail": "$34 billion",
@@ -8720,7 +8720,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": null,
     "edge_or_thesis": "overstated by 27x and 2009 revenue by 40x.",
     "any_quant_detail": "11%, 78%, at 2008",
@@ -8875,7 +8875,7 @@
       "bond",
       "repo"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "Rokos Capital",
     "edge_or_thesis": null,
     "any_quant_detail": "£65 billion, 51%",
@@ -8890,7 +8890,7 @@
     "instruments": [
       "bond"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": null,
     "edge_or_thesis": "the UK economy faced recession — creating a policy divergence that would drive yields higher.",
     "any_quant_detail": "£45 billion",
@@ -9074,7 +9074,7 @@
     "instruments": [
       "CDS"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": null,
     "edge_or_thesis": "Deutsche Bank maintained $128 billion in long mortgage exposure.",
     "any_quant_detail": "$47 million, $1.1 billion, $128 billion",
@@ -9136,7 +9136,7 @@
     "instruments": [
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "of capital; gold",
     "edge_or_thesis": "surgical: short European banks on Brexit uncertainty, especially the most leveraged one.",
     "any_quant_detail": "0.51%, 14%",
@@ -9393,7 +9393,7 @@
     "instruments": [
       "bond"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "Rokos Capital",
     "edge_or_thesis": "central banks hiked rates drove performance.",
     "any_quant_detail": "51%, 30%, 300 basis points",
@@ -9851,7 +9851,7 @@
     "instruments": [
       "option"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "Melvin Capital; The fund; S&P 500",
     "edge_or_thesis": "dealers bought underlying to hedge short call positions.",
     "any_quant_detail": "$2.75B, $7B, $2.33B, $3.24B, $463M, 97%, 42.15%, 4.15%",
@@ -9899,7 +9899,7 @@
       "futures",
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "Matador Fund; S&P 500; VIX; natural gas",
     "edge_or_thesis": null,
     "any_quant_detail": "$130M, $150M, $2B, 7.2%, 75%, 20%, 115%, 97%",
@@ -9946,7 +9946,7 @@
       "swap",
       "volatility"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "Ronin Capital; failed to meet capital; VIX",
     "edge_or_thesis": null,
     "any_quant_detail": "$600M, $3.65B, 22%, 21%",
@@ -11226,7 +11226,7 @@
       "bond",
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "long/short",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
@@ -13758,7 +13758,7 @@
     "instruments": [
       "futures"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "FTSE",
     "edge_or_thesis": null,
     "any_quant_detail": null,
@@ -15416,7 +15416,7 @@
       "equity",
       "volatility"
     ],
-    "direction": "unspecified",
+    "direction": "arbitrage/relative value",
     "underlying": null,
     "edge_or_thesis": "implied volatility exploded.",
     "any_quant_detail": "7.61%, 41%",
@@ -15603,7 +15603,7 @@
       "futures",
       "volatility"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "VIX",
     "edge_or_thesis": null,
     "any_quant_detail": null,
@@ -16555,7 +16555,7 @@
     "instruments": [
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "arbitrage/relative value",
     "underlying": "with storage capacity and capital",
     "edge_or_thesis": null,
     "any_quant_detail": ", BP, at $40 per barrel",
@@ -16602,7 +16602,7 @@
       "futures",
       "commodity"
     ],
-    "direction": "unspecified",
+    "direction": "short",
     "underlying": "storage access and enough capital",
     "edge_or_thesis": "locked in on day one.",
     "any_quant_detail": "$2 billion",
@@ -17003,7 +17003,7 @@
       "futures",
       "volatility"
     ],
-    "direction": "unspecified",
+    "direction": "arbitrage/relative value",
     "underlying": "VIX",
     "edge_or_thesis": "the primary arbitrage signal.",
     "any_quant_detail": null,
@@ -17514,7 +17514,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "Elliott Management; billion",
     "edge_or_thesis": "was proving prescient.",
     "any_quant_detail": "$15 billion, $60 billion",
