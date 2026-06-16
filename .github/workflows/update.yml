@@ -1,30 +1,28 @@
-name: Refresh Trade Intelligence
+name: Rebuild Site
 
-# Runs the FULL pipeline in the cloud on a schedule, so updates no longer
-# depend on a local Mac / LaunchAgent being awake. The pipeline is stdlib-only
-# (no API keys), so it runs entirely on the GitHub runner.
+# Build-only safety net. The data refresh (fetch from Substack) CANNOT run here:
+# Substack returns HTTP 403 to GitHub's datacenter IPs (Cloudflare bot
+# protection), so fetching must happen from a residential IP — that is done on
+# the Mac by refresh.sh + the LaunchAgent (com.navnoor.substacktrades).
 #
-# Failure visibility: each step is named, so a red run points at the exact
-# stage (fetch / extract / filter / build). GitHub emails the repo owner on
-# any failed scheduled run.
+# This workflow only rebuilds docs/index.html from the already-committed
+# trades_extracted.json. Use it (Actions tab → "Run workflow") to regenerate the
+# site after changing build_site.py, without re-fetching. Day-to-day the Mac
+# already builds and pushes docs/index.html alongside the data, so this is rarely
+# needed.
 
 on:
-  schedule:
-    # Twice daily (UTC). Two windows add resilience against GitHub's
-    # best-effort scheduling, which can delay or skip a single cron tick.
-    - cron: '0 6 * * *'
-    - cron: '0 18 * * *'
-  workflow_dispatch: {}        # allow manual "Run workflow" from the Actions tab
+  workflow_dispatch: {}
 
 permissions:
-  contents: write              # needed to commit the rebuilt site back to main
+  contents: write
 
 concurrency:
-  group: refresh-trade-intelligence
-  cancel-in-progress: false    # never abort a half-done push
+  group: rebuild-site
+  cancel-in-progress: false
 
 jobs:
-  refresh:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -35,39 +33,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Fetch latest posts from Substack
-        run: python fetch_all_posts.py     # exits non-zero on partial/failed fetch
-
-      - name: Extract trades
-        run: python extract_trades.py
-
-      - name: Filter & deduplicate
-        run: python filter_trades.py
-
-      - name: Check whether trade data changed
-        id: datacheck
-        run: |
-          # docs/index.html embeds a build timestamp and so changes every run;
-          # gate the rebuild on the *data* (trades_extracted.json) to avoid
-          # committing an identical site twice a day.
-          if git diff --quiet -- trades_extracted.json; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "No new or changed trades — nothing to deploy."
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "Trade data changed — rebuilding and deploying."
-          fi
-
       - name: Build site
-        if: steps.datacheck.outputs.changed == 'true'
         run: python build_site.py
 
-      - name: Commit & deploy
-        if: steps.datacheck.outputs.changed == 'true'
+      - name: Commit rebuilt site if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add trades_extracted.json docs/index.html
-          COUNT=$(python -c "import json; print(len(json.load(open('trades_extracted.json'))))")
-          git commit -m "auto: refresh — ${COUNT} trades ($(date -u '+%Y-%m-%d %H:%M UTC'))"
-          git push
+          git add docs/index.html
+          if git diff --staged --quiet; then
+            echo "No changes."
+          else
+            git commit -m "rebuild site $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi

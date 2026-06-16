@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # Full pipeline: fetch → extract → filter → build → push.
 #
-# NOTE: Automated refreshes now run in the cloud via
-# .github/workflows/update.yml (twice daily, no Mac required). This script is a
-# MANUAL fallback to force an immediate refresh from your machine. Safe to call
-# multiple times per day — skips if it already ran successfully in the last 20h.
+# This is the AUTOMATED refresh, run from this Mac by the LaunchAgent
+# com.navnoor.substacktrades at 9am / 1pm / 8pm. It must run here (a residential
+# IP) because Substack returns HTTP 403 to datacenter/cloud IPs — so the fetch
+# cannot be moved to GitHub Actions. The cloud workflow only rebuilds the site
+# on demand. Safe to call multiple times per day — skips if it already ran
+# successfully in the last 20h.
 set -e
 
 cd "$(dirname "$0")"
