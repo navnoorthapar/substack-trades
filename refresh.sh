@@ -41,9 +41,10 @@ echo "=== Filtering & deduplicating ==="
 python3 filter_trades.py
 
 echo ""
-echo "=== Resolving residual directions (regex+LLM hybrid; no-ops without an API key) ==="
-# Optional + fail-safe: never let this stage abort the pipeline (it already
-# swallows its own errors, but guard set -e regardless).
+echo "=== Resolving residual directions (free local LLM hybrid; disabled by default) ==="
+# Optional + fail-safe. Disabled unless DIRECTION_LLM_ENABLE=1 (the installed 7B
+# model tested below the regex's precision, so it must not auto-run). Never let
+# this stage abort the pipeline.
 python3 llm_direction.py || echo "(direction resolver skipped/failed — keeping regex output)"
 
 # Only rebuild + push if trades_extracted.json actually changed

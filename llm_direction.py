@@ -1,39 +1,54 @@
 #!/usr/bin/env python3
 """Hybrid direction resolver — the LLM half of a regex+LLM hybrid extractor.
 
-Web research (and our own corpus audit) is clear: rule-based regex is brittle on
-narrative financial prose and plateaus on nuanced fields like trade direction.
-The production-grade pattern is a HYBRID — let the (cheap, deterministic) regex
-classify the confident majority, and call an LLM ONLY on the low-confidence
-remainder, with the LLM instructed to abstain ("unspecified") when unsure. That
-abstention is what keeps precision high instead of trading false-positives for
-coverage.
+Web research on structured extraction from financial prose converges on a
+hybrid: rule-based regex handles the confident majority (cheap, deterministic),
+and an LLM resolves only the low-confidence remainder, instructed to abstain
+when unsure — which is what keeps precision high instead of trading
+false-positives for coverage.
 
-This script is that LLM pass. It reads trades_extracted.json, finds the trades
-the regex left as 'unspecified', and asks Claude to classify each — keeping the
-regex result for everything else.
+This script is that LLM pass, and it runs **100% free and local** against an
+Ollama model on this machine (no API key, no per-token cost, no quota). It calls
+Ollama's HTTP endpoint with nothing but the Python standard library, so the
+pipeline keeps its "stdlib only, no pip install" property.
 
-Design goals (so it is safe to drop into the automated pipeline):
-  * Opt-in / fail-safe. No `anthropic` SDK or no ANTHROPIC_API_KEY  ->  clean
-    no-op; the regex-only output is left untouched and the pipeline continues.
-  * Cached. Classifications are cached by description hash in
-    .direction_cache.json, so each run only calls the API for newly-seen
-    'unspecified' trades. This keeps cost ~$0 after the first backfill AND makes
-    the output deterministic (so refresh.sh's "commit only if changed" gate does
-    not churn on LLM nondeterminism).
+It reads trades_extracted.json, finds the trades the regex left as
+'unspecified', and asks the local model to classify each — keeping the regex
+result for everything else.
+
+Safe to drop into the automated pipeline:
+  * Opt-in / fail-safe. If Ollama isn't running (or the model isn't pulled) it is
+    a clean no-op — regex-only output is left untouched and the pipeline
+    continues.
+  * Cached by description hash in .direction_cache.json, so each run only calls
+    the model for newly-seen 'unspecified' trades. Keeps repeat cost ~free and
+    output deterministic (so refresh.sh's "commit only if changed" gate doesn't
+    churn on model nondeterminism).
   * Atomic writes; never raises into the pipeline.
 
-Enable on the Mac that runs the pipeline:
-    pip install anthropic
-    export ANTHROPIC_API_KEY=sk-ant-...        # add to the LaunchAgent env too
+DISABLED BY DEFAULT. Tested locally, qwen2.5-coder:7b scored *below* the tuned
+regex on precision for the hard residual cases (it confidently inverted some
+long/short calls), so it is not allowed to run automatically and degrade the
+data. The hybrid stays wired and ready: point DIRECTION_LLM_MODEL at a model you
+have validated (a larger local instruct model, etc.) and set DIRECTION_LLM_ENABLE=1.
+
+Enable (one time, free, local):
+    ollama serve                      # daemon (usually already running)
+    ollama pull <a-model-you-trust>   # e.g. a larger instruct model
+    export DIRECTION_LLM_ENABLE=1
+    export DIRECTION_LLM_MODEL=<that-model>
 
 Tuning via env:
-    DIRECTION_LLM_MODEL   model id (default claude-opus-4-8; claude-haiku-4-5 is
-                          the cheap option for this simple classification)
+    DIRECTION_LLM_ENABLE  must be 1/true/yes to run at all (default: off)
+    DIRECTION_LLM_MODEL   ollama model id   (default qwen2.5-coder:7b)
+    OLLAMA_URL            base url          (default http://localhost:11434)
+    DIRECTION_LLM_LIMIT   cap trades per run (for testing; default = all)
 """
 import hashlib
 import json
 import os
+import urllib.error
+import urllib.request
 from collections import Counter
 from pathlib import Path
 
@@ -41,7 +56,10 @@ ROOT   = Path(__file__).parent
 TRADES = ROOT / 'trades_extracted.json'
 CACHE  = ROOT / '.direction_cache.json'
 
-MODEL = os.environ.get('DIRECTION_LLM_MODEL', 'claude-opus-4-8')
+MODEL      = os.environ.get('DIRECTION_LLM_MODEL', 'qwen2.5-coder:7b')
+OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://localhost:11434').rstrip('/')
+LIMIT      = int(os.environ.get('DIRECTION_LLM_LIMIT', '0') or 0)
+
 VALID = ('long', 'short', 'long/short', 'arbitrage/relative value', 'unspecified')
 
 SYSTEM = """You label the DIRECTION of a single hedge-fund trade described in a short text, for a trade-intelligence dashboard. Return exactly one label:
@@ -56,7 +74,9 @@ Rules:
 - PRECISION OVER RECALL. If you are not confident the text states a clear position for this fund, return "unspecified" with low confidence. Do not guess.
 - Classify the position of the fund the paragraph is ABOUT — ignore incidental mentions of other market participants (e.g. "market makers were short gamma" is not the fund's trade).
 - Owning or buying puts is bearish -> "short". Selling or writing calls is bearish -> "short". Selling puts is bullish.
-- A long straddle/strangle (long both a call and a put) is a volatility position, not directional -> "unspecified" unless a clear net direction is stated."""
+- A long straddle/strangle (long both a call and a put) is a volatility position, not directional -> "unspecified" unless a clear net direction is stated.
+
+Answer with JSON only: {"direction": <label>, "confidence": "high"|"medium"|"low"}."""
 
 SCHEMA = {
     "type": "object",
@@ -65,7 +85,6 @@ SCHEMA = {
         "confidence": {"type": "string", "enum": ["high", "medium", "low"]},
     },
     "required": ["direction", "confidence"],
-    "additionalProperties": False,
 }
 
 
@@ -89,32 +108,62 @@ def _atomic_write(path, obj):
     os.replace(tmp, path)
 
 
-def _classify(client, trade):
+def _ollama_models():
+    """Return the set of installed model names, or None if the server is down."""
+    try:
+        req = urllib.request.Request(f'{OLLAMA_URL}/api/tags')
+        with urllib.request.urlopen(req, timeout=5) as r:
+            data = json.loads(r.read())
+        return {m.get('name', '') for m in data.get('models', [])}
+    except Exception:
+        return None
+
+
+def _classify(trade):
     """Return one of VALID. Any failure degrades to 'unspecified' (never raises)."""
     desc = (trade.get('trade_description') or '')[:1500]
     instruments = ', '.join(trade.get('instruments') or [])
     underlying = trade.get('underlying') or ''
     user = f"Instruments: {instruments}\nUnderlying: {underlying}\n\nTrade text:\n{desc}"
+    payload = {
+        "model": MODEL,
+        "messages": [
+            {"role": "system", "content": SYSTEM},
+            {"role": "user", "content": user},
+        ],
+        "stream": False,
+        "format": SCHEMA,              # Ollama structured output
+        "options": {"temperature": 0},  # deterministic -> stable cache
+    }
     try:
-        resp = client.messages.create(
-            model=MODEL,
-            max_tokens=200,
-            system=SYSTEM,
-            messages=[{"role": "user", "content": user}],
-            output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
+        req = urllib.request.Request(
+            f'{OLLAMA_URL}/api/chat',
+            data=json.dumps(payload).encode('utf-8'),
+            headers={'Content-Type': 'application/json'},
         )
-        text = next((b.text for b in resp.content if b.type == 'text'), '')
-        data = json.loads(text)
+        with urllib.request.urlopen(req, timeout=120) as r:
+            resp = json.loads(r.read())
+        content = (resp.get('message') or {}).get('content', '')
+        data = json.loads(content)
         if data.get('confidence') == 'low':
             return 'unspecified'
         direction = data.get('direction', 'unspecified')
         return direction if direction in VALID else 'unspecified'
-    except Exception as e:  # API error, parse error, network — all fail safe
+    except Exception as e:
         print(f'    classify error ({type(e).__name__}): {e}')
         return 'unspecified'
 
 
 def run():
+    # Default OFF. The local 7B model tested below the regex's precision bar on the
+    # hard residual cases (it confidently inverted some directions), so it must not
+    # silently run in the automated pipeline and degrade the data. Opt in only once
+    # you've pointed DIRECTION_LLM_MODEL at a model you've validated.
+    if os.environ.get('DIRECTION_LLM_ENABLE', '').lower() not in ('1', 'true', 'yes'):
+        print('Direction LLM resolver disabled (set DIRECTION_LLM_ENABLE=1 to enable). '
+              'Keeping regex-only directions.')
+        return
+
     trades = json.load(open(TRADES, encoding='utf-8'))
     targets = [t for t in trades if (t.get('direction') or 'unspecified') == 'unspecified']
     if not targets:
@@ -124,7 +173,7 @@ def run():
     cache = _load_cache()
     changed = False
 
-    # 1) Apply any cached classifications first — free, no API call needed.
+    # 1) Apply cached classifications first — free, no model call needed.
     todo = []
     for t in targets:
         k = _key(t.get('trade_description') or '')
@@ -136,26 +185,23 @@ def run():
         else:
             todo.append((k, t))
 
-    # 2) Resolve the rest via the LLM — only if it's actually available.
+    # 2) Resolve the rest via the local model — only if Ollama is actually up.
     if todo:
-        sdk_ok = True
-        try:
-            import anthropic  # noqa: F401
-        except ImportError:
-            sdk_ok = False
-        key_ok = bool(os.environ.get('ANTHROPIC_API_KEY') or os.environ.get('ANTHROPIC_AUTH_TOKEN'))
-
-        if not (sdk_ok and key_ok):
-            why = 'anthropic SDK not installed' if not sdk_ok else 'ANTHROPIC_API_KEY not set'
-            print(f'{len(todo)} unspecified trade(s) left for the LLM, but {why} — '
-                  f'skipping LLM pass (regex-only output kept). '
-                  f'`pip install anthropic` + set ANTHROPIC_API_KEY to enable.')
+        if LIMIT:
+            todo = todo[:LIMIT]
+        installed = _ollama_models()
+        if installed is None:
+            print(f'{len(todo)} unspecified trade(s) left for the LLM, but Ollama is not '
+                  f'reachable at {OLLAMA_URL} — skipping LLM pass (regex-only output kept). '
+                  f'Start it with `ollama serve`.')
+        elif MODEL not in installed and not any(m.split(':')[0] == MODEL.split(':')[0] for m in installed):
+            print(f'{len(todo)} unspecified trade(s) left for the LLM, but model "{MODEL}" '
+                  f'is not installed — skipping. Run `ollama pull {MODEL}`. '
+                  f'Installed: {sorted(installed) or "none"}.')
         else:
-            import anthropic
-            client = anthropic.Anthropic()
-            print(f'Resolving {len(todo)} regex-unspecified trades via {MODEL}...')
+            print(f'Resolving {len(todo)} regex-unspecified trades via local {MODEL}...')
             for i, (k, t) in enumerate(todo, 1):
-                label = _classify(client, t)
+                label = _classify(t)
                 cache[k] = label
                 if label != 'unspecified':
                     t['direction'] = label

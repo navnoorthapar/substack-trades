@@ -1,8 +1,8 @@
-# Core pipeline: stdlib only (urllib, json, re, pathlib) — no install needed.
+# Core pipeline: stdlib only (urllib, json, re, pathlib) — no install needed,
+# and no paid APIs.
 #
-# Optional: the regex+LLM hybrid direction resolver (llm_direction.py) uses the
-# Anthropic SDK. It is opt-in and fail-safe — the pipeline runs fine without it.
-# To enable it on the machine that runs refresh.sh:
-#     pip install anthropic        # >= 0.40
-#     export ANTHROPIC_API_KEY=sk-ant-...
-# anthropic>=0.40   # uncomment to pin if you vendor deps
+# Optional: the regex+LLM hybrid direction resolver (llm_direction.py) talks to a
+# LOCAL, FREE Ollama model over plain urllib — no pip package, no API key, no
+# per-token cost. It is DISABLED by default (the installed 7B model tested below
+# the regex's precision bar) and fail-safe. To enable, see the header of
+# llm_direction.py: pull a model you trust, then set DIRECTION_LLM_ENABLE=1.
