@@ -15,9 +15,39 @@ OUTPUT_PATH = ROOT / 'trades_extracted.json'
 
 # ─── Pattern libraries ────────────────────────────────────────────────────────
 
-DIRECTION_LONG = r'\b(went long|goes long|entered long|long position|net long|build\w* (?:a )?long|built (?:a )?long|bullish|upside bet|leveraged long|bought|purchase[d]?|acqui(?:red|res)|long exposure|long (?:the|bias)|long call[s]?|accumulated|added (?:to )?(?:the )?(?:long|position|stake|holdings?|exposure)|increased (?:the )?(?:long|position|stake|holdings?|exposure)|deployed (?:capital )?(?:into|to|in)|allocated (?:capital )?to)\b'
-DIRECTION_SHORT = r'\b(shorted|shorting|went short|goes short|entered short|sold short|short position|net short|short seller[s]?|bet against|CDS buy|bearish|short exposure|leveraged short|short bias|short(?:ed)? (?:the|bonds?|equities|stocks?|currencies?|dollar|sterling|yen|euro|pound)|took (?:a )?short|built (?:a )?short|bought put[s]?|put buyer[s]?)\b'
-DIRECTION_ARB = r'\b(arbitrage[d]?|arb(?:ed)?|relative value|pairs trade|basis trade|convergence trade|spread trade|market neutral|merger arb|risk arb|event[\s\-]driven)\b'
+# LONG signals. NB: bare "buy/buying" is deliberately excluded — it matches order
+# flow ("1,619 buy orders"), dealer hedging ("buy to rebalance"), and option-leg
+# mechanics ("buy ATM puts"). "bought"/"purchased" are kept (explicit actions).
+DIRECTION_LONG = (
+    r'\b(went long|goes long|going long|enter(?:ed|s|ing)? (?:a |an )?long'
+    r'|(?:took|established|initiated|opened|put on|building|built|added) (?:a |an )?long'
+    r'|long position|net long|bullish|upside bet|leveraged long|bought|purchase[d]?|acqui(?:red|res|ring)'
+    r'|long exposure|long (?:the|bias)'
+    # mirror of the SHORT asset list so "long oil" / "long equities" classify symmetrically
+    r'|long (?:the )?(?:bond[s]?|gilt[s]?|treasur\w+|equit\w+|stock[s]?|share[s]?|oil|crude|gold|silver|copper|natural gas|gas|duration|credit|the dollar|sterling|yen|euro|pound)'
+    r'|long (?:vol(?:atility)?|gamma|vega)|long call[s]?|bought call[s]?|call spread|overweight|accumulated'
+    r'|(?:added|increased) (?:to )?(?:the )?(?:long|position|stake|holdings?|exposure)'
+    # activist / disclosed stakes — a clean long signal ("rebuilt a $2B stake in")
+    r'|(?:built|rebuilt|raised|amassed|disclosed|acquired|took|owns?|holds?|established) (?:a |an )?(?:[\$\d.,]+\+?\s*(?:billion|million|bn|mn)?\s*)?(?:minority |majority |new |large |sizable |controlling |[\d.]+%\s+)?(?:stake|equity stake|long position) in'
+    r'|[\d.]+%\s+stake|stake in'
+    r'|deployed (?:capital )?(?:into|to|in)|allocated (?:capital )?to)\b'
+)
+DIRECTION_SHORT = (
+    r'\b(shorted|shorting|went short|goes short|going short|enter(?:ed|s|ing)? (?:a |an )?short'
+    r'|(?:established|initiated|opened|put on|took|built|building|added) (?:a |an )?short'
+    r'|sold short|short position|net short|short seller[s]?|bet(?:ting)? against|CDS buy|bearish'
+    r'|short exposure|leveraged short|short bias|underweight'
+    r'|short(?:ed)? (?:the )?(?:bond[s]?|gilt[s]?|treasur\w+|equit\w+|stock[s]?|share[s]?|currenc\w+|dollar|sterling|yen|euro|pound|oil|crude|gold|silver|copper|gas|credit|duration|index)'
+    r'|short (?:vol(?:atility)?|gamma|vega|VIX)|selling (?:vol(?:atility)?|index vol)|sold vol(?:atility)?'
+    r'|(?:sold|wrote|writing|selling) call[s]?|bought put[s]?|put option[s]?|protective put|bought protection|put buyer[s]?'
+    r'|fad(?:e|ed|ing) the)\b'
+)
+DIRECTION_ARB = (
+    r'\b(arbitrage[d]?|arb(?:ed)?|relative value|pairs trade|basis trade|convergence trade|spread trade'
+    r'|market neutral|merger arb|risk arb|event[\s\-]driven'
+    r'|steepener|flattener|curve (?:steepener|flattener|trade)'
+    r'|dispersion (?:trade|strateg\w+|book|play)|calendar spread|time spread)\b'
+)
 
 INSTRUMENTS = {
     # "note/notes" removed — matches "researchers' note", footnotes, URLs.
@@ -156,18 +186,30 @@ DIRECTION_MAP = {
 }
 
 def classify_direction(text):
-    # Strip common false-positive phrases before matching
-    cleaned = re.sub(r'\bshort[\s\-](?:term|dated|run|fall|sighted|hand|list|cut|age|change|selling)\b', '', text, flags=re.IGNORECASE)
-    cleaned = re.sub(r'\blong[\s\-](?:term|run|dated|standing|time|only|awaited|haul|lasting|suffering)\b', '', cleaned, flags=re.IGNORECASE)
-    # "long put(s)" = owning puts = bearish; neutralize to avoid false long signal
-    has_long_put = bool(re.search(r'\blong\s+put[s]?\b', cleaned, re.IGNORECASE))
-    if has_long_put:
-        cleaned = re.sub(r'\blong\s+put[s]?\b', 'OWNED_PUT', cleaned, flags=re.IGNORECASE)
+    # Strip common false-positive phrases before matching so a bare "long"/"short"
+    # left behind is much more likely to be an actual position than prose.
+    # "long/short" / "long-short" as a compound is a fund-type adjective, not a trade
+    # ("a long/short equity fund"); drop it so it can't trip the long or short signals.
+    cleaned = re.sub(r'\blong[/\-]short\b', ' ', text, flags=re.IGNORECASE)
+    cleaned = re.sub(r'\bshort[\s\-](?:term|dated|run|fall|sighted|hand|list|cut|age|change|selling|squeeze)\b', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'\blong[\s\-](?:term|run|dated|standing|time|only|awaited|haul|lasting|suffering|list|way|history|period|stretch|line|shot|shadow)\b', '', cleaned, flags=re.IGNORECASE)
+    # Owning puts (long/bought/purchased puts) is a bearish position — neutralize it so
+    # the generic "bought"/"long" signal doesn't misfire it as long; count it as short.
+    owns_puts = bool(re.search(r'\b(?:long|bought|purchased|buying|own(?:s|ed)?|hold(?:s|ing)?)\s+put[s]?\b', cleaned, re.IGNORECASE))
+    if owns_puts:
+        cleaned = re.sub(r'\b(?:long|bought|purchased|buying|own(?:s|ed)?|hold(?:s|ing)?)\s+put[s]?\b', 'OWNED_PUT', cleaned, flags=re.IGNORECASE)
     if re.search(DIRECTION_ARB, cleaned, re.IGNORECASE):
         return 'arbitrage/relative value'
     long_match  = re.search(DIRECTION_LONG,  cleaned, re.IGNORECASE)
-    short_match = re.search(DIRECTION_SHORT, cleaned, re.IGNORECASE) or has_long_put
-    if long_match and short_match:
+    short_match = re.search(DIRECTION_SHORT, cleaned, re.IGNORECASE) or owns_puts
+    # Two-legged structure: "long <asset> … short <asset>" within one sentence (pairs /
+    # calendar / multi-leg). Term-words were stripped above, so a residual long+short
+    # pairing in a trade paragraph is almost always a genuine long/short book — even when
+    # a leg's asset isn't enumerated (e.g. "long oil and short airlines"). Requiring a
+    # word after each side excludes the fund-type adjective "long/short" / "long-short".
+    structural_ls = bool(re.search(r'\blong\s+\w[^.]{1,80}?\bshort\s+\w', cleaned, re.IGNORECASE) or
+                         re.search(r'\bshort\s+\w[^.]{1,80}?\blong\s+\w', cleaned, re.IGNORECASE))
+    if (long_match and short_match) or structural_ls:
         return 'long/short'
     if long_match:
         return 'long'
