@@ -1,5 +1,97 @@
 [
   {
+    "article_title": "How Barra, Axioma, and Commercial Risk Models Missed January 2022’s 9.1% Growth Equity Crash: The Path Factor Blind Spot",
+    "article_url": "https://navnoorbawa.substack.com/p/how-barra-axioma-and-commercial-risk",
+    "article_date": "2026-06-16",
+    "trade_description": "The standard use of Fed funds futures in institutional risk management is to extract hike probabilities, assign event timing, and hedge accordingly. When the Fed acts, the book gets repriced. That framework is sufficient for predicting when the Fed moves. It is structurally wrong for predicting when strategies break.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": "the window in which capital; futures in institutional risk management",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "How Barra, Axioma, and Commercial Risk Models Missed January 2022’s 9.1% Growth Equity Crash: The Path Factor Blind Spot",
+    "article_url": "https://navnoorbawa.substack.com/p/how-barra-axioma-and-commercial-risk",
+    "article_date": "2026-06-16",
+    "trade_description": "The foundational methodological result is Kuttner (2001), Journal of Monetary Economics 47(3): the paper established that the change in fed funds futures prices around an FOMC announcement — not the raw change in the policy rate itself — isolates the unexpected component of a policy decision, and it is this unexpected component that drives the asset-price response. Using the raw target-rate change as the risk variable conflates a fully-priced move with a surprise; only the futures-derived surprise measure is informative. This single methodological point has a direct implication for risk management: the relevant risk event is the surprise embedded in futures repricing, not the scheduled FOMC meeting itself.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": "direct implication for risk management",
+    "edge_or_thesis": "it identifies which quantities are measured versus inferred.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "How Barra, Axioma, and Commercial Risk Models Missed January 2022’s 9.1% Growth Equity Crash: The Path Factor Blind Spot",
+    "article_url": "https://navnoorbawa.substack.com/p/how-barra-axioma-and-commercial-risk",
+    "article_date": "2026-06-16",
+    "trade_description": "January 2022, pre-hike. Long-duration equity — high-growth, low-earnings-yield names with the highest implicit cash flow duration — experienced their maximum monthly drawdown of the entire cycle before any hike occurred. The Preqin All-Strategies Hedge Fund benchmark fell 1.88% in January 2022 alone (Preqin database figure, presumably net of fees per standard convention for “All-Strategies” benchmark indices, though Preqin’s specific fee-basis documentation for this series was not independently confirmed; Preqin is a self-reporting data provider with characteristics standard to alternative data aggregators, including selection effects and limited independent verification of underlying returns), per Preqin’s January 2022 performance update. Growth sectors experienced the sharpest selloffs; ",
+    "instruments": [
+      "equity",
+      "FX"
+    ],
+    "direction": "unspecified",
+    "underlying": "Strategies",
+    "edge_or_thesis": "weighed on risk sentiment and triggered selloffs in growth sectors of the market” — a rise located entirely in the forward curve, not in the spot rate.",
+    "any_quant_detail": "1.88%, 1%, 25bp",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "How Barra, Axioma, and Commercial Risk Models Missed January 2022’s 9.1% Growth Equity Crash: The Path Factor Blind Spot",
+    "article_url": "https://navnoorbawa.substack.com/p/how-barra-axioma-and-commercial-risk",
+    "article_date": "2026-06-16",
+    "trade_description": "Positioning evidence. Reuters’ Jamie McGeever, reporting CFTC Commitment of Traders data for the week ending March 15, 2022 (Reuters secondary reporting of CFTC primary data; the underlying CFTC COT file is available at cftc.gov), noted that speculative accounts cut their net short 2-year Treasury position by the largest weekly amount since February 2021. This is the sound of managers covering short-rates bets at liftoff eve — the optimal time to have covered was six weeks earlier, at the January path factor shock.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "short",
+    "underlying": null,
+    "edge_or_thesis": "near-zero market effect.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "How Barra, Axioma, and Commercial Risk Models Missed January 2022’s 9.1% Growth Equity Crash: The Path Factor Blind Spot",
+    "article_url": "https://navnoorbawa.substack.com/p/how-barra-axioma-and-commercial-risk",
+    "article_date": "2026-06-16",
+    "trade_description": "Where the gap persists. The gap is most material for fundamental long/short equity funds between $500M and $5B AUM relying on commercial factor models as their primary risk infrastructure, without in-house quantitative risk build-out. Advisor Perspectives’ coverage of the Global Investment Report’s 2022 Annual Hedge Fund Survey reports that the BarclayHedge Equity Long/Short Index lost less than 3.5% in the first half of 2022, but within the survey’s curated set of 50 historically top-performing broad-strategy funds, the 15 hedged-equity entrants ranged from MAK One at +15.3% to Old Kings Capital at -40.1% — a spread exceeding 55 percentage points among funds sharing a broadly similar mandate (this 50-fund set is itself survivorship-selected — “the strongest long-term performing broad-stra",
+    "instruments": [
+      "equity",
+      "commodity"
+    ],
+    "direction": "unspecified",
+    "underlying": "Annual to Old Kings Capital; duration management",
+    "edge_or_thesis": "severe enough to prompt review.",
+    "any_quant_detail": "$500M, $5B, 3.5%, 15.3%, 40.1%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "How Barra, Axioma, and Commercial Risk Models Missed January 2022’s 9.1% Growth Equity Crash: The Path Factor Blind Spot",
+    "article_url": "https://navnoorbawa.substack.com/p/how-barra-axioma-and-commercial-risk",
+    "article_date": "2026-06-16",
+    "trade_description": "First, the historical covariance estimate of a growth equity portfolio’s sensitivity to 2-year yields drifts toward zero during extended low-rate periods. From 2012 to 2021, growth equity was largely decorrelated from rate moves in equity factor models. A fund whose risk system estimated near-zero rate beta on January 1, 2022 — because its lookback history was calibrated to that decorrelated period — would have run an undercalibrated hedge at precisely the moment when the rate-equity correlation reasserted itself. The regime shift invalidates the historical beta exactly when the historical beta is most needed.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "largely decorrelated from rate moves in equity factor models.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
     "article_title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
     "article_url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
     "article_date": "2026-06-06",
