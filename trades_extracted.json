@@ -1,5 +1,95 @@
 [
   {
+    "article_title": "AI Hedge Funds Now Run 0.99 Beta to the S&P. You’re Paying 2 and 20 for an Index Fund.",
+    "article_url": "https://navnoorbawa.substack.com/p/ai-hedge-funds-now-run-099-beta-to",
+    "article_date": "2026-06-17",
+    "trade_description": "The collapse of Technology/Media/Telecom hedge fund differentiation from equity benchmarks is not a bad streak. It is the predictable endpoint of a capacity overflow: when a single fund’s AUM exceeds the entire prior TMT universe, the long book is structurally forced into the same mega-cap names that define the Nasdaq 100. The alpha erosion is documented, the mechanism is causal, and the fee structure is indefensible at scale.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": "Telecom single fund; Nasdaq; S&P 500",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "AI Hedge Funds Now Run 0.99 Beta to the S&P. You’re Paying 2 and 20 for an Index Fund.",
+    "article_url": "https://navnoorbawa.substack.com/p/ai-hedge-funds-now-run-099-beta-to",
+    "article_date": "2026-06-17",
+    "trade_description": "When the world’s most specialized tech equity managers collectively deliver S&P beta within rounding error, the 2-and-20 fee model requires a cleaner defense than “we pick stocks.” This piece argues that defense does not exist — not because these managers are poor at stock selection, but because capacity overflow has removed the portfolio space in which their selection could produce returns uncorrelated to index performance. The practical implication is direct: an allocator paying 2-and-20 to a TMT hedge fund above roughly $10 billion in AUM is, in most cases, paying premium fees for Nasdaq beta rather than for alpha. The mechanism, the alpha decay, and the approximate capacity bound at which the remaining edge survives are all documentable.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": "TMT fund; TMT Nasdaq",
+    "edge_or_thesis": "capacity overflow has removed the portfolio space in which their selection could produce returns uncorrelated to index performance.",
+    "any_quant_detail": "$10 billion, 16 basis points",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "AI Hedge Funds Now Run 0.99 Beta to the S&P. You’re Paying 2 and 20 for an Index Fund.",
+    "article_url": "https://navnoorbawa.substack.com/p/ai-hedge-funds-now-run-099-beta-to",
+    "article_date": "2026-06-17",
+    "trade_description": "Brunnermeier and Nagel’s 2004 academic paper, examining 53 hedge fund managers’ quarterly SEC 13F filings from 1998 to 2000, found systematic technology overweighting throughout the Nasdaq’s ascent. [13F filings capture long US equity positions at quarter-end only; they do not capture short positions, derivatives, or international holdings. The directional overweighting finding is treated as valid for the long book.] At the Nasdaq’s March 2000 peak, the sample held 31% of stock portfolios in technology against a market weight of 21%. The funds were not hedging the bubble — and their long books did not protect against the 55% Nasdaq 100 drawdown that followed.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long/short",
+    "underlying": "or international holdings; Nasdaq",
+    "edge_or_thesis": "valid for the long book.",
+    "any_quant_detail": "31%, 21%, 55%, 53%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "AI Hedge Funds Now Run 0.99 Beta to the S&P. You’re Paying 2 and 20 for an Index Fund.",
+    "article_url": "https://navnoorbawa.substack.com/p/ai-hedge-funds-now-run-099-beta-to",
+    "article_date": "2026-06-17",
+    "trade_description": "The current exposure structure is directionally comparable. The Goldman Sachs equity strategy team, per Institutional Investor’s reporting, found that top tech stocks accounted for 53% of S&P 500 total returns in 2024. Goldman Sachs prime brokerage data, reported by Reuters and confirmed by Hedgeweek, showed hedge funds’ exposure to AI-related tech hardware at its highest since Goldman began tracking the data in 2016, as of October 2025. (Goldman prime brokerage data covers Goldman’s client universe, not the full industry.)",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": "Nasdaq; S&P 500",
+    "edge_or_thesis": "Goldman began tracking the data in 2016, as of October 2025.",
+    "any_quant_detail": "31%, 21%, 55%, 53%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "AI Hedge Funds Now Run 0.99 Beta to the S&P. You’re Paying 2 and 20 for an Index Fund.",
+    "article_url": "https://navnoorbawa.substack.com/p/ai-hedge-funds-now-run-099-beta-to",
+    "article_date": "2026-06-17",
+    "trade_description": "The 1998 parallel is not a prediction of a comparable drawdown. It is a structural analogy: both episodes show a concentrated equity market reducing the diversification surface for any discretionary long manager — and a hedge fund industry that, individually rationally, declined to run tracking error against the dominant factor.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "Goldman began tracking the data in 2016, as of October 2025.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Coatue"
+  },
+  {
+    "article_title": "AI Hedge Funds Now Run 0.99 Beta to the S&P. You’re Paying 2 and 20 for an Index Fund.",
+    "article_url": "https://navnoorbawa.substack.com/p/ai-hedge-funds-now-run-099-beta-to",
+    "article_date": "2026-06-17",
+    "trade_description": "For TMT or AI-focused hedge fund allocations at funds above approximately $10 billion: the correct revaluation question is not “what alpha can this manager generate in theory” but “what is the net-of-fee cost of the beta being delivered?” At 0.87× Nasdaq beta (conservative floor) and approximately 5–6% annual estimated fee drag in a positive return year, a 70/30 QQQ/short-duration Treasury allocation delivers comparable factor exposure at 18 basis points. The ~1.4pp net alpha residual in the category average does not compensate for lockup and the asymmetric downside.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "unspecified",
+    "underlying": "focused Nasdaq; QQQ",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$10 billion, $2B, 6%, 18 basis points, At 0.87, at 18",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
     "article_title": "How Barra, Axioma, and Commercial Risk Models Missed January 2022’s 9.1% Growth Equity Crash: The Path Factor Blind Spot",
     "article_url": "https://navnoorbawa.substack.com/p/how-barra-axioma-and-commercial-risk",
     "article_date": "2026-06-16",
