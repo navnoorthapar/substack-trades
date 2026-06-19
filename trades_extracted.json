@@ -1,5 +1,50 @@
 [
   {
+    "article_title": "12 Private Equity Funds Are Chasing the Same 30 Football Clubs",
+    "article_url": "https://navnoorbawa.substack.com/p/12-private-equity-funds-are-chasing",
+    "article_date": "2026-06-18",
+    "trade_description": "Every sophisticated capital allocator now knows European football clubs are being accumulated by private equity. What they do not know — and what determines whether this trade still works — is that the alpha is bifurcated. At trophy-asset entry points (4–6x EV/Revenue), it is already crowded to near-zero net IRR for fund sizes above $2 billion. At mid-tier entry points (1–2x EV/Revenue), it persists — but the investable universe is shrinking as named capital vehicles compete for a club set that regulatory barriers have materially constrained. What closes the window is not financial logic. It is the structural barriers that restrict two of the five major European leagues, early but documented evidence — so far a single case — that relegation risk is underweighted in PE underwriting, and a m",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": "Every sophisticated capital; zero net IRR for fund; is shrinking as named capital",
+    "edge_or_thesis": "named capital vehicles compete for a club set that regulatory barriers have materially constrained.",
+    "any_quant_detail": "$2 billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "12 Private Equity Funds Are Chasing the Same 30 Football Clubs",
+    "article_url": "https://navnoorbawa.substack.com/p/12-private-equity-funds-are-chasing",
+    "article_date": "2026-06-18",
+    "trade_description": "In January 2025, Presidio Investors acquired Hellas Verona, as confirmed by the joint statement published by the club and Presidio. Financial terms were not officially disclosed. Private Equity Wire, citing a source familiar with the deal, estimated the enterprise value at €120M–130M including existing debt. TheScore.com citing AFP reported Italian media estimated approximately €130M total. According to the managing partner in an interview with ION Analytics/Mergermarket — a practitioner’s statement, not independently verified — no new debt was raised; Presidio bought out the existing equity with existing debt remaining in place.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "Verona, as confirmed by the joint statement published by the club and Presidio.",
+    "any_quant_detail": "€120M, €130M",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
+    "article_title": "12 Private Equity Funds Are Chasing the Same 30 Football Clubs",
+    "article_url": "https://navnoorbawa.substack.com/p/12-private-equity-funds-are-chasing",
+    "article_date": "2026-06-18",
+    "trade_description": "The 25% increase in big five media rights is meaningful and confirmed. At a constant 4.9x EV/Revenue multiple, a €20M annual UCL distribution increment for a mid-tier club that achieves qualification translates to approximately €100M in EV — significant option value for a club purchased at 1.5x revenue, even without the secondary catalysts.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "€5 billion, €4.4 billion, €20M, €100M, 14%, 25%, at 1.5",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null
+  },
+  {
     "article_title": "AI Hedge Funds Now Run 0.99 Beta to the S&P. You’re Paying 2 and 20 for an Index Fund.",
     "article_url": "https://navnoorbawa.substack.com/p/ai-hedge-funds-now-run-099-beta-to",
     "article_date": "2026-06-17",
