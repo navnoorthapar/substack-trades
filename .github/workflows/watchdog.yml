@@ -1,0 +1,50 @@
+name: Monitor Published Research
+
+on:
+  schedule:
+    - cron: '17 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: published-research-watchdog
+  cancel-in-progress: true
+
+jobs:
+  monitor:
+    name: Verify live release and freshness
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the expected release
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Verify exact live release
+        run: >-
+          python3 smoke_test_site.py
+          --expected-revision "$GITHUB_SHA"
+          --articles-file articles_index.json
+          --observations-file trades_extracted.json
+          --retries 2
+          --retry-delay 5
+          https://navnoorthapar.github.io/substack-trades/
+
+      - name: Enforce scheduled-refresh freshness
+        run: |
+          python3 - <<'PY'
+          import json
+          from datetime import datetime, timezone
+
+          snapshot = json.load(open('snapshot_manifest.json', encoding='utf-8'))
+          checked_at = datetime.fromisoformat(str(snapshot['checked_at']).replace('Z', '+00:00'))
+          age = datetime.now(timezone.utc) - checked_at.astimezone(timezone.utc)
+          if age.total_seconds() > 16 * 3600:
+              raise SystemExit(
+                  f"Published research snapshot is stale: {age.total_seconds() / 3600:.1f} hours old"
+              )
+          print(f"Published research snapshot is current: {age.total_seconds() / 3600:.1f} hours old")
+          PY

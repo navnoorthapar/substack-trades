@@ -24,7 +24,9 @@ Scheduled Mac
                                                                   |
                                                                   v
 GitHub Actions
-  tracked snapshot -> validation + tests -> _site/index.html
+  tracked snapshot -> validation + tests -> _site/index.html (fast shell + latest dossiers)
+                                         -> _site/article_briefs.json (older exact spans)
+                                         -> _site/observations.json (parser observations)
                                          -> immutable Pages artifact
                                          -> atomic production deployment
 ```
@@ -43,7 +45,9 @@ state is `medium_posts.json`, `articles_index.json`, `trades_extracted.json`,
 catalogue prevents a temporary archive failure from erasing older articles.
 Production builds consume the validated article and observation snapshots. The
 manifest binds exact input bytes, counts, publication freshness, and per-channel
-fetch health. Generated HTML is intentionally ignored:
+fetch health. Deferred assets carry the same checksum and are rejected by the
+browser if their release identity, record IDs, article ownership, or required
+fields do not match. Generated site files are intentionally ignored:
 every production artifact is rebuilt, tested, and deployed without a bot commit
 or a second source of truth.
 
@@ -70,13 +74,22 @@ does not manufacture NAV/P&L, attribution, exposure, leverage, VaR, stress,
 liquidity, funding, counterparty, capacity, execution, compliance, or investor
 metrics without the connected books and records required to calculate them.
 
-The default Research Brief prioritizes recent passages and surfaces active
-diligence, overdue reviews, unverified evidence, and packet coverage. The
-Observation Monitor and Research Library support fast source review. Decision
-Workflow v2 stores an 18-part analyst packet: eight investment-case fields, six
-self-attested control gates, and four workflow controls. Coverage means only
-that fields were populated; it is not approval, conviction, investability, or
-proof that a control was completed.
+The default Institutional Article Workbench is built around the article data:
+the first eligible authored passage, contextual evidence, mechanism,
+limitations, falsifiers, implementation, cited checkpoints, and exact source
+provenance. Its evidence ledger keeps detected numeric tokens attached to their
+original passage; tokens are lexical, deduplicated, capped, and never presented
+as normalized or comparable facts. Duplicate spans are collapsed by source
+identity, related research requires an exact mentioned-entity or underlying
+overlap, and excerpt gaps are marked not assessable rather than absent.
+
+The Observation Monitor and Research Library provide fast passage-level review.
+Directional labels describe parsed language, not an actor, verified position,
+exposure, conviction, or current view. Decision Workflow v2 stores an 18-part
+analyst packet: eight investment-case fields, six self-attested control gates,
+and four workflow controls. Coverage means only that fields were populated; it
+is not approval, conviction, investability, or proof that a control was
+completed.
 
 Each workflow packet retains a bounded source snapshot and dataset checksum.
 If a later extraction changes or removes the observation ID, the packet remains
@@ -159,6 +172,9 @@ candidate can therefore neither leak into the next scheduled run nor trigger a
 GitHub Pages deployment unless its full local quality gate passes. GitHub Pages
 then publishes the exact tested artifact atomically and the post-deploy smoke
 test verifies HTTPS, revision, counts, and checksum before declaring it healthy.
+A separate least-privilege watchdog checks the exact published revision every
+four hours and rejects a research snapshot older than 16 hours, leaving margin
+above the longest scheduled refresh interval.
 
 Manually redeploy the current `main` snapshot without fetching publications:
 

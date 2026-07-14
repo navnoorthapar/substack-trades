@@ -19,23 +19,32 @@ class DeploymentConfigurationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.workflow = (ROOT / '.github/workflows/update.yml').read_text(encoding='utf-8')
+        cls.watchdog = (ROOT / '.github/workflows/watchdog.yml').read_text(encoding='utf-8')
         cls.dependabot = (ROOT / '.github/dependabot.yml').read_text(encoding='utf-8')
         cls.refresh = (ROOT / 'refresh.sh').read_text(encoding='utf-8')
+        cls.automation_status = (ROOT / 'automation_status.sh').read_text(encoding='utf-8')
         cls.ignore = (ROOT / '.gitignore').read_text(encoding='utf-8').splitlines()
 
     def test_every_third_party_action_is_immutable_and_version_annotated(self):
-        action_uses = re.findall(
-            r'(?m)^\s*uses:\s*([^@\s]+)@([^\s]+)(?:\s+#\s*(\S+))?$',
-            self.workflow,
-        )
-        self.assertTrue(action_uses)
-        for action, revision, version in action_uses:
-            self.assertRegex(revision, r'^[0-9a-f]{40}$')
-            self.assertIn(action, ACTION_PINS)
-            expected_revision, expected_version = ACTION_PINS[action]
-            self.assertEqual(revision, expected_revision)
-            self.assertEqual(version, expected_version)
-        self.assertEqual(sum(action == 'actions/checkout' for action, _, _ in action_uses), 2)
+        for label, workflow, checkout_count in (
+            ('deployment', self.workflow, 2),
+            ('watchdog', self.watchdog, 1),
+        ):
+            action_uses = re.findall(
+                r'(?m)^\s*uses:\s*([^@\s]+)@([^\s]+)(?:\s+#\s*(\S+))?$',
+                workflow,
+            )
+            self.assertTrue(action_uses, f'{label} workflow has no pinned actions')
+            for action, revision, version in action_uses:
+                self.assertRegex(revision, r'^[0-9a-f]{40}$')
+                self.assertIn(action, ACTION_PINS)
+                expected_revision, expected_version = ACTION_PINS[action]
+                self.assertEqual(revision, expected_revision)
+                self.assertEqual(version, expected_version)
+            self.assertEqual(
+                sum(action == 'actions/checkout' for action, _, _ in action_uses),
+                checkout_count,
+            )
 
     def test_quality_gate_validates_current_and_available_prior_snapshot(self):
         for required in (
@@ -57,20 +66,35 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'SITE_REVISION: ${{ github.sha }}',
             'test -f _site/index.html',
             'test -f _site/article_briefs.json',
+            'test -f _site/observations.json',
             'test ! -L _site/article_briefs.json',
+            'test ! -L _site/observations.json',
+            'artifact_file_count=$(find _site -type f',
+            'artifact_file_count != 3',
+            'must contain exactly index.html, article_briefs.json, and observations.json',
             'find _site -type l',
             'index_bytes < 100000',
-            'index_bytes > 2000000',
+            'index_bytes > 900000',
             "brief_bytes=$(wc -c < _site/article_briefs.json",
+            "observation_bytes=$(wc -c < _site/observations.json",
             'gzip_bytes=$(gzip -9 -c _site/index.html',
-            'gzip_bytes > 500000',
+            'gzip_bytes > 250000',
             'brief_bytes < 100000',
             'brief_bytes > 800000',
+            'observation_bytes < 500000',
+            'observation_bytes > 1500000',
             'total_bytes > 3000000',
             "Path('_site/article_briefs.json').read_text",
+            "Path('_site/observations.json').read_text",
             "deferred.get('schema_version') != 1",
-            "deferred.get('data_checksum') != snapshot_checksum",
+            "deferred.get('data_checksum') != expected_checksum",
             "not isinstance(deferred.get('briefs'), dict)",
+            "observation_asset.get('schema_version') != 1",
+            "observation_asset.get('data_checksum') != expected_checksum",
+            "not isinstance(observation_asset.get('observations'), list)",
+            'len(asset_observations) != len(source_observations)',
+            'Deferred observation identities do not match the source snapshot.',
+            'Deferred observation content differs from the source snapshot.',
             'from smoke_test_site import snapshot_checksum, validate_html',
         ):
             self.assertIn(required, self.workflow)
@@ -88,6 +112,32 @@ class DeploymentConfigurationTests(unittest.TestCase):
             self.assertIn(required, deploy_job)
         self.assertIn('contents: read', deploy_job)
         self.assertIn('persist-credentials: false', deploy_job)
+
+    def test_watchdog_verifies_exact_release_and_enforces_sixteen_hour_freshness(self):
+        for required in (
+            "cron: '17 */4 * * *'",
+            'workflow_dispatch:',
+            'group: published-research-watchdog',
+            'cancel-in-progress: true',
+            'timeout-minutes: 5',
+            'persist-credentials: false',
+            'smoke_test_site.py',
+            '--expected-revision "$GITHUB_SHA"',
+            '--articles-file articles_index.json',
+            '--observations-file trades_extracted.json',
+            '--retries 2',
+            'https://navnoorthapar.github.io/substack-trades/',
+            "json.load(open('snapshot_manifest.json'",
+            "snapshot['checked_at']",
+            'datetime.now(timezone.utc)',
+            'age.total_seconds() > 16 * 3600',
+        ):
+            self.assertIn(required, self.watchdog)
+        self.assertRegex(self.watchdog, r'(?m)^permissions:\n\s+contents: read$')
+        self.assertNotIn('contents: write', self.watchdog)
+        self.assertNotRegex(self.watchdog, r'(?m)^\s*run:\s*git (?:commit|push)')
+        self.assertIn('MAX_AGE_SECONDS=${MAX_AGE_SECONDS:-57600}', self.automation_status)
+        self.assertNotIn('129600', self.automation_status)
 
     def test_pull_requests_cannot_deploy(self):
         self.assertRegex(self.workflow, r'(?m)^\s*push:')

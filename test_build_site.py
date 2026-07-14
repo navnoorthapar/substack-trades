@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import unicodedata
 import unittest
 from collections import Counter
 from pathlib import Path
@@ -38,6 +39,9 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         cls.brief_path = cls.site_dir / 'article_briefs.json'
         cls.brief_bytes = cls.brief_path.read_bytes()
         cls.brief_archive = json.loads(cls.brief_bytes.decode('utf-8'))
+        cls.observation_path = cls.site_dir / 'observations.json'
+        cls.observation_bytes = cls.observation_path.read_bytes()
+        cls.observation_archive = json.loads(cls.observation_bytes.decode('utf-8'))
         article_payload = json.loads((ROOT / 'articles_index.json').read_text(encoding='utf-8'))
         cls.source_articles = (
             article_payload.get('articles', [])
@@ -46,19 +50,18 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         )
         cls.source_ideas = json.loads((ROOT / 'trades_extracted.json').read_text(encoding='utf-8'))
         article_match = re.search(r'const ARTICLES = (.*?);\n', cls.html)
-        idea_match = re.search(r'const IDEAS = (.*?);\n', cls.html)
         snapshot_match = re.search(r'const SNAPSHOT = (.*?);\n', cls.html)
-        if not article_match or not idea_match or not snapshot_match:
+        if not article_match or not snapshot_match:
             raise AssertionError('generated client payload is missing')
         cls.articles = json.loads(article_match.group(1))
-        cls.ideas = json.loads(idea_match.group(1))
+        cls.ideas = cls.observation_archive['observations']
         cls.snapshot = json.loads(snapshot_match.group(1))
 
     @classmethod
     def tearDownClass(cls):
         cls._site_temp.cleanup()
 
-    def test_complete_multi_source_dataset_is_embedded_once(self):
+    def test_complete_multi_source_dataset_is_deferred_once(self):
         self.assertEqual(len(self.articles), len(self.source_articles))
         self.assertEqual(len(self.ideas), len(self.source_ideas))
         self.assertEqual(
@@ -73,6 +76,116 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertEqual(len(idea_ids), len(self.ideas))
         self.assertTrue(all(idea['article_id'] in article_ids for idea in self.ideas))
         self.assertTrue(all('article_url' not in idea for idea in self.ideas))
+        self.assertIn('let IDEAS = [];', self.html)
+        self.assertNotRegex(self.html, r'const IDEAS\s*=\s*\[')
+
+    def test_deferred_observations_are_complete_release_bound_and_lossless(self):
+        self.assertTrue(self.observation_path.is_file())
+        self.assertEqual(
+            set(self.observation_archive),
+            {'schema_version', 'data_checksum', 'observations'},
+        )
+        self.assertEqual(self.observation_archive['schema_version'], 1)
+        self.assertEqual(
+            self.observation_archive['data_checksum'],
+            self.snapshot['data_checksum'],
+        )
+        self.assertIsInstance(self.ideas, list)
+        self.assertEqual(len(self.ideas), self.snapshot['observation_count'])
+        self.assertEqual(len(self.ideas), len(self.source_ideas))
+
+        article_urls = {
+            article['id']: article['url'].rstrip('/') for article in self.articles
+        }
+        source_by_identity = {
+            (
+                str(source.get('article_url') or '').rstrip('/'),
+                str(source.get('trade_description') or '').strip(),
+            ): source
+            for source in self.source_ideas
+        }
+        self.assertEqual(
+            len(source_by_identity),
+            len(self.source_ideas),
+            'source URL plus exact passage must identify every observation',
+        )
+
+        archive_ids = set()
+        archive_identities = set()
+        for idea in self.ideas:
+            self.assertNotIn(idea['id'], archive_ids)
+            archive_ids.add(idea['id'])
+            self.assertIn(idea['article_id'], article_urls)
+            identity = (article_urls[idea['article_id']], idea['description'])
+            self.assertIn(identity, source_by_identity)
+            self.assertNotIn(identity, archive_identities)
+            archive_identities.add(identity)
+            source = source_by_identity[identity]
+            expected_instruments = [
+                str(value) for value in (source.get('instruments') or ['unspecified'])
+                if value
+            ] or ['unspecified']
+            expected_manager = ' '.join(unicodedata.normalize(
+                'NFKC', str(source.get('fund_name_if_mentioned') or '')
+            ).split())
+            expected = {
+                'description': str(source.get('trade_description') or '').strip(),
+                'description_truncated': bool(source.get('description_truncated', False)),
+                'direction': str(source.get('direction') or 'unspecified'),
+                'instruments': expected_instruments,
+                'underlying': source.get('underlying') or '',
+                'thesis': source.get('edge_or_thesis') or '',
+                'quant': source.get('any_quant_detail') or '',
+                'outcome': source.get('outcome_if_mentioned') or '',
+                'manager_raw': expected_manager,
+            }
+            self.assertEqual(
+                {field: idea[field] for field in expected},
+                expected,
+                f'deferred observation altered source content for {identity[0]}',
+            )
+
+        self.assertEqual(archive_identities, set(source_by_identity))
+        for required in (
+            "'observations.json?v='",
+            "cache:'no-cache'",
+            'payload.schema_version !== 1',
+            'payload.data_checksum !== SNAPSHOT.data_checksum',
+            'rows.length !== Number(SNAPSHOT.observation_count || 0)',
+            'const expectedArticleById = new Map()',
+            'nextMap.has(idea.id)',
+            'expectedArticleById.get(idea.id) !== idea.article_id',
+            'nextMap.size !== expectedArticleById.size',
+            'relevanceScoreCache = new WeakMap()',
+            'Observation archive does not match this release',
+        ):
+            self.assertIn(required, self.html)
+
+    def test_observation_deep_links_wait_for_verified_release_asset(self):
+        gate_start = self.html.index('function currentStateNeedsObservations()')
+        render_start = self.html.index('function render() {', gate_start)
+        render_end = self.html.index('\nfunction resetFilters', render_start)
+        gate = self.html[gate_start:render_end]
+        for text in (
+            'if (!isArticleView()) return true',
+            'state.query || state.directions.size || state.instruments.size',
+            'function renderObservationGate()',
+            'release-bound observation asset',
+            'data-retry-observations',
+            'no evidence-absence conclusion has been drawn',
+            'if (!observationsReady && currentStateNeedsObservations())',
+        ):
+            self.assertIn(text, gate)
+        self.assertLess(
+            gate.index('if (!observationsReady && currentStateNeedsObservations())'),
+            gate.index('const records = filteredRecords()'),
+        )
+        # A deferred idea selection remains in state and in the URL until the
+        # verified archive arrives; the loading gate must not clear it.
+        observation_gate = gate[gate.index('function renderObservationGate()'):gate.index('function render() {')]
+        self.assertNotIn("state.selected = ''", observation_gate)
+        self.assertIn('function retryObservations()', self.html)
+        self.assertIn("event.target.closest('[data-retry-observations]')", self.html)
 
     def test_documentation_coverage_matches_the_five_source_fields_exactly(self):
         field_names = {'market', 'stance', 'underlying', 'thesis', 'numeric'}
@@ -182,22 +295,28 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('function renderIntelligenceBrief(records)', self.html)
         for text in (
             'Intelligence Brief',
-            'Research intelligence brief · source-backed',
-            'Start with the article. Test it against its evidence.',
-            'Authored framing, contextual evidence, mechanism, limitations, falsifiers, and public checkpoints',
-            'shown as exact source passages, never converted into a synthetic recommendation',
-            "Author\\'s framing",
-            'Why this article is surfaced',
-            'Upcoming checkpoints cited',
-            'Continue reading',
+            'Institutional article workbench · source-backed',
+            'Read the argument. Audit the evidence. Preserve the boundary.',
+            'Opening authored passage, detected numbers, mechanism, limitations, falsifiers, implementation, and cited checkpoints',
+            'retaining exact authored language and provenance',
+            'Opening authored passage',
+            'Captured article structure',
+            'Institutional diligence map',
+            'Evidence ledger',
+            'Detected numbers with their authored context',
+            'Dossier coverage in this lens',
+            'Related archive context',
             'Recent article dossiers',
-            'Open full dossier',
-            'Published research, not a live market as-of or a portfolio recommendation.',
+            'Open source dossier',
+            'Copy institutional brief',
+            'Print / PDF',
+            'Published-source research; not independently verified, a live market as-of, or a portfolio recommendation.',
             'Evidence boundaries',
-            'Raw extracted observations',
+            'Instrument extraction map',
+            'Parser-derived observations',
             'built from exact authored sections, not observation count',
             'Extracted passages describe mixed structures; no single article-level stance is assigned.',
-            'does not infer current holdings, conviction, expected return, portfolio fit, or a live market view',
+            'does not infer holdings, conviction, expected return, portfolio fit, or a live market view',
         ):
             self.assertIn(text, self.html)
 
@@ -206,9 +325,13 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         briefing = self.html[briefing_start:briefing_end]
         self.assertIn('ARTICLE_BY_ID.get(state.selected)', briefing)
         self.assertIn('articleClaim(selected)', briefing)
-        self.assertIn("briefSection(selected,'evidence')", briefing)
-        self.assertIn("section.kind === 'implementation'", briefing)
-        self.assertIn('data-brief-article', briefing)
+        self.assertIn('articleBriefSpans(selected)', briefing)
+        self.assertIn('articleEvidenceLedger(selected)', briefing)
+        self.assertIn('researchMapMarkup(selected)', briefing)
+        self.assertIn('evidenceLedgerMarkup(selected)', briefing)
+        self.assertIn('archiveCoverageMarkup(records)', briefing)
+        self.assertIn('relatedResearchMarkup(selected)', briefing)
+        self.assertIn('map(intelligenceCard)', briefing)
         self.assertNotIn('documentation_score', briefing)
 
         article_view_start = self.html.index('function isArticleView()')
@@ -269,6 +392,9 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             return {
                 'text': value['text'],
                 'truncated': bool(value.get('truncated')),
+                'start': int(value.get('start') or 0),
+                'end': int(value.get('end') or 0),
+                'sha256': str(value.get('sha256') or ''),
             }
 
         def compact_brief(value):
@@ -282,6 +408,9 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                         'text': section['text'],
                         'truncated': bool(section.get('truncated')),
                         'source_order': int(section.get('source_order') or 0),
+                        'start': int(section.get('start') or 0),
+                        'end': int(section.get('end') or 0),
+                        'sha256': str(section.get('sha256') or ''),
                     }
                     for section in value.get('sections') or []
                     if isinstance(section, dict) and section.get('text')
@@ -293,6 +422,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                         'date_label': checkpoint.get('date_label') or '',
                         'text': checkpoint['text'],
                         'context_kind': checkpoint.get('context_kind') or '',
+                        'truncated': bool(checkpoint.get('truncated')),
+                        'start': int(checkpoint.get('start') or 0),
+                        'end': int(checkpoint.get('end') or 0),
+                        'sha256': str(checkpoint.get('sha256') or ''),
                     }
                     for checkpoint in value.get('checkpoints') or []
                     if isinstance(checkpoint, dict) and checkpoint.get('text')
@@ -333,6 +466,225 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Checking the deferred dossier against this release.',
         ):
             self.assertIn(text, self.html)
+
+    def test_client_article_briefs_retain_exact_source_span_provenance(self):
+        """Every workbench passage must retain its validated source identity."""
+        deferred = self.brief_archive['briefs']
+        span_count = 0
+        for article in self.articles:
+            brief = article['brief'] if article['brief'] is not None else deferred[article['id']]
+            spans = [brief.get('lead'), brief.get('fallback_evidence')]
+            spans.extend(brief.get('sections') or [])
+            spans.extend(brief.get('checkpoints') or [])
+            for span in (value for value in spans if value is not None):
+                span_count += 1
+                self.assertTrue(
+                    {'text', 'truncated', 'start', 'end', 'sha256'} <= set(span),
+                    'a client brief span lost exact provenance fields',
+                )
+                self.assertIs(type(span['start']), int)
+                self.assertIs(type(span['end']), int)
+                self.assertGreaterEqual(span['start'], 0)
+                self.assertGreater(span['end'], span['start'])
+                self.assertEqual(span['end'] - span['start'], len(span['text']))
+                self.assertEqual(
+                    span['sha256'],
+                    hashlib.sha256(span['text'].encode('utf-8')).hexdigest(),
+                )
+        self.assertGreater(span_count, len(self.articles))
+
+        provenance_start = self.html.index('function spanProvenance(span)')
+        provenance_end = self.html.index('\nfunction evidenceLedgerMarkup', provenance_start)
+        provenance = self.html[provenance_start:provenance_end]
+        for text in ('span.start', 'span.end', 'span.sha256', 'Exact source span', 'shortened for display'):
+            self.assertIn(text, provenance)
+        self.assertIn('spanProvenance(row.span)', self.html)
+        self.assertIn('spanProvenance(checkpoint)', self.html)
+
+    def test_evidence_ledger_keeps_reported_numbers_attached_to_authored_context(self):
+        number_start = self.html.index('function numberTokenRegex()')
+        number_end = self.html.index('\nfunction articleBriefSpans', number_start)
+        number_logic = self.html[number_start:number_end]
+        for token_family in (
+            '[$€£¥]', 'basis points?', 'million', 'billion',
+            'sharpe|sortino|rmse', '-\\s*to\\s*-', '[–—-]', '.slice(0,10)',
+            'const seen = new Set()',
+        ):
+            self.assertIn(token_family, number_logic)
+        self.assertIn('escapeHtml(text.slice(cursor,match.index))', number_logic)
+        self.assertIn("'<mark>' + escapeHtml(match[0]) + '</mark>'", number_logic)
+        self.assertNotIn("escapeHtml(value).replace", number_logic)
+
+        ledger_start = self.html.index('function articleEvidenceLedger(article)')
+        ledger_end = self.html.index('\nfunction ', ledger_start + len('function articleEvidenceLedger(article)'))
+        ledger_logic = self.html[ledger_start:ledger_end]
+        self.assertIn('articleBriefSpans(article)', ledger_logic)
+        self.assertIn('extractNumberTokens(row.span.text)', ledger_logic)
+        self.assertIn('row.values.length', ledger_logic)
+        self.assertNotIn('idea.quant', ledger_logic)
+        self.assertNotIn('direction', ledger_logic)
+
+        spans_start = self.html.index('function articleBriefSpans(article)')
+        spans_end = self.html.index('\nfunction articleEvidenceLedger', spans_start)
+        spans = self.html[spans_start:spans_end]
+        for text in ('const byIdentity = new Map()', 'span.sha256', 'row.kinds', 'row.labels'):
+            self.assertIn(text, spans)
+
+        markup_start = self.html.index('function evidenceLedgerMarkup(article)')
+        markup_end = self.html.index('\nfunction researchMapMarkup', markup_start)
+        markup = self.html[markup_start:markup_end]
+        for text in (
+            'Detected numbers with their authored context',
+            'Exact number-bearing source passages',
+            'Research role',
+            'Detected numeric tokens · max 10',
+            'Exact authored context',
+            'row.span.text',
+            'spanProvenance(row.span)',
+            'Detection is lexical, deduplicated, and capped at ten unique tokens per passage',
+            'not normalized, made comparable, or independently verified',
+            'unique source span',
+            'This is an extraction boundary, not a claim that the article contains no quantitative evidence.',
+        ):
+            self.assertIn(text, markup)
+
+    def test_institutional_diligence_map_distinguishes_capture_from_quality(self):
+        sequence_match = re.search(
+            r'const BRIEF_SEQUENCE\s*=\s*\[(.*?)\];',
+            self.html,
+            flags=re.DOTALL,
+        )
+        self.assertIsNotNone(sequence_match)
+        sequence = sequence_match.group(1)
+        for key in ('lead', 'evidence', 'mechanism', 'countercase', 'falsifier', 'implementation'):
+            self.assertIn("'" + key + "'", sequence)
+
+        start = self.html.index('function researchMapMarkup(article)')
+        end = self.html.index('\nfunction archiveCoverageMarkup', start)
+        workbench_map = self.html[start:end]
+        for text in (
+            "BRIEF_SEQUENCE.concat([['checkpoint','Public checkpoint']])",
+            'articleBriefSpans(article)',
+            'Exact passage captured',
+            'Not identified by rules',
+            'research-map-step captured',
+            'research-map-step not-captured',
+            'Presence means an exact authored passage was captured',
+            'not that the argument is correct, complete, investable, or independently verified',
+        ):
+            self.assertIn(text, workbench_map)
+
+    def test_lens_coverage_bars_are_counts_not_quality_scores(self):
+        start = self.html.index('function archiveCoverageMarkup(records)')
+        end = self.html.index('\nfunction relatedArticleRows', start)
+        coverage = self.html[start:end]
+        for label in ('Contextual evidence', 'Mechanism', 'Countercase', 'Falsifier', 'Implementation', 'Checkpoint'):
+            self.assertIn("['" + label + "'", coverage)
+        for text in (
+            'const denominator = records.length || 1',
+            'Math.round(count / denominator * 100)',
+            'Math.max(1,percent)',
+            "row[0] + ': ' + count + ' of ' + records.length + ' articles'",
+            'Dossier coverage in this lens',
+            'High-precision section presence only; not research quality, confidence, or a recommendation score.',
+        ):
+            self.assertIn(text, coverage)
+        self.assertNotIn('documentation_score', coverage)
+
+    def test_related_archive_context_explains_only_exact_metadata_overlap(self):
+        start = self.html.index('function relatedArticleRows(selected)')
+        end = self.html.index('\nfunction articleReasons', start)
+        related = self.html[start:end]
+        for text in (
+            'selected.manager_keys',
+            'selected.underlyings',
+            'selected.instruments',
+            'Same mentioned entity:',
+            'Same extracted underlying:',
+            'qualified:Boolean(managers.length || underlyings.length)',
+            'Exact entity or underlying overlap',
+            'No direct overlap found',
+        ):
+            self.assertIn(text, related)
+        self.assertNotIn('selected.directions', related)
+        self.assertNotIn('Same parsed structure:', related)
+        self.assertNotIn('Same market:', related)
+        self.assertNotIn('semantic', related.casefold())
+        self.assertNotIn('confidence', related.casefold())
+
+    def test_institutional_brief_can_be_copied_and_printed_with_provenance(self):
+        start = self.html.index('function articleBriefText(article)')
+        end = self.html.index('\nfunction intelligenceCard', start)
+        brief_text = self.html[start:end]
+        for text in (
+            'article.title',
+            "'Source: ' + article.url",
+            "'Dataset: ' + String(SNAPSHOT.data_checksum",
+            'spanProvenance(row.span)',
+            'spanProvenance(checkpoint)',
+            'exact published-source passages; not independently verified',
+        ):
+            self.assertIn(text, brief_text)
+
+        self.assertIn('data-copy-brief="', self.html)
+        self.assertIn('data-print-brief', self.html)
+        self.assertIn('Copy institutional brief', self.html)
+        self.assertIn('Print / PDF', self.html)
+        self.assertRegex(
+            self.html,
+            re.compile(
+                r"ARTICLE_BY_ID\.get\(copyBrief\.dataset\.copyBrief\).*?"
+                r"copyText\(articleBriefText\(article\),'Institutional brief copied with source provenance'\)",
+                re.DOTALL,
+            ),
+        )
+        self.assertRegex(
+            self.html,
+            re.compile(
+                r"event\.target\.closest\('\[data-print-brief\]'\).*?window\.print\(\)",
+                re.DOTALL,
+            ),
+        )
+        print_start = self.html.index('@media print{')
+        print_end = self.html.index('@media(prefers-reduced-motion', print_start)
+        print_css = self.html[print_start:print_end]
+        self.assertIn('.intel-passage{display:block;overflow:visible;-webkit-line-clamp:unset}', print_css)
+        self.assertIn('.app-header,.kpi-strip,.filter-rail,.command-bar', print_css)
+
+    def test_checkpoint_status_uses_snapshot_check_date_not_viewer_clock(self):
+        start = self.html.index('function renderIntelligenceBrief(records)')
+        end = self.html.index('\nfunction contextualRecords', start)
+        briefing = self.html[start:end]
+        self.assertIn("const checkedDate = String(SNAPSHOT.checked_at || '').slice(0,10) || MAX_DATE", briefing)
+        self.assertIn("checkpoint.date < checkedDate", briefing)
+        self.assertIn('Cited date passed · verification due', briefing)
+        self.assertIn('Upcoming cited date', briefing)
+        self.assertIn('Status is measured against the dataset check date.', briefing)
+        self.assertNotIn('Date.now()', briefing)
+        self.assertNotIn('new Date().toISOString()', briefing)
+
+    def test_excerpt_boundaries_never_claim_missing_full_article_evidence(self):
+        start = self.html.index('function renderArticleInspector(article)')
+        end = self.html.index("\nlet renderedInspectorKey = ''", start)
+        inspector = self.html[start:end]
+        boundary_start = inspector.index('const gaps = [];')
+        boundary_end = inspector.index("\n  if (structures.size > 1)", boundary_start)
+        boundary_logic = inspector[boundary_start:boundary_end]
+        excerpt_start = boundary_logic.index("if (article.content_status === 'excerpt') {")
+        full_start = boundary_logic.index('} else {', excerpt_start)
+        excerpt_branch = boundary_logic[excerpt_start:full_start]
+        full_branch = boundary_logic[full_start:]
+
+        self.assertIn('not assessable', excerpt_branch)
+        self.assertIn('absence cannot be inferred', excerpt_branch)
+        self.assertIn("!articleEvidence(article)", excerpt_branch)
+        self.assertIn("!articleHasBriefKind(article,'countercase')", excerpt_branch)
+        self.assertNotIn('No contextual evidence passage', excerpt_branch)
+        self.assertNotIn('No explicit countercase', excerpt_branch)
+
+        self.assertIn('No contextual evidence passage', full_branch)
+        self.assertIn('No explicit countercase or falsifier section', full_branch)
+        self.assertIn('not proof of absence', full_branch)
 
     def test_new_since_review_requires_an_explicit_acknowledgement(self):
         initialization_start = self.html.index("let lastSeenPublication = ''")
@@ -462,7 +814,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Export CSV',
             'Copy view',
             'Source passage',
-            'Parsed stance',
+            'Parsed directional language',
             'Mentioned entity',
             'Numeric context',
             'Reported outcome',
@@ -500,6 +852,79 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('aria-live="polite"', self.html)
         self.assertIn('prefers-reduced-motion', self.html)
         self.assertNotIn('autofocus', self.html)
+
+    def test_landmarks_dynamic_labels_and_desktop_inspector_focus_are_accessible(self):
+        active_filters = re.search(r'<div\b[^>]*id="active-filters"[^>]*>', self.html)
+        self.assertIsNotNone(active_filters)
+        self.assertIn('role="region"', active_filters.group(0))
+        self.assertIn('aria-label="Active filters"', active_filters.group(0))
+
+        direction_mix = re.search(r'<div\b[^>]*id="direction-mix"[^>]*>', self.html)
+        self.assertIsNotNone(direction_mix)
+        self.assertIn('role="img"', direction_mix.group(0))
+        self.assertIn('aria-label=', direction_mix.group(0))
+
+        brand = re.search(r'<div\b[^>]*class="brand"[^>]*>', self.html)
+        self.assertIsNotNone(brand)
+        self.assertNotIn('aria-label=', brand.group(0), 'generic brand container is not a landmark')
+
+        context_start = self.html.index('function renderContext(records)')
+        context_end = self.html.index('\nconst BRIEF_KIND_LABELS', context_start)
+        context = self.html[context_start:context_end]
+        self.assertIn("directionMix.setAttribute('aria-label',directionSummary)", context)
+        for label in ('Long ', 'Short ', 'Relative value ', 'L/S ', 'No reliable stance '):
+            self.assertIn(label, context)
+
+        inspector_start = self.html.index('function openInspector(focusInside)')
+        inspector_end = self.html.index('\nfunction selectRecord', inspector_start)
+        inspector = self.html[inspector_start:inspector_end]
+        self.assertLess(
+            inspector.index('if (window.innerWidth <= 1240)'),
+            inspector.index('if (focusInside)'),
+            'focus transfer must run for both desktop and narrow inspectors',
+        )
+        self.assertIn("document.querySelector('#inspector-content .record-title')", inspector)
+        self.assertIn('heading.tabIndex = -1', inspector)
+        self.assertIn('heading.focus()', inspector)
+        self.assertIn("document.getElementById('inspector-close').focus()", inspector)
+
+    def test_print_output_preserves_the_article_brief_and_removes_terminal_chrome(self):
+        print_start = self.html.index('@media print{')
+        print_end = self.html.index('@media(prefers-reduced-motion', print_start)
+        print_css = self.html[print_start:print_end]
+        for selector in (
+            '.app-header', '.kpi-strip', '.filter-rail', '.command-bar',
+            '.active-filters', '.context-bar', '.inspector', '.drawer-backdrop',
+        ):
+            self.assertIn(selector, print_css)
+        self.assertIn('display:none!important', print_css)
+        self.assertRegex(print_css, r'html,body\{[^}]*height:auto!important[^}]*overflow:visible!important')
+        self.assertRegex(print_css, r'\.workspace,\.main-panel,\.briefing-shell\{[^}]*height:auto!important[^}]*overflow:visible!important')
+        self.assertRegex(print_css, r'\.intel-passage\{[^}]*display:block[^}]*overflow:visible[^}]*-webkit-line-clamp:unset')
+        self.assertIn('break-inside:avoid', print_css)
+
+    def test_meaningful_navigation_uses_browser_history_and_popstate_restores_focus(self):
+        hash_start = self.html.index("let nextHistoryMode = 'replace'")
+        hash_end = self.html.index('\nlet queryCacheKey', hash_start)
+        hash_logic = self.html[hash_start:hash_end]
+        self.assertIn("nextHistoryMode = 'push'", hash_logic)
+        self.assertIn("history[nextHistoryMode === 'push' ? 'pushState' : 'replaceState']", hash_logic)
+        self.assertIn('if (!restoringHistory', hash_logic)
+
+        popstate_start = self.html.index("window.addEventListener('popstate'")
+        popstate_end = self.html.index("window.addEventListener('resize'", popstate_start)
+        popstate = self.html[popstate_start:popstate_end]
+        self.assertIn('restoringHistory = true', popstate)
+        self.assertIn('hydrateFromHash();', popstate)
+        self.assertIn("document.getElementById('search').value = state.query", popstate)
+        self.assertIn('render();', popstate)
+        self.assertIn('restoringHistory = false', popstate)
+        self.assertIn('target.focus()', popstate)
+        self.assertGreaterEqual(
+            self.html.count('markMeaningfulNavigation();'),
+            4,
+            'view, filter, and record changes should create navigable history entries',
+        )
 
     def test_grid_links_search_filters_and_drawers_have_complete_keyboard_semantics(self):
         self.assertGreaterEqual(self.html.count('role="row" data-record-id='), 2)
@@ -607,6 +1032,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertRegex(freshness, r"source\.status\s*===\s*['\"]ok['\"]")
         for freshness_class in ('fresh', 'degraded', 'stale'):
             self.assertIn(freshness_class, freshness)
+        self.assertRegex(freshness, r'ageHours\s*>\s*16')
+        self.assertNotRegex(freshness, r'ageHours\s*>\s*36')
         self.assertIn('9 AM, 1 PM, and 10 PM Asia/Kolkata', self.html)
 
     def test_outcomes_are_not_assigned_a_success_state(self):
@@ -673,15 +1100,15 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertNotRegex(self.html, r'state\.limit\s*=\s*Math\.ceil\s*\(')
 
     def test_static_artifact_stays_inside_the_institutional_performance_budget(self):
-        self.assertLess(
+        self.assertLessEqual(
             len(self.html_bytes),
-            2_000_000,
-            'single-file artifact exceeded the reviewed 2.0 MB transfer budget',
+            900_000,
+            'first-load HTML exceeded the reviewed 900 KB transfer budget',
         )
-        self.assertLess(
+        self.assertLessEqual(
             len(gzip.compress(self.html_bytes, compresslevel=9)),
-            500_000,
-            'compressed first load exceeded the reviewed 500 KB budget',
+            250_000,
+            'compressed first load exceeded the reviewed 250 KB budget',
         )
         self.assertGreaterEqual(
             len(self.brief_bytes),
@@ -693,10 +1120,20 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             800_000,
             'deferred dossier payload exceeded its reviewed 800 KB budget',
         )
+        self.assertGreaterEqual(
+            len(self.observation_bytes),
+            500_000,
+            'deferred observation payload is unexpectedly empty or incomplete',
+        )
+        self.assertLessEqual(
+            len(self.observation_bytes),
+            1_500_000,
+            'deferred observation payload exceeded its reviewed 1.5 MB budget',
+        )
         artifact_files = [path for path in self.site_dir.rglob('*') if path.is_file()]
         self.assertEqual(
             {path.relative_to(self.site_dir).as_posix() for path in artifact_files},
-            {'index.html', 'article_briefs.json'},
+            {'index.html', 'article_briefs.json', 'observations.json'},
         )
         self.assertTrue(all(not path.is_symlink() for path in artifact_files))
         self.assertLess(
@@ -706,17 +1143,23 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         )
 
     def test_direction_mix_legend_names_all_supported_states(self):
-        legend_match = re.search(
-            r'document\.getElementById\([\'\"]mix-legend[\'\"]\)\.textContent\s*=(.*?);',
-            self.html,
-            flags=re.DOTALL,
-        )
-        self.assertIsNotNone(legend_match, 'direction mix legend is missing')
-        legend = legend_match.group(1)
+        context_start = self.html.index('function renderContext(records)')
+        context_end = self.html.index('\nconst BRIEF_KIND_LABELS', context_start)
+        legend = self.html[context_start:context_end]
+        self.assertIn('Parsed passage language—not exposure', legend)
         self.assertIn('L/S', legend)
         self.assertIn('No reliable stance', legend)
         self.assertRegex(legend, r"counts\[['\"]long/short['\"]\]")
         self.assertRegex(legend, r'counts\.unspecified')
+        self.assertIn("directionMix.setAttribute('aria-label',directionSummary)", self.html)
+        self.assertIn("directionMix.setAttribute('aria-label',directionSummary)", legend)
+        self.assertIn("document.getElementById('mix-legend').textContent = directionSummary", legend)
+        self.assertIn(
+            'aria-label="Parsed directional language in visible passages; not portfolio exposure"',
+            self.html,
+        )
+        self.assertIn('Coverage is not investment quality or evidence of a position.', self.html)
+        self.assertNotIn('Parsed stance / structure', self.html)
 
     def test_institutional_palette_is_neutral_and_readable_in_both_themes(self):
         root_match = re.search(r':root\s*\{(?P<body>.*?)\}\s*html\[data-theme="light"\]', self.html, re.DOTALL)

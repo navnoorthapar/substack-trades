@@ -100,8 +100,15 @@ jobs:
           set -euo pipefail
           test -f _site/index.html
           test -f _site/article_briefs.json
+          test -f _site/observations.json
           test ! -L _site/index.html
           test ! -L _site/article_briefs.json
+          test ! -L _site/observations.json
+          artifact_file_count=$(find _site -type f | wc -l | tr -d ' ')
+          if (( artifact_file_count != 3 )); then
+            echo "Generated artifact must contain exactly index.html, article_briefs.json, and observations.json." >&2
+            exit 1
+          fi
           if find _site -type l -print -quit | grep -q .; then
             echo "Generated artifact contains a symbolic link." >&2
             exit 1
@@ -109,50 +116,141 @@ jobs:
 
           index_bytes=$(wc -c < _site/index.html | tr -d ' ')
           brief_bytes=$(wc -c < _site/article_briefs.json | tr -d ' ')
+          observation_bytes=$(wc -c < _site/observations.json | tr -d ' ')
           gzip_bytes=$(gzip -9 -c _site/index.html | wc -c | tr -d ' ')
           total_bytes=$(du -sk _site | awk '{print $1 * 1024}')
-          if (( index_bytes < 100000 || index_bytes > 2000000 )); then
-            echo "index.html size ${index_bytes} is outside the 100 KB–2.0 MB policy." >&2
+          if (( index_bytes < 100000 || index_bytes > 900000 )); then
+            echo "index.html size ${index_bytes} is outside the 100–900 KB first-load policy." >&2
             exit 1
           fi
-          if (( gzip_bytes > 500000 )); then
-            echo "Compressed index size ${gzip_bytes} exceeds the 500 KB policy." >&2
+          if (( gzip_bytes > 250000 )); then
+            echo "Compressed index size ${gzip_bytes} exceeds the 250 KB first-load policy." >&2
             exit 1
           fi
           if (( brief_bytes < 100000 || brief_bytes > 800000 )); then
             echo "Deferred dossier size ${brief_bytes} is outside the 100–800 KB policy." >&2
             exit 1
           fi
+          if (( observation_bytes < 500000 || observation_bytes > 1500000 )); then
+            echo "Deferred observation size ${observation_bytes} is outside the 500 KB–1.5 MB policy." >&2
+            exit 1
+          fi
           if (( total_bytes > 3000000 )); then
             echo "Site artifact size ${total_bytes} exceeds the 3.0 MB policy." >&2
             exit 1
           fi
-          echo "Size policy passed: raw=${index_bytes}, gzip=${gzip_bytes}, deferred=${brief_bytes}, total=${total_bytes} bytes."
+          echo "Size policy passed: raw=${index_bytes}, gzip=${gzip_bytes}, dossiers=${brief_bytes}, observations=${observation_bytes}, total=${total_bytes} bytes."
 
           python - <<'PY'
           import json
           import os
+          import re
+          import unicodedata
           from pathlib import Path
           from smoke_test_site import snapshot_checksum, validate_html
 
           articles = json.loads(Path('articles_index.json').read_text(encoding='utf-8'))
-          observations = json.loads(Path('trades_extracted.json').read_text(encoding='utf-8'))
+          source_observations = json.loads(Path('trades_extracted.json').read_text(encoding='utf-8'))
           html = Path('_site/index.html').read_text(encoding='utf-8')
           deferred = json.loads(Path('_site/article_briefs.json').read_text(encoding='utf-8'))
+          observation_asset = json.loads(Path('_site/observations.json').read_text(encoding='utf-8'))
+          expected_checksum = snapshot_checksum('articles_index.json', 'trades_extracted.json')
           if deferred.get('schema_version') != 1:
               raise SystemExit('Deferred article dossier schema mismatch.')
-          if deferred.get('data_checksum') != snapshot_checksum(
-              'articles_index.json', 'trades_extracted.json'
-          ):
+          if deferred.get('data_checksum') != expected_checksum:
               raise SystemExit('Deferred article dossiers do not match the source snapshot.')
           if not isinstance(deferred.get('briefs'), dict) or not deferred['briefs']:
               raise SystemExit('Deferred article dossier payload is empty.')
+          if observation_asset.get('schema_version') != 1:
+              raise SystemExit('Deferred observation schema mismatch.')
+          if observation_asset.get('data_checksum') != expected_checksum:
+              raise SystemExit('Deferred observations do not match the source snapshot.')
+          if not isinstance(observation_asset.get('observations'), list):
+              raise SystemExit('Deferred observation payload is invalid.')
+          asset_observations = observation_asset['observations']
+          if len(asset_observations) != len(source_observations):
+              raise SystemExit('Deferred observation count does not match the source snapshot.')
+
+          article_match = re.search(r'const ARTICLES = (.*?);\n', html)
+          if not article_match:
+              raise SystemExit('Generated article identity map is missing.')
+          generated_articles = json.loads(article_match.group(1))
+          article_url_by_id = {
+              row['id']: str(row['url']).rstrip('/') for row in generated_articles
+          }
+          expected_owner_by_id = {}
+          for article in generated_articles:
+              idea_ids = article.get('idea_ids')
+              if not isinstance(idea_ids, list):
+                  raise SystemExit('Generated article observation references are invalid.')
+              for idea_id in idea_ids:
+                  if not idea_id or idea_id in expected_owner_by_id:
+                      raise SystemExit('Generated article observation references are duplicated.')
+                  expected_owner_by_id[idea_id] = article['id']
+          asset_ids = [str(row.get('id') or '') for row in asset_observations]
+          if not all(asset_ids) or len(asset_ids) != len(set(asset_ids)):
+              raise SystemExit('Deferred observation identities are invalid or duplicated.')
+          if set(asset_ids) != set(expected_owner_by_id):
+              raise SystemExit('Deferred observations do not match generated article references.')
+          if any(
+              expected_owner_by_id[row['id']] != row.get('article_id')
+              for row in asset_observations
+          ):
+              raise SystemExit('Deferred observation article ownership is invalid.')
+
+          def source_identity(row):
+              return (
+                  str(row.get('article_url') or '').rstrip('/'),
+                  str(row.get('trade_description') or '').strip(),
+              )
+
+          def asset_identity(row):
+              return (
+                  article_url_by_id.get(row.get('article_id'), ''),
+                  str(row.get('description') or ''),
+              )
+
+          source_by_identity = {source_identity(row): row for row in source_observations}
+          asset_by_identity = {asset_identity(row): row for row in asset_observations}
+          if (
+              len(source_by_identity) != len(source_observations)
+              or len(asset_by_identity) != len(asset_observations)
+              or set(asset_by_identity) != set(source_by_identity)
+          ):
+              raise SystemExit('Deferred observation identities do not match the source snapshot.')
+
+          def source_content(row):
+              instruments = [
+                  str(value) for value in (row.get('instruments') or ['unspecified'])
+                  if value
+              ] or ['unspecified']
+              manager = ' '.join(unicodedata.normalize(
+                  'NFKC', str(row.get('fund_name_if_mentioned') or '')
+              ).split())
+              return {
+                  'description': str(row.get('trade_description') or '').strip(),
+                  'description_truncated': bool(row.get('description_truncated', False)),
+                  'direction': str(row.get('direction') or 'unspecified'),
+                  'instruments': instruments,
+                  'underlying': row.get('underlying') or '',
+                  'thesis': row.get('edge_or_thesis') or '',
+                  'quant': row.get('any_quant_detail') or '',
+                  'outcome': row.get('outcome_if_mentioned') or '',
+                  'manager_raw': manager,
+              }
+
+          for identity, source_row in source_by_identity.items():
+              asset_row = asset_by_identity[identity]
+              expected = source_content(source_row)
+              actual = {field: asset_row.get(field) for field in expected}
+              if actual != expected:
+                  raise SystemExit('Deferred observation content differs from the source snapshot.')
           validate_html(
               html,
               os.environ['SITE_REVISION'],
               len(articles),
-              len(observations),
-              snapshot_checksum('articles_index.json', 'trades_extracted.json'),
+              len(source_observations),
+              expected_checksum,
           )
           print(f'Artifact policy passed: {len(html.encode("utf-8"))} bytes.')
           PY

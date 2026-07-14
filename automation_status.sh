@@ -4,7 +4,7 @@ set -uo pipefail
 LABEL=com.navnoor.substacktrades
 DOMAIN="gui/$(id -u)"
 LAST_RUN_FILE="$HOME/.substack_trades_last_run"
-MAX_AGE_SECONDS=${MAX_AGE_SECONDS:-129600} # 36 hours
+MAX_AGE_SECONDS=${MAX_AGE_SECONDS:-57600} # 16 hours; the longest normal schedule gap is 11 hours
 REPOSITORY=navnoorthapar/substack-trades
 ok=1
 updater_issue=0
