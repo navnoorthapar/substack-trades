@@ -100,6 +100,34 @@ def validate_article_index(articles, post_by_url):
     return set(urls)
 
 
+def validate_deployable_articles(articles):
+    """Validate the tracked article catalogue when the local post snapshot is absent."""
+    require(articles, 'article index is empty')
+    urls = []
+    source_ids = []
+    for index, article in enumerate(articles):
+        require(isinstance(article, dict), f'article {index} is not an object')
+        url = article.get('url')
+        source = article.get('source')
+        source_id = article.get('source_id') or article.get('slug')
+        content_status = article.get('content_status') or 'full'
+        date = article.get('post_date') or ''
+        require(source in VALID_SOURCES, f'article {index} has an invalid source')
+        require(isinstance(url, str) and validate_source_url(source, url),
+                f'article {index} has an invalid {source} URL')
+        require(isinstance(source_id, str) and source_id,
+                f'article {index} has no source ID')
+        require(content_status in VALID_CONTENT_STATUSES,
+                f'article {index} has an invalid content status')
+        require(DATE_RE.match(date), f'article {index} has an invalid date')
+        urls.append(url)
+        source_ids.append((source, source_id))
+    require(len(urls) == len(set(urls)), 'article index contains duplicate URLs')
+    require(len(source_ids) == len(set(source_ids)),
+            'article index contains duplicate source IDs')
+    return set(urls)
+
+
 def validate_trades(trades, article_urls):
     require(trades, 'trade output is empty')
     represented_articles = set()
@@ -152,7 +180,10 @@ def validate_regression(trades, represented_articles, previous_path, minimum_rat
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--posts', type=Path, required=True)
+    parser.add_argument(
+        '--posts', type=Path,
+        help='optional local post snapshot for strict source-to-article validation',
+    )
     parser.add_argument('--articles', type=Path, required=True)
     parser.add_argument('--trades', type=Path, required=True)
     parser.add_argument('--previous-trades', type=Path)
@@ -161,11 +192,14 @@ def main():
 
     try:
         require(0 < args.minimum_ratio <= 1, 'minimum ratio must be in (0, 1]')
-        posts = load_list(args.posts, 'post snapshot')
         articles = load_list(args.articles, 'article index')
         trades = load_list(args.trades, 'trade output')
-        post_by_url = validate_posts(posts)
-        article_urls = validate_article_index(articles, post_by_url)
+        if args.posts:
+            posts = load_list(args.posts, 'post snapshot')
+            post_by_url = validate_posts(posts)
+            article_urls = validate_article_index(articles, post_by_url)
+        else:
+            article_urls = validate_deployable_articles(articles)
         represented_articles = validate_trades(trades, article_urls)
         validate_regression(trades, represented_articles, args.previous_trades,
                             args.minimum_ratio)

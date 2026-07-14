@@ -3,6 +3,7 @@
 import hashlib
 import html as html_lib
 import json
+import os
 import unicodedata
 from collections import Counter, defaultdict
 from datetime import datetime
@@ -11,8 +12,8 @@ from urllib.parse import urlsplit, urlunsplit
 
 
 ROOT = Path(__file__).parent
-DOCS_DIR = ROOT / 'docs'
-DOCS_DIR.mkdir(exist_ok=True)
+DOCS_DIR = Path(os.environ.get('SITE_OUTPUT_DIR', ROOT / 'docs')).expanduser()
+DOCS_DIR.mkdir(parents=True, exist_ok=True)
 
 with open(ROOT / 'trades_extracted.json', encoding='utf-8') as handle:
     trades = json.load(handle)

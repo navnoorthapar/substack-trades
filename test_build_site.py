@@ -1,7 +1,9 @@
 import json
+import os
 import re
 import subprocess
 import sys
+import tempfile
 import unittest
 from collections import Counter
 from pathlib import Path
@@ -13,14 +15,19 @@ ROOT = Path(__file__).parent
 class InstitutionalTerminalBuildTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls._site_temp = tempfile.TemporaryDirectory(prefix='nrt-site-test-')
+        cls.site_dir = Path(cls._site_temp.name)
+        environment = os.environ.copy()
+        environment['SITE_OUTPUT_DIR'] = str(cls.site_dir)
         subprocess.run(
             [sys.executable, str(ROOT / 'build_site.py')],
             cwd=ROOT,
+            env=environment,
             check=True,
             capture_output=True,
             text=True,
         )
-        cls.html = (ROOT / 'docs' / 'index.html').read_text(encoding='utf-8')
+        cls.html = (cls.site_dir / 'index.html').read_text(encoding='utf-8')
         cls.source_articles = json.loads((ROOT / 'articles_index.json').read_text(encoding='utf-8'))
         cls.source_ideas = json.loads((ROOT / 'trades_extracted.json').read_text(encoding='utf-8'))
         article_match = re.search(r'const ARTICLES = (.*?);\n', cls.html)
@@ -29,6 +36,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             raise AssertionError('generated client payload is missing')
         cls.articles = json.loads(article_match.group(1))
         cls.ideas = json.loads(idea_match.group(1))
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._site_temp.cleanup()
 
     def test_complete_multi_source_dataset_is_embedded_once(self):
         self.assertEqual(len(self.articles), len(self.source_articles))

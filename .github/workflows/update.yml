@@ -1,55 +1,80 @@
-name: Rebuild Site
+name: Validate and Deploy Pages
 
-# Build-only safety net. The data refresh (fetch from Substack) CANNOT run here:
-# Substack returns HTTP 403 to GitHub's datacenter IPs (Cloudflare bot
-# protection), so fetching must happen from a residential IP — that is done on
-# the Mac by refresh.sh + the LaunchAgent (com.navnoor.substacktrades).
+# Publication fetching stays on the scheduled Mac because Substack blocks
+# cloud datacenter traffic. GitHub receives only a validated source snapshot,
+# then independently tests, builds, and atomically deploys it.
 #
-# This workflow only rebuilds docs/index.html from already-committed data. It
-# runs when the builder or tracked data changes, and can also be started from the
-# Actions tab. The generated docs/index.html path is intentionally excluded from
-# the push filter so the bot's rebuild commit cannot trigger a workflow loop.
-
+# This bootstrap revision is deliberately manual-only while Pages still serves
+# the legacy /docs directory. Automatic main/PR triggers are enabled after the
+# first artifact deployment is verified.
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - build_site.py
-      - trades_extracted.json
-      - articles_index.json
-  workflow_dispatch: {}
+  workflow_dispatch:
 
-permissions:
-  contents: write
+permissions: {}
 
 concurrency:
-  group: rebuild-site
+  group: pages-production
   cancel-in-progress: false
 
 jobs:
-  build:
+  quality:
+    name: Quality gate
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pages: read
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Check out source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
-      - name: Build site
-        run: python build_site.py
+      - name: Run regression suite
+        run: python -m unittest discover -s . -p 'test_*.py' -v
 
-      - name: Commit rebuilt site if changed
+      - name: Validate deployable data snapshot
+        run: >-
+          python validate_pipeline.py
+          --articles articles_index.json
+          --trades trades_extracted.json
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Build immutable site artifact
+        env:
+          SITE_OUTPUT_DIR: ${{ github.workspace }}/_site
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html
-          if git diff --staged --quiet; then
-            echo "No changes."
-          else
-            git commit -m "rebuild site $(date -u '+%Y-%m-%d %H:%M UTC')"
-            git push
-          fi
+          rm -rf _site
+          python build_site.py
+          test -s _site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+          retention-days: 1
+
+  deploy:
+    name: Deploy production
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy GitHub Pages artifact
+        id: deployment
+        uses: actions/deploy-pages@v5
