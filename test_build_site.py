@@ -738,17 +738,40 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
         dark = tokens(root_match.group('body'))
         light = tokens(light_match.group('body'))
+        required_tokens = {
+            'text', 'text-secondary', 'text-muted', 'accent', 'accent-strong', 'on-accent',
+            'positive', 'positive-soft', 'negative', 'negative-soft',
+            'warning', 'warning-soft', 'warning-line',
+            'long', 'long-soft', 'long-line', 'short', 'short-soft', 'short-line',
+            'relative', 'relative-soft', 'long-short', 'long-short-soft',
+            'quant', 'quant-soft', 'number', 'number-soft', 'checkpoint',
+            'surface-1', 'control-line',
+        }
         for palette in (dark, light):
-            for foreground in ('text', 'text-secondary', 'text-muted', 'accent', 'positive', 'negative', 'relative', 'long-short', 'quant'):
+            self.assertFalse(
+                required_tokens - palette.keys(),
+                'institutional palette is missing dedicated semantic tokens: ' +
+                ', '.join(sorted(required_tokens - palette.keys())),
+            )
+            for foreground in (
+                'text', 'text-secondary', 'text-muted', 'accent',
+                'positive', 'negative', 'warning',
+                'long', 'short', 'relative', 'long-short',
+                'quant', 'number', 'checkpoint',
+            ):
                 self.assertGreaterEqual(contrast(palette[foreground], palette['surface-1']), 4.5, foreground)
             self.assertGreaterEqual(contrast(palette['on-accent'], palette['accent-strong']), 4.5)
             self.assertGreaterEqual(contrast(palette['control-line'], palette['surface-1']), 3.0)
-            for semantic in ('positive', 'negative', 'relative', 'long-short', 'quant'):
+            for semantic in (
+                'positive', 'negative', 'warning',
+                'long', 'short', 'relative', 'long-short',
+                'quant', 'number',
+            ):
                 self.assertGreaterEqual(contrast(palette[semantic], palette[f'{semantic}-soft']), 4.5, f'{semantic} badge')
 
         for surface in ('bg', 'surface-1', 'surface-2', 'surface-3'):
             channels = [int(dark[surface][index:index + 2], 16) for index in (1, 3, 5)]
-            self.assertLessEqual(max(channels) - min(channels), 20, f'{surface} should remain neutral graphite')
+            self.assertLessEqual(max(channels) - min(channels), 10, f'{surface} should remain neutral graphite')
         self.assertGreaterEqual(contrast(light['text-muted'], light['selected']), 4.5)
         self.assertIn('background:var(--accent-strong);color:var(--on-accent)', self.html)
         self.assertIn('#search:focus{border-color:var(--control-line)', self.html)
@@ -757,19 +780,96 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
     def test_semantic_colors_are_scoped_to_information_states(self):
         self.assertRegex(self.html, r'\.status-dot\{[^}]*background:var\(--text-muted\)')
         self.assertRegex(self.html, r'\.status-dot\.fresh\{[^}]*background:var\(--positive\)')
-        self.assertRegex(self.html, r'\.status-dot\.degraded\{[^}]*background:var\(--relative\)')
+        self.assertRegex(self.html, r'\.status-dot\.degraded\{[^}]*background:var\(--warning\)')
         self.assertRegex(self.html, r'\.status-dot\.stale\{[^}]*background:var\(--negative\)')
         self.assertRegex(self.html, r'\.evidence-flag\.on\{[^}]*color:var\(--quant\)')
         self.assertRegex(self.html, r'\.source-badge\{[^}]*color:var\(--text-secondary\)')
         self.assertIn('.source-substack::before{background:var(--source-substack)}', self.html)
         self.assertIn('.source-medium::before{background:var(--source-medium)}', self.html)
         for class_name, token in (
-            ('dir-long', 'positive'),
-            ('dir-short', 'negative'),
+            ('dir-long', 'long'),
+            ('dir-short', 'short'),
             ('dir-arb', 'relative'),
             ('dir-ls', 'long-short'),
         ):
             self.assertRegex(self.html, rf'\.{class_name}\{{[^}}]*color:var\(--{token}\)')
+
+    def test_article_brief_uses_neutral_labels_and_dedicated_evidence_colors(self):
+        for selector in ('brief-kicker', 'intel-label'):
+            selector_pattern = re.escape(selector)
+            self.assertRegex(
+                self.html,
+                rf'\.{selector_pattern}\{{[^}}]*color:var\(--text-(?:secondary|muted)\)',
+            )
+        self.assertRegex(
+            self.html,
+            r'\.article-dossier-section h3\{[^}]*color:var\(--text-(?:secondary|muted)\)',
+        )
+        for selector in ('intel-passage mark', 'article-dossier-section mark'):
+            selector_pattern = re.escape(selector)
+            self.assertRegex(
+                self.html,
+                rf'\.{selector_pattern}\{{[^}}]*background:var\(--number-soft\)[^}}]*color:var\(--number\)',
+            )
+
+    def test_warning_checkpoint_and_selection_colors_are_not_market_direction_colors(self):
+        warning_rules = {
+            'status-dot.degraded': r'background:var\(--warning\)[^}]*var\(--warning-soft\)',
+            'evidence-gap': (
+                r'border-color:var\(--warning-line\)[^}]*background:var\(--warning-soft\)'
+                r'[^}]*color:var\(--warning\)'
+            ),
+            'review-flag': r'color:var\(--warning\)',
+            'review-notice': (
+                r'border:[^;}]*var\(--warning-line\)[^}]*background:var\(--warning-soft\)'
+                r'[^}]*color:var\(--warning\)'
+            ),
+            'orphaned-queue h2': r'color:var\(--warning\)',
+        }
+        for selector, expected_rule in warning_rules.items():
+            selector_pattern = re.escape(selector)
+            self.assertRegex(
+                self.html,
+                rf'\.{selector_pattern}\{{[^}}]*{expected_rule}',
+                selector,
+            )
+        for selector in ('checkpoint time', 'checkpoint-mini time'):
+            selector_pattern = re.escape(selector)
+            self.assertRegex(
+                self.html,
+                rf'\.{selector_pattern}\{{[^}}]*color:var\(--checkpoint\)',
+                selector,
+            )
+        self.assertRegex(
+            self.html,
+            r'\.pinned-selection\{[^}]*var\(--selected-line\)',
+        )
+        self.assertRegex(
+            self.html,
+            r'\.filter-chip:hover\{[^}]*border-color:var\(--line-strong\)',
+        )
+        self.assertNotRegex(
+            self.html,
+            r'\.(?:intel-passage mark|article-dossier-section mark|checkpoint(?:-mini)? time|'
+            r'status-dot\.degraded|evidence-gap|review-flag|review-notice|pinned-selection)'
+            r'\{[^}]*(?:--relative|--positive|--negative)',
+        )
+
+    def test_market_direction_tokens_are_separate_from_operational_status_tokens(self):
+        self.assertRegex(self.html, r'\.mix-long\{[^}]*background:var\(--long\)')
+        self.assertRegex(self.html, r'\.mix-short\{[^}]*background:var\(--short\)')
+        self.assertRegex(
+            self.html,
+            r'\.dir-long\{[^}]*color:var\(--long\)[^}]*border-color:var\(--long-line\)'
+            r'[^}]*background:var\(--long-soft\)',
+        )
+        self.assertRegex(
+            self.html,
+            r'\.dir-short\{[^}]*color:var\(--short\)[^}]*border-color:var\(--short-line\)'
+            r'[^}]*background:var\(--short-soft\)',
+        )
+        self.assertRegex(self.html, r'\.documentation-badge\.complete\{[^}]*color:var\(--positive\)')
+        self.assertRegex(self.html, r'\.status-dot\.stale\{[^}]*background:var\(--negative\)')
 
     def test_mobile_filter_drawer_has_a_wired_close_control(self):
         close_buttons = re.findall(r'<button\b[^>]*\bid="filter-close"[^>]*>', self.html)
