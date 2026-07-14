@@ -46,7 +46,7 @@ directions.
 
 The installer copies the versioned LaunchAgent into
 `~/Library/LaunchAgents`, loads it, verifies it, and starts one refresh. It then
-runs at 09:00, 13:00, and 20:00 local time and once after login.
+runs at 09:00, 13:00, and 22:00 local time and once after login.
 
 macOS may block the new background process. Open **System Settings -> General ->
 Login Items & Extensions -> Allow in Background**, enable the `bash`/Unknown

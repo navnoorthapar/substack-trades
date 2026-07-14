@@ -42,5 +42,5 @@ if ! launchctl print "$DOMAIN/$LABEL" >/dev/null; then
 fi
 
 echo "Updater installed and loaded."
-echo "Schedule: 09:00, 13:00, and 20:00 local time."
+echo "Schedule: 09:00, 13:00, and 22:00 local time."
 echo "Logs: $LOG_DIR"

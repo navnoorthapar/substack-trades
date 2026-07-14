@@ -70,7 +70,7 @@ printf '%s\n' "$$" > "$LOCK_DIR/pid"
 WORK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/substack-trades-refresh.XXXXXX")
 
 # Avoid only accidental rapid reruns. The old 20-hour gate defeated the 9am,
-# 1pm, and 8pm schedule and could hide a post for almost a day.
+# 1pm, and 10pm schedule and could hide a post for almost a day.
 if [ "${FORCE_REFRESH:-0}" != "1" ] && [ -f "$LAST_RUN_FILE" ]; then
     LAST=$(sed -n '1p' "$LAST_RUN_FILE")
     if [[ "$LAST" =~ ^[0-9]+$ ]]; then
