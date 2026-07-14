@@ -18,6 +18,7 @@ Scheduled Mac
   Medium archive -> medium_posts.json -------/          |
                                                         +-> articles_index.json
                                                         +-> trades_extracted.json
+                                                        +-> snapshot_manifest.json
                                                         +-> strict validation + tests
                                                         +-> commit tracked data
                                                                   |
@@ -28,17 +29,21 @@ GitHub Actions
                                          -> atomic production deployment
 ```
 
-Medium's public author archive is paginated; its ten-item RSS feed is used only
-as a fallback. Cross-posts are matched using Medium's explicit Substack notice,
+Medium's public author archive is paginated; its ten-item RSS feed can extend a
+previous complete catalogue when the archive is temporarily unavailable. A
+simultaneous archive and RSS outage fails closed and preserves the last good
+snapshot. Cross-posts are matched using Medium's explicit Substack notice,
 normalized titles, subtitles plus dates, conservative similarity, and reviewed
 mappings in `medium_dedupe_overrides.json`. Substack remains the canonical card
 for cross-posts; only Medium-only articles are added.
 
 `all_posts.json` and `all_sources_posts.json` stay local. The tracked pipeline
-state is `medium_posts.json`, `articles_index.json`, `trades_extracted.json`, and
-`.direction_cache.json`; retaining the Medium catalogue prevents a temporary
-archive failure from erasing older articles. Production builds consume the
-validated article and idea snapshots. Generated HTML is intentionally ignored:
+state is `medium_posts.json`, `articles_index.json`, `trades_extracted.json`,
+`snapshot_manifest.json`, and `.direction_cache.json`; retaining the Medium
+catalogue prevents a temporary archive failure from erasing older articles.
+Production builds consume the validated article and observation snapshots. The
+manifest binds exact input bytes, counts, publication freshness, and per-channel
+fetch health. Generated HTML is intentionally ignored:
 every production artifact is rebuilt, tested, and deployed without a bot commit
 or a second source of truth.
 
@@ -46,6 +51,25 @@ The core pipeline needs Python 3.9+, Git with authenticated write access to
 `origin`, and network access to Substack and GitHub. It has no pip dependencies.
 Ollama with `qwen2.5:14b` is optional; without it, refreshes preserve cached
 classifications and keep the regex-only direction for new residuals.
+
+## Product and data boundary
+
+The default Research Brief prioritizes recent, well-documented source passages;
+the Observation Monitor, Research Library, and device-local Decision Queue
+support follow-up diligence. Documentation coverage reports whether five fields
+were captured—market, parsed stance, underlying, thesis, and numeric context.
+It is not a confidence, quality, or investability score.
+
+The terminal indexes published research by one author across two publication
+channels. It does not claim independent source corroboration, verified fund
+positions, live prices, expected returns, execution records, or portfolio fit.
+Every capital decision still requires review of the original publication and
+independent valuation, catalyst, liquidity/capacity, downside, sizing, legal,
+and portfolio-level diligence.
+
+Queue status, tags, and memos remain in browser storage unless explicitly
+backed up. Do not put confidential, personal, client, or regulated information
+in the queue.
 
 ## Install the scheduled updater
 
@@ -94,6 +118,10 @@ Every push to `main` runs the regression suite, validates the tracked snapshot,
 builds a fresh immutable artifact, and deploys it. Pull requests run the same
 quality gate without production credentials or deployment. Production runs are
 serialized and never cancelled midway; stale pull-request runs are cancelled.
+The release is then fetched over HTTPS and checked against the exact commit,
+record counts, and data checksum. Actions are restricted to GitHub-owned,
+full-SHA-pinned dependencies, and `main` rejects force pushes, deletion, and
+non-linear history while preserving the scheduled updater's normal direct push.
 
 Manually redeploy the current `main` snapshot without fetching publications:
 
@@ -114,7 +142,8 @@ python3 -m unittest discover -s . -p 'test_*.py' -v
 python3 validate_pipeline.py \
   --posts all_sources_posts.json \
   --articles articles_index.json \
-  --trades trades_extracted.json
+  --trades trades_extracted.json \
+  --manifest snapshot_manifest.json
 ```
 
 Build the ignored local preview and serve it at <http://localhost:8000>:

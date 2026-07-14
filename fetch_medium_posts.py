@@ -20,12 +20,14 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fetch_all_posts import SSL_CONTEXT, atomic_write_json, strip_html
+from fetch_all_posts import SSL_CONTEXT, atomic_write_json, iso_instant, strip_html
 
 
 ROOT = Path(__file__).parent
 OUTPUT_PATH = Path(os.environ.get('MEDIUM_OUTPUT', ROOT / 'medium_posts.json')).expanduser()
 PREVIOUS_PATH = Path(os.environ.get('PREVIOUS_MEDIUM', ROOT / 'medium_posts.json')).expanduser()
+_status_output = os.environ.get('FETCH_STATUS_OUTPUT')
+FETCH_STATUS_PATH = Path(_status_output).expanduser() if _status_output else None
 
 USERNAME = 'navnoorbawa'
 GRAPHQL_URL = f'https://{USERNAME}.medium.com/_/graphql'
@@ -292,6 +294,38 @@ def load_previous(path=PREVIOUS_PATH):
     return value
 
 
+def utc_now():
+    return datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z')
+
+
+def newest_post_date(posts):
+    dates = [post.get('post_date') for post in posts
+             if isinstance(post, dict) and isinstance(post.get('post_date'), str)]
+    return max(
+        dates,
+        key=iso_instant,
+        default='',
+    )
+
+
+def write_fetch_status(status, mode, fetched_count, posts, error=None):
+    if FETCH_STATUS_PATH is None:
+        return
+    payload = {
+        'schema_version': 1,
+        'source': 'medium',
+        'checked_at': utc_now(),
+        'status': status,
+        'mode': mode,
+        'fetched_count': fetched_count,
+        'published_count': len(posts),
+        'newest': newest_post_date(posts),
+    }
+    if error:
+        payload['error'] = str(error)
+    atomic_write_json(FETCH_STATUS_PATH, payload)
+
+
 def fetch_rss_posts(attempts=3):
     """Fetch the latest ten posts for incremental fallback only."""
     last_error = None
@@ -370,26 +404,42 @@ def validate_catalogue(posts, previous):
 
 
 def main():
-    previous = load_previous()
+    try:
+        previous = load_previous()
+    except ValueError as exc:
+        print(f'Cannot trust previous Medium catalogue: {exc}', file=sys.stderr)
+        write_fetch_status('failed', 'previous_catalogue_invalid', 0, [], exc)
+        return 1
     print(f'Fetching complete Medium archive for @{USERNAME}...')
     try:
         raw_posts = fetch_archive()
         posts = [convert_post(post) for post in raw_posts]
         posts.sort(key=lambda post: post.get('post_date') or '', reverse=True)
         validate_catalogue(posts, previous)
-        mode = 'complete archive'
+        mode = 'complete_archive'
+        status = 'ok'
+        fetched_count = len(raw_posts)
     except Exception as archive_error:
         if not previous:
             print(f'Medium archive fetch failed with no previous catalogue: {archive_error}',
                   file=sys.stderr)
+            write_fetch_status('failed', 'archive_failed', 0, [], archive_error)
             return 1
         print(f'Warning: complete Medium archive unavailable: {archive_error}', file=sys.stderr)
         print('Merging the latest RSS items into the previous complete catalogue.')
         try:
             latest = fetch_rss_posts()
         except Exception as rss_error:
-            print(f'Warning: Medium RSS also unavailable: {rss_error}', file=sys.stderr)
-            latest = []
+            # A cached catalogue proves only what was known previously.  If
+            # both live discovery paths are down, publishing it as freshly
+            # checked would conceal a possible new article.
+            message = f'Medium archive and RSS fetches both failed: {rss_error}'
+            print(message, file=sys.stderr)
+            write_fetch_status(
+                'failed', 'archive_and_rss_failed', 0, previous,
+                f'archive: {archive_error}; RSS: {rss_error}',
+            )
+            return 1
         by_id = {str(post.get('medium_id') or post.get('source_id')): post
                  for post in previous if post.get('medium_id') or post.get('source_id')}
         new_count = 0
@@ -399,14 +449,28 @@ def main():
                 by_id[post_id] = post
                 new_count += 1
         posts = sorted(by_id.values(), key=lambda post: post.get('post_date') or '', reverse=True)
-        validate_catalogue(posts, previous)
-        mode = f'cached archive + RSS ({new_count} new)'
+        try:
+            validate_catalogue(posts, previous)
+        except ValueError as catalogue_error:
+            print(f'Medium fallback catalogue is invalid: {catalogue_error}', file=sys.stderr)
+            write_fetch_status(
+                'failed', 'cached_archive_plus_rss_invalid', len(latest), previous,
+                catalogue_error,
+            )
+            return 1
+        mode = 'cached_archive_plus_rss'
+        status = 'degraded'
+        fetched_count = len(latest)
 
     atomic_write_json(OUTPUT_PATH, posts)
+    write_fetch_status(status, mode, fetched_count, posts)
     public_count = sum(post.get('visibility') == 'PUBLIC' for post in posts)
     locked_count = sum(post.get('visibility') == 'LOCKED' for post in posts)
     mirror_count = sum(bool(post.get('mirror_substack_slug')) for post in posts)
-    print(f'Saved {len(posts)} Medium posts to {OUTPUT_PATH} via {mode}.')
+    mode_summary = mode.replace('_', ' ')
+    if status == 'degraded':
+        mode_summary += f' ({new_count} new)'
+    print(f'Saved {len(posts)} Medium posts to {OUTPUT_PATH} via {mode_summary}.')
     print(f'  {public_count} public, {locked_count} member-only, '
           f'{mirror_count} explicit Substack mirrors')
     return 0

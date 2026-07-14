@@ -54,6 +54,8 @@ import urllib.request
 from collections import Counter
 from pathlib import Path
 
+from extract_trades import has_negated_trade_signal, is_reference_only_block
+
 ROOT   = Path(__file__).parent
 TRADES = Path(os.environ.get('TRADES_PATH', ROOT / 'trades_extracted.json'))
 CACHE  = Path(os.environ.get('DIRECTION_CACHE_PATH', ROOT / '.direction_cache.json'))
@@ -103,10 +105,20 @@ def _key(desc):
     return hashlib.sha256(desc.encode('utf-8')).hexdigest()
 
 
+def _eligible_for_direction_resolution(trade):
+    """Never let cached/model output reverse an explicit denial or citation."""
+    description = str(trade.get('trade_description') or '')
+    return not (
+        has_negated_trade_signal(description)
+        or is_reference_only_block(description)
+    )
+
+
 def _load_cache():
     if CACHE.exists():
         try:
-            return json.load(open(CACHE, encoding='utf-8'))
+            with open(CACHE, encoding='utf-8') as handle:
+                return json.load(handle)
         except Exception:
             return {}
     return {}
@@ -187,8 +199,19 @@ def run():
               'Keeping regex-only directions.')
         return
 
-    trades = json.load(open(TRADES, encoding='utf-8'))
-    targets = [t for t in trades if (t.get('direction') or 'unspecified') == 'unspecified']
+    with open(TRADES, encoding='utf-8') as handle:
+        trades = json.load(handle)
+    unspecified = [
+        t for t in trades
+        if (t.get('direction') or 'unspecified') == 'unspecified'
+    ]
+    targets = [t for t in unspecified if _eligible_for_direction_resolution(t)]
+    blocked = len(unspecified) - len(targets)
+    if blocked:
+        print(
+            f'{blocked} explicitly negated/reference-only trade(s) kept unspecified; '
+            'cached/model direction overrides are disabled for them.'
+        )
     if not targets:
         print('No unspecified directions to resolve.')
         return

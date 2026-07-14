@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-07-14T04:46:13Z",
+  "latest_publication": "2026-07-11T15:00:05.870Z",
+  "article_count": 363,
+  "observation_count": 1274,
+  "data_checksum": "0585448263033201a4acbb7ec7f8077808b81ba374e443bc4cb76667cafe51ba",
+  "sources": {
+    "substack": {
+      "checked_at": "2026-07-14T04:45:53Z",
+      "status": "ok",
+      "mode": "complete_api",
+      "published_count": 229,
+      "fetched_count": 229,
+      "included_count": 229,
+      "newest": "2026-07-11T15:00:05.870Z"
+    },
+    "medium": {
+      "checked_at": "2026-07-14T04:46:12Z",
+      "status": "ok",
+      "mode": "complete_archive",
+      "published_count": 361,
+      "fetched_count": 361,
+      "included_count": 134,
+      "newest": "2026-07-11T15:00:24.330Z"
+    }
+  }
+}

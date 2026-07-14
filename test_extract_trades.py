@@ -10,6 +10,133 @@ import extract_trades
 
 
 class ExtractTradesHardeningTests(unittest.TestCase):
+    def test_explicitly_negated_direction_is_not_classified(self):
+        examples = [
+            'There is no verified, current spot-versus-perpetual arbitrage to chase.',
+            'The review found no evidence that the fund went short the dollar.',
+            'The mandate does not hold a long position in equities.',
+            'The desk never went long oil during the shock.',
+            'The portfolio operates without taking a short position in bonds.',
+        ]
+        for text in examples:
+            with self.subTest(text=text):
+                self.assertEqual(extract_trades.classify_direction(text), 'unspecified')
+
+        self.assertTrue(
+            extract_trades.has_negated_trade_signal(
+                'There is no verified arbitrage opportunity in this market.'
+            )
+        )
+        self.assertFalse(
+            extract_trades.has_negated_trade_signal(
+                'The fund was not only long oil but also short airline stocks.'
+            )
+        )
+
+    def test_negation_scope_preserves_affirmative_contrast_and_not_only(self):
+        self.assertEqual(
+            extract_trades.classify_direction(
+                'The fund was not only long oil but also short airline stocks.'
+            ),
+            'long/short',
+        )
+        self.assertEqual(
+            extract_trades.classify_direction(
+                'The fund was not long oil but went short airline stocks.'
+            ),
+            'short',
+        )
+        self.assertEqual(
+            extract_trades.classify_direction(
+                'This was not speculation—it was a long oil position.'
+            ),
+            'long',
+        )
+
+    def test_prediction_market_no_token_is_not_treated_as_negation(self):
+        self.assertTrue(
+            extract_trades.is_trade_block(
+                'Buy $4,300 YES on Polymarket and $5,700 NO on Kalshi for a 10% return.'
+            )
+        )
+
+    def test_negated_trade_language_does_not_create_trade_block(self):
+        self.assertFalse(
+            extract_trades.is_trade_block(
+                'There is no verified NDF arbitrage to chase in the currency market.'
+            )
+        )
+        self.assertFalse(
+            extract_trades.is_trade_block(
+                'The fund did not establish a long position in common stock.'
+            )
+        )
+
+    def test_reference_and_url_only_blocks_are_not_observations(self):
+        references = [
+            '[1] Doe, J. (2025). "Treasury Basis Trade." Journal of Finance. '
+            'https://example.com/paper',
+            'Federal Reserve Board — Hedge Fund Treasury Futures and Repo Positions: '
+            'https://example.com/feds-note',
+            'https://example.com/research/long-equity-options-and-bonds',
+        ]
+        for text in references:
+            with self.subTest(text=text):
+                self.assertTrue(extract_trades.is_reference_only_block(text))
+                self.assertFalse(extract_trades.is_trade_block(text))
+
+    def test_process_article_keeps_analysis_but_drops_reference_entry(self):
+        analysis = (
+            'The portfolio established a long position in Acme Capital common stock '
+            'because improving cash flow supported the valuation. The position was '
+            'sized conservatively and monitored against the stated downside case.'
+        )
+        reference = (
+            '[1] Doe, J. (2025). "Long Equity and Options Trading." Journal of Finance. '
+            'https://example.com/paper'
+        )
+        post = {
+            'title': 'A documented position',
+            'url': 'https://example.com/article',
+            'post_date': '2026-07-14T00:00:00Z',
+            'body_text': analysis + '\n\n' + reference,
+        }
+
+        trades = extract_trades.process_article(post)
+
+        self.assertEqual(len(trades), 1)
+        self.assertEqual(trades[0]['trade_description'], analysis)
+        self.assertEqual(trades[0]['direction'], 'long')
+
+    def test_labels_cannot_be_inferred_beyond_published_passage(self):
+        visible = (
+            'The paper discusses option pricing and equity volatility, but there is '
+            'no verified arbitrage opportunity or current position to execute. '
+        )
+        paragraph = visible + ('Background model discussion. ' * 40) + (
+            'A separate appendix says another fund established a long position in stock.'
+        )
+        post = {
+            'title': 'Evidence boundary test',
+            'url': 'https://example.com/evidence-boundary',
+            'post_date': '2026-07-14T00:00:00Z',
+            'body_text': paragraph,
+        }
+
+        self.assertGreater(len(paragraph), 800)
+        self.assertFalse(extract_trades.is_trade_block(extract_trades.excerpt(paragraph)))
+        trades = extract_trades.process_article(post)
+        self.assertTrue(trades)
+        self.assertTrue(all(
+            extract_trades.classify_direction(trade['trade_description'])
+            == trade['direction']
+            for trade in trades
+        ))
+        self.assertTrue(all(
+            not trade['trade_description'].startswith(visible)
+            for trade in trades
+        ))
+
     def test_accumulated_metric_is_not_a_long_signal(self):
         text = (
             "LJM's short put positions accumulated negative gamma. "

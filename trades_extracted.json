@@ -53,7 +53,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "long",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": "an indicative figure only.",
     "any_quant_detail": "150 million dollars, 750 million dollars, at 65.92",
@@ -83,7 +83,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": "bitcoin",
     "edge_or_thesis": "a structural advantage this piece has not sized in dollar terms.",
     "any_quant_detail": "150 million dollars, 750 million dollars",
@@ -111,7 +111,6 @@
     "article_date": "2026-07-01",
     "trade_description": "The mechanism was structural, not purely sentiment-driven. BIS’s own transaction-level analysis documents that both long and short volatility ETPs needed to buy VIX futures near the 4:15pm close to maintain their target exposure, a rebalancing collision that pushed 115,862 futures contracts, roughly a quarter of the day’s entire volume, through the market within a single minute at 16:08. The Augustin, Cheng, and Van den Bergen study adds the input that made this collision so dangerous in the first place: between 2007 and 2017, the S&P 500 VIX Short-Term Futures Index carried an average 90-day trailing volatility of 64.0% (the spot VIX itself averaged 117.2%), versus 17.4% for the S&P 500, and by late 2017 the S&P 500’s own trailing volatility had compressed further, to about 6.8%. Any",
     "instruments": [
-      "equity",
       "futures",
       "volatility"
     ],
@@ -132,7 +131,7 @@
       "equity",
       "volatility"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": "S&P 500",
     "edge_or_thesis": "it is not a return-generating signal that gets arbitraged away as more capital adopts it; running it does not consume anyone else’s ability to run it.",
     "any_quant_detail": "$30 billion, 21.5%, 24.1%, 0.4%, at 0",
@@ -301,22 +300,6 @@
     "article_title": "Universa Built $20B Calling Stochastic Vol Wrong. A BIS Rule Just Proved It.",
     "article_url": "https://navnoorbawa.substack.com/p/universa-built-20b-calling-stochastic",
     "article_date": "2026-06-25",
-    "trade_description": "The Hill estimator’s cross-sectional equity alpha — 5.4% annually per Kelly and Jiang (2014, Review of Financial Studies) — is dead in the form it was published. Hou, Xue, and Zhang (2020, Review of Financial Studies) find t-statistics of 0.57–1.13 in full-sample replication, down from the original 2.0–2.15, consistent with the decay McLean and Pontiff (2016, Journal of Finance) document when no structural barrier protects an anomaly from publication-informed trading. The same estimator’s application to the options market — anchoring the volatility surface’s power-law continuation from near-money strikes to extreme ones — has not been arbitraged away, because the barrier here is not analytical effort but a hedgeability constraint that dealer balance sheets and the Basel III Fundamental",
-    "instruments": [
-      "option",
-      "equity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "5.4%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Universa Built $20B Calling Stochastic Vol Wrong. A BIS Rule Just Proved It.",
-    "article_url": "https://navnoorbawa.substack.com/p/universa-built-20b-calling-stochastic",
-    "article_date": "2026-06-25",
     "trade_description": "That said, the mechanism deserves examination independently of who published it. The underlying mathematical claim — that a power-law distribution implies a specific relative price relationship between options at different strikes — rests on established results in extreme value theory that predate and are independent of Universa. The testable empirical claim (that market prices at extreme strikes fall below the power-law continuation from near-money anchors) is falsifiable by anyone with access to an options data terminal. And the equity cross-section result the same authors might cite to motivate their edge was destroyed by independent replication — which actually shows the replication community does correct inflated claims in this space. The options-market mechanism is worth examining on",
     "instruments": [
       "option",
@@ -391,7 +374,7 @@
       "swap",
       "commodity"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "40%, 34%, 47%, 5%, 20%, at 60",
@@ -458,8 +441,7 @@
     "instruments": [
       "option",
       "futures",
-      "commodity",
-      "volatility"
+      "commodity"
     ],
     "direction": "unspecified",
     "underlying": "VIX",
@@ -688,8 +670,7 @@
     "article_date": "2026-06-16",
     "trade_description": "January 2022, pre-hike. Long-duration equity — high-growth, low-earnings-yield names with the highest implicit cash flow duration — experienced their maximum monthly drawdown of the entire cycle before any hike occurred. The Preqin All-Strategies Hedge Fund benchmark fell 1.88% in January 2022 alone (Preqin database figure, presumably net of fees per standard convention for “All-Strategies” benchmark indices, though Preqin’s specific fee-basis documentation for this series was not independently confirmed; Preqin is a self-reporting data provider with characteristics standard to alternative data aggregators, including selection effects and limited independent verification of underlying returns), per Preqin’s January 2022 performance update. Growth sectors experienced the sharpest selloffs;",
     "instruments": [
-      "equity",
-      "FX"
+      "equity"
     ],
     "direction": "unspecified",
     "underlying": "Strategies",
@@ -719,8 +700,7 @@
     "article_date": "2026-06-16",
     "trade_description": "Where the gap persists. The gap is most material for fundamental long/short equity funds between $500M and $5B AUM relying on commercial factor models as their primary risk infrastructure, without in-house quantitative risk build-out. Advisor Perspectives’ coverage of the Global Investment Report’s 2022 Annual Hedge Fund Survey reports that the BarclayHedge Equity Long/Short Index lost less than 3.5% in the first half of 2022, but within the survey’s curated set of 50 historically top-performing broad-strategy funds, the 15 hedged-equity entrants ranged from MAK One at +15.3% to Old Kings Capital at -40.1% — a spread exceeding 55 percentage points among funds sharing a broadly similar mandate (this 50-fund set is itself survivorship-selected — “the strongest long-term performing",
     "instruments": [
-      "equity",
-      "commodity"
+      "equity"
     ],
     "direction": "unspecified",
     "underlying": "Annual Old Kings Capital",
@@ -1132,13 +1112,13 @@
     "article_title": "The Options Moment Gap Killed LJM. It’s Why SEBI Froze Jane Street’s $570M.",
     "article_url": "https://medium.com/@navnoorbawa/the-options-moment-gap-killed-ljm-its-why-sebi-froze-jane-street-s-570m-9ba0863e1a64",
     "article_date": "2026-05-25",
-    "trade_description": "Every large, sustained loss in derivatives trading traces to the same root cause: the distribution that generated the actual returns was not the distribution embedded in the pricing model. LJM Funds Management believed its volatility surface would remain anchored. Jane Street allegedly knew the index settlement distribution differed systematically from the intraday distribution — and built a position to harvest that gap on expiry days. Both outcomes, separated by years and continents, are explainable by the same mathematical object: the moment generating function M_X(t) = E[e^{tX}] and its moment-extraction identity E[X^n] = M_X^{(n)}(0). These encode the full shape of a return distribution — every moment, every cumulant, every tail-risk implication — in a single compact function. The gap",
+    "trade_description": "These encode the full shape of a return distribution — every moment, every cumulant, every tail-risk implication — in a single compact function. The gap between what options imply about that shape and what realized returns reveal is where hedge fund alpha either accumulates or explodes.",
     "instruments": [
       "option"
     ],
     "direction": "unspecified",
-    "underlying": "Funds Management",
-    "edge_or_thesis": "mispricing — and mispricing is alpha.",
+    "underlying": null,
+    "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
@@ -1994,81 +1974,6 @@
     "fund_name_if_mentioned": null
   },
   {
-    "article_title": "Non-Deliverable Forwards (NDFs) and Emerging Market Currency Alpha: How Hedge Funds Profit, How Banks Manipulated the Fix, and Why Three Sovereign Markets Banned the Trade",
-    "article_url": "https://navnoorbawa.substack.com/p/non-deliverable-forwards-ndfs-and",
-    "article_date": "2026-04-07",
-    "trade_description": "The Hedge Fund Journal — Citrone 2026 profile: “George Soros and I each made a billion dollars shorting the yen”: https://thehedgefundjournal.com/50-giants/rob-citrone-discovery-macro-stock-picker-giant/",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "short",
-    "underlying": "The Discovery Capital",
-    "edge_or_thesis": null,
-    "any_quant_detail": "27.5%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Soros"
-  },
-  {
-    "article_title": "Non-Deliverable Forwards (NDFs) and Emerging Market Currency Alpha: How Hedge Funds Profit, How Banks Manipulated the Fix, and Why Three Sovereign Markets Banned the Trade",
-    "article_url": "https://navnoorbawa.substack.com/p/non-deliverable-forwards-ndfs-and",
-    "article_date": "2026-04-07",
-    "trade_description": "Business Standard (April 2, 2026) — Rupee opens 130 paise higher; largest gain in 12 years: https://www.business-standard.com/markets/news/rupee-rises-rbi-ndf-ban-forex-speculation-april-2-126040200209_1.html",
-    "instruments": [
-      "FX"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Non-Deliverable Forwards (NDFs) and Emerging Market Currency Alpha: How Hedge Funds Profit, How Banks Manipulated the Fix, and Why Three Sovereign Markets Banned the Trade",
-    "article_url": "https://navnoorbawa.substack.com/p/non-deliverable-forwards-ndfs-and",
-    "article_date": "2026-04-07",
-    "trade_description": "BIS Quarterly Review 2019 — Hedge funds and PTFs arbitrage NDFs; INR NDF led onshore during GFC and taper tantrum: https://www.bis.org/publ/qtrpdf/r_qt1912h.pdf",
-    "instruments": [
-      "FX"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Non-Deliverable Forwards (NDFs) and Emerging Market Currency Alpha: How Hedge Funds Profit, How Banks Manipulated the Fix, and Why Three Sovereign Markets Banned the Trade",
-    "article_url": "https://navnoorbawa.substack.com/p/non-deliverable-forwards-ndfs-and",
-    "article_date": "2026-04-07",
-    "trade_description": "Business Standard (December 2024) — NDF arbitrage inverted rupee forward premiums curve: https://www.business-standard.com/economy/news/rbi-s-forex-swaps-arbitrage-spur-inversion-of-rupee-forward-premiums-curve-124121200557_1.html",
-    "instruments": [
-      "FX"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": "CNY",
-    "edge_or_thesis": "backbone of offshore BRL market: https://positioned.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Non-Deliverable Forwards (NDFs) and Emerging Market Currency Alpha: How Hedge Funds Profit, How Banks Manipulated the Fix, and Why Three Sovereign Markets Banned the Trade",
-    "article_url": "https://navnoorbawa.substack.com/p/non-deliverable-forwards-ndfs-and",
-    "article_date": "2026-04-07",
-    "trade_description": "Positioned — BRL NDF carry trade numeric example; NDF as backbone of offshore BRL market: https://positioned.app/traders-glossary/brl",
-    "instruments": [
-      "FX"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "backbone of offshore BRL market: https://positioned.",
-    "any_quant_detail": "at 9",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
     "article_title": "How Hedge Funds Turned Defense Stocks Into Their Best Trade of 2022: Pre-Invasion CEO Signals, SEC 13F Forensics, Three Documented Thesis Structures, and the European Asymmetry That Returned 1,700%",
     "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-turned-defense-stocks",
     "article_date": "2026-04-03",
@@ -2724,37 +2629,6 @@
     "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
     "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
     "article_date": "2026-03-22",
-    "trade_description": "JPMorgan’s data puts quant funds at 645% gross leverage and multi-strategy funds at 444% — confirmed directly from the Reuters primary source: https://www.investing.com/news/stock-market-news/hedge-funds-double-down-using-nearrecord-leverage-in-quest-to-boost-returns-4388757 (note: Hedgeweek’s summary had these reversed, but the Reuters original text reads “Quantitative and multi-strategy funds’ leverage at the end of last month averaged 645.3% and 444.3%, respectively”): https://www.hedgeweek.com/hedge-funds-push-leverage-towards-record-highs-as-managers-chase-returns/",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "292.8%, 645%, 444%, 645.3%, 444.3%, at 645, at 444",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "Morgan Stanley’s 75-year study confirms an 8.4% average S&P gain in the 12 months following external shocks: https://www.morganstanley.com/insights/articles/iran-war-oil-shock-stock-market-impacts",
-    "instruments": [
-      "equity",
-      "commodity"
-    ],
-    "direction": "unspecified",
-    "underlying": "Brent",
-    "edge_or_thesis": "geopolitical risk — it is pricing it entirely as an energy supply shock with rate path implications.",
-    "any_quant_detail": "8.4%, at $145, at 16",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
     "trade_description": "The 30-day market regime established above — leverage unwind expressed through energy prices, with the oil-equity inverse as the dominant regime signal — does not resolve itself independently. It resolves through the Fed. And the Fed, in April 2026, is not a simple policy institution. It is a three-way intersection of an oil shock, a leadership transition, and a dot-plot binary that the market has not yet fully stress-tested.",
     "instruments": [
       "equity",
@@ -2787,29 +2661,13 @@
     "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
     "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
     "article_date": "2026-03-22",
-    "trade_description": "The Federal Reserve’s FEDS Notes analysis reveals the structural vulnerability: https://www.federalreserve.gov/econres/notes/feds-notes/hedge-fund-treasury-exposures-repo-and-margining-20230908.html",
-    "instruments": [
-      "bond",
-      "repo"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "binding constraints, forcing funds to unwind despite continued availability of repo financing.",
-    "any_quant_detail": "73.8%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
     "trade_description": "73.8% of hedge fund repo borrowing was transacted at zero or negative haircuts — meaning the fund’s borrowing equaled or exceeded collateral value. Average balance sheet leverage at zero-haircut funds: 6.2-to-1 to 9-to-1, versus 2.1-to-1 for average qualifying hedge funds.",
     "instruments": [
       "repo"
     ],
     "direction": "unspecified",
-    "underlying": "The Resonanz Capital",
-    "edge_or_thesis": null,
+    "underlying": null,
+    "edge_or_thesis": "binding constraints, forcing funds to unwind despite continued availability of repo financing.",
     "any_quant_detail": "73.8%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
@@ -2839,25 +2697,10 @@
     ],
     "direction": "unspecified",
     "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "51.8%, 15%",
+    "edge_or_thesis": "the square root of order size relative to daily volume — doubling position size increases impact ~40%, not 100%.",
+    "any_quant_detail": "51.8%, 15%, 40%, 100%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Citadel"
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "The OFR’s June 2025 blog post documents the specific vulnerability: hedge fund repo borrowing doubled from Q4 2022 through Q4 2024, with many funds now more reliant on overnight repo than prime brokerage: https://www.financialresearch.gov/the-ofr-blog/2025/06/02/blog-hfm-q4-2024/",
-    "instruments": [
-      "repo"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "70%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
   },
   {
     "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
@@ -2902,37 +2745,6 @@
     "underlying": "Brent",
     "edge_or_thesis": null,
     "any_quant_detail": "180%, 8%, 8.4%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "Reuters/Investing.com — JPMorgan HF Leverage (quants 645.3%, multi-strat 444.3%): https://www.investing.com/news/stock-market-news/hedge-funds-double-down-using-nearrecord-leverage-in-quest-to-boost-returns-4388757",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "645.3%, 444.3%, at 444.3",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "Fed FEDS Notes — HF Treasury Exposures Repo Margining: https://www.federalreserve.gov/econres/notes/feds-notes/hedge-fund-treasury-exposures-repo-and-margining-20230908.html",
-    "instruments": [
-      "bond",
-      "repo"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -3018,8 +2830,7 @@
     "article_date": "2026-03-19",
     "trade_description": "The critical execution discipline: funds that made the full move on the CDS trade understood they were shorting a specific legal fiction, not the UAE sovereign. Lexology’s legal analysis explicitly confirmed: “A public statement on 30 November 2009, of the Dubai Finance Department Director-General, that the Dubai World debts are ‘not guaranteed by the government’ appears to correctly reflect the legal position.” Any fund that had read that legal position — available in Dubai World’s own establishment decree — knew the implied guarantee was not contractual. Funds that shorted GCC credit broadly were caught in rapid spread compression when Abu Dhabi stepped in: on December 14, 2009, the Dubai government received $10 billion in surprise aid from Abu Dhabi, which immediately paid off the",
     "instruments": [
-      "CDS",
-      "equity"
+      "CDS"
     ],
     "direction": "short",
     "underlying": null,
@@ -3120,36 +2931,6 @@
     "fund_name_if_mentioned": "Point72"
   },
   {
-    "article_title": "The Desert Playbook: How Hedge Funds Extracted Alpha from Dubai — AED Peg Speculation, Dubai World CDS, Nakheel Distressed Sukuk, Emaar Equity Proxy, and DIFC Tax Arbitrage (2007–2026)",
-    "article_url": "https://navnoorbawa.substack.com/p/the-desert-playbook-how-hedge-funds",
-    "article_date": "2026-03-19",
-    "trade_description": "https://www.bloomberg.com/news/articles/2025-08-26/abu-dhabi-s-lunate-to-take-stake-in-brevan-commits-2-billion — Bloomberg — Lunate $2B + minority equity stake in Brevan Howard, August 2025",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "long",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$10B, $2B",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "howard"
-  },
-  {
-    "article_title": "The Desert Playbook: How Hedge Funds Extracted Alpha from Dubai — AED Peg Speculation, Dubai World CDS, Nakheel Distressed Sukuk, Emaar Equity Proxy, and DIFC Tax Arbitrage (2007–2026)",
-    "article_url": "https://navnoorbawa.substack.com/p/the-desert-playbook-how-hedge-funds",
-    "article_date": "2026-03-19",
-    "trade_description": "https://www.financemagnates.com/institutional-forex/the-flock-of-hedge-funds-to-gcc-asset-gathering-booms-but-liquidity-constraints-persist/ — Finance Magnates — 125% YoY DIFC growth 2023; asset gathering vs. liquidity constraints",
-    "instruments": [
-      "FX"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$2B, 125%, 28%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
     "article_title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
     "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
     "article_date": "2026-03-16",
@@ -3175,7 +2956,7 @@
       "bond",
       "futures"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": "the alternative — regulatory breach, insolvency, or fiduciary failure — is worse.",
     "any_quant_detail": null,
@@ -3254,10 +3035,9 @@
     "trade_description": "The systemic dimension is fully documented. The Journal of Monetary Economics 2025 paper by Barth and Kahn documents that in March 2020, as COVID triggered repo margin spikes, basis traders sold approximately $100 billion in Treasuries — prompting the Federal Reserve to accelerate its scheduled Treasury purchases beginning March 13, 2020, and then announce emergency QE of at least $500 billion in Treasuries on March 15, 2020 (the Sunday FOMC emergency statement). The NY Fed’s March 12 operating statement shows the March 13 purchases were framed as reserve management; the full emergency programme was declared on March 15. The Federal Reserve FEDS 2021-038 paper by Kruttli, Monin, Petrasek and Watugala confirms: hedge fund gross U.S. Treasury exposures doubled from 2018 to February 2020 to",
     "instruments": [
       "bond",
-      "futures",
       "repo"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": "reserve management; the full emergency programme was declared on March 15.",
     "any_quant_detail": "$100 billion, $500 billion, $2.4 trillion",
@@ -3427,8 +3207,7 @@
     "trade_description": "The Berkeley post-mortem by Craine documents the trade structure precisely: LTCM was “in effect a seller of liquidity” in fixed income markets. It sold short the expensive, liquid on-the-run Treasuries and bought the cheap, illiquid off-the-run Treasuries — earning the liquidity premium. It received fixed in long-dated interest rate swaps (paying LIBOR floating) and bought long Treasuries — earning the positive swap spread that existed before 2008. Both trades were directionally correct. The LTCM Wikipedia entry quotes a partner directly: “there was a clear temporary reason to explain the widening of arbitrage spreads, at the time it gave them more conviction that these trades would eventually return to fair value (as they did, but not without widening much further first).” The trades were",
     "instruments": [
       "bond",
-      "swap",
-      "repo"
+      "swap"
     ],
     "direction": "arbitrage/relative value",
     "underlying": null,
@@ -3656,7 +3435,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
@@ -3692,22 +3471,6 @@
     "underlying": "S&P 500; Nasdaq; SPY; QQQ",
     "edge_or_thesis": null,
     "any_quant_detail": "$886 million, $739 million, $1.625 billion",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "The Index Fund Toll Booth: How Hedge Funds Systematically Extract Billions from Passive Investors",
-    "article_url": "https://navnoorbawa.substack.com/p/the-index-fund-toll-booth-how-hedge",
-    "article_date": "2026-03-13",
-    "trade_description": "Important precision note: As Market Rebellion correctly documented, the $1.625 billion is notional value — the maximum underlying value if options are exercised — not the actual premium paid. The 2 million units in each filing represent share-equivalents; each option contract covers 100 shares, meaning Burry held 20,000 put contracts per ETF. Source: Market Rebellion — “No, Michael Burry Didn’t Risk 93% of His Portfolio on Put Options”",
-    "instruments": [
-      "option",
-      "equity"
-    ],
-    "direction": "short",
-    "underlying": "Scion Asset Management",
-    "edge_or_thesis": "Market Rebellion correctly documented, the $1.",
-    "any_quant_detail": "$1.625 billion, 93%, 100 shares",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -4480,10 +4243,9 @@
     "article_date": "2026-03-06",
     "trade_description": "Claim Source Greenlight Q1 2025 investor letter full text Hedge Fund Alpha “We suspect we are now in a bear market” Reuters · Hedgeweek · Institutional Investor Greenlight +8.2% Q1, gold “by far biggest winner” Reuters / Yahoo Finance Greenlight +11.9% through April 2025 Institutional Investor Einhorn at Sohn Conference — gold price targets CNBC / Yahoo Finance Tudor Jones 13F — GLD +49%, Fortune interview Motley Fool Tudor Investment Corp Q3 2025 13F portfolio GuruFocus Crescat all 5 funds top 10 globally (Preqin) Crescat Capital Crescat Q1 2025 — “primary driver of returns” Crescat Q1 Letter Crescat ~92% YTD through June 30, 2025 Hedge Fund Alpha Crescat “America’s Twin Deficit Trap” letter Crescat Aug 2025 Crescat “Positioned For What’s Ahead” Crescat Sep 2025 Crescat “Opportunity to",
     "instruments": [
-      "equity",
       "commodity"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": "Motley Fool Tudor Investment Corp; Crescat Capital; GLD; gold",
     "edge_or_thesis": "1979 BullionVault (Dec 31, 2025) 53 new all-time highs in 2025 World Gold Council Full Year 2025 For informational purposes only.",
     "any_quant_detail": "$79B, $40B, 8.2%, 11.9%, 49%, 92%, 33%",
@@ -4755,36 +4517,6 @@
     "underlying": "Resonanz Capital; S&P 500; VIX",
     "edge_or_thesis": null,
     "any_quant_detail": "$50 million, $1.86 billion, 13%, 65%, at 115,862",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "How Hedge Funds Monetise Options Time Decay: Theta Harvesting, the Volatility Risk Premium, Institutional Blowups, and the Survivor DNA of Short-Vol",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-monetise-options",
-    "article_date": "2026-03-06",
-    "trade_description": "The Hedge Fund Journal — Ostrum/Seeyond VRP (UCITS Hedge 2024 award, best 10-year volatility strategy; ~13% managed COVID drawdown vs. -65% generic unmanaged VRP exposure): https://thehedgefundjournal.com/harvesting-the-volatility-risk-premium-globally/",
-    "instruments": [
-      "volatility"
-    ],
-    "direction": "unspecified",
-    "underlying": "The",
-    "edge_or_thesis": null,
-    "any_quant_detail": "13%, 65%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "How Hedge Funds Monetise Options Time Decay: Theta Harvesting, the Volatility Risk Premium, Institutional Blowups, and the Survivor DNA of Short-Vol",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-monetise-options",
-    "article_date": "2026-03-06",
-    "trade_description": "The Hedge Fund Journal — Assenagon dispersion strategy mechanics: https://thehedgefundjournal.com/assenagon-long-short-volatility-strategy-equity/",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": "The Resonanz Capital",
-    "edge_or_thesis": null,
-    "any_quant_detail": "13%, 65%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -5360,21 +5092,6 @@
     "underlying": null,
     "edge_or_thesis": "“years, even decades could go by before another relative-value trade this attractive comes along.",
     "any_quant_detail": "30 cents on the dollar, at 10",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Andurand"
-  },
-  {
-    "article_title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
-    "article_url": "https://navnoorbawa.substack.com/p/blood-crude-and-capital-how-russias",
-    "article_date": "2026-03-04",
-    "trade_description": "What failed: The Andurand Commodities Discretionary Enhanced Fund — the high-leverage vehicle behind the 162% H1 2022 run — fell 54.7% in 2023. Russian supply proved more resilient than any Western model predicted; Iranian barrels recovered; OPEC+ discipline partially offset the shortfall. Pure derivatives exposure without information asymmetry or physical edge is noise-tradeable out of position when disruption magnitude is uncertain.",
-    "instruments": [
-      "commodity"
-    ],
-    "direction": "unspecified",
-    "underlying": "Andurand Commodities Discretionary Enhanced Fund",
-    "edge_or_thesis": "mispricing — Statar’s doubled €350M bet was not a commodity trade at all.",
-    "any_quant_detail": "€350M, 162%, 54.7%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Andurand"
   },
@@ -6223,21 +5940,6 @@
     "article_title": "Korea’s $170 Billion Retail Wave Broadcast Its Own Signal. The 13F Filings, Goldman Research, JPMorgan Notes, and 15 Years of KSD Data Show Exactly How Institutional Money Read It — ",
     "article_url": "https://navnoorbawa.substack.com/p/koreas-170-billion-retail-wave-broadcast",
     "article_date": "2026-02-27",
-    "trade_description": "On Bloomberg TV on August 21, 2025, Jackson was on record saying the stock was up 575% since July 1 and he had not sold: “If they put some effort into this, this could be a $500 stock.”",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "a strategy to “bring attention to the masses.",
-    "any_quant_detail": "575%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Korea’s $170 Billion Retail Wave Broadcast Its Own Signal. The 13F Filings, Goldman Research, JPMorgan Notes, and 15 Years of KSD Data Show Exactly How Institutional Money Read It — ",
-    "article_url": "https://navnoorbawa.substack.com/p/koreas-170-billion-retail-wave-broadcast",
-    "article_date": "2026-02-27",
     "trade_description": "Matt Levine’s Bloomberg Opinion column from August 28, 2025 — republished in full by Securities Docket — identified the EMJ model explicitly as a third form of hedge fund management: beyond predicting which stocks will become meme stocks, a fund manager can “buy stocks and try to make them meme stocks.” Levine concluded: “Eventually Citadel is going to hire someone to do this sort of thing.”",
     "instruments": [
       "equity"
@@ -6806,25 +6508,10 @@
       "equity",
       "futures"
     ],
-    "direction": "long",
+    "direction": "unspecified",
     "underlying": "Nasdaq; US Treasury",
     "edge_or_thesis": "recently as November 20.",
     "any_quant_detail": "$1 trillion",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "The €3.6 Billion Forecast Edge: How InCommodities and Danske Commodities Built a Systematic Advantage in Europe’s Intraday Power Markets",
-    "article_url": "https://navnoorbawa.substack.com/p/the-36-billion-forecast-edge-how",
-    "article_date": "2026-02-24",
-    "trade_description": "This is not a commodity trade. It is not a macro view on gas prices. It is a systematic, compounding bet on one structural fact: renewable generators cannot forecast their own output as accurately as a dedicated specialist with better models, faster data ingestion, and higher-resolution NWP post-processing. The spread between those two forecast accuracies is the alpha. The continuous intraday market is where that alpha is monetized. The energy transition guarantees that the spread will not converge — it will widen with every incremental GW of intermittent capacity installed.",
-    "instruments": [
-      "commodity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "accurately as a dedicated specialist with better models, faster data ingestion, and higher-resolution NWP post-processing.",
-    "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -7009,21 +6696,6 @@
     "underlying": "EUA",
     "edge_or_thesis": "remained intact and the repricing reflected political risk premium, not a structural breakdown.",
     "any_quant_detail": "25%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Andurand"
-  },
-  {
-    "article_title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
-    "article_url": "https://navnoorbawa.substack.com/p/eu-ets-alpha-andurands-3085-eua-trade",
-    "article_date": "2026-02-23",
-    "trade_description": "Meanwhile, the global alternative — UN Article 6 carbon trading — is operational but implementation lags severely behind political agreements. The framework has genuine momentum: as of late 2025, over 90 bilateral Article 6.2 agreements had been established across more than 50 nations, and the IGES 2025 Implementation Status Report counts 99 formalized bilateral agreements or arrangements across 61 Parties. But as of April 2025, only one ITMO transfer had been fully completed — between Switzerland and Thailand in January 2024 — with domestic legal frameworks and registry infrastructure still being built in most signatory countries. Until Article 6 operationalizes at scale, the EU ETS remains, by approximately 90%, the dominant liquid carbon market globally — and the only one where",
-    "instruments": [
-      "futures"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "of late 2025, over 90 bilateral Article 6.",
-    "any_quant_detail": "90%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Andurand"
   },
@@ -7525,7 +7197,7 @@
     "instruments": [
       "bond"
     ],
-    "direction": "long/short",
+    "direction": "long",
     "underlying": "Apollo Global Management; Lune Holdings",
     "edge_or_thesis": "of today, Lune Holdings’ €450 million of 5.",
     "any_quant_detail": "€704 million, €600 million, €104 million, €450 million, 5.625%, at 2, at 68",
@@ -7944,7 +7616,6 @@
     "trade_description": "The definitive evidence: CryptoSlate reports October’s net all-crypto ETP inflows reached $7.6 billion despite the crash — the direction of flow is what matters here, not just the number. And the Amberdata year dashboard, cited throughout this article, shows BTC spot ETF flows remained positive for the month. That is not retail buying the dip. The carry trade story goes one step further: Amberdata’s own head of research Michael Marshall, writing in a December 4 CoinDesk analysis, confirmed that the subsequent Nov–Dec ETF outflows were driven by basis trade unwinds — funds closing their ETF spot legs as the annualized basis compressed from 6.63% to 4.46%, falling below the ~5% breakeven threshold. This is the complete arc: carry trade funds opened positions before the crash, profited",
     "instruments": [
       "equity",
-      "futures",
       "FX"
     ],
     "direction": "arbitrage/relative value",
@@ -7977,7 +7648,7 @@
     "instruments": [
       "option"
     ],
-    "direction": "long/short",
+    "direction": "unspecified",
     "underlying": "USD; Bitcoin",
     "edge_or_thesis": null,
     "any_quant_detail": "$2.5 million, $1.3 million, $8.55 billion, 1%, 2.1%",
@@ -8347,52 +8018,6 @@
     "underlying": null,
     "edge_or_thesis": "independent of the asset price, arbitrage opportunities must exist.",
     "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Citadel"
-  },
-  {
-    "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
-    "article_url": "https://navnoorbawa.substack.com/p/black-scholes-is-a-quoting-language",
-    "article_date": "2026-02-18",
-    "trade_description": "Bakshi & Kapadia — “Delta-Hedged Gains and the Negative Market Volatility Risk Premium” (RFS, 2003, Vol. 16, №2, pp. 527–566): https://academic.oup.com/rfs/article-abstract/16/2/527/1579962",
-    "instruments": [
-      "volatility"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Citadel"
-  },
-  {
-    "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
-    "article_url": "https://navnoorbawa.substack.com/p/black-scholes-is-a-quoting-language",
-    "article_date": "2026-02-18",
-    "trade_description": "Dew-Becker & Giglio — “The Decline of the Variance Risk Premium” (CAPM alpha of traded options, post-2010 convergence to zero): https://www.dew-becker.org/documents/synth_opt.pdf",
-    "instruments": [
-      "option",
-      "volatility"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Griffin / Citadel"
-  },
-  {
-    "article_title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
-    "article_url": "https://navnoorbawa.substack.com/p/black-scholes-is-a-quoting-language",
-    "article_date": "2026-02-18",
-    "trade_description": "Saba Capital Hedge Fund of the Year — Risk.net ($1B flattener, $500M short CDS, Tail Fund +99% March 2020): https://www.risk.net/awards/7738506/hedge-fund-of-the-year-saba-capital-management",
-    "instruments": [
-      "CDS"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": "Saba Capital; Saba Capital Tail Fund",
-    "edge_or_thesis": null,
-    "any_quant_detail": "$1B, $500M, 25.5%, 99%, 144%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Citadel"
   },
@@ -8984,21 +8609,6 @@
     "article_title": "Boaz Weinstein’s 5-Engine Strategy at Saba Capital: London Whale ($300M), COVID Trade (+99%), SPAC Arbitrage, CEF Activism & Big Tech CDS (2025 Analysis)",
     "article_url": "https://navnoorbawa.substack.com/p/boaz-weinsteins-5-engine-strategy",
     "article_date": "2026-02-13",
-    "trade_description": "SPACs exploited structural mispricing in equity-linked vehicles. But another discount-to-value opportunity existed at even larger scale — one that required activist pressure, not passive arbitrage.",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": "End Fund",
-    "edge_or_thesis": "mispricing in equity-linked vehicles.",
-    "any_quant_detail": "$4.26 billion, $3.66B",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Boaz Weinstein’s 5-Engine Strategy at Saba Capital: London Whale ($300M), COVID Trade (+99%), SPAC Arbitrage, CEF Activism & Big Tech CDS (2025 Analysis)",
-    "article_url": "https://navnoorbawa.substack.com/p/boaz-weinsteins-5-engine-strategy",
-    "article_date": "2026-02-13",
     "trade_description": "This is why Weinstein runs five strategies instead of one. Each engine targets different market conditions. When volatility is suppressed and credit spreads are tight — as in 2025 — Engines 1 and 2 (credit arbitrage and tail hedging) underperform. But Engines 4 and 5 (CEF activism and tech CDS) print money. Here’s the current state of all five:",
     "instruments": [
       "CDS"
@@ -9514,36 +9124,6 @@
     "fund_name_if_mentioned": "Soros"
   },
   {
-    "article_title": "The Illiquidity Arbitrage Playbook: How Burford Capital ($16B Argentina Win), Blackstone (Hipgnosis), and Elite Funds Manufacture Alpha from Covenant Loopholes, Litigation Finance, Life Settlements",
-    "article_url": "https://navnoorbawa.substack.com/p/the-illiquidity-arbitrage-playbook",
-    "article_date": "2026-02-09",
-    "trade_description": "This isn’t about buying thinly-traded stocks. It’s about manufacturing alpha from assets that cannot be traded, structuring deals that trap counterparties, and engaging in “judicial arbitrage” where the payout is a court order, not a dividend.",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "The Illiquidity Arbitrage Playbook: How Burford Capital ($16B Argentina Win), Blackstone (Hipgnosis), and Elite Funds Manufacture Alpha from Covenant Loopholes, Litigation Finance, Life Settlements",
-    "article_url": "https://navnoorbawa.substack.com/p/the-illiquidity-arbitrage-playbook",
-    "article_date": "2026-02-09",
-    "trade_description": "J.Crew exploited contractual illiquidity — covenant loopholes that exist because private credit agreements cannot be renegotiated in real-time like public bonds can be sold.",
-    "instruments": [
-      "bond"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "private credit agreements cannot be renegotiated in real-time like public bonds can be sold.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
     "article_title": "Tanaka’s Formula in Practice: How Hedge Funds Use Local Time to Trade Corridor Swaps, Timer Options, and Volatility Arbitrage",
     "article_url": "https://navnoorbawa.substack.com/p/tanakas-formula-in-practice-how-hedge",
     "article_date": "2026-02-09",
@@ -9907,7 +9487,7 @@
     "instruments": [
       "FX"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "$2.4 billion, 80%",
@@ -9950,8 +9530,7 @@
     "article_date": "2026-02-04",
     "trade_description": "Volatility Trading Strategies Used by Capstone & Citadel: Variance Swaps, Dispersion Trading, and Gamma Scalping Explained\n\nHow the Martingale Representation Theorem Converts Market Inefficiencies Into Systematic Alpha — And Why XIV’s $1.9B Collapse Exposed the Limits\n\nThe Martingale Representation Theorem is the mathematical foundation that allows elite hedge funds to convert volatility from an abstract risk measure into a tradable asset class. While retail investors speculate on market direction, firms like Capstone Investment Advisors ($12.2B AUM) and Citadel systematically manufacture synthetic volatility exposures, hedge them precisely, and extract the spread between what institutions pay for crash protection versus what it actually costs to provide. This isn’t speculation — it’s",
     "instruments": [
-      "swap",
-      "volatility"
+      "swap"
     ],
     "direction": "unspecified",
     "underlying": null,
@@ -10214,7 +9793,7 @@
     "instruments": [
       "bond"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "193%, 153%, 51%, 0.5%, at 40, at 0.5",
@@ -11829,7 +11408,7 @@
     "instruments": [
       "bond"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": "relative value trades.",
     "any_quant_detail": "$8 billion",
@@ -12388,21 +11967,6 @@
     "fund_name_if_mentioned": "Point72"
   },
   {
-    "article_title": "Point72 Delivered 19% Returns After Returning $3–5B to Investors",
-    "article_url": "https://navnoorbawa.substack.com/p/point72-delivered-19-returns-after",
-    "article_date": "2026-01-04",
-    "trade_description": "Point72 2024–2025 Performance: https://www.hedgeweek.com/point72-to-return-5bn-after-strong-2024-gains/ | https://www.investing.com/news/stock-market-news/de-shaws-flagship-funds-trump-market-volatility-to-beat-sp-500-in-2025-source-says-4428076",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Point72"
-  },
-  {
     "article_title": "Squarepoint Capital Teardown: Statistical Arbitrage, Vol Surface Arb & ML Alpha at $182B Scale",
     "article_url": "https://navnoorbawa.substack.com/p/squarepoint-capital-teardown-statistical",
     "article_date": "2026-01-03",
@@ -12920,36 +12484,6 @@
     "direction": "arbitrage/relative value",
     "underlying": null,
     "edge_or_thesis": "mispricing overwhelms information aggregation.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "The Math of Prediction Markets: Binary Options, Kelly Criterion, and CLOB Pricing Mechanics",
-    "article_url": "https://navnoorbawa.substack.com/p/the-math-of-prediction-markets-binary",
-    "article_date": "2025-12-24",
-    "trade_description": "The deterministic payoff structure eliminates model risk present in vanilla options. If your probability forecast is calibrated, binary options offer the cleanest expression of edge. No volatility surface to model, no Greeks to hedge, just pure probability times payout.",
-    "instruments": [
-      "option"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "The Math of Prediction Markets: Binary Options, Kelly Criterion, and CLOB Pricing Mechanics",
-    "article_url": "https://navnoorbawa.substack.com/p/the-math-of-prediction-markets-binary",
-    "article_date": "2025-12-24",
-    "trade_description": "18. Bet Metrics Lab, “Prediction Market Arbitrage” —  https://betmetricslab.com/arbitrage-betting/prediction-market-arbitrage/",
-    "instruments": [
-      "prediction_market"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
@@ -14129,36 +13663,6 @@
     "fund_name_if_mentioned": "Millennium"
   },
   {
-    "article_title": "Millennium Management’s Multi-Strategy Trading Architecture: Four Core Strategies Behind 14% Annualized Returns",
-    "article_url": "https://navnoorbawa.substack.com/p/millennium-managements-multi-strategy",
-    "article_date": "2025-12-17",
-    "trade_description": "Business Insider on never-lose-money strategy: https://markets.businessinsider.com/news/stocks/hedge-fund-strategy-never-lose-money-in-the-stock-market-2024-10",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "citadel"
-  },
-  {
-    "article_title": "Millennium Management’s Multi-Strategy Trading Architecture: Four Core Strategies Behind 14% Annualized Returns",
-    "article_url": "https://navnoorbawa.substack.com/p/millennium-managements-multi-strategy",
-    "article_date": "2025-12-17",
-    "trade_description": "Business Insider: https://markets.businessinsider.com/news/stocks/hedge-fund-strategy-never-lose-money-in-the-stock-market-2024-10",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$900M",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "millennium"
-  },
-  {
     "article_title": "Why Millennium Deployed $55B to 100+ External Hedge Fund Managers",
     "article_url": "https://navnoorbawa.substack.com/p/why-millennium-deployed-55b-to-100",
     "article_date": "2025-12-16",
@@ -14413,7 +13917,7 @@
     "instruments": [
       "volatility"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
@@ -15365,21 +14869,6 @@
     "fund_name_if_mentioned": null
   },
   {
-    "article_title": "Which Hedge Funds Are Trading Prediction Markets — And How Are They Making Money?",
-    "article_url": "https://navnoorbawa.substack.com/p/which-hedge-funds-are-trading-prediction",
-    "article_date": "2025-11-29",
-    "trade_description": "Prediction markets have crossed the institutional threshold. The question is no longer whether hedge funds will trade event contracts — it’s which strategies will generate durable alpha as liquidity deepens and spreads compress.",
-    "instruments": [
-      "prediction_market"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "liquidity deepens and spreads compress.",
-    "any_quant_detail": "$30M",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
     "article_title": "Inside AQR Capital Management: How Multi-Factor Systematic Strategies Generate Returns",
     "article_url": "https://navnoorbawa.substack.com/p/inside-aqr-capital-management-how",
     "article_date": "2025-11-28",
@@ -15712,21 +15201,6 @@
     "fund_name_if_mentioned": null
   },
   {
-    "article_title": "Goldman Sachs Claims 18% Returns on Event-Driven Options. I Tested It With Real Data — Here’s What Happened",
-    "article_url": "https://navnoorbawa.substack.com/p/goldman-sachs-claims-18-returns-on",
-    "article_date": "2025-11-23",
-    "trade_description": "Impact: P&L calculations miss the core edge — buying underpriced event vol. I’m modeling directional bets, not vol arbitrage.",
-    "instruments": [
-      "volatility"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": "IV proxy\nReality: Pre-earnings IV often trades 2–3× realized vol; post-earnings collapses to 0.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
     "article_title": "Quadeye Securities: Extracting ≈0.5 Basis Points from India’s HFT Infrastructure Game",
     "article_url": "https://navnoorbawa.substack.com/p/quadeye-securities-extracting-05",
     "article_date": "2025-11-21",
@@ -15785,21 +15259,6 @@
     "any_quant_detail": "15%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Citadel"
-  },
-  {
-    "article_title": "ICE’s $2B Polymarket Investment: The 12-Month Retail Arbitrage Extinction Window",
-    "article_url": "https://navnoorbawa.substack.com/p/ices-2b-polymarket-investment-the",
-    "article_date": "2025-11-20",
-    "trade_description": "[¹]: Saguillo, O., Ghafouri, V., Kiffer, L., & Suarez-Tangil, G. (2025). “Unravelling the Probabilistic Forest: Arbitrage in Prediction Markets.” 7th Conference on Advances in Financial Technologies (AFT 2025). Available at: https://suarez-tangil.networks.imdea.org/papers/2025aft-arbitrage.pdf",
-    "instruments": [
-      "prediction_market"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
   },
   {
     "article_title": "How Citadel Avoided the 2024 Steepener Massacre: Ditching PCA for Market Observables",
@@ -16212,7 +15671,7 @@
     ],
     "direction": "unspecified",
     "underlying": "LQD",
-    "edge_or_thesis": null,
+    "edge_or_thesis": "percentage of total U.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
@@ -16244,21 +15703,6 @@
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "$2B, $8B, 000%, 2%, at $8",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "The $2M Arbitrageur Playbook: Reverse Engineering Top Performer Strategies",
-    "article_url": "https://navnoorbawa.substack.com/p/the-2m-arbitrageur-playbook-reverse",
-    "article_date": "2025-11-05",
-    "trade_description": "[1] Saguillo, O., Ghafouri, V., Kiffer, L., & Suarez-Tangil, G. (2025). “Unravelling the Probabilistic Forest: Arbitrage in Prediction Markets.” 7th Conference on Advances in Financial Technologies (AFT 2025). Leibniz International Proceedings in Informatics, Vol. 354, pp. 27:1–27:24. DOI: 10.4230/LIPIcs.AFT.2025.27. https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.AFT.2025.27",
-    "instruments": [
-      "prediction_market"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": "professional infrastructure stabilizes orderbooks and automated strategies eliminate simple mispricings.",
-    "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -16335,21 +15779,6 @@
     "underlying": "crypto",
     "edge_or_thesis": "CFTC-designated contract market.",
     "any_quant_detail": "$500M, $189M, $430M, $3.7B, 62%, 37%, 000%, 50%, 2%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "NegRisk Market Rebalancing: How $29M Was Extracted From Multi-Condition Prediction Markets",
-    "article_url": "https://navnoorbawa.substack.com/p/negrisk-market-rebalancing-how-29m",
-    "article_date": "2025-11-03",
-    "trade_description": "[1] Saguillo, O., Ghafouri, V., Kiffer, L., & Suarez-Tangil, G. (2025). “Unravelling the Probabilistic Forest: Arbitrage in Prediction Markets.” 7th Conference on Advances in Financial Technologies (AFT 2025). Leibniz International Proceedings in Informatics, Volume 354, pp. 27:1–27:24. https://doi.org/10.4230/LIPIcs.AFT.2025.27",
-    "instruments": [
-      "prediction_market"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -16432,21 +15861,6 @@
     "article_title": "Combinatorial Arbitrage in Prediction Markets: Why 62% of LLM-Detected Dependencies Fail to Generate Profit",
     "article_url": "https://navnoorbawa.substack.com/p/combinatorial-arbitrage-in-prediction",
     "article_date": "2025-11-02",
-    "trade_description": "LLM semantic analysis detects relationships. Not all relationships create arbitrage structures. Example: “Trump wins election” and “Stock market hits all-time high” may exhibit correlation (estimated ρ ≈ 0.6) but both can independently resolve TRUE without probability violation.",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Combinatorial Arbitrage in Prediction Markets: Why 62% of LLM-Detected Dependencies Fail to Generate Profit",
-    "article_url": "https://navnoorbawa.substack.com/p/combinatorial-arbitrage-in-prediction",
-    "article_date": "2025-11-02",
     "trade_description": "ICE investment signals professionalization: Intercontinental Exchange (NYSE parent) announced an investment of up to $2 billion in Polymarket, reflecting a valuation of approximately $8 billion pre-investment (October 7, 2025). ICE becomes global distributor of Polymarket event-driven data, bringing institutional infrastructure to retail-dominated orderbooks.",
     "instruments": [
       "prediction_market"
@@ -16486,21 +15900,6 @@
     "underlying": null,
     "edge_or_thesis": "Kalshi’s 62% capture during the September 11–17 period and institutional market maker entry beginning to compress spreads.",
     "any_quant_detail": "62%, 000%, 50%, 2%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Combinatorial Arbitrage in Prediction Markets: Why 62% of LLM-Detected Dependencies Fail to Generate Profit",
-    "article_url": "https://navnoorbawa.substack.com/p/combinatorial-arbitrage-in-prediction",
-    "article_date": "2025-11-02",
-    "trade_description": "Saguillo, O., Ghafouri, V., Kiffer, L., & Suarez-Tangil, G. (2025). “Unravelling the Probabilistic Forest: Arbitrage in Prediction Markets.” arXiv:2508.03474. IMDEA Networks Institute. https://arxiv.org/abs/2508.03474",
-    "instruments": [
-      "prediction_market"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$2.01 million",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -16561,21 +15960,6 @@
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "$1B, 75%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Building a Prediction Market Arbitrage Bot: Technical Implementation",
-    "article_url": "https://navnoorbawa.substack.com/p/building-a-prediction-market-arbitrage",
-    "article_date": "2025-11-01",
-    "trade_description": "[1] Saguillo, O., Ghafouri, V., Kiffer, L., & Suarez-Tangil, G. (2025). “Unravelling the Probabilistic Forest: Arbitrage in Prediction Markets.” arXiv:2508.03474. IMDEA Networks Institute. https://arxiv.org/abs/2508.03474",
-    "instruments": [
-      "prediction_market"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": "crypto",
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -16651,21 +16035,6 @@
     "underlying": "crypto",
     "edge_or_thesis": null,
     "any_quant_detail": "$2 billion, $8 billion, $40 million",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Prediction Market Arbitrage: How Quants Extracted $40M From Structural Mispricing",
-    "article_url": "https://navnoorbawa.substack.com/p/prediction-market-arbitrage-how-quants",
-    "article_date": "2025-10-31",
-    "trade_description": "Saguillo, O., Ghafouri, V., Kiffer, L., & Suarez-Tangil, G. (2025). “Unravelling the Probabilistic Forest: Arbitrage in Prediction Markets.” arXiv:2508.03474. https://arxiv.org/abs/2508.03474",
-    "instruments": [
-      "prediction_market"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": "market structure professionalizes.",
-    "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -16855,21 +16224,6 @@
     "fund_name_if_mentioned": null
   },
   {
-    "article_title": "One Million Options Contracts Isn’t One Million Euros — Or Even Close",
-    "article_url": "https://navnoorbawa.substack.com/p/one-million-options-contracts-isnt",
-    "article_date": "2025-10-29",
-    "trade_description": "Stress testing & systemic risk: Shock vega-notional (currency per 1% vol) — that’s the metric that moves dealer P&L and margin calls. What Every Market-Size Paragraph Should Contain\n\nRaw contracts (daily/monthly) — label the source\n\nNotional traded — total and per contract\n\nPremium traded — total and per contract\n\nVega-notional — total and per contract (if vega available)\n\nTurnover / open interest ratio and median trade size\n\nEffective spread (bps of notional) and margin % of notional\n\nContract multiplier and settlement currency (document conversion)\n\nFinish with one declarative sentence: e.g., “Although NIFTY trades ~30× more contracts than SPX, the SPX’s per-contract notional makes it the dominant pool of economic exposure for dealers.”\n\nContext & Corroboration\n\nPublic exchange reports",
-    "instruments": [
-      "option"
-    ],
-    "direction": "unspecified",
-    "underlying": "EUR",
-    "edge_or_thesis": null,
-    "any_quant_detail": "1%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
     "article_title": "The Volatility Carry Trade: How Selling Vol Makes ~10% — Until It Can Lose 80%",
     "article_url": "https://navnoorbawa.substack.com/p/the-volatility-carry-trade-how-selling",
     "article_date": "2025-10-28",
@@ -16972,7 +16326,7 @@
     "instruments": [
       "option"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
@@ -17177,21 +16531,6 @@
     "fund_name_if_mentioned": "Amaranth"
   },
   {
-    "article_title": "How Amaranth Advisors Lost $6 Billion in 20 Days: A Quantitative Post-Mortem",
-    "article_url": "https://navnoorbawa.substack.com/p/how-amaranth-advisors-lost-6-billion",
-    "article_date": "2025-10-21",
-    "trade_description": "[¹⁶]: “The Story of Centaurus Hedge Fund: Rise and Fall of a Trading Giant,” Shipping and Commodity Academy. Source",
-    "instruments": [
-      "commodity"
-    ],
-    "direction": "unspecified",
-    "underlying": "Energy Fund; Centaurus",
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Amaranth"
-  },
-  {
     "article_title": "How Misusing the Sharpe Ratio Cost Hedge Funds $150+ Billion — Twice",
     "article_url": "https://navnoorbawa.substack.com/p/how-misusing-the-sharpe-ratio-cost",
     "article_date": "2025-10-20",
@@ -17300,21 +16639,6 @@
     "fund_name_if_mentioned": null
   },
   {
-    "article_title": "How Vol-Arb Desks Actually Make Money From Correlation: The Complete Playbook With Real Trades",
-    "article_url": "https://navnoorbawa.substack.com/p/how-vol-arb-desks-actually-make-money",
-    "article_date": "2025-10-19",
-    "trade_description": "18. Bloomberg. “Booming Hedge Fund Options Trade Risks Getting Crushed by Crowds.” May 24, 2024. Article",
-    "instruments": [
-      "option"
-    ],
-    "direction": "unspecified",
-    "underlying": "Booming",
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
     "article_title": "Weather Derivatives Explode 260%: Inside the $25B Climate Risk Transfer Market",
     "article_url": "https://navnoorbawa.substack.com/p/weather-derivatives-explode-260-inside",
     "article_date": "2025-10-18",
@@ -17359,21 +16683,6 @@
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "90%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Weather Derivatives Explode 260%: Inside the $25B Climate Risk Transfer Market",
-    "article_url": "https://navnoorbawa.substack.com/p/weather-derivatives-explode-260-inside",
-    "article_date": "2025-10-18",
-    "trade_description": "9. GARP (Global Association of Risk Professionals) — “How Weather Derivatives Hedge Against Nature’s Unpredictability” (February 2025)",
-    "instruments": [
-      "weather_derivative"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
   },
@@ -17799,21 +17108,6 @@
     "article_title": "How Hedge Funds Made 50% Returns Betting Against MicroStrategy While Buying Bitcoin",
     "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-50-returns-betting",
     "article_date": "2025-10-14",
-    "trade_description": "Thesis Statement: “At 2.6x, MicroStrategy’s equity premium is exceptionally high. Our thesis is not predicated on a bearish view of bitcoin or MicroStrategy, but rather a belief that the relationship between the two has grown distorted. Assuming the premium to NAV reverts to more historically consistent averages implies a 50% return.”",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "short",
-    "underlying": "Kerrisdale Capital; bitcoin; Bitcoin",
-    "edge_or_thesis": "is not predicated on a bearish view of bitcoin or MicroStrategy, but rather a belief that the relationship between the two has grown distorted.",
-    "any_quant_detail": "50%, At 2.6",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "How Hedge Funds Made 50% Returns Betting Against MicroStrategy While Buying Bitcoin",
-    "article_url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-50-returns-betting",
-    "article_date": "2025-10-14",
     "trade_description": "While Kerrisdale executed the straightforward pairs trade, sophisticated institutional players deployed a parallel strategy: convertible bond arbitrage on MSTR’s zero-coupon convertible notes.",
     "instruments": [
       "bond"
@@ -17943,24 +17237,9 @@
       "futures",
       "commodity"
     ],
-    "direction": "arbitrage/relative value",
+    "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "The $2 Billion Oil Storage Trade: How Wall Street Turned Super Contango Into Historic Profits",
-    "article_url": "https://navnoorbawa.substack.com/p/the-2-billion-oil-storage-trade-how",
-    "article_date": "2025-10-13",
-    "trade_description": "Simply being long futures in contango markets means paying the carry without earning the arbitrage profit.",
-    "instruments": [
-      "futures"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": "WTI",
-    "edge_or_thesis": "returns for individual commodity markets.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
@@ -18192,22 +17471,6 @@
     "any_quant_detail": "15%, 0.002%, 1.5%, 4.5%, 2 basis points",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "The $5.6 Billion Unwind: How Trump’s Tariff Shock Broke the Quant Machine",
-    "article_url": "https://navnoorbawa.substack.com/p/the-56-billion-unwind-how-trumps",
-    "article_date": "2025-10-08",
-    "trade_description": "The most dangerous phrase in quant finance isn’t “this time is different” — it’s “our models already account for that.”\n\nThe $5.6 billion loss at Man Group is a painful case study in the limits of historical inference, the primacy of liquidity, and the necessity of designing models that actively manage the possibility that politics can — and will — break the math. Sources\n\n(Primary filings and contemporaneous reporting cited by the author.)\n\nMan Group — Trading statement for the quarter ended 31 March 2025 (April 17, 2025)\n\nBloomberg — Man Group Hedge Funds Losing Up to 15% This Year Show Quant Pain (April 11, 2025)\n\nReuters — Hedge fund Man Group’s assets dip by nearly $6 billion during Trump tariff turmoil (April 17, 2025)\n\nReuters — What just happened in the US Treasury market? (April",
-    "instruments": [
-      "bond",
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": "Man Group; US Treasury",
-    "edge_or_thesis": null,
-    "any_quant_detail": "$5.6 billion, $6 billion, 15%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Man Group"
   },
   {
     "article_title": "How Bridgewater’s Pure Alpha Captured 26.2% Returns from Tariff Volatility: A Quantitative Breakdown",
@@ -18672,22 +17935,6 @@
     "any_quant_detail": "$2.3 billion, $2.6 billion",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Ackman"
-  },
-  {
-    "article_title": "The $27 Million Bet That Returned $2.6 Billion: Deconstructing the Greatest Hedge Fund Trade in Modern History",
-    "article_url": "https://navnoorbawa.substack.com/p/the-27-million-bet-that-returned",
-    "article_date": "2025-09-30",
-    "trade_description": "The strategy: Without the CDS hedge, Pershing Square’s equity portfolio would have declined with the market (-34% at worst). Instead:",
-    "instruments": [
-      "CDS",
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$27M, $2.6B, $2.3B, 526%, 70.2%, 34%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Ackman / Pershing"
   },
   {
     "article_title": "The $27 Million Bet That Returned $2.6 Billion: Deconstructing the Greatest Hedge Fund Trade in Modern History",
@@ -19209,21 +18456,6 @@
     "fund_name_if_mentioned": null
   },
   {
-    "article_title": "How Josh Resnick’s 120.6% Return Cracked the $475 Million Rich List Code ",
-    "article_url": "https://navnoorbawa.substack.com/p/how-josh-resnicks-1206-return-cracked",
-    "article_date": "2025-09-18",
-    "trade_description": "Key insight: Resnick’s comeback wasn’t built on desperation trades but on patient positioning in his core competency — technology, media, and telecommunications. The 2022 drawdown had created attractive entry points across growth stocks that Jericho understood intimately.",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "$372 million, 120.6%, 59.5%, at $372, 613,000 shares",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
     "article_title": "RIEF’s $1.6 Billion Liberation Day Disaster: How Trump’s Tariff Shock Broke Renaissance’s Quant Models",
     "article_url": "https://navnoorbawa.substack.com/p/riefs-16-billion-liberation-day-disaster",
     "article_date": "2025-09-16",
@@ -19246,7 +18478,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "long",
+    "direction": "unspecified",
     "underlying": "S&P 500",
     "edge_or_thesis": "April 2025 demonstrated, far more vulnerable to regime changes.",
     "any_quant_detail": null,
@@ -20004,7 +19236,7 @@
     "article_title": "The Three Models That Power Modern Hedge Funds: Black-Scholes, Binomial, and Monte Carlo in Practice",
     "article_url": "https://medium.com/@navnoorbawa/the-three-models-that-power-modern-hedge-funds-black-scholes-binomial-and-monte-carlo-in-cc7f349e14ab",
     "article_date": "2025-08-09",
-    "trade_description": "The Three Models That Power Modern Hedge Funds: Black-Scholes, Binomial, and Monte Carlo in Practice\n\nHow Renaissance Technologies, Citadel, and other quantitative giants actually implement the foundational mathematics of options pricing and risk management. The Foundation of Quantitative Finance\n\nThree mathematical models developed in the 1970s and 1980s form the backbone of modern hedge fund operations. While Renaissance Technologies has generated over $100 billion in cumulative profits and Citadel manages $65+ billion in assets, their success stems not from these models alone, but from sophisticated implementations that understand both their power and limitations. Bottom Line Up Front:\n\nBlack-Scholes provides the foundation for options pricing and risk management across all major funds",
+    "trade_description": "The Three Models That Power Modern Hedge Funds: Black-Scholes, Binomial, and Monte Carlo in Practice\n\nHow Renaissance Technologies, Citadel, and other quantitative giants actually implement the foundational mathematics of options pricing and risk management. Three mathematical models developed in the 1970s and 1980s form the backbone of modern hedge fund operations. While Renaissance Technologies has generated over $100 billion in cumulative profits and Citadel manages $65+ billion in assets, their success stems not from these models alone, but from sophisticated implementations that understand both their power and limitations. Black-Scholes provides the foundation for options pricing and risk management across all major funds\n\nBinomial models handle American options and complex payoff",
     "instruments": [
       "option"
     ],
@@ -20029,38 +19261,6 @@
     "any_quant_detail": "35%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": "Citadel"
-  },
-  {
-    "article_title": "Goldman’s Copper Options Catastrophe: When Political Risk Models Fail",
-    "article_url": "https://medium.com/@navnoorbawa/goldmans-copper-options-catastrophe-when-political-risk-models-fail-0795b52e851e",
-    "article_date": "2025-08-03",
-    "trade_description": "What Goldman’s models failed to anticipate was the complexity of tariff implementation. The Critical Timeline:\n\nJuly 10, 2025: Trump announces 50% copper tariffs\n\nJuly 30, 2025 (Wednesday): White House clarifies tariff structure with major exemptions\n\nAugust 1, 2025 (Friday): Goldman recommends copper call options; tariffs take effect; market crashes\n\nThe Arbitrage Mechanics",
-    "instruments": [
-      "option",
-      "commodity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": "copper",
-    "edge_or_thesis": null,
-    "any_quant_detail": "50%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Building a Four-Source Agricultural Trading Signal: Corn Futures Analysis",
-    "article_url": "https://medium.com/@navnoorbawa/building-a-four-source-agricultural-trading-signal-corn-futures-analysis-0e2493d3c3c6",
-    "article_date": "2025-08-02",
-    "trade_description": "Building a Four-Source Agricultural Trading Signal: Corn Futures Analysis\n\nCo-authored by Navnoor Bawa and Ishita Gupta\n\nWhat We Built\n\nWe developed a systematic trading signal generator for corn futures (ZC) that integrates four alternative data sources: weather conditions, soil moisture, satellite imagery, and news sentiment. Each source contributes 25% to the final trading decision, with cross-validation to detect conflicts between data streams. Data Integration Architecture\n\nThe system pulls real-time data from six APIs:\n\nWeather: OpenMeteo and NASA POWER for temperature, precipitation, and growing degree days\n\nSoil Moisture: USDA NASS for topsoil conditions and drought classifications\n\nSatellite: NASA POWER for NDVI vegetation health indicators\n\nNews Sentiment: Alpha Vantage, NewsAPI,",
-    "instruments": [
-      "futures",
-      "commodity"
-    ],
-    "direction": "unspecified",
-    "underlying": "Corn Futures Analysis\n\nCo; Corn; corn",
-    "edge_or_thesis": null,
-    "any_quant_detail": "25%, 59.3%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
   },
   {
     "article_title": "The $1 Billion VIX Gamble: Inside Hedge Fund Volatility Strategies That Made and Lost Fortunes",
@@ -20404,21 +19604,6 @@
       "option"
     ],
     "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null
-  },
-  {
-    "article_title": "Enhanced Local Volatility Surface Calibration for Quantitative Derivatives Research",
-    "article_url": "https://medium.com/@navnoorbawa/enhanced-local-volatility-surface-calibration-for-quantitative-derivatives-research-9e1f270b91ec",
-    "article_date": "2025-03-19",
-    "trade_description": "These metrics have been independently validated against academic benchmarks for similar numerical improvements in local volatility calibration. Applications to Quantitative Research\n\nThese enhancements deliver immediate value for:\n\nCross-model validation: More reliable benchmarking against stochastic volatility models\n\nExotics pricing: Improved accuracy for path-dependent and multi-asset derivatives\n\nRisk management: More stable Greeks calculation, particularly for vanna-volga and cross-gamma terms\n\nCalibration framework: Superior initial surface for more advanced volatility models\n\nTechnical Implementation Details\n\nThe implementation is designed for both accuracy and usability:\n\nInterpolation methods: B-spline interpolation for smooth, arbitrage-free surfaces\n\nDiagnostics system:",
-    "instruments": [
-      "option"
-    ],
-    "direction": "arbitrage/relative value",
     "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,

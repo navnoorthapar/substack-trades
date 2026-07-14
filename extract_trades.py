@@ -195,6 +195,158 @@ TRADE_TRIGGERS = [
     r'\b(?:leveraged|levered|unlevered)\b',
 ]
 
+# Negated trade language must not be promoted into a directional observation.
+# Keep this deliberately local: a negator governs at most the nearby clause and
+# stops at an adversative conjunction.  The explicit ``not only`` exception is
+# important because that construction normally introduces (rather than denies)
+# a real position, e.g. "not only long oil but also short airlines".
+_NEGATION_RE = re.compile(
+    r"\b(?:no|not|never|without|neither|nor|cannot|can['’]t|"
+    r"didn['’]t|doesn['’]t|isn['’]t|wasn['’]t|weren['’]t|"
+    r"hasn['’]t|haven['’]t|hadn['’]t|won['’]t|wouldn['’]t|"
+    r"couldn['’]t|shouldn['’]t)\b",
+    re.IGNORECASE,
+)
+_NEGATION_EXCEPTION_RE = re.compile(r'^\s*(?:only|just|merely)\b', re.IGNORECASE)
+_NEGATION_STOP_RE = re.compile(
+    r'\b(?:but|however|yet|although|though|rather|instead)\b',
+    re.IGNORECASE,
+)
+_OWNS_PUTS_RE = re.compile(
+    r'\b(?:long|bought|purchased|buying|own(?:s|ed)?|hold(?:s|ing)?)\s+put[s]?\b',
+    re.IGNORECASE,
+)
+
+_URL_RE = re.compile(r'(?:https?://|www\.)\S+', re.IGNORECASE)
+_REFERENCE_HEADING_RE = re.compile(
+    r'^(?:references?|bibliography|sources?|footnotes?|further reading)\s*[:&-]*\s*$',
+    re.IGNORECASE,
+)
+_REFERENCE_MARKER_RE = re.compile(
+    r'^\s*(?:\[(?:\d+|[ivxlcdm]+|[\u00b9\u00b2\u00b3\u2070-\u2079]+)\]|\d{1,3}[.)])\s*',
+    re.IGNORECASE,
+)
+_CITATION_METADATA_RE = re.compile(
+    r'\b(?:doi|arxiv|available at|retrieved|accessed|working paper|quarterly review|'
+    r'journal of|proceedings|volume\s+\d+|vol\.\s*\d+|pp?\.\s*\d+)\b',
+    re.IGNORECASE,
+)
+_CITATION_LINE_RE = re.compile(
+    r'(?:\b(?:source|article|white paper|tutorial)\b\.?\s*$|'
+    r'\([A-Z][a-z]{2,8}\.?\s+(?:\d{1,2},?\s+)?(?:19|20)\d{2}\)\s*$|'
+    r'\b[A-Z][A-Za-z-]+,\s*(?:[A-Z]\.(?:\s*[A-Z]\.)?|[A-Z][a-z]+)'
+    r'.{0,120}\((?:19|20)\d{2}\))',
+    re.IGNORECASE,
+)
+
+
+def _is_negated_signal(text, start):
+    """Return whether a nearby explicit negator governs a signal at ``start``."""
+    # A sentence/clause boundary ends negation scope.  Commas intentionally do
+    # not: "no verified, current arbitrage" is a common construction.
+    prefix_start = max(0, start - 180)
+    prefix = text[prefix_start:start]
+    boundary = max(prefix.rfind(mark) for mark in ('.', '!', '?', ';', ':', '\n', ')', '—', '–'))
+    clause = prefix[boundary + 1:]
+    negations = list(_NEGATION_RE.finditer(clause))
+    if not negations:
+        return False
+
+    negation = negations[-1]
+    between = clause[negation.end():]
+    # YES/NO is an instrument side in prediction markets, not grammatical
+    # negation.  Only exempt an uppercase NO when nearby syntax makes that role
+    # explicit; sentence-initial "No arbitrage" remains negated.
+    if negation.group(0) == 'NO':
+        nearby_start = max(0, prefix_start + boundary + 1 + negation.start() - 80)
+        nearby_end = min(len(text), start + 80)
+        nearby = text[nearby_start:nearby_end]
+        if (re.search(r'\bYES\s*/\s*NO\b', nearby) or
+                re.search(r'\b(?:buy|sell|bought|sold)\b.{0,60}\bNO\b', nearby, re.IGNORECASE) or
+                re.search(r'\bNO\s+(?:shares?|contracts?|tokens?|position)\b', nearby)):
+            return False
+    if _NEGATION_EXCEPTION_RE.match(between):
+        return False
+    if _NEGATION_STOP_RE.search(between):
+        return False
+
+    # Bound the scope so an unrelated negation early in a long clause cannot
+    # suppress a later, affirmative position.
+    return len(re.findall(r"\b[\w'-]+\b", between)) <= 14
+
+
+def _negated_trade_signal_spans(text):
+    """Return spans of trade signals governed by explicit local negation."""
+    spans = []
+    patterns = (DIRECTION_LONG, DIRECTION_SHORT, DIRECTION_ARB, *TRADE_TRIGGERS)
+    for pattern in patterns:
+        for match in re.finditer(pattern, text, re.IGNORECASE):
+            if _is_negated_signal(text, match.start()):
+                spans.append((match.start(), match.end()))
+    for match in _OWNS_PUTS_RE.finditer(text):
+        if _is_negated_signal(text, match.start()):
+            spans.append((match.start(), match.end()))
+    return spans
+
+
+def has_negated_trade_signal(text):
+    """Return True when text explicitly denies a nearby trade signal."""
+    return bool(_negated_trade_signal_spans(text))
+
+
+def _mask_negated_trade_signals(text):
+    """Blank explicitly negated trade signals while preserving text offsets."""
+    spans = _negated_trade_signal_spans(text)
+
+    if not spans:
+        return text
+    chars = list(text)
+    for start, end in spans:
+        chars[start:end] = ' ' * (end - start)
+    return ''.join(chars)
+
+
+def _is_reference_line(line):
+    """Identify a single bibliography/source-list line conservatively."""
+    line = line.strip()
+    if not line or _REFERENCE_HEADING_RE.fullmatch(line):
+        return True
+    has_reference_marker = bool(_REFERENCE_MARKER_RE.match(line))
+
+    urls = list(_URL_RE.finditer(line))
+    if not urls:
+        return has_reference_marker and bool(
+            _CITATION_METADATA_RE.search(line) or _CITATION_LINE_RE.search(line)
+        )
+
+    if has_reference_marker:
+        return True
+
+    without_urls = _URL_RE.sub(' ', line)
+    if len(re.findall(r'[A-Za-z]{2,}', without_urls)) <= 3:
+        return True
+    if line.lower().startswith(('http://', 'https://', 'www.')):
+        return True
+    if _CITATION_METADATA_RE.search(line):
+        return True
+
+    # Source-list entries usually consist of one citation clause followed by a
+    # terminal URL.  Do not apply this to prose with multiple sentences or to a
+    # URL embedded mid-paragraph; those can contain substantive analysis.
+    trailing = line[urls[-1].end():].strip(' \t\r\n.,;:|()[]')
+    before_url = line[:urls[-1].start()].rstrip()
+    sentence_breaks = re.search(r'[.!?]\s+[A-Z]', before_url)
+    source_separator = re.search(r'(?:\s[|—–-]\s|:\s*)$', before_url)
+    if not trailing and not sentence_breaks and source_separator:
+        return True
+    return False
+
+
+def is_reference_only_block(text):
+    """Return True when every non-empty line is bibliography/URL metadata."""
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    return bool(lines) and all(_is_reference_line(line) for line in lines)
+
 DIRECTION_MAP = {
     'long': ['long', 'bought', 'buy', 'purchase', 'acquired', 'bullish', 'call option', 'call spread', 'upside', 'entered long'],
     'short': ['short', 'sold short', 'put option', 'bearish', 'bet against', 'cds buy', 'credit protection'],
@@ -211,11 +363,12 @@ def classify_direction(text):
     cleaned = re.sub(r'\blong[/\-]short\b', ' ', text, flags=re.IGNORECASE)
     cleaned = re.sub(r'\bshort[\s\-](?:term|dated|run|fall|sighted|hand|list|cut|age|change|selling|squeeze)\b', '', cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r'\blong[\s\-](?:term|run|dated|standing|time|only|awaited|haul|lasting|suffering|list|way|history|period|stretch|line|shot|shadow)\b', '', cleaned, flags=re.IGNORECASE)
+    cleaned = _mask_negated_trade_signals(cleaned)
     # Owning puts (long/bought/purchased puts) is a bearish position — neutralize it so
     # the generic "bought"/"long" signal doesn't misfire it as long; count it as short.
-    owns_puts = bool(re.search(r'\b(?:long|bought|purchased|buying|own(?:s|ed)?|hold(?:s|ing)?)\s+put[s]?\b', cleaned, re.IGNORECASE))
+    owns_puts = bool(_OWNS_PUTS_RE.search(cleaned))
     if owns_puts:
-        cleaned = re.sub(r'\b(?:long|bought|purchased|buying|own(?:s|ed)?|hold(?:s|ing)?)\s+put[s]?\b', 'OWNED_PUT', cleaned, flags=re.IGNORECASE)
+        cleaned = _OWNS_PUTS_RE.sub('OWNED_PUT', cleaned)
     if re.search(DIRECTION_ARB, cleaned, re.IGNORECASE):
         return 'arbitrage/relative value'
     long_match  = re.search(DIRECTION_LONG,  cleaned, re.IGNORECASE)
@@ -268,10 +421,11 @@ def find_paragraph_blocks(text, window=5):
     i = 0
     while i < len(sentences):
         sent = sentences[i]
-        has_trigger = any(re.search(p, sent, re.IGNORECASE) for p in TRADE_TRIGGERS)
+        signal_text = _mask_negated_trade_signals(sent)
+        has_trigger = any(re.search(p, signal_text, re.IGNORECASE) for p in TRADE_TRIGGERS)
         has_instrument = any(re.search(p, sent, re.IGNORECASE) for p in INSTRUMENTS.values())
 
-        if has_trigger and has_instrument:
+        if not is_reference_only_block(sent) and has_trigger and has_instrument:
             # Build context window
             start = max(0, i - 1)
             end = min(len(sentences), i + window)
@@ -360,12 +514,16 @@ def excerpt(text, limit=800):
 
 def is_trade_block(block):
     """Check if a text block describes a specific trade (not just background info)."""
-    has_trigger = any(re.search(p, block, re.IGNORECASE) for p in TRADE_TRIGGERS)
+    if is_reference_only_block(block):
+        return False
+
+    signal_text = _mask_negated_trade_signals(block)
+    has_trigger = any(re.search(p, signal_text, re.IGNORECASE) for p in TRADE_TRIGGERS)
     has_instrument = any(re.search(p, block, re.IGNORECASE) for p in INSTRUMENTS.values())
     has_quant = any(re.search(p, block, re.IGNORECASE) for p in QUANT_PATTERNS[:8])
-    has_direction = (re.search(DIRECTION_LONG, block, re.IGNORECASE) or
-                     re.search(DIRECTION_SHORT, block, re.IGNORECASE) or
-                     re.search(DIRECTION_ARB, block, re.IGNORECASE))
+    has_direction = (re.search(DIRECTION_LONG, signal_text, re.IGNORECASE) or
+                     re.search(DIRECTION_SHORT, signal_text, re.IGNORECASE) or
+                     re.search(DIRECTION_ARB, signal_text, re.IGNORECASE))
 
     # Require at least: (trigger OR direction) AND instrument
     return (has_trigger or has_direction) and has_instrument
@@ -381,13 +539,21 @@ def process_article(post):
         return []
 
     # Split text into paragraphs
-    paragraphs = [p.strip() for p in text.split('\n\n') if p.strip() and len(p.strip()) > 50]
+    paragraphs = [
+        p.strip()
+        for p in text.split('\n\n')
+        if p.strip() and len(p.strip()) > 50 and not is_reference_only_block(p)
+    ]
 
     trades = []
 
     # Strategy 1: Find explicit trade blocks in paragraphs
     for i, para in enumerate(paragraphs):
-        if is_trade_block(para):
+        description = excerpt(para)
+        # Every structured label must be supportable by the passage we publish.
+        # A directional word beyond the 800-character evidence boundary cannot
+        # turn an otherwise non-trade excerpt into a directional observation.
+        if is_trade_block(description):
             # Build larger context
             context_parts = []
             if i > 0:
@@ -401,12 +567,12 @@ def process_article(post):
                 'article_title': title,
                 'article_url': url,
                 'article_date': date,
-                'trade_description': excerpt(para),
-                # Instruments detected from the paragraph itself only — not the wider context,
+                'trade_description': description,
+                # Instruments detected from the published passage only — not the wider context,
                 # to avoid inheriting instrument tags from adjacent paragraphs.
                 # Context is kept for thesis/underlying/quant which span multiple sentences.
-                'instruments': find_instruments(para),
-                'direction': classify_direction(para),
+                'instruments': find_instruments(description),
+                'direction': classify_direction(description),
                 'underlying': extract_underlying(context),
                 'edge_or_thesis': extract_thesis(context),
                 'any_quant_detail': extract_quant_details(context),
@@ -417,16 +583,19 @@ def process_article(post):
 
     # If no trades found through paragraph analysis, do full-text scan
     if not trades:
-        blocks = find_paragraph_blocks(text)
+        # Scan only the same non-reference material considered above.  This
+        # prevents a references section from being resurrected by the fallback.
+        blocks = find_paragraph_blocks('\n\n'.join(paragraphs))
         for block in blocks[:5]:  # Limit to 5 blocks
-            if len(block) > 50:
+            description = excerpt(block)
+            if len(description) > 50 and is_trade_block(description):
                 trade = {
                     'article_title': title,
                     'article_url': url,
                     'article_date': date,
-                    'trade_description': excerpt(block),
-                    'instruments': find_instruments(block),
-                    'direction': classify_direction(block),
+                    'trade_description': description,
+                    'instruments': find_instruments(description),
+                    'direction': classify_direction(description),
                     'underlying': extract_underlying(block),
                     'edge_or_thesis': extract_thesis(block),
                     'any_quant_detail': extract_quant_details(block),

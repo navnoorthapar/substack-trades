@@ -91,12 +91,14 @@ echo "=== Fetching posts from Substack ==="
 POSTS_OUTPUT="$WORK_DIR/substack.candidate.json" \
 ARTICLES_OUTPUT="$WORK_DIR/substack-articles.candidate.json" \
 PREVIOUS_POSTS="$ROOT/all_posts.json" \
+FETCH_STATUS_OUTPUT="$WORK_DIR/substack-status.json" \
     "$PYTHON" fetch_all_posts.py
 
 echo
 echo "=== Fetching complete Medium archive ==="
 MEDIUM_OUTPUT="$WORK_DIR/medium.candidate.json" \
 PREVIOUS_MEDIUM="$ROOT/medium_posts.json" \
+FETCH_STATUS_OUTPUT="$WORK_DIR/medium-status.json" \
     "$PYTHON" fetch_medium_posts.py
 
 echo
@@ -129,14 +131,30 @@ TRADES_PATH="$WORK_DIR/trades.candidate.json" \
     "$PYTHON" llm_direction.py || echo "(direction resolver skipped/failed; regex output kept)"
 
 echo
+echo "=== Creating verifiable snapshot manifest ==="
+"$PYTHON" write_snapshot_manifest.py \
+    --articles "$WORK_DIR/articles.candidate.json" \
+    --trades "$WORK_DIR/trades.candidate.json" \
+    --substack-status "$WORK_DIR/substack-status.json" \
+    --medium-status "$WORK_DIR/medium-status.json" \
+    --output "$WORK_DIR/snapshot_manifest.candidate.json"
+
+echo
 echo "=== Validating candidate data ==="
 VALIDATE_ARGS=(
     --posts "$WORK_DIR/posts.candidate.json"
     --articles "$WORK_DIR/articles.candidate.json"
     --trades "$WORK_DIR/trades.candidate.json"
+    --manifest "$WORK_DIR/snapshot_manifest.candidate.json"
 )
+if [ -f "$ROOT/articles_index.json" ]; then
+    VALIDATE_ARGS+=(--previous-articles "$ROOT/articles_index.json")
+fi
 if [ -f "$ROOT/trades_extracted.json" ]; then
     VALIDATE_ARGS+=(--previous-trades "$ROOT/trades_extracted.json")
+fi
+if [ -f "$ROOT/snapshot_manifest.json" ]; then
+    VALIDATE_ARGS+=(--previous-manifest "$ROOT/snapshot_manifest.json")
 fi
 "$PYTHON" validate_pipeline.py "${VALIDATE_ARGS[@]}"
 mv "$WORK_DIR/substack.candidate.json" "$ROOT/all_posts.json"
@@ -144,12 +162,13 @@ mv "$WORK_DIR/medium.candidate.json" "$ROOT/medium_posts.json"
 mv "$WORK_DIR/posts.candidate.json" "$ROOT/all_sources_posts.json"
 mv "$WORK_DIR/articles.candidate.json" "$ROOT/articles_index.json"
 mv "$WORK_DIR/trades.candidate.json" "$ROOT/trades_extracted.json"
+mv "$WORK_DIR/snapshot_manifest.candidate.json" "$ROOT/snapshot_manifest.json"
 
 echo
 echo "=== Running regression suite ==="
 "$PYTHON" -m unittest -q
 
-TRACKED_OUTPUTS=(articles_index.json medium_posts.json trades_extracted.json)
+TRACKED_OUTPUTS=(articles_index.json medium_posts.json trades_extracted.json snapshot_manifest.json)
 if [ -f .direction_cache.json ]; then
     TRACKED_OUTPUTS+=(.direction_cache.json)
 fi
