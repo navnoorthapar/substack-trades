@@ -14,6 +14,8 @@ from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
+from article_briefs import build_article_brief
+
 ROOT = Path(__file__).parent
 POSTS_PATH = Path(os.environ.get('POSTS_OUTPUT', ROOT / 'all_posts.json')).expanduser()
 ARTICLE_INDEX_PATH = Path(os.environ.get(
@@ -121,7 +123,7 @@ def fetch_posts(limit=50, offset=0, attempts=3):
 
 def article_metadata(post):
     """Keep the small, deployable subset needed to render every article."""
-    return {
+    value = {
         'source': 'substack',
         'source_id': post.get('slug', ''),
         'slug': post.get('slug', ''),
@@ -133,6 +135,8 @@ def article_metadata(post):
         'wordcount': post.get('wordcount', 0),
         'content_status': 'full',
     }
+    value['brief'] = build_article_brief(post)
+    return value
 
 
 def atomic_write_json(path, value):

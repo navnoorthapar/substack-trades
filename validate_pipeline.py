@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
+from article_briefs import validate_brief_against_body, validate_brief_structure
 from extract_trades import (
     classify_direction,
     extract_outcome,
@@ -184,6 +185,9 @@ def validate_posts(posts):
     identities = []
     for index, post in enumerate(posts):
         metadata = validate_article_record(post, index, 'post')
+        body_text = post.get('body_text')
+        require(isinstance(body_text, str), f'post {index} has no source body text')
+        metadata['body_text'] = body_text
         require(post.get('is_published') is True,
                 f'post {index} is not explicitly published')
         require(metadata['url'] not in post_by_url,
@@ -213,6 +217,11 @@ def validate_article_index(articles, post_by_url):
                 f'article {index} date does not match its fetched post')
         require(metadata['content_status'] == post['content_status'],
                 f'article {index} content status does not match its fetched post')
+        require('brief' in article, f'article {index} has no source-backed brief')
+        try:
+            validate_brief_against_body(article['brief'], post['body_text'])
+        except ValueError as exc:
+            raise ValueError(f'article {index} brief validation failed: {exc}') from None
         require(url not in article_by_url,
                 'article index contains duplicate canonical URLs')
         article_by_url[url] = metadata
@@ -229,8 +238,18 @@ def validate_deployable_articles(articles):
     require(articles, 'article index is empty')
     article_by_url = {}
     identities = []
+    has_briefs = any(isinstance(article, dict) and 'brief' in article
+                     for article in articles)
     for index, article in enumerate(articles):
         metadata = validate_article_record(article, index, 'article')
+        if has_briefs:
+            require('brief' in article, f'article {index} has no source-backed brief')
+            try:
+                validate_brief_structure(article['brief'])
+            except ValueError as exc:
+                raise ValueError(
+                    f'article {index} brief validation failed: {exc}'
+                ) from None
         require(metadata['url'] not in article_by_url,
                 'article index contains duplicate canonical URLs')
         article_by_url[metadata['url']] = metadata

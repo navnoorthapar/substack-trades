@@ -10,6 +10,8 @@ import unittest
 from collections import Counter
 from pathlib import Path
 
+from article_briefs import is_boilerplate_text
+
 
 ROOT = Path(__file__).parent
 
@@ -33,6 +35,9 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         cls.html_path = cls.site_dir / 'index.html'
         cls.html_bytes = cls.html_path.read_bytes()
         cls.html = cls.html_bytes.decode('utf-8')
+        cls.brief_path = cls.site_dir / 'article_briefs.json'
+        cls.brief_bytes = cls.brief_path.read_bytes()
+        cls.brief_archive = json.loads(cls.brief_bytes.decode('utf-8'))
         article_payload = json.loads((ROOT / 'articles_index.json').read_text(encoding='utf-8'))
         cls.source_articles = (
             article_payload.get('articles', [])
@@ -171,41 +176,163 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                 self.assertEqual(observed.get(raw), {canonical})
         self.assertIn('Original entity mention', self.html)
 
-    def test_research_brief_is_default_and_states_the_decision_boundary(self):
+    def test_article_intelligence_brief_is_default_and_source_led(self):
         self.assertRegex(self.html, r'<body[^>]*data-view="briefing"')
         self.assertRegex(self.html, r"const state\s*=\s*\{\s*view:['\"]briefing['\"]")
-        self.assertIn('function renderBriefing(records)', self.html)
+        self.assertIn('function renderIntelligenceBrief(records)', self.html)
         for text in (
-            'Owner research brief',
-            'Recent high-context passages',
-            'Documentation coverage',
-            'Publication health',
-            'One author, two publication channels',
-            'not independent corroborating sources',
-            'not verified positions',
-            'not confidence or quality',
-            'Live market price and valuation checked',
-            'Liquidity, capacity, borrow and funding checked',
-            'Mandate / portfolio fit',
-            'New since last review',
-            'Mark reviewed through',
-            'Decision workflow',
-            'In active diligence',
-            '18/18 packet coverage—not approval',
-            'Owner operating boundary',
-            'No synthetic fund metrics',
-            'Requires connected systems',
-            'Positions, NAV/P&amp;L and attribution',
+            'Intelligence Brief',
+            'Research intelligence brief · source-backed',
+            'Start with the article. Test it against its evidence.',
+            'Authored framing, contextual evidence, mechanism, limitations, falsifiers, and public checkpoints',
+            'shown as exact source passages, never converted into a synthetic recommendation',
+            "Author\\'s framing",
+            'Why this article is surfaced',
+            'Upcoming checkpoints cited',
+            'Continue reading',
+            'Recent article dossiers',
+            'Open full dossier',
+            'Published research, not a live market as-of or a portfolio recommendation.',
+            'Evidence boundaries',
+            'Raw extracted observations',
+            'built from exact authored sections, not observation count',
+            'Extracted passages describe mixed structures; no single article-level stance is assigned.',
+            'does not infer current holdings, conviction, expected return, portfolio fit, or a live market view',
         ):
             self.assertIn(text, self.html)
 
-        briefing_start = self.html.index('function renderBriefing(records)')
+        briefing_start = self.html.index('function renderIntelligenceBrief(records)')
         briefing_end = self.html.index('\nfunction contextualRecords', briefing_start)
         briefing = self.html[briefing_start:briefing_end]
-        self.assertIn('idea.documentation_score >= 4', briefing)
-        self.assertIn('!reviewFlagged(idea)', briefing)
-        self.assertIn("idea._article.content_status === 'full'", briefing)
-        self.assertIn('data-brief-record', briefing)
+        self.assertIn('ARTICLE_BY_ID.get(state.selected)', briefing)
+        self.assertIn('articleClaim(selected)', briefing)
+        self.assertIn("briefSection(selected,'evidence')", briefing)
+        self.assertIn("section.kind === 'implementation'", briefing)
+        self.assertIn('data-brief-article', briefing)
+        self.assertNotIn('documentation_score', briefing)
+
+        article_view_start = self.html.index('function isArticleView()')
+        article_view_end = self.html.index('\nfunction briefSection', article_view_start)
+        self.assertIn("state.view === 'briefing'", self.html[article_view_start:article_view_end])
+        contextual_start = self.html.index('function contextualRecords(skip)')
+        contextual_end = self.html.index('\nfunction recordArticle', contextual_start)
+        self.assertIn('return ARTICLES.filter', self.html[contextual_start:contextual_end])
+
+    def test_displayed_article_framing_rejects_boilerplate(self):
+        contaminated = [
+            (article['id'], article['subtitle'])
+            for article in self.articles
+            if article.get('subtitle') and is_boilerplate_text(article['subtitle'])
+        ]
+        self.assertEqual(contaminated, [])
+        claim_start = self.html.index('function articleClaim(article)')
+        claim_end = self.html.index('\nfunction articleEvidence', claim_start)
+        claim_function = self.html[claim_start:claim_end]
+        self.assertLess(
+            claim_function.index('(lead && lead.text)'),
+            claim_function.index('(article && article.subtitle)'),
+        )
+
+    def test_hash_hydrated_article_search_loads_the_complete_dossier_archive(self):
+        startup = self.html[self.html.index('hydrateFromHash();'):]
+        self.assertIn(
+            'if (state.query && isArticleView()) renderArticleAwareSearch(false);',
+            startup,
+        )
+        search_start = self.html.index('function renderArticleAwareSearch(focusResult)')
+        search_end = self.html.index("document.getElementById('search').addEventListener('input'", search_start)
+        search = self.html[search_start:search_end]
+        self.assertIn('loadBriefArchive().then(finish)', search)
+        self.assertIn('briefArchiveReady', search)
+
+    def test_deferred_article_dossiers_are_complete_release_bound_and_lossless(self):
+        self.assertTrue(self.brief_path.is_file())
+        self.assertEqual(self.brief_archive['schema_version'], 1)
+        self.assertEqual(
+            self.brief_archive['data_checksum'],
+            self.snapshot['data_checksum'],
+        )
+        deferred = self.brief_archive['briefs']
+        self.assertIsInstance(deferred, dict)
+
+        inline_ids = {article['id'] for article in self.articles if article['brief'] is not None}
+        deferred_ids = set(deferred)
+        all_ids = {article['id'] for article in self.articles}
+        self.assertTrue(inline_ids)
+        self.assertTrue(deferred_ids)
+        self.assertFalse(inline_ids.intersection(deferred_ids))
+        self.assertEqual(inline_ids.union(deferred_ids), all_ids)
+
+        def compact_span(value):
+            if not isinstance(value, dict) or not value.get('text'):
+                return None
+            return {
+                'text': value['text'],
+                'truncated': bool(value.get('truncated')),
+            }
+
+        def compact_brief(value):
+            value = value if isinstance(value, dict) else {}
+            return {
+                'lead': compact_span(value.get('lead')),
+                'sections': [
+                    {
+                        'kind': section.get('kind') or '',
+                        'heading': section.get('heading') or '',
+                        'text': section['text'],
+                        'truncated': bool(section.get('truncated')),
+                        'source_order': int(section.get('source_order') or 0),
+                    }
+                    for section in value.get('sections') or []
+                    if isinstance(section, dict) and section.get('text')
+                ],
+                'fallback_evidence': compact_span(value.get('fallback_evidence')),
+                'checkpoints': [
+                    {
+                        'date': checkpoint.get('date') or '',
+                        'date_label': checkpoint.get('date_label') or '',
+                        'text': checkpoint['text'],
+                        'context_kind': checkpoint.get('context_kind') or '',
+                    }
+                    for checkpoint in value.get('checkpoints') or []
+                    if isinstance(checkpoint, dict) and checkpoint.get('text')
+                ],
+            }
+
+        source_by_url = {article['url'].rstrip('/'): article for article in self.source_articles}
+        for article in self.articles:
+            source = source_by_url[article['url'].rstrip('/')]
+            expected = compact_brief(source.get('brief'))
+            actual = article['brief'] if article['brief'] is not None else deferred[article['id']]
+            self.assertEqual(actual, expected)
+
+        for source in self.source_articles:
+            brief = source.get('brief')
+            self.assertIsInstance(brief, dict)
+            self.assertEqual(brief.get('schema_version'), 1)
+            self.assertRegex(str(brief.get('body_sha256') or ''), r'^[0-9a-f]{64}$')
+            spans = [brief.get('lead'), brief.get('fallback_evidence')]
+            spans.extend(brief.get('sections') or [])
+            spans.extend(brief.get('checkpoints') or [])
+            for span in (value for value in spans if value is not None):
+                self.assertEqual(span['end'] - span['start'], len(span['text']))
+                self.assertEqual(
+                    span['sha256'],
+                    hashlib.sha256(span['text'].encode('utf-8')).hexdigest(),
+                )
+
+        for text in (
+            "'article_briefs.json?v='",
+            "cache:'no-cache'",
+            'response.ok',
+            'payload.schema_version !== 1',
+            'payload.data_checksum !== SNAPSHOT.data_checksum',
+            "article.brief = payload.briefs[id]",
+            'refreshArticleSearch(article)',
+            'Loading the exact article dossier',
+            'Checking the deferred dossier against this release.',
+        ):
+            self.assertIn(text, self.html)
 
     def test_new_since_review_requires_an_explicit_acknowledgement(self):
         initialization_start = self.html.index("let lastSeenPublication = ''")
@@ -327,10 +454,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_institutional_views_and_workflows_are_present(self):
         for text in (
-            'Research Brief',
-            'Observation Monitor',
-            'Research Library',
-            'Decision Queue',
+            'Intelligence Brief',
+            'Evidence Explorer',
+            'Article Library',
+            'Review Queue',
             'Research evidence',
             'Export CSV',
             'Copy view',
@@ -390,8 +517,13 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertGreater(search_end, search_start)
         search_handler = self.html[search_start:search_end]
         self.assertRegex(search_handler, r"event\.key\s*!==\s*['\"]Enter['\"]")
-        self.assertIn('render();', search_handler)
-        self.assertIn('focusSelectedRow();', search_handler)
+        self.assertIn('renderArticleAwareSearch(true);', search_handler)
+        article_search_start = self.html.index('function renderArticleAwareSearch(focusResult)')
+        article_search_end = self.html.index("document.getElementById('search').addEventListener('input'", article_search_start)
+        article_search = self.html[article_search_start:article_search_end]
+        self.assertIn('render();', article_search)
+        self.assertIn('focusSelectedRow();', article_search)
+        self.assertIn('loadBriefArchive().then(finish)', article_search)
 
         self.assertIn("button.setAttribute('aria-label','Remove filter: '", self.html)
         self.assertIn("mark.setAttribute('aria-hidden','true')", self.html)
@@ -461,10 +593,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIsNotNone(csp_match)
         csp = csp_match.group(1)
         for directive in (
-            "default-src 'none'", "connect-src 'none'", "object-src 'none'",
+            "default-src 'none'", "connect-src 'self'", "object-src 'none'",
             "base-uri 'none'", "form-action 'none'", "frame-src 'none'",
         ):
             self.assertIn(directive, csp)
+        self.assertNotIn("connect-src 'none'", csp)
 
         freshness_start = self.html.index('function renderStaticStats()')
         freshness = self.html[freshness_start:]
@@ -542,13 +675,34 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
     def test_static_artifact_stays_inside_the_institutional_performance_budget(self):
         self.assertLess(
             len(self.html_bytes),
-            1_800_000,
-            'single-file artifact exceeded the reviewed 1.8 MB transfer budget',
+            2_000_000,
+            'single-file artifact exceeded the reviewed 2.0 MB transfer budget',
         )
         self.assertLess(
             len(gzip.compress(self.html_bytes, compresslevel=9)),
-            450_000,
-            'compressed first load exceeded the reviewed 450 KB budget',
+            500_000,
+            'compressed first load exceeded the reviewed 500 KB budget',
+        )
+        self.assertGreaterEqual(
+            len(self.brief_bytes),
+            100_000,
+            'deferred dossier payload is unexpectedly empty or incomplete',
+        )
+        self.assertLessEqual(
+            len(self.brief_bytes),
+            800_000,
+            'deferred dossier payload exceeded its reviewed 800 KB budget',
+        )
+        artifact_files = [path for path in self.site_dir.rglob('*') if path.is_file()]
+        self.assertEqual(
+            {path.relative_to(self.site_dir).as_posix() for path in artifact_files},
+            {'index.html', 'article_briefs.json'},
+        )
+        self.assertTrue(all(not path.is_symlink() for path in artifact_files))
+        self.assertLess(
+            sum(path.stat().st_size for path in artifact_files),
+            3_000_000,
+            'complete static artifact exceeded the reviewed 3.0 MB policy',
         )
 
     def test_direction_mix_legend_names_all_supported_states(self):

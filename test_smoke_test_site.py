@@ -6,13 +6,23 @@ import types
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import smoke_test_site
 
 
 REVISION = 'a' * 40
 CHECKSUM = 'b' * 64
+
+
+def fixture_deferred(checksum=CHECKSUM, schema_version=1, briefs=None):
+    if briefs is None:
+        briefs = {'a_article': {'lead': {'text': 'Exact authored passage.'}}}
+    return {
+        'schema_version': schema_version,
+        'data_checksum': checksum,
+        'briefs': briefs,
+    }
 
 
 def fixture_html(
@@ -86,6 +96,54 @@ class SmokeTestSiteTests(unittest.TestCase):
                 fixture_html(), REVISION, 363, 1327, 'c' * 64,
             )
 
+    def test_deferred_dossier_must_match_exact_release(self):
+        smoke_test_site.validate_deferred_payload(fixture_deferred(), CHECKSUM)
+        with self.assertRaisesRegex(ValueError, 'schema_version must be 1'):
+            smoke_test_site.validate_deferred_payload(
+                fixture_deferred(schema_version=2), CHECKSUM,
+            )
+        with self.assertRaisesRegex(ValueError, 'expected'):
+            smoke_test_site.validate_deferred_payload(
+                fixture_deferred(checksum='c' * 64), CHECKSUM,
+            )
+        with self.assertRaisesRegex(ValueError, 'non-empty object'):
+            smoke_test_site.validate_deferred_payload(
+                fixture_deferred(briefs={}), CHECKSUM,
+            )
+
+    def test_deferred_asset_resolves_beside_page_without_inheriting_query(self):
+        self.assertEqual(
+            smoke_test_site.deferred_asset_url(
+                'https://example.test/research/?old=1#fragment'
+            ),
+            'https://example.test/research/article_briefs.json',
+        )
+        self.assertEqual(
+            smoke_test_site.deferred_asset_url(
+                'https://example.test/research/index.html?old=1'
+            ),
+            'https://example.test/research/article_briefs.json',
+        )
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_deferred_fetch_rejects_off_origin_redirect(self, urlopen, ssl_context):
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.geturl.return_value = 'https://attacker.test/article_briefs.json'
+        urlopen.return_value = response
+        with self.assertRaisesRegex(ValueError, 'redirected off-origin'):
+            smoke_test_site.fetch_deferred_briefs(
+                'https://example.test/research/', REVISION, 1, 20,
+            )
+        request = urlopen.call_args.args[0]
+        self.assertEqual(
+            request.full_url,
+            'https://example.test/research/article_briefs.json?'
+            f'nrt_smoke_revision={REVISION}&nrt_smoke_attempt=1',
+        )
+        ssl_context.assert_called_once_with()
+
     def test_snapshot_counts_require_non_empty_json_lists(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'records.json'
@@ -107,10 +165,11 @@ class SmokeTestSiteTests(unittest.TestCase):
                 smoke_test_site.snapshot_checksum(articles, observations), expected,
             )
 
+    @patch('smoke_test_site.fetch_deferred_briefs', return_value=fixture_deferred())
     @patch('smoke_test_site.time.sleep')
     @patch('smoke_test_site.fetch_html')
     def test_stale_release_is_retried_until_expected_revision_appears(
-        self, fetch_html, sleep,
+        self, fetch_html, sleep, fetch_deferred,
     ):
         fetch_html.side_effect = [
             fixture_html(revision='c' * 40),
@@ -127,6 +186,33 @@ class SmokeTestSiteTests(unittest.TestCase):
                 retry_delay=0.01,
             )
         self.assertEqual(fetch_html.call_count, 2)
+        fetch_deferred.assert_called_once_with(
+            'https://example.test/research/', REVISION, 2, 20.0,
+        )
+        sleep.assert_called_once_with(0.01)
+
+    @patch('smoke_test_site.time.sleep')
+    @patch('smoke_test_site.fetch_deferred_briefs')
+    @patch('smoke_test_site.fetch_html', return_value=fixture_html())
+    def test_stale_deferred_asset_is_retried_with_page(
+        self, fetch_html, fetch_deferred, sleep,
+    ):
+        fetch_deferred.side_effect = [
+            fixture_deferred(checksum='c' * 64),
+            fixture_deferred(),
+        ]
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            smoke_test_site.smoke_test(
+                'https://example.test/research/',
+                REVISION,
+                363,
+                1327,
+                CHECKSUM,
+                retries=2,
+                retry_delay=0.01,
+            )
+        self.assertEqual(fetch_html.call_count, 2)
+        self.assertEqual(fetch_deferred.call_count, 2)
         sleep.assert_called_once_with(0.01)
 
     @patch('smoke_test_site.fetch_html', return_value=fixture_html(revision='c' * 40))

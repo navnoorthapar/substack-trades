@@ -99,28 +99,35 @@ jobs:
         run: |
           set -euo pipefail
           test -f _site/index.html
+          test -f _site/article_briefs.json
           test ! -L _site/index.html
+          test ! -L _site/article_briefs.json
           if find _site -type l -print -quit | grep -q .; then
             echo "Generated artifact contains a symbolic link." >&2
             exit 1
           fi
 
           index_bytes=$(wc -c < _site/index.html | tr -d ' ')
+          brief_bytes=$(wc -c < _site/article_briefs.json | tr -d ' ')
           gzip_bytes=$(gzip -9 -c _site/index.html | wc -c | tr -d ' ')
           total_bytes=$(du -sk _site | awk '{print $1 * 1024}')
-          if (( index_bytes < 100000 || index_bytes > 1800000 )); then
-            echo "index.html size ${index_bytes} is outside the 100 KB–1.8 MB policy." >&2
+          if (( index_bytes < 100000 || index_bytes > 2000000 )); then
+            echo "index.html size ${index_bytes} is outside the 100 KB–2.0 MB policy." >&2
             exit 1
           fi
-          if (( gzip_bytes > 450000 )); then
-            echo "Compressed index size ${gzip_bytes} exceeds the 450 KB policy." >&2
+          if (( gzip_bytes > 500000 )); then
+            echo "Compressed index size ${gzip_bytes} exceeds the 500 KB policy." >&2
             exit 1
           fi
-          if (( total_bytes > 2000000 )); then
-            echo "Site artifact size ${total_bytes} exceeds the 2 MB policy." >&2
+          if (( brief_bytes < 100000 || brief_bytes > 800000 )); then
+            echo "Deferred dossier size ${brief_bytes} is outside the 100–800 KB policy." >&2
             exit 1
           fi
-          echo "Size policy passed: raw=${index_bytes}, gzip=${gzip_bytes}, total=${total_bytes} bytes."
+          if (( total_bytes > 3000000 )); then
+            echo "Site artifact size ${total_bytes} exceeds the 3.0 MB policy." >&2
+            exit 1
+          fi
+          echo "Size policy passed: raw=${index_bytes}, gzip=${gzip_bytes}, deferred=${brief_bytes}, total=${total_bytes} bytes."
 
           python - <<'PY'
           import json
@@ -131,6 +138,15 @@ jobs:
           articles = json.loads(Path('articles_index.json').read_text(encoding='utf-8'))
           observations = json.loads(Path('trades_extracted.json').read_text(encoding='utf-8'))
           html = Path('_site/index.html').read_text(encoding='utf-8')
+          deferred = json.loads(Path('_site/article_briefs.json').read_text(encoding='utf-8'))
+          if deferred.get('schema_version') != 1:
+              raise SystemExit('Deferred article dossier schema mismatch.')
+          if deferred.get('data_checksum') != snapshot_checksum(
+              'articles_index.json', 'trades_extracted.json'
+          ):
+              raise SystemExit('Deferred article dossiers do not match the source snapshot.')
+          if not isinstance(deferred.get('briefs'), dict) or not deferred['briefs']:
+              raise SystemExit('Deferred article dossier payload is empty.')
           validate_html(
               html,
               os.environ['SITE_REVISION'],

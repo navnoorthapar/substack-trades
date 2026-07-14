@@ -15,6 +15,8 @@ from urllib.request import Request, urlopen
 
 
 MAX_RESPONSE_BYTES = 12 * 1024 * 1024
+MAX_DEFERRED_BYTES = 2 * 1024 * 1024
+DEFERRED_ASSET_NAME = 'article_briefs.json'
 REQUIRED_META = {
     'nrt-revision',
     'nrt-article-count',
@@ -144,6 +146,109 @@ def cache_busted_url(url, revision, attempt):
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), ''))
 
 
+def same_origin(first_url, second_url):
+    """Return whether two absolute URLs share scheme, host, and effective port."""
+    first = urlsplit(first_url)
+    second = urlsplit(second_url)
+
+    def origin(parts):
+        default_port = 443 if parts.scheme.casefold() == 'https' else 80
+        return (
+            parts.scheme.casefold(),
+            (parts.hostname or '').casefold(),
+            parts.port or default_port,
+        )
+
+    return origin(first) == origin(second)
+
+
+def deferred_asset_url(page_url):
+    """Resolve the deferred dossier beside the deployed page, never off-origin."""
+    parts = urlsplit(page_url)
+    path = parts.path or '/'
+    if path.endswith('/'):
+        asset_path = f'{path}{DEFERRED_ASSET_NAME}'
+    else:
+        leaf = path.rsplit('/', 1)[-1].casefold()
+        if leaf.endswith(('.html', '.htm')):
+            parent = path.rsplit('/', 1)[0]
+            asset_path = f'{parent}/{DEFERRED_ASSET_NAME}'
+        else:
+            asset_path = f'{path}/{DEFERRED_ASSET_NAME}'
+    return urlunsplit((parts.scheme, parts.netloc, asset_path, '', ''))
+
+
+def validate_deferred_payload(payload, expected_checksum):
+    """Fail closed unless the deferred dossier belongs to the exact snapshot."""
+    if not isinstance(payload, dict):
+        raise ValueError('deferred article dossier must be a JSON object')
+    schema_version = payload.get('schema_version')
+    if type(schema_version) is not int or schema_version != 1:
+        raise ValueError('deferred article dossier schema_version must be 1')
+    checksum = payload.get('data_checksum')
+    if not isinstance(checksum, str) or not CHECKSUM_RE.fullmatch(checksum):
+        raise ValueError(
+            'deferred article dossier data_checksum is not a lowercase SHA-256 digest'
+        )
+    if checksum != expected_checksum:
+        raise ValueError(
+            'deferred article dossier data_checksum is '
+            f'{checksum}, expected {expected_checksum}'
+        )
+    briefs = payload.get('briefs')
+    if not isinstance(briefs, dict) or not briefs:
+        raise ValueError('deferred article dossier briefs must be a non-empty object')
+
+
+def fetch_deferred_briefs(page_url, revision, attempt, timeout):
+    """Fetch and decode the same-origin deferred dossier over verified HTTPS."""
+    asset_url = deferred_asset_url(page_url)
+    if not same_origin(page_url, asset_url):
+        raise ValueError('deferred article dossier URL is not same-origin')
+    requested_url = cache_busted_url(asset_url, revision, attempt)
+    request = Request(
+        requested_url,
+        headers={
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'User-Agent': 'navnoor-terminal-deployment-smoke/1.0',
+        },
+    )
+    context = verified_ssl_context()
+    with urlopen(request, timeout=timeout, context=context) as response:
+        final_url = response.geturl()
+        if urlsplit(final_url).scheme != 'https':
+            raise ValueError(
+                f'deferred article dossier redirected away from HTTPS: {final_url}'
+            )
+        if not same_origin(page_url, final_url):
+            raise ValueError(
+                f'deferred article dossier redirected off-origin: {final_url}'
+            )
+        status = getattr(response, 'status', None)
+        if status is None:
+            status = response.getcode()
+        if status != 200:
+            raise ValueError(f'deferred article dossier returned HTTP {status}')
+        content_type = response.headers.get_content_type()
+        if content_type != 'application/json':
+            raise ValueError(
+                'deferred article dossier returned '
+                f'{content_type}, not application/json'
+            )
+        payload = response.read(MAX_DEFERRED_BYTES + 1)
+    if len(payload) > MAX_DEFERRED_BYTES:
+        raise ValueError(
+            f'deferred article dossier exceeds {MAX_DEFERRED_BYTES} bytes'
+        )
+    try:
+        value = json.loads(payload.decode('utf-8'))
+    except (UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f'deferred article dossier is not valid UTF-8 JSON: {exc}') from exc
+    return value
+
+
 def verified_ssl_context():
     """Use the platform trust store, with certifi as a verified macOS fallback."""
     try:
@@ -214,10 +319,17 @@ def smoke_test(
                 expected_observations,
                 expected_checksum,
             )
+            deferred = fetch_deferred_briefs(
+                url,
+                expected_revision,
+                attempt,
+                timeout,
+            )
+            validate_deferred_payload(deferred, expected_checksum)
             print(
                 f'Smoke test passed on attempt {attempt}: HTTPS, revision '
                 f'{expected_revision[:12]}, {expected_articles} articles, '
-                f'{expected_observations} observations.'
+                f'{expected_observations} observations, same-release deferred dossiers.'
             )
             return
         except Exception as exc:  # Retries intentionally cover HTTP and stale-cache failures.

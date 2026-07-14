@@ -10,6 +10,7 @@ import unicodedata
 from datetime import datetime
 from pathlib import Path
 
+from article_briefs import build_article_brief
 from fetch_all_posts import atomic_write_json
 
 
@@ -224,6 +225,7 @@ def article_metadata(post):
         'audience': post.get('audience', ''),
         'wordcount': post.get('wordcount', 0),
         'content_status': post.get('content_status', 'full'),
+        'brief': build_article_brief(post),
     }
     if post.get('alternate_urls'):
         value['alternate_urls'] = post['alternate_urls']
