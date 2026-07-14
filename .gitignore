@@ -5,5 +5,3 @@ __pycache__/
 *.pyc
 .DS_Store
 promo_*.md
-.direction_cache.json
-.direction_cache.json.tmp

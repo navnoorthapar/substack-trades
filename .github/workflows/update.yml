@@ -5,13 +5,19 @@ name: Rebuild Site
 # protection), so fetching must happen from a residential IP — that is done on
 # the Mac by refresh.sh + the LaunchAgent (com.navnoor.substacktrades).
 #
-# This workflow only rebuilds docs/index.html from the already-committed
-# trades_extracted.json. Use it (Actions tab → "Run workflow") to regenerate the
-# site after changing build_site.py, without re-fetching. Day-to-day the Mac
-# already builds and pushes docs/index.html alongside the data, so this is rarely
-# needed.
+# This workflow only rebuilds docs/index.html from already-committed data. It
+# runs when the builder or tracked data changes, and can also be started from the
+# Actions tab. The generated docs/index.html path is intentionally excluded from
+# the push filter so the bot's rebuild commit cannot trigger a workflow loop.
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - build_site.py
+      - trades_extracted.json
+      - articles_index.json
   workflow_dispatch: {}
 
 permissions:

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build docs/index.html — hedge fund trade intelligence dashboard."""
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime
 
 ROOT     = Path(__file__).parent
 DOCS_DIR = ROOT / 'docs'
@@ -12,25 +12,69 @@ DOCS_DIR.mkdir(exist_ok=True)
 with open(ROOT / 'trades_extracted.json') as f:
     trades = json.load(f)
 
-BUILT_AT = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
+# `articles_index.json` is the small, tracked metadata snapshot written by the
+# fetcher.  It is deliberately separate from the much larger local-only post
+# corpus and lets the site show articles even when extraction finds no trades.
+article_index_path = ROOT / 'articles_index.json'
+article_index = []
+if article_index_path.exists():
+    with open(article_index_path, encoding='utf-8') as f:
+        article_index_payload = json.load(f)
+    if isinstance(article_index_payload, dict):
+        article_index = article_index_payload.get('articles', [])
+    else:
+        article_index = article_index_payload
+    if not isinstance(article_index, list) or not all(isinstance(a, dict) for a in article_index):
+        raise ValueError('articles_index.json must contain a list of article objects')
+else:
+    print('Warning: articles_index.json missing; building from trade metadata only')
 
-# Group trades by article URL — no dependency on all_posts.json
+
+def _clean_date(value):
+    """Return a sortable ISO date, sending malformed values to the bottom."""
+    date = str(value or '')[:10]
+    try:
+        datetime.strptime(date, '%Y-%m-%d')
+    except ValueError:
+        return '1970-01-01'
+    return date
+
+
+# Group trades by article URL, then left-join them onto every fetched article.
 trades_by_url = defaultdict(list)
 for t in trades:
-    trades_by_url[t.get('article_url', '')].append(t)
+    url = str(t.get('article_url') or '').strip().rstrip('/')
+    if url:
+        trades_by_url[url].append(t)
 
 articles = []
+seen_urls = set()
+for metadata in article_index:
+    url = str(metadata.get('url') or '').strip().rstrip('/')
+    if not url or url in seen_urls:
+        continue
+    seen_urls.add(url)
+    article_trades = trades_by_url.get(url, [])
+    first = article_trades[0] if article_trades else {}
+    articles.append({
+        'title':       metadata.get('title') or first.get('article_title') or url,
+        'subtitle':    metadata.get('subtitle') or '',
+        'date':        _clean_date(metadata.get('post_date') or first.get('article_date')),
+        'url':         url,
+        'trade_count': len(article_trades),
+        'trades':      article_trades,
+    })
+
+# Preserve trade-bearing articles that predate or are otherwise absent from the
+# metadata index.  This makes an incomplete index additive rather than lossy.
 for url, article_trades in trades_by_url.items():
-    if not url:          # skip trades with no URL — would render href="None"
+    if url in seen_urls:
         continue
     first = article_trades[0]
-    title = first.get('article_title') or url   # None title would display as "null"
-    date  = (first.get('article_date') or '')[:10]
-    if len(date) != 10:                          # malformed date → sort to bottom
-        date = '1970-01-01'
     articles.append({
-        'title':       title,
-        'date':        date,
+        'title':       first.get('article_title') or url,
+        'subtitle':    '',
+        'date':        _clean_date(first.get('article_date')),
         'url':         url,
         'trade_count': len(article_trades),
         'trades':      article_trades,
@@ -40,12 +84,20 @@ articles.sort(key=lambda x: x['date'], reverse=True)
 
 # ── Top funds for sidebar filter ──────────────────────────────────────────────
 import re as _re
-fund_counts = {}
+fund_variants = defaultdict(Counter)
 for t in trades:
     fn = t.get('fund_name_if_mentioned')
     if fn:
-        fund_counts[fn] = fund_counts.get(fn, 0) + 1
-top_funds = sorted(fund_counts.items(), key=lambda x: -x[1])[:12]
+        name = str(fn).strip()
+        if name:
+            fund_variants[name.casefold()][name] += 1
+
+fund_counts = []
+for variants in fund_variants.values():
+    # Display the most common spelling while combining case-only duplicates.
+    display_name = sorted(variants.items(), key=lambda x: (-x[1], x[0].casefold(), x[0]))[0][0]
+    fund_counts.append((display_name, sum(variants.values())))
+top_funds = sorted(fund_counts, key=lambda x: (-x[1], x[0].casefold()))[:12]
 
 def _fid(name):
     return _re.sub(r'[^a-zA-Z0-9]', '_', name)
@@ -65,7 +117,17 @@ for fn, _ in top_funds:
     )
 fund_filter_html = '\n    '.join(_fund_btns)
 
-data_json = json.dumps(articles, ensure_ascii=False)
+def _json_for_script(value):
+    """Serialize JSON without allowing data to terminate the script element."""
+    return (json.dumps(value, ensure_ascii=False)
+            .replace('&', r'\u0026')
+            .replace('<', r'\u003c')
+            .replace('>', r'\u003e')
+            .replace('\u2028', r'\u2028')
+            .replace('\u2029', r'\u2029'))
+
+
+data_json = _json_for_script(articles)
 
 HTML = f"""<!DOCTYPE html>
 <html lang="en">
@@ -124,6 +186,10 @@ header{{
 .stats-bar{{display:flex;gap:20px;font-family:var(--font-mono);font-size:11px;color:var(--muted)}}
 .stats-bar span b{{color:var(--text);font-weight:600}}
 .spacer{{flex:1}}
+.sr-only{{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}}
 #search{{
   width:280px;height:34px;
   background:var(--surface);border:1px solid var(--border2);
@@ -180,17 +246,21 @@ main{{flex:1;padding:20px 24px;max-width:960px;}}
 }}
 .article-card:hover{{border-color:var(--border2)}}
 .article-header{{
-  padding:14px 16px;cursor:pointer;
+  width:100%;padding:14px 16px;cursor:pointer;
   display:flex;align-items:flex-start;gap:12px;
+  appearance:none;background:transparent;border:0;color:inherit;
+  font:inherit;text-align:left;
 }}
 .article-header:hover .article-title{{color:var(--accent)}}
+.article-header:focus-visible{{outline:2px solid var(--accent);outline-offset:-2px}}
 .article-meta{{
   font-family:var(--font-mono);font-size:10px;color:var(--muted);
   white-space:nowrap;padding-top:2px;
 }}
 .article-date{{display:block}}
-.article-body{{flex:1;min-width:0}}
+.article-body{{display:block;flex:1;min-width:0}}
 .article-title{{
+  display:block;
   font-size:13.5px;font-weight:500;color:var(--text);
   line-height:1.4;margin-bottom:6px;transition:color .15s;
 }}
@@ -274,6 +344,7 @@ html.light .trade-quant{{color:#b45309}}
 .trade-outcome-loss{{font-size:11px;color:var(--short);margin-top:4px;font-style:italic}}
 .fund-tag{{font-size:10px;font-family:var(--font-mono);padding:2px 7px;border-radius:3px;color:var(--accent);border:1px solid;border-color:#14532d;background:#052012;margin-right:4px}}
 html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
+.no-trades{{padding:18px 16px;color:var(--muted);font-size:12px}}
 
 /* ── EMPTY STATE ── */
 .empty{{text-align:center;padding:80px 20px;color:var(--muted)}}
@@ -290,7 +361,9 @@ html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
 @media(max-width:768px){{
   header{{flex-wrap:wrap;height:auto;padding:10px 16px;gap:8px;}}
   .brand{{flex:1 1 auto}}
-  .stats-bar,.spacer{{display:none}}
+  .spacer{{display:none}}
+  .stats-bar{{display:flex;order:9;flex:1 0 100%;font-size:10px;gap:0}}
+  .stats-bar > span:not(.data-freshness){{display:none}}
   #search{{order:10;width:100%;}}
   #filter-toggle{{display:flex}}
   .layout{{flex-direction:column}}
@@ -319,20 +392,21 @@ html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
     <span><b id="stat-trades">0</b> trades</span>
     <span><b id="stat-funds">0</b> funds</span>
     <span><b id="stat-range">—</b></span>
-    <span style="margin-left:8px;color:var(--dim)">updated {BUILT_AT}</span>
+    <span class="data-freshness">latest article <b id="stat-latest">—</b></span>
   </div>
   <div class="spacer"></div>
+  <label class="sr-only" for="search">Search articles, funds, instruments, and directions</label>
   <input id="search" type="text" placeholder="Search articles, funds, instruments…" autocomplete="off" spellcheck="false">
   <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light / dark" style="
     background:var(--surface);border:1px solid var(--border2);color:var(--muted);
     cursor:pointer;border-radius:6px;padding:0 10px;height:34px;font-size:13px;
     font-family:var(--font-sans);white-space:nowrap;transition:background .15s,color .15s;
   ">&#9788; Light</button>
-  <button id="filter-toggle" onclick="toggleFilters()">&#9776; Filters</button>
+  <button id="filter-toggle" onclick="toggleFilters()" aria-expanded="false" aria-controls="filters-panel">&#9776; Filters</button>
 </header>
 
 <div class="layout">
-<aside>
+<aside id="filters-panel">
   <div class="filter-group">
     <span class="filter-label">Fund</span>
     {fund_filter_html}
@@ -378,7 +452,7 @@ html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
 </aside>
 
 <main>
-  <div class="result-count" id="result-count"></div>
+  <div class="result-count" id="result-count" role="status" aria-live="polite" aria-atomic="true"></div>
   <div id="feed"></div>
 </main>
 </div>
@@ -401,16 +475,24 @@ function tradeMatchesInst(t, inst) {{
   if (inst === 'all') return true;
   return (t.instruments || []).includes(inst);
 }}
+function normalizeFund(value) {{
+  return String(value || '').trim().toLowerCase();
+}}
 function tradeMatchesFund(t, fund) {{
   if (fund === 'all') return true;
-  return (t.fund_name_if_mentioned || '').toLowerCase() === fund.toLowerCase();
+  return normalizeFund(t.fund_name_if_mentioned) === normalizeFund(fund);
 }}
 function matchesQuery(art, q, trades) {{
   if (!q) return true;
   const src = trades || art.trades;
   const haystack = [
     art.title,
-    ...src.map(t => [t.trade_description, t.underlying, t.edge_or_thesis, t.outcome_if_mentioned, t.fund_name_if_mentioned].join(' '))
+    art.subtitle,
+    ...src.map(t => [
+      t.trade_description, t.underlying, t.edge_or_thesis,
+      t.outcome_if_mentioned, t.fund_name_if_mentioned, t.direction,
+      (t.instruments || []).join(' ')
+    ].join(' '))
   ].join(' ').toLowerCase();
   return q.toLowerCase().split(' ').filter(Boolean).every(w => haystack.includes(w));
 }}
@@ -450,8 +532,8 @@ function render() {{
     return;
   }}
 
-  for (const art of visible) {{
-    const card = buildCard(art, tradeCache.get(art));
+  for (const [index, art] of visible.entries()) {{
+    const card = buildCard(art, tradeCache.get(art), index);
     feed.appendChild(card);
   }}
 }}
@@ -472,6 +554,17 @@ function dirLabel(dir) {{
 function esc(s) {{
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }}
+function cssToken(s) {{
+  return String(s || '').replace(/[^a-zA-Z0-9_-]/g, '_');
+}}
+function safeArticleUrl(value) {{
+  try {{
+    const url = new URL(value);
+    return url.protocol === 'https:' ? url.href : '#';
+  }} catch (_error) {{
+    return '#';
+  }}
+}}
 
 const _MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function fmtDate(s) {{
@@ -480,7 +573,7 @@ function fmtDate(s) {{
   return `${{_MONTHS[m-1]}} ${{d}}, ${{y}}`;
 }}
 
-function buildCard(art, trades) {{
+function buildCard(art, trades, index) {{
   const div = document.createElement('div');
   div.className = 'article-card';
 
@@ -488,40 +581,48 @@ function buildCard(art, trades) {{
   const insts = [...new Set(trades.flatMap(t => t.instruments || []))].filter(i => i !== 'unspecified').sort();
   const dirs  = [...new Set(trades.map(t => t.direction).filter(d => d && d !== 'unspecified'))].sort();
 
-  const instTags = insts.map(i => `<span class="tag tag-${{i}}">${{i}}</span>`).join('');
+  const instTags = insts.map(i => `<span class="tag tag-${{cssToken(i)}}">${{esc(i)}}</span>`).join('');
   const dirTags  = dirs.map(d => {{
     const dc = dirClass(d);
     return dc ? `<span class="dir-tag ${{dc}}">${{dirLabel(d)}}</span>` : '';
   }}).join('');
+  const toggleId = `article-toggle-${{index}}`;
+  const panelId = `trades-panel-${{index}}`;
+  const tradeMarkup = trades.length
+    ? trades.map(t => buildTrade(t)).join('')
+    : '<div class="no-trades">No qualifying trades were extracted from this article.</div>';
 
   div.innerHTML = `
-    <div class="article-header" onclick="toggleCard(this.parentElement)">
-      <div class="article-meta">
+    <button type="button" class="article-header" id="${{toggleId}}" aria-expanded="false" aria-controls="${{panelId}}">
+      <span class="article-meta">
         <span class="article-date">${{fmtDate(art.date)}}</span>
-      </div>
-      <div class="article-body">
-        <div class="article-title">${{esc(art.title)}}</div>
-        <div class="tag-row">${{instTags}}${{dirTags}}</div>
-      </div>
-      <div class="trade-badge">${{trades.length}} trade${{trades.length !== 1 ? 's' : ''}}</div>
-      <div class="expand-icon">&#9658;</div>
-    </div>
-    <div class="trades-panel">
-      <a class="article-link" href="${{esc(art.url)}}" target="_blank" rel="noopener">&#8599; Open on Substack</a>
-      ${{trades.map(t => buildTrade(t)).join('')}}
+      </span>
+      <span class="article-body">
+        <span class="article-title">${{esc(art.title)}}</span>
+        <span class="tag-row">${{instTags}}${{dirTags}}</span>
+      </span>
+      <span class="trade-badge">${{trades.length}} trade${{trades.length !== 1 ? 's' : ''}}</span>
+      <span class="expand-icon" aria-hidden="true">&#9658;</span>
+    </button>
+    <div class="trades-panel" id="${{panelId}}" role="region" aria-labelledby="${{toggleId}}">
+      <a class="article-link" href="${{esc(safeArticleUrl(art.url))}}" target="_blank" rel="noopener">&#8599; Open on Substack</a>
+      ${{tradeMarkup}}
     </div>`;
+
+  const toggle = div.querySelector('.article-header');
+  toggle.addEventListener('click', () => toggleCard(div, toggle));
 
   return div;
 }}
 
 function isLossOutcome(s) {{
-  return /\b(lost|loss(?:es)?|losing|declined?|fell|fall|blew.?up|wiped|bankrupt|collapse[d]?|down \\$|negative return|drawdown)\b/i.test(s);
+  return /\\b(lost|loss(?:es)?|losing|declined?|fell|fall|blew.?up|wiped|bankrupt|collapse[d]?|down \\$|negative return|drawdown)\\b/i.test(s);
 }}
 
 function buildTrade(t) {{
   const dc = dirClass(t.direction);
   const dirBadge = dc ? `<span class="dir-tag ${{dc}}">${{dirLabel(t.direction)}}</span>` : '';
-  const instTags = (t.instruments || []).map(i => `<span class="tag tag-${{i}}">${{i}}</span>`).join('');
+  const instTags = (t.instruments || []).map(i => `<span class="tag tag-${{cssToken(i)}}">${{esc(i)}}</span>`).join('');
   const fundTag  = t.fund_name_if_mentioned ? `<span class="fund-tag">${{esc(t.fund_name_if_mentioned)}}</span>` : '';
 
   const desc    = esc(t.trade_description || '');
@@ -538,8 +639,9 @@ function buildTrade(t) {{
   </div>`;
 }}
 
-function toggleCard(card) {{
-  card.classList.toggle('open');
+function toggleCard(card, toggle) {{
+  const isOpen = card.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', String(isOpen));
 }}
 
 // ── Sidebar counts ──
@@ -569,21 +671,25 @@ function updateCounts() {{
   }});
 }}
 
+function setActiveFilter(selector, btn) {{
+  document.querySelectorAll(selector).forEach(b => {{
+    const active = b === btn;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', String(active));
+  }});
+}}
 function setDir(btn) {{
-  document.querySelectorAll('[data-dir]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  setActiveFilter('[data-dir]', btn);
   activeDir = btn.dataset.dir;
   render();
 }}
 function setInst(btn) {{
-  document.querySelectorAll('[data-inst]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  setActiveFilter('[data-inst]', btn);
   activeInst = btn.dataset.inst;
   render();
 }}
 function setFund(btn) {{
-  document.querySelectorAll('[data-fund]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  setActiveFilter('[data-fund]', btn);
   activeFund = btn.dataset.fund;
   render();
 }}
@@ -611,9 +717,12 @@ function renderStats() {{
   const dates = DATA.map(a => a.date).filter(d => d > '2020-01-01').sort();
   document.getElementById('stat-articles').textContent = DATA.length;
   document.getElementById('stat-trades').textContent = DATA.reduce((s, a) => s + a.trade_count, 0).toLocaleString();
-  const fundCount = new Set(DATA.flatMap(a => a.trades.map(t => t.fund_name_if_mentioned).filter(Boolean))).size;
+  const fundCount = new Set(DATA.flatMap(a => a.trades
+    .map(t => normalizeFund(t.fund_name_if_mentioned))
+    .filter(Boolean))).size;
   document.getElementById('stat-funds').textContent = fundCount;
   document.getElementById('stat-range').textContent = dates.length ? fmtDate(dates[0]) + ' → ' + fmtDate(dates[dates.length - 1]) : '—';
+  document.getElementById('stat-latest').textContent = dates.length ? fmtDate(dates[dates.length - 1]) : '—';
 }}
 
 // ── Filter panel (mobile) ──
@@ -621,7 +730,9 @@ function toggleFilters() {{
   const aside = document.querySelector('aside');
   aside.classList.toggle('open');
   const open = aside.classList.contains('open');
-  document.getElementById('filter-toggle').innerHTML = open ? '&#10005; Close' : '&#9776; Filters';
+  const toggle = document.getElementById('filter-toggle');
+  toggle.innerHTML = open ? '&#10005; Close' : '&#9776; Filters';
+  toggle.setAttribute('aria-expanded', String(open));
 }}
 
 // ── Theme toggle ──
@@ -656,21 +767,27 @@ document.addEventListener('keydown', e => {{
 
 // ── Init ──
 (function initFromHash() {{
+  document.querySelectorAll('[data-dir],[data-inst],[data-fund]').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.classList.contains('active'))));
+
   const hash = location.hash.slice(1);
   if (!hash) return;
   const p = new URLSearchParams(hash);
   if (p.has('q')) {{ query = p.get('q'); document.getElementById('search').value = query; }}
   if (p.has('dir')) {{
-    activeDir = p.get('dir');
-    document.querySelectorAll('[data-dir]').forEach(b => b.classList.toggle('active', b.dataset.dir === activeDir));
+    const requested = p.get('dir');
+    const btn = [...document.querySelectorAll('[data-dir]')].find(b => b.dataset.dir === requested);
+    if (btn) {{ activeDir = btn.dataset.dir; setActiveFilter('[data-dir]', btn); }}
   }}
   if (p.has('inst')) {{
-    activeInst = p.get('inst');
-    document.querySelectorAll('[data-inst]').forEach(b => b.classList.toggle('active', b.dataset.inst === activeInst));
+    const requested = p.get('inst');
+    const btn = [...document.querySelectorAll('[data-inst]')].find(b => b.dataset.inst === requested);
+    if (btn) {{ activeInst = btn.dataset.inst; setActiveFilter('[data-inst]', btn); }}
   }}
   if (p.has('fund')) {{
-    activeFund = p.get('fund');
-    document.querySelectorAll('[data-fund]').forEach(b => b.classList.toggle('active', b.dataset.fund === activeFund));
+    const requested = normalizeFund(p.get('fund'));
+    const btn = [...document.querySelectorAll('[data-fund]')].find(b => normalizeFund(b.dataset.fund) === requested);
+    if (btn) {{ activeFund = btn.dataset.fund; setActiveFilter('[data-fund]', btn); }}
   }}
 }})();
 renderStats();

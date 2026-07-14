@@ -1,0 +1,2063 @@
+[
+  {
+    "slug": "optiver-wrote-the-neutral-fix-for",
+    "title": "Optiver Wrote the 'Neutral' Fix for European Markets. Three of Its Five Ideas Would Also Enrich Optiver.",
+    "subtitle": "Optiver holds an SI license, sits on EPTA's governing board, and shares a clearing coalition with a rival CCP the paper never discloses.",
+    "post_date": "2026-07-11T15:00:05.870Z",
+    "url": "https://navnoorbawa.substack.com/p/optiver-wrote-the-neutral-fix-for",
+    "audience": "everyone",
+    "wordcount": 4622
+  },
+  {
+    "slug": "hull-whites-mean-reversion-problem",
+    "title": "Hull-White’s Mean-Reversion Problem: A ‘Smarter’ Model Lost to a Naive Guess in 2022",
+    "subtitle": "Mean reversion recalibrates monthly. Volatility recalibrates daily. Here’s why that gap matters — and why it isn’t a trading edge yet.",
+    "post_date": "2026-07-08T07:56:39.312Z",
+    "url": "https://navnoorbawa.substack.com/p/hull-whites-mean-reversion-problem",
+    "audience": "everyone",
+    "wordcount": 1502
+  },
+  {
+    "slug": "avellaneda-stoikov-charges-up-to",
+    "title": "Avellaneda-Stoikov Charges Up to 48.76% of Profit for Inventory Skew. HSBC-Funded Quants Traced the Cost to One Assumption",
+    "subtitle": "The cost is convex: 0.86% at low risk aversion, 48.76% at high, by the model’s own 2008 tables.",
+    "post_date": "2026-07-04T19:40:35.596Z",
+    "url": "https://navnoorbawa.substack.com/p/avellaneda-stoikov-charges-up-to",
+    "audience": "everyone",
+    "wordcount": 1570
+  },
+  {
+    "slug": "mica-locked-tethers-184-billion-stablecoin",
+    "title": "MiCA Locked Tether’s $184 Billion Stablecoin Out of Europe. Circle Holds the Rent.",
+    "subtitle": "There's no arbitrage to chase, only a capacity-capped bet on Circle with a hard deadline of August 31.",
+    "post_date": "2026-07-04T13:04:21.096Z",
+    "url": "https://navnoorbawa.substack.com/p/mica-locked-tethers-184-billion-stablecoin",
+    "audience": "everyone",
+    "wordcount": 3109
+  },
+  {
+    "slug": "the-895x-gap-behind-volmageddon-credit",
+    "title": "The 895x Gap Behind Volmageddon. Credit Suisse’s $500M Question Still Isn’t Settled.",
+    "subtitle": "The vehicle that broke in 2018 is gone. The mechanism relocated into 0DTE options, now a majority of S&P 500 options volume.",
+    "post_date": "2026-07-01T22:15:31.998Z",
+    "url": "https://navnoorbawa.substack.com/p/the-895x-gap-behind-volmageddon-credit",
+    "audience": "everyone",
+    "wordcount": 3829
+  },
+  {
+    "slug": "black-scholes-delta-is-wrong-hull",
+    "title": "Black-Scholes Delta Is Wrong: Hull-White’s Fix Beats SABR",
+    "subtitle": "The correction cuts S&P 500 hedging error up to 42% using three parameters versus SABR’s 87,000 — and most desks ignore it.",
+    "post_date": "2026-06-30T02:37:14.905Z",
+    "url": "https://navnoorbawa.substack.com/p/black-scholes-delta-is-wrong-hull",
+    "audience": "everyone",
+    "wordcount": 2895
+  },
+  {
+    "slug": "de-shaw-citadel-and-renaissance-run",
+    "title": "D.E. Shaw, Citadel, and Renaissance Run Statistical Arbitrage. The OLS Bias in Mean-Reversion Speed Has Been Known Since 1954.",
+    "subtitle": "The 60-day OLS window overestimates mean-reversion speed. Adding more data doesn’t fix it. The T⁻¹ bias and the 2009 correction explained.",
+    "post_date": "2026-06-28T17:41:04.678Z",
+    "url": "https://navnoorbawa.substack.com/p/de-shaw-citadel-and-renaissance-run",
+    "audience": "everyone",
+    "wordcount": 2608
+  },
+  {
+    "slug": "alphabet-baillie-gifford-and-founders",
+    "title": "Alphabet, Baillie Gifford, and Founders Fund Made Billions From SpaceX. The RKLB/ASTS Pair Is the Only Alpha Left.",
+    "subtitle": "Three-phase SpaceX alpha: proxy access captured, float mechanics decaying December 9, RKLB/ASTS pair the only trade still open.",
+    "post_date": "2026-06-26T12:39:46.240Z",
+    "url": "https://navnoorbawa.substack.com/p/alphabet-baillie-gifford-and-founders",
+    "audience": "everyone",
+    "wordcount": 3521
+  },
+  {
+    "slug": "universa-built-20b-calling-stochastic",
+    "title": "Universa Built $20B Calling Stochastic Vol Wrong. A BIS Rule Just Proved It.",
+    "subtitle": "The Kelly-Jiang tail risk factor collapsed to t = 0.57. The power-law options version survived — here's the structural reason why.",
+    "post_date": "2026-06-25T11:08:09.877Z",
+    "url": "https://navnoorbawa.substack.com/p/universa-built-20b-calling-stochastic",
+    "audience": "everyone",
+    "wordcount": 2666
+  },
+  {
+    "slug": "oils-40-sharpe-variance-trade-sat",
+    "title": "Oil’s 40% Sharpe Variance Trade Sat Untested Since 2011. No Fund Has Shown They Run It.",
+    "subtitle": "Replicating this trade needs a full options surface. OVX gives one 30-day number. That gap explains why no fund discloses running it.",
+    "post_date": "2026-06-23T08:11:43.623Z",
+    "url": "https://navnoorbawa.substack.com/p/oils-40-sharpe-variance-trade-sat",
+    "audience": "everyone",
+    "wordcount": 3488
+  },
+  {
+    "slug": "12-private-equity-funds-are-chasing",
+    "title": "12 Private Equity Funds Are Chasing the Same 30 Football Clubs",
+    "subtitle": "Trophy-tier deals are crowded to near-zero net IRR. The mid-tier trade at 1–2x revenue still clears 18–21%, and the reason is regulatory, not financial.",
+    "post_date": "2026-06-18T08:47:33.497Z",
+    "url": "https://navnoorbawa.substack.com/p/12-private-equity-funds-are-chasing",
+    "audience": "everyone",
+    "wordcount": 3047
+  },
+  {
+    "slug": "ai-hedge-funds-now-run-099-beta-to",
+    "title": "AI Hedge Funds Now Run 0.99 Beta to the S&P. You’re Paying 2 and 20 for an Index Fund.",
+    "subtitle": "How $59B in AUM mathematically forces Nasdaq beta, why Coatue's gross alpha was negative before fees, and a one-calculation diagnostic for any TMT allocation.",
+    "post_date": "2026-06-17T22:58:21.255Z",
+    "url": "https://navnoorbawa.substack.com/p/ai-hedge-funds-now-run-099-beta-to",
+    "audience": "everyone",
+    "wordcount": 2793
+  },
+  {
+    "slug": "how-barra-axioma-and-commercial-risk",
+    "title": "How Barra, Axioma, and Commercial Risk Models Missed January 2022’s 9.1% Growth Equity Crash: The Path Factor Blind Spot",
+    "subtitle": "Why futures-implied path repricing drove January 2022's worst growth equity month before the Fed hiked once — and why Barra and Axioma remain structurally blind to it in mid-2026.",
+    "post_date": "2026-06-16T08:51:38.270Z",
+    "url": "https://navnoorbawa.substack.com/p/how-barra-axioma-and-commercial-risk",
+    "audience": "everyone",
+    "wordcount": 4292
+  },
+  {
+    "slug": "prediction-market-alpha-the-314-who",
+    "title": "Prediction Market Alpha: The 3.14% Who Win, the Federal Cases, and the Hedge Funds Moving In",
+    "subtitle": "Two federal indictments, $143M in flagged insider profit, and the three structural edges that hold up — verified from primary sources",
+    "post_date": "2026-06-06T10:49:07.280Z",
+    "url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
+    "audience": "everyone",
+    "wordcount": 2716
+  },
+  {
+    "slug": "how-hrt-and-jane-street-made-225b",
+    "title": "How HRT and Jane Street Made $22.5B in One Quarter: The Models, the 50.1% Edge, and the SEBI Order",
+    "subtitle": "The Avellaneda-Stoikov and Cartea-Wang models, the SEBI order that froze $564M, and the lawsuit that exposed the strategy. ",
+    "post_date": "2026-05-29T06:50:15.910Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
+    "audience": "everyone",
+    "wordcount": 4436
+  },
+  {
+    "slug": "a-nomura-trader-made-10284-spoofing",
+    "title": "A Nomura Trader Made $10,284 Spoofing ¥400 Billion in JGB Orders. BlueCrest Hired Him for the Alpha Inside.",
+    "subtitle": "The talent arbitrage, the surveillance blind spot Nomura admitted in writing, and the post-YCC JGB steepener thesis behind Michael Platt's most counterintuitive hire",
+    "post_date": "2026-05-23T04:19:05.514Z",
+    "url": "https://navnoorbawa.substack.com/p/a-nomura-trader-made-10284-spoofing",
+    "audience": "everyone",
+    "wordcount": 2967
+  },
+  {
+    "slug": "the-cramer-rao-bound-killed-ltcm",
+    "title": "The Cramér-Rao Bound Killed LTCM. It’s Why the SEC Just Fined Two Sigma $90M.",
+    "subtitle": "Fisher Information sets a hard ceiling on every quant fund's Sharpe ratio. LTCM, August 2007, and Two Sigma's $90M fine are the same math.",
+    "post_date": "2026-05-16T18:45:17.698Z",
+    "url": "https://navnoorbawa.substack.com/p/the-cramer-rao-bound-killed-ltcm",
+    "audience": "everyone",
+    "wordcount": 2948
+  },
+  {
+    "slug": "market-making-alpha-how-virtu-won",
+    "title": "Market Making Alpha: How Virtu Won 1,237 Days — and Why Jane Street Keeps Ending Up in Court",
+    "subtitle": "",
+    "post_date": "2026-05-08T13:48:25.572Z",
+    "url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
+    "audience": "everyone",
+    "wordcount": 5494
+  },
+  {
+    "slug": "axie-infinity-cs2-skins-and-roblox",
+    "title": "Axie Infinity, CS2 Skins, and Roblox: How Hedge Funds Built Gaming Currency Alpha — and the Three Mispriced Opportunities They Are Still Missing",
+    "subtitle": "Every claim in this article links directly to its source — an interview, news report, investor letter, or court document. No assertion is uncited.",
+    "post_date": "2026-04-24T03:51:47.501Z",
+    "url": "https://navnoorbawa.substack.com/p/axie-infinity-cs2-skins-and-roblox",
+    "audience": "everyone",
+    "wordcount": 3305
+  },
+  {
+    "slug": "how-hedge-funds-made-billions-from",
+    "title": "How Hedge Funds Made Billions From SoftBank: Five Structural Trades From the NAV Discount to the Nasdaq Whale",
+    "subtitle": "From Elliott Management’s activist campaign to the Alibaba prepaid forward collar — every trade, every mechanism, every primary source.",
+    "post_date": "2026-04-12T15:45:37.586Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-billions-from",
+    "audience": "everyone",
+    "wordcount": 3806
+  },
+  {
+    "slug": "non-deliverable-forwards-ndfs-and",
+    "title": "Non-Deliverable Forwards (NDFs) and Emerging Market Currency Alpha: How Hedge Funds Profit, How Banks Manipulated the Fix, and Why Three Sovereign Markets Banned the Trade",
+    "subtitle": "Covering directional currency attacks, carry trades, basis arbitrage, fixing window exploitation, calendar spreads, and NDF price discovery — with CFTC enforcement orders, central bank speeches.",
+    "post_date": "2026-04-07T16:14:53.694Z",
+    "url": "https://navnoorbawa.substack.com/p/non-deliverable-forwards-ndfs-and",
+    "audience": "everyone",
+    "wordcount": 4976
+  },
+  {
+    "slug": "how-hedge-funds-turned-defense-stocks",
+    "title": "How Hedge Funds Turned Defense Stocks Into Their Best Trade of 2022: Pre-Invasion CEO Signals, SEC 13F Forensics, Three Documented Thesis Structures, and the European Asymmetry That Returned 1,700%",
+    "subtitle": "Every claim in this article carries a direct source link. No assertions without evidence.",
+    "post_date": "2026-04-03T05:28:13.868Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-turned-defense-stocks",
+    "audience": "everyone",
+    "wordcount": 3988
+  },
+  {
+    "slug": "iran-war-hedge-fund-alpha-map-every",
+    "title": "Iran War Hedge Fund Alpha Map: Every Winner, Every Loser, and the Complete Insider Trading Evidence — Pre-War CFTC Crude Positioning, the Three-Driver Bond Selloff, Six Winning Structures",
+    "subtitle": "Every Winner, Every Loser, and the Complete Insider Trading Evidence — Pre-War CFTC Crude Positioning, the Three-Driver Bond Selloff, Six Winning Structures, and the $500M TACO Trade",
+    "post_date": "2026-03-30T17:23:35.894Z",
+    "url": "https://navnoorbawa.substack.com/p/iran-war-hedge-fund-alpha-map-every",
+    "audience": "everyone",
+    "wordcount": 4948
+  },
+  {
+    "slug": "joint-spxvix-calibration-follow-up",
+    "title": "Joint SPX/VIX Calibration Follow-Up: Bates SVJ Degenerates on Daily Data, HMM Fails on Novel Crises, and One Logic Fix Recovers $300K — Findings 7–10",
+    "subtitle": "Navnoor Bawa | navnoorbawa.me | March 28, 2026",
+    "post_date": "2026-03-28T11:00:14.965Z",
+    "url": "https://navnoorbawa.substack.com/p/joint-spxvix-calibration-follow-up",
+    "audience": "everyone",
+    "wordcount": 2333
+  },
+  {
+    "slug": "indias-oil-war-market-crisis-30-day",
+    "title": "India’s Oil-War Market Crisis: 30-Day Nifty Outlook, RBI April 2026 MPC Decision, and Emergency Portfolio Liquidation Framework",
+    "subtitle": "",
+    "post_date": "2026-03-26T08:28:39.268Z",
+    "url": "https://navnoorbawa.substack.com/p/indias-oil-war-market-crisis-30-day",
+    "audience": "everyone",
+    "wordcount": 5808
+  },
+  {
+    "slug": "the-holy-grail-of-volatility-modelling",
+    "title": "The Holy Grail of Volatility Modelling: What Happens When You Actually Try to Build It",
+    "subtitle": "",
+    "post_date": "2026-03-25T09:15:05.084Z",
+    "url": "https://navnoorbawa.substack.com/p/the-holy-grail-of-volatility-modelling",
+    "audience": "everyone",
+    "wordcount": 2030
+  },
+  {
+    "slug": "iran-war-oil-shock-2928-hedge-fund",
+    "title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
+    "subtitle": "30-Day Market Outlook · April FOMC Reaction Function · Institutional Liquidation Protocol Under Redemption Pressure",
+    "post_date": "2026-03-22T16:41:52.845Z",
+    "url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
+    "audience": "everyone",
+    "wordcount": 3561
+  },
+  {
+    "slug": "the-desert-playbook-how-hedge-funds",
+    "title": "The Desert Playbook: How Hedge Funds Extracted Alpha from Dubai — AED Peg Speculation, Dubai World CDS, Nakheel Distressed Sukuk, Emaar Equity Proxy, and DIFC Tax Arbitrage (2007–2026)",
+    "subtitle": "Alpha Autopsy · Dubai Alpha Dossier · Primary-Source Edition · March 2026 · ~25 min read Distressed Credit · Macro · Structured Finance · Islamic Finance · MENA · Sovereign Wealth · Hedge Funds",
+    "post_date": "2026-03-19T14:08:23.845Z",
+    "url": "https://navnoorbawa.substack.com/p/the-desert-playbook-how-hedge-funds",
+    "audience": "everyone",
+    "wordcount": 4877
+  },
+  {
+    "slug": "how-hedge-funds-profit-every-time",
+    "title": "How Hedge Funds Profit Every Time Pension Funds, Banks, and LDI Managers Have No Choice But to Transact",
+    "subtitle": "Treasury Basis Trade · SVB Short · UK LDI Crisis 2022 · Pershing Square 30-Year Treasury Short · Hayman Capital Japan Macro · LTCM · Negative Swap Spreads — 37 Primary Sources, All Verified",
+    "post_date": "2026-03-16T14:21:18.966Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-every-time",
+    "audience": "everyone",
+    "wordcount": 4951
+  },
+  {
+    "slug": "the-index-fund-toll-booth-how-hedge",
+    "title": "The Index Fund Toll Booth: How Hedge Funds Systematically Extract Billions from Passive Investors",
+    "subtitle": "",
+    "post_date": "2026-03-13T14:21:53.179Z",
+    "url": "https://navnoorbawa.substack.com/p/the-index-fund-toll-booth-how-hedge",
+    "audience": "everyone",
+    "wordcount": 3917
+  },
+  {
+    "slug": "how-blackrocks-esg-retreat-triggered",
+    "title": "How BlackRock’s ESG Retreat Triggered $100 Billion in Pension Exits and $1.5 Billion in Short Profits",
+    "subtitle": "Three Documented Trades Across the US-Europe Divide",
+    "post_date": "2026-03-11T15:27:34.304Z",
+    "url": "https://navnoorbawa.substack.com/p/how-blackrocks-esg-retreat-triggered",
+    "audience": "everyone",
+    "wordcount": 3565
+  },
+  {
+    "slug": "elliott-management-azoria-and-the",
+    "title": "Elliott Management, Azoria, and the ESG Forced-Selling Short: How the ‘Anti-Woke Trade’ Actually Worked — Four Case Studies, Every Claim Sourced",
+    "subtitle": "",
+    "post_date": "2026-03-09T16:34:47.159Z",
+    "url": "https://navnoorbawa.substack.com/p/elliott-management-azoria-and-the",
+    "audience": "everyone",
+    "wordcount": 3364
+  },
+  {
+    "slug": "the-2022-uk-gilt-market-crisis-how",
+    "title": "The 2022 UK Gilt Market Crisis: How Hedge Funds Pre-Positioned £65 Billion and Extracted Billions — Five Funds, Seven Strategies, Every Claim Sourced to the Bank of England and BIS",
+    "subtitle": "",
+    "post_date": "2026-03-07T13:58:33.123Z",
+    "url": "https://navnoorbawa.substack.com/p/the-2022-uk-gilt-market-crisis-how",
+    "audience": "everyone",
+    "wordcount": 4425
+  },
+  {
+    "slug": "gold-65-silver-144-in-2025-how-bridgewater",
+    "title": "Gold +65%, Silver +144% in 2025: How Bridgewater, Crescat, Greenlight, Tudor Jones, and Druckenmiller Made Their Biggest Precious Metals Calls",
+    "subtitle": "The Trades, the Mechanics, and Why Brevan Howard’s $34B Fund Returned Just 0.8%",
+    "post_date": "2026-03-06T18:01:50.272Z",
+    "url": "https://navnoorbawa.substack.com/p/gold-65-silver-144-in-2025-how-bridgewater",
+    "audience": "everyone",
+    "wordcount": 3327
+  },
+  {
+    "slug": "how-hedge-funds-monetise-options",
+    "title": "How Hedge Funds Monetise Options Time Decay: Theta Harvesting, the Volatility Risk Premium, Institutional Blowups, and the Survivor DNA of Short-Vol",
+    "subtitle": "",
+    "post_date": "2026-03-06T09:11:39.941Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-monetise-options",
+    "audience": "everyone",
+    "wordcount": 5296
+  },
+  {
+    "slug": "the-trade-war-dividend-druckenmillers",
+    "title": "The Trade War Dividend: Druckenmiller's Exact Positions, Bridgewater's 50-Year Record +34%, Ackman's -15% Error, and the $164 Billion Tariff Refund Market",
+    "subtitle": "How the 2025 tariff crisis produced +45% for one fund and -15% for another. 14 funds, every trade traced to a primary source: transcript, investor letter, court filing, or regulatory data.",
+    "post_date": "2026-03-05T16:29:43.408Z",
+    "url": "https://navnoorbawa.substack.com/p/the-trade-war-dividend-druckenmillers",
+    "audience": "everyone",
+    "wordcount": 3920
+  },
+  {
+    "slug": "blood-crude-and-capital-how-russias",
+    "title": "Blood, Crude & Capital: How Russia’s Energy Sanctions Generated Over $30 Billion in Documented Profit — The Complete Nine-Trade Record of Vitol, Trafigura, Andurand Capital, and Statar Capital",
+    "subtitle": "",
+    "post_date": "2026-03-04T17:38:12.507Z",
+    "url": "https://navnoorbawa.substack.com/p/blood-crude-and-capital-how-russias",
+    "audience": "everyone",
+    "wordcount": 4706
+  },
+  {
+    "slug": "securities-class-action-settlements",
+    "title": "Securities Class Action Settlements: The $15 Billion Recovery Pool 79% of Hedge Funds Are Surrendering to Their Competitors",
+    "subtitle": "",
+    "post_date": "2026-03-03T16:52:35.576Z",
+    "url": "https://navnoorbawa.substack.com/p/securities-class-action-settlements",
+    "audience": "everyone",
+    "wordcount": 3677
+  },
+  {
+    "slug": "how-hedge-funds-pre-positioned-for",
+    "title": "How Hedge Funds Pre-Positioned for the Iran War: Eight Weeks of Oil, Gold, Defense, Tankers, Airlines, and Yen — Documented From CFTC Filings to Kpler Intelligence",
+    "subtitle": "Eight weeks of systematic accumulation. One Saturday night. A decade’s worth of alpha compressed into 48 hours.",
+    "post_date": "2026-03-02T10:39:09.659Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-pre-positioned-for",
+    "audience": "everyone",
+    "wordcount": 3502
+  },
+  {
+    "slug": "how-hedge-funds-systematically-profit",
+    "title": "How Hedge Funds Systematically Profit From European Market Structure: Index Rebalancing Arbitrage, Merger Arb, and MiFID II — Named Funds, Exact Trades, Hard Numbers",
+    "subtitle": "",
+    "post_date": "2026-03-01T17:31:54.764Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-systematically-profit",
+    "audience": "everyone",
+    "wordcount": 4473
+  },
+  {
+    "slug": "the-three-trades-inside-japans-halo",
+    "title": "The Three Trades Inside Japan’s HALO Position: Buffett’s Yen Carry, Elliott’s Governance Arbitrage, and the 1,400% Cable Company Nobody Covered",
+    "subtitle": "",
+    "post_date": "2026-02-28T17:59:57.420Z",
+    "url": "https://navnoorbawa.substack.com/p/the-three-trades-inside-japans-halo",
+    "audience": "everyone",
+    "wordcount": 3719
+  },
+  {
+    "slug": "koreas-170-billion-retail-wave-broadcast",
+    "title": "Korea’s $170 Billion Retail Wave Broadcast Its Own Signal. The 13F Filings, Goldman Research, JPMorgan Notes, and 15 Years of KSD Data Show Exactly How Institutional Money Read It — ",
+    "subtitle": "and Ran Every Phase of It.",
+    "post_date": "2026-02-27T17:38:50.970Z",
+    "url": "https://navnoorbawa.substack.com/p/koreas-170-billion-retail-wave-broadcast",
+    "audience": "everyone",
+    "wordcount": 3640
+  },
+  {
+    "slug": "the-179-billion-loop",
+    "title": "The $17.9 Billion Loop",
+    "subtitle": "Prime brokerage leverage, the $55B EA merger arb, Figma's 250% IPO pop, and a closed derivatives gap — the anatomy of how Morgan Stanley's record Q4 and hedge fund returns from 10% to 45% were the sam",
+    "post_date": "2026-02-26T17:19:18.094Z",
+    "url": "https://navnoorbawa.substack.com/p/the-179-billion-loop",
+    "audience": "everyone",
+    "wordcount": 3604
+  },
+  {
+    "slug": "the-cme-group-outage-november-2025",
+    "title": "The CME Group Outage, November 2025: Human Error Froze $1 Trillion in Derivatives. A Post-Mortem on Who Made Money, Who Was Neutralized, and the Structural Risk That Remains Unfixed.",
+    "subtitle": "Market Structure / Derivatives / Infrastructure Risk",
+    "post_date": "2026-02-25T18:09:43.549Z",
+    "url": "https://navnoorbawa.substack.com/p/the-cme-group-outage-november-2025",
+    "audience": "everyone",
+    "wordcount": 2873
+  },
+  {
+    "slug": "the-36-billion-forecast-edge-how",
+    "title": "The €3.6 Billion Forecast Edge: How InCommodities and Danske Commodities Built a Systematic Advantage in Europe’s Intraday Power Markets",
+    "subtitle": "",
+    "post_date": "2026-02-24T16:54:09.506Z",
+    "url": "https://navnoorbawa.substack.com/p/the-36-billion-forecast-edge-how",
+    "audience": "everyone",
+    "wordcount": 2421
+  },
+  {
+    "slug": "eu-ets-alpha-andurands-3085-eua-trade",
+    "title": "EU ETS Alpha: Andurand’s €30→€85 EUA Trade, Four Hedge Fund Strategies Decoded, and How One Merz Sentence Triggered a 25% Carbon Market Crash",
+    "subtitle": "",
+    "post_date": "2026-02-23T14:41:59.332Z",
+    "url": "https://navnoorbawa.substack.com/p/eu-ets-alpha-andurands-3085-eua-trade",
+    "audience": "everyone",
+    "wordcount": 2932
+  },
+  {
+    "slug": "the-energy-trading-edge-how-hedge",
+    "title": "The Energy Trading Edge: How Hedge Funds Built the Infrastructure to Extract Billions From Energy Markets — While Oil Majors Watched",
+    "subtitle": "From Amaranth’s $6.6 Billion Collapse to Citadel’s $8 Billion Year: The Physical-Financial Integration Playbook Every Major Fund Is Now Copying",
+    "post_date": "2026-02-23T02:33:15.086Z",
+    "url": "https://navnoorbawa.substack.com/p/the-energy-trading-edge-how-hedge",
+    "audience": "everyone",
+    "wordcount": 3507
+  },
+  {
+    "slug": "us-investment-grade-spreads-hit-30",
+    "title": "US Investment-Grade Spreads Hit 30-Year Lows as a $400 Billion AI Bond Wave Arrives. Vanguard Says Investors Are Full. Here Is What the Smart Money Was Already Doing — and Five Trades That Follow.",
+    "subtitle": "",
+    "post_date": "2026-02-21T19:22:35.522Z",
+    "url": "https://navnoorbawa.substack.com/p/us-investment-grade-spreads-hit-30",
+    "audience": "everyone",
+    "wordcount": 3976
+  },
+  {
+    "slug": "kem-one-apollos-600m-acquisition",
+    "title": "Kem One: Apollo’s €600M Acquisition Collapsed to 2 Cents as China Flooded Europe with Cheap PVC — Inside the Hedge Fund War Between Three Shorts and Two Rescue Lenders",
+    "subtitle": "",
+    "post_date": "2026-02-20T17:32:16.631Z",
+    "url": "https://navnoorbawa.substack.com/p/kem-one-apollos-600m-acquisition",
+    "audience": "everyone",
+    "wordcount": 4156
+  },
+  {
+    "slug": "how-druckenmiller-rokos-and-vista",
+    "title": "How Druckenmiller, Rokos, and Vista Front-Ran Brazil’s R$33B Institutional Flood — The Complete 2026 Macro Trade Anatomy",
+    "subtitle": "EWZ · Ibovespa · Brazil Macro 2026 · Selic Carry Trade · Emerging Markets Rotation · 13F Analysis",
+    "post_date": "2026-02-19T18:23:26.872Z",
+    "url": "https://navnoorbawa.substack.com/p/how-druckenmiller-rokos-and-vista",
+    "audience": "everyone",
+    "wordcount": 2965
+  },
+  {
+    "slug": "how-hedge-funds-basis-traders-and",
+    "title": "How Hedge Funds, Basis Traders, and a $200M Whale Extracted Alpha From Crypto’s $19 Billion October 2025 Liquidation Cascade",
+    "subtitle": "",
+    "post_date": "2026-02-18T17:55:38.700Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-basis-traders-and",
+    "audience": "everyone",
+    "wordcount": 3141
+  },
+  {
+    "slug": "black-scholes-is-a-quoting-language",
+    "title": "Black-Scholes Is a Quoting Language, Not a Pricing Truth: How Citadel, Universa, and Saba Turn Every Assumption It Gets Wrong into Systematic Alpha",
+    "subtitle": "",
+    "post_date": "2026-02-18T12:15:32.788Z",
+    "url": "https://navnoorbawa.substack.com/p/black-scholes-is-a-quoting-language",
+    "audience": "everyone",
+    "wordcount": 3957
+  },
+  {
+    "slug": "inside-costars-3-billion-homescom",
+    "title": "Inside CoStar’s $3 Billion Homes.com Proxy Fight: Third Point, D.E. Shaw, and the $10 Billion Value Dispute — A Verified, Both-Sides Analysis",
+    "subtitle": "",
+    "post_date": "2026-02-17T15:48:40.732Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-costars-3-billion-homescom",
+    "audience": "everyone",
+    "wordcount": 2606
+  },
+  {
+    "slug": "mason-capital-management-from-ascents",
+    "title": "Mason Capital Management: From Ascent’s Bankruptcy to $6B Continuation Fund Fight — A Playbook for Event-Driven Returns",
+    "subtitle": "How one hedge fund extracts alpha from corporate distress: 664% distressed debt returns, $54M treaty arbitration wins, and battles against private equity conflicts",
+    "post_date": "2026-02-16T16:05:09.604Z",
+    "url": "https://navnoorbawa.substack.com/p/mason-capital-management-from-ascents",
+    "audience": "everyone",
+    "wordcount": 2457
+  },
+  {
+    "slug": "first-brands-23b-fraud-2025-the-complete",
+    "title": "First Brands $2.3B Fraud (2025): The Complete Winners & Losers Playbook — Apollo’s 95→50¢ Short, Marathon’s DIP Flip, UBS’s $500M Loss, and the Unprecedented 30¢ Collapse",
+    "subtitle": "",
+    "post_date": "2026-02-15T15:37:28.333Z",
+    "url": "https://navnoorbawa.substack.com/p/first-brands-23b-fraud-2025-the-complete",
+    "audience": "everyone",
+    "wordcount": 2406
+  },
+  {
+    "slug": "inside-da-vinci-tradings-multi-market",
+    "title": "Inside Da Vinci Trading’s Multi-Market Volatility Engine: Deconstructing the Amsterdam Prop Shop’s Strategy Across MEXC, Kraken, and Traditional Derivatives",
+    "subtitle": "",
+    "post_date": "2026-02-15T04:59:20.914Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-da-vinci-tradings-multi-market",
+    "audience": "everyone",
+    "wordcount": 1905
+  },
+  {
+    "slug": "blue-owl-capital-obdc-merger-failure",
+    "title": "Blue Owl Capital (OBDC) Merger Failure: The Complete Analysis of NAV Discount, $150M Redemptions, Insider Buying, Lawsuits, and Investment Opportunity",
+    "subtitle": "",
+    "post_date": "2026-02-14T18:05:28.750Z",
+    "url": "https://navnoorbawa.substack.com/p/blue-owl-capital-obdc-merger-failure",
+    "audience": "everyone",
+    "wordcount": 2918
+  },
+  {
+    "slug": "boaz-weinsteins-5-engine-strategy",
+    "title": "Boaz Weinstein’s 5-Engine Strategy at Saba Capital: London Whale ($300M), COVID Trade (+99%), SPAC Arbitrage, CEF Activism & Big Tech CDS (2025 Analysis)",
+    "subtitle": "",
+    "post_date": "2026-02-13T15:05:56.076Z",
+    "url": "https://navnoorbawa.substack.com/p/boaz-weinsteins-5-engine-strategy",
+    "audience": "everyone",
+    "wordcount": 2047
+  },
+  {
+    "slug": "2025-hedge-fund-performance-analysis",
+    "title": "2025 Hedge Fund Performance Analysis: Complete Industry Report on Returns, Strategies, and Systemic Risk",
+    "subtitle": "",
+    "post_date": "2026-02-12T18:10:57.812Z",
+    "url": "https://navnoorbawa.substack.com/p/2025-hedge-fund-performance-analysis",
+    "audience": "everyone",
+    "wordcount": 3839
+  },
+  {
+    "slug": "elliott-managements-ac-milan-investment",
+    "title": "Elliott Management’s AC Milan Investment Analysis (2017–2026): €700M Deployed, €1.2B Exit, €120M+ Vendor Loan Interest — Complete Financial Breakdown",
+    "subtitle": "How a hedge fund converted predatory credit into a 1.8x return: Distressed debt mechanics, operational turnaround, vendor financing profit center, and full P&L reconstruction with verified sources",
+    "post_date": "2026-02-11T20:25:06.615Z",
+    "url": "https://navnoorbawa.substack.com/p/elliott-managements-ac-milan-investment",
+    "audience": "everyone",
+    "wordcount": 2295
+  },
+  {
+    "slug": "alphabets-20-billion-bond-offering",
+    "title": "Alphabet’s $20 Billion Bond Offering: Spread Compression, 100-Year Sterling Bond, and the AI Infrastructure Financing Trade",
+    "subtitle": "",
+    "post_date": "2026-02-10T10:33:38.455Z",
+    "url": "https://navnoorbawa.substack.com/p/alphabets-20-billion-bond-offering",
+    "audience": "everyone",
+    "wordcount": 1100
+  },
+  {
+    "slug": "how-36-souths-long-volatility-strategy",
+    "title": "How 36 South’s Long Volatility Strategy Gained 35% in Early 2020: Long-Dated Options, Negative Carry, and Crisis Alpha",
+    "subtitle": "",
+    "post_date": "2026-02-10T09:34:57.978Z",
+    "url": "https://navnoorbawa.substack.com/p/how-36-souths-long-volatility-strategy",
+    "audience": "everyone",
+    "wordcount": 966
+  },
+  {
+    "slug": "the-illiquidity-arbitrage-playbook",
+    "title": "The Illiquidity Arbitrage Playbook: How Burford Capital ($16B Argentina Win), Blackstone (Hipgnosis), and Elite Funds Manufacture Alpha from Covenant Loopholes, Litigation Finance, Life Settlements",
+    "subtitle": "",
+    "post_date": "2026-02-09T12:04:17.763Z",
+    "url": "https://navnoorbawa.substack.com/p/the-illiquidity-arbitrage-playbook",
+    "audience": "everyone",
+    "wordcount": 1837
+  },
+  {
+    "slug": "tanakas-formula-in-practice-how-hedge",
+    "title": "Tanaka’s Formula in Practice: How Hedge Funds Use Local Time to Trade Corridor Swaps, Timer Options, and Volatility Arbitrage",
+    "subtitle": "",
+    "post_date": "2026-02-09T06:47:04.261Z",
+    "url": "https://navnoorbawa.substack.com/p/tanakas-formula-in-practice-how-hedge",
+    "audience": "everyone",
+    "wordcount": 2104
+  },
+  {
+    "slug": "music-royalty-tax-arbitrage-how-institutional",
+    "title": "Music Royalty Tax Arbitrage: How Institutional Buyers Engineer Returns Through IRC Section 197 Amortization and Asset-Backed Securities",
+    "subtitle": "",
+    "post_date": "2026-02-08T16:09:42.425Z",
+    "url": "https://navnoorbawa.substack.com/p/music-royalty-tax-arbitrage-how-institutional",
+    "audience": "everyone",
+    "wordcount": 819
+  },
+  {
+    "slug": "leap-year-alpha-how-the-366th-day",
+    "title": "Leap Year Alpha: How the 366th Day Misprices Interest Rates, Retail Revenue, and Options",
+    "subtitle": "ISDA day-count arbitrage, Walmart’s 100bp revenue trap, and Black-Scholes theta distortion across three asset classes",
+    "post_date": "2026-02-07T06:06:31.669Z",
+    "url": "https://navnoorbawa.substack.com/p/leap-year-alpha-how-the-366th-day",
+    "audience": "everyone",
+    "wordcount": 1544
+  },
+  {
+    "slug": "the-forensic-playbook-point72s-56",
+    "title": "The Forensic Playbook: Point72’s 56 FOIA Requests, Baker Bros’ Warrant Engineering, Perceptive’s Credit Structures, and Forensic Analysis That Generates Pharma Alpha-Why $276M Trade Ended in Prison",
+    "subtitle": "",
+    "post_date": "2026-02-06T15:14:18.484Z",
+    "url": "https://navnoorbawa.substack.com/p/the-forensic-playbook-point72s-56",
+    "audience": "everyone",
+    "wordcount": 2405
+  },
+  {
+    "slug": "from-soross-2b-win-to-ltcms-46b-loss",
+    "title": "From Soros’s $2B Win to LTCM’s $4.6B Loss: The Complete Emerging Markets Hedge Fund Playbook",
+    "subtitle": "",
+    "post_date": "2026-02-05T16:07:23.435Z",
+    "url": "https://navnoorbawa.substack.com/p/from-soross-2b-win-to-ltcms-46b-loss",
+    "audience": "everyone",
+    "wordcount": 1670
+  },
+  {
+    "slug": "how-hedge-funds-made-billions-in-324",
+    "title": "How Hedge Funds Made Billions in Gaming: Distressed Debt, Activist Campaigns & REIT Strategies",
+    "subtitle": "A Forensic Analysis of 11 Verified Institutional Trades — From Caesars to Wynn",
+    "post_date": "2026-02-04T16:00:28.543Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-billions-in-324",
+    "audience": "everyone",
+    "wordcount": 1592
+  },
+  {
+    "slug": "how-hedge-funds-made-billions-in",
+    "title": "How Hedge Funds Made Billions in China: Muddy Waters’ 11,260-Hour Luckin Investigation, Bridgewater’s 35% Return, and the Trades That Actually Worked",
+    "subtitle": "The forensic investigations, stimulus timing, and distressed debt plays that generated verified billion-dollar profits — plus the macro bets that lost $15 billion.",
+    "post_date": "2026-02-03T14:23:48.789Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-billions-in",
+    "audience": "everyone",
+    "wordcount": 1917
+  },
+  {
+    "slug": "odeys-193-return-explained-how-hedge",
+    "title": "Odey’s 193% Return Explained: How Hedge Funds Profited From UK Gilt Crisis While Bank of England Purchased £19.3 Billion (2022 LDI Breakdown)",
+    "subtitle": "",
+    "post_date": "2026-02-02T15:18:11.983Z",
+    "url": "https://navnoorbawa.substack.com/p/odeys-193-return-explained-how-hedge",
+    "audience": "everyone",
+    "wordcount": 1434
+  },
+  {
+    "slug": "6-market-mechanisms-that-generated",
+    "title": "6 Market Mechanisms That Generated $40M+: From Legal Arbitrage to SEC Fraud Cases",
+    "subtitle": "Structural supremacy beats smart trades. Every time.",
+    "post_date": "2026-02-01T12:03:33.315Z",
+    "url": "https://navnoorbawa.substack.com/p/6-market-mechanisms-that-generated",
+    "audience": "everyone",
+    "wordcount": 1638
+  },
+  {
+    "slug": "the-250b-ipo-underpricing-system",
+    "title": "The $250B IPO Underpricing System: How Hedge Funds Gained Systematic Allocation Advantages",
+    "subtitle": "A forensic analysis of institutional allocation mechanics, prime brokerage relationships, and documented hedge fund profiteering from 1980–2025",
+    "post_date": "2026-01-31T12:57:57.106Z",
+    "url": "https://navnoorbawa.substack.com/p/the-250b-ipo-underpricing-system",
+    "audience": "everyone",
+    "wordcount": 1919
+  },
+  {
+    "slug": "inside-deutsche-banks-10b-collapse",
+    "title": "Inside Deutsche Bank’s $10B Collapse: The Trades That Built and Destroyed Germany’s Largest Bank",
+    "subtitle": "How profitable internal bets paradoxically created the blueprint for external hedge funds to extract billions (2005–2023)",
+    "post_date": "2026-01-30T16:22:16.361Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-deutsche-banks-10b-collapse",
+    "audience": "everyone",
+    "wordcount": 3377
+  },
+  {
+    "slug": "how-elite-traders-made-250b-from",
+    "title": "How Elite Traders Made $250B from Commodities (2022-2023): Citadel’s $8B, Vitol’s $15B, and the Verified Strategies Behind Record Profits",
+    "subtitle": "",
+    "post_date": "2026-01-29T06:14:29.820Z",
+    "url": "https://navnoorbawa.substack.com/p/how-elite-traders-made-250b-from",
+    "audience": "everyone",
+    "wordcount": 1801
+  },
+  {
+    "slug": "inside-scott-bessents-30-return-how",
+    "title": "Inside Scott Bessent’s 30% Return: How Elite Hedge Funds Turned Japan’s ‘Widow-Maker’ Trade Into a Goldmine (December 2022–2026)",
+    "subtitle": "",
+    "post_date": "2026-01-28T18:14:02.352Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-scott-bessents-30-return-how",
+    "audience": "everyone",
+    "wordcount": 1810
+  },
+  {
+    "slug": "inside-kite-lake-capitals-2b-event",
+    "title": "Inside Kite Lake Capital’s $2B Event-Driven Strategy: Merger Arbitrage Mechanics, Reverse Arb Execution, and European Credit Shorts",
+    "subtitle": "How Kite Lake screens 500–600 M&A deals annually, executes reverse merger arb shorts, and caps European credit exposure at $1B — with 14 consecutive profitable years.",
+    "post_date": "2026-01-27T17:05:41.310Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-kite-lake-capitals-2b-event",
+    "audience": "everyone",
+    "wordcount": 1814
+  },
+  {
+    "slug": "4-hidden-market-mechanisms-that-make",
+    "title": "4 Hidden Market Mechanisms That Make Financial Crashes Inevitable",
+    "subtitle": "From CME’s matching algorithms to $13T in bankruptcy-remote assets: the hardcoded rules that guarantee crises (with forensic analysis of SVB’s $13B mistake)",
+    "post_date": "2026-01-26T17:06:34.326Z",
+    "url": "https://navnoorbawa.substack.com/p/4-hidden-market-mechanisms-that-make",
+    "audience": "everyone",
+    "wordcount": 1209
+  },
+  {
+    "slug": "inside-the-tcp-packet-splitting-exploit",
+    "title": "Inside the TCP Packet Splitting Exploit: How CME’s 3-Microsecond Penalty Killed HFT Front-Loading ($145K+ in Fines)",
+    "subtitle": "",
+    "post_date": "2026-01-25T16:03:25.594Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-the-tcp-packet-splitting-exploit",
+    "audience": "everyone",
+    "wordcount": 1299
+  },
+  {
+    "slug": "copper-tcrcs-hit-60-why-andurand",
+    "title": "Copper TC/RCs Hit -$60: Why Andurand Predicts $40,000 and Currie Calls It His ‘Highest Conviction Trade Ever’",
+    "subtitle": "Smelters now pay miners to process ore as 17.9-year mine timelines collide with accelerating deficits",
+    "post_date": "2026-01-24T16:57:37.127Z",
+    "url": "https://navnoorbawa.substack.com/p/copper-tcrcs-hit-60-why-andurand",
+    "audience": "everyone",
+    "wordcount": 1455
+  },
+  {
+    "slug": "20-billion-in-3-credit-trades-how",
+    "title": "$20 Billion in 3 Credit Trades: How Ackman, Paulson & Elliott Made History (With Exact Mechanics)",
+    "subtitle": "Three hedge fund managers. Three distinct credit strategies. Combined profits: $20 billion.",
+    "post_date": "2026-01-23T15:37:36.158Z",
+    "url": "https://navnoorbawa.substack.com/p/20-billion-in-3-credit-trades-how",
+    "audience": "everyone",
+    "wordcount": 2420
+  },
+  {
+    "slug": "inside-the-oil-trades-that-generated",
+    "title": "Inside the Oil Trades That Generated $15B+ in Profits During 2020–2022",
+    "subtitle": "",
+    "post_date": "2026-01-22T16:52:08.006Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-the-oil-trades-that-generated",
+    "audience": "everyone",
+    "wordcount": 1305
+  },
+  {
+    "slug": "volatility-trading-case-studies-bill",
+    "title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies",
+    "subtitle": "From deep OTM puts to short strangles: Every documented case of options strategies that made billions or destroyed funds, with full SEC/DOJ sources.",
+    "post_date": "2026-01-21T14:30:51.275Z",
+    "url": "https://navnoorbawa.substack.com/p/volatility-trading-case-studies-bill",
+    "audience": "everyone",
+    "wordcount": 1388
+  },
+  {
+    "slug": "tci-fund-management-2025-inside-chris",
+    "title": "TCI Fund Management 2025: Inside Chris Hohn’s Record $18.9 Billion Year — Complete Portfolio, Trade Prices, and Activist Tactics",
+    "subtitle": "The complete breakdown of the hedge fund’s record-breaking year, exact accumulation strategies, failed campaigns, and legal tactics that most investors miss",
+    "post_date": "2026-01-20T16:39:03.434Z",
+    "url": "https://navnoorbawa.substack.com/p/tci-fund-management-2025-inside-chris",
+    "audience": "everyone",
+    "wordcount": 2148
+  },
+  {
+    "slug": "investigative-short-sellers-vs-systematic",
+    "title": "Investigative Short-Sellers vs. Systematic Multi-Managers: Hindenburg Disbanded as Multi-Strats Delivered 15–19% (Citadel, Point72, Millennium 2024 Analysis)",
+    "subtitle": "Forensic investigation monetizes fraud through concentrated shorts. Systematic diversification harvests statistical edge across 330+ pods. One model just collapsed.",
+    "post_date": "2026-01-19T17:51:35.419Z",
+    "url": "https://navnoorbawa.substack.com/p/investigative-short-sellers-vs-systematic",
+    "audience": "everyone",
+    "wordcount": 698
+  },
+  {
+    "slug": "how-hedge-funds-made-5b-from-sovereign",
+    "title": "How Hedge Funds Made $5B+ From Sovereign Debt: Argentina, Greece & Ukraine Case Studies",
+    "subtitle": "The complete litigation playbook: 1,270% returns through legal enforcement, statistical disputes, and GDP warrant strategies",
+    "post_date": "2026-01-18T16:19:54.456Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-5b-from-sovereign",
+    "audience": "everyone",
+    "wordcount": 904
+  },
+  {
+    "slug": "florida-captured-11-of-new-hedge",
+    "title": "Florida Captured 11% of New Hedge Fund Launches in 2024. Here’s Why Dubai Hit 102 Funds and London Needs 474K Sq Ft",
+    "subtitle": "",
+    "post_date": "2026-01-17T16:28:32.394Z",
+    "url": "https://navnoorbawa.substack.com/p/florida-captured-11-of-new-hedge",
+    "audience": "everyone",
+    "wordcount": 979
+  },
+  {
+    "slug": "bobby-jains-new-hedge-fund-complete",
+    "title": "Bobby Jain’s New Hedge Fund: Complete 13F Breakdown of $21B Portfolio",
+    "subtitle": "",
+    "post_date": "2026-01-16T16:16:56.204Z",
+    "url": "https://navnoorbawa.substack.com/p/bobby-jains-new-hedge-fund-complete",
+    "audience": "everyone",
+    "wordcount": 1111
+  },
+  {
+    "slug": "the-2-trillion-treasury-basis-trade",
+    "title": "The $2 Trillion Treasury Basis Trade: March 2020’s Crisis Structure Returns at Record Scale",
+    "subtitle": "",
+    "post_date": "2026-01-15T18:01:42.997Z",
+    "url": "https://navnoorbawa.substack.com/p/the-2-trillion-treasury-basis-trade",
+    "audience": "everyone",
+    "wordcount": 1750
+  },
+  {
+    "slug": "how-nick-train-lost-16-billion-in",
+    "title": "How Nick Train Lost £16 Billion in 4 Years (And Kept Buying)",
+    "subtitle": "The complete trade-by-trade breakdown of what went wrong at Lindsell Train — with verified sources",
+    "post_date": "2026-01-14T16:59:42.716Z",
+    "url": "https://navnoorbawa.substack.com/p/how-nick-train-lost-16-billion-in",
+    "audience": "everyone",
+    "wordcount": 1497
+  },
+  {
+    "slug": "how-prime-brokers-make-37b-revenue",
+    "title": "How Prime Brokers Make $37B: Revenue Models Behind $6.2T Hedge Fund Leverage",
+    "subtitle": "",
+    "post_date": "2026-01-13T15:21:24.746Z",
+    "url": "https://navnoorbawa.substack.com/p/how-prime-brokers-make-37b-revenue",
+    "audience": "everyone",
+    "wordcount": 803
+  },
+  {
+    "slug": "why-one-hedge-fund-returned-21-while",
+    "title": "Why One Hedge Fund Returned 21% While Another Made 0.75% in 2025",
+    "subtitle": "How Brevan Howard returned 0.75% while Rokos Capital captured gold’s 65% surge — a technical deconstruction with verified sources",
+    "post_date": "2026-01-12T17:51:05.236Z",
+    "url": "https://navnoorbawa.substack.com/p/why-one-hedge-fund-returned-21-while",
+    "audience": "everyone",
+    "wordcount": 1668
+  },
+  {
+    "slug": "i-mapped-every-entry-level-position",
+    "title": "I Mapped Every Entry-Level Position to Portfolio Manager at 600+ Hedge Funds (Verified Salaries: $115K-$700K, PM Timeline: 5–15 Years)",
+    "subtitle": "",
+    "post_date": "2026-01-11T13:10:44.280Z",
+    "url": "https://navnoorbawa.substack.com/p/i-mapped-every-entry-level-position",
+    "audience": "everyone",
+    "wordcount": 7893
+  },
+  {
+    "slug": "how-one-trader-made-1-billion-in",
+    "title": "How One Trader Made $1 Billion in One Month Betting Against the Fed",
+    "subtitle": "Chris Rokos paid himself £477mn after his macro fund returned 31% in 2024. Here’s the precise trade structure, P&L mechanics, and why the single risk-taker model enabled maximum economic capture.",
+    "post_date": "2026-01-11T09:46:45.942Z",
+    "url": "https://navnoorbawa.substack.com/p/how-one-trader-made-1-billion-in",
+    "audience": "everyone",
+    "wordcount": 1483
+  },
+  {
+    "slug": "eight-banks-paid-13b-for-silver-manipulation",
+    "title": "Eight Banks Paid $1.3B for Silver Manipulation. Then in 2025, Silver Hit $83 and Shorts Collapsed.",
+    "subtitle": "JPMorgan traders went to federal prison for spoofing (2008–2016). Regulators prosecuted eight banks (2016–2023). Then the 2025 rally to $83/oz showed what happens when supply deficits meet a previousl",
+    "post_date": "2026-01-10T17:41:16.632Z",
+    "url": "https://navnoorbawa.substack.com/p/eight-banks-paid-13b-for-silver-manipulation",
+    "audience": "everyone",
+    "wordcount": 3650
+  },
+  {
+    "slug": "i-analyzed-40-hedge-fund-billionaires",
+    "title": "I Analyzed 40 Hedge Fund Billionaires: Here’s the Exact Career Path That Made Them $500B",
+    "subtitle": "Multiple billionaires started in one specific type of role. The pattern contradicts what most finance career advisors recommend.",
+    "post_date": "2026-01-09T16:06:59.561Z",
+    "url": "https://navnoorbawa.substack.com/p/i-analyzed-40-hedge-fund-billionaires",
+    "audience": "everyone",
+    "wordcount": 1313
+  },
+  {
+    "slug": "bluecrest-73-renaissance-1439-october",
+    "title": "BlueCrest +73%, Renaissance -14.39% October: Inside 2025’s Nuclear Trade and Quant Catastrophe",
+    "subtitle": "Verified fund returns, nuclear power PPAs, multistrategy spreads, and why systematic strategies failed",
+    "post_date": "2026-01-08T16:55:02.349Z",
+    "url": "https://navnoorbawa.substack.com/p/bluecrest-73-renaissance-1439-october",
+    "audience": "everyone",
+    "wordcount": 1417
+  },
+  {
+    "slug": "how-hedge-funds-made-30-in-the-first",
+    "title": "How Hedge Funds Made 30% in the First Days of 2026 on Venezuela’s Distressed Debt",
+    "subtitle": "US forces arrested President Maduro on January 3, 2026. Bonds trading at 6–16 cents for years surged 27% overnight. Funds that positioned around bounded downside and binary political catalysts capture",
+    "post_date": "2026-01-07T13:41:46.046Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-30-in-the-first",
+    "audience": "everyone",
+    "wordcount": 1748
+  },
+  {
+    "slug": "how-bluecrest-made-6-billion-shorting",
+    "title": "How BlueCrest Made $6 Billion Shorting Bonds: The Court Documents",
+    "subtitle": "153% returns. $2 billion to the founder. Zero external investors. Here’s what the SEC filings and court documents reveal.",
+    "post_date": "2026-01-06T13:46:43.595Z",
+    "url": "https://navnoorbawa.substack.com/p/how-bluecrest-made-6-billion-shorting",
+    "audience": "everyone",
+    "wordcount": 1132
+  },
+  {
+    "slug": "bridgewaters-pure-alpha-returned",
+    "title": "Bridgewater’s Pure Alpha Returned 33% in 2025. Here’s the Exact System Behind It.",
+    "subtitle": "33% return in 2025. 11.4% annualized since 1991. Only 4–5 losing years in 34 years.",
+    "post_date": "2026-01-05T17:12:47.180Z",
+    "url": "https://navnoorbawa.substack.com/p/bridgewaters-pure-alpha-returned",
+    "audience": "everyone",
+    "wordcount": 1024
+  },
+  {
+    "slug": "point72-delivered-19-returns-after",
+    "title": "Point72 Delivered 19% Returns After Returning $3–5B to Investors",
+    "subtitle": "How Steven Cohen’s $41.5B hedge fund beat Citadel and Millennium with a 30% AI bet, $4.5B in tail hedges, and disciplined capital management",
+    "post_date": "2026-01-04T18:14:40.521Z",
+    "url": "https://navnoorbawa.substack.com/p/point72-delivered-19-returns-after",
+    "audience": "everyone",
+    "wordcount": 1622
+  },
+  {
+    "slug": "squarepoint-capital-teardown-statistical",
+    "title": "Squarepoint Capital Teardown: Statistical Arbitrage, Vol Surface Arb & ML Alpha at $182B Scale",
+    "subtitle": "Systematic execution across 4,299 positions with millions of daily trades",
+    "post_date": "2026-01-03T17:18:59.767Z",
+    "url": "https://navnoorbawa.substack.com/p/squarepoint-capital-teardown-statistical",
+    "audience": "everyone",
+    "wordcount": 1253
+  },
+  {
+    "slug": "how-founders-fund-captured-polymarkets",
+    "title": "How Founders Fund Captured Polymarket’s Rise to ~$9B: The Platform Economics Breakdown",
+    "subtitle": "From $45M Series B to ~$9B valuation in 18 months. Here’s every layer of value capture: venture equity, data licensing, and concentrated alpha extraction.",
+    "post_date": "2026-01-02T17:18:14.319Z",
+    "url": "https://navnoorbawa.substack.com/p/how-founders-fund-captured-polymarkets",
+    "audience": "everyone",
+    "wordcount": 1228
+  },
+  {
+    "slug": "what-3000-years-of-economic-history",
+    "title": "What 3,000 Years of Economic History Teaches Us About Where Wealth Flows Next",
+    "subtitle": "A quantitative framework for understanding how capital, currencies, and economic power have shifted across civilizations",
+    "post_date": "2026-01-01T03:32:38.601Z",
+    "url": "https://navnoorbawa.substack.com/p/what-3000-years-of-economic-history",
+    "audience": "everyone",
+    "wordcount": 1751
+  },
+  {
+    "slug": "36-returns-how-de-shaw-beat-citadel",
+    "title": "36% Returns: How D.E. Shaw Beat Citadel & Millennium to Top 2024",
+    "subtitle": "D.E. Shaw’s Oculus Fund posted 36.1% net returns while Composite delivered 18%, earning $11.1 billion for investors to claim #1 on the 2024 LCH rankings. Here’s the technical breakdown.",
+    "post_date": "2025-12-31T11:09:36.615Z",
+    "url": "https://navnoorbawa.substack.com/p/36-returns-how-de-shaw-beat-citadel",
+    "audience": "everyone",
+    "wordcount": 1474
+  },
+  {
+    "slug": "inside-the-168b-systematic-fund-making",
+    "title": "Inside the $168B Systematic Fund Making Money While Others Lose (Man AHL)",
+    "subtitle": "Deconstructing the revenue architecture, execution edge, and behavioral alpha behind the world’s largest systematic hedge fund",
+    "post_date": "2025-12-30T17:56:37.034Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-the-168b-systematic-fund-making",
+    "audience": "everyone",
+    "wordcount": 1298
+  },
+  {
+    "slug": "how-top-quant-funds-made-197-while",
+    "title": "How Catastrophe Bonds Returned 19.7% While Hedge Funds Struggled",
+    "subtitle": "The catastrophe bond blueprint: Six strategies generating 300–600bp of uncorrelated alpha from natural disasters",
+    "post_date": "2025-12-29T12:31:34.558Z",
+    "url": "https://navnoorbawa.substack.com/p/how-top-quant-funds-made-197-while",
+    "audience": "everyone",
+    "wordcount": 6784
+  },
+  {
+    "slug": "how-millennium-citadel-and-point72",
+    "title": "How Millennium, Citadel & Point72 Structure Pods: Team Economics Behind $428B Multi-Manager Industry",
+    "subtitle": "",
+    "post_date": "2025-12-28T17:13:43.308Z",
+    "url": "https://navnoorbawa.substack.com/p/how-millennium-citadel-and-point72",
+    "audience": "everyone",
+    "wordcount": 1532
+  },
+  {
+    "slug": "inside-cliff-asnesss-35b-quarter",
+    "title": "Inside Cliff Asness’s $35B Quarter: The Multi-Factor Math Behind Micron (+412%) and Walmart (+188%)",
+    "subtitle": "Decoding the systematic position sizing framework behind a $156 billion quantitative portfolio’s most aggressive trades",
+    "post_date": "2025-12-27T16:15:58.743Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-cliff-asnesss-35b-quarter",
+    "audience": "everyone",
+    "wordcount": 1310
+  },
+  {
+    "slug": "millenniums-234b-q3-portfolio-20b",
+    "title": "Millennium’s $234B Q3 Portfolio: $20B NVDA Position, $7.4B External Allocations, and What 330 Pods Actually Trade",
+    "subtitle": "",
+    "post_date": "2025-12-26T12:29:58.024Z",
+    "url": "https://navnoorbawa.substack.com/p/millenniums-234b-q3-portfolio-20b",
+    "audience": "everyone",
+    "wordcount": 1299
+  },
+  {
+    "slug": "polymarket-prediction-system-v2-from",
+    "title": "Polymarket Prediction System v2: From 100 Samples to 9,862 Markets — A Technical Update",
+    "subtitle": "How I scaled the ML pipeline 100x and achieved 97.8% accuracy on high-confidence predictions using only free, real data",
+    "post_date": "2025-12-25T13:01:53.888Z",
+    "url": "https://navnoorbawa.substack.com/p/polymarket-prediction-system-v2-from",
+    "audience": "everyone",
+    "wordcount": 1094
+  },
+  {
+    "slug": "building-a-quantitative-prediction",
+    "title": "Building a Quantitative Prediction System for Polymarket: A Transparent Technical Deep-Dive",
+    "subtitle": "How I Built an ML Pipeline to Predict Decentralized Prediction Market Prices Using Real-Time API Data",
+    "post_date": "2025-12-24T16:26:19.148Z",
+    "url": "https://navnoorbawa.substack.com/p/building-a-quantitative-prediction",
+    "audience": "everyone",
+    "wordcount": 1823
+  },
+  {
+    "slug": "the-math-of-prediction-markets-binary",
+    "title": "The Math of Prediction Markets: Binary Options, Kelly Criterion, and CLOB Pricing Mechanics",
+    "subtitle": "",
+    "post_date": "2025-12-24T14:21:05.277Z",
+    "url": "https://navnoorbawa.substack.com/p/the-math-of-prediction-markets-binary",
+    "audience": "everyone",
+    "wordcount": 1669
+  },
+  {
+    "slug": "arbitrage-evolution-from-morgan-stanleys",
+    "title": "Arbitrage Evolution: From Morgan Stanley’s $50M (1987) to Crypto and Prediction Markets",
+    "subtitle": "",
+    "post_date": "2025-12-23T15:13:11.034Z",
+    "url": "https://navnoorbawa.substack.com/p/arbitrage-evolution-from-morgan-stanleys",
+    "audience": "everyone",
+    "wordcount": 1346
+  },
+  {
+    "slug": "how-julian-robertsons-22b-hedge-fund",
+    "title": "How Julian Robertson’s $22B Hedge Fund Spawned 200+ Firms (38 He Seeded Directly)",
+    "subtitle": "",
+    "post_date": "2025-12-22T17:21:31.842Z",
+    "url": "https://navnoorbawa.substack.com/p/how-julian-robertsons-22b-hedge-fund",
+    "audience": "everyone",
+    "wordcount": 1995
+  },
+  {
+    "slug": "how-hedge-funds-generated-262-alpha",
+    "title": "How Hedge Funds Generated 2.62% Alpha in 2024: Short Rebates, Dispersion Trades, and the $15B Alternative Data Surge",
+    "subtitle": "",
+    "post_date": "2025-12-21T12:06:26.479Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-generated-262-alpha",
+    "audience": "everyone",
+    "wordcount": 1642
+  },
+  {
+    "slug": "the-185-trillion-arbitrage-how-hedge",
+    "title": "The $1.85 Trillion Arbitrage: How Hedge Funds Profit From Forward Mispricings",
+    "subtitle": "Treasury basis trades, CIP deviations, and commodity curve exploitation explained with Fed data",
+    "post_date": "2025-12-20T12:47:29.414Z",
+    "url": "https://navnoorbawa.substack.com/p/the-185-trillion-arbitrage-how-hedge",
+    "audience": "everyone",
+    "wordcount": 1566
+  },
+  {
+    "slug": "the-185-trillion-treasury-trade-that",
+    "title": "The $1.85 Trillion Treasury Trade That Nearly Broke Markets in 2020, And It’s Back",
+    "subtitle": "",
+    "post_date": "2025-12-19T13:24:47.556Z",
+    "url": "https://navnoorbawa.substack.com/p/the-185-trillion-treasury-trade-that",
+    "audience": "everyone",
+    "wordcount": 2579
+  },
+  {
+    "slug": "why-renaissances-medallion-made-76",
+    "title": "Why Renaissance’s Medallion Made 76% While Their Own RIEF Lost 22.6% in 2020",
+    "subtitle": "The difference wasn’t strategy: it was how their models handled regime shifts",
+    "post_date": "2025-12-18T13:29:08.212Z",
+    "url": "https://navnoorbawa.substack.com/p/why-renaissances-medallion-made-76",
+    "audience": "everyone",
+    "wordcount": 1046
+  },
+  {
+    "slug": "millennium-managements-multi-strategy",
+    "title": "Millennium Management’s Multi-Strategy Trading Architecture: Four Core Strategies Behind 14% Annualized Returns",
+    "subtitle": "",
+    "post_date": "2025-12-17T07:47:41.197Z",
+    "url": "https://navnoorbawa.substack.com/p/millennium-managements-multi-strategy",
+    "audience": "everyone",
+    "wordcount": 1934
+  },
+  {
+    "slug": "why-millennium-deployed-55b-to-100",
+    "title": "Why Millennium Deployed $55B to 100+ External Hedge Fund Managers",
+    "subtitle": "",
+    "post_date": "2025-12-16T12:39:51.375Z",
+    "url": "https://navnoorbawa.substack.com/p/why-millennium-deployed-55b-to-100",
+    "audience": "everyone",
+    "wordcount": 1036
+  },
+  {
+    "slug": "market-neutral-funds-returned-721",
+    "title": "Market-Neutral Funds Returned 7.21% in 2024. Most Were Accidentally Long Momentum.",
+    "subtitle": "",
+    "post_date": "2025-12-15T14:33:37.374Z",
+    "url": "https://navnoorbawa.substack.com/p/market-neutral-funds-returned-721",
+    "audience": "everyone",
+    "wordcount": 1252
+  },
+  {
+    "slug": "how-hedge-funds-extract-49-annual",
+    "title": "How Hedge Funds Extract 4–9% Annual FX Alpha: The 3-Factor Framework Institutions Use",
+    "subtitle": "",
+    "post_date": "2025-12-14T12:29:59.803Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-extract-49-annual",
+    "audience": "everyone",
+    "wordcount": 1540
+  },
+  {
+    "slug": "how-institutional-traders-exploit",
+    "title": "How Institutional Traders Exploit Gamma Explosion at Options Expiration",
+    "subtitle": "Corrected and fully cited edition. Every claim below is traceable to a named, datable primary source.",
+    "post_date": "2025-12-13T14:43:30.185Z",
+    "url": "https://navnoorbawa.substack.com/p/how-institutional-traders-exploit",
+    "audience": "everyone",
+    "wordcount": 3830
+  },
+  {
+    "slug": "the-mathematical-execution-behind",
+    "title": "The Mathematical Execution Behind Prediction Market Alpha: How Quants Extract Edge from Binary Contracts",
+    "subtitle": "",
+    "post_date": "2025-12-12T14:14:23.005Z",
+    "url": "https://navnoorbawa.substack.com/p/the-mathematical-execution-behind",
+    "audience": "everyone",
+    "wordcount": 1657
+  },
+  {
+    "slug": "how-llm-sentiment-analysis-generated",
+    "title": "How LLM Sentiment Analysis Generated 355% Returns (3.05 Sharpe) By Fixing the Fatal Flaw Most Quants Miss",
+    "subtitle": "VIX regime conditioning transforms failed sentiment strategies into 20–40% annual alpha — here’s the academic evidence",
+    "post_date": "2025-12-11T12:39:51.113Z",
+    "url": "https://navnoorbawa.substack.com/p/how-llm-sentiment-analysis-generated",
+    "audience": "everyone",
+    "wordcount": 1319
+  },
+  {
+    "slug": "how-qis-products-democratized-dispersion",
+    "title": "How QIS Products Democratized Dispersion Trading: Packaging Systematic Correlation Premium for Institutional Allocators",
+    "subtitle": "",
+    "post_date": "2025-12-10T13:15:45.255Z",
+    "url": "https://navnoorbawa.substack.com/p/how-qis-products-democratized-dispersion",
+    "audience": "everyone",
+    "wordcount": 1415
+  },
+  {
+    "slug": "how-hedge-funds-really-trade-the",
+    "title": "How Hedge Funds Really Trade the $30 Trillion Treasury Market: Inside the Basis Trade That Has Regulators Worried",
+    "subtitle": "Fed Governor Lisa Cook just warned that leveraged Treasury arbitrage positions could \"magnify instability\" during market stress. Here's the actual P&L mechanics behind the $1.85 trillion trade.",
+    "post_date": "2025-12-09T16:34:07.514Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-really-trade-the",
+    "audience": "everyone",
+    "wordcount": 1643
+  },
+  {
+    "slug": "market-making-in-derivatives-crushes",
+    "title": "Market-Making in Derivatives Crushes Directional Hedge Fund Trading: A $20B Revenue Gap",
+    "subtitle": "The numbers reveal an industry-defining asymmetry: pure market-makers generate 2x the revenue of multi-strategy hedge funds on comparable capital bases.",
+    "post_date": "2025-12-08T12:45:05.856Z",
+    "url": "https://navnoorbawa.substack.com/p/market-making-in-derivatives-crushes",
+    "audience": "everyone",
+    "wordcount": 1380
+  },
+  {
+    "slug": "how-hedge-funds-profit-from-uk-budget",
+    "title": "How Hedge Funds Profit from UK Budget Shorts: The P&L Mechanics Behind Policy-Driven Equity Compression",
+    "subtitle": "",
+    "post_date": "2025-12-07T22:13:51.872Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-profit-from-uk-budget",
+    "audience": "everyone",
+    "wordcount": 1667
+  },
+  {
+    "slug": "how-investment-banks-profit-from",
+    "title": "How Investment Banks Profit from Dispersion Trading: Volatility Arbitrage at Scale",
+    "subtitle": "",
+    "post_date": "2025-12-06T17:03:19.636Z",
+    "url": "https://navnoorbawa.substack.com/p/how-investment-banks-profit-from",
+    "audience": "everyone",
+    "wordcount": 1133
+  },
+  {
+    "slug": "beyond-the-smile-how-hedge-funds",
+    "title": "Beyond the Smile: How Hedge Funds Trade 3D Volatility Surfaces for Spatial Arbitrage",
+    "subtitle": "While retail traders stare at 2D volatility smiles, institutional desks analyze multi-dimensional surfaces to extract P&L from spatial dislocations that flat curves can’t reveal.",
+    "post_date": "2025-12-05T16:46:46.958Z",
+    "url": "https://navnoorbawa.substack.com/p/beyond-the-smile-how-hedge-funds",
+    "audience": "everyone",
+    "wordcount": 1550
+  },
+  {
+    "slug": "market-making-in-sports-betting-how",
+    "title": "Market Making in Sports Betting: How Quant Firms Extract Alpha from Exchange Microstructure",
+    "subtitle": "A technical breakdown of how Susquehanna, Jane Street, and specialized traders profit from sports betting markets using financial market infrastructure — no predictions required.",
+    "post_date": "2025-12-04T16:24:43.953Z",
+    "url": "https://navnoorbawa.substack.com/p/market-making-in-sports-betting-how",
+    "audience": "everyone",
+    "wordcount": 1737
+  },
+  {
+    "slug": "bank-of-americas-macro-trading-desk",
+    "title": "Bank of America’s Macro Trading Desk: How 25% Revenue Growth Was Engineered in H1 2025",
+    "subtitle": "",
+    "post_date": "2025-12-03T16:35:55.120Z",
+    "url": "https://navnoorbawa.substack.com/p/bank-of-americas-macro-trading-desk",
+    "audience": "everyone",
+    "wordcount": 2190
+  },
+  {
+    "slug": "inside-citibanks-trading-engine-how",
+    "title": "Inside Citibank’s Trading Engine: How Event-Driven FX Architecture and Systematic Execution Drive $3.6B Quarterly FICC Revenue",
+    "subtitle": "Deconstructing the quantitative frameworks, infrastructure mechanics, and P&L drivers behind a Tier-1 institutional trading operation",
+    "post_date": "2025-12-02T16:43:22.287Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-citibanks-trading-engine-how",
+    "audience": "everyone",
+    "wordcount": 1978
+  },
+  {
+    "slug": "bridgewaters-alpha-beta-framework",
+    "title": "Bridgewater’s Alpha-Beta Framework: How Risk Parity and Portable Alpha Generate Returns",
+    "subtitle": "The mechanics behind systematic macro’s most influential strategies — and their structural failure modes.",
+    "post_date": "2025-12-01T16:13:17.596Z",
+    "url": "https://navnoorbawa.substack.com/p/bridgewaters-alpha-beta-framework",
+    "audience": "everyone",
+    "wordcount": 867
+  },
+  {
+    "slug": "marshall-waces-tops-how-crowdsourcing",
+    "title": "Marshall Wace’s TOPS: How Crowdsourcing Alpha Built a $75 Billion Systematic Edge",
+    "subtitle": "",
+    "post_date": "2025-11-30T15:52:53.416Z",
+    "url": "https://navnoorbawa.substack.com/p/marshall-waces-tops-how-crowdsourcing",
+    "audience": "everyone",
+    "wordcount": 920
+  },
+  {
+    "slug": "which-hedge-funds-are-trading-prediction",
+    "title": "Which Hedge Funds Are Trading Prediction Markets — And How Are They Making Money?",
+    "subtitle": "",
+    "post_date": "2025-11-29T16:14:30.302Z",
+    "url": "https://navnoorbawa.substack.com/p/which-hedge-funds-are-trading-prediction",
+    "audience": "everyone",
+    "wordcount": 1373
+  },
+  {
+    "slug": "inside-aqr-capital-management-how",
+    "title": "Inside AQR Capital Management: How Multi-Factor Systematic Strategies Generate Returns",
+    "subtitle": "AQR’s ≈$165B systematic framework survived three quant crises. Here’s the mechanics behind the 2025 resurgence.",
+    "post_date": "2025-11-28T17:22:15.745Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-aqr-capital-management-how",
+    "audience": "everyone",
+    "wordcount": 1233
+  },
+  {
+    "slug": "two-sigmas-china-alpha-machine-52",
+    "title": "Two Sigma’s China Alpha Machine: 52% Returns in a Retail-Dominated Market",
+    "subtitle": "",
+    "post_date": "2025-11-27T07:43:40.459Z",
+    "url": "https://navnoorbawa.substack.com/p/two-sigmas-china-alpha-machine-52",
+    "audience": "everyone",
+    "wordcount": 791
+  },
+  {
+    "slug": "ml-signal-extraction-6-hypotheses",
+    "title": "ML Signal Extraction: 6 Hypotheses With Documented Capital Deployment",
+    "subtitle": "Only strategies with real-world deployment or rigorous out-of-sample validation. Every claim traceable to auditable research.",
+    "post_date": "2025-11-26T17:03:16.224Z",
+    "url": "https://navnoorbawa.substack.com/p/ml-signal-extraction-6-hypotheses",
+    "audience": "everyone",
+    "wordcount": 682
+  },
+  {
+    "slug": "long-gamma-captures-excess-realized",
+    "title": "Long Gamma Captures Excess Realized Volatility: Understanding Gamma Scalping vs. Static Tail Protection",
+    "subtitle": "How volatility arbitrage works through two distinct mechanisms — and why conflating them leads to implementation failure",
+    "post_date": "2025-11-25T15:01:13.558Z",
+    "url": "https://navnoorbawa.substack.com/p/long-gamma-captures-excess-realized",
+    "audience": "everyone",
+    "wordcount": 1087
+  },
+  {
+    "slug": "quant-discovered-vs-discretionary",
+    "title": "Quant-Discovered vs. Discretionary Trades: How Hedge Funds Actually Find Alpha",
+    "subtitle": "The systematic advantage in 2024 wasn’t just performance — it was methodology. Here’s how the two approaches fundamentally differ in uncovering profitable trades.",
+    "post_date": "2025-11-25T04:30:12.857Z",
+    "url": "https://navnoorbawa.substack.com/p/quant-discovered-vs-discretionary",
+    "audience": "everyone",
+    "wordcount": 1177
+  },
+  {
+    "slug": "how-hedge-funds-extract-billions",
+    "title": "How Hedge Funds Extract Billions From Volatility Mispricings: The Systematic Arbitrage Playbook",
+    "subtitle": "",
+    "post_date": "2025-11-24T15:02:05.821Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-extract-billions",
+    "audience": "everyone",
+    "wordcount": 1629
+  },
+  {
+    "slug": "how-hedge-funds-made-then-lost-billions",
+    "title": "How Hedge Funds Made (Then Lost) Billions Timing $220B in Predictable Index Flows",
+    "subtitle": "The Russell Reconstitution arbitrage strategy that generated massive profits for Millennium and rivals — until overcrowding turned a timing edge into a $900M blowup",
+    "post_date": "2025-11-24T03:36:52.658Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-then-lost-billions",
+    "audience": "everyone",
+    "wordcount": 1254
+  },
+  {
+    "slug": "i-added-transaction-costs-to-my-goldman",
+    "title": "I Added Transaction Costs to My Goldman Sachs Backtest. The 49% Return Became a -9.6% Loss.",
+    "subtitle": "",
+    "post_date": "2025-11-23T15:32:51.425Z",
+    "url": "https://navnoorbawa.substack.com/p/i-added-transaction-costs-to-my-goldman",
+    "audience": "everyone",
+    "wordcount": 1437
+  },
+  {
+    "slug": "goldman-sachs-claims-18-returns-on",
+    "title": "Goldman Sachs Claims 18% Returns on Event-Driven Options. I Tested It With Real Data — Here’s What Happened",
+    "subtitle": "",
+    "post_date": "2025-11-23T03:19:44.934Z",
+    "url": "https://navnoorbawa.substack.com/p/goldman-sachs-claims-18-returns-on",
+    "audience": "everyone",
+    "wordcount": 1369
+  },
+  {
+    "slug": "goldman-sachs-event-driven-options",
+    "title": "Goldman Sachs Event-Driven Options: Three Strategies with 11–18% Reported Returns",
+    "subtitle": "",
+    "post_date": "2025-11-22T14:45:38.101Z",
+    "url": "https://navnoorbawa.substack.com/p/goldman-sachs-event-driven-options",
+    "audience": "everyone",
+    "wordcount": 659
+  },
+  {
+    "slug": "jpmorgans-298b-trading-operation",
+    "title": "JPMorgan’s $29.8B Trading Operation: Machine Learning Execution, Dark Pool Economics, and Systematic Alpha",
+    "subtitle": "",
+    "post_date": "2025-11-21T14:46:58.190Z",
+    "url": "https://navnoorbawa.substack.com/p/jpmorgans-298b-trading-operation",
+    "audience": "everyone",
+    "wordcount": 1198
+  },
+  {
+    "slug": "quadeye-securities-extracting-05",
+    "title": "Quadeye Securities: Extracting ≈0.5 Basis Points from India’s HFT Infrastructure Game",
+    "subtitle": "How systematic latency arbitrage generated estimated ₹40 lakh daily profits — until competition compressed margins by 67%",
+    "post_date": "2025-11-21T13:01:29.253Z",
+    "url": "https://navnoorbawa.substack.com/p/quadeye-securities-extracting-05",
+    "audience": "everyone",
+    "wordcount": 1345
+  },
+  {
+    "slug": "ices-2b-polymarket-investment-the",
+    "title": "ICE’s $2B Polymarket Investment: The 12-Month Retail Arbitrage Extinction Window",
+    "subtitle": "",
+    "post_date": "2025-11-20T16:17:13.573Z",
+    "url": "https://navnoorbawa.substack.com/p/ices-2b-polymarket-investment-the",
+    "audience": "everyone",
+    "wordcount": 1564
+  },
+  {
+    "slug": "how-citadel-avoided-the-2024-steepener",
+    "title": "How Citadel Avoided the 2024 Steepener Massacre: Ditching PCA for Market Observables",
+    "subtitle": "",
+    "post_date": "2025-11-20T13:32:27.811Z",
+    "url": "https://navnoorbawa.substack.com/p/how-citadel-avoided-the-2024-steepener",
+    "audience": "everyone",
+    "wordcount": 1067
+  },
+  {
+    "slug": "multi-strategy-hedge-funds-face-structural",
+    "title": "Multi-Strategy Hedge Funds Face Structural Headwinds in Private Credit Expansion",
+    "subtitle": "",
+    "post_date": "2025-11-19T14:52:58.285Z",
+    "url": "https://navnoorbawa.substack.com/p/multi-strategy-hedge-funds-face-structural",
+    "audience": "everyone",
+    "wordcount": 706
+  },
+  {
+    "slug": "how-major-hedge-funds-value-crypto",
+    "title": "How Major Hedge Funds Value Crypto: Trading Market Structure While Traditional Valuation Fails",
+    "subtitle": "The institutional playbook for crypto isn’t about belief — it’s about arbitraging inefficiency at scale.",
+    "post_date": "2025-11-18T16:56:20.879Z",
+    "url": "https://navnoorbawa.substack.com/p/how-major-hedge-funds-value-crypto",
+    "audience": "everyone",
+    "wordcount": 1242
+  },
+  {
+    "slug": "point72s-multi-pod-engine-how-415b",
+    "title": "Point72’s Multi-Pod Engine: How $41.5B Delivers 19% Returns Through Systematic Diversification",
+    "subtitle": "",
+    "post_date": "2025-11-17T17:51:18.986Z",
+    "url": "https://navnoorbawa.substack.com/p/point72s-multi-pod-engine-how-415b",
+    "audience": "everyone",
+    "wordcount": 1121
+  },
+  {
+    "slug": "how-futures-first-generates-returns",
+    "title": "How Futures First Generates Returns: Liquidity Provision Across Global Derivatives Markets",
+    "subtitle": "Market making mechanics, P&L drivers, and the technology moat in exchange-traded derivatives",
+    "post_date": "2025-11-16T17:40:14.891Z",
+    "url": "https://navnoorbawa.substack.com/p/how-futures-first-generates-returns",
+    "audience": "everyone",
+    "wordcount": 906
+  },
+  {
+    "slug": "graviton-research-capital-deconstructing",
+    "title": "Graviton Research Capital: Deconstructing India’s Largest HFT Firm’s Statistical Arbitrage Infrastructure",
+    "subtitle": "How sub-microsecond co-location and quantitative signal processing generated Rs 13,828 crore monthly volume with 74% win rate",
+    "post_date": "2025-11-15T17:27:23.404Z",
+    "url": "https://navnoorbawa.substack.com/p/graviton-research-capital-deconstructing",
+    "audience": "everyone",
+    "wordcount": 1143
+  },
+  {
+    "slug": "da-vinci-trading-volatility-arbitrage",
+    "title": "Da Vinci Trading: Volatility Arbitrage and Crypto Market Making Deconstructed",
+    "subtitle": "",
+    "post_date": "2025-11-14T17:23:18.162Z",
+    "url": "https://navnoorbawa.substack.com/p/da-vinci-trading-volatility-arbitrage",
+    "audience": "everyone",
+    "wordcount": 850
+  },
+  {
+    "slug": "de-shaws-1998-crisis-how-a-372-million",
+    "title": "D.E. Shaw’s 1998 Crisis: How a $372 Million Loss Built a $65 Billion Quant Giant",
+    "subtitle": "",
+    "post_date": "2025-11-13T16:59:14.554Z",
+    "url": "https://navnoorbawa.substack.com/p/de-shaws-1998-crisis-how-a-372-million",
+    "audience": "everyone",
+    "wordcount": 1002
+  },
+  {
+    "slug": "hudson-river-trading-how-8b-in-revenue",
+    "title": "Hudson River Trading: How $8B in Revenue Reveals the Death of Latency Arbitrage",
+    "subtitle": "",
+    "post_date": "2025-11-12T15:37:59.053Z",
+    "url": "https://navnoorbawa.substack.com/p/hudson-river-trading-how-8b-in-revenue",
+    "audience": "everyone",
+    "wordcount": 821
+  },
+  {
+    "slug": "how-qrt-built-28b-through-centralized",
+    "title": "How QRT Built $28B Through Centralized Allocation — Not Star Portfolio Managers",
+    "subtitle": "",
+    "post_date": "2025-11-11T16:29:42.408Z",
+    "url": "https://navnoorbawa.substack.com/p/how-qrt-built-28b-through-centralized",
+    "audience": "everyone",
+    "wordcount": 944
+  },
+  {
+    "slug": "how-volatility-arbitrage-funds-use",
+    "title": "How Volatility Arbitrage Funds Use the Heston Model to Extract Alpha from Equity Options",
+    "subtitle": "",
+    "post_date": "2025-11-10T16:53:31.881Z",
+    "url": "https://navnoorbawa.substack.com/p/how-volatility-arbitrage-funds-use",
+    "audience": "everyone",
+    "wordcount": 1186
+  },
+  {
+    "slug": "how-multi-strategy-hedge-funds-win",
+    "title": "How Multi-Strategy Hedge Funds Win at FX Carry: Risk Control Over Alpha Generation",
+    "subtitle": "",
+    "post_date": "2025-11-09T16:11:21.724Z",
+    "url": "https://navnoorbawa.substack.com/p/how-multi-strategy-hedge-funds-win",
+    "audience": "everyone",
+    "wordcount": 798
+  },
+  {
+    "slug": "how-xtx-markets-turned-2024s-volatility",
+    "title": "How XTX Markets Turned 2024’s Volatility Into £1.28 Billion: The Computational Edge in Market Making",
+    "subtitle": "",
+    "post_date": "2025-11-08T17:18:15.694Z",
+    "url": "https://navnoorbawa.substack.com/p/how-xtx-markets-turned-2024s-volatility",
+    "audience": "everyone",
+    "wordcount": 1049
+  },
+  {
+    "slug": "how-flow-traders-captured-495m-in",
+    "title": "How Flow Traders Captured €495M in Q1 2020: Market Making’s 3,543% Profit Surge",
+    "subtitle": "",
+    "post_date": "2025-11-07T11:01:44.990Z",
+    "url": "https://navnoorbawa.substack.com/p/how-flow-traders-captured-495m-in",
+    "audience": "everyone",
+    "wordcount": 1055
+  },
+  {
+    "slug": "optivers-35b-market-making-engine",
+    "title": "Optiver’s €3.5B Market-Making Engine: Avellaneda-Stoikov Inventory Optimization at Scale",
+    "subtitle": "",
+    "post_date": "2025-11-06T15:06:43.800Z",
+    "url": "https://navnoorbawa.substack.com/p/optivers-35b-market-making-engine",
+    "audience": "everyone",
+    "wordcount": 867
+  },
+  {
+    "slug": "the-2m-arbitrageur-playbook-reverse",
+    "title": "The $2M Arbitrageur Playbook: Reverse Engineering Top Performer Strategies",
+    "subtitle": "",
+    "post_date": "2025-11-05T16:26:50.041Z",
+    "url": "https://navnoorbawa.substack.com/p/the-2m-arbitrageur-playbook-reverse",
+    "audience": "everyone",
+    "wordcount": 1517
+  },
+  {
+    "slug": "susquehannas-black-monday-trade-exploiting",
+    "title": "Susquehanna’s Black Monday Trade: Exploiting Black-Scholes Model Risk in the 1987 Crash",
+    "subtitle": "Susquehanna International Group generated millions from long OTM puts during the October 19, 1987 crash — a 22.6% single-day decline — by systematically exploiting tail risk mispricing embedded in Bla",
+    "post_date": "2025-11-04T14:58:52.736Z",
+    "url": "https://navnoorbawa.substack.com/p/susquehannas-black-monday-trade-exploiting",
+    "audience": "everyone",
+    "wordcount": 764
+  },
+  {
+    "slug": "negrisk-market-rebalancing-how-29m",
+    "title": "NegRisk Market Rebalancing: How $29M Was Extracted From Multi-Condition Prediction Markets",
+    "subtitle": "",
+    "post_date": "2025-11-03T09:03:58.709Z",
+    "url": "https://navnoorbawa.substack.com/p/negrisk-market-rebalancing-how-29m",
+    "audience": "everyone",
+    "wordcount": 1228
+  },
+  {
+    "slug": "combinatorial-arbitrage-in-prediction",
+    "title": "Combinatorial Arbitrage in Prediction Markets: Why 62% of LLM-Detected Dependencies Fail to Generate Profit",
+    "subtitle": "",
+    "post_date": "2025-11-02T15:14:59.507Z",
+    "url": "https://navnoorbawa.substack.com/p/combinatorial-arbitrage-in-prediction",
+    "audience": "everyone",
+    "wordcount": 1772
+  },
+  {
+    "slug": "building-a-prediction-market-arbitrage",
+    "title": "Building a Prediction Market Arbitrage Bot: Technical Implementation",
+    "subtitle": "",
+    "post_date": "2025-11-01T11:03:25.925Z",
+    "url": "https://navnoorbawa.substack.com/p/building-a-prediction-market-arbitrage",
+    "audience": "everyone",
+    "wordcount": 1605
+  },
+  {
+    "slug": "prediction-market-arbitrage-how-quants",
+    "title": "Prediction Market Arbitrage: How Quants Extracted $40M From Structural Mispricing",
+    "subtitle": "",
+    "post_date": "2025-10-31T10:53:02.713Z",
+    "url": "https://navnoorbawa.substack.com/p/prediction-market-arbitrage-how-quants",
+    "audience": "everyone",
+    "wordcount": 1037
+  },
+  {
+    "slug": "how-hedge-funds-generated-30-returns",
+    "title": "How Hedge Funds Generated 30% Returns in the Convertible Arbitrage Boom of 2025",
+    "subtitle": "A technical breakdown of LMR Partners’ record performance and the profit mechanics of a strategy resurrected from the dead",
+    "post_date": "2025-10-30T17:16:57.937Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-generated-30-returns",
+    "audience": "everyone",
+    "wordcount": 3196
+  },
+  {
+    "slug": "one-million-options-contracts-isnt",
+    "title": "One Million Options Contracts Isn’t One Million Euros — Or Even Close",
+    "subtitle": "How to compare options markets properly: notional, premium, and vega — a math-first framework for busy quant researchers, hedge funds, and traders.",
+    "post_date": "2025-10-29T16:42:07.007Z",
+    "url": "https://navnoorbawa.substack.com/p/one-million-options-contracts-isnt",
+    "audience": "everyone",
+    "wordcount": 835
+  },
+  {
+    "slug": "the-volatility-carry-trade-how-selling",
+    "title": "The Volatility Carry Trade: How Selling Vol Makes ~10% — Until It Can Lose 80%",
+    "subtitle": "For quant researchers, hedge-fund analysts and traders who want the facts fast: precise, sourced, and action-focused.",
+    "post_date": "2025-10-28T16:26:53.035Z",
+    "url": "https://navnoorbawa.substack.com/p/the-volatility-carry-trade-how-selling",
+    "audience": "everyone",
+    "wordcount": 857
+  },
+  {
+    "slug": "how-hidden-volatility-feedback-loops",
+    "title": "How Hidden Volatility Feedback Loops Determine Your P&L: The Multivariate Quadratic Hawkes Revolution",
+    "subtitle": "",
+    "post_date": "2025-10-27T15:51:09.917Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hidden-volatility-feedback-loops",
+    "audience": "everyone",
+    "wordcount": 2351
+  },
+  {
+    "slug": "how-short-sellers-extracted-127m",
+    "title": "How Short Sellers Extracted $127M from the BDC Collapse: Dissecting a Credit Quality Arbitrage",
+    "subtitle": "A technical breakdown of the structural vulnerabilities in private credit-linked equities that delivered 8.7% returns in 30 days",
+    "post_date": "2025-10-26T16:01:14.471Z",
+    "url": "https://navnoorbawa.substack.com/p/how-short-sellers-extracted-127m",
+    "audience": "everyone",
+    "wordcount": 2242
+  },
+  {
+    "slug": "the-multi-million-dollar-misdiagnosis",
+    "title": "The Multi-Million Dollar Misdiagnosis: When FX Desks Blame Brokers for Internal Routing Failures",
+    "subtitle": "How systematic attribution error costs trading desks millions — and the technical forensics required to find the real culprit",
+    "post_date": "2025-10-25T15:33:37.076Z",
+    "url": "https://navnoorbawa.substack.com/p/the-multi-million-dollar-misdiagnosis",
+    "audience": "everyone",
+    "wordcount": 3335
+  },
+  {
+    "slug": "the-46-billion-lesson-why-european",
+    "title": "The $4.6 Billion Lesson: Why European Options Trade “Below Value” — And How Market Makers Profit From Your Confusion",
+    "subtitle": "How Long-Term Capital Management lost billions while market makers earned millions from the same fundamental principle ",
+    "post_date": "2025-10-24T15:05:33.169Z",
+    "url": "https://navnoorbawa.substack.com/p/the-46-billion-lesson-why-european",
+    "audience": "everyone",
+    "wordcount": 2374
+  },
+  {
+    "slug": "how-markov-processes-print-money",
+    "title": "How Markov Processes Print Money in Market Chaos: The $400B Strategy That Profited From COVID’s Crash",
+    "subtitle": "When stocks plunged 34% in March 2020, one type of hedge fund made money. Here’s the mathematical framework behind their “crisis alpha” — and what it teaches us about state-dependent trading. ",
+    "post_date": "2025-10-23T08:04:54.819Z",
+    "url": "https://navnoorbawa.substack.com/p/how-markov-processes-print-money",
+    "audience": "everyone",
+    "wordcount": 3463
+  },
+  {
+    "slug": "the-40-year-bond-trade-how-systematic",
+    "title": "The 40-Year Bond Trade: How Systematic Forecast Errors Generated Excess Returns",
+    "subtitle": "Forecasters predicted rising rates from 1980–2021. They were wrong. That’s precisely why long-duration positions printed money.",
+    "post_date": "2025-10-22T04:20:02.075Z",
+    "url": "https://navnoorbawa.substack.com/p/the-40-year-bond-trade-how-systematic",
+    "audience": "everyone",
+    "wordcount": 1898
+  },
+  {
+    "slug": "how-amaranth-advisors-lost-6-billion",
+    "title": "How Amaranth Advisors Lost $6 Billion in 20 Days: A Quantitative Post-Mortem",
+    "subtitle": "September 14, 2006. A single trading day. Amaranth Advisors, a $9.2 billion hedge fund, hemorrhaged $560 million on natural gas positions.[¹][²]",
+    "post_date": "2025-10-21T04:15:27.872Z",
+    "url": "https://navnoorbawa.substack.com/p/how-amaranth-advisors-lost-6-billion",
+    "audience": "everyone",
+    "wordcount": 1636
+  },
+  {
+    "slug": "how-misusing-the-sharpe-ratio-cost",
+    "title": "How Misusing the Sharpe Ratio Cost Hedge Funds $150+ Billion — Twice",
+    "subtitle": "When Nobel laureates made the same fatal statistical mistakes twice — and lost billions",
+    "post_date": "2025-10-20T11:21:32.411Z",
+    "url": "https://navnoorbawa.substack.com/p/how-misusing-the-sharpe-ratio-cost",
+    "audience": "everyone",
+    "wordcount": 4573
+  },
+  {
+    "slug": "how-vol-arb-desks-actually-make-money",
+    "title": "How Vol-Arb Desks Actually Make Money From Correlation: The Complete Playbook With Real Trades",
+    "subtitle": "",
+    "post_date": "2025-10-19T12:38:09.899Z",
+    "url": "https://navnoorbawa.substack.com/p/how-vol-arb-desks-actually-make-money",
+    "audience": "everyone",
+    "wordcount": 3378
+  },
+  {
+    "slug": "weather-derivatives-explode-260-inside",
+    "title": "Weather Derivatives Explode 260%: Inside the $25B Climate Risk Transfer Market",
+    "subtitle": "How hedge funds and energy companies are monetizing Mother Nature’s volatility — and why 2023 marked a turning point",
+    "post_date": "2025-10-18T13:14:51.599Z",
+    "url": "https://navnoorbawa.substack.com/p/weather-derivatives-explode-260-inside",
+    "audience": "everyone",
+    "wordcount": 3000
+  },
+  {
+    "slug": "how-statistical-arbitrage-desks-made",
+    "title": "How Statistical Arbitrage Desks Made 7.79% During the April Tariff Crash",
+    "subtitle": "While directional strategies lost money, stat arb captured record returns by exploiting the highest cross-sectional dispersion in a decade",
+    "post_date": "2025-10-17T15:41:12.985Z",
+    "url": "https://navnoorbawa.substack.com/p/how-statistical-arbitrage-desks-made",
+    "audience": "everyone",
+    "wordcount": 2388
+  },
+  {
+    "slug": "the-martingale-paradox-why-mathematically",
+    "title": "The Martingale Paradox: Why Mathematically “Perfect” Trading Strategies Fail in Real Markets",
+    "subtitle": "How capital constraints turned theoretical certainty into catastrophic losses for Victor Niederhoffer, LTCM, and thousands of short volatility traders",
+    "post_date": "2025-10-16T18:22:30.603Z",
+    "url": "https://navnoorbawa.substack.com/p/the-martingale-paradox-why-mathematically",
+    "audience": "everyone",
+    "wordcount": 5139
+  },
+  {
+    "slug": "how-hedge-funds-use-machine-learning",
+    "title": "How Hedge Funds Use Machine Learning for Derivatives Pricing — And Where They Make Money",
+    "subtitle": "A technical deep-dive into neural networks, reinforcement learning, and the real strategies generating alpha in 2025",
+    "post_date": "2025-10-15T16:31:13.445Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-use-machine-learning",
+    "audience": "everyone",
+    "wordcount": 2868
+  },
+  {
+    "slug": "how-hedge-funds-made-50-returns-betting",
+    "title": "How Hedge Funds Made 50% Returns Betting Against MicroStrategy While Buying Bitcoin",
+    "subtitle": "The MSTR Volatility Scissors Strategy: A Masterclass in Premium Arbitrage",
+    "post_date": "2025-10-14T16:30:51.833Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-50-returns-betting",
+    "audience": "everyone",
+    "wordcount": 2999
+  },
+  {
+    "slug": "the-2-billion-oil-storage-trade-how",
+    "title": "The $2 Billion Oil Storage Trade: How Wall Street Turned Super Contango Into Historic Profits",
+    "subtitle": "What happens when theory meets crisis? In 2008–2009, Goldman Sachs, Morgan Stanley, and Shell chartered 145 tankers to exploit cost-of-carry arbitrage at industrial scale.",
+    "post_date": "2025-10-13T17:33:15.681Z",
+    "url": "https://navnoorbawa.substack.com/p/the-2-billion-oil-storage-trade-how",
+    "audience": "everyone",
+    "wordcount": 2675
+  },
+  {
+    "slug": "the-deepseek-shock-how-systematic",
+    "title": "The DeepSeek Shock: How Systematic Hedge Funds Profited While Fundamentals Lost Billions",
+    "subtitle": "January 27, 2025: A single AI announcement triggered the largest one-day market value loss in history — exposing the critical difference between positioning and prediction.",
+    "post_date": "2025-10-12T17:02:09.625Z",
+    "url": "https://navnoorbawa.substack.com/p/the-deepseek-shock-how-systematic",
+    "audience": "everyone",
+    "wordcount": 2606
+  },
+  {
+    "slug": "when-hedge-funds-lost-money-while",
+    "title": "When Hedge Funds Lost Money While Markets Hit All-Time Highs: The October 2025 Crowding Crisis",
+    "subtitle": "How systematic strategies shed 1.8% in four days — not from market direction, but from their own positioning",
+    "post_date": "2025-10-11T16:56:08.438Z",
+    "url": "https://navnoorbawa.substack.com/p/when-hedge-funds-lost-money-while",
+    "audience": "everyone",
+    "wordcount": 3816
+  },
+  {
+    "slug": "how-multi-strategy-funds-generated",
+    "title": "How Multi-Strategy Funds Generated 10% Returns in 2025: Inside Balyasny’s Pod Allocation Model",
+    "subtitle": "",
+    "post_date": "2025-10-10T17:14:12.892Z",
+    "url": "https://navnoorbawa.substack.com/p/how-multi-strategy-funds-generated",
+    "audience": "everyone",
+    "wordcount": 2263
+  },
+  {
+    "slug": "anatomy-of-a-468-million-collapse",
+    "title": "Anatomy of a $468 Million Collapse: How Pierre Andurand Lost 52% in Four Months",
+    "subtitle": "Deconstructing the trade mechanics behind one of commodity trading’s worst back-to-back drawdowns",
+    "post_date": "2025-10-09T15:53:39.253Z",
+    "url": "https://navnoorbawa.substack.com/p/anatomy-of-a-468-million-collapse",
+    "audience": "everyone",
+    "wordcount": 1097
+  },
+  {
+    "slug": "commodity-derivatives-pricing-engine",
+    "title": "Commodity Derivatives Pricing Engine: Mathematical Validation of Forward Curves Using Real Market Data",
+    "subtitle": "",
+    "post_date": "2025-10-09T07:33:40.570Z",
+    "url": "https://navnoorbawa.substack.com/p/commodity-derivatives-pricing-engine",
+    "audience": "everyone",
+    "wordcount": 1918
+  },
+  {
+    "slug": "the-56-billion-unwind-how-trumps",
+    "title": "The $5.6 Billion Unwind: How Trump’s Tariff Shock Broke the Quant Machine",
+    "subtitle": "A 14-Day Forensic Analysis of Man Group’s Systematic Trading Collapse",
+    "post_date": "2025-10-08T16:13:04.575Z",
+    "url": "https://navnoorbawa.substack.com/p/the-56-billion-unwind-how-trumps",
+    "audience": "everyone",
+    "wordcount": 1228
+  },
+  {
+    "slug": "how-bridgewaters-pure-alpha-captured",
+    "title": "How Bridgewater’s Pure Alpha Captured 26.2% Returns from Tariff Volatility: A Quantitative Breakdown",
+    "subtitle": "The $92B flagship fund’s systematic volatility harvesting delivered its strongest run since 2010 — here’s the mechanical blueprint and quantitative evidence behind the trade.",
+    "post_date": "2025-10-07T17:03:04.623Z",
+    "url": "https://navnoorbawa.substack.com/p/how-bridgewaters-pure-alpha-captured",
+    "audience": "everyone",
+    "wordcount": 1413
+  },
+  {
+    "slug": "statistical-arbitrage-the-quant-strategy",
+    "title": "Statistical Arbitrage: The Quant Strategy Seeing Record Inflows",
+    "subtitle": "How market neutral mean reversion strategies are generating alpha in 2025",
+    "post_date": "2025-10-06T17:27:46.322Z",
+    "url": "https://navnoorbawa.substack.com/p/statistical-arbitrage-the-quant-strategy",
+    "audience": "everyone",
+    "wordcount": 1390
+  },
+  {
+    "slug": "volatility-arbitrage-how-funds-profited",
+    "title": "Volatility Arbitrage: How Funds Profited During the August 2024 VIX Spike",
+    "subtitle": "Deconstructing the Largest VIX Move in History — and the Trades That Made Millions",
+    "post_date": "2025-10-05T17:17:45.784Z",
+    "url": "https://navnoorbawa.substack.com/p/volatility-arbitrage-how-funds-profited",
+    "audience": "everyone",
+    "wordcount": 2045
+  },
+  {
+    "slug": "how-ackman-made-26b-installing-one",
+    "title": "How Ackman Made $2.6B Installing One CEO: The Activist Alpha Playbook",
+    "subtitle": "Canadian Pacific, Elliott’s toolkit, and the real economics of forcing operational change",
+    "post_date": "2025-10-04T18:59:41.043Z",
+    "url": "https://navnoorbawa.substack.com/p/how-ackman-made-26b-installing-one",
+    "audience": "everyone",
+    "wordcount": 2152
+  },
+  {
+    "slug": "inside-bridgewaters-pure-alpha-how",
+    "title": "Inside Bridgewater’s Pure Alpha: How Systematic Macro Translates Economic Views Into Portfolio Positions",
+    "subtitle": "A data-driven analysis of the strategy posting 26% returns in 2025 — and what quant researchers can learn from it",
+    "post_date": "2025-10-04T00:25:29.567Z",
+    "url": "https://navnoorbawa.substack.com/p/inside-bridgewaters-pure-alpha-how",
+    "audience": "everyone",
+    "wordcount": 2244
+  },
+  {
+    "slug": "longshort-equity-dissecting-robert",
+    "title": "Long/Short Equity: Dissecting Robert Citrone’s 52% Return in 2024",
+    "subtitle": "How Discovery Capital Management generated 52% net returns through concentrated Argentina positioning, active short management, and disciplined macro-driven security selection",
+    "post_date": "2025-10-03T01:34:25.649Z",
+    "url": "https://navnoorbawa.substack.com/p/longshort-equity-dissecting-robert",
+    "audience": "everyone",
+    "wordcount": 2616
+  },
+  {
+    "slug": "renaissance-technologies-the-100",
+    "title": "Renaissance Technologies: The $100 Billion Built on Statistical Arbitrage",
+    "subtitle": "How the Medallion Fund transformed mathematics into the greatest wealth-generating machine in finance history",
+    "post_date": "2025-10-02T02:38:50.502Z",
+    "url": "https://navnoorbawa.substack.com/p/renaissance-technologies-the-100",
+    "audience": "everyone",
+    "wordcount": 3253
+  },
+  {
+    "slug": "the-pod-shop-revolution-how-multi",
+    "title": "The Pod Shop Revolution: How Multi-Strategy Funds Generated 13.6% Returns While Markets Stumbled",
+    "subtitle": "Three firms — Citadel, Millennium, and D.E. Shaw — demonstrate why diversification plus leverage beats concentration in institutional capital management",
+    "post_date": "2025-10-01T01:14:09.693Z",
+    "url": "https://navnoorbawa.substack.com/p/the-pod-shop-revolution-how-multi",
+    "audience": "everyone",
+    "wordcount": 1962
+  },
+  {
+    "slug": "the-27-million-bet-that-returned",
+    "title": "The $27 Million Bet That Returned $2.6 Billion: Deconstructing the Greatest Hedge Fund Trade in Modern History",
+    "subtitle": "How Bill Ackman Generated a 9,526% Return in 30 Days — Complete P&L Analysis for Quants and Traders",
+    "post_date": "2025-09-30T01:33:36.823Z",
+    "url": "https://navnoorbawa.substack.com/p/the-27-million-bet-that-returned",
+    "audience": "everyone",
+    "wordcount": 4373
+  },
+  {
+    "slug": "the-474-trillion-inflection-point",
+    "title": "The $4.74 Trillion Inflection Point: Your Complete Guide to Launching a Hedge Fund in 2025’s Golden Era",
+    "subtitle": "Where 53.6% of All SEC-Registered Hedge Fund Assets Concentrate — And the Mathematical Precision Behind the World’s Most Powerful Financial Ecosystem",
+    "post_date": "2025-09-29T02:00:19.035Z",
+    "url": "https://navnoorbawa.substack.com/p/the-474-trillion-inflection-point",
+    "audience": "everyone",
+    "wordcount": 3079
+  },
+  {
+    "slug": "the-george-weiss-collapse-how-a-46",
+    "title": "How a 46-Year Hedge Fund Dynasty Died on Zoom",
+    "subtitle": "When operational risk destroys what markets couldn’t touch — a quantitative case study in institutional failure",
+    "post_date": "2025-09-28T02:08:47.748Z",
+    "url": "https://navnoorbawa.substack.com/p/the-george-weiss-collapse-how-a-46",
+    "audience": "everyone",
+    "wordcount": 1560
+  },
+  {
+    "slug": "the-242k-cross-trading-scheme-how",
+    "title": "The $242K Cross-Trading Scheme: How Palmer Square Turned “Cost-Saving Arbitrage” Into Systematic Client Exploitation",
+    "subtitle": "A quantitative analysis of 351 prearranged trades that revealed the thin line between legitimate strategy and regulatory violation",
+    "post_date": "2025-09-27T02:10:16.796Z",
+    "url": "https://navnoorbawa.substack.com/p/the-242k-cross-trading-scheme-how",
+    "audience": "everyone",
+    "wordcount": 1729
+  },
+  {
+    "slug": "how-de-shaw-generated-111-billion",
+    "title": "How D.E. Shaw Generated $11.1 Billion: Inside the Macro Trade That Defined 2024",
+    "subtitle": " The fund’s Oculus strategy delivered 36.1% returns by capturing volatility regime shifts and rate transition opportunities — then returned billions at peak performance",
+    "post_date": "2025-09-26T01:15:39.588Z",
+    "url": "https://navnoorbawa.substack.com/p/how-de-shaw-generated-111-billion",
+    "audience": "everyone",
+    "wordcount": 1442
+  },
+  {
+    "slug": "the-20-billion-meltdown-how-two-junior",
+    "title": "The $20 Billion Meltdown: How Two Junior Traders Broke the World’s Oldest Metal Exchange",
+    "subtitle": "When Price Controls Failed, $19.7 Billion in Margin Calls Nearly Collapsed the LME",
+    "post_date": "2025-09-25T03:30:34.072Z",
+    "url": "https://navnoorbawa.substack.com/p/the-20-billion-meltdown-how-two-junior",
+    "audience": "everyone",
+    "wordcount": 2040
+  },
+  {
+    "slug": "how-ecor1-capital-lost-10-million",
+    "title": "How EcoR1 Capital Lost €10 Million Manipulating a Cross-Listed IPO: A Quantitative Breakdown",
+    "subtitle": "The €10 Million Question: When Sophisticated Arbitrage Becomes Market Manipulation",
+    "post_date": "2025-09-24T01:30:30.063Z",
+    "url": "https://navnoorbawa.substack.com/p/how-ecor1-capital-lost-10-million",
+    "audience": "everyone",
+    "wordcount": 1393
+  },
+  {
+    "slug": "weather-derivatives-market-explodes",
+    "title": "Weather Derivatives Market Explodes 260%: Inside the $25 Billion Climate Risk Transfer Revolution",
+    "subtitle": "How extreme weather volatility transformed a niche financial instrument into a mainstream risk management tool",
+    "post_date": "2025-09-23T13:22:52.238Z",
+    "url": "https://navnoorbawa.substack.com/p/weather-derivatives-market-explodes",
+    "audience": "everyone",
+    "wordcount": 1239
+  },
+  {
+    "slug": "the-171-billion-cftc-enforcement",
+    "title": "The $17.1 Billion CFTC Enforcement Bonanza: Why Crypto Killed Traditional Trading Cases",
+    "subtitle": "",
+    "post_date": "2025-09-22T03:36:15.552Z",
+    "url": "https://navnoorbawa.substack.com/p/the-171-billion-cftc-enforcement",
+    "audience": "everyone",
+    "wordcount": 1269
+  },
+  {
+    "slug": "the-40-trillion-reality-check-how",
+    "title": "The $40 Trillion Reality Check: How Systematic Funds Extract Alpha From ESG Market Maturation",
+    "subtitle": "How climate risk became the most systematically tradeable inefficiency in modern markets",
+    "post_date": "2025-09-21T04:59:19.296Z",
+    "url": "https://navnoorbawa.substack.com/p/the-40-trillion-reality-check-how",
+    "audience": "everyone",
+    "wordcount": 1240
+  },
+  {
+    "slug": "how-hedge-funds-made-and-lost-millions",
+    "title": "How Hedge Funds Made (and Lost) Millions with Rough Volatility Models: A Deep Dive into Modern Volatility Arbitrage",
+    "subtitle": "A comprehensive analysis of how cutting-edge volatility models created — and destroyed — hedge fund fortunes",
+    "post_date": "2025-09-20T05:10:37.928Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hedge-funds-made-and-lost-millions",
+    "audience": "everyone",
+    "wordcount": 1706
+  },
+  {
+    "slug": "how-morgan-stanley-made-100m-through",
+    "title": "How Morgan Stanley Made $100M+ Through Systematic Information Arbitrage (And Paid $249M For It)",
+    "subtitle": "A deep-dive into Wall Street’s latest fraud case — and what it teaches us about modern market manipulation",
+    "post_date": "2025-09-19T07:28:05.294Z",
+    "url": "https://navnoorbawa.substack.com/p/how-morgan-stanley-made-100m-through",
+    "audience": "everyone",
+    "wordcount": 1234
+  },
+  {
+    "slug": "how-josh-resnicks-1206-return-cracked",
+    "title": "How Josh Resnick’s 120.6% Return Cracked the $475 Million Rich List Code ",
+    "subtitle": "A Deep Dive into Jericho Capital’s Special Opportunities Strategy and the Concentrated Bets That Generated Historic Returns",
+    "post_date": "2025-09-18T05:11:25.611Z",
+    "url": "https://navnoorbawa.substack.com/p/how-josh-resnicks-1206-return-cracked",
+    "audience": "everyone",
+    "wordcount": 1743
+  },
+  {
+    "slug": "how-jpmorgan-lost-617-million-in",
+    "title": "How JPMorgan Lost $617 Million in 2024’s Perfect Compliance Storm",
+    "subtitle": "",
+    "post_date": "2025-09-17T06:57:15.220Z",
+    "url": "https://navnoorbawa.substack.com/p/how-jpmorgan-lost-617-million-in",
+    "audience": "everyone",
+    "wordcount": 907
+  },
+  {
+    "slug": "riefs-16-billion-liberation-day-disaster",
+    "title": "RIEF’s $1.6 Billion Liberation Day Disaster: How Trump’s Tariff Shock Broke Renaissance’s Quant Models",
+    "subtitle": "When systematic trading meets unprecedented policy shocks, even the world’s most sophisticated algorithms can’t save you",
+    "post_date": "2025-09-16T01:30:43.028Z",
+    "url": "https://navnoorbawa.substack.com/p/riefs-16-billion-liberation-day-disaster",
+    "audience": "everyone",
+    "wordcount": 1780
+  },
+  {
+    "slug": "how-chris-rokos-made-1-billion-in",
+    "title": "How Chris Rokos Made $1 Billion in a Single Day: Deconstructing the Trump Trade",
+    "subtitle": "The mechanics behind one of 2024's most profitable hedge fund trades",
+    "post_date": "2025-09-15T01:54:38.303Z",
+    "url": "https://navnoorbawa.substack.com/p/how-chris-rokos-made-1-billion-in",
+    "audience": "everyone",
+    "wordcount": 1460
+  },
+  {
+    "slug": "how-quants-made-4144-returns-in-2020",
+    "title": "How Quants Made 4,144% Returns in 2020 While Markets Crashed: The Heston Model Edge",
+    "subtitle": "The mathematical model that revealed volatility’s true nature — and turned market panic into massive profits",
+    "post_date": "2025-09-14T03:04:45.498Z",
+    "url": "https://navnoorbawa.substack.com/p/how-quants-made-4144-returns-in-2020",
+    "audience": "everyone",
+    "wordcount": 1620
+  },
+  {
+    "slug": "how-hsbc-made-millions-gaming-bond",
+    "title": "How HSBC Made Millions Gaming Bond Pricing Screens: A Quant’s Guide to Market Manipulation",
+    "subtitle": "Understanding the mechanics behind a $45 million penalty — and the systematic profit extraction that preceded it",
+    "post_date": "2025-09-14T03:01:18.429Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hsbc-made-millions-gaming-bond",
+    "audience": "everyone",
+    "wordcount": 1448
+  },
+  {
+    "slug": "pre-ipo-arbitrage-fraud-how-120m",
+    "title": "Pre-IPO Arbitrage Fraud: How $120M Was Stolen Through Corrupted Market-Making",
+    "subtitle": "A quantitative breakdown of how legitimate investment strategies become systematic theft",
+    "post_date": "2025-09-13T01:10:08.507Z",
+    "url": "https://navnoorbawa.substack.com/p/pre-ipo-arbitrage-fraud-how-120m",
+    "audience": "everyone",
+    "wordcount": 1372
+  },
+  {
+    "slug": "how-societe-generales-a388m-mark",
+    "title": "How Société Générale’s A$3.88M ‘Mark the Close’ Strategy Exploited War-Driven Market Volatility",
+    "subtitle": "ASIC’s latest A$3.88 million penalty reveals the mechanics behind one of derivatives trading’s most profitable — and risky — manipulation strategies",
+    "post_date": "2025-09-11T16:58:33.490Z",
+    "url": "https://navnoorbawa.substack.com/p/how-societe-generales-a388m-mark",
+    "audience": "everyone",
+    "wordcount": 1202
+  },
+  {
+    "slug": "singapores-8-billion-market-manipulation",
+    "title": "Singapore’s $8 Billion Market Manipulation: How 187 Trading Accounts Generated Massive Profits Before the Crash",
+    "subtitle": "How contra trading and wash trading mechanics created artificial demand — until Goldman Sachs margin calls triggered the collapse",
+    "post_date": "2025-09-11T03:41:34.386Z",
+    "url": "https://navnoorbawa.substack.com/p/singapores-8-billion-market-manipulation",
+    "audience": "everyone",
+    "wordcount": 1164
+  },
+  {
+    "slug": "how-totalenergies-lost-48m-trying",
+    "title": "How TotalEnergies Lost $48M Trying to Game European Gasoline Markets",
+    "subtitle": "A deep dive into cross-market arbitrage gone wrong and the mechanics of commodity benchmark manipulation",
+    "post_date": "2025-09-10T04:35:23.770Z",
+    "url": "https://navnoorbawa.substack.com/p/how-totalenergies-lost-48m-trying",
+    "audience": "everyone",
+    "wordcount": 1305
+  },
+  {
+    "slug": "how-trafigura-turned-a-100m-arbitrage",
+    "title": "How Trafigura Turned a $100M Arbitrage into a $55M Fraud: Deconstructing the USGC-Singapore Fuel Oil Manipulation",
+    "subtitle": "The most expensive lesson in commodity trading: when legitimate strategies cross into market manipulation",
+    "post_date": "2025-09-09T02:30:25.059Z",
+    "url": "https://navnoorbawa.substack.com/p/how-trafigura-turned-a-100m-arbitrage",
+    "audience": "everyone",
+    "wordcount": 1286
+  },
+  {
+    "slug": "how-jpmorgan-made-172-million-manipulating",
+    "title": "How JPMorgan Made $172 Million Manipulating Markets: The Spoofing Strategy That Broke the System",
+    "subtitle": "The largest market manipulation settlement in history reveals how 15 traders systematically extracted wealth from electronic markets",
+    "post_date": "2025-09-08T02:52:46.621Z",
+    "url": "https://navnoorbawa.substack.com/p/how-jpmorgan-made-172-million-manipulating",
+    "audience": "everyone",
+    "wordcount": 1792
+  },
+  {
+    "slug": "the-650m-volmageddon-collapse-how",
+    "title": "The $650M Volmageddon Collapse: How LJM's Leveraged Short Vol Strategy Imploded in 48 Hours",
+    "subtitle": "How a fund named \"Preservation\" delivered 80% destruction in two trading sessions",
+    "post_date": "2025-09-07T04:43:50.637Z",
+    "url": "https://navnoorbawa.substack.com/p/the-650m-volmageddon-collapse-how",
+    "audience": "everyone",
+    "wordcount": 1986
+  }
+]

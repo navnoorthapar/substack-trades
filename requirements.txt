@@ -1,8 +1,10 @@
-# Core pipeline: stdlib only (urllib, json, re, pathlib) — no install needed,
-# and no paid APIs.
+# Python dependencies: none. The core pipeline uses only the Python 3.9+
+# standard library; no pip install or paid API is required.
 #
-# Optional: the regex+LLM hybrid direction resolver (llm_direction.py) talks to a
-# LOCAL, FREE Ollama model over plain urllib — no pip package, no API key, no
-# per-token cost. It is DISABLED by default (the installed 7B model tested below
-# the regex's precision bar) and fail-safe. To enable, see the header of
-# llm_direction.py: pull a model you trust, then set DIRECTION_LLM_ENABLE=1.
+# Operational dependencies for automated publishing are macOS launchd, Git with
+# authenticated write access to origin, a trusted TLS certificate bundle, and
+# network access to Substack and GitHub. See README.md for installation.
+#
+# Optional: refresh.sh attempts the free local Ollama direction pass with
+# qwen2.5:14b. If Ollama or that model is unavailable, it safely keeps regex-only
+# directions. Ollama is not a Python package dependency.

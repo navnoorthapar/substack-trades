@@ -55,8 +55,8 @@ from collections import Counter
 from pathlib import Path
 
 ROOT   = Path(__file__).parent
-TRADES = ROOT / 'trades_extracted.json'
-CACHE  = ROOT / '.direction_cache.json'
+TRADES = Path(os.environ.get('TRADES_PATH', ROOT / 'trades_extracted.json'))
+CACHE  = Path(os.environ.get('DIRECTION_CACHE_PATH', ROOT / '.direction_cache.json'))
 
 MODEL      = os.environ.get('DIRECTION_LLM_MODEL', 'qwen2.5:14b')
 OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://localhost:11434').rstrip('/')

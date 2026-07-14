@@ -4,14 +4,29 @@ Extract trades from all Substack posts saved in all_posts.json.
 Uses pattern matching + contextual extraction to identify investment positions.
 """
 import json
+import os
 import re
 import sys
 from datetime import datetime
 
 from pathlib import Path
 ROOT = Path(__file__).parent
-INPUT_PATH  = ROOT / 'all_posts.json'
-OUTPUT_PATH = ROOT / 'trades_extracted.json'
+INPUT_PATH = Path(os.environ.get('POSTS_INPUT', ROOT / 'all_posts.json')).expanduser()
+OUTPUT_PATH = Path(os.environ.get('TRADES_OUTPUT', ROOT / 'trades_extracted.json')).expanduser()
+
+
+def atomic_write_json(path, value):
+    """Write JSON beside its destination, then atomically replace it."""
+    path = Path(path)
+    tmp_path = path.parent / (path.name + '.tmp')
+    try:
+        with open(tmp_path, 'w', encoding='utf-8') as f:
+            json.dump(value, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, path)
+    finally:
+        # A serialization or replace failure must not leave a stale temp file.
+        if tmp_path.exists():
+            tmp_path.unlink()
 
 # ─── Pattern libraries ────────────────────────────────────────────────────────
 
@@ -25,7 +40,10 @@ DIRECTION_LONG = (
     r'|long exposure|long (?:the|bias)'
     # mirror of the SHORT asset list so "long oil" / "long equities" classify symmetrically
     r'|long (?:the )?(?:bond[s]?|gilt[s]?|treasur\w+|equit\w+|stock[s]?|share[s]?|oil|crude|gold|silver|copper|natural gas|gas|duration|credit|the dollar|sterling|yen|euro|pound)'
-    r'|long (?:vol(?:atility)?|gamma|vega)|long call[s]?|bought call[s]?|call spread|overweight|accumulated'
+    r'|long (?:vol(?:atility)?|gamma|vega)|long call[s]?|bought call[s]?|call spread|overweight'
+    # "accumulated" alone also describes losses/negative gamma. Require a
+    # plausibly owned asset or an explicit long/bullish position after it.
+    r'|accumulated (?:a |an |the )?(?:(?:long|bullish) (?:positions?|exposure)|(?:(?!(?:short|bearish)\b)[\w.$%\-]+\s+){0,3}(?:positions?|shares?|stock|equit(?:y|ies)|stake|holdings?|bonds?|calls?|call options?))'
     r'|(?:added|increased) (?:to )?(?:the )?(?:long|position|stake|holdings?|exposure)'
     # activist / disclosed stakes — a clean long signal ("rebuilt a $2B stake in")
     r'|(?:built|rebuilt|raised|amassed|disclosed|acquired|took|owns?|holds?|established) (?:a |an )?(?:[\$\d.,]+\+?\s*(?:billion|million|bn|mn)?\s*)?(?:minority |majority |new |large |sizable |controlling |[\d.]+%\s+)?(?:stake|equity stake|long position) in'
@@ -266,21 +284,23 @@ def find_paragraph_blocks(text, window=5):
 
 def extract_underlying(text):
     """Try to extract the main underlying asset/issuer/index."""
-    # Look for company names, indices, currencies
+    # Look for company names, indices, currencies. Company capitalization is
+    # meaningful: applying IGNORECASE to its legal-suffix pattern turned phrases
+    # such as "against Vegas on its co-terminal" into bogus company names.
     patterns = [
-        r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3}(?:\s+(?:Inc|Corp|Ltd|plc|Group|Holdings|Capital|Management|Fund|AG|SA|SE|NV|Co))\.?)\b',
-        r'\b(S&P\s*500|Nasdaq|FTSE|DAX|Nikkei|Hang Seng|Russell\s*\d+|MSCI|CDX|iTraxx|VIX)\b',
-        r'\b(Bank Nifty|Nifty\s*50|BSE Sensex|Hang Seng|Nikkei 225|ASX 200|CAC 40|Euro Stoxx|STOXX 50|STOXX 600)\b',
-        r'\b(TLT|SPY|QQQ|IWM|HYG|LQD|GLD|SLV|USO|XLE|XLF|XLK|EEM|GDX|VXX|UVXY)\b',
-        r'\b(TTF|EUA|CCA|JGB|OAT|BTP)\b',
-        r'\b(US\s*(?:Treasury|10-year|2-year|30-year)|UK\s*Gilt|German\s*Bund|JGB|Italian\s*BTP|Greek\s*bond)\b',
-        r'\b(WTI|Brent|crude oil|natural gas|gold|silver|copper|wheat|corn|soybeans)\b',
-        r'\b(USD|EUR|GBP|JPY|CHF|AUD|CAD|CNY|EM currencies?)\b',
-        r'\b(Bitcoin|Ethereum|crypto)\b',
+        (r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3}(?:\s+(?:Inc|Corp|Ltd|plc|Group|Holdings|Capital|Management|Fund|AG|SA|SE|NV|Co))\.?)\b', 0),
+        (r'\b(S&P\s*500|Nasdaq|FTSE|DAX|Nikkei|Hang Seng|Russell\s*\d+|MSCI|CDX|iTraxx|VIX)\b', re.IGNORECASE),
+        (r'\b(Bank Nifty|Nifty\s*50|BSE Sensex|Hang Seng|Nikkei 225|ASX 200|CAC 40|Euro Stoxx|STOXX 50|STOXX 600)\b', re.IGNORECASE),
+        (r'\b(TLT|SPY|QQQ|IWM|HYG|LQD|GLD|SLV|USO|XLE|XLF|XLK|EEM|GDX|VXX|UVXY)\b', re.IGNORECASE),
+        (r'\b(TTF|EUA|CCA|JGB|OAT|BTP)\b', re.IGNORECASE),
+        (r'\b(US\s*(?:Treasury|10-year|2-year|30-year)|UK\s*Gilt|German\s*Bund|JGB|Italian\s*BTP|Greek\s*bond)\b', re.IGNORECASE),
+        (r'\b(WTI|Brent|crude oil|natural gas|gold|silver|copper|wheat|corn|soybeans)\b', re.IGNORECASE),
+        (r'\b(USD|EUR|GBP|JPY|CHF|AUD|CAD|CNY|EM currencies?)\b', re.IGNORECASE),
+        (r'\b(Bitcoin|Ethereum|crypto)\b', re.IGNORECASE),
     ]
     found = []
-    for p in patterns:
-        matches = re.findall(p, text, re.IGNORECASE)
+    for pattern, flags in patterns:
+        matches = re.findall(pattern, text, flags)
         found.extend(m if isinstance(m, str) else m[0] for m in matches[:3])
     if found:
         return '; '.join(list(dict.fromkeys(found))[:5])
@@ -307,7 +327,7 @@ def extract_outcome(text):
 def extract_thesis(text):
     """Extract the edge/thesis."""
     patterns = [
-        r'(?:because|since|as|given that|due to|on the thesis that|thesis\s*[:—]?)\s+([^.!?]{20,150}[.!?])',
+        r'(?:\b(?:because|since|as|given that|due to|on the thesis that)\b|\bthesis\b\s*[:—]?)\s+([^.!?]{20,150}[.!?])',
         r'(?:the trade was based on|the edge was|the rationale was|bet(?:ting)? (?:on|that)|believed that)\s+([^.!?]{20,150}[.!?])',
         r'(?:mispricing|arbitrage opportunity|relative value|divergence|dislocation)[^.!?]{0,100}[.!?]',
         r'(?:expected|anticipated|predicted|forecasted)\s+([^.!?]{20,150}[.!?])',
@@ -320,6 +340,23 @@ def extract_thesis(text):
             if len(thesis) > 20:
                 return thesis[:200]
     return None
+
+
+def excerpt(text, limit=800):
+    """Return an at-most-limit excerpt without cutting the final word."""
+    text = text.strip()
+    if len(text) <= limit:
+        return text
+
+    head = text[:limit]
+    # If the limit lands inside a word, discard that partial word. Normal prose
+    # always has an earlier whitespace boundary; the fallback keeps a useful
+    # bounded excerpt even for a pathological single-token input.
+    if not text[limit].isspace() and not head[-1].isspace():
+        boundary = max(head.rfind(' '), head.rfind('\n'), head.rfind('\t'))
+        if boundary > 0:
+            head = head[:boundary]
+    return head.rstrip()
 
 def is_trade_block(block):
     """Check if a text block describes a specific trade (not just background info)."""
@@ -364,7 +401,7 @@ def process_article(post):
                 'article_title': title,
                 'article_url': url,
                 'article_date': date,
-                'trade_description': para[:800],
+                'trade_description': excerpt(para),
                 # Instruments detected from the paragraph itself only — not the wider context,
                 # to avoid inheriting instrument tags from adjacent paragraphs.
                 # Context is kept for thesis/underlying/quant which span multiple sentences.
@@ -387,7 +424,7 @@ def process_article(post):
                     'article_title': title,
                     'article_url': url,
                     'article_date': date,
-                    'trade_description': block[:800],
+                    'trade_description': excerpt(block),
                     'instruments': find_instruments(block),
                     'direction': classify_direction(block),
                     'underlying': extract_underlying(block),
@@ -447,9 +484,8 @@ def main():
     print(f'Articles with trades: {articles_with_trades}')
     print(f'Articles with no trades identified: {articles_no_trades}')
 
-    # Save output
-    with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
-        json.dump(all_trades, f, ensure_ascii=False, indent=2)
+    # Save output atomically so interruption cannot truncate the tracked dataset.
+    atomic_write_json(OUTPUT_PATH, all_trades)
 
     print(f'\nSaved {len(all_trades)} trade records to {OUTPUT_PATH}')
 

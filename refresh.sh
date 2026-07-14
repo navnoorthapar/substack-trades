@@ -1,76 +1,165 @@
 #!/usr/bin/env bash
-# Full pipeline: fetch → extract → filter → resolve-directions → build → push.
+# Fetch -> extract -> validate -> build -> publish.
 #
-# This is the AUTOMATED refresh, run from this Mac by the LaunchAgent
-# com.navnoor.substacktrades at 9am / 1pm / 8pm. It must run here (a residential
-# IP) because Substack returns HTTP 403 to datacenter/cloud IPs — so the fetch
-# cannot be moved to GitHub Actions. The cloud workflow only rebuilds the site
-# on demand. Safe to call multiple times per day — skips if it already ran
-# successfully in the last 20h.
-set -e
+# Substack rejects datacenter IPs, so the live feed refresh runs on this Mac.
+# GitHub Actions remains a build-only fallback. This script is safe to schedule
+# several times per day and safe to rerun after an interrupted push.
+set -Eeuo pipefail
 
 cd "$(dirname "$0")"
-
+ROOT=$PWD
 LAST_RUN_FILE="$HOME/.substack_trades_last_run"
+MIN_REFRESH_SECONDS=${MIN_REFRESH_SECONDS:-1800}
+LOCK_DIR="${TMPDIR:-/tmp}/com.navnoor.substacktrades.lock"
+LOCK_OWNED=0
+WORK_DIR=""
 
-# Skip if already ran successfully in the last 20 hours
-if [ -f "$LAST_RUN_FILE" ]; then
-    LAST=$(cat "$LAST_RUN_FILE")
-    NOW=$(date +%s)
-    DIFF=$(( NOW - LAST ))
-    if [ "$DIFF" -lt 72000 ]; then
-        echo "Already ran $(( DIFF / 3600 ))h ago — skipping."
+if [ -n "${PYTHON_BIN:-}" ]; then
+    PYTHON=$PYTHON_BIN
+elif [ -x /usr/bin/python3 ]; then
+    PYTHON=/usr/bin/python3
+else
+    PYTHON=$(command -v python3)
+fi
+
+if [ ! -x "$PYTHON" ]; then
+    echo "No working Python 3 interpreter found." >&2
+    exit 1
+fi
+
+cleanup() {
+    exit_code=$1
+    trap - EXIT
+    if [ -n "$WORK_DIR" ] && [ -d "$WORK_DIR" ]; then
+        rm -f "$WORK_DIR/trades.raw.json" "$WORK_DIR/trades.candidate.json"
+        rmdir "$WORK_DIR" 2>/dev/null || true
+    fi
+    if [ "$LOCK_OWNED" -eq 1 ]; then
+        rm -f "$LOCK_DIR/pid"
+        rmdir "$LOCK_DIR" 2>/dev/null || true
+    fi
+    exit "$exit_code"
+}
+
+on_error() {
+    exit_code=$?
+    trap - ERR
+    echo "Refresh failed at line $1 (exit $exit_code). Previous published data was preserved." >&2
+    exit "$exit_code"
+}
+
+trap 'cleanup $?' EXIT
+trap 'on_error $LINENO' ERR
+
+# Prevent a manual run and a scheduled run from mutating the same files.
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+    running_pid=""
+    if [ -f "$LOCK_DIR/pid" ]; then
+        running_pid=$(sed -n '1p' "$LOCK_DIR/pid")
+    fi
+    if [[ "$running_pid" =~ ^[0-9]+$ ]] && kill -0 "$running_pid" 2>/dev/null; then
+        echo "A refresh is already running (PID $running_pid); exiting cleanly."
         exit 0
+    fi
+    rm -f "$LOCK_DIR/pid"
+    rmdir "$LOCK_DIR" 2>/dev/null || true
+    mkdir "$LOCK_DIR"
+fi
+LOCK_OWNED=1
+printf '%s\n' "$$" > "$LOCK_DIR/pid"
+WORK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/substack-trades-refresh.XXXXXX")
+
+# Avoid only accidental rapid reruns. The old 20-hour gate defeated the 9am,
+# 1pm, and 8pm schedule and could hide a post for almost a day.
+if [ "${FORCE_REFRESH:-0}" != "1" ] && [ -f "$LAST_RUN_FILE" ]; then
+    LAST=$(sed -n '1p' "$LAST_RUN_FILE")
+    if [[ "$LAST" =~ ^[0-9]+$ ]]; then
+        NOW=$(date +%s)
+        DIFF=$((NOW - LAST))
+        if [ "$DIFF" -ge 0 ] && [ "$DIFF" -lt "$MIN_REFRESH_SECONDS" ]; then
+            echo "Refresh completed $((DIFF / 60)) minutes ago; skipping duplicate run."
+            exit 0
+        fi
     fi
 fi
 
-# Start from the latest main so a manual run rebases onto any cloud commits
-# instead of failing to push with a non-fast-forward error.
 echo "=== Syncing with origin/main ==="
-git pull --rebase --autostash origin main || true
+# A failed sync is fatal: continuing could create a commit that cannot publish.
+git pull --rebase --autostash origin main
 
 echo "=== Fetching posts from Substack ==="
-python3 fetch_all_posts.py
+"$PYTHON" fetch_all_posts.py
 
-echo ""
-echo "=== Extracting trades ==="
-python3 extract_trades.py
+echo
+echo "=== Extracting trades into an isolated candidate ==="
+POSTS_INPUT="$ROOT/all_posts.json" \
+TRADES_OUTPUT="$WORK_DIR/trades.raw.json" \
+    "$PYTHON" extract_trades.py
 
-echo ""
-echo "=== Filtering & deduplicating ==="
-python3 filter_trades.py
+echo
+echo "=== Filtering and deduplicating ==="
+TRADES_INPUT="$WORK_DIR/trades.raw.json" \
+TRADES_OUTPUT="$WORK_DIR/trades.candidate.json" \
+    "$PYTHON" filter_trades.py
 
-echo ""
-echo "=== Resolving residual directions (free local LLM hybrid via Ollama) ==="
-# Enabled: validated qwen2.5:14b (~88% precision, zero inversions) classifies the
-# trades the regex left 'unspecified'. Fail-safe — if Ollama is down it no-ops, and
-# this stage can never abort the pipeline. Cached, so only new trades hit the model.
+echo
+echo "=== Restoring cached directions / resolving new residuals ==="
+# The local model is optional and fail-safe. The tracked cache preserves prior
+# validated classifications when Ollama is not running.
 DIRECTION_LLM_ENABLE=1 DIRECTION_LLM_MODEL=qwen2.5:14b \
-    python3 llm_direction.py || echo "(direction resolver skipped/failed — keeping regex output)"
+TRADES_PATH="$WORK_DIR/trades.candidate.json" \
+    "$PYTHON" llm_direction.py || echo "(direction resolver skipped/failed; regex output kept)"
 
-# Only rebuild + push if trades_extracted.json actually changed
-git add trades_extracted.json
-if git diff --staged --quiet; then
-    echo "No new trades since last run."
-    git restore --staged trades_extracted.json 2>/dev/null || true
-    # Still mark as ran so we don't hammer Substack again today
-    date +%s > "$LAST_RUN_FILE"
-    exit 0
+echo
+echo "=== Validating candidate data ==="
+VALIDATE_ARGS=(
+    --posts "$ROOT/all_posts.json"
+    --articles "$ROOT/articles_index.json"
+    --trades "$WORK_DIR/trades.candidate.json"
+)
+if [ -f "$ROOT/trades_extracted.json" ]; then
+    VALIDATE_ARGS+=(--previous-trades "$ROOT/trades_extracted.json")
+fi
+"$PYTHON" validate_pipeline.py "${VALIDATE_ARGS[@]}"
+mv "$WORK_DIR/trades.candidate.json" "$ROOT/trades_extracted.json"
+
+git add articles_index.json trades_extracted.json
+if [ -f .direction_cache.json ]; then
+    git add .direction_cache.json
 fi
 
-echo ""
-echo "=== Building site ==="
-python3 build_site.py
+SITE_CHANGED=0
+if ! git diff --staged --quiet -- articles_index.json trades_extracted.json; then
+    SITE_CHANGED=1
+fi
 
-echo ""
-echo "=== Committing and pushing ==="
-git add trades_extracted.json docs/index.html
-TRADE_COUNT=$(python3 -c "import json; print(len(json.load(open('trades_extracted.json'))))")
-git commit -m "update: ${TRADE_COUNT} trades ($(date -u '+%Y-%m-%d'))"
+if [ "$SITE_CHANGED" -eq 1 ] || [ ! -f docs/index.html ]; then
+    echo
+    echo "=== Building site ==="
+    "$PYTHON" build_site.py
+    git add docs/index.html
+fi
+
+if git diff --staged --quiet; then
+    echo "No feed changes since the last published refresh."
+else
+    ARTICLE_COUNT=$("$PYTHON" -c "import json; print(len(json.load(open('articles_index.json'))))")
+    TRADE_COUNT=$("$PYTHON" -c "import json; print(len(json.load(open('trades_extracted.json'))))")
+    echo
+    echo "=== Committing ${ARTICLE_COUNT} articles / ${TRADE_COUNT} trades ==="
+    git commit -m "update: ${ARTICLE_COUNT} articles, ${TRADE_COUNT} trades ($(date -u '+%Y-%m-%d'))"
+fi
+
+# Always push, even when this run produced no diff. This retries a commit left
+# ahead of origin by a previous network failure.
+echo
+echo "=== Publishing ==="
 git push origin main
 
 date +%s > "$LAST_RUN_FILE"
 
-echo ""
-echo "Done — ${TRADE_COUNT} trades live at:"
+ARTICLE_COUNT=$("$PYTHON" -c "import json; print(len(json.load(open('articles_index.json'))))")
+TRADE_COUNT=$("$PYTHON" -c "import json; print(len(json.load(open('trades_extracted.json'))))")
+echo
+echo "Done - ${ARTICLE_COUNT} articles and ${TRADE_COUNT} trades published at:"
 echo "https://navnoorthapar.github.io/substack-trades/"

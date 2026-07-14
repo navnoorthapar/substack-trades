@@ -4,12 +4,24 @@ Quality filter and deduplication pass for extracted trades.
 Removes false positives, meta-content, and paywall notices.
 """
 import json
+import os
 import re
 
 from pathlib import Path
 ROOT = Path(__file__).parent
-INPUT_PATH  = ROOT / 'trades_extracted.json'
-OUTPUT_PATH = ROOT / 'trades_extracted.json'
+INPUT_PATH = Path(os.environ.get('TRADES_INPUT', ROOT / 'trades_extracted.json'))
+OUTPUT_PATH = Path(os.environ.get('TRADES_OUTPUT', ROOT / 'trades_extracted.json'))
+
+
+def atomic_write_json(path, value):
+    tmp_path = path.parent / (path.name + '.tmp')
+    try:
+        with open(tmp_path, 'w', encoding='utf-8') as f:
+            json.dump(value, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, path)
+    finally:
+        if tmp_path.exists():
+            tmp_path.unlink()
 
 # Patterns indicating the "trade" is actually meta-content, not a real trade
 META_PATTERNS = [
@@ -166,8 +178,7 @@ def main():
     unique.sort(key=get_date, reverse=True)
 
     # Save
-    with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
-        json.dump(unique, f, ensure_ascii=False, indent=2)
+    atomic_write_json(OUTPUT_PATH, unique)
 
     print(f"\nFinal trade count saved to {OUTPUT_PATH}: {len(unique)}")
 
