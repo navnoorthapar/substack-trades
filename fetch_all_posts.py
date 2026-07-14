@@ -15,8 +15,13 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).parent
-POSTS_PATH = ROOT / 'all_posts.json'
-ARTICLE_INDEX_PATH = ROOT / 'articles_index.json'
+POSTS_PATH = Path(os.environ.get('POSTS_OUTPUT', ROOT / 'all_posts.json')).expanduser()
+ARTICLE_INDEX_PATH = Path(os.environ.get(
+    'ARTICLES_OUTPUT', ROOT / 'articles_index.json'
+)).expanduser()
+PREVIOUS_POSTS_PATH = Path(os.environ.get(
+    'PREVIOUS_POSTS', ROOT / 'all_posts.json'
+)).expanduser()
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -115,6 +120,8 @@ def fetch_posts(limit=50, offset=0, attempts=3):
 def article_metadata(post):
     """Keep the small, deployable subset needed to render every article."""
     return {
+        'source': 'substack',
+        'source_id': post.get('slug', ''),
         'slug': post.get('slug', ''),
         'title': post.get('title', ''),
         'subtitle': post.get('subtitle', ''),
@@ -122,6 +129,7 @@ def article_metadata(post):
         'url': post.get('url', ''),
         'audience': post.get('audience', ''),
         'wordcount': post.get('wordcount', 0),
+        'content_status': 'full',
     }
 
 
@@ -180,6 +188,8 @@ def main():
             body_text = strip_html(body_html) if body_html else post.get('truncated_body_text', '')
 
             all_posts.append({
+                'source': 'substack',
+                'source_id': post.get('slug', ''),
                 'slug': post.get('slug', ''),
                 'title': post.get('title', ''),
                 'subtitle': post.get('subtitle', ''),
@@ -192,6 +202,7 @@ def main():
                 'wordcount': post.get('wordcount', 0),
                 'body_text': body_text,
                 'body_html_length': len(body_html),
+                'content_status': 'full',
             })
 
         if len(posts) < limit:
@@ -215,9 +226,9 @@ def main():
         print("Fetch returned zero posts — leaving previous all_posts.json untouched.")
         sys.exit(1)
 
-    if POSTS_PATH.exists():
+    if PREVIOUS_POSTS_PATH.exists():
         try:
-            with open(POSTS_PATH, 'r', encoding='utf-8') as f:
+            with open(PREVIOUS_POSTS_PATH, 'r', encoding='utf-8') as f:
                 prev = json.load(f)
             prev_count = len(prev) if isinstance(prev, list) else 0
             prev_slugs = {post.get('slug') for post in prev if isinstance(post, dict) and post.get('slug')}

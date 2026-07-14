@@ -31,7 +31,7 @@ cleanup() {
     exit_code=$1
     trap - EXIT
     if [ -n "$WORK_DIR" ] && [ -d "$WORK_DIR" ]; then
-        rm -f "$WORK_DIR/trades.raw.json" "$WORK_DIR/trades.candidate.json"
+        rm -f "$WORK_DIR"/*.json
         rmdir "$WORK_DIR" 2>/dev/null || true
     fi
     if [ "$LOCK_OWNED" -eq 1 ]; then
@@ -88,11 +88,29 @@ echo "=== Syncing with origin/main ==="
 git pull --rebase --autostash origin main
 
 echo "=== Fetching posts from Substack ==="
-"$PYTHON" fetch_all_posts.py
+POSTS_OUTPUT="$WORK_DIR/substack.candidate.json" \
+ARTICLES_OUTPUT="$WORK_DIR/substack-articles.candidate.json" \
+PREVIOUS_POSTS="$ROOT/all_posts.json" \
+    "$PYTHON" fetch_all_posts.py
+
+echo
+echo "=== Fetching complete Medium archive ==="
+MEDIUM_OUTPUT="$WORK_DIR/medium.candidate.json" \
+PREVIOUS_MEDIUM="$ROOT/medium_posts.json" \
+    "$PYTHON" fetch_medium_posts.py
+
+echo
+echo "=== Merging sources and removing Medium cross-posts ==="
+SUBSTACK_POSTS="$WORK_DIR/substack.candidate.json" \
+MEDIUM_POSTS="$WORK_DIR/medium.candidate.json" \
+POSTS_OUTPUT="$WORK_DIR/posts.candidate.json" \
+ARTICLES_OUTPUT="$WORK_DIR/articles.candidate.json" \
+DEDUPE_REPORT_OUTPUT="$WORK_DIR/dedupe-report.json" \
+    "$PYTHON" merge_article_sources.py
 
 echo
 echo "=== Extracting trades into an isolated candidate ==="
-POSTS_INPUT="$ROOT/all_posts.json" \
+POSTS_INPUT="$WORK_DIR/posts.candidate.json" \
 TRADES_OUTPUT="$WORK_DIR/trades.raw.json" \
     "$PYTHON" extract_trades.py
 
@@ -113,17 +131,21 @@ TRADES_PATH="$WORK_DIR/trades.candidate.json" \
 echo
 echo "=== Validating candidate data ==="
 VALIDATE_ARGS=(
-    --posts "$ROOT/all_posts.json"
-    --articles "$ROOT/articles_index.json"
+    --posts "$WORK_DIR/posts.candidate.json"
+    --articles "$WORK_DIR/articles.candidate.json"
     --trades "$WORK_DIR/trades.candidate.json"
 )
 if [ -f "$ROOT/trades_extracted.json" ]; then
     VALIDATE_ARGS+=(--previous-trades "$ROOT/trades_extracted.json")
 fi
 "$PYTHON" validate_pipeline.py "${VALIDATE_ARGS[@]}"
+mv "$WORK_DIR/substack.candidate.json" "$ROOT/all_posts.json"
+mv "$WORK_DIR/medium.candidate.json" "$ROOT/medium_posts.json"
+mv "$WORK_DIR/posts.candidate.json" "$ROOT/all_sources_posts.json"
+mv "$WORK_DIR/articles.candidate.json" "$ROOT/articles_index.json"
 mv "$WORK_DIR/trades.candidate.json" "$ROOT/trades_extracted.json"
 
-git add articles_index.json trades_extracted.json
+git add articles_index.json medium_posts.json trades_extracted.json
 if [ -f .direction_cache.json ]; then
     git add .direction_cache.json
 fi

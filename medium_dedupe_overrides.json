@@ -1,0 +1,57 @@
+{
+  "description": "Reviewed Medium-to-Substack cross-post mappings whose titles were substantially rewritten. Substack remains the canonical dashboard card.",
+  "overrides": [
+    {
+      "medium_title_key": "optiver wrote the neutral fix for european markets 3 out of its 5 ideas would also enrich optiver",
+      "substack_title": "Optiver Wrote the 'Neutral' Fix for European Markets. Three of Its Five Ideas Would Also Enrich Optiver."
+    },
+    {
+      "medium_title_key": "avellaneda stoikov charges up to 48 76 of profit for inventory skew hsbc funded quants traced why",
+      "substack_title": "Avellaneda-Stoikov Charges Up to 48.76% of Profit for Inventory Skew. HSBC-Funded Quants Traced the Cost to One Assumption"
+    },
+    {
+      "medium_title_key": "the george weiss collapse how a 46 year hedge fund dynasty died on zoom",
+      "substack_title": "How a 46-Year Hedge Fund Dynasty Died on Zoom"
+    },
+    {
+      "medium_title_key": "millennium s 234b q3 portfolio what 330 pods actually trade",
+      "substack_title": "Millennium’s $234B Q3 Portfolio: $20B NVDA Position, $7.4B External Allocations, and What 330 Pods Actually Trade"
+    },
+    {
+      "medium_title_key": "how trump s tariff shock broke renaissance s quant models",
+      "substack_title": "RIEF’s $1.6 Billion Liberation Day Disaster: How Trump’s Tariff Shock Broke Renaissance’s Quant Models"
+    },
+    {
+      "medium_title_key": "d e shaw citadel and renaissance run stat arb its ols bias has been known since 1954",
+      "substack_title": "D.E. Shaw, Citadel, and Renaissance Run Statistical Arbitrage. The OLS Bias in Mean-Reversion Speed Has Been Known Since 1954."
+    },
+    {
+      "medium_title_key": "non deliverable forwards ndfs and emerging market currency alpha how hedge funds profit bank",
+      "substack_title": "Non-Deliverable Forwards (NDFs) and Emerging Market Currency Alpha: How Hedge Funds Profit, How Banks Manipulated the Fix, and Why Three Sovereign Markets Banned the Trade"
+    },
+    {
+      "medium_title_key": "volatility trading case studies 19 documented hedge fund strategies",
+      "substack_title": "Volatility Trading Case Studies: Bill Ackman’s $2.6B, Allianz’s $6B Fraud, Universa’s 3,612% — 19 Documented Hedge Fund Strategies"
+    },
+    {
+      "medium_title_key": "how elite funds made 16b from illiquidity burford blackstone covenant arbitrage",
+      "substack_title": "The Illiquidity Arbitrage Playbook: How Burford Capital ($16B Argentina Win), Blackstone (Hipgnosis), and Elite Funds Manufacture Alpha from Covenant Loopholes, Litigation Finance, Life Settlements"
+    },
+    {
+      "medium_title_key": "pharma alpha point72 s 56 foia requests baker bros warrants cassava 40m and martoma s 276m jail",
+      "substack_title": "The Forensic Playbook: Point72’s 56 FOIA Requests, Baker Bros’ Warrant Engineering, Perceptive’s Credit Structures, and Forensic Analysis That Generates Pharma Alpha-Why $276M Trade Ended in Prison"
+    },
+    {
+      "medium_title_key": "long gamma captures excess realized volatility the p and l mechanics behind volatility arbitrage",
+      "substack_title": "Long Gamma Captures Excess Realized Volatility: Understanding Gamma Scalping vs. Static Tail Protection"
+    },
+    {
+      "medium_title_key": "oil s variance premium 40 sharpe 0 disclosed track records",
+      "substack_title": "Oil’s 40% Sharpe Variance Trade Sat Untested Since 2011. No Fund Has Shown They Run It."
+    },
+    {
+      "medium_title_key": "how 1 hedge fund turned 27m into 2 6b in 30 days",
+      "substack_title": "The $27 Million Bet That Returned $2.6 Billion: Deconstructing the Greatest Hedge Fund Trade in Modern History"
+    }
+  ]
+}

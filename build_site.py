@@ -40,6 +40,13 @@ def _clean_date(value):
     return date
 
 
+def _clean_source(value, url=''):
+    source = str(value or '').strip().casefold()
+    if source in {'substack', 'medium'}:
+        return source
+    return 'medium' if 'medium.com/' in str(url).casefold() else 'substack'
+
+
 # Group trades by article URL, then left-join them onto every fetched article.
 trades_by_url = defaultdict(list)
 for t in trades:
@@ -61,6 +68,8 @@ for metadata in article_index:
         'subtitle':    metadata.get('subtitle') or '',
         'date':        _clean_date(metadata.get('post_date') or first.get('article_date')),
         'url':         url,
+        'source':      _clean_source(metadata.get('source'), url),
+        'alternate_urls': metadata.get('alternate_urls') or {},
         'trade_count': len(article_trades),
         'trades':      article_trades,
     })
@@ -76,6 +85,8 @@ for url, article_trades in trades_by_url.items():
         'subtitle':    '',
         'date':        _clean_date(first.get('article_date')),
         'url':         url,
+        'source':      _clean_source(None, url),
+        'alternate_urls': {},
         'trade_count': len(article_trades),
         'trades':      article_trades,
     })
@@ -236,6 +247,8 @@ main{{flex:1;padding:20px 24px;max-width:960px;}}
 .dot-prediction_market{{background:#4ade80}}
 .dot-weather_derivative{{background:#7dd3fc}}
 .dot-all{{background:var(--accent)}}
+.dot-substack{{background:#f97316}}
+.dot-medium{{background:#d1d5db}}
 
 /* ── ARTICLE CARDS ── */
 .result-count{{font-size:12px;color:var(--muted);margin-bottom:16px;font-family:var(--font-mono)}}
@@ -258,6 +271,14 @@ main{{flex:1;padding:20px 24px;max-width:960px;}}
   white-space:nowrap;padding-top:2px;
 }}
 .article-date{{display:block}}
+.source-badge{{
+  display:inline-block;margin-top:5px;padding:1px 5px;border:1px solid;
+  border-radius:3px;font-size:8px;letter-spacing:.06em;text-transform:uppercase;
+}}
+.source-substack{{color:#fb923c;border-color:#7c2d12;background:#1c0b04}}
+.source-medium{{color:#d1d5db;border-color:#4b5563;background:#171717}}
+html.light .source-substack{{color:#c2410c;border-color:#fed7aa;background:#fff7ed}}
+html.light .source-medium{{color:#374151;border-color:#d1d5db;background:#f9fafb}}
 .article-body{{display:block;flex:1;min-width:0}}
 .article-title{{
   display:block;
@@ -373,8 +394,9 @@ html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
   main{{padding:12px 16px;max-width:100%;}}
   .result-count{{margin-bottom:10px;}}
   .article-header{{padding:12px 14px;gap:8px;flex-wrap:wrap;}}
-  .article-meta{{display:flex;flex-direction:row;gap:8px;white-space:nowrap;font-size:9px;flex:0 0 100%;order:3;padding-top:0;}}
+  .article-meta{{display:flex;flex-direction:row;align-items:center;gap:8px;white-space:nowrap;font-size:9px;flex:0 0 100%;order:3;padding-top:0;}}
   .article-date{{display:inline;margin:0;}}
+  .source-badge{{margin-top:0}}
   .article-body{{flex:1 1 calc(100% - 90px);}}
   .article-title{{font-size:13px;}}
   .trade-badge{{font-size:9px;padding:2px 6px;}}
@@ -407,6 +429,19 @@ html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
 
 <div class="layout">
 <aside id="filters-panel">
+  <div class="filter-group">
+    <span class="filter-label">Source</span>
+    <button class="filter-btn active" data-source="all" onclick="setSource(this)">
+      <span class="dot dot-all"></span> All <span class="count"></span>
+    </button>
+    <button class="filter-btn" data-source="substack" onclick="setSource(this)">
+      <span class="dot dot-substack"></span> Substack <span class="count"></span>
+    </button>
+    <button class="filter-btn" data-source="medium" onclick="setSource(this)">
+      <span class="dot dot-medium"></span> Medium <span class="count"></span>
+    </button>
+  </div>
+
   <div class="filter-group">
     <span class="filter-label">Fund</span>
     {fund_filter_html}
@@ -464,6 +499,7 @@ const DATA = {data_json};
 let activeDir  = 'all';
 let activeInst = 'all';
 let activeFund = 'all';
+let activeSource = 'all';
 let query      = '';
 
 // ── Filter & Render ──
@@ -488,6 +524,7 @@ function matchesQuery(art, q, trades) {{
   const haystack = [
     art.title,
     art.subtitle,
+    art.source,
     ...src.map(t => [
       t.trade_description, t.underlying, t.edge_or_thesis,
       t.outcome_if_mentioned, t.fund_name_if_mentioned, t.direction,
@@ -508,16 +545,17 @@ function filteredTrades(art) {{
 function render() {{
   const feed = document.getElementById('feed');
   const q = query.trim();
-  const filtersActive = activeDir !== 'all' || activeInst !== 'all' || activeFund !== 'all';
+  const tradeFiltersActive = activeDir !== 'all' || activeInst !== 'all' || activeFund !== 'all';
 
   const tradeCache = new Map();
   for (const art of DATA) {{
-    tradeCache.set(art, filtersActive ? filteredTrades(art) : art.trades);
+    tradeCache.set(art, tradeFiltersActive ? filteredTrades(art) : art.trades);
   }}
 
   const visible = DATA.filter(art => {{
     const trades = tradeCache.get(art);
-    if (filtersActive && trades.length === 0) return false;
+    if (activeSource !== 'all' && art.source !== activeSource) return false;
+    if (tradeFiltersActive && trades.length === 0) return false;
     return matchesQuery(art, q, trades);
   }});
 
@@ -576,6 +614,8 @@ function fmtDate(s) {{
 function buildCard(art, trades, index) {{
   const div = document.createElement('div');
   div.className = 'article-card';
+  const source = art.source === 'medium' ? 'medium' : 'substack';
+  const sourceLabel = source === 'medium' ? 'Medium' : 'Substack';
 
   // Instruments from filtered trades
   const insts = [...new Set(trades.flatMap(t => t.instruments || []))].filter(i => i !== 'unspecified').sort();
@@ -596,6 +636,7 @@ function buildCard(art, trades, index) {{
     <button type="button" class="article-header" id="${{toggleId}}" aria-expanded="false" aria-controls="${{panelId}}">
       <span class="article-meta">
         <span class="article-date">${{fmtDate(art.date)}}</span>
+        <span class="source-badge source-${{source}}">${{sourceLabel}}</span>
       </span>
       <span class="article-body">
         <span class="article-title">${{esc(art.title)}}</span>
@@ -605,7 +646,7 @@ function buildCard(art, trades, index) {{
       <span class="expand-icon" aria-hidden="true">&#9658;</span>
     </button>
     <div class="trades-panel" id="${{panelId}}" role="region" aria-labelledby="${{toggleId}}">
-      <a class="article-link" href="${{esc(safeArticleUrl(art.url))}}" target="_blank" rel="noopener">&#8599; Open on Substack</a>
+      <a class="article-link" href="${{esc(safeArticleUrl(art.url))}}" target="_blank" rel="noopener">&#8599; Open on ${{sourceLabel}}</a>
       ${{tradeMarkup}}
     </div>`;
 
@@ -648,6 +689,14 @@ function toggleCard(card, toggle) {{
 function updateCounts() {{
   const dirs  = ['all','long','short','arbitrage/relative value','long/short'];
   const insts = ['all','equity','volatility','option','bond','futures','commodity','FX','repo','swap','CDS','prediction_market','weather_derivative'];
+
+  document.querySelectorAll('[data-source]').forEach(btn => {{
+    const source = btn.dataset.source;
+    const el = btn.querySelector('.count');
+    if (el) el.textContent = source === 'all'
+      ? DATA.length
+      : DATA.filter(article => article.source === source).length;
+  }});
 
   for (const d of dirs) {{
     const id = d === 'all' ? 'cnt-dir-all' : d === 'arbitrage/relative value' ? 'cnt-dir-arb' : d === 'long/short' ? 'cnt-dir-ls' : `cnt-dir-${{d}}`;
@@ -693,6 +742,11 @@ function setFund(btn) {{
   activeFund = btn.dataset.fund;
   render();
 }}
+function setSource(btn) {{
+  setActiveFilter('[data-source]', btn);
+  activeSource = btn.dataset.source;
+  render();
+}}
 
 // ── URL hash state (shareable / bookmarkable filters) ──
 function updateHash() {{
@@ -701,6 +755,7 @@ function updateHash() {{
   if (activeDir !== 'all') p.set('dir', activeDir);
   if (activeInst !== 'all') p.set('inst', activeInst);
   if (activeFund !== 'all') p.set('fund', activeFund);
+  if (activeSource !== 'all') p.set('source', activeSource);
   const s = p.toString();
   history.replaceState(null, '', s ? '#' + s : location.pathname + location.search);
 }}
@@ -767,7 +822,7 @@ document.addEventListener('keydown', e => {{
 
 // ── Init ──
 (function initFromHash() {{
-  document.querySelectorAll('[data-dir],[data-inst],[data-fund]').forEach(b =>
+  document.querySelectorAll('[data-dir],[data-inst],[data-fund],[data-source]').forEach(b =>
     b.setAttribute('aria-pressed', String(b.classList.contains('active'))));
 
   const hash = location.hash.slice(1);
@@ -788,6 +843,11 @@ document.addEventListener('keydown', e => {{
     const requested = normalizeFund(p.get('fund'));
     const btn = [...document.querySelectorAll('[data-fund]')].find(b => normalizeFund(b.dataset.fund) === requested);
     if (btn) {{ activeFund = btn.dataset.fund; setActiveFilter('[data-fund]', btn); }}
+  }}
+  if (p.has('source')) {{
+    const requested = p.get('source');
+    const btn = [...document.querySelectorAll('[data-source]')].find(b => b.dataset.source === requested);
+    if (btn) {{ activeSource = btn.dataset.source; setActiveFilter('[data-source]', btn); }}
   }}
 }})();
 renderStats();

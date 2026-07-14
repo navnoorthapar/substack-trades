@@ -1,23 +1,37 @@
 # Substack Trade Intelligence
 
-This project fetches posts from `navnoorbawa.substack.com`, extracts trade
-records, and publishes the dashboard at
+This project fetches posts from `navnoorbawa.substack.com` and
+`medium.com/@navnoorbawa`, extracts trade records, and publishes the dashboard at
 <https://navnoorthapar.github.io/substack-trades/>.
 
 ## Architecture
 
 Substack rejects GitHub-hosted datacenter traffic, so fetching and publishing
-run from a logged-in Mac with a residential connection. The local pipeline is:
+run from a logged-in Mac with a residential connection. Medium's public author
+archive is paginated; the ten-item RSS feed is used only as a fallback. The
+local pipeline is:
 
 ```text
-Substack API -> all_posts.json -> articles_index.json + trades_extracted.json
-             -> validation -> docs/index.html -> git push -> GitHub Pages
+Substack API ----> all_posts.json ---------\
+                                           +-> cross-source dedupe -> all_sources_posts.json
+Medium archive -> medium_posts.json -------/                         |
+                                                                     +-> articles_index.json
+                                                                     +-> trades_extracted.json
+                                                                     +-> validation -> docs/index.html
+                                                                                     -> GitHub Pages
 ```
 
-`all_posts.json` stays local because it contains the full corpus.
-`articles_index.json`, `trades_extracted.json`, `.direction_cache.json`, and
-`docs/index.html` are tracked. The GitHub Action never fetches Substack; it only
-rebuilds `docs/index.html` after relevant pushes or a manual dispatch.
+`all_posts.json` and `all_sources_posts.json` stay local. `medium_posts.json` is
+tracked as the last known complete Medium catalogue so a temporary API failure
+cannot erase older articles. Cross-posts are matched by Medium's explicit
+Substack notice, normalized/full titles, subtitles plus dates, conservative
+similarity, and reviewed mappings in `medium_dedupe_overrides.json`. Substack is
+kept as the canonical card; only Medium-only articles are added.
+
+`articles_index.json`, `medium_posts.json`, `trades_extracted.json`,
+`.direction_cache.json`, and `docs/index.html` are tracked. The GitHub Action
+never fetches either publication; it only rebuilds `docs/index.html` after
+relevant pushes or a manual dispatch.
 
 The core pipeline needs Python 3.9+, Git with authenticated write access to
 `origin`, and network access to Substack and GitHub. It has no pip dependencies.
@@ -76,14 +90,14 @@ gh workflow run update.yml
 gh run list --workflow update.yml --limit 5
 ```
 
-This fallback can regenerate the site, but it cannot discover new Substack posts;
-only the Mac refresh has access to the live feed.
+This fallback can regenerate the site, but it cannot discover new publication
+posts; only the Mac refresh runs the live multi-source ingestion pipeline.
 
 Validate the currently generated data without publishing it:
 
 ```bash
 python3 validate_pipeline.py \
-  --posts all_posts.json \
+  --posts all_sources_posts.json \
   --articles articles_index.json \
   --trades trades_extracted.json
 ```

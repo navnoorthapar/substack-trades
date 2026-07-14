@@ -5,6 +5,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 
 VALID_DIRECTIONS = {
@@ -16,6 +17,8 @@ VALID_INSTRUMENTS = {
     'unspecified',
 }
 DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}')
+VALID_SOURCES = {'substack', 'medium'}
+VALID_CONTENT_STATUSES = {'full', 'excerpt'}
 
 
 def load_list(path, label):
@@ -34,39 +37,66 @@ def require(condition, message):
         raise ValueError(message)
 
 
+def validate_source_url(source, url):
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return False
+    host = (parsed.hostname or '').casefold()
+    if parsed.scheme != 'https':
+        return False
+    if source == 'substack':
+        return host == 'navnoorbawa.substack.com' and parsed.path.startswith('/p/')
+    if source == 'medium':
+        return (host == 'medium.com' or host.endswith('.medium.com')) and bool(parsed.path.strip('/'))
+    return False
+
+
 def validate_posts(posts):
     require(posts, 'post snapshot is empty')
-    urls = []
-    slugs = []
+    post_by_url = {}
+    source_ids = []
     for index, post in enumerate(posts):
         require(isinstance(post, dict), f'post {index} is not an object')
         url = post.get('url')
-        slug = post.get('slug')
+        source = post.get('source')
+        source_id = post.get('source_id') or post.get('slug')
+        content_status = post.get('content_status') or 'full'
         date = post.get('post_date') or ''
-        require(isinstance(url, str) and url.startswith('https://navnoorbawa.substack.com/p/'),
-                f'post {index} has an invalid URL')
-        require(isinstance(slug, str) and slug, f'post {index} has no slug')
+        require(source in VALID_SOURCES, f'post {index} has an invalid source')
+        require(isinstance(url, str) and validate_source_url(source, url),
+                f'post {index} has an invalid {source} URL')
+        require(isinstance(source_id, str) and source_id,
+                f'post {index} has no source ID')
+        require(content_status in VALID_CONTENT_STATUSES,
+                f'post {index} has an invalid content status')
         require(DATE_RE.match(date), f'post {index} has an invalid date')
-        urls.append(url)
-        slugs.append(slug)
-    require(len(urls) == len(set(urls)), 'post snapshot contains duplicate URLs')
-    require(len(slugs) == len(set(slugs)), 'post snapshot contains duplicate slugs')
-    return set(urls)
+        require(url not in post_by_url, 'post snapshot contains duplicate URLs')
+        post_by_url[url] = (source, source_id)
+        source_ids.append((source, source_id))
+    require(len(source_ids) == len(set(source_ids)),
+            'post snapshot contains duplicate source IDs')
+    return post_by_url
 
 
-def validate_article_index(articles, post_urls):
+def validate_article_index(articles, post_by_url):
     require(articles, 'article index is empty')
     urls = []
     for index, article in enumerate(articles):
         require(isinstance(article, dict), f'article {index} is not an object')
         url = article.get('url')
+        source = article.get('source')
+        source_id = article.get('source_id') or article.get('slug')
         date = article.get('post_date') or ''
-        require(isinstance(url, str) and url in post_urls,
+        require(isinstance(url, str) and url in post_by_url,
                 f'article {index} is not present in the fetched post snapshot')
+        require((source, source_id) == post_by_url[url],
+                f'article {index} source metadata does not match its post')
         require(DATE_RE.match(date), f'article {index} has an invalid date')
         urls.append(url)
     require(len(urls) == len(set(urls)), 'article index contains duplicate URLs')
-    require(set(urls) == post_urls, 'article index does not exactly match the fetched posts')
+    require(set(urls) == set(post_by_url),
+            'article index does not exactly match the fetched posts')
     return set(urls)
 
 
@@ -134,8 +164,8 @@ def main():
         posts = load_list(args.posts, 'post snapshot')
         articles = load_list(args.articles, 'article index')
         trades = load_list(args.trades, 'trade output')
-        post_urls = validate_posts(posts)
-        article_urls = validate_article_index(articles, post_urls)
+        post_by_url = validate_posts(posts)
+        article_urls = validate_article_index(articles, post_by_url)
         represented_articles = validate_trades(trades, article_urls)
         validate_regression(trades, represented_articles, args.previous_trades,
                             args.minimum_ratio)
