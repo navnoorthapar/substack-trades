@@ -1,36 +1,36 @@
 #!/usr/bin/env python3
-"""Build docs/index.html — hedge fund trade intelligence dashboard."""
+"""Build the institutional research terminal at docs/index.html."""
+import hashlib
+import html as html_lib
 import json
+import unicodedata
 from collections import Counter, defaultdict
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
-ROOT     = Path(__file__).parent
+
+ROOT = Path(__file__).parent
 DOCS_DIR = ROOT / 'docs'
 DOCS_DIR.mkdir(exist_ok=True)
 
-with open(ROOT / 'trades_extracted.json') as f:
-    trades = json.load(f)
+with open(ROOT / 'trades_extracted.json', encoding='utf-8') as handle:
+    trades = json.load(handle)
 
-# `articles_index.json` is the small, tracked metadata snapshot written by the
-# fetcher.  It is deliberately separate from the much larger local-only post
-# corpus and lets the site show articles even when extraction finds no trades.
 article_index_path = ROOT / 'articles_index.json'
 article_index = []
 if article_index_path.exists():
-    with open(article_index_path, encoding='utf-8') as f:
-        article_index_payload = json.load(f)
-    if isinstance(article_index_payload, dict):
-        article_index = article_index_payload.get('articles', [])
-    else:
-        article_index = article_index_payload
-    if not isinstance(article_index, list) or not all(isinstance(a, dict) for a in article_index):
+    with open(article_index_path, encoding='utf-8') as handle:
+        payload = json.load(handle)
+    article_index = payload.get('articles', []) if isinstance(payload, dict) else payload
+    if not isinstance(article_index, list) or not all(
+            isinstance(article, dict) for article in article_index):
         raise ValueError('articles_index.json must contain a list of article objects')
 else:
     print('Warning: articles_index.json missing; building from trade metadata only')
 
 
-def _clean_date(value):
+def clean_date(value):
     """Return a sortable ISO date, sending malformed values to the bottom."""
     date = str(value or '')[:10]
     try:
@@ -40,19 +40,52 @@ def _clean_date(value):
     return date
 
 
-def _clean_source(value, url=''):
+def clean_source(value, url=''):
     source = str(value or '').strip().casefold()
     if source in {'substack', 'medium'}:
         return source
     return 'medium' if 'medium.com/' in str(url).casefold() else 'substack'
 
 
-# Group trades by article URL, then left-join them onto every fetched article.
+def stable_id(prefix, value):
+    digest = hashlib.sha256(value.encode('utf-8')).hexdigest()[:14]
+    return f'{prefix}_{digest}'
+
+
+def normalize_identity_text(value):
+    """Return a stable, Unicode-aware identity key for durable client state."""
+    normalized = unicodedata.normalize('NFKC', str(value or ''))
+    return ' '.join(normalized.split()).casefold()
+
+
+def canonical_url_identity(value):
+    """Canonicalize safe URL components used for stable article identity."""
+    raw = str(value or '').strip()
+    parts = urlsplit(raw)
+    scheme = parts.scheme.casefold()
+    host = (parts.hostname or '').casefold()
+    port = parts.port
+    if port and not ((scheme == 'https' and port == 443) or (scheme == 'http' and port == 80)):
+        host = f'{host}:{port}'
+    path = parts.path.rstrip('/') or '/'
+    return urlunsplit((scheme, host, path, parts.query, ''))
+
+
+def json_for_script(value):
+    """Serialize data without allowing it to terminate the script element."""
+    return (json.dumps(value, ensure_ascii=False, separators=(',', ':'))
+            .replace('&', r'\u0026')
+            .replace('<', r'\u003c')
+            .replace('>', r'\u003e')
+            .replace('\u2028', r'\u2028')
+            .replace('\u2029', r'\u2029'))
+
+
 trades_by_url = defaultdict(list)
-for t in trades:
-    url = str(t.get('article_url') or '').strip().rstrip('/')
+for trade in trades:
+    url = str(trade.get('article_url') or '').strip().rstrip('/')
     if url:
-        trades_by_url[url].append(t)
+        trades_by_url[url].append(trade)
 
 articles = []
 seen_urls = set()
@@ -63,803 +96,2152 @@ for metadata in article_index:
     seen_urls.add(url)
     article_trades = trades_by_url.get(url, [])
     first = article_trades[0] if article_trades else {}
+    try:
+        wordcount = max(0, int(metadata.get('wordcount') or 0))
+    except (TypeError, ValueError):
+        wordcount = 0
     articles.append({
-        'title':       metadata.get('title') or first.get('article_title') or url,
-        'subtitle':    metadata.get('subtitle') or '',
-        'date':        _clean_date(metadata.get('post_date') or first.get('article_date')),
-        'url':         url,
-        'source':      _clean_source(metadata.get('source'), url),
+        'title': metadata.get('title') or first.get('article_title') or url,
+        'subtitle': metadata.get('subtitle') or '',
+        'date': clean_date(metadata.get('post_date') or first.get('article_date')),
+        'url': url,
+        'source': clean_source(metadata.get('source'), url),
         'alternate_urls': metadata.get('alternate_urls') or {},
-        'trade_count': len(article_trades),
-        'trades':      article_trades,
+        'wordcount': wordcount,
+        'content_status': metadata.get('content_status') or 'full',
+        'trades': article_trades,
     })
 
-# Preserve trade-bearing articles that predate or are otherwise absent from the
-# metadata index.  This makes an incomplete index additive rather than lossy.
+# Keep trade-bearing articles additive if metadata is ever incomplete.
 for url, article_trades in trades_by_url.items():
     if url in seen_urls:
         continue
     first = article_trades[0]
     articles.append({
-        'title':       first.get('article_title') or url,
-        'subtitle':    '',
-        'date':        _clean_date(first.get('article_date')),
-        'url':         url,
-        'source':      _clean_source(None, url),
+        'title': first.get('article_title') or url,
+        'subtitle': '',
+        'date': clean_date(first.get('article_date')),
+        'url': url,
+        'source': clean_source(None, url),
         'alternate_urls': {},
-        'trade_count': len(article_trades),
-        'trades':      article_trades,
+        'wordcount': 0,
+        'content_status': 'full',
+        'trades': article_trades,
     })
 
-articles.sort(key=lambda x: x['date'], reverse=True)
+articles.sort(key=lambda article: article['date'], reverse=True)
 
-# ── Top funds for sidebar filter ──────────────────────────────────────────────
-import re as _re
-fund_variants = defaultdict(Counter)
-for t in trades:
-    fn = t.get('fund_name_if_mentioned')
-    if fn:
-        name = str(fn).strip()
-        if name:
-            fund_variants[name.casefold()][name] += 1
+manager_variants = defaultdict(Counter)
+for trade in trades:
+    raw_manager = ' '.join(unicodedata.normalize(
+        'NFKC', str(trade.get('fund_name_if_mentioned') or '')
+    ).split())
+    if raw_manager:
+        manager_variants[normalize_identity_text(raw_manager)][raw_manager] += 1
 
-fund_counts = []
-for variants in fund_variants.values():
-    # Display the most common spelling while combining case-only duplicates.
-    display_name = sorted(variants.items(), key=lambda x: (-x[1], x[0].casefold(), x[0]))[0][0]
-    fund_counts.append((display_name, sum(variants.values())))
-top_funds = sorted(fund_counts, key=lambda x: (-x[1], x[0].casefold()))[:12]
 
-def _fid(name):
-    return _re.sub(r'[^a-zA-Z0-9]', '_', name)
+def preferred_manager_label(key):
+    variants = manager_variants[key]
+    return sorted(
+        variants,
+        key=lambda label: (-variants[label], label.islower(), label.casefold(), label),
+    )[0]
 
-_fund_btns = [
-    '<button class="filter-btn active" data-fund="all" onclick="setFund(this)">'
-    '<span class="dot dot-all"></span> All <span class="count" id="cnt-fund-all"></span>'
-    '</button>'
-]
-for fn, _ in top_funds:
-    fn_esc = fn.replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;').replace('>', '&gt;')
-    _fund_btns.append(
-        f'<button class="filter-btn" data-fund="{fn_esc}" onclick="setFund(this)">'
-        f'<span class="dot" style="background:var(--accent);opacity:.4"></span>'
-        f'{fn_esc} <span class="count" id="cnt-fund-{_fid(fn)}"></span>'
-        f'</button>'
+
+manager_labels = {
+    key: preferred_manager_label(key)
+    for key in manager_variants
+}
+
+# Flatten the client payload once. Article metadata is stored once instead of
+# being repeated inside every extracted idea, materially reducing parse/heap
+# cost while keeping the deployment a single static file.
+client_articles = []
+client_ideas = []
+for article in articles:
+    article_id = stable_id('a', canonical_url_identity(article['url']))
+    idea_ids = []
+    directions = set()
+    instruments = set()
+    managers = set()
+    manager_keys = set()
+
+    for trade in article['trades']:
+        description = str(trade.get('trade_description') or '').strip()
+        idea_id = stable_id(
+            'i',
+            canonical_url_identity(article['url']) + '\0' + normalize_identity_text(description),
+        )
+        idea_ids.append(idea_id)
+        direction = str(trade.get('direction') or 'unspecified')
+        idea_instruments = [
+            str(value) for value in (trade.get('instruments') or ['unspecified'])
+            if value
+        ] or ['unspecified']
+        manager_key = normalize_identity_text(trade.get('fund_name_if_mentioned'))
+        manager = manager_labels.get(manager_key, '')
+        directions.add(direction)
+        instruments.update(idea_instruments)
+        if manager:
+            managers.add(manager)
+            manager_keys.add(manager_key)
+        client_ideas.append({
+            'id': idea_id,
+            'article_id': article_id,
+            'description': description,
+            'direction': direction,
+            'instruments': idea_instruments,
+            'underlying': trade.get('underlying') or '',
+            'thesis': trade.get('edge_or_thesis') or '',
+            'quant': trade.get('any_quant_detail') or '',
+            'outcome': trade.get('outcome_if_mentioned') or '',
+            'manager': manager,
+            'manager_key': manager_key,
+        })
+
+    read_minutes = max(1, round(article['wordcount'] / 220)) if article['wordcount'] else 0
+    client_articles.append({
+        'id': article_id,
+        'title': article['title'],
+        'subtitle': article['subtitle'],
+        'date': article['date'],
+        'url': article['url'],
+        'source': article['source'],
+        'alternate_urls': article['alternate_urls'],
+        'wordcount': article['wordcount'],
+        'read_minutes': read_minutes,
+        'content_status': article['content_status'],
+        'idea_ids': idea_ids,
+        'trade_count': len(idea_ids),
+        'directions': sorted(directions),
+        'instruments': sorted(instruments),
+        'managers': sorted(managers, key=str.casefold),
+        'manager_keys': sorted(manager_keys),
+        'has_quant': any(bool(trade.get('any_quant_detail')) for trade in article['trades']),
+        'has_thesis': any(bool(trade.get('edge_or_thesis')) for trade in article['trades']),
+        'has_outcome': any(bool(trade.get('outcome_if_mentioned')) for trade in article['trades']),
+    })
+
+article_ids = [article['id'] for article in client_articles]
+idea_ids = [idea['id'] for idea in client_ideas]
+if len(article_ids) != len(set(article_ids)):
+    raise ValueError('Stable article ID collision detected')
+if len(idea_ids) != len(set(idea_ids)):
+    raise ValueError('Stable idea ID collision detected; extracted descriptions must be unique per article')
+
+manager_counts = Counter(
+    idea['manager_key'] for idea in client_ideas if idea.get('manager_key')
+)
+manager_rows = sorted(
+    manager_counts.items(),
+    key=lambda row: (-row[1], manager_labels[row[0]].casefold()),
+)
+manager_buttons = []
+for manager_key, count in manager_rows:
+    escaped_text = html_lib.escape(manager_labels[manager_key])
+    escaped_attr = html_lib.escape(manager_key, quote=True)
+    manager_buttons.append(
+        '<button type="button" class="facet-option manager-option" '
+        f'data-filter="manager" data-value="{escaped_attr}">'
+        f'<span>{escaped_text}</span><span class="facet-count" '
+        f'data-count-manager="{escaped_attr}">{count}</span></button>'
     )
-fund_filter_html = '\n    '.join(_fund_btns)
 
-def _json_for_script(value):
-    """Serialize JSON without allowing data to terminate the script element."""
-    return (json.dumps(value, ensure_ascii=False)
-            .replace('&', r'\u0026')
-            .replace('<', r'\u003c')
-            .replace('>', r'\u003e')
-            .replace('\u2028', r'\u2028')
-            .replace('\u2029', r'\u2029'))
+articles_json = json_for_script(client_articles)
+ideas_json = json_for_script(client_ideas)
+manager_html = '\n'.join(manager_buttons)
 
-
-data_json = _json_for_script(articles)
-
-HTML = f"""<!DOCTYPE html>
+HTML_TEMPLATE = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trade Intelligence — navnoorbawa</title>
+<meta name="description" content="Institutional research intelligence across hedge funds, systematic strategies, derivatives, and market structure.">
+<meta name="color-scheme" content="dark light">
+<title>Navnoor Research Terminal</title>
+<script>
+(function () {
+  try {
+    var stored = localStorage.getItem('nrt-theme');
+    var theme = stored || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.dataset.theme = theme;
+  } catch (_error) {
+    document.documentElement.dataset.theme = 'dark';
+  }
+})();
+</script>
 <style>
-*,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
-:root{{
-  --bg:#000;
-  --surface:#0d0d0d;
-  --card:#111;
-  --border:#1c1c1c;
-  --border2:#252525;
-  --text:#e2e2e2;
-  --muted:#666;
-  --dim:#444;
-  --accent:#22c55e;
-  --long:#22c55e;
-  --short:#ef4444;
-  --arb:#60a5fa;
-  --ls:#a78bfa;
-  --header-bg:rgba(0,0,0,0.92);
-  --font-mono:'SF Mono','Fira Code','Cascadia Code',monospace;
-  --font-sans:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
-}}
-html.light{{
-  --bg:#f8f8f8;
-  --surface:#fff;
-  --card:#fff;
-  --border:#e4e4e4;
-  --border2:#d0d0d0;
-  --text:#111;
-  --muted:#888;
-  --dim:#bbb;
-  --accent:#16a34a;
-  --long:#16a34a;
-  --short:#dc2626;
-  --arb:#2563eb;
-  --ls:#7c3aed;
-  --header-bg:rgba(248,248,248,0.95);
-}}
-html{{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:14px;line-height:1.5;transition:background .2s,color .2s}}
-body{{min-height:100vh;display:flex;flex-direction:column}}
+*,*::before,*::after{box-sizing:border-box}
+html,body,h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}
+button,input,select{font:inherit}
+:root{
+  --header-h:58px;
+  --kpi-h:44px;
+  --rail-w:232px;
+  --inspector-w:420px;
+  --bg:#071019;
+  --surface-1:#0b1621;
+  --surface-2:#101e2b;
+  --surface-3:#152535;
+  --surface-raised:#182a3a;
+  --line:#203244;
+  --line-strong:#30485f;
+  --text:#e7edf4;
+  --text-secondary:#aebcca;
+  --text-muted:#8999aa;
+  --accent:#66a3ff;
+  --accent-soft:#142a46;
+  --positive:#35c98a;
+  --negative:#ff6b75;
+  --relative:#f0b75a;
+  --long-short:#ad8cff;
+  --quant:#f0b75a;
+  --focus:#9bc2ff;
+  --selected:#102b49;
+  --selected-line:#66a3ff;
+  --shadow:0 18px 50px rgba(0,0,0,.3);
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+html[data-theme="light"]{
+  --bg:#f3f6f9;
+  --surface-1:#ffffff;
+  --surface-2:#f8fafc;
+  --surface-3:#edf2f7;
+  --surface-raised:#ffffff;
+  --line:#d5dee8;
+  --line-strong:#b7c5d3;
+  --text:#152231;
+  --text-secondary:#43566a;
+  --text-muted:#5f7184;
+  --accent:#1f63b7;
+  --accent-soft:#e4effc;
+  --positive:#087a50;
+  --negative:#b92838;
+  --relative:#8a5a00;
+  --long-short:#6941a5;
+  --quant:#7c5100;
+  --focus:#1f63b7;
+  --selected:#e5f0fc;
+  --selected-line:#1f63b7;
+  --shadow:0 18px 50px rgba(25,44,65,.18);
+}
+html{background:var(--bg);color:var(--text);font:13px/1.45 var(--sans);font-variant-numeric:tabular-nums}
+body{height:100vh;height:100dvh;overflow:hidden;background:var(--bg)}
+button,a,input,select{outline:none}
+button{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--focus);outline-offset:2px
+}
+a{color:var(--accent)}
+.skip-link{
+  position:fixed;left:12px;top:8px;z-index:1000;padding:9px 12px;
+  background:var(--accent);color:#071019;border-radius:4px;text-decoration:none;
+  transform:translateY(-150%)
+}
+.skip-link:focus{transform:translateY(0)}
+html[data-theme="light"] .skip-link{color:#fff}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* ── TOP BAR ── */
-header{{
-  position:sticky;top:0;z-index:100;
-  background:var(--header-bg);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  padding:0 24px;
-  display:flex;align-items:center;gap:20px;height:56px;
-}}
-.brand{{font-size:11px;font-family:var(--font-mono);letter-spacing:.14em;color:var(--accent);text-transform:uppercase;white-space:nowrap}}
-.stats-bar{{display:flex;gap:20px;font-family:var(--font-mono);font-size:11px;color:var(--muted)}}
-.stats-bar span b{{color:var(--text);font-weight:600}}
-.spacer{{flex:1}}
-.sr-only{{
-  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
-  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
-}}
-#search{{
-  width:280px;height:34px;
-  background:var(--surface);border:1px solid var(--border2);
-  border-radius:6px;color:var(--text);font-size:13px;padding:0 12px;
-  outline:none;font-family:var(--font-sans);
-}}
-#search:focus{{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 20%,transparent)}}
-#search::placeholder{{color:var(--dim)}}
+/* Global command header */
+.app-header{
+  height:var(--header-h);display:grid;grid-template-columns:auto minmax(240px,640px) auto;
+  align-items:center;gap:20px;padding:0 16px;border-bottom:1px solid var(--line);
+  background:var(--surface-1);position:relative;z-index:50
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:205px}
+.brand-mark{
+  width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line-strong);
+  border-radius:4px;color:var(--accent);font:700 11px var(--mono);letter-spacing:.04em;background:var(--surface-2)
+}
+.brand-name{font-weight:650;font-size:12px;letter-spacing:.015em;white-space:nowrap}
+.brand-sub{font:9px var(--mono);color:var(--text-muted);letter-spacing:.11em;text-transform:uppercase;margin-top:2px}
+.global-search{position:relative;width:100%}
+.search-glyph{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none}
+#search{
+  width:100%;height:36px;border:1px solid var(--line);border-radius:4px;
+  background:var(--surface-2);color:var(--text);padding:0 52px 0 36px
+}
+#search::placeholder{color:var(--text-muted)}
+#search:focus{border-color:var(--accent);background:var(--surface-1)}
+.search-key{position:absolute;right:9px;top:50%;transform:translateY(-50%);font:10px var(--mono);color:var(--text-muted);border:1px solid var(--line);border-radius:3px;padding:1px 5px}
+.header-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:310px}
+.freshness{display:flex;align-items:center;gap:7px;color:var(--text-secondary);font:10px var(--mono);white-space:nowrap;margin-right:4px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.utility-button{
+  min-height:34px;padding:0 10px;border:1px solid var(--line);border-radius:4px;
+  background:var(--surface-2);color:var(--text-secondary);cursor:pointer
+}
+.utility-button:hover{background:var(--surface-3);color:var(--text);border-color:var(--line-strong)}
+#mobile-filter-button{display:none}
 
-/* ── LAYOUT ── */
-.layout{{display:flex;flex:1;}}
-aside{{
-  width:220px;flex-shrink:0;
-  padding:20px 16px;
-  border-right:1px solid var(--border);
-  position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;
-}}
-main{{flex:1;padding:20px 24px;max-width:960px;}}
+/* Compact global metrics */
+.kpi-strip{
+  height:var(--kpi-h);display:flex;align-items:stretch;border-bottom:1px solid var(--line);
+  background:var(--surface-2);overflow-x:auto;scrollbar-width:none
+}
+.kpi-strip::-webkit-scrollbar{display:none}
+.kpi-item{
+  min-width:150px;display:flex;align-items:center;gap:10px;padding:0 16px;
+  border:0;border-right:1px solid var(--line);background:transparent;text-align:left;
+  color:var(--text-secondary)
+}
+button.kpi-item{cursor:pointer}
+button.kpi-item:hover{background:var(--surface-3)}
+.kpi-value{font:600 15px var(--mono);color:var(--text)}
+.kpi-label{font:9px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);line-height:1.3}
+.kpi-detail{font:10px var(--mono);color:var(--text-secondary);white-space:nowrap}
 
-/* ── SIDEBAR FILTERS ── */
-.filter-group{{margin-bottom:24px}}
-.filter-label{{font-size:10px;font-family:var(--font-mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:block}}
-.filter-btn{{
-  display:flex;align-items:center;gap:8px;width:100%;
-  background:none;border:none;color:var(--muted);cursor:pointer;
-  padding:5px 8px;border-radius:5px;font-size:12px;text-align:left;
-  font-family:var(--font-sans);transition:background .15s,color .15s;
-}}
-.filter-btn:hover{{background:var(--surface);color:var(--text)}}
-.filter-btn.active{{background:var(--surface);color:var(--accent)}}
-.filter-btn .count{{margin-left:auto;font-family:var(--font-mono);font-size:10px;color:var(--dim)}}
-.filter-btn.active .count{{color:var(--accent)}}
-.dot{{width:7px;height:7px;border-radius:50%;flex-shrink:0}}
-.dot-equity{{background:#60a5fa}}
-.dot-volatility{{background:#f59e0b}}
-.dot-option{{background:#a78bfa}}
-.dot-bond{{background:#34d399}}
-.dot-futures{{background:#fb923c}}
-.dot-commodity{{background:#fbbf24}}
-.dot-FX{{background:#38bdf8}}
-.dot-repo{{background:#94a3b8}}
-.dot-swap{{background:#c084fc}}
-.dot-CDS{{background:#f87171}}
-.dot-prediction_market{{background:#4ade80}}
-.dot-weather_derivative{{background:#7dd3fc}}
-.dot-all{{background:var(--accent)}}
-.dot-substack{{background:#f97316}}
-.dot-medium{{background:#d1d5db}}
+/* Three-pane workstation */
+.workspace{
+  height:calc(100vh - var(--header-h) - var(--kpi-h));
+  height:calc(100dvh - var(--header-h) - var(--kpi-h));
+  display:grid;grid-template-columns:var(--rail-w) minmax(560px,1fr) var(--inspector-w);
+  overflow:hidden
+}
+.filter-rail{
+  min-width:0;border-right:1px solid var(--line);background:var(--surface-1);
+  overflow-y:auto;overscroll-behavior:contain;padding-bottom:20px;scrollbar-width:thin
+}
+.rail-header{
+  position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;
+  height:44px;padding:0 12px;border-bottom:1px solid var(--line);background:var(--surface-1)
+}
+.rail-actions{display:flex;align-items:center;gap:2px}
+#filter-close{display:none}
+.rail-title{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.1em}
+.text-button{border:0;background:transparent;color:var(--accent);font-size:11px;cursor:pointer;padding:7px}
+.text-button:hover{text-decoration:underline}
+.filter-group{padding:14px 10px;border-bottom:1px solid var(--line)}
+.filter-heading{display:flex;align-items:center;justify-content:space-between;margin:0 2px 8px}
+.filter-heading h2{font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.11em;color:var(--text-muted)}
+.facet-list{display:grid;gap:3px}
+.facet-list.two-column{grid-template-columns:1fr 1fr}
+.facet-option,.facet-clear{
+  width:100%;min-height:30px;border:1px solid transparent;border-radius:3px;background:transparent;
+  display:flex;align-items:center;gap:7px;padding:4px 7px;color:var(--text-secondary);
+  cursor:pointer;text-align:left;font-size:11px
+}
+.facet-option:hover,.facet-clear:hover{background:var(--surface-3);color:var(--text)}
+.facet-option.active,.facet-clear.active{
+  background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 48%,var(--line));
+  color:var(--accent)
+}
+.facet-option::before,.facet-clear::before{
+  content:"";width:7px;height:7px;border:1px solid var(--line-strong);border-radius:2px;flex:0 0 auto
+}
+.facet-option.active::before{background:var(--accent);border-color:var(--accent)}
+.facet-clear::before{border-radius:50%}
+.facet-clear.active::before{border:2px solid var(--accent);background:transparent}
+.facet-count{margin-left:auto;color:var(--text-muted);font:9px var(--mono)}
+.facet-option.active .facet-count{color:var(--accent)}
+.date-options{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.date-option{
+  min-height:30px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-secondary);
+  border-radius:3px;font:9px var(--mono);cursor:pointer
+}
+.date-option:hover{border-color:var(--line-strong);color:var(--text)}
+.date-option.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.manager-search{
+  width:100%;height:31px;border:1px solid var(--line);border-radius:3px;background:var(--surface-2);
+  color:var(--text);padding:0 8px;margin-bottom:6px;font-size:11px
+}
+.manager-options{max-height:188px;overflow:auto;scrollbar-width:thin}
+.manager-option[hidden]{display:none}
+.filter-note{font-size:10px;color:var(--text-muted);margin:8px 2px 0}
+.rail-disclaimer{padding:14px 12px;color:var(--text-muted);font-size:10px;line-height:1.55}
+.rail-disclaimer strong{color:var(--text-secondary);font-weight:600}
+.research-only-filter{display:none}
+body[data-view="research"] .research-only-filter{display:block}
 
-/* ── ARTICLE CARDS ── */
-.result-count{{font-size:12px;color:var(--muted);margin-bottom:16px;font-family:var(--font-mono)}}
-.article-card{{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:8px;margin-bottom:12px;overflow:hidden;
-  transition:border-color .2s;
-}}
-.article-card:hover{{border-color:var(--border2)}}
-.article-header{{
-  width:100%;padding:14px 16px;cursor:pointer;
-  display:flex;align-items:flex-start;gap:12px;
-  appearance:none;background:transparent;border:0;color:inherit;
-  font:inherit;text-align:left;
-}}
-.article-header:hover .article-title{{color:var(--accent)}}
-.article-header:focus-visible{{outline:2px solid var(--accent);outline-offset:-2px}}
-.article-meta{{
-  font-family:var(--font-mono);font-size:10px;color:var(--muted);
-  white-space:nowrap;padding-top:2px;
-}}
-.article-date{{display:block}}
-.source-badge{{
-  display:inline-block;margin-top:5px;padding:1px 5px;border:1px solid;
-  border-radius:3px;font-size:8px;letter-spacing:.06em;text-transform:uppercase;
-}}
-.source-substack{{color:#fb923c;border-color:#7c2d12;background:#1c0b04}}
-.source-medium{{color:#d1d5db;border-color:#4b5563;background:#171717}}
-html.light .source-substack{{color:#c2410c;border-color:#fed7aa;background:#fff7ed}}
-html.light .source-medium{{color:#374151;border-color:#d1d5db;background:#f9fafb}}
-.article-body{{display:block;flex:1;min-width:0}}
-.article-title{{
-  display:block;
-  font-size:13.5px;font-weight:500;color:var(--text);
-  line-height:1.4;margin-bottom:6px;transition:color .15s;
-}}
-.tag-row{{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}}
-.tag{{
-  font-size:10px;font-family:var(--font-mono);
-  padding:2px 7px;border-radius:3px;
-  border:1px solid;
-}}
-/* dark tag colours */
-.tag-equity{{color:#60a5fa;border-color:#1e3a5f;background:#0a1929}}
-.tag-volatility{{color:#f59e0b;border-color:#44300a;background:#1a1000}}
-.tag-option{{color:#a78bfa;border-color:#3b2a6e;background:#150f29}}
-.tag-bond{{color:#34d399;border-color:#0a3626;background:#061610}}
-.tag-futures{{color:#fb923c;border-color:#4a2010;background:#1a0c05}}
-.tag-commodity{{color:#fbbf24;border-color:#443509;background:#1a1200}}
-.tag-FX{{color:#38bdf8;border-color:#0a2e44;background:#041018}}
-.tag-repo{{color:#94a3b8;border-color:#2a3040;background:#0d1018}}
-.tag-swap{{color:#c084fc;border-color:#3a1f60;background:#120a24}}
-.tag-CDS{{color:#f87171;border-color:#4a1515;background:#1a0606}}
-.tag-prediction_market{{color:#4ade80;border-color:#163c22;background:#071610}}
-.tag-weather_derivative{{color:#7dd3fc;border-color:#0a2a3e;background:#040f18}}
-.dir-tag{{font-size:10px;font-family:var(--font-mono);padding:2px 7px;border-radius:3px;border:1px solid}}
-.dir-long{{color:var(--long);border-color:#14532d;background:#052012}}
-.dir-short{{color:var(--short);border-color:#4a1515;background:#1a0606}}
-.dir-arb{{color:var(--arb);border-color:#1e3a5f;background:#0a1929}}
-.dir-ls{{color:var(--ls);border-color:#3b2a6e;background:#150f29}}
-/* light mode tag overrides */
-html.light .tag-equity{{background:#eff6ff;border-color:#bfdbfe}}
-html.light .tag-volatility{{background:#fffbeb;border-color:#fde68a}}
-html.light .tag-option{{background:#f5f3ff;border-color:#ddd6fe}}
-html.light .tag-bond{{background:#f0fdf4;border-color:#bbf7d0}}
-html.light .tag-futures{{background:#fff7ed;border-color:#fed7aa}}
-html.light .tag-commodity{{background:#fefce8;border-color:#fef08a}}
-html.light .tag-FX{{background:#f0f9ff;border-color:#bae6fd}}
-html.light .tag-repo{{background:#f8fafc;border-color:#cbd5e1}}
-html.light .tag-swap{{background:#faf5ff;border-color:#e9d5ff}}
-html.light .tag-CDS{{background:#fef2f2;border-color:#fecaca}}
-html.light .tag-prediction_market{{background:#f0fdf4;border-color:#bbf7d0}}
-html.light .tag-weather_derivative{{background:#f0f9ff;border-color:#bae6fd}}
-html.light .dir-long{{background:#f0fdf4;border-color:#bbf7d0}}
-html.light .dir-short{{background:#fef2f2;border-color:#fecaca}}
-html.light .dir-arb{{background:#eff6ff;border-color:#bfdbfe}}
-html.light .dir-ls{{background:#f5f3ff;border-color:#ddd6fe}}
-.trade-badge{{
-  margin-left:auto;flex-shrink:0;
-  font-family:var(--font-mono);font-size:10px;color:var(--muted);
-  padding:3px 8px;border:1px solid var(--border);border-radius:4px;
-  align-self:flex-start;white-space:nowrap;
-}}
-.expand-icon{{
-  flex-shrink:0;width:18px;height:18px;color:var(--dim);
-  display:flex;align-items:center;justify-content:center;
-  transition:transform .2s;font-size:10px;
-}}
-.article-card.open .expand-icon{{transform:rotate(90deg)}}
+.main-panel{min-width:0;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+.command-bar{
+  min-height:50px;display:flex;align-items:center;gap:10px;padding:7px 12px;
+  border-bottom:1px solid var(--line);background:var(--surface-1);flex-wrap:wrap
+}
+.view-tabs{display:flex;align-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:2px}
+.view-tab{
+  min-height:30px;border:0;border-radius:3px;background:transparent;color:var(--text-secondary);
+  padding:0 11px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap
+}
+.view-tab.active{background:var(--surface-raised);color:var(--text);box-shadow:0 0 0 1px var(--line)}
+.result-summary{font:10px var(--mono);color:var(--text-muted);white-space:nowrap}
+.command-spacer{flex:1}
+.select-control{
+  height:32px;border:1px solid var(--line);border-radius:3px;background:var(--surface-2);
+  color:var(--text-secondary);padding:0 28px 0 8px;font-size:11px;cursor:pointer
+}
+.command-button{
+  min-height:32px;border:1px solid var(--line);border-radius:3px;background:var(--surface-2);
+  color:var(--text-secondary);padding:0 9px;cursor:pointer;font-size:10px;white-space:nowrap
+}
+.command-button:hover{background:var(--surface-3);border-color:var(--line-strong);color:var(--text)}
+.command-button.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.active-filters{
+  min-height:35px;display:flex;align-items:center;gap:6px;padding:5px 12px;border-bottom:1px solid var(--line);
+  background:var(--surface-2);overflow-x:auto
+}
+.active-filters.empty{display:none}
+.active-label{font:9px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-right:3px}
+.filter-chip{
+  display:inline-flex;align-items:center;gap:5px;min-height:24px;border:1px solid var(--line);
+  background:var(--surface-1);color:var(--text-secondary);border-radius:3px;padding:0 7px;
+  font-size:10px;white-space:nowrap;cursor:pointer
+}
+.filter-chip:hover{border-color:var(--negative);color:var(--text)}
+.chip-x{color:var(--text-muted)}
 
-/* ── TRADE LIST ── */
-.trades-panel{{display:none;border-top:1px solid var(--border);}}
-.article-card.open .trades-panel{{display:block}}
-.article-link{{
-  display:block;padding:8px 16px;font-size:11px;color:var(--accent);
-  text-decoration:none;border-bottom:1px solid var(--border);
-  font-family:var(--font-mono);letter-spacing:.03em;
-}}
-.article-link:hover{{background:var(--surface)}}
-.trade-item{{
-  padding:12px 16px;border-bottom:1px solid var(--border);
-}}
-.trade-item:last-child{{border-bottom:none}}
-.trade-row1{{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}}
-.trade-desc{{font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:6px}}
-.trade-field{{font-size:11px;color:var(--muted);margin-top:4px}}
-.trade-field b{{color:var(--text);font-weight:500;opacity:.7}}
-.trade-quant{{
-  font-family:var(--font-mono);font-size:11px;
-  color:#d97706;margin-top:4px;
-}}
-html.light .trade-quant{{color:#b45309}}
-.trade-outcome{{font-size:11px;color:var(--accent);margin-top:4px;font-style:italic}}
-.trade-outcome-loss{{font-size:11px;color:var(--short);margin-top:4px;font-style:italic}}
-.fund-tag{{font-size:10px;font-family:var(--font-mono);padding:2px 7px;border-radius:3px;color:var(--accent);border:1px solid;border-color:#14532d;background:#052012;margin-right:4px}}
-html.light .fund-tag{{color:#15803d;border-color:#bbf7d0;background:#f0fdf4}}
-.no-trades{{padding:18px 16px;color:var(--muted);font-size:12px}}
+.context-bar{
+  min-height:42px;display:grid;grid-template-columns:auto minmax(160px,1fr) auto;align-items:center;
+  gap:14px;padding:6px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)
+}
+.context-metrics{display:flex;align-items:center;gap:15px;white-space:nowrap}
+.context-metric{display:flex;align-items:baseline;gap:5px}
+.context-metric b{font:600 12px var(--mono);color:var(--text)}
+.context-metric span{font:9px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+.direction-mix{height:6px;display:flex;overflow:hidden;border-radius:2px;background:var(--surface-3)}
+.mix-segment{height:100%;min-width:0}
+.mix-long{background:var(--positive)}
+.mix-short{background:var(--negative)}
+.mix-arb{background:var(--relative)}
+.mix-ls{background:var(--long-short)}
+.mix-unspecified{background:var(--line-strong)}
+.mix-legend{font:9px var(--mono);color:var(--text-muted);white-space:nowrap}
 
-/* ── EMPTY STATE ── */
-.empty{{text-align:center;padding:80px 20px;color:var(--muted)}}
-.empty h2{{font-size:16px;margin-bottom:8px;color:var(--dim)}}
+/* Dense master tables */
+.command-bar,.active-filters,.context-bar{flex:0 0 auto}
+.table-shell{flex:1 1 auto;min-height:0;overflow:auto;position:relative;scrollbar-width:thin;background:var(--surface-1)}
+.data-table{min-width:760px}
+.table-head{
+  position:sticky;top:0;z-index:5;display:grid;align-items:center;min-height:34px;
+  border-bottom:1px solid var(--line-strong);background:var(--surface-2);
+  color:var(--text-muted);font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.07em
+}
+.idea-grid{grid-template-columns:82px 86px 122px 130px minmax(270px,1fr) 78px 76px 34px}
+.research-grid{grid-template-columns:82px 78px minmax(360px,1fr) 76px 110px 90px 34px}
+.head-cell{height:100%;display:flex;align-items:center;padding:0 9px;min-width:0}
+.head-sort{
+  width:100%;height:100%;display:flex;align-items:center;border:0;background:transparent;color:inherit;
+  padding:0;text-align:left;text-transform:inherit;letter-spacing:inherit;font:inherit;cursor:pointer
+}
+.head-sort:hover{color:var(--text)}
+.head-cell[aria-sort="ascending"] .head-sort::after{content:" ↑";color:var(--accent)}
+.head-cell[aria-sort="descending"] .head-sort::after{content:" ↓";color:var(--accent)}
+.data-row{
+  display:grid;align-items:center;border-bottom:1px solid var(--line);background:var(--surface-1);
+  color:var(--text-secondary);position:relative;cursor:default;min-width:760px
+}
+.data-row:hover{background:var(--surface-2)}
+.data-row.selected{background:var(--selected);box-shadow:inset 2px 0 var(--selected-line)}
+.data-row[aria-selected="true"]{color:var(--text)}
+.data-cell{min-width:0;padding:7px 9px;overflow-wrap:anywhere}
+.cell-date{font:10px var(--mono);color:var(--text-muted);white-space:nowrap}
+.direction-badge,.source-badge,.coverage-badge{
+  display:inline-flex;align-items:center;min-height:21px;padding:0 6px;border:1px solid;
+  border-radius:3px;font:600 9px var(--mono);white-space:nowrap
+}
+.dir-long{color:var(--positive);border-color:color-mix(in srgb,var(--positive) 48%,var(--line));background:color-mix(in srgb,var(--positive) 8%,transparent)}
+.dir-short{color:var(--negative);border-color:color-mix(in srgb,var(--negative) 48%,var(--line));background:color-mix(in srgb,var(--negative) 8%,transparent)}
+.dir-arb{color:var(--relative);border-color:color-mix(in srgb,var(--relative) 48%,var(--line));background:color-mix(in srgb,var(--relative) 8%,transparent)}
+.dir-ls{color:var(--long-short);border-color:color-mix(in srgb,var(--long-short) 48%,var(--line));background:color-mix(in srgb,var(--long-short) 8%,transparent)}
+.dir-unspecified{color:var(--text-muted);border-color:var(--line-strong);background:var(--surface-2)}
+.source-substack{color:#f2a56f;border-color:#744426;background:#1e1510}
+.source-medium{color:#c8d2dd;border-color:#536170;background:#161d24}
+html[data-theme="light"] .source-substack{color:#9a3f0c;border-color:#d8a27e;background:#fff6ef}
+html[data-theme="light"] .source-medium{color:#384b5d;border-color:#9aabba;background:#f4f7f9}
+.instrument-primary{font:600 10px var(--mono);color:var(--text);text-transform:capitalize}
+.instrument-secondary{font-size:9px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.manager-name{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.missing{color:var(--text-muted)}
+.idea-title{font-size:11.5px;color:var(--text);line-height:1.4;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.idea-context{font-size:9.5px;color:var(--text-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evidence-set{display:flex;gap:3px;align-items:center}
+.evidence-flag{
+  min-width:24px;height:19px;display:grid;place-items:center;border:1px solid var(--line);
+  border-radius:3px;color:var(--text-muted);font:600 8px var(--mono)
+}
+.evidence-flag.on{border-color:color-mix(in srgb,var(--quant) 55%,var(--line));color:var(--quant);background:color-mix(in srgb,var(--quant) 8%,transparent)}
+.row-open{
+  width:27px;height:27px;display:grid;place-items:center;border:1px solid transparent;border-radius:3px;
+  text-decoration:none;color:var(--text-muted);font-size:13px
+}
+.row-open:hover{border-color:var(--line);background:var(--surface-3);color:var(--accent)}
+.article-title{font-size:12px;font-weight:600;color:var(--text);line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.article-subtitle{font-size:9.5px;color:var(--text-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.number-cell{font:11px var(--mono);color:var(--text);text-align:right}
+.coverage-full{color:var(--positive);border-color:color-mix(in srgb,var(--positive) 45%,var(--line))}
+.coverage-excerpt{color:var(--relative);border-color:color-mix(in srgb,var(--relative) 45%,var(--line))}
+.coverage-research{color:var(--text-muted);border-color:var(--line-strong)}
+body.density-compact .data-row{min-height:48px}
+body.density-comfortable .data-row{min-height:66px}
+body.density-compact .idea-title{-webkit-line-clamp:1}
+.empty-state{display:none;padding:80px 24px;text-align:center;color:var(--text-muted)}
+.empty-state.visible{display:block}
+.empty-state h2{font-size:14px;color:var(--text);margin-bottom:6px}
+.load-more-wrap{display:none;padding:12px;text-align:center;border-top:1px solid var(--line)}
+.load-more-wrap.visible{display:block}
+.load-more{
+  min-height:34px;border:1px solid var(--line);border-radius:3px;background:var(--surface-2);
+  color:var(--text-secondary);padding:0 18px;cursor:pointer;font-size:11px
+}
+.load-more:hover{background:var(--surface-3);color:var(--text)}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{{width:5px;height:5px}}
-::-webkit-scrollbar-track{{background:transparent}}
-::-webkit-scrollbar-thumb{{background:var(--border2);border-radius:3px}}
-::-webkit-scrollbar-thumb:hover{{background:var(--dim)}}
+/* Persistent evidence inspector */
+.inspector{
+  min-width:0;border-left:1px solid var(--line);background:var(--surface-1);
+  overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin
+}
+.inspector-hidden .workspace{grid-template-columns:var(--rail-w) minmax(560px,1fr) 0}
+.inspector-hidden .inspector{display:none}
+.inspector-header{
+  position:sticky;top:0;z-index:4;min-height:44px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 13px;border-bottom:1px solid var(--line);background:var(--surface-1)
+}
+.inspector-label{font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.11em;color:var(--text-muted)}
+.inspector-close{border:0;background:transparent;color:var(--text-muted);cursor:pointer;padding:8px}
+.inspector-content{padding:16px}
+.inspector-empty{padding:70px 18px;text-align:center;color:var(--text-muted)}
+.inspector-empty-mark{
+  width:42px;height:42px;margin:0 auto 14px;display:grid;place-items:center;border:1px solid var(--line);
+  border-radius:4px;background:var(--surface-2);font:600 11px var(--mono);color:var(--accent)
+}
+.inspector-empty h2{font-size:13px;color:var(--text);margin-bottom:6px}
+.record-eyebrow{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.record-id{font:9px var(--mono);color:var(--text-muted)}
+.record-title{font-size:17px;line-height:1.35;color:var(--text);letter-spacing:-.01em;overflow-wrap:anywhere}
+.record-subtitle{font-size:11px;color:var(--text-muted);line-height:1.55;margin-top:7px}
+.record-actions{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+.primary-action,.secondary-action{
+  min-height:34px;border-radius:3px;padding:0 10px;display:inline-flex;align-items:center;
+  justify-content:center;gap:6px;text-decoration:none;cursor:pointer;font-size:10px
+}
+.primary-action{border:1px solid var(--accent);background:var(--accent);color:#071019;font-weight:700}
+html[data-theme="light"] .primary-action{color:#fff}
+.secondary-action{border:1px solid var(--line);background:var(--surface-2);color:var(--text-secondary)}
+.secondary-action:hover{background:var(--surface-3);color:var(--text)}
+.secondary-action.saved{color:var(--relative);border-color:var(--relative)}
+.record-facts{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.inspector-section{padding:13px 0;border-top:1px solid var(--line)}
+.inspector-section h3{font:600 9px var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:7px}
+.inspector-section p{font-size:11.5px;line-height:1.62;color:var(--text-secondary);overflow-wrap:anywhere}
+.inspector-section .primary-text{color:var(--text);font-size:12.5px}
+.quant-block{
+  padding:10px;border:1px solid color-mix(in srgb,var(--quant) 38%,var(--line));
+  border-radius:3px;background:color-mix(in srgb,var(--quant) 6%,var(--surface-2));
+  color:var(--quant);font:10.5px/1.6 var(--mono);overflow-wrap:anywhere
+}
+.reported-outcome{padding-left:9px;border-left:2px solid var(--line-strong)}
+.provenance{
+  margin-top:14px;padding:11px;border:1px solid var(--line);border-radius:3px;
+  background:var(--surface-2);font-size:9.5px;line-height:1.55;color:var(--text-muted)
+}
+.article-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:14px 0}
+.article-stat{padding:10px;background:var(--surface-2)}
+.article-stat b{display:block;font:600 12px var(--mono);color:var(--text)}
+.article-stat span{font:8px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+.related-ideas{display:grid;gap:5px}
+.related-idea{
+  border:1px solid var(--line);border-radius:3px;background:var(--surface-2);padding:8px;
+  color:var(--text-secondary);text-align:left;cursor:pointer;font-size:10.5px;line-height:1.4
+}
+.related-idea:hover{background:var(--surface-3);border-color:var(--line-strong);color:var(--text)}
 
-/* ── MOBILE ── */
-#filter-toggle{{display:none;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border2);color:var(--muted);cursor:pointer;border-radius:6px;padding:0 10px;height:34px;font-size:13px;font-family:var(--font-sans);white-space:nowrap;transition:background .15s,color .15s;}}
-@media(max-width:768px){{
-  header{{flex-wrap:wrap;height:auto;padding:10px 16px;gap:8px;}}
-  .brand{{flex:1 1 auto}}
-  .spacer{{display:none}}
-  .stats-bar{{display:flex;order:9;flex:1 0 100%;font-size:10px;gap:0}}
-  .stats-bar > span:not(.data-freshness){{display:none}}
-  #search{{order:10;width:100%;}}
-  #filter-toggle{{display:flex}}
-  .layout{{flex-direction:column}}
-  aside{{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);padding:12px 16px;display:none;}}
-  aside.open{{display:block}}
-  .filter-group{{margin-bottom:16px}}
-  main{{padding:12px 16px;max-width:100%;}}
-  .result-count{{margin-bottom:10px;}}
-  .article-header{{padding:12px 14px;gap:8px;flex-wrap:wrap;}}
-  .article-meta{{display:flex;flex-direction:row;align-items:center;gap:8px;white-space:nowrap;font-size:9px;flex:0 0 100%;order:3;padding-top:0;}}
-  .article-date{{display:inline;margin:0;}}
-  .source-badge{{margin-top:0}}
-  .article-body{{flex:1 1 calc(100% - 90px);}}
-  .article-title{{font-size:13px;}}
-  .trade-badge{{font-size:9px;padding:2px 6px;}}
-  .trade-item{{padding:10px 14px;}}
-  .trade-desc{{font-size:12px;}}
-}}
+/* Overlays and feedback */
+.drawer-backdrop{display:none}
+.toast{
+  position:fixed;left:50%;bottom:22px;z-index:200;transform:translate(-50%,20px);
+  padding:9px 13px;border:1px solid var(--line-strong);border-radius:4px;
+  background:var(--surface-raised);color:var(--text);box-shadow:var(--shadow);
+  font-size:11px;opacity:0;pointer-events:none;transition:opacity .16s,transform .16s
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+dialog{
+  width:min(520px,calc(100vw - 32px));border:1px solid var(--line-strong);border-radius:5px;
+  background:var(--surface-raised);color:var(--text);padding:0;box-shadow:var(--shadow)
+}
+dialog::backdrop{background:rgba(3,9,15,.72)}
+.dialog-header{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid var(--line)}
+.dialog-header h2{font-size:13px}
+.shortcut-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin:15px;border:1px solid var(--line)}
+.shortcut-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px;background:var(--surface-2);font-size:10.5px;color:var(--text-secondary)}
+kbd{font:9px var(--mono);border:1px solid var(--line-strong);background:var(--surface-1);border-radius:3px;padding:2px 6px;color:var(--text)}
+.dialog-foot{padding:0 15px 15px;color:var(--text-muted);font-size:10px}
+noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:var(--bg);color:var(--text);padding:30px}
+
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:4px}
+*{scrollbar-color:var(--line-strong) transparent}
+
+@media(max-width:1240px){
+  .workspace{grid-template-columns:var(--rail-w) minmax(0,1fr)}
+  .inspector{
+    position:fixed;z-index:90;top:calc(var(--header-h) + var(--kpi-h));right:0;bottom:0;
+    width:min(var(--inspector-w),calc(100vw - 40px));box-shadow:var(--shadow);
+    transform:translateX(105%);transition:transform .18s ease
+  }
+  body.inspector-open .inspector{transform:translateX(0)}
+  .inspector-hidden .workspace{grid-template-columns:var(--rail-w) minmax(0,1fr)}
+  .inspector-hidden .inspector{display:block}
+}
+@media(max-width:1020px){
+  .app-header{grid-template-columns:auto minmax(220px,1fr) auto;gap:10px}
+  .brand{min-width:0}
+  .brand-sub{display:none}
+  .freshness{display:none}
+  .header-right{min-width:0}
+  .workspace{grid-template-columns:minmax(0,1fr)}
+  .filter-rail{
+    position:fixed;z-index:100;top:calc(var(--header-h) + var(--kpi-h));left:0;bottom:0;
+    width:min(300px,calc(100vw - 44px));box-shadow:var(--shadow);transform:translateX(-105%);
+    transition:transform .18s ease
+  }
+  body.filters-open .filter-rail{transform:translateX(0)}
+  #mobile-filter-button{display:inline-flex}
+  #filter-close{display:inline-flex}
+  .drawer-backdrop{
+    position:fixed;z-index:80;inset:calc(var(--header-h) + var(--kpi-h)) 0 0;
+    background:rgba(3,9,15,.64)
+  }
+  body.filters-open .drawer-backdrop,body.inspector-open .drawer-backdrop{display:block}
+}
+@media(max-width:760px){
+  :root{--header-h:54px;--kpi-h:42px}
+  .app-header{grid-template-columns:auto minmax(0,1fr) auto;padding:0 9px;gap:7px}
+  .brand-name{display:none}
+  .brand{min-width:auto}
+  .brand-mark{width:32px;height:32px}
+  .search-key,#shortcut-button,.button-label{display:none}
+  #search{height:42px;padding-right:9px}
+  .header-right{gap:5px}
+  .utility-button{min-width:42px;min-height:42px;padding:0 8px}
+  .facet-option,.facet-clear,.date-option,.manager-search{min-height:44px}
+  .kpi-item{min-width:128px;padding:0 11px}
+  .kpi-value{font-size:13px}
+  .command-bar{padding:6px 8px;gap:6px}
+  .view-tab{padding:0 8px;min-height:34px}
+  .result-summary{order:5;flex:1 0 100%}
+  .command-spacer{display:none}
+  .select-control,.command-button{min-height:42px}
+  .active-filters{padding-left:8px}
+  .context-bar{grid-template-columns:1fr;padding:7px 8px;gap:6px}
+  .context-metrics{gap:10px;overflow-x:auto}
+  .mix-legend{display:none}
+  .data-table{min-width:0}
+  .table-head{
+    position:absolute;width:1px;height:1px;min-height:1px;margin:-1px;padding:0;
+    overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0
+  }
+  .data-row{min-width:0}
+  .idea-grid{
+    grid-template-columns:74px 1fr auto;
+    grid-template-areas:
+      "date bias source"
+      "idea idea idea"
+      "market manager evidence"
+      "open open open";
+    gap:0;padding:9px 8px
+  }
+  .research-grid{
+    grid-template-columns:74px 1fr auto;
+    grid-template-areas:
+      "date source open"
+      "article article article"
+      "count coverage read";
+    gap:0;padding:9px 8px
+  }
+  .data-cell{padding:4px 5px}
+  .cell-date{grid-area:date}
+  .cell-bias{grid-area:bias}
+  .cell-market{grid-area:market}
+  .cell-manager{grid-area:manager}
+  .cell-idea{grid-area:idea}
+  .cell-evidence{grid-area:evidence;justify-self:end}
+  .cell-source{grid-area:source;justify-self:end}
+  .cell-open{grid-area:open;display:none}
+  .cell-article{grid-area:article}
+  .cell-count{grid-area:count;text-align:left}
+  .cell-coverage{grid-area:coverage}
+  .cell-read{grid-area:read;text-align:right}
+  body.density-compact .data-row,body.density-comfortable .data-row{min-height:unset}
+  body.density-compact .idea-title{-webkit-line-clamp:2}
+  .idea-context{white-space:normal;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+  .inspector{top:calc(var(--header-h) + var(--kpi-h));width:calc(100vw - 18px)}
+  .shortcut-grid{grid-template-columns:1fr}
+}
+@media(max-width:430px){
+  .command-button[data-action="copy-view"],.command-button[data-action="density"]{display:none}
+  .view-tab{font-size:10px}
+  .context-metric:nth-child(n+3){display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+@media(forced-colors:active){
+  .status-dot,.facet-option.active::before,.mix-segment{forced-color-adjust:none}
+}
 </style>
 </head>
-<body>
+<body class="density-compact" data-view="ideas">
+<a class="skip-link" href="#main-panel">Skip to research results</a>
+<h1 class="sr-only">Navnoor Research Terminal</h1>
 
-<header>
-  <span class="brand">&#9670; Trade Intelligence</span>
-  <div class="stats-bar">
-    <span><b id="stat-articles">0</b> articles</span>
-    <span><b id="stat-trades">0</b> trades</span>
-    <span><b id="stat-funds">0</b> funds</span>
-    <span><b id="stat-range">—</b></span>
-    <span class="data-freshness">latest article <b id="stat-latest">—</b></span>
+<header class="app-header">
+  <div class="brand" aria-label="Navnoor Research Terminal">
+    <div class="brand-mark" aria-hidden="true">N/R</div>
+    <div>
+      <div class="brand-name">Navnoor Research Terminal</div>
+      <div class="brand-sub">Institutional trade intelligence</div>
+    </div>
   </div>
-  <div class="spacer"></div>
-  <label class="sr-only" for="search">Search articles, funds, instruments, and directions</label>
-  <input id="search" type="text" placeholder="Search articles, funds, instruments…" autocomplete="off" spellcheck="false">
-  <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light / dark" style="
-    background:var(--surface);border:1px solid var(--border2);color:var(--muted);
-    cursor:pointer;border-radius:6px;padding:0 10px;height:34px;font-size:13px;
-    font-family:var(--font-sans);white-space:nowrap;transition:background .15s,color .15s;
-  ">&#9788; Light</button>
-  <button id="filter-toggle" onclick="toggleFilters()" aria-expanded="false" aria-controls="filters-panel">&#9776; Filters</button>
+  <div class="global-search">
+    <label class="sr-only" for="search">Search manager, market, underlying, thesis, or article</label>
+    <span class="search-glyph" aria-hidden="true">⌕</span>
+    <input id="search" type="search" autocomplete="off" spellcheck="false"
+      placeholder="Search manager, market, underlying, thesis…">
+    <span class="search-key" aria-hidden="true">/</span>
+  </div>
+  <div class="header-right">
+    <div class="freshness"><span class="status-dot"></span><span>Data through <b id="data-through">—</b></span></div>
+    <button class="utility-button" id="theme-button" type="button" aria-label="Switch color theme">Light</button>
+    <button class="utility-button" id="shortcut-button" type="button" aria-label="Show keyboard shortcuts">?</button>
+    <button class="utility-button" id="mobile-filter-button" type="button" aria-expanded="false" aria-controls="filter-rail">Filters</button>
+  </div>
 </header>
 
-<div class="layout">
-<aside id="filters-panel">
-  <div class="filter-group">
-    <span class="filter-label">Source</span>
-    <button class="filter-btn active" data-source="all" onclick="setSource(this)">
-      <span class="dot dot-all"></span> All <span class="count"></span>
-    </button>
-    <button class="filter-btn" data-source="substack" onclick="setSource(this)">
-      <span class="dot dot-substack"></span> Substack <span class="count"></span>
-    </button>
-    <button class="filter-btn" data-source="medium" onclick="setSource(this)">
-      <span class="dot dot-medium"></span> Medium <span class="count"></span>
-    </button>
+<section class="kpi-strip" aria-label="Dataset coverage">
+  <button class="kpi-item" type="button" data-kpi-view="ideas">
+    <span class="kpi-value" id="kpi-ideas">0</span><span class="kpi-label">Extracted<br>ideas</span>
+  </button>
+  <button class="kpi-item" type="button" data-kpi-view="research">
+    <span class="kpi-value" id="kpi-research">0</span><span class="kpi-label">Research<br>notes</span>
+  </button>
+  <div class="kpi-item">
+    <span class="kpi-value" id="kpi-managers">0</span><span class="kpi-label">Managers<br>/ firms</span>
   </div>
-
-  <div class="filter-group">
-    <span class="filter-label">Fund</span>
-    {fund_filter_html}
+  <button class="kpi-item" type="button" data-kpi-quality="quant">
+    <span class="kpi-value" id="kpi-quantified">0</span><span class="kpi-label">Quantified<br>observations</span>
+  </button>
+  <div class="kpi-item">
+    <span class="kpi-detail" id="kpi-sources">—</span><span class="kpi-label">Source<br>coverage</span>
   </div>
+</section>
 
-  <div class="filter-group">
-    <span class="filter-label">Direction</span>
-    <button class="filter-btn active" data-dir="all" onclick="setDir(this)">
-      <span class="dot dot-all"></span> All <span class="count" id="cnt-dir-all"></span>
-    </button>
-    <button class="filter-btn" data-dir="long" onclick="setDir(this)">
-      <span style="width:7px;height:7px;border-radius:50%;background:var(--long);flex-shrink:0"></span> Long <span class="count" id="cnt-dir-long"></span>
-    </button>
-    <button class="filter-btn" data-dir="short" onclick="setDir(this)">
-      <span style="width:7px;height:7px;border-radius:50%;background:var(--short);flex-shrink:0"></span> Short <span class="count" id="cnt-dir-short"></span>
-    </button>
-    <button class="filter-btn" data-dir="arbitrage/relative value" onclick="setDir(this)">
-      <span style="width:7px;height:7px;border-radius:50%;background:var(--arb);flex-shrink:0"></span> Arb / RV <span class="count" id="cnt-dir-arb"></span>
-    </button>
-    <button class="filter-btn" data-dir="long/short" onclick="setDir(this)">
-      <span style="width:7px;height:7px;border-radius:50%;background:var(--ls);flex-shrink:0"></span> L/S <span class="count" id="cnt-dir-ls"></span>
-    </button>
-  </div>
+<div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
 
-  <div class="filter-group">
-    <span class="filter-label">Instrument</span>
-    <button class="filter-btn active" data-inst="all" onclick="setInst(this)">
-      <span class="dot dot-all"></span> All <span class="count" id="cnt-inst-all"></span>
-    </button>
-    <button class="filter-btn" data-inst="equity" onclick="setInst(this)"><span class="dot dot-equity"></span> Equity <span class="count" id="cnt-inst-equity"></span></button>
-    <button class="filter-btn" data-inst="volatility" onclick="setInst(this)"><span class="dot dot-volatility"></span> Volatility <span class="count" id="cnt-inst-volatility"></span></button>
-    <button class="filter-btn" data-inst="option" onclick="setInst(this)"><span class="dot dot-option"></span> Options <span class="count" id="cnt-inst-option"></span></button>
-    <button class="filter-btn" data-inst="bond" onclick="setInst(this)"><span class="dot dot-bond"></span> Bonds <span class="count" id="cnt-inst-bond"></span></button>
-    <button class="filter-btn" data-inst="futures" onclick="setInst(this)"><span class="dot dot-futures"></span> Futures <span class="count" id="cnt-inst-futures"></span></button>
-    <button class="filter-btn" data-inst="commodity" onclick="setInst(this)"><span class="dot dot-commodity"></span> Commodity <span class="count" id="cnt-inst-commodity"></span></button>
-    <button class="filter-btn" data-inst="FX" onclick="setInst(this)"><span class="dot dot-FX"></span> FX <span class="count" id="cnt-inst-FX"></span></button>
-    <button class="filter-btn" data-inst="repo" onclick="setInst(this)"><span class="dot dot-repo"></span> Repo <span class="count" id="cnt-inst-repo"></span></button>
-    <button class="filter-btn" data-inst="swap" onclick="setInst(this)"><span class="dot dot-swap"></span> Swaps <span class="count" id="cnt-inst-swap"></span></button>
-    <button class="filter-btn" data-inst="CDS" onclick="setInst(this)"><span class="dot dot-CDS"></span> CDS <span class="count" id="cnt-inst-CDS"></span></button>
-    <button class="filter-btn" data-inst="prediction_market" onclick="setInst(this)"><span class="dot dot-prediction_market"></span> Pred. Mkt <span class="count" id="cnt-inst-prediction_market"></span></button>
-    <button class="filter-btn" data-inst="weather_derivative" onclick="setInst(this)"><span class="dot dot-weather_derivative"></span> Weather <span class="count" id="cnt-inst-weather_derivative"></span></button>
-  </div>
-</aside>
+<div class="workspace">
+  <aside class="filter-rail" id="filter-rail" aria-label="Research filters" tabindex="-1">
+    <div class="rail-header">
+      <span class="rail-title">Universe filters</span>
+      <div class="rail-actions">
+        <button class="text-button" id="clear-filters" type="button">Clear all</button>
+        <button class="text-button" id="filter-close" type="button" aria-label="Close research filters">Close</button>
+      </div>
+    </div>
 
-<main>
-  <div class="result-count" id="result-count" role="status" aria-live="polite" aria-atomic="true"></div>
-  <div id="feed"></div>
-</main>
+    <section class="filter-group" aria-labelledby="source-filter-label">
+      <div class="filter-heading"><h2 id="source-filter-label">Source</h2></div>
+      <div class="facet-list">
+        <button class="facet-clear active" type="button" data-clear-facet="source"><span>Any source</span><span class="facet-count" data-count-clear="source"></span></button>
+        <button class="facet-option" type="button" data-filter="source" data-value="substack"><span>Substack</span><span class="facet-count" data-count-source="substack"></span></button>
+        <button class="facet-option" type="button" data-filter="source" data-value="medium"><span>Medium</span><span class="facet-count" data-count-source="medium"></span></button>
+      </div>
+    </section>
+
+    <section class="filter-group" aria-labelledby="date-filter-label">
+      <div class="filter-heading"><h2 id="date-filter-label">Time window</h2></div>
+      <div class="date-options">
+        <button class="date-option" type="button" data-filter="range" data-value="30d">30D</button>
+        <button class="date-option" type="button" data-filter="range" data-value="90d">90D</button>
+        <button class="date-option" type="button" data-filter="range" data-value="1y">1Y</button>
+        <button class="date-option active" type="button" data-filter="range" data-value="all">All</button>
+      </div>
+    </section>
+
+    <section class="filter-group" aria-labelledby="direction-filter-label">
+      <div class="filter-heading"><h2 id="direction-filter-label">Direction / structure</h2></div>
+      <div class="facet-list">
+        <button class="facet-clear active" type="button" data-clear-facet="direction"><span>Any direction</span><span class="facet-count" data-count-clear="direction"></span></button>
+        <button class="facet-option" type="button" data-filter="direction" data-value="long"><span>Long</span><span class="facet-count" data-count-direction="long"></span></button>
+        <button class="facet-option" type="button" data-filter="direction" data-value="short"><span>Short</span><span class="facet-count" data-count-direction="short"></span></button>
+        <button class="facet-option" type="button" data-filter="direction" data-value="arbitrage/relative value"><span>Arbitrage / RV</span><span class="facet-count" data-count-direction="arbitrage/relative value"></span></button>
+        <button class="facet-option" type="button" data-filter="direction" data-value="long/short"><span>Long / short</span><span class="facet-count" data-count-direction="long/short"></span></button>
+        <button class="facet-option" type="button" data-filter="direction" data-value="unspecified"><span>Not stated / research</span><span class="facet-count" data-count-direction="unspecified"></span></button>
+      </div>
+    </section>
+
+    <section class="filter-group" aria-labelledby="instrument-filter-label">
+      <div class="filter-heading"><h2 id="instrument-filter-label">Market / instrument</h2></div>
+      <div class="facet-list two-column">
+        <button class="facet-clear active" type="button" data-clear-facet="instrument"><span>Any</span><span class="facet-count" data-count-clear="instrument"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="equity"><span>Equity</span><span class="facet-count" data-count-instrument="equity"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="option"><span>Options</span><span class="facet-count" data-count-instrument="option"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="volatility"><span>Volatility</span><span class="facet-count" data-count-instrument="volatility"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="bond"><span>Bonds</span><span class="facet-count" data-count-instrument="bond"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="futures"><span>Futures</span><span class="facet-count" data-count-instrument="futures"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="commodity"><span>Commodity</span><span class="facet-count" data-count-instrument="commodity"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="FX"><span>FX</span><span class="facet-count" data-count-instrument="FX"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="swap"><span>Swaps</span><span class="facet-count" data-count-instrument="swap"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="CDS"><span>CDS</span><span class="facet-count" data-count-instrument="CDS"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="repo"><span>Repo</span><span class="facet-count" data-count-instrument="repo"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="prediction_market"><span>Prediction</span><span class="facet-count" data-count-instrument="prediction_market"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="weather_derivative"><span>Weather</span><span class="facet-count" data-count-instrument="weather_derivative"></span></button>
+        <button class="facet-option" type="button" data-filter="instrument" data-value="unspecified"><span>Not stated</span><span class="facet-count" data-count-instrument="unspecified"></span></button>
+      </div>
+    </section>
+
+    <section class="filter-group" aria-labelledby="manager-filter-label">
+      <div class="filter-heading">
+        <h2 id="manager-filter-label">Manager / firm</h2>
+        <button class="text-button" type="button" data-clear-facet="manager">Any</button>
+      </div>
+      <label class="sr-only" for="manager-search">Search managers and firms</label>
+      <input class="manager-search" id="manager-search" type="search" autocomplete="off" placeholder="Find manager or firm…">
+      <div class="facet-list manager-options" id="manager-options">
+__MANAGER_BUTTONS__
+      </div>
+    </section>
+
+    <section class="filter-group" aria-labelledby="evidence-filter-label">
+      <div class="filter-heading"><h2 id="evidence-filter-label">Evidence available</h2></div>
+      <div class="facet-list">
+        <button class="facet-option" type="button" data-filter="quality" data-value="quant"><span>Quantified</span><span class="facet-count" data-count-quality="quant"></span></button>
+        <button class="facet-option" type="button" data-filter="quality" data-value="thesis"><span>Has edge / thesis</span><span class="facet-count" data-count-quality="thesis"></span></button>
+        <button class="facet-option" type="button" data-filter="quality" data-value="outcome"><span>Reported outcome</span><span class="facet-count" data-count-quality="outcome"></span></button>
+      </div>
+    </section>
+
+    <section class="filter-group" aria-labelledby="content-filter-label">
+      <div class="filter-heading"><h2 id="content-filter-label">Content access</h2></div>
+      <div class="facet-list">
+        <button class="facet-clear active" type="button" data-clear-facet="content"><span>Full + excerpt</span><span class="facet-count" data-count-clear="content"></span></button>
+        <button class="facet-option" type="button" data-filter="content" data-value="full"><span>Full text indexed</span><span class="facet-count" data-count-content="full"></span></button>
+        <button class="facet-option" type="button" data-filter="content" data-value="excerpt"><span>Excerpt indexed</span><span class="facet-count" data-count-content="excerpt"></span></button>
+      </div>
+    </section>
+
+    <section class="filter-group research-only-filter" aria-labelledby="coverage-filter-label">
+      <div class="filter-heading"><h2 id="coverage-filter-label">Research coverage</h2></div>
+      <div class="facet-list">
+        <button class="date-option active" type="button" data-filter="coverage" data-value="all">All research</button>
+        <button class="date-option" type="button" data-filter="coverage" data-value="ideas">With extracted ideas</button>
+        <button class="date-option" type="button" data-filter="coverage" data-value="research">Research-only</button>
+      </div>
+    </section>
+
+    <p class="rail-disclaimer"><strong>Research-derived intelligence.</strong> Extracted ideas are not execution records or investment recommendations. Verify context in the original publication.</p>
+  </aside>
+
+  <main class="main-panel" id="main-panel" tabindex="-1">
+    <div class="command-bar">
+      <nav class="view-tabs" aria-label="Terminal views">
+        <button class="view-tab active" type="button" data-view="ideas">Idea Monitor</button>
+        <button class="view-tab" type="button" data-view="research">Research Library</button>
+        <button class="view-tab" type="button" data-view="saved">Saved <span id="saved-count"></span></button>
+      </nav>
+      <span class="result-summary" id="result-summary"></span>
+      <span class="command-spacer"></span>
+      <label class="sr-only" for="sort-select">Sort results</label>
+      <select class="select-control" id="sort-select"></select>
+      <button class="command-button" type="button" data-action="density"><span class="button-label">Density: </span><span id="density-label">Compact</span></button>
+      <button class="command-button" type="button" data-action="copy-view">Copy view</button>
+      <button class="command-button" type="button" data-action="export">Export CSV</button>
+      <button class="command-button active" type="button" data-action="inspector" aria-pressed="true" aria-expanded="true" aria-controls="inspector">Inspector</button>
+    </div>
+
+    <div class="active-filters empty" id="active-filters" aria-label="Active filters"></div>
+
+    <section class="context-bar" aria-label="Visible universe summary">
+      <div class="context-metrics">
+        <span class="context-metric"><b id="visible-primary">0</b><span id="visible-primary-label">ideas</span></span>
+        <span class="context-metric"><b id="visible-articles">0</b><span id="visible-secondary-label">notes</span></span>
+        <span class="context-metric"><b id="visible-managers">0</b><span>managers</span></span>
+      </div>
+      <div class="direction-mix" id="direction-mix" aria-label="Visible direction distribution"></div>
+      <span class="mix-legend" id="mix-legend"></span>
+    </section>
+
+    <section class="table-shell" id="table-shell" aria-label="Research results">
+      <div class="data-table" id="data-table" role="table" aria-rowcount="0">
+        <div class="table-head idea-grid" id="table-head" role="row" aria-rowindex="1"></div>
+        <div id="table-body" role="rowgroup"></div>
+      </div>
+      <div class="empty-state" id="empty-state">
+        <h2 id="empty-title">No matching records</h2>
+        <p id="empty-copy">Adjust the search or clear one of the active filters.</p>
+      </div>
+      <div class="load-more-wrap" id="load-more-wrap">
+        <button class="load-more" id="load-more" type="button"></button>
+      </div>
+    </section>
+  </main>
+
+  <aside class="inspector" id="inspector" aria-label="Evidence inspector">
+    <div class="inspector-header">
+      <span class="inspector-label">Evidence inspector</span>
+      <button class="inspector-close" id="inspector-close" type="button" aria-label="Close evidence inspector">×</button>
+    </div>
+    <div id="inspector-content">
+      <div class="inspector-empty">
+        <div class="inspector-empty-mark">N/R</div>
+        <h2>Select a record</h2>
+        <p>Inspect the complete idea, evidence, provenance, and source without losing your position in the monitor.</p>
+      </div>
+    </div>
+  </aside>
 </div>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
+
+<dialog id="shortcut-dialog" aria-labelledby="shortcut-title">
+  <div class="dialog-header">
+    <h2 id="shortcut-title">Keyboard workflow</h2>
+    <button class="inspector-close" type="button" data-close-dialog aria-label="Close keyboard shortcuts">×</button>
+  </div>
+  <div class="shortcut-grid">
+    <div class="shortcut-item"><span>Focus global search</span><kbd>/</kbd></div>
+    <div class="shortcut-item"><span>Move through rows</span><span><kbd>J</kbd> <kbd>K</kbd></span></div>
+    <div class="shortcut-item"><span>Open evidence inspector</span><kbd>Enter</kbd></div>
+    <div class="shortcut-item"><span>Open original research</span><kbd>O</kbd></div>
+    <div class="shortcut-item"><span>Save selected idea</span><kbd>S</kbd></div>
+    <div class="shortcut-item"><span>Copy selected citation</span><kbd>C</kbd></div>
+    <div class="shortcut-item"><span>Toggle filters</span><kbd>F</kbd></div>
+    <div class="shortcut-item"><span>Ideas / Research / Saved</span><span><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></span></div>
+    <div class="shortcut-item"><span>Close panel</span><kbd>Esc</kbd></div>
+    <div class="shortcut-item"><span>Show this reference</span><kbd>?</kbd></div>
+  </div>
+  <p class="dialog-foot">Shortcuts are disabled while typing in a form control.</p>
+</dialog>
+
+<noscript><div>This research terminal requires JavaScript to filter and inspect the embedded dataset.</div></noscript>
+
 <script>
-const DATA = {data_json};
+const ARTICLES = __ARTICLES_JSON__;
+const IDEAS = __IDEAS_JSON__;
 
-// ── State ──
-let activeDir  = 'all';
-let activeInst = 'all';
-let activeFund = 'all';
-let activeSource = 'all';
-let query      = '';
+const ARTICLE_BY_ID = new Map(ARTICLES.map(function (article) { return [article.id, article]; }));
+const IDEA_BY_ID = new Map(IDEAS.map(function (idea) { return [idea.id, idea]; }));
+const MANAGER_LABELS = new Map(IDEAS.filter(function (idea) { return idea.manager_key; }).map(function (idea) { return [idea.manager_key,idea.manager]; }));
+const MANAGERS = Array.from(MANAGER_LABELS.keys()).sort(function (a, b) { return MANAGER_LABELS.get(a).localeCompare(MANAGER_LABELS.get(b)); });
+const MAX_DATE = ARTICLES.reduce(function (latest, article) { return article.date > latest ? article.date : latest; }, '1970-01-01');
+const VALID_SOURCES = new Set(['substack','medium']);
+const VALID_DIRECTIONS = new Set(['long','short','arbitrage/relative value','long/short','unspecified']);
+const VALID_INSTRUMENTS = new Set(['equity','option','volatility','bond','futures','commodity','FX','swap','CDS','repo','prediction_market','weather_derivative','unspecified']);
+const VALID_QUALITY = new Set(['quant','thesis','outcome']);
+const VALID_CONTENT = new Set(['full','excerpt']);
+const PAGE_SIZE = {ideas:100,research:80,saved:100};
 
-// ── Filter & Render ──
-function tradeMatchesDir(t, dir) {{
-  if (dir === 'all') return true;
-  return t.direction === dir;
-}}
-function tradeMatchesInst(t, inst) {{
-  if (inst === 'all') return true;
-  return (t.instruments || []).includes(inst);
-}}
-function normalizeFund(value) {{
-  return String(value || '').trim().toLowerCase();
-}}
-function tradeMatchesFund(t, fund) {{
-  if (fund === 'all') return true;
-  return normalizeFund(t.fund_name_if_mentioned) === normalizeFund(fund);
-}}
-function matchesQuery(art, q, trades) {{
-  if (!q) return true;
-  const src = trades || art.trades;
-  const haystack = [
-    art.title,
-    art.subtitle,
-    art.source,
-    ...src.map(t => [
-      t.trade_description, t.underlying, t.edge_or_thesis,
-      t.outcome_if_mentioned, t.fund_name_if_mentioned, t.direction,
-      (t.instruments || []).join(' ')
-    ].join(' '))
-  ].join(' ').toLowerCase();
-  return q.toLowerCase().split(' ').filter(Boolean).every(w => haystack.includes(w));
-}}
-
-function filteredTrades(art) {{
-  return art.trades.filter(t =>
-    tradeMatchesDir(t, activeDir) &&
-    tradeMatchesInst(t, activeInst) &&
-    tradeMatchesFund(t, activeFund)
-  );
-}}
-
-function render() {{
-  const feed = document.getElementById('feed');
-  const q = query.trim();
-  const tradeFiltersActive = activeDir !== 'all' || activeInst !== 'all' || activeFund !== 'all';
-
-  const tradeCache = new Map();
-  for (const art of DATA) {{
-    tradeCache.set(art, tradeFiltersActive ? filteredTrades(art) : art.trades);
-  }}
-
-  const visible = DATA.filter(art => {{
-    const trades = tradeCache.get(art);
-    if (activeSource !== 'all' && art.source !== activeSource) return false;
-    if (tradeFiltersActive && trades.length === 0) return false;
-    return matchesQuery(art, q, trades);
-  }});
-
-  document.getElementById('result-count').textContent =
-    `${{visible.length}} article${{visible.length !== 1 ? 's' : ''}} · ${{visible.reduce((s, a) => s + tradeCache.get(a).length, 0)}} trades`;
-
-  updateHash();
-
-  feed.innerHTML = '';
-  if (visible.length === 0) {{
-    feed.innerHTML = '<div class="empty"><h2>No results</h2><p>Try a different search or filter.</p></div>';
-    return;
-  }}
-
-  for (const [index, art] of visible.entries()) {{
-    const card = buildCard(art, tradeCache.get(art), index);
-    feed.appendChild(card);
-  }}
-}}
-
-function dirClass(dir) {{
-  if (dir === 'long') return 'dir-long';
-  if (dir === 'short') return 'dir-short';
-  if (dir === 'arbitrage/relative value') return 'dir-arb';
-  if (dir === 'long/short') return 'dir-ls';
-  return '';
-}}
-function dirLabel(dir) {{
-  if (dir === 'arbitrage/relative value') return 'Arb/RV';
-  if (dir === 'long/short') return 'L/S';
-  return dir.charAt(0).toUpperCase() + dir.slice(1);
-}}
-
-function esc(s) {{
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}}
-function cssToken(s) {{
-  return String(s || '').replace(/[^a-zA-Z0-9_-]/g, '_');
-}}
-function safeArticleUrl(value) {{
-  try {{
+function normalize(value) {
+  return String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+function instrumentLabel(value) {
+  const labels = {
+    option:'Options', volatility:'Volatility', equity:'Equity', bond:'Bonds',
+    futures:'Futures', commodity:'Commodity', FX:'FX', repo:'Repo', swap:'Swaps',
+    CDS:'CDS', prediction_market:'Prediction market',
+    weather_derivative:'Weather derivative', unspecified:'Not stated'
+  };
+  return labels[value] || value;
+}
+function directionLabel(value) {
+  const labels = {
+    long:'Long', short:'Short', 'arbitrage/relative value':'Arb / RV',
+    'long/short':'Long / short', unspecified:'Not stated'
+  };
+  return labels[value] || 'Not stated';
+}
+function directionClass(value) {
+  if (value === 'long') return 'dir-long';
+  if (value === 'short') return 'dir-short';
+  if (value === 'arbitrage/relative value') return 'dir-arb';
+  if (value === 'long/short') return 'dir-ls';
+  return 'dir-unspecified';
+}
+function sourceLabel(value) {
+  return value === 'medium' ? 'Medium' : 'Substack';
+}
+function escapeHtml(value) {
+  return String(value || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function safeUrl(value) {
+  try {
     const url = new URL(value);
-    return url.protocol === 'https:' ? url.href : '#';
-  }} catch (_error) {{
+    const host = url.hostname.toLowerCase();
+    const validHost = host === 'navnoorbawa.substack.com' || host === 'medium.com' || host.endsWith('.medium.com');
+    return url.protocol === 'https:' && validHost ? url.href : '#';
+  } catch (_error) {
     return '#';
-  }}
-}}
+  }
+}
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function formatDate(value) {
+  if (!value || value === '1970-01-01') return '—';
+  const parts = value.split('-').map(Number);
+  return MONTHS[parts[1] - 1] + ' ' + parts[2] + ', ' + parts[0];
+}
+function shortDate(value) {
+  if (!value || value === '1970-01-01') return '—';
+  const parts = value.split('-').map(Number);
+  return String(parts[2]).padStart(2,'0') + ' ' + MONTHS[parts[1] - 1] + ' ' + String(parts[0]).slice(2);
+}
+function number(value) {
+  return Number(value || 0).toLocaleString();
+}
+function hasValue(value) {
+  return Boolean(String(value || '').trim());
+}
+function setFromParam(params, key, validValues) {
+  const raw = params.get(key);
+  if (!raw) return new Set();
+  return new Set(raw.split('|').map(function (value) { return value.trim(); }).filter(function (value) {
+    return value && (!validValues || validValues.has(value));
+  }));
+}
 
-const _MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-function fmtDate(s) {{
-  if (!s || s === '1970-01-01') return '—';
-  const [y, m, d] = s.split('-').map(Number);
-  return `${{_MONTHS[m-1]}} ${{d}}, ${{y}}`;
-}}
+ARTICLES.forEach(function (article) {
+  article._ideas = article.idea_ids.map(function (id) { return IDEA_BY_ID.get(id); }).filter(Boolean);
+  article._search = normalize([
+    article.title, article.subtitle, article.source, article.instruments.join(' '),
+    article.directions.join(' '), article.managers.join(' '),
+    article._ideas.map(function (idea) {
+      return [idea.description,idea.underlying,idea.thesis,idea.quant,idea.outcome,idea.manager].join(' ');
+    }).join(' ')
+  ].join(' '));
+});
+IDEAS.forEach(function (idea) {
+  idea._article = ARTICLE_BY_ID.get(idea.article_id);
+  idea._search = normalize([
+    idea._article.title, idea._article.subtitle, idea._article.source,
+    idea.description, idea.direction, idea.instruments.join(' '), idea.underlying,
+    idea.thesis, idea.quant, idea.outcome, idea.manager
+  ].join(' '));
+});
 
-function buildCard(art, trades, index) {{
-  const div = document.createElement('div');
-  div.className = 'article-card';
-  const source = art.source === 'medium' ? 'medium' : 'substack';
-  const sourceLabel = source === 'medium' ? 'Medium' : 'Substack';
+let savedIdeas = new Set();
+try {
+  const stored = JSON.parse(localStorage.getItem('nrt-saved-ideas') || '[]');
+  if (Array.isArray(stored)) savedIdeas = new Set(stored.filter(function (id) { return IDEA_BY_ID.has(id); }));
+} catch (_error) {}
 
-  // Instruments from filtered trades
-  const insts = [...new Set(trades.flatMap(t => t.instruments || []))].filter(i => i !== 'unspecified').sort();
-  const dirs  = [...new Set(trades.map(t => t.direction).filter(d => d && d !== 'unspecified'))].sort();
+let storedDensity = 'compact';
+let storedInspector = true;
+try {
+  storedDensity = localStorage.getItem('nrt-density') === 'comfortable' ? 'comfortable' : 'compact';
+  storedInspector = localStorage.getItem('nrt-inspector') !== 'hidden';
+} catch (_error) {}
 
-  const instTags = insts.map(i => `<span class="tag tag-${{cssToken(i)}}">${{esc(i)}}</span>`).join('');
-  const dirTags  = dirs.map(d => {{
-    const dc = dirClass(d);
-    return dc ? `<span class="dir-tag ${{dc}}">${{dirLabel(d)}}</span>` : '';
-  }}).join('');
-  const toggleId = `article-toggle-${{index}}`;
-  const panelId = `trades-panel-${{index}}`;
-  const tradeMarkup = trades.length
-    ? trades.map(t => buildTrade(t)).join('')
-    : '<div class="no-trades">No qualifying trades were extracted from this article.</div>';
+const state = {
+  view:'ideas',
+  query:'',
+  sources:new Set(),
+  directions:new Set(),
+  instruments:new Set(),
+  managers:new Set(),
+  quality:new Set(),
+  content:new Set(),
+  range:'all',
+  coverage:'all',
+  sort:'newest',
+  density:storedDensity,
+  selected:'',
+  limit:PAGE_SIZE.ideas,
+  inspector:storedInspector
+};
 
-  div.innerHTML = `
-    <button type="button" class="article-header" id="${{toggleId}}" aria-expanded="false" aria-controls="${{panelId}}">
-      <span class="article-meta">
-        <span class="article-date">${{fmtDate(art.date)}}</span>
-        <span class="source-badge source-${{source}}">${{sourceLabel}}</span>
-      </span>
-      <span class="article-body">
-        <span class="article-title">${{esc(art.title)}}</span>
-        <span class="tag-row">${{instTags}}${{dirTags}}</span>
-      </span>
-      <span class="trade-badge">${{trades.length}} trade${{trades.length !== 1 ? 's' : ''}}</span>
-      <span class="expand-icon" aria-hidden="true">&#9658;</span>
-    </button>
-    <div class="trades-panel" id="${{panelId}}" role="region" aria-labelledby="${{toggleId}}">
-      <a class="article-link" href="${{esc(safeArticleUrl(art.url))}}" target="_blank" rel="noopener">&#8599; Open on ${{sourceLabel}}</a>
-      ${{tradeMarkup}}
-    </div>`;
+function hydrateFromHash() {
+  const params = new URLSearchParams(location.hash.slice(1));
+  if (['ideas','research','saved'].includes(params.get('view'))) state.view = params.get('view');
+  state.query = params.get('q') || '';
+  state.sources = setFromParam(params,'src',VALID_SOURCES);
+  state.directions = setFromParam(params,'dir',VALID_DIRECTIONS);
+  state.instruments = setFromParam(params,'inst',VALID_INSTRUMENTS);
+  state.managers = setFromParam(params,'mgr',new Set(MANAGERS));
+  state.quality = setFromParam(params,'evidence',VALID_QUALITY);
+  state.content = setFromParam(params,'content',VALID_CONTENT);
+  if (['30d','90d','1y','all'].includes(params.get('range'))) state.range = params.get('range');
+  if (['all','ideas','research'].includes(params.get('coverage'))) state.coverage = params.get('coverage');
+  if (params.get('sort')) state.sort = params.get('sort');
+  if (['compact','comfortable'].includes(params.get('density'))) state.density = params.get('density');
+  state.selected = params.get('selected') || '';
+  state.limit = PAGE_SIZE[state.view];
+}
 
-  const toggle = div.querySelector('.article-header');
-  toggle.addEventListener('click', () => toggleCard(div, toggle));
+function updateHash() {
+  const params = new URLSearchParams();
+  if (state.view !== 'ideas') params.set('view',state.view);
+  if (state.query) params.set('q',state.query);
+  if (state.sources.size) params.set('src',Array.from(state.sources).join('|'));
+  if (state.directions.size) params.set('dir',Array.from(state.directions).join('|'));
+  if (state.instruments.size) params.set('inst',Array.from(state.instruments).join('|'));
+  if (state.managers.size) params.set('mgr',Array.from(state.managers).join('|'));
+  if (state.quality.size) params.set('evidence',Array.from(state.quality).join('|'));
+  if (state.content.size) params.set('content',Array.from(state.content).join('|'));
+  if (state.range !== 'all') params.set('range',state.range);
+  if (state.coverage !== 'all' && state.view === 'research') params.set('coverage',state.coverage);
+  if (state.sort !== 'newest') params.set('sort',state.sort);
+  if (state.density !== 'compact') params.set('density',state.density);
+  if (state.selected) params.set('selected',state.selected);
+  const encoded = params.toString();
+  history.replaceState(null,'',encoded ? '#' + encoded : location.pathname + location.search);
+}
 
-  return div;
-}}
+let queryCacheKey = null;
+let queryTokenCache = [];
+let relevanceScoreCache = new WeakMap();
+function queryTokens() {
+  const aliases = {options:'option',equities:'equity',stocks:'equity',rv:'relative value',arb:'arbitrage'};
+  const normalizedQuery = normalize(state.query);
+  if (normalizedQuery !== queryCacheKey) {
+    queryCacheKey = normalizedQuery;
+    queryTokenCache = normalizedQuery.split(' ').filter(Boolean).map(function (token) { return aliases[token] || token; });
+    relevanceScoreCache = new WeakMap();
+  }
+  return queryTokenCache;
+}
+function matchesSearch(haystack) {
+  const tokens = queryTokens();
+  return tokens.every(function (token) { return haystack.includes(token); });
+}
+function inDateRange(date) {
+  if (state.range === 'all') return true;
+  const newest = new Date(MAX_DATE + 'T00:00:00Z');
+  const candidate = new Date(date + 'T00:00:00Z');
+  const days = state.range === '30d' ? 30 : state.range === '90d' ? 90 : 365;
+  return newest - candidate <= days * 86400000 && candidate <= newest;
+}
+function setMatches(selected, values) {
+  if (!selected.size) return true;
+  return values.some(function (value) { return selected.has(value); });
+}
+function qualityMatches(record, isArticle) {
+  if (!state.quality.size) return true;
+  const values = isArticle ? {
+    quant:record.has_quant,thesis:record.has_thesis,outcome:record.has_outcome
+  } : {
+    quant:hasValue(record.quant),thesis:hasValue(record.thesis),outcome:hasValue(record.outcome)
+  };
+  return Array.from(state.quality).every(function (key) { return values[key]; });
+}
+function ideaMatches(idea, skip) {
+  const article = idea._article;
+  if (state.view === 'saved' && !savedIdeas.has(idea.id)) return false;
+  if (skip !== 'source' && state.sources.size && !state.sources.has(article.source)) return false;
+  if (!inDateRange(article.date)) return false;
+  if (skip !== 'direction' && state.directions.size && !state.directions.has(idea.direction)) return false;
+  if (skip !== 'instrument' && !setMatches(state.instruments,idea.instruments)) return false;
+  if (skip !== 'manager' && state.managers.size && !state.managers.has(idea.manager_key)) return false;
+  if (skip !== 'quality' && !qualityMatches(idea,false)) return false;
+  if (skip !== 'content' && state.content.size && !state.content.has(article.content_status)) return false;
+  return matchesSearch(idea._search);
+}
+function ideaMatchesResearchFacets(idea,skip) {
+  if (skip !== 'direction' && state.directions.size && !state.directions.has(idea.direction)) return false;
+  if (skip !== 'instrument' && !setMatches(state.instruments,idea.instruments)) return false;
+  if (skip !== 'manager' && state.managers.size && !state.managers.has(idea.manager_key)) return false;
+  if (skip !== 'quality' && !qualityMatches(idea,false)) return false;
+  return matchesSearch(idea._search);
+}
+function articleMatches(article, skip) {
+  if (skip !== 'source' && state.sources.size && !state.sources.has(article.source)) return false;
+  if (!inDateRange(article.date)) return false;
+  const hasTradeFilters =
+    (skip !== 'direction' && state.directions.size) ||
+    (skip !== 'instrument' && state.instruments.size) ||
+    (skip !== 'manager' && state.managers.size) ||
+    (skip !== 'quality' && state.quality.size);
+  if (hasTradeFilters && !article._ideas.some(function (idea) { return ideaMatchesResearchFacets(idea,skip); })) return false;
+  if (skip !== 'content' && state.content.size && !state.content.has(article.content_status)) return false;
+  if (state.coverage === 'ideas' && article.trade_count === 0) return false;
+  if (state.coverage === 'research' && article.trade_count !== 0) return false;
+  return matchesSearch(article._search);
+}
+function relevanceScore(record) {
+  if (!state.query) return 0;
+  queryTokens();
+  if (relevanceScoreCache.has(record)) return relevanceScoreCache.get(record);
+  const tokens = queryTokens();
+  let score;
+  if (state.view === 'research') {
+    const title = normalize(record.title);
+    const managers = normalize(record.managers.join(' '));
+    score = tokens.reduce(function (value, token) {
+      return value + (title.includes(token) ? 8 : 0) + (managers.includes(token) ? 5 : 0);
+    },0);
+  } else {
+    const article = record._article;
+    const title = normalize(article.title);
+    const manager = normalize(record.manager);
+    const underlying = normalize(record.underlying);
+    score = tokens.reduce(function (value, token) {
+      return value + (manager.includes(token) ? 10 : 0) + (underlying.includes(token) ? 8 : 0) + (title.includes(token) ? 6 : 0);
+    },0);
+  }
+  relevanceScoreCache.set(record,score);
+  return score;
+}
+function sortedRecords(records) {
+  return records.slice().sort(function (left,right) {
+    const leftArticle = state.view === 'research' ? left : left._article;
+    const rightArticle = state.view === 'research' ? right : right._article;
+    if (state.sort === 'oldest') return leftArticle.date.localeCompare(rightArticle.date);
+    if (state.sort === 'manager') return String(left.manager || '').localeCompare(String(right.manager || '')) || rightArticle.date.localeCompare(leftArticle.date);
+    if (state.sort === 'market') return String((left.instruments || [])[0] || '').localeCompare(String((right.instruments || [])[0] || '')) || rightArticle.date.localeCompare(leftArticle.date);
+    if (state.sort === 'direction') return String(left.direction || '').localeCompare(String(right.direction || '')) || rightArticle.date.localeCompare(leftArticle.date);
+    if (state.sort === 'article') return leftArticle.title.localeCompare(rightArticle.title);
+    if (state.sort === 'most-ideas') return right.trade_count - left.trade_count || right.date.localeCompare(left.date);
+    if (state.sort === 'read-time') return right.read_minutes - left.read_minutes || right.date.localeCompare(left.date);
+    if (state.sort === 'title') return left.title.localeCompare(right.title);
+    if (state.sort === 'relevance') return relevanceScore(right) - relevanceScore(left) || rightArticle.date.localeCompare(leftArticle.date);
+    return rightArticle.date.localeCompare(leftArticle.date);
+  });
+}
+function filteredRecords(skip) {
+  const records = state.view === 'research'
+    ? ARTICLES.filter(function (article) { return articleMatches(article,skip); })
+    : IDEAS.filter(function (idea) { return ideaMatches(idea,skip); });
+  return sortedRecords(records);
+}
 
-function isLossOutcome(s) {{
-  return /\\b(lost|loss(?:es)?|losing|declined?|fell|fall|blew.?up|wiped|bankrupt|collapse[d]?|down \\$|negative return|drawdown)\\b/i.test(s);
-}}
+function setSortOptions() {
+  const select = document.getElementById('sort-select');
+  const research = state.view === 'research';
+  const options = research ? [
+    ['newest','Newest first'],['oldest','Oldest first'],['most-ideas','Most ideas'],
+    ['read-time','Longest read'],['title','Title A–Z']
+  ] : [
+    ['newest','Newest first'],['oldest','Oldest first'],['manager','Manager A–Z'],
+    ['market','Market A–Z'],['direction','Direction A–Z'],['article','Article A–Z'],
+    ['relevance','Search relevance']
+  ];
+  if (!options.some(function (option) { return option[0] === state.sort; })) state.sort = 'newest';
+  select.innerHTML = options.map(function (option) {
+    return '<option value="' + option[0] + '"' + (option[0] === state.sort ? ' selected' : '') + '>' + option[1] + '</option>';
+  }).join('');
+}
+function ariaSort(key) {
+  if (key === 'newest' && state.sort === 'oldest') return 'ascending';
+  if (state.sort !== key) return 'none';
+  return state.sort === 'oldest' || state.sort === 'manager' || state.sort === 'market' || state.sort === 'direction' || state.sort === 'article' || state.sort === 'title'
+    ? 'ascending' : 'descending';
+}
+function renderTableHead() {
+  const head = document.getElementById('table-head');
+  if (state.view === 'research') {
+    head.className = 'table-head research-grid';
+    head.innerHTML =
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('newest') + '"><button class="head-sort" type="button" data-sort="newest">Date</button></div>' +
+      '<div class="head-cell" role="columnheader">Source</div>' +
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('title') + '"><button class="head-sort" type="button" data-sort="title">Research note</button></div>' +
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('most-ideas') + '"><button class="head-sort" type="button" data-sort="most-ideas">Ideas</button></div>' +
+      '<div class="head-cell" role="columnheader">Coverage</div>' +
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('read-time') + '"><button class="head-sort" type="button" data-sort="read-time">Read</button></div>' +
+      '<div class="head-cell" role="columnheader"><span class="sr-only">Open</span></div>';
+  } else {
+    head.className = 'table-head idea-grid';
+    head.innerHTML =
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('newest') + '"><button class="head-sort" type="button" data-sort="newest">Date</button></div>' +
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('direction') + '"><button class="head-sort" type="button" data-sort="direction">Bias</button></div>' +
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('market') + '"><button class="head-sort" type="button" data-sort="market">Market</button></div>' +
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('manager') + '"><button class="head-sort" type="button" data-sort="manager">Manager / firm</button></div>' +
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('article') + '"><button class="head-sort" type="button" data-sort="article">Idea / structure</button></div>' +
+      '<div class="head-cell" role="columnheader">Evidence</div>' +
+      '<div class="head-cell" role="columnheader">Source</div>' +
+      '<div class="head-cell" role="columnheader"><span class="sr-only">Open</span></div>';
+  }
+  head.querySelectorAll('[data-sort]').forEach(function (button) {
+    button.tabIndex = window.innerWidth <= 760 ? -1 : 0;
+  });
+  document.getElementById('data-table').setAttribute('aria-colcount',state.view === 'research' ? '7' : '8');
+}
 
-function buildTrade(t) {{
-  const dc = dirClass(t.direction);
-  const dirBadge = dc ? `<span class="dir-tag ${{dc}}">${{dirLabel(t.direction)}}</span>` : '';
-  const instTags = (t.instruments || []).map(i => `<span class="tag tag-${{cssToken(i)}}">${{esc(i)}}</span>`).join('');
-  const fundTag  = t.fund_name_if_mentioned ? `<span class="fund-tag">${{esc(t.fund_name_if_mentioned)}}</span>` : '';
+function evidenceMarkup(idea) {
+  const quant = hasValue(idea.quant);
+  const thesis = hasValue(idea.thesis);
+  const outcome = hasValue(idea.outcome);
+  const label = 'Quantitative detail ' + (quant ? 'available' : 'unavailable') + '; thesis ' +
+    (thesis ? 'available' : 'unavailable') + '; reported outcome ' + (outcome ? 'available' : 'unavailable');
+  return '<span class="evidence-set" role="img" aria-label="' + label + '">' +
+    '<span class="evidence-flag ' + (quant ? 'on' : '') + '" aria-hidden="true" title="Quantitative detail">Q' + (quant ? '+' : '−') + '</span>' +
+    '<span class="evidence-flag ' + (thesis ? 'on' : '') + '" aria-hidden="true" title="Edge or thesis">T' + (thesis ? '+' : '−') + '</span>' +
+    '<span class="evidence-flag ' + (outcome ? 'on' : '') + '" aria-hidden="true" title="Reported outcome">O' + (outcome ? '+' : '−') + '</span>' +
+    '</span>';
+}
+function ideaRow(idea) {
+  const article = idea._article;
+  const primaryInstrument = idea.instruments[0] || 'unspecified';
+  const otherInstruments = idea.instruments.slice(1).map(instrumentLabel).join(', ');
+  const selected = state.selected === idea.id;
+  const rowLabel = formatDate(article.date) + ', ' + directionLabel(idea.direction) + ', ' +
+    idea.instruments.map(instrumentLabel).join(', ') + ', ' + (idea.manager || 'manager not stated') + ', ' +
+    (idea.description || 'no description extracted') + ', ' + sourceLabel(article.source);
+  return '<div class="data-row idea-grid" role="row" data-record-id="' + idea.id + '" tabindex="' + (selected ? '0' : '-1') + '" aria-selected="' + selected + '" aria-label="' + escapeHtml(rowLabel) + '">' +
+    '<div class="data-cell cell-date" role="cell"><time datetime="' + article.date + '">' + shortDate(article.date) + '</time></div>' +
+    '<div class="data-cell cell-bias" role="cell"><span class="direction-badge ' + directionClass(idea.direction) + '">' + directionLabel(idea.direction) + '</span></div>' +
+    '<div class="data-cell cell-market" role="cell"><div class="instrument-primary">' + escapeHtml(instrumentLabel(primaryInstrument)) + '</div>' +
+      (otherInstruments ? '<div class="instrument-secondary">+' + escapeHtml(otherInstruments) + '</div>' : '') + '</div>' +
+    '<div class="data-cell cell-manager" role="cell"><div class="manager-name ' + (idea.manager ? '' : 'missing') + '">' + escapeHtml(idea.manager || '—') + '</div></div>' +
+    '<div class="data-cell cell-idea" role="cell"><div class="idea-title">' + escapeHtml(idea.description || 'No description extracted') + '</div>' +
+      '<div class="idea-context">' + escapeHtml(idea.underlying || article.title) + '</div></div>' +
+    '<div class="data-cell cell-evidence" role="cell">' + evidenceMarkup(idea) + '</div>' +
+    '<div class="data-cell cell-source" role="cell"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span></div>' +
+    '<div class="data-cell cell-open" role="cell"><a class="row-open" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener" aria-label="Open ' + escapeHtml(article.title) + ' in a new tab">↗</a></div>' +
+    '</div>';
+}
+function researchRow(article) {
+  const selected = state.selected === article.id;
+  const coverage = article.trade_count === 0
+    ? '<span class="coverage-badge coverage-research">Research-only</span>'
+    : article.content_status === 'full'
+      ? '<span class="coverage-badge coverage-full">Full text</span>'
+      : '<span class="coverage-badge coverage-excerpt">Excerpt</span>';
+  const read = article.content_status === 'excerpt'
+    ? 'Preview'
+    : article.read_minutes ? article.read_minutes + ' min' : '—';
+  const rowLabel = formatDate(article.date) + ', ' + sourceLabel(article.source) + ', ' + article.title + ', ' +
+    number(article.trade_count) + ' extracted ideas, ' + (article.content_status === 'full' ? 'full text indexed' : 'excerpt indexed');
+  return '<div class="data-row research-grid" role="row" data-record-id="' + article.id + '" tabindex="' + (selected ? '0' : '-1') + '" aria-selected="' + selected + '" aria-label="' + escapeHtml(rowLabel) + '">' +
+    '<div class="data-cell cell-date" role="cell"><time datetime="' + article.date + '">' + shortDate(article.date) + '</time></div>' +
+    '<div class="data-cell cell-source" role="cell"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span></div>' +
+    '<div class="data-cell cell-article" role="cell"><div class="article-title">' + escapeHtml(article.title) + '</div><div class="article-subtitle">' + escapeHtml(article.subtitle || 'No abstract available') + '</div></div>' +
+    '<div class="data-cell cell-count number-cell" role="cell">' + number(article.trade_count) + '</div>' +
+    '<div class="data-cell cell-coverage" role="cell">' + coverage + '</div>' +
+    '<div class="data-cell cell-read number-cell" role="cell">' + read + '</div>' +
+    '<div class="data-cell cell-open" role="cell"><a class="row-open" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener" aria-label="Open ' + escapeHtml(article.title) + ' in a new tab">↗</a></div>' +
+    '</div>';
+}
+function renderRows(records) {
+  const body = document.getElementById('table-body');
+  const fragment = document.createDocumentFragment();
+  const visible = records.slice(0,state.limit);
+  visible.forEach(function (record) {
+    const template = document.createElement('template');
+    template.innerHTML = state.view === 'research' ? researchRow(record) : ideaRow(record);
+    fragment.appendChild(template.content.firstElementChild);
+  });
+  body.replaceChildren(fragment);
+  body.querySelectorAll('[data-record-id]').forEach(function (row,index) {
+    row.setAttribute('aria-rowindex',String(index + 2));
+  });
+  if (!body.querySelector('[aria-selected="true"]')) {
+    const first = body.querySelector('[data-record-id]');
+    if (first) first.tabIndex = 0;
+  }
+  document.getElementById('data-table').setAttribute('aria-rowcount',String(records.length + 1));
 
-  const desc    = esc(t.trade_description || '');
-  const underlying = t.underlying ? `<div class="trade-field"><b>Underlying:</b> ${{esc(t.underlying)}}</div>` : '';
-  const thesis  = t.edge_or_thesis ? `<div class="trade-field"><b>Edge / Thesis:</b> ${{esc(t.edge_or_thesis)}}</div>` : '';
-  const quant   = t.any_quant_detail ? `<div class="trade-quant">&#9670; ${{esc(t.any_quant_detail)}}</div>` : '';
-  const outLoss = t.outcome_if_mentioned && isLossOutcome(t.outcome_if_mentioned);
-  const outcome = t.outcome_if_mentioned ? `<div class="${{outLoss ? 'trade-outcome-loss' : 'trade-outcome'}}">${{outLoss ? '&#10007;' : '&#10003;'}} ${{esc(t.outcome_if_mentioned)}}</div>` : '';
+  const empty = document.getElementById('empty-state');
+  empty.classList.toggle('visible',records.length === 0);
+  const savedEmpty = state.view === 'saved' && savedIdeas.size === 0;
+  document.getElementById('empty-title').textContent = savedEmpty ? 'No saved ideas on this device' : 'No matching records';
+  document.getElementById('empty-copy').textContent = savedEmpty
+    ? 'Select an idea, open the inspector, and choose Save idea.'
+    : 'Adjust the search or clear one of the active filters.';
 
-  return `<div class="trade-item">
-    <div class="trade-row1">${{fundTag}}${{dirBadge}}${{instTags}}</div>
-    <div class="trade-desc">${{desc}}</div>
-    ${{underlying}}${{thesis}}${{quant}}${{outcome}}
-  </div>`;
-}}
+  const more = document.getElementById('load-more-wrap');
+  more.classList.toggle('visible',records.length > visible.length);
+  document.getElementById('load-more').textContent = 'Show next ' + Math.min(PAGE_SIZE[state.view],records.length - visible.length) + ' of ' + number(records.length - visible.length) + ' remaining';
+}
 
-function toggleCard(card, toggle) {{
-  const isOpen = card.classList.toggle('open');
-  toggle.setAttribute('aria-expanded', String(isOpen));
-}}
+function renderContext(records) {
+  let visibleIdeas;
+  let visibleArticles;
+  if (state.view === 'research') {
+    visibleArticles = records;
+    visibleIdeas = records.flatMap(function (article) {
+      return article._ideas.filter(function (idea) { return ideaMatchesResearchFacets(idea); });
+    });
+  } else {
+    visibleIdeas = records;
+    visibleArticles = Array.from(new Set(records.map(function (idea) { return idea.article_id; }))).map(function (id) { return ARTICLE_BY_ID.get(id); });
+  }
+  const managers = new Set(visibleIdeas.map(function (idea) { return idea.manager; }).filter(Boolean));
+  document.getElementById('visible-primary').textContent = number(records.length);
+  document.getElementById('visible-primary-label').textContent = state.view === 'research' ? 'notes' : 'ideas';
+  document.getElementById('visible-articles').textContent = number(visibleArticles.length);
+  document.getElementById('visible-secondary-label').textContent = state.view === 'research' ? 'ideas' : 'notes';
+  if (state.view === 'research') document.getElementById('visible-articles').textContent = number(visibleIdeas.length);
+  document.getElementById('visible-managers').textContent = number(managers.size);
 
-// ── Sidebar counts ──
-function updateCounts() {{
-  const dirs  = ['all','long','short','arbitrage/relative value','long/short'];
-  const insts = ['all','equity','volatility','option','bond','futures','commodity','FX','repo','swap','CDS','prediction_market','weather_derivative'];
+  const counts = {long:0,short:0,'arbitrage/relative value':0,'long/short':0,unspecified:0};
+  visibleIdeas.forEach(function (idea) { counts[idea.direction] = (counts[idea.direction] || 0) + 1; });
+  const total = visibleIdeas.length || 1;
+  const segments = [
+    ['long','mix-long'],['short','mix-short'],['arbitrage/relative value','mix-arb'],
+    ['long/short','mix-ls'],['unspecified','mix-unspecified']
+  ];
+  document.getElementById('direction-mix').innerHTML = segments.map(function (row) {
+    const width = counts[row[0]] / total * 100;
+    return '<span class="mix-segment ' + row[1] + '" style="width:' + width.toFixed(3) + '%" title="' + directionLabel(row[0]) + ': ' + number(counts[row[0]]) + '"></span>';
+  }).join('');
+  document.getElementById('mix-legend').textContent =
+    'L ' + number(counts.long) + ' · S ' + number(counts.short) + ' · RV ' +
+    number(counts['arbitrage/relative value']) + ' · L/S ' + number(counts['long/short']) +
+    ' · Not stated ' + number(counts.unspecified);
+}
 
-  document.querySelectorAll('[data-source]').forEach(btn => {{
-    const source = btn.dataset.source;
-    const el = btn.querySelector('.count');
-    if (el) el.textContent = source === 'all'
-      ? DATA.length
-      : DATA.filter(article => article.source === source).length;
-  }});
+function contextualRecords(skip) {
+  if (state.view === 'research') return ARTICLES.filter(function (article) { return articleMatches(article,skip); });
+  return IDEAS.filter(function (idea) { return ideaMatches(idea,skip); });
+}
+function recordArticle(record) {
+  return state.view === 'research' ? record : record._article;
+}
+function recordValues(record, facet) {
+  if (state.view === 'research') {
+    if (facet === 'source') return [record.source];
+    if (facet === 'content') return [record.content_status];
+    const matchingIdeas = record._ideas.filter(function (idea) { return ideaMatchesResearchFacets(idea,facet); });
+    if (facet === 'direction') return matchingIdeas.map(function (idea) { return idea.direction; });
+    if (facet === 'instrument') return matchingIdeas.flatMap(function (idea) { return idea.instruments; });
+    if (facet === 'manager') return matchingIdeas.map(function (idea) { return idea.manager_key; }).filter(Boolean);
+    if (facet === 'quality') return matchingIdeas.flatMap(function (idea) {
+      return [
+        hasValue(idea.quant) ? 'quant' : '', hasValue(idea.thesis) ? 'thesis' : '', hasValue(idea.outcome) ? 'outcome' : ''
+      ].filter(Boolean);
+    });
+  } else {
+    if (facet === 'source') return [record._article.source];
+    if (facet === 'direction') return [record.direction];
+    if (facet === 'instrument') return record.instruments;
+    if (facet === 'manager') return record.manager_key ? [record.manager_key] : [];
+    if (facet === 'content') return [record._article.content_status];
+    if (facet === 'quality') return [
+      hasValue(record.quant) ? 'quant' : '', hasValue(record.thesis) ? 'thesis' : '', hasValue(record.outcome) ? 'outcome' : ''
+    ].filter(Boolean);
+  }
+  return [];
+}
+function updateFacetCounts() {
+  ['source','direction','instrument','manager','quality','content'].forEach(function (facet) {
+    const records = contextualRecords(facet);
+    const counts = new Map();
+    records.forEach(function (record) {
+      new Set(recordValues(record,facet)).forEach(function (value) {
+        counts.set(value,(counts.get(value) || 0) + 1);
+      });
+    });
+    document.querySelectorAll('[data-count-' + facet + ']').forEach(function (element) {
+      const value = element.dataset['count' + facet.charAt(0).toUpperCase() + facet.slice(1)];
+      element.textContent = number(counts.get(value) || 0);
+    });
+    const clear = document.querySelector('[data-count-clear="' + facet + '"]');
+    if (clear) clear.textContent = number(records.length);
+  });
+}
 
-  for (const d of dirs) {{
-    const id = d === 'all' ? 'cnt-dir-all' : d === 'arbitrage/relative value' ? 'cnt-dir-arb' : d === 'long/short' ? 'cnt-dir-ls' : `cnt-dir-${{d}}`;
-    const el = document.getElementById(id);
-    if (el) el.textContent = DATA.reduce((s, a) => s + a.trades.filter(t => tradeMatchesDir(t, d)).length, 0);
-  }}
-  for (const i of insts) {{
-    const el = document.getElementById(`cnt-inst-${{i}}`);
-    if (el) el.textContent = i === 'all'
-      ? DATA.reduce((s, a) => s + a.trade_count, 0)
-      : DATA.reduce((s, a) => s + a.trades.filter(t => tradeMatchesInst(t, i)).length, 0);
-  }}
-  // Fund counts — iterate over DOM buttons so it auto-handles whatever the Python injected
-  document.querySelectorAll('[data-fund]').forEach(btn => {{
-    const fund = btn.dataset.fund;
-    const el = btn.querySelector('.count');
-    if (!el) return;
-    el.textContent = fund === 'all'
-      ? DATA.reduce((s, a) => s + a.trade_count, 0)
-      : DATA.reduce((s, a) => s + a.trades.filter(t => tradeMatchesFund(t, fund)).length, 0);
-  }});
-}}
+function filterLabel(facet,value) {
+  if (facet === 'source') return sourceLabel(value);
+  if (facet === 'direction') return directionLabel(value);
+  if (facet === 'instrument') return instrumentLabel(value);
+  if (facet === 'quality') return {quant:'Quantified',thesis:'Has thesis',outcome:'Reported outcome'}[value];
+  if (facet === 'content') return value === 'full' ? 'Full text' : 'Excerpt';
+  if (facet === 'manager') return MANAGER_LABELS.get(value) || value;
+  if (facet === 'range') return value.toUpperCase();
+  if (facet === 'coverage') return value === 'ideas' ? 'With ideas' : value === 'research' ? 'Research-only' : 'All research';
+  return value;
+}
+function renderActiveFilters() {
+  const container = document.getElementById('active-filters');
+  const chips = [];
+  [
+    ['source',state.sources],['direction',state.directions],['instrument',state.instruments],
+    ['manager',state.managers],['quality',state.quality],['content',state.content]
+  ].forEach(function (entry) {
+    entry[1].forEach(function (value) {
+      chips.push('<button class="filter-chip" type="button" data-remove-filter="' + entry[0] + '" data-value="' + escapeHtml(value) + '">' +
+        escapeHtml(filterLabel(entry[0],value)) + '<span class="chip-x">×</span></button>');
+    });
+  });
+  if (state.range !== 'all') chips.push('<button class="filter-chip" type="button" data-remove-filter="range" data-value="' + state.range + '">' + filterLabel('range',state.range) + '<span class="chip-x">×</span></button>');
+  if (state.view === 'research' && state.coverage !== 'all') chips.push('<button class="filter-chip" type="button" data-remove-filter="coverage" data-value="' + state.coverage + '">' + filterLabel('coverage',state.coverage) + '<span class="chip-x">×</span></button>');
+  container.classList.toggle('empty',chips.length === 0);
+  container.innerHTML = chips.length ? '<span class="active-label">Active</span>' + chips.join('') : '';
+}
+function setPressedStates() {
+  document.body.dataset.view = state.view;
+  document.body.classList.toggle('density-compact',state.density === 'compact');
+  document.body.classList.toggle('density-comfortable',state.density === 'comfortable');
+  document.body.classList.toggle('inspector-hidden',!state.inspector);
+  document.querySelectorAll('[data-view]').forEach(function (button) {
+    const active = button.dataset.view === state.view;
+    button.classList.toggle('active',active);
+    button.setAttribute('aria-pressed',String(active));
+  });
+  const facetSets = {
+    source:state.sources,direction:state.directions,instrument:state.instruments,
+    manager:state.managers,quality:state.quality,content:state.content
+  };
+  document.querySelectorAll('[data-filter]').forEach(function (button) {
+    const facet = button.dataset.filter;
+    let active = false;
+    if (facetSets[facet]) active = facetSets[facet].has(button.dataset.value);
+    if (facet === 'range') active = state.range === button.dataset.value;
+    if (facet === 'coverage') active = state.coverage === button.dataset.value;
+    button.classList.toggle('active',active);
+    button.setAttribute('aria-pressed',String(active));
+  });
+  document.querySelectorAll('[data-clear-facet]').forEach(function (button) {
+    const facet = button.dataset.clearFacet;
+    const active = facetSets[facet] ? facetSets[facet].size === 0 : false;
+    button.classList.toggle('active',active);
+    button.setAttribute('aria-pressed',String(active));
+  });
+  const inspectorControl = document.querySelector('[data-action="inspector"]');
+  const inspectorActive = window.innerWidth <= 1240
+    ? document.body.classList.contains('inspector-open')
+    : state.inspector;
+  inspectorControl.classList.toggle('active',inspectorActive);
+  inspectorControl.setAttribute('aria-pressed',String(inspectorActive));
+  inspectorControl.setAttribute('aria-expanded',String(inspectorActive));
+  document.getElementById('density-label').textContent = state.density === 'compact' ? 'Compact' : 'Comfortable';
+  document.getElementById('saved-count').textContent = savedIdeas.size ? '(' + savedIdeas.size + ')' : '';
+  syncOverlayAccessibility();
+}
 
-function setActiveFilter(selector, btn) {{
-  document.querySelectorAll(selector).forEach(b => {{
-    const active = b === btn;
-    b.classList.toggle('active', active);
-    b.setAttribute('aria-pressed', String(active));
-  }});
-}}
-function setDir(btn) {{
-  setActiveFilter('[data-dir]', btn);
-  activeDir = btn.dataset.dir;
+function inspectorBadge(value,label) {
+  return '<span class="direction-badge ' + directionClass(value) + '">' + escapeHtml(label || directionLabel(value)) + '</span>';
+}
+function detailSection(title,value,className) {
+  return '<section class="inspector-section"><h3>' + title + '</h3>' +
+    (value ? '<p class="' + (className || '') + '">' + escapeHtml(value) + '</p>' : '<p class="missing">—</p>') +
+    '</section>';
+}
+function renderIdeaInspector(idea) {
+  const article = idea._article;
+  const alternate = article.alternate_urls && article.alternate_urls.medium;
+  const saved = savedIdeas.has(idea.id);
+  const badges = [inspectorBadge(idea.direction)];
+  idea.instruments.forEach(function (instrument) {
+    badges.push('<span class="coverage-badge">' + escapeHtml(instrumentLabel(instrument)) + '</span>');
+  });
+  if (idea.manager) badges.push('<span class="coverage-badge">' + escapeHtml(idea.manager) + '</span>');
+  return '<div class="inspector-content">' +
+    '<div class="record-eyebrow"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span><time datetime="' + article.date + '">' + formatDate(article.date) + '</time><span class="record-id">' + idea.id.toUpperCase() + '</span></div>' +
+    '<h2 class="record-title">' + escapeHtml(article.title) + '</h2>' +
+    (article.subtitle ? '<p class="record-subtitle">' + escapeHtml(article.subtitle) + '</p>' : '') +
+    '<div class="record-actions">' +
+      '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener">Open original ↗</a>' +
+      (alternate ? '<a class="secondary-action" href="' + escapeHtml(safeUrl(alternate)) + '" target="_blank" rel="noopener">Medium copy ↗</a>' : '') +
+      '<button class="secondary-action ' + (saved ? 'saved' : '') + '" type="button" data-save-idea="' + idea.id + '">' + (saved ? '★ Saved' : '☆ Save idea') + '</button>' +
+      '<button class="secondary-action" type="button" data-copy-citation="' + idea.id + '">Copy citation</button>' +
+    '</div>' +
+    '<div class="record-facts">' + badges.join('') + '</div>' +
+    detailSection('Extracted idea / structure',idea.description,'primary-text') +
+    detailSection('Underlying',idea.underlying) +
+    detailSection('Edge / thesis',idea.thesis) +
+    '<section class="inspector-section"><h3>Quantitative evidence</h3>' +
+      (idea.quant ? '<div class="quant-block">' + escapeHtml(idea.quant) + '</div>' : '<p class="missing">—</p>') +
+    '</section>' +
+    '<section class="inspector-section"><h3>Reported outcome</h3>' +
+      (idea.outcome ? '<p class="reported-outcome">' + escapeHtml(idea.outcome) + '</p>' : '<p class="missing">—</p>') +
+    '</section>' +
+    '<div class="provenance">This record was extracted from published research. “Not stated” means the source did not express a reliable directional position. Reported outcomes are reproduced neutrally and are not independently verified.</div>' +
+    '</div>';
+}
+function renderArticleInspector(article) {
+  const alternate = article.alternate_urls && article.alternate_urls.medium;
+  const coverageText = article.trade_count === 0
+    ? 'Research-only — no explicit signal extracted.'
+    : article.trade_count + ' extracted idea' + (article.trade_count === 1 ? '' : 's') + '.';
+  const related = article._ideas.slice(0,8).map(function (idea) {
+    return '<button class="related-idea" type="button" data-related-idea="' + idea.id + '">' +
+      '<span class="direction-badge ' + directionClass(idea.direction) + '">' + directionLabel(idea.direction) + '</span> ' +
+      escapeHtml(idea.description) + '</button>';
+  }).join('');
+  return '<div class="inspector-content">' +
+    '<div class="record-eyebrow"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span><time datetime="' + article.date + '">' + formatDate(article.date) + '</time><span class="record-id">' + article.id.toUpperCase() + '</span></div>' +
+    '<h2 class="record-title">' + escapeHtml(article.title) + '</h2>' +
+    (article.subtitle ? '<p class="record-subtitle">' + escapeHtml(article.subtitle) + '</p>' : '') +
+    '<div class="record-actions">' +
+      '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener">Open original ↗</a>' +
+      (alternate ? '<a class="secondary-action" href="' + escapeHtml(safeUrl(alternate)) + '" target="_blank" rel="noopener">Medium copy ↗</a>' : '') +
+      '<button class="secondary-action" type="button" data-copy-article="' + article.id + '">Copy citation</button>' +
+    '</div>' +
+    '<div class="article-stats">' +
+      '<div class="article-stat"><b>' + number(article.trade_count) + '</b><span>Ideas</span></div>' +
+      '<div class="article-stat"><b>' + (article.content_status === 'excerpt' ? 'Preview' : article.read_minutes ? article.read_minutes + 'm' : '—') + '</b><span>' + (article.content_status === 'excerpt' ? 'Access' : 'Est. read') + '</span></div>' +
+      '<div class="article-stat"><b>' + (article.content_status === 'full' ? 'Full' : 'Excerpt') + '</b><span>Indexed</span></div>' +
+    '</div>' +
+    '<section class="inspector-section"><h3>Coverage status</h3><p class="primary-text">' + escapeHtml(coverageText) + '</p></section>' +
+    (related ? '<section class="inspector-section"><h3>Extracted ideas</h3><div class="related-ideas">' + related + '</div></section>' : '') +
+    '<div class="provenance">Research metadata and extracted structures are provided for discovery. Review the original publication before making an investment or execution decision.</div>' +
+    '</div>';
+}
+function renderInspector() {
+  const container = document.getElementById('inspector-content');
+  if (!state.selected) {
+    container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">N/R</div><h2>Select a record</h2><p>Inspect the complete idea, evidence, provenance, and source without losing your position in the monitor.</p></div>';
+    return;
+  }
+  if (state.view === 'research') {
+    const article = ARTICLE_BY_ID.get(state.selected);
+    container.innerHTML = article ? renderArticleInspector(article) : '';
+  } else {
+    const idea = IDEA_BY_ID.get(state.selected);
+    container.innerHTML = idea ? renderIdeaInspector(idea) : '';
+  }
+}
+
+function render() {
+  setSortOptions();
+  const records = filteredRecords();
+  const ids = new Set(records.map(function (record) { return record.id; }));
+  if (!ids.has(state.selected)) state.selected = records.length ? records[0].id : '';
+  setPressedStates();
+  renderTableHead();
+  renderRows(records);
+  renderContext(records);
+  renderActiveFilters();
+  updateFacetCounts();
+  renderInspector();
+  document.getElementById('result-summary').textContent =
+    number(records.length) + ' ' + (state.view === 'research' ? 'research notes' : 'extracted ideas');
+  updateHash();
+  document.getElementById('announcer').textContent =
+    number(records.length) + ' results in ' + (state.view === 'research' ? 'Research Library' : state.view === 'saved' ? 'Saved ideas' : 'Idea Monitor');
+}
+
+function resetFilters() {
+  state.query = '';
+  state.sources.clear();
+  state.directions.clear();
+  state.instruments.clear();
+  state.managers.clear();
+  state.quality.clear();
+  state.content.clear();
+  state.range = 'all';
+  state.coverage = 'all';
+  state.limit = PAGE_SIZE[state.view];
+  document.getElementById('search').value = '';
+  document.getElementById('manager-search').value = '';
+  document.querySelectorAll('.manager-option').forEach(function (button) { button.hidden = false; });
   render();
-}}
-function setInst(btn) {{
-  setActiveFilter('[data-inst]', btn);
-  activeInst = btn.dataset.inst;
+}
+function toggleSet(set,value) {
+  if (set.has(value)) set.delete(value); else set.add(value);
+}
+function setInertState(element,hidden) {
+  if (!element) return;
+  element.inert = hidden;
+  if (hidden) element.setAttribute('aria-hidden','true');
+  else element.removeAttribute('aria-hidden');
+}
+function syncOverlayAccessibility() {
+  const filtersNarrow = window.innerWidth <= 1020;
+  const inspectorNarrow = window.innerWidth <= 1240;
+  const filtersOpen = filtersNarrow && document.body.classList.contains('filters-open');
+  const inspectorOpen = inspectorNarrow && document.body.classList.contains('inspector-open');
+  const overlayOpen = filtersOpen || inspectorOpen;
+  setInertState(document.querySelector('.app-header'),overlayOpen);
+  setInertState(document.querySelector('.kpi-strip'),overlayOpen);
+  setInertState(document.getElementById('main-panel'),overlayOpen);
+  setInertState(
+    document.getElementById('filter-rail'),
+    filtersOpen ? false : filtersNarrow || inspectorOpen
+  );
+  setInertState(
+    document.getElementById('inspector'),
+    inspectorOpen ? false : inspectorNarrow || !state.inspector || filtersOpen
+  );
+  document.getElementById('mobile-filter-button').setAttribute('aria-expanded',String(filtersOpen));
+  document.getElementById('drawer-backdrop').setAttribute('aria-hidden',String(!overlayOpen));
+  const inspectorControl = document.querySelector('[data-action="inspector"]');
+  const inspectorActive = inspectorNarrow ? inspectorOpen : state.inspector;
+  inspectorControl.classList.toggle('active',inspectorActive);
+  inspectorControl.setAttribute('aria-pressed',String(inspectorActive));
+  inspectorControl.setAttribute('aria-expanded',String(inspectorActive));
+}
+function closeDrawers() {
+  document.body.classList.remove('filters-open','inspector-open');
+  syncOverlayAccessibility();
+}
+function focusSelectedRow() {
+  const selected = document.querySelector('[data-record-id="' + CSS.escape(state.selected) + '"]');
+  const fallback = document.querySelector('[data-record-id][tabindex="0"]');
+  (selected || fallback || document.querySelector('[data-action="inspector"]')).focus();
+}
+function openInspector(focusInside) {
+  state.inspector = true;
+  try { localStorage.setItem('nrt-inspector','visible'); } catch (_error) {}
+  if (window.innerWidth <= 1240) {
+    document.body.classList.remove('filters-open');
+    document.body.classList.add('inspector-open');
+  }
+  setPressedStates();
+  if (focusInside && window.innerWidth <= 1240) {
+    setTimeout(function () { document.getElementById('inspector-close').focus(); },0);
+  }
+}
+function selectRecord(id,focusRow,openDetails) {
+  state.selected = id;
+  document.querySelectorAll('[data-record-id]').forEach(function (row) {
+    const selected = row.dataset.recordId === id;
+    row.classList.toggle('selected',selected);
+    row.setAttribute('aria-selected',String(selected));
+    row.tabIndex = selected ? 0 : -1;
+    if (selected && focusRow) row.focus({preventScroll:false});
+  });
+  renderInspector();
+  updateHash();
+  if (openDetails) openInspector(true);
+}
+function selectedArticle() {
+  if (!state.selected) return null;
+  if (state.view === 'research') return ARTICLE_BY_ID.get(state.selected);
+  const idea = IDEA_BY_ID.get(state.selected);
+  return idea ? idea._article : null;
+}
+function moveSelection(delta) {
+  let rows = Array.from(document.querySelectorAll('[data-record-id]'));
+  if (!rows.length) return;
+  let index = rows.findIndex(function (row) { return row.dataset.recordId === state.selected; });
+  if (delta > 0 && index === rows.length - 1) {
+    const records = filteredRecords();
+    if (rows.length < records.length) {
+      state.limit += PAGE_SIZE[state.view];
+      renderRows(records);
+      rows = Array.from(document.querySelectorAll('[data-record-id]'));
+      index = rows.findIndex(function (row) { return row.dataset.recordId === state.selected; });
+    }
+  }
+  index = Math.max(0,Math.min(rows.length - 1,(index < 0 ? 0 : index + delta)));
+  selectRecord(rows[index].dataset.recordId,true,false);
+}
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(function () { toast.classList.remove('show'); },1800);
+}
+async function copyText(value,message) {
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch (_error) {
+    const textarea = document.createElement('textarea');
+    textarea.value = value;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    textarea.remove();
+  }
+  showToast(message || 'Copied');
+}
+function ideaCitation(idea) {
+  const article = idea._article;
+  return article.title + ' — ' + directionLabel(idea.direction) + ' — ' +
+    (idea.manager || 'Manager not stated') + ' — ' + article.url;
+}
+function articleCitation(article) {
+  return article.title + ' (' + formatDate(article.date) + ') — ' + article.url;
+}
+function toggleSaved(id) {
+  if (!IDEA_BY_ID.has(id)) return;
+  const active = document.activeElement;
+  const restoreSave = active && active.closest && active.closest('[data-save-idea="' + CSS.escape(id) + '"]');
+  const restoreRow = active && active.closest && active.closest('[data-record-id]');
+  if (savedIdeas.has(id)) savedIdeas.delete(id); else savedIdeas.add(id);
+  try { localStorage.setItem('nrt-saved-ideas',JSON.stringify(Array.from(savedIdeas))); } catch (_error) {}
+  showToast(savedIdeas.has(id) ? 'Idea saved on this device' : 'Idea removed from saved');
   render();
-}}
-function setFund(btn) {{
-  setActiveFilter('[data-fund]', btn);
-  activeFund = btn.dataset.fund;
+  if (restoreSave) {
+    const replacement = document.querySelector('[data-save-idea="' + CSS.escape(id) + '"]');
+    if (replacement) replacement.focus();
+  } else if (restoreRow) {
+    focusSelectedRow();
+  }
+}
+function csvCell(value) {
+  let text = String(value ?? '');
+  if (/^[\s]*[=+\-@]/.test(text)) text = "'" + text;
+  return '"' + text.replace(/"/g,'""') + '"';
+}
+function exportCsv() {
+  const records = filteredRecords();
+  let rows;
+  if (state.view === 'research') {
+    rows = [['Date','Source','Article','Subtitle','Extracted ideas','Content access','URL']].concat(records.map(function (article) {
+      return [article.date,sourceLabel(article.source),article.title,article.subtitle,article.trade_count,article.content_status,article.url];
+    }));
+  } else {
+    rows = [['Date','Direction','Instruments','Underlying','Manager / firm','Extracted idea','Edge / thesis','Quant detail','Reported outcome','Article','Source','URL']].concat(records.map(function (idea) {
+      const article = idea._article;
+      return [article.date,directionLabel(idea.direction),idea.instruments.map(instrumentLabel).join('; '),idea.underlying,idea.manager,idea.description,idea.thesis,idea.quant,idea.outcome,article.title,sourceLabel(article.source),article.url];
+    }));
+  }
+  const csv = '\uFEFF' + rows.map(function (row) { return row.map(csvCell).join(','); }).join('\r\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'navnoor-research-' + state.view + '-' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); },0);
+  showToast(number(records.length) + ' records exported');
+}
+
+document.getElementById('table-body').addEventListener('click',function (event) {
+  if (event.target.closest('a')) return;
+  const row = event.target.closest('[data-record-id]');
+  if (row) selectRecord(row.dataset.recordId,false,true);
+});
+document.getElementById('table-body').addEventListener('dblclick',function (event) {
+  const row = event.target.closest('[data-record-id]');
+  if (!row || event.target.closest('a')) return;
+  const article = selectedArticle();
+  if (article) window.open(safeUrl(article.url),'_blank','noopener');
+});
+document.getElementById('table-body').addEventListener('keydown',function (event) {
+  const row = event.target.closest('[data-record-id]');
+  if (!row) return;
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    event.stopPropagation();
+    selectRecord(row.dataset.recordId,false,true);
+  }
+});
+document.getElementById('table-head').addEventListener('click',function (event) {
+  const button = event.target.closest('[data-sort]');
+  if (!button) return;
+  state.sort = button.dataset.sort === 'newest'
+    ? (state.sort === 'newest' ? 'oldest' : 'newest')
+    : button.dataset.sort;
+  state.limit = PAGE_SIZE[state.view];
   render();
-}}
-function setSource(btn) {{
-  setActiveFilter('[data-source]', btn);
-  activeSource = btn.dataset.source;
-  render();
-}}
+  const replacement = document.querySelector('[data-sort="' + button.dataset.sort + '"]');
+  if (replacement) replacement.focus();
+});
 
-// ── URL hash state (shareable / bookmarkable filters) ──
-function updateHash() {{
-  const p = new URLSearchParams();
-  if (query) p.set('q', query);
-  if (activeDir !== 'all') p.set('dir', activeDir);
-  if (activeInst !== 'all') p.set('inst', activeInst);
-  if (activeFund !== 'all') p.set('fund', activeFund);
-  if (activeSource !== 'all') p.set('source', activeSource);
-  const s = p.toString();
-  history.replaceState(null, '', s ? '#' + s : location.pathname + location.search);
-}}
-
-// ── Search ──
-let searchTimer;
-document.getElementById('search').addEventListener('input', e => {{
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {{ query = e.target.value; render(); }}, 180);
-}});
-
-// ── Stats ──
-function renderStats() {{
-  const dates = DATA.map(a => a.date).filter(d => d > '2020-01-01').sort();
-  document.getElementById('stat-articles').textContent = DATA.length;
-  document.getElementById('stat-trades').textContent = DATA.reduce((s, a) => s + a.trade_count, 0).toLocaleString();
-  const fundCount = new Set(DATA.flatMap(a => a.trades
-    .map(t => normalizeFund(t.fund_name_if_mentioned))
-    .filter(Boolean))).size;
-  document.getElementById('stat-funds').textContent = fundCount;
-  document.getElementById('stat-range').textContent = dates.length ? fmtDate(dates[0]) + ' → ' + fmtDate(dates[dates.length - 1]) : '—';
-  document.getElementById('stat-latest').textContent = dates.length ? fmtDate(dates[dates.length - 1]) : '—';
-}}
-
-// ── Filter panel (mobile) ──
-function toggleFilters() {{
-  const aside = document.querySelector('aside');
-  aside.classList.toggle('open');
-  const open = aside.classList.contains('open');
-  const toggle = document.getElementById('filter-toggle');
-  toggle.innerHTML = open ? '&#10005; Close' : '&#9776; Filters';
-  toggle.setAttribute('aria-expanded', String(open));
-}}
-
-// ── Theme toggle ──
-function toggleTheme() {{
-  const isLight = document.documentElement.classList.toggle('light');
-  localStorage.setItem('theme', isLight ? 'light' : 'dark');
-  document.getElementById('theme-toggle').innerHTML = isLight ? '&#9790; Dark' : '&#9788; Light';
-}}
-(function () {{
-  if (localStorage.getItem('theme') === 'light') {{
-    document.documentElement.classList.add('light');
-    document.getElementById('theme-toggle').innerHTML = '&#9790; Dark';
-  }}
-}})();
-
-// ── Keyboard shortcuts ──
-document.addEventListener('keydown', e => {{
-  const s = document.getElementById('search');
-  if (e.key === '/' && document.activeElement !== s) {{
-    e.preventDefault();
-    s.focus();
-  }}
-  if (e.key === 'Escape') {{
-    if (query) {{
-      s.value = '';
-      query = '';
+document.addEventListener('click',function (event) {
+  const view = event.target.closest('[data-view]');
+  if (view) {
+    state.view = view.dataset.view;
+    state.sort = 'newest';
+    state.selected = '';
+    state.limit = PAGE_SIZE[state.view];
+    render();
+    return;
+  }
+  const kpiView = event.target.closest('[data-kpi-view]');
+  if (kpiView) {
+    state.view = kpiView.dataset.kpiView;
+    state.sort = 'newest';
+    state.selected = '';
+    state.limit = PAGE_SIZE[state.view];
+    render();
+    return;
+  }
+  const kpiQuality = event.target.closest('[data-kpi-quality]');
+  if (kpiQuality) {
+    state.view = 'ideas';
+    state.quality.add(kpiQuality.dataset.kpiQuality);
+    state.limit = PAGE_SIZE.ideas;
+    render();
+    return;
+  }
+  const facet = event.target.closest('[data-filter]');
+  if (facet) {
+    const name = facet.dataset.filter;
+    const value = facet.dataset.value;
+    if (name === 'range') state.range = value;
+    else if (name === 'coverage') state.coverage = value;
+    else {
+      const map = {
+        source:state.sources,direction:state.directions,instrument:state.instruments,
+        manager:state.managers,quality:state.quality,content:state.content
+      };
+      if (map[name]) toggleSet(map[name],value);
+    }
+    state.limit = PAGE_SIZE[state.view];
+    render();
+    return;
+  }
+  const clearFacet = event.target.closest('[data-clear-facet]');
+  if (clearFacet) {
+    const map = {
+      source:state.sources,direction:state.directions,instrument:state.instruments,
+      manager:state.managers,quality:state.quality,content:state.content
+    };
+    if (map[clearFacet.dataset.clearFacet]) map[clearFacet.dataset.clearFacet].clear();
+    state.limit = PAGE_SIZE[state.view];
+    render();
+    return;
+  }
+  const remove = event.target.closest('[data-remove-filter]');
+  if (remove) {
+    const chipIndex = Array.from(document.querySelectorAll('[data-remove-filter]')).indexOf(remove);
+    const name = remove.dataset.removeFilter;
+    const map = {
+      source:state.sources,direction:state.directions,instrument:state.instruments,
+      manager:state.managers,quality:state.quality,content:state.content
+    };
+    if (map[name]) map[name].delete(remove.dataset.value);
+    if (name === 'range') state.range = 'all';
+    if (name === 'coverage') state.coverage = 'all';
+    state.limit = PAGE_SIZE[state.view];
+    render();
+    const remainingChips = document.querySelectorAll('[data-remove-filter]');
+    if (remainingChips.length) remainingChips[Math.min(chipIndex,remainingChips.length - 1)].focus();
+    else document.getElementById('clear-filters').focus();
+    return;
+  }
+  const related = event.target.closest('[data-related-idea]');
+  if (related) {
+    state.view = 'ideas';
+    state.directions.clear();
+    state.instruments.clear();
+    state.managers.clear();
+    state.quality.clear();
+    state.selected = related.dataset.relatedIdea;
+    state.sort = 'newest';
+    state.limit = PAGE_SIZE.ideas;
+    render();
+    openInspector(false);
+    const heading = document.querySelector('#inspector-content .record-title');
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus();
+    }
+    return;
+  }
+  const save = event.target.closest('[data-save-idea]');
+  if (save) {
+    toggleSaved(save.dataset.saveIdea);
+    return;
+  }
+  const copyIdea = event.target.closest('[data-copy-citation]');
+  if (copyIdea) {
+    const idea = IDEA_BY_ID.get(copyIdea.dataset.copyCitation);
+    if (idea) copyText(ideaCitation(idea),'Idea citation copied');
+    return;
+  }
+  const copyArticle = event.target.closest('[data-copy-article]');
+  if (copyArticle) {
+    const article = ARTICLE_BY_ID.get(copyArticle.dataset.copyArticle);
+    if (article) copyText(articleCitation(article),'Article citation copied');
+    return;
+  }
+  const action = event.target.closest('[data-action]');
+  if (action) {
+    if (action.dataset.action === 'density') {
+      state.density = state.density === 'compact' ? 'comfortable' : 'compact';
+      try { localStorage.setItem('nrt-density',state.density); } catch (_error) {}
       render();
-    }}
-    if (document.activeElement === s) s.blur();
-  }}
-}});
+    } else if (action.dataset.action === 'copy-view') {
+      updateHash();
+      copyText(location.href,'Shareable view copied');
+    } else if (action.dataset.action === 'export') {
+      exportCsv();
+    } else if (action.dataset.action === 'inspector') {
+      if (window.innerWidth <= 1240) {
+        const wasOpen = document.body.classList.contains('inspector-open');
+        if (wasOpen) {
+          closeDrawers();
+          action.focus();
+        } else {
+          openInspector(true);
+        }
+      } else {
+        state.inspector = !state.inspector;
+        try { localStorage.setItem('nrt-inspector',state.inspector ? 'visible' : 'hidden'); } catch (_error) {}
+        if (!state.inspector) document.body.classList.remove('inspector-open');
+        render();
+      }
+    }
+  }
+});
 
-// ── Init ──
-(function initFromHash() {{
-  document.querySelectorAll('[data-dir],[data-inst],[data-fund],[data-source]').forEach(b =>
-    b.setAttribute('aria-pressed', String(b.classList.contains('active'))));
+let searchTimer;
+document.getElementById('search').addEventListener('input',function (event) {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(function () {
+    state.query = event.target.value;
+    state.limit = PAGE_SIZE[state.view];
+    if (state.query && state.sort === 'newest') state.sort = 'relevance';
+    if (!state.query && state.sort === 'relevance') state.sort = 'newest';
+    render();
+  },120);
+});
+document.getElementById('manager-search').addEventListener('input',function (event) {
+  const query = normalize(event.target.value);
+  document.querySelectorAll('.manager-option').forEach(function (button) {
+    button.hidden = Boolean(query) && !normalize(button.dataset.value).includes(query);
+  });
+});
+document.getElementById('sort-select').addEventListener('change',function (event) {
+  state.sort = event.target.value;
+  state.limit = PAGE_SIZE[state.view];
+  render();
+});
+document.getElementById('clear-filters').addEventListener('click',resetFilters);
+document.getElementById('load-more').addEventListener('click',function () {
+  state.limit += PAGE_SIZE[state.view];
+  renderRows(filteredRecords());
+});
+document.getElementById('mobile-filter-button').addEventListener('click',function () {
+  const open = !document.body.classList.contains('filters-open');
+  document.body.classList.toggle('filters-open',open);
+  document.body.classList.remove('inspector-open');
+  syncOverlayAccessibility();
+  if (open) document.getElementById('filter-close').focus();
+  else this.focus();
+});
+document.getElementById('filter-close').addEventListener('click',function () {
+  closeDrawers();
+  document.getElementById('mobile-filter-button').focus();
+});
+document.getElementById('drawer-backdrop').addEventListener('click',function () {
+  const filtersWereOpen = document.body.classList.contains('filters-open');
+  const inspectorWasOpen = document.body.classList.contains('inspector-open');
+  closeDrawers();
+  if (filtersWereOpen) document.getElementById('mobile-filter-button').focus();
+  else if (inspectorWasOpen) focusSelectedRow();
+});
+document.getElementById('inspector-close').addEventListener('click',function () {
+  if (window.innerWidth <= 1240) {
+    closeDrawers();
+    focusSelectedRow();
+  } else {
+    state.inspector = false;
+    try { localStorage.setItem('nrt-inspector','hidden'); } catch (_error) {}
+    render();
+    document.querySelector('[data-action="inspector"]').focus();
+  }
+});
+document.getElementById('theme-button').addEventListener('click',function () {
+  const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('nrt-theme',next); } catch (_error) {}
+  this.textContent = next === 'light' ? 'Dark' : 'Light';
+});
+const shortcutDialog = document.getElementById('shortcut-dialog');
+document.getElementById('shortcut-button').addEventListener('click',function () { shortcutDialog.showModal(); });
+document.querySelector('[data-close-dialog]').addEventListener('click',function () { shortcutDialog.close(); });
 
-  const hash = location.hash.slice(1);
-  if (!hash) return;
-  const p = new URLSearchParams(hash);
-  if (p.has('q')) {{ query = p.get('q'); document.getElementById('search').value = query; }}
-  if (p.has('dir')) {{
-    const requested = p.get('dir');
-    const btn = [...document.querySelectorAll('[data-dir]')].find(b => b.dataset.dir === requested);
-    if (btn) {{ activeDir = btn.dataset.dir; setActiveFilter('[data-dir]', btn); }}
-  }}
-  if (p.has('inst')) {{
-    const requested = p.get('inst');
-    const btn = [...document.querySelectorAll('[data-inst]')].find(b => b.dataset.inst === requested);
-    if (btn) {{ activeInst = btn.dataset.inst; setActiveFilter('[data-inst]', btn); }}
-  }}
-  if (p.has('fund')) {{
-    const requested = normalizeFund(p.get('fund'));
-    const btn = [...document.querySelectorAll('[data-fund]')].find(b => normalizeFund(b.dataset.fund) === requested);
-    if (btn) {{ activeFund = btn.dataset.fund; setActiveFilter('[data-fund]', btn); }}
-  }}
-  if (p.has('source')) {{
-    const requested = p.get('source');
-    const btn = [...document.querySelectorAll('[data-source]')].find(b => b.dataset.source === requested);
-    if (btn) {{ activeSource = btn.dataset.source; setActiveFilter('[data-source]', btn); }}
-  }}
-}})();
-renderStats();
-updateCounts();
+document.addEventListener('keydown',function (event) {
+  const target = event.target;
+  const editable = target.matches('input,textarea,select,[contenteditable="true"]');
+  const interactive = target.closest && target.closest('button,a,[role="button"]');
+  if (event.key === 'Escape') {
+    if (shortcutDialog.open) { shortcutDialog.close(); return; }
+    const filtersWereOpen = document.body.classList.contains('filters-open');
+    const inspectorWasOpen = document.body.classList.contains('inspector-open');
+    if (filtersWereOpen || inspectorWasOpen) {
+      closeDrawers();
+      if (filtersWereOpen) document.getElementById('mobile-filter-button').focus();
+      else focusSelectedRow();
+      return;
+    }
+    if (target === document.getElementById('search') && (target.value || state.query)) {
+      clearTimeout(searchTimer);
+      target.value = '';
+      state.query = '';
+      state.sort = 'newest';
+      render();
+    }
+    return;
+  }
+  if (shortcutDialog.open || editable || interactive || event.metaKey || event.ctrlKey || event.altKey) return;
+  if (event.key === '/') {
+    event.preventDefault();
+    document.getElementById('search').focus();
+  } else if (event.key === '?') {
+    event.preventDefault();
+    shortcutDialog.showModal();
+  } else if (event.key === 'j' || (event.key === 'ArrowDown' && target.closest('[data-record-id]'))) {
+    event.preventDefault();
+    moveSelection(1);
+  } else if (event.key === 'k' || (event.key === 'ArrowUp' && target.closest('[data-record-id]'))) {
+    event.preventDefault();
+    moveSelection(-1);
+  } else if (event.key === 'Enter' && state.selected) {
+    openInspector(true);
+  } else if (event.key.toLowerCase() === 'o') {
+    const article = selectedArticle();
+    if (article) window.open(safeUrl(article.url),'_blank','noopener');
+  } else if (event.key.toLowerCase() === 's' && state.view !== 'research' && state.selected) {
+    toggleSaved(state.selected);
+  } else if (event.key.toLowerCase() === 'c' && state.selected) {
+    if (state.view === 'research') {
+      const article = ARTICLE_BY_ID.get(state.selected);
+      if (article) copyText(articleCitation(article),'Article citation copied');
+    } else {
+      const idea = IDEA_BY_ID.get(state.selected);
+      if (idea) copyText(ideaCitation(idea),'Idea citation copied');
+    }
+  } else if (event.key.toLowerCase() === 'f') {
+    event.preventDefault();
+    if (window.innerWidth > 1020) {
+      document.getElementById('manager-search').focus();
+    } else {
+      const button = document.getElementById('mobile-filter-button');
+      const open = !document.body.classList.contains('filters-open');
+      document.body.classList.toggle('filters-open',open);
+      document.body.classList.remove('inspector-open');
+      syncOverlayAccessibility();
+      if (open) document.getElementById('filter-close').focus();
+      else button.focus();
+    }
+  } else if (event.key === '1' || event.key === '2' || event.key === '3') {
+    state.view = event.key === '1' ? 'ideas' : event.key === '2' ? 'research' : 'saved';
+    state.sort = 'newest';
+    state.selected = '';
+    state.limit = PAGE_SIZE[state.view];
+    render();
+    focusSelectedRow();
+  }
+});
+
+window.addEventListener('resize',function () {
+  if (window.innerWidth > 1240) document.body.classList.remove('inspector-open');
+  if (window.innerWidth > 1020) document.body.classList.remove('filters-open');
+  document.querySelectorAll('#table-head [data-sort]').forEach(function (button) {
+    button.tabIndex = window.innerWidth <= 760 ? -1 : 0;
+  });
+  syncOverlayAccessibility();
+});
+
+function renderStaticStats() {
+  const quantified = IDEAS.filter(function (idea) { return hasValue(idea.quant); }).length;
+  const sourceCounts = ARTICLES.reduce(function (counts,article) {
+    counts[article.source] = (counts[article.source] || 0) + 1;
+    return counts;
+  },{});
+  document.getElementById('kpi-ideas').textContent = number(IDEAS.length);
+  document.getElementById('kpi-research').textContent = number(ARTICLES.length);
+  document.getElementById('kpi-managers').textContent = number(MANAGERS.length);
+  document.getElementById('kpi-quantified').textContent = number(quantified);
+  document.getElementById('kpi-sources').textContent =
+    number(sourceCounts.substack || 0) + ' Substack / ' + number(sourceCounts.medium || 0) + ' Medium';
+  document.getElementById('data-through').textContent = formatDate(MAX_DATE);
+  const theme = document.documentElement.dataset.theme || 'dark';
+  document.getElementById('theme-button').textContent = theme === 'light' ? 'Dark' : 'Light';
+}
+
+hydrateFromHash();
+document.getElementById('search').value = state.query;
+state.inspector = storedInspector;
+renderStaticStats();
 render();
-if (window.innerWidth > 768) document.getElementById('search').focus();
 </script>
 </body>
-</html>"""
+</html>
+"""
+
+HTML = (HTML_TEMPLATE
+        .replace('__ARTICLES_JSON__', articles_json)
+        .replace('__IDEAS_JSON__', ideas_json)
+        .replace('__MANAGER_BUTTONS__', manager_html))
 
 out = DOCS_DIR / 'index.html'
-with open(out, 'w', encoding='utf-8') as f:
-    f.write(HTML)
+with open(out, 'w', encoding='utf-8') as handle:
+    handle.write(HTML)
 
-print(f"Built {out} ({len(HTML)//1024} KB)")
+print(
+    f'Built {out} ({len(HTML) // 1024} KB, '
+    f'{len(client_articles)} research notes, {len(client_ideas)} extracted ideas)'
+)
