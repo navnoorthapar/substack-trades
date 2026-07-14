@@ -158,12 +158,55 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertRegex(legend, r"counts\[['\"]long/short['\"]\]")
         self.assertRegex(legend, r'counts\.unspecified')
 
-    def test_light_theme_preserves_skip_and_primary_action_contrast(self):
-        for class_name in ('skip-link', 'primary-action'):
-            self.assertRegex(
-                self.html,
-                rf'''html\[data-theme=["']light["']\]\s+\.{class_name}\s*\{{[^}}]*color\s*:\s*(?:#fff(?:fff)?|white)\b''',
-            )
+    def test_institutional_palette_is_neutral_and_readable_in_both_themes(self):
+        root_match = re.search(r':root\s*\{(?P<body>.*?)\}\s*html\[data-theme="light"\]', self.html, re.DOTALL)
+        light_match = re.search(r'html\[data-theme="light"\]\s*\{(?P<body>.*?)\}', self.html, re.DOTALL)
+        self.assertIsNotNone(root_match)
+        self.assertIsNotNone(light_match)
+
+        def tokens(block):
+            return dict(re.findall(r'--([\w-]+)\s*:\s*(#[0-9a-fA-F]{6})', block))
+
+        def luminance(color):
+            channels = [int(color[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+            linear = [channel / 12.92 if channel <= 0.04045 else ((channel + 0.055) / 1.055) ** 2.4 for channel in channels]
+            return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+        def contrast(left, right):
+            first, second = luminance(left), luminance(right)
+            return (max(first, second) + 0.05) / (min(first, second) + 0.05)
+
+        dark = tokens(root_match.group('body'))
+        light = tokens(light_match.group('body'))
+        for palette in (dark, light):
+            for foreground in ('text', 'text-secondary', 'text-muted', 'accent', 'positive', 'negative', 'relative', 'long-short', 'quant'):
+                self.assertGreaterEqual(contrast(palette[foreground], palette['surface-1']), 4.5, foreground)
+            self.assertGreaterEqual(contrast(palette['on-accent'], palette['accent-strong']), 4.5)
+            self.assertGreaterEqual(contrast(palette['control-line'], palette['surface-1']), 3.0)
+            for semantic in ('positive', 'negative', 'relative', 'long-short', 'quant'):
+                self.assertGreaterEqual(contrast(palette[semantic], palette[f'{semantic}-soft']), 4.5, f'{semantic} badge')
+
+        for surface in ('bg', 'surface-1', 'surface-2', 'surface-3'):
+            channels = [int(dark[surface][index:index + 2], 16) for index in (1, 3, 5)]
+            self.assertLessEqual(max(channels) - min(channels), 20, f'{surface} should remain neutral graphite')
+        self.assertGreaterEqual(contrast(light['text-muted'], light['selected']), 4.5)
+        self.assertIn('background:var(--accent-strong);color:var(--on-accent)', self.html)
+        self.assertIn('#search:focus{border-color:var(--control-line)', self.html)
+        self.assertNotEqual(dark['quant'], dark['relative'])
+
+    def test_semantic_colors_are_scoped_to_information_states(self):
+        self.assertRegex(self.html, r'\.status-dot\{[^}]*background:var\(--positive\)')
+        self.assertRegex(self.html, r'\.evidence-flag\.on\{[^}]*color:var\(--quant\)')
+        self.assertRegex(self.html, r'\.source-badge\{[^}]*color:var\(--text-secondary\)')
+        self.assertIn('.source-substack::before{background:var(--source-substack)}', self.html)
+        self.assertIn('.source-medium::before{background:var(--source-medium)}', self.html)
+        for class_name, token in (
+            ('dir-long', 'positive'),
+            ('dir-short', 'negative'),
+            ('dir-arb', 'relative'),
+            ('dir-ls', 'long-short'),
+        ):
+            self.assertRegex(self.html, rf'\.{class_name}\{{[^}}]*color:var\(--{token}\)')
 
     def test_mobile_filter_drawer_has_a_wired_close_control(self):
         close_buttons = re.findall(r'<button\b[^>]*\bid="filter-close"[^>]*>', self.html)
