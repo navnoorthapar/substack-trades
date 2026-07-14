@@ -4,17 +4,25 @@ name: Validate and Deploy Pages
 # cloud datacenter traffic. GitHub receives only a validated source snapshot,
 # then independently tests, builds, and atomically deploys it.
 #
-# This bootstrap revision is deliberately manual-only while Pages still serves
-# the legacy /docs directory. Automatic main/PR triggers are enabled after the
-# first artifact deployment is verified.
 on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions: {}
 
 concurrency:
-  group: pages-production
-  cancel-in-progress: false
+  group: >-
+    pages-${{
+      github.event_name == 'pull_request'
+      && github.event.pull_request.number
+      || 'production'
+    }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   quality:
@@ -46,6 +54,9 @@ jobs:
           --trades trades_extracted.json
 
       - name: Configure GitHub Pages
+        if: >-
+          github.ref == 'refs/heads/main'
+          && github.event_name != 'pull_request'
         uses: actions/configure-pages@v6
 
       - name: Build immutable site artifact
@@ -57,6 +68,9 @@ jobs:
           test -s _site/index.html
 
       - name: Upload Pages artifact
+        if: >-
+          github.ref == 'refs/heads/main'
+          && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: _site
@@ -64,6 +78,9 @@ jobs:
 
   deploy:
     name: Deploy production
+    if: >-
+      github.ref == 'refs/heads/main'
+      && github.event_name != 'pull_request'
     needs: quality
     runs-on: ubuntu-latest
     timeout-minutes: 10

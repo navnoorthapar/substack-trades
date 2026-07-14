@@ -2,6 +2,8 @@ all_posts.json
 all_sources_posts.json
 trades_extracted.md
 /index.html
+/docs/
+/_site/
 __pycache__/
 *.pyc
 .DS_Store

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Fetch -> extract -> validate -> build -> publish.
+# Fetch -> extract -> validate -> commit source data -> queue atomic deployment.
 #
 # Substack rejects datacenter IPs, so the live feed refresh runs on this Mac.
-# GitHub Actions remains a build-only fallback. This script is safe to schedule
-# several times per day and safe to rerun after an interrupted push.
+# GitHub Actions owns the tested build and deployment. This script is safe to
+# schedule several times per day and safe to rerun after an interrupted push.
 set -Eeuo pipefail
 
 cd "$(dirname "$0")"
@@ -145,37 +145,32 @@ mv "$WORK_DIR/posts.candidate.json" "$ROOT/all_sources_posts.json"
 mv "$WORK_DIR/articles.candidate.json" "$ROOT/articles_index.json"
 mv "$WORK_DIR/trades.candidate.json" "$ROOT/trades_extracted.json"
 
-git add articles_index.json medium_posts.json trades_extracted.json
+echo
+echo "=== Running regression suite ==="
+"$PYTHON" -m unittest -q
+
+TRACKED_OUTPUTS=(articles_index.json medium_posts.json trades_extracted.json)
 if [ -f .direction_cache.json ]; then
-    git add .direction_cache.json
+    TRACKED_OUTPUTS+=(.direction_cache.json)
 fi
+git add -- "${TRACKED_OUTPUTS[@]}"
 
-SITE_CHANGED=0
-if ! git diff --staged --quiet -- articles_index.json trades_extracted.json; then
-    SITE_CHANGED=1
-fi
-
-if [ "$SITE_CHANGED" -eq 1 ] || [ ! -f docs/index.html ]; then
-    echo
-    echo "=== Building site ==="
-    "$PYTHON" build_site.py
-    git add docs/index.html
-fi
-
-if git diff --staged --quiet; then
-    echo "No feed changes since the last published refresh."
+if git diff --staged --quiet -- "${TRACKED_OUTPUTS[@]}"; then
+    echo "No feed changes since the last successful refresh."
 else
     ARTICLE_COUNT=$("$PYTHON" -c "import json; print(len(json.load(open('articles_index.json'))))")
     TRADE_COUNT=$("$PYTHON" -c "import json; print(len(json.load(open('trades_extracted.json'))))")
     echo
     echo "=== Committing ${ARTICLE_COUNT} articles / ${TRADE_COUNT} trades ==="
-    git commit -m "update: ${ARTICLE_COUNT} articles, ${TRADE_COUNT} trades ($(date -u '+%Y-%m-%d'))"
+    git commit --only \
+        -m "update: ${ARTICLE_COUNT} articles, ${TRADE_COUNT} trades ($(date -u '+%Y-%m-%d'))" \
+        -- "${TRACKED_OUTPUTS[@]}"
 fi
 
 # Always push, even when this run produced no diff. This retries a commit left
 # ahead of origin by a previous network failure.
 echo
-echo "=== Publishing ==="
+echo "=== Pushing validated source snapshot ==="
 git push origin main
 
 date +%s > "$LAST_RUN_FILE"
@@ -183,5 +178,6 @@ date +%s > "$LAST_RUN_FILE"
 ARTICLE_COUNT=$("$PYTHON" -c "import json; print(len(json.load(open('articles_index.json'))))")
 TRADE_COUNT=$("$PYTHON" -c "import json; print(len(json.load(open('trades_extracted.json'))))")
 echo
-echo "Done - ${ARTICLE_COUNT} articles and ${TRADE_COUNT} trades published at:"
+echo "Done - ${ARTICLE_COUNT} articles and ${TRADE_COUNT} trades are synchronized."
+echo "Changed snapshots queue a tested, atomic GitHub Pages deployment at:"
 echo "https://navnoorthapar.github.io/substack-trades/"
