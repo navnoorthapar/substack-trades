@@ -33,6 +33,17 @@ class ExtractTradesHardeningTests(unittest.TestCase):
             )
         )
 
+        institutional_false_positives = [
+            'Three checks would falsify the no live price arb thesis in stablecoins.',
+            'The VIX moved because quotes widened, not because of genuine volatility.',
+            "Volatility arbitrage isn't about being long or short volatility.",
+            'Traditional arbitrage-based pricing breaks down in an incomplete market.',
+            'No primary filing confirms that the bank acquired a long bond position.',
+        ]
+        for text in institutional_false_positives:
+            with self.subTest(text=text):
+                self.assertEqual(extract_trades.classify_direction(text), 'unspecified')
+
     def test_negation_scope_preserves_affirmative_contrast_and_not_only(self):
         self.assertEqual(
             extract_trades.classify_direction(
@@ -107,6 +118,47 @@ class ExtractTradesHardeningTests(unittest.TestCase):
         self.assertEqual(len(trades), 1)
         self.assertEqual(trades[0]['trade_description'], analysis)
         self.assertEqual(trades[0]['direction'], 'long')
+        self.assertFalse(trades[0]['description_truncated'])
+
+    def test_displayed_fields_never_bleed_from_adjacent_paragraphs(self):
+        visible = (
+            'The fund established a long position in Acme Capital common stock '
+            'because recurring revenue improved the base case by 12%.'
+        )
+        adjacent = (
+            'A separate swaptions appendix discusses Vega Holdings, a $30 billion '
+            'portfolio, and a thesis because volatility will mean revert.'
+        )
+        post = {
+            'title': 'Passage-level evidence',
+            'url': 'https://example.com/passage-evidence',
+            'post_date': '2026-07-14T00:00:00Z',
+            'body_text': visible + '\n\n' + adjacent,
+        }
+
+        first = extract_trades.process_article(post)[0]
+
+        self.assertEqual(first['trade_description'], visible)
+        self.assertNotIn('Vega', first['underlying'] or '')
+        self.assertNotIn('$30 billion', first['any_quant_detail'] or '')
+        self.assertNotIn('volatility will mean revert', first['edge_or_thesis'] or '')
+
+    def test_truncation_is_explicit_provenance(self):
+        paragraph = (
+            'The fund established a long position in Acme Capital common stock '
+            'because recurring revenue improved. ' + ('Supporting detail ' * 80)
+        )
+        post = {
+            'title': 'A long bounded passage',
+            'url': 'https://example.com/truncated',
+            'post_date': '2026-07-14T00:00:00Z',
+            'body_text': paragraph,
+        }
+
+        trade = extract_trades.process_article(post)[0]
+
+        self.assertLessEqual(len(trade['trade_description']), 800)
+        self.assertTrue(trade['description_truncated'])
 
     def test_labels_cannot_be_inferred_beyond_published_passage(self):
         visible = (

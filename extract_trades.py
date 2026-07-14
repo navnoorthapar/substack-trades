@@ -216,6 +216,13 @@ _OWNS_PUTS_RE = re.compile(
     r'\b(?:long|bought|purchased|buying|own(?:s|ed)?|hold(?:s|ing)?)\s+put[s]?\b',
     re.IGNORECASE,
 )
+_AFFIRMATIVE_AFTER_CONTRAST_RE = re.compile(
+    r'\b(?:went|goes|going)\s+(?:long|short)\b|'
+    r'\b(?:established|initiated|opened|put on|took|built)\s+(?:a\s+|an\s+)?(?:long|short)\b|'
+    r'\b(?:shorted|sold short|bought puts?|bought protection)\b|'
+    r'\b(?:long|short)\s+(?:the\s+)?(?:bond|gilt|treasur|equit|stock|share|oil|crude|gold|silver|copper|gas|credit|duration|dollar|sterling|yen|euro|pound|volatil|gamma|vega|VIX)',
+    re.IGNORECASE,
+)
 
 _URL_RE = re.compile(r'(?:https?://|www\.)\S+', re.IGNORECASE)
 _REFERENCE_HEADING_RE = re.compile(
@@ -355,12 +362,18 @@ DIRECTION_MAP = {
     'long/short': ['long', 'short'],
 }
 
-def classify_direction(text):
+def _classify_direction_without_negation(text):
     # Strip common false-positive phrases before matching so a bare "long"/"short"
     # left behind is much more likely to be an actual position than prose.
     # "long/short" / "long-short" as a compound is a fund-type adjective, not a trade
     # ("a long/short equity fund"); drop it so it can't trip the long or short signals.
     cleaned = re.sub(r'\blong[/\-]short\b', ' ', text, flags=re.IGNORECASE)
+    cleaned = re.sub(
+        r'\b(?:traditional\s+)?arbitrage[- ]based pricing\b|\barbitrage pricing\b',
+        ' ',
+        cleaned,
+        flags=re.IGNORECASE,
+    )
     cleaned = re.sub(r'\bshort[\s\-](?:term|dated|run|fall|sighted|hand|list|cut|age|change|selling|squeeze)\b', '', cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r'\blong[\s\-](?:term|run|dated|standing|time|only|awaited|haul|lasting|suffering|list|way|history|period|stretch|line|shot|shadow)\b', '', cleaned, flags=re.IGNORECASE)
     cleaned = _mask_negated_trade_signals(cleaned)
@@ -387,6 +400,28 @@ def classify_direction(text):
     if short_match:
         return 'short'
     return 'unspecified'
+
+
+def classify_direction(text):
+    # Precision is more important than recall in an institutional research
+    # index.  A bounded passage containing an explicitly negated trade signal
+    # abstains unless an adversative clause ("but", "however", etc.) then states
+    # a separate affirmative position.  The observation remains searchable and
+    # its source text remains visible even when its stance is unspecified.
+    # ``has_negated_trade_signal`` already exempts affirmative constructions
+    # such as "not only long ..." and YES/NO prediction-market contracts.
+    if has_negated_trade_signal(text):
+        for stop in _NEGATION_STOP_RE.finditer(text):
+            prefix = text[:stop.start()]
+            tail = text[stop.end():]
+            if (has_negated_trade_signal(prefix)
+                    and not has_negated_trade_signal(tail)
+                    and _AFFIRMATIVE_AFTER_CONTRAST_RE.search(tail)):
+                affirmative = _classify_direction_without_negation(tail)
+                if affirmative != 'unspecified':
+                    return affirmative
+        return 'unspecified'
+    return _classify_direction_without_negation(text)
 
 def find_instruments(text):
     found = []
@@ -554,30 +589,22 @@ def process_article(post):
         # A directional word beyond the 800-character evidence boundary cannot
         # turn an otherwise non-trade excerpt into a directional observation.
         if is_trade_block(description):
-            # Build larger context
-            context_parts = []
-            if i > 0:
-                context_parts.append(paragraphs[i-1][-200:])
-            context_parts.append(para)
-            if i < len(paragraphs) - 1:
-                context_parts.append(paragraphs[i+1][:200])
-            context = ' '.join(context_parts)
-
             trade = {
                 'article_title': title,
                 'article_url': url,
                 'article_date': date,
                 'trade_description': description,
-                # Instruments detected from the published passage only — not the wider context,
-                # to avoid inheriting instrument tags from adjacent paragraphs.
-                # Context is kept for thesis/underlying/quant which span multiple sentences.
+                # Every field shown or scored in the terminal is derived from
+                # this exact published passage.  Adjacent paragraphs are not
+                # allowed to leak evidence into the visible record.
                 'instruments': find_instruments(description),
                 'direction': classify_direction(description),
-                'underlying': extract_underlying(context),
-                'edge_or_thesis': extract_thesis(context),
-                'any_quant_detail': extract_quant_details(context),
-                'outcome_if_mentioned': extract_outcome(context),
-                'fund_name_if_mentioned': extract_fund_name(context) or extract_fund_name(title),
+                'underlying': extract_underlying(description),
+                'edge_or_thesis': extract_thesis(description),
+                'any_quant_detail': extract_quant_details(description),
+                'outcome_if_mentioned': extract_outcome(description),
+                'fund_name_if_mentioned': extract_fund_name(description) or extract_fund_name(title),
+                'description_truncated': len(description) < len(para.strip()),
             }
             trades.append(trade)
 
@@ -596,11 +623,12 @@ def process_article(post):
                     'trade_description': description,
                     'instruments': find_instruments(description),
                     'direction': classify_direction(description),
-                    'underlying': extract_underlying(block),
-                    'edge_or_thesis': extract_thesis(block),
-                    'any_quant_detail': extract_quant_details(block),
-                    'outcome_if_mentioned': extract_outcome(block),
-                    'fund_name_if_mentioned': extract_fund_name(block) or extract_fund_name(title),
+                    'underlying': extract_underlying(description),
+                    'edge_or_thesis': extract_thesis(description),
+                    'any_quant_detail': extract_quant_details(description),
+                    'outcome_if_mentioned': extract_outcome(description),
+                    'fund_name_if_mentioned': extract_fund_name(description) or extract_fund_name(title),
+                    'description_truncated': len(description) < len(block.strip()),
                 }
                 trades.append(trade)
 

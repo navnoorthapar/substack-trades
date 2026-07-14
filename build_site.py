@@ -11,6 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
+from extract_trades import has_negated_trade_signal
+
 
 ROOT = Path(__file__).parent
 DOCS_DIR = Path(os.environ.get('SITE_OUTPUT_DIR', ROOT / 'docs')).expanduser()
@@ -94,19 +96,15 @@ def canonical_manager_label(value):
     return raw, MANAGER_ALIAS_LABELS.get(normalize_identity_text(raw), raw)
 
 
-NEGATED_STANCE_RE = re.compile(
-    r"\b(?:no|not|never|without|none|cannot|can't|isn't|wasn't|didn't)\b"
-    r"[^.!?\n]{0,90}\b(?:arbitrage|long|short|buy|sell|position|trade|"
-    r"opportunity|exposure)\b",
-    re.IGNORECASE,
-)
 REFERENCE_LINE_RE = re.compile(
     r"^(?:https?://|[^.!?\n]{0,120}(?:—|–|:)[ \t]*https?://)",
     re.IGNORECASE,
 )
 
 
-def observation_metadata(description, direction, instruments, underlying, thesis, quant):
+def observation_metadata(
+        description, direction, instruments, underlying, thesis, quant,
+        description_truncated=False):
     """Return transparent documentation coverage and conservative review flags."""
     text = str(description or '').strip()
     fields = {
@@ -117,14 +115,13 @@ def observation_metadata(description, direction, instruments, underlying, thesis
         'numeric': bool(str(quant or '').strip()),
     }
     reference_line = bool(REFERENCE_LINE_RE.search(text))
-    negation_risk = bool(NEGATED_STANCE_RE.search(text)) and fields['stance']
-    truncated = len(text) >= 790 and not re.search(r'[.!?…\]\)\u201d\u2019\'"]$', text)
+    negation_risk = has_negated_trade_signal(text)
     return {
         'documentation_fields': fields,
         'documentation_score': sum(fields.values()),
         'reference_line': reference_line,
         'negation_risk': negation_risk,
-        'description_truncated': truncated,
+        'description_truncated': bool(description_truncated),
     }
 
 
@@ -262,6 +259,7 @@ for article in articles:
         underlying = trade.get('underlying') or ''
         metadata = observation_metadata(
             description, direction, idea_instruments, underlying, thesis, quant,
+            trade.get('description_truncated', False),
         )
         directions.add(direction)
         instruments.update(idea_instruments)
@@ -712,6 +710,14 @@ body[data-view="briefing"] .table-shell,body[data-view="briefing"] .context-bar{
 .coverage-value{text-align:right;font:10px var(--mono);color:var(--text-muted)}
 .brief-note{padding:12px;font-size:10.5px;line-height:1.55;color:var(--text-muted)}
 .brief-note strong{color:var(--text-secondary)}
+.owner-workflow-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line)}
+.owner-workflow-item{padding:10px 12px;background:var(--surface-1)}
+.owner-workflow-item b{display:block;font:650 15px var(--mono);color:var(--text)}
+.owner-workflow-item span{display:block;margin-top:3px;font-size:9.5px;line-height:1.35;color:var(--text-muted)}
+.operating-boundary{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+.operating-boundary div{padding:11px 12px;background:var(--surface-1)}
+.operating-boundary h4{font:650 9.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary);margin-bottom:5px}
+.operating-boundary p{font-size:10px;line-height:1.5;color:var(--text-muted)}
 
 /* Dense master tables */
 .command-bar,.active-filters,.context-bar{flex:0 0 auto}
@@ -722,7 +728,7 @@ body[data-view="briefing"] .table-shell,body[data-view="briefing"] .context-bar{
   border-bottom:1px solid var(--line-strong);background:var(--surface-2);
   color:var(--text-muted);font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.06em
 }
-.idea-grid{grid-template-columns:82px 100px 118px 142px minmax(270px,1fr) 138px 76px 34px}
+.idea-grid{grid-template-columns:82px 130px 118px 142px minmax(270px,1fr) 138px 76px 34px}
 .research-grid{grid-template-columns:82px 78px minmax(360px,1fr) 76px 110px 90px 34px}
 .head-cell{height:100%;display:flex;align-items:center;padding:0 9px;min-width:0}
 .head-sort{
@@ -772,6 +778,7 @@ body[data-view="briefing"] .table-shell,body[data-view="briefing"] .context-bar{
 .review-flag{color:var(--relative);font:650 9px var(--mono)}
 .new-badge{display:inline-flex;margin-left:6px;color:var(--accent);font:650 9px var(--mono);text-transform:uppercase}
 .workflow-badge{display:inline-flex;margin-left:6px;padding:1px 5px;border:1px solid var(--line-strong);border-radius:3px;color:var(--text-secondary);font:650 9px var(--mono);text-transform:uppercase}
+.workflow-badge.coverage{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
 .pinned-selection{box-shadow:inset 3px 0 var(--relative-line)}
 .row-open{
   width:27px;height:27px;display:grid;place-items:center;border:1px solid transparent;border-radius:3px;
@@ -865,11 +872,36 @@ body.density-compact .idea-title{-webkit-line-clamp:1}
 .diligence-mark{font:700 10px var(--mono);color:var(--text-muted)}
 .diligence-item.captured .diligence-mark{color:var(--positive)}
 .workflow-panel{margin:13px 0;padding:11px;border:1px solid var(--line-strong);border-radius:4px;background:var(--surface-2)}
-.workflow-panel h3{font:650 10px var(--mono);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.workflow-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.workflow-panel h3{font:650 10px var(--mono);text-transform:uppercase;letter-spacing:.07em}
+.workflow-coverage{display:inline-flex;padding:3px 6px;border:1px solid var(--accent);border-radius:3px;background:var(--accent-soft);color:var(--accent);font:650 9px var(--mono)}
+.workflow-subhead{margin:12px 0 3px;padding-top:10px;border-top:1px solid var(--line);font:650 9.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary)}
+.workflow-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
 .workflow-field{display:grid;gap:4px;margin-top:8px;color:var(--text-muted);font-size:10px}
+.workflow-field.wide{grid-column:1/-1}
 .workflow-field select,.workflow-field input,.workflow-field textarea{width:100%;border:1px solid var(--control-line);border-radius:3px;background:var(--surface-1);color:var(--text);padding:7px;font-size:11px}
 .workflow-field textarea{min-height:72px;resize:vertical;line-height:1.45}
+.workflow-field textarea.compact{min-height:56px}
+.workflow-gates{display:grid;gap:5px;margin-top:8px;border:0;padding:0}
+.workflow-gates legend{font-size:10px;color:var(--text-muted);margin-bottom:3px}
+.workflow-gate{display:flex;align-items:flex-start;gap:7px;padding:7px;border:1px solid var(--line);border-radius:3px;background:var(--surface-1);color:var(--text-secondary);font-size:10px;line-height:1.4;cursor:pointer}
+.workflow-gate input{width:16px;height:16px;flex:0 0 auto;margin:0;accent-color:var(--accent)}
+.workflow-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .workflow-warning{font-size:9.5px;color:var(--text-muted);line-height:1.45;margin-top:8px}
+.orphaned-queue{display:none;border-bottom:1px solid var(--line);background:var(--surface-1);padding:10px 12px}
+.orphaned-queue.visible{display:block}
+.orphaned-queue h2{font:650 10px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--relative)}
+.orphaned-queue>p{margin:4px 0 8px;color:var(--text-muted);font-size:10px;line-height:1.45}
+.orphaned-list{display:grid;gap:6px}
+.orphaned-item{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:8px;padding:8px;border:1px solid var(--line);border-radius:3px;background:var(--surface-2);font-size:10px;color:var(--text-secondary)}
+.orphaned-item time,.orphaned-item small{font:9.5px var(--mono);color:var(--text-muted)}
+.orphaned-item strong{display:block;color:var(--text);font-size:10.5px}
+.orphaned-item p{margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-muted)}
+.orphaned-item a{color:var(--accent);text-decoration:none}
+body.density-comfortable .idea-title{font-size:12.5px;line-height:1.5}
+body.density-comfortable .idea-context,body.density-comfortable .instrument-secondary,body.density-comfortable .article-subtitle{font-size:11px}
+body.density-comfortable .manager-name,body.density-comfortable .article-title{font-size:12px}
+body.density-comfortable .data-cell{padding-top:9px;padding-bottom:9px}
 
 /* Overlays and feedback */
 .drawer-backdrop{display:none}
@@ -896,6 +928,7 @@ kbd{font:9px var(--mono);border:1px solid var(--line-strong);background:var(--su
 .method-card h3{font:650 10px var(--mono);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
 .method-card p,.method-card li{font-size:10.5px;line-height:1.55;color:var(--text-secondary)}
 .method-card ul{margin:6px 0 0;padding-left:17px}
+.method-card a{color:var(--accent);text-underline-offset:2px}
 noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:var(--bg);color:var(--text);padding:30px}
 
 ::-webkit-scrollbar{width:7px;height:7px}
@@ -950,6 +983,9 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .kpi-item{min-width:128px;padding:0 11px}
   .kpi-value{font-size:13px}
   .command-bar{padding:6px 8px;gap:6px}
+  .view-tabs{width:100%;max-width:100%;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .view-tabs::-webkit-scrollbar{display:none}
+  .view-tab{flex:0 0 auto}
   .view-tab{padding:0 8px;min-height:44px;font-size:11px}
   .result-summary{order:5;flex:1 0 100%}
   .command-spacer{display:none}
@@ -1009,6 +1045,9 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .brief-record{grid-template-columns:68px 80px minmax(0,1fr)}
   .brief-record .documentation-badge{display:none}
   .diligence-grid{grid-template-columns:1fr}
+  .workflow-grid,.operating-boundary{grid-template-columns:1fr}
+  .workflow-gate{min-height:44px;align-items:center}
+  .orphaned-item{grid-template-columns:1fr}
 }
 @media(max-width:430px){
   .command-button[data-action="copy-view"],.command-button[data-action="density"]{display:none}
@@ -1086,7 +1125,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
       <div class="filter-heading"><h2 id="preset-filter-label">Research triage</h2></div>
       <div class="preset-list">
         <button class="preset-button" type="button" data-preset="recent">Recent high-context passages</button>
-        <button class="preset-button" type="button" data-preset="new">New since last visit</button>
+        <button class="preset-button" type="button" data-preset="new">New since last review</button>
         <button class="preset-button" type="button" data-preset="rv">Numeric relative value</button>
         <button class="preset-button" type="button" data-preset="entity">Mentioned entity</button>
       </div>
@@ -1202,6 +1241,7 @@ __MANAGER_BUTTONS__
       <div class="facet-list">
         <button class="facet-clear active" type="button" data-clear-queue-status><span>Any queue status</span></button>
         <button class="facet-option" type="button" data-filter="queue-status" data-value="review"><span>Review</span></button>
+        <button class="facet-option" type="button" data-filter="queue-status" data-value="diligence"><span>Diligence</span></button>
         <button class="facet-option" type="button" data-filter="queue-status" data-value="monitor"><span>Monitor</span></button>
         <button class="facet-option" type="button" data-filter="queue-status" data-value="archived"><span>Archived</span></button>
       </div>
@@ -1231,6 +1271,12 @@ __MANAGER_BUTTONS__
     </div>
 
     <div class="active-filters empty" id="active-filters" aria-label="Active filters"></div>
+
+    <section class="orphaned-queue" id="orphaned-queue" aria-labelledby="orphaned-title">
+      <h2 id="orphaned-title">Retained source snapshots</h2>
+      <p>These local decision packets refer to passages no longer present in the current extraction. They are preserved for auditability and remain available in queue backups.</p>
+      <div class="orphaned-list" id="orphaned-list"></div>
+    </section>
 
     <section class="context-bar" aria-label="Visible universe summary">
       <div class="context-metrics">
@@ -1295,7 +1341,7 @@ __MANAGER_BUTTONS__
     <div class="shortcut-item"><span>First / last visible row</span><span><kbd>Home</kbd> <kbd>End</kbd></span></div>
     <div class="shortcut-item"><span>Open evidence inspector</span><kbd>Enter</kbd></div>
     <div class="shortcut-item"><span>Open original research</span><kbd>O</kbd></div>
-    <div class="shortcut-item"><span>Add selected passage to review</span><kbd>S</kbd></div>
+    <div class="shortcut-item"><span>Add or archive selected decision packet</span><kbd>S</kbd></div>
     <div class="shortcut-item"><span>Copy selected citation</span><kbd>C</kbd></div>
     <div class="shortcut-item"><span>Toggle filters</span><kbd>F</kbd></div>
     <div class="shortcut-item"><span>Brief / Monitor / Library / Queue</span><span><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></span></div>
@@ -1318,11 +1364,19 @@ __MANAGER_BUTTONS__
     </section>
     <section class="method-card">
       <h3>Decision boundary</h3>
-      <p>Records are research observations—not verified trades, current holdings, or recommendations. Live price and valuation, catalyst and horizon, sizing, liquidity and capacity, downside, and portfolio fit are not assessed by this terminal.</p>
+      <p>Records are research observations—not verified trades, current holdings, or recommendations. This terminal supports published-source intake and a human-entered decision packet. It does not contain live prices, positions, P&amp;L, sizing, execution, portfolio risk, liquidity, financing, counterparties, investor records, or compliance approvals.</p>
     </section>
     <section class="method-card">
       <h3>Local decision queue</h3>
-      <p>Queue status, tags, and notes stay in this browser unless you export a backup. Do not enter confidential, personal, or regulated information.</p>
+      <p>Queue packets and self-attested diligence gates stay in this browser unless you export a backup. They are not an authenticated or immutable enterprise audit record. Do not enter confidential, personal, client, position, or regulated information.</p>
+    </section>
+    <section class="method-card">
+      <h3>Institutional basis</h3>
+      <p>The workflow is informed by the <a href="https://www.sec.gov/newsroom/press-releases/2024-17" target="_blank" rel="noopener noreferrer">SEC’s private-fund risk dimensions</a>, <a href="https://www.aima.org/article/presenting-the-2025-edition.html" target="_blank" rel="noopener noreferrer">AIMA’s 2025 manager DDQ</a>, and <a href="https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a" target="_blank" rel="noopener noreferrer">CFA Institute’s reasonable-basis standard</a>. These references guide questions; they do not certify a packet.</p>
+    </section>
+    <section class="method-card">
+      <h3>Owner operating stack</h3>
+      <p>Daily P&amp;L, exposure, leverage, concentration, stress, cash and margin require an OMS/PMS, market data, administrator, prime-broker and risk feeds. Operations, governance and investor oversight require controlled compliance, accounting and CRM systems.</p>
     </section>
   </div>
   <p class="dialog-foot">Shortcuts are disabled while typing in a form control. Always review the original publication and perform independent diligence.</p>
@@ -1346,9 +1400,27 @@ const VALID_INSTRUMENTS = new Set(['equity','option','volatility','bond','future
 const VALID_QUALITY = new Set(['quant','thesis','outcome','manager']);
 const VALID_CONTENT = new Set(['full','excerpt']);
 const VALID_DOCUMENTATION = new Set(['triage','documented','strong','needs-context','review']);
-const VALID_QUEUE_STATUSES = new Set(['review','monitor','archived']);
+const VALID_QUEUE_STATUSES = new Set(['review','diligence','monitor','archived']);
+const VALID_PRIORITIES = new Set(['low','normal','high']);
+const VALID_CONFIDENCE = new Set(['unrated','low','medium','high']);
+const DILIGENCE_GATES = [
+  ['source','Original publication reviewed'],
+  ['independent','Independent evidence obtained'],
+  ['market','Live market price and valuation checked'],
+  ['liquidity','Liquidity, capacity, borrow and funding checked'],
+  ['portfolio','Portfolio exposure, correlation and stress checked'],
+  ['compliance','Legal and compliance constraints checked']
+];
+const PACKET_CASE_FIELDS = ['thesis','contrary','catalyst','horizon','payoff','risk','implementation','portfolio'];
+const WORKFLOW_TEXT_LIMITS = {
+  tags:500,note:4000,owner:120,horizon:160,thesis:1800,contrary:1600,
+  catalyst:1400,payoff:1800,risk:1800,implementation:1800,portfolio:1800,
+  next_action:700
+};
+const MAX_QUEUE_ITEMS = 250;
 const PAGE_SIZE = {briefing:24,ideas:100,research:80,queue:100};
-const WORKFLOW_KEY = 'nrt-decision-queue-v1';
+const WORKFLOW_KEY = 'nrt-decision-queue-v2';
+const LEGACY_WORKFLOW_KEY = 'nrt-decision-queue-v1';
 const LAST_SEEN_KEY = 'nrt-last-seen-publication';
 
 function normalize(value) {
@@ -1369,6 +1441,11 @@ function directionLabel(value) {
     'long/short':'Long / short', unspecified:'No reliable stance'
   };
   return labels[value] || 'No reliable stance';
+}
+function compactDirectionLabel(value) {
+  if (value === 'unspecified') return 'No stance';
+  if (value === 'long/short') return 'L / S';
+  return directionLabel(value);
 }
 function directionClass(value) {
   if (value === 'long') return 'dir-long';
@@ -1423,6 +1500,93 @@ function isNewDate(date) {
 function reviewFlagged(idea) {
   return Boolean(idea.reference_line || idea.negation_risk || idea.description_truncated);
 }
+function validDateInput(value) {
+  const text = String(value || '');
+  return /^\d{4}-\d{2}-\d{2}$/.test(text) && !Number.isNaN(new Date(text + 'T00:00:00Z').getTime()) ? text : '';
+}
+function sourceSnapshotForIdea(id) {
+  const idea = IDEA_BY_ID.get(id);
+  if (!idea) return null;
+  const article = idea._article || ARTICLE_BY_ID.get(idea.article_id);
+  if (!article) return null;
+  return {
+    article_id:String(article.id || '').slice(0,80),
+    title:String(article.title || '').slice(0,500),
+    url:String(article.url || '').slice(0,1200),
+    date:String(article.date || '').slice(0,10),
+    source:String(article.source || '').slice(0,20),
+    passage:String(passageText(idea) || '').slice(0,1200),
+    direction:String(idea.direction || 'unspecified').slice(0,40),
+    instruments:(idea.instruments || []).slice(0,20).map(function (value) { return String(value).slice(0,80); }),
+    underlying:String(idea.underlying || '').slice(0,500),
+    data_checksum:String(SNAPSHOT.data_checksum || '')
+  };
+}
+function normalizeSourceSnapshot(value,id) {
+  const current = sourceSnapshotForIdea(id);
+  if (!value || typeof value !== 'object') return current;
+  const url = safeUrl(String(value.url || ''));
+  if (url === '#') return current;
+  return {
+    article_id:String(value.article_id || '').slice(0,80),
+    title:String(value.title || 'Retained research source').slice(0,500),
+    url:url.slice(0,1200),
+    date:validDateInput(value.date),
+    source:VALID_SOURCES.has(value.source) ? value.source : (url.includes('medium.com') ? 'medium' : 'substack'),
+    passage:String(value.passage || '').slice(0,1200),
+    direction:VALID_DIRECTIONS.has(value.direction) ? value.direction : 'unspecified',
+    instruments:Array.isArray(value.instruments) ? value.instruments.slice(0,20).map(function (item) { return String(item).slice(0,80); }) : [],
+    underlying:String(value.underlying || '').slice(0,500),
+    data_checksum:String(value.data_checksum || '').slice(0,64)
+  };
+}
+function blankChecks() {
+  return DILIGENCE_GATES.reduce(function (result,row) { result[row[0]] = false; return result; },{});
+}
+function normalizeWorkflowItem(value) {
+  if (!value || typeof value !== 'object') return null;
+  const id = String(value.id || '').slice(0,100);
+  if (!id) return null;
+  const snapshot = normalizeSourceSnapshot(value.source_snapshot,id);
+  if (!snapshot) return null;
+  const checks = blankChecks();
+  DILIGENCE_GATES.forEach(function (row) {
+    checks[row[0]] = Boolean(value.checks && value.checks[row[0]]);
+  });
+  const item = {
+    id:id,
+    status:VALID_QUEUE_STATUSES.has(value.status) ? value.status : 'review',
+    priority:VALID_PRIORITIES.has(value.priority) ? value.priority : 'normal',
+    confidence:VALID_CONFIDENCE.has(value.confidence) ? value.confidence : 'unrated',
+    review_date:validDateInput(value.review_date),
+    verified_at:String(value.verified_at || '').slice(0,40),
+    checks:checks,
+    source_snapshot:snapshot,
+    updated_at:String(value.updated_at || '').slice(0,40)
+  };
+  Object.keys(WORKFLOW_TEXT_LIMITS).forEach(function (field) {
+    item[field] = String(value[field] || '').slice(0,WORKFLOW_TEXT_LIMITS[field]);
+  });
+  return item;
+}
+function newWorkflowItem(id) {
+  return normalizeWorkflowItem({
+    id:id,status:'review',priority:'normal',confidence:'unrated',checks:blankChecks(),
+    source_snapshot:sourceSnapshotForIdea(id),updated_at:new Date().toISOString()
+  });
+}
+function packetCoverage(item) {
+  if (!item) return {caseCount:0,controlCount:0,workflowCount:0,completed:0,total:18,complete:false};
+  const caseCount = PACKET_CASE_FIELDS.filter(function (field) { return hasValue(item[field]); }).length;
+  const controlCount = DILIGENCE_GATES.filter(function (row) { return Boolean(item.checks && item.checks[row[0]]); }).length;
+  const workflowCount = Number(hasValue(item.owner)) + Number(Boolean(item.review_date)) +
+    Number(item.confidence !== 'unrated') + Number(hasValue(item.next_action));
+  const completed = caseCount + controlCount + workflowCount;
+  return {caseCount:caseCount,controlCount:controlCount,workflowCount:workflowCount,completed:completed,total:18,complete:completed === 18};
+}
+function reviewIsOverdue(item) {
+  return Boolean(item && item.status !== 'archived' && item.review_date && item.review_date < new Date().toISOString().slice(0,10));
+}
 function documentationMatches(idea) {
   if (state.documentation === 'all') return true;
   if (state.documentation === 'documented') return idea.documentation_score === 5;
@@ -1437,7 +1601,7 @@ function documentationMatches(idea) {
 function persistWorkflow() {
   savedIdeas = new Set(workflowItems.keys());
   try {
-    localStorage.setItem(WORKFLOW_KEY,JSON.stringify(Array.from(workflowItems.values())));
+    localStorage.setItem(WORKFLOW_KEY,JSON.stringify(Array.from(workflowItems.values()).slice(0,MAX_QUEUE_ITEMS)));
     return true;
   } catch (_error) {
     showToast('Queue could not be saved in this browser');
@@ -1465,28 +1629,31 @@ IDEAS.forEach(function (idea) {
 });
 
 let workflowItems = new Map();
+let workflowNeedsMigration = false;
 try {
-  const stored = JSON.parse(localStorage.getItem(WORKFLOW_KEY) || '[]');
+  const currentStored = JSON.parse(localStorage.getItem(WORKFLOW_KEY) || 'null');
+  const legacyStored = JSON.parse(localStorage.getItem(LEGACY_WORKFLOW_KEY) || 'null');
+  const stored = Array.isArray(currentStored) ? currentStored : Array.isArray(legacyStored) ? legacyStored : [];
   if (Array.isArray(stored)) {
-    stored.slice(0,2000).forEach(function (item) {
-      if (!item || !IDEA_BY_ID.has(item.id)) return;
-      workflowItems.set(item.id,{
-        id:item.id,
-        status:VALID_QUEUE_STATUSES.has(item.status) ? item.status : 'review',
-        note:String(item.note || '').slice(0,4000),
-        tags:String(item.tags || '').slice(0,500),
-        updated_at:String(item.updated_at || '')
-      });
+    stored.slice(0,MAX_QUEUE_ITEMS).forEach(function (value) {
+      const item = normalizeWorkflowItem(value);
+      if (item) workflowItems.set(item.id,item);
     });
+    if (!Array.isArray(currentStored) && workflowItems.size) workflowNeedsMigration = true;
   }
   if (!workflowItems.size) {
     const legacy = JSON.parse(localStorage.getItem('nrt-saved-ideas') || '[]');
     if (Array.isArray(legacy)) legacy.forEach(function (id) {
-      if (IDEA_BY_ID.has(id)) workflowItems.set(id,{id:id,status:'review',note:'',tags:'',updated_at:''});
+      if (IDEA_BY_ID.has(id) && workflowItems.size < MAX_QUEUE_ITEMS) {
+        const item = newWorkflowItem(id);
+        if (item) workflowItems.set(id,item);
+      }
     });
+    if (workflowItems.size) workflowNeedsMigration = true;
   }
 } catch (_error) {}
 let savedIdeas = new Set(workflowItems.keys());
+if (workflowNeedsMigration) persistWorkflow();
 
 let lastSeenPublication = '';
 try { lastSeenPublication = localStorage.getItem(LAST_SEEN_KEY) || ''; } catch (_error) {}
@@ -1495,7 +1662,7 @@ const firstVisitCutoff = (function () {
   newest.setUTCDate(newest.getUTCDate() - 7);
   return newest.toISOString().slice(0,10);
 })();
-const NEW_SINCE_DATE = lastSeenPublication
+let NEW_SINCE_DATE = lastSeenPublication
   ? (lastSeenPublication > MAX_DATE ? MAX_DATE : lastSeenPublication)
   : firstVisitCutoff;
 
@@ -1685,8 +1852,18 @@ function sortedRecords(records) {
     if (state.sort === 'article') return leftArticle.title.localeCompare(rightArticle.title);
     if (state.sort === 'documented') return Number(right.documentation_score || 0) - Number(left.documentation_score || 0) || rightArticle.date.localeCompare(leftArticle.date);
     if (state.sort === 'queue-status') {
-      const order = {review:0,monitor:1,archived:2};
+      const order = {diligence:0,review:1,monitor:2,archived:3};
       return (order[(workflowItems.get(left.id) || {}).status] ?? 9) - (order[(workflowItems.get(right.id) || {}).status] ?? 9) || rightArticle.date.localeCompare(leftArticle.date);
+    }
+    if (state.sort === 'priority') {
+      const order = {high:0,normal:1,low:2};
+      return (order[(workflowItems.get(left.id) || {}).priority] ?? 9) - (order[(workflowItems.get(right.id) || {}).priority] ?? 9) || rightArticle.date.localeCompare(leftArticle.date);
+    }
+    if (state.sort === 'review-date') {
+      return String((workflowItems.get(left.id) || {}).review_date || '9999-12-31').localeCompare(String((workflowItems.get(right.id) || {}).review_date || '9999-12-31')) || rightArticle.date.localeCompare(leftArticle.date);
+    }
+    if (state.sort === 'updated') {
+      return String((workflowItems.get(right.id) || {}).updated_at || '').localeCompare(String((workflowItems.get(left.id) || {}).updated_at || '')) || rightArticle.date.localeCompare(leftArticle.date);
     }
     if (state.sort === 'most-ideas') return right.trade_count - left.trade_count || right.date.localeCompare(left.date);
     if (state.sort === 'read-time') return right.read_minutes - left.read_minutes || right.date.localeCompare(left.date);
@@ -1712,7 +1889,7 @@ function setSortOptions() {
     ['newest','Newest first'],['oldest','Oldest first'],['manager','Manager A–Z'],
     ['market','Market A–Z'],['direction','Direction A–Z'],['article','Article A–Z'],
     ['documented','Most documented'],
-    ...(state.view === 'queue' ? [['queue-status','Queue status']] : []),
+    ...(state.view === 'queue' ? [['queue-status','Queue status'],['priority','Priority'],['review-date','Next review'],['updated','Packet updated']] : []),
     ['relevance','Search relevance']
   ];
   if (!options.some(function (option) { return option[0] === state.sort; })) state.sort = 'newest';
@@ -1783,7 +1960,10 @@ function ideaRow(idea) {
     (idea.description || 'no description extracted') + ', ' + sourceLabel(article.source);
   const workflow = workflowItems.get(idea.id);
   const newBadge = isNewDate(article.date) ? '<span class="new-badge">New</span>' : '';
-  const workflowBadge = workflow ? '<span class="workflow-badge">' + escapeHtml(workflow.status) + '</span>' : '';
+  const coverage = packetCoverage(workflow);
+  const workflowBadge = workflow ? '<span class="workflow-badge">' + escapeHtml(workflow.status) + '</span>' +
+    '<span class="workflow-badge coverage" title="Decision packet coverage; not approval">' + coverage.completed + '/' + coverage.total + '</span>' +
+    (reviewIsOverdue(workflow) ? '<span class="review-flag">Overdue</span>' : '') : '';
   const review = reviewFlagged(idea) ? '<span class="review-flag" title="Extraction review recommended">Review</span>' : '';
   return '<div class="data-row idea-grid" role="row" data-record-id="' + idea.id + '" tabindex="' + (selected ? '0' : '-1') + '" aria-selected="' + selected + '" aria-keyshortcuts="Enter Space ArrowUp ArrowDown Home End O S C" aria-label="' + escapeHtml(rowLabel) + '">' +
     '<div class="data-cell cell-date" role="gridcell"><time datetime="' + article.date + '">' + shortDate(article.date) + '</time>' + newBadge + '</div>' +
@@ -1865,6 +2045,23 @@ function renderRows(records) {
   document.getElementById('load-more').textContent = 'Show next ' + Math.min(PAGE_SIZE[state.view],records.length - visible.length) + ' of ' + number(records.length - visible.length) + ' remaining';
 }
 
+function renderOrphanedQueue() {
+  const shell = document.getElementById('orphaned-queue');
+  const list = document.getElementById('orphaned-list');
+  const orphaned = Array.from(workflowItems.values()).filter(function (item) { return !IDEA_BY_ID.has(item.id); });
+  const visible = state.view === 'queue' && orphaned.length > 0;
+  shell.classList.toggle('visible',visible);
+  if (!visible) {
+    list.replaceChildren();
+    return;
+  }
+  list.innerHTML = orphaned.slice(0,50).map(function (item) {
+    const source = item.source_snapshot;
+    const coverage = packetCoverage(item);
+    return '<article class="orphaned-item"><time datetime="' + escapeHtml(source.date) + '">' + escapeHtml(source.date || 'Date unknown') + '</time><div><strong>' + escapeHtml(source.title) + '</strong><p>' + escapeHtml(source.passage || 'Passage snapshot unavailable') + '</p><small>' + escapeHtml(item.status) + ' · packet ' + coverage.completed + '/' + coverage.total + ' · retained from dataset ' + escapeHtml(String(source.data_checksum || '').slice(0,12) || 'unknown') + '</small></div><a href="' + escapeHtml(safeUrl(source.url)) + '" target="_blank" rel="noopener noreferrer">Open source ↗</a></article>';
+  }).join('');
+}
+
 function renderContext(records) {
   let visibleIdeas;
   let visibleArticles;
@@ -1914,7 +2111,16 @@ function renderBriefing(records) {
   const newCount = records.filter(function (idea) { return isNewDate(idea._article.date); }).length;
   const directional = records.filter(function (idea) { return idea.direction !== 'unspecified'; }).length;
   const documented = records.filter(function (idea) { return idea.documentation_score === 5; }).length;
-  const entities = new Set(records.map(function (idea) { return idea.manager_key; }).filter(Boolean));
+  const queueItems = Array.from(workflowItems.values());
+  const activeQueue = queueItems.filter(function (item) { return item.status !== 'archived'; });
+  const diligenceQueue = activeQueue.filter(function (item) { return item.status === 'diligence'; });
+  const overdueQueue = activeQueue.filter(reviewIsOverdue);
+  const unverifiedQueue = activeQueue.filter(function (item) { return !item.checks.source; });
+  const completePackets = activeQueue.filter(function (item) { return packetCoverage(item).complete; });
+  const orphanedQueue = queueItems.filter(function (item) { return !IDEA_BY_ID.has(item.id); });
+  const reviewBaseline = lastSeenPublication
+    ? 'Explicitly reviewed through ' + formatDate(NEW_SINCE_DATE) + '.'
+    : 'First visit baseline uses the latest seven publication days.';
   const highContext = records.filter(function (idea) {
     return idea.documentation_score >= 4 && !reviewFlagged(idea) && idea._article.content_status === 'full';
   }).slice(0,8);
@@ -1940,26 +2146,32 @@ function renderBriefing(records) {
     const article = idea._article;
     return '<button class="brief-record" type="button" data-brief-record="' + idea.id + '">' +
       '<time datetime="' + article.date + '">' + shortDate(article.date) + (isNewDate(article.date) ? '<span class="new-badge">New</span>' : '') + '</time>' +
-      '<span class="direction-badge ' + directionClass(idea.direction) + '">' + directionLabel(idea.direction) + '</span>' +
+      '<span class="direction-badge ' + directionClass(idea.direction) + '" title="' + escapeHtml(directionLabel(idea.direction)) + '">' + compactDirectionLabel(idea.direction) + '</span>' +
       '<span><span class="brief-record-title">' + escapeHtml(passageText(idea)) + '</span><span class="brief-record-context">' + escapeHtml((idea.manager || idea.underlying || article.title) + ' · ' + sourceLabel(article.source) + ' · ' + (article.content_status === 'full' ? 'Full text' : 'Excerpt')) + '</span></span>' +
       '<span class="documentation-badge ' + (idea.documentation_score === 5 ? 'complete' : '') + '">' + idea.documentation_score + '/5</span>' +
     '</button>';
   }).join('');
   shell.innerHTML =
     '<div class="brief-hero"><div><div class="brief-kicker">Owner research brief · published information</div><h2>Prioritize what deserves human diligence</h2><p>This screen ranks recent, well-documented source passages for review. It does not infer live holdings, expected returns, conviction, or portfolio suitability.</p></div>' +
-      '<div class="brief-actions"><button class="secondary-action" type="button" data-preset="recent">Open high-context monitor</button><button class="secondary-action" type="button" data-view="queue">Open decision queue</button></div></div>' +
+      '<div class="brief-actions"><button class="secondary-action" type="button" data-action="mark-reviewed">Mark reviewed through ' + shortDate(MAX_DATE) + '</button><button class="secondary-action" type="button" data-preset="recent">Open high-context monitor</button><button class="secondary-action" type="button" data-view="queue">Open decision queue</button></div></div>' +
     '<div class="brief-metrics">' +
-      '<div class="brief-metric"><b>' + number(newCount) + '</b><span>New since baseline</span><p>Published after ' + formatDate(NEW_SINCE_DATE) + '.</p></div>' +
+      '<div class="brief-metric"><b>' + number(newCount) + '</b><span>New since last review</span><p>' + reviewBaseline + '</p></div>' +
       '<div class="brief-metric"><b>' + number(directional) + '</b><span>Directional passages</span><p>Rules-based parsed stance; verify negation and historical context.</p></div>' +
       '<div class="brief-metric"><b>' + number(documented) + '</b><span>All 5 fields captured</span><p>Coverage only—not confidence, quality, or investability.</p></div>' +
-      '<div class="brief-metric"><b>' + number(entities.size) + '</b><span>Mentioned entities</span><p>Canonicalized names; mentions do not establish positions.</p></div>' +
+      '<div class="brief-metric"><b>' + number(activeQueue.length) + '</b><span>Active decision packets</span><p>Device-local human diligence; ' + number(overdueQueue.length) + ' overdue.</p></div>' +
     '</div>' +
     '<div class="brief-grid"><div class="brief-card"><div class="brief-card-header"><h3>Recent high-context passages</h3><span>' + number(highContext.length) + ' shown</span></div><div class="brief-list">' + (recordRows || '<div class="brief-empty">No high-context passages match this view. Clear filters or browse the monitor.</div>') + '</div></div>' +
       '<div class="brief-stack">' +
+        '<section class="brief-card"><div class="brief-card-header"><h3>Decision workflow</h3><span>Device-local · self-attested</span></div><div class="owner-workflow-grid">' +
+          '<div class="owner-workflow-item"><b>' + number(diligenceQueue.length) + '</b><span>In active diligence</span></div>' +
+          '<div class="owner-workflow-item"><b>' + number(overdueQueue.length) + '</b><span>Review dates overdue</span></div>' +
+          '<div class="owner-workflow-item"><b>' + number(unverifiedQueue.length) + '</b><span>Original sources not marked reviewed</span></div>' +
+          '<div class="owner-workflow-item"><b>' + number(completePackets.length) + '</b><span>18/18 packet coverage—not approval</span></div>' +
+        '</div>' + (orphanedQueue.length ? '<p class="brief-note"><strong>' + number(orphanedQueue.length) + ' retained source snapshot' + (orphanedQueue.length === 1 ? '' : 's') + '.</strong> The current extraction no longer contains those passage IDs; the queue preserves them for auditability.</p>' : '') + '</section>' +
         '<section class="brief-card"><div class="brief-card-header"><h3>Documentation coverage</h3><span>' + number(records.length) + ' passages</span></div><div class="coverage-list">' + fields.map(function (field) { return coverageRow(fieldLabels[field],fieldCounts[field],records.length); }).join('') + '</div></section>' +
         '<section class="brief-card"><div class="brief-card-header"><h3>Leading markets</h3><span>Mentions</span></div><div class="coverage-list">' + (topMarkets.map(function (row) { return coverageRow(instrumentLabel(row[0]),row[1],records.length); }).join('') || '<div class="brief-empty">No specified market in this view.</div>') + '</div></section>' +
         '<section class="brief-card"><div class="brief-card-header"><h3>Publication health</h3><span>Last complete check</span></div><div class="coverage-list">' + sourceRows + '</div><p class="brief-note"><strong>One author, two publication channels.</strong> Substack and Medium are distribution channels, not independent corroborating sources. Research is published through ' + formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10)) + '; collection checked ' + formatCheckedAt(SNAPSHOT.checked_at) + '.</p></section>' +
-        '<section class="brief-card"><div class="brief-card-header"><h3>Before any capital decision</h3><span>Not assessed</span></div><p class="brief-note">Validate live price and valuation, catalyst and horizon, sizing, liquidity and capacity, downside and exit conditions, legal/compliance constraints, data independence, and portfolio-level correlation and concentration.</p></section>' +
+        '<section class="brief-card"><div class="brief-card-header"><h3>Owner operating boundary</h3><span>No synthetic fund metrics</span></div><div class="operating-boundary"><div><h4>Supported here</h4><p>Published-source discovery, passage-level evidence, timeliness, contrary evidence, catalysts, valuation framing, falsifiers, decision ownership and review cadence.</p></div><div><h4>Requires connected systems</h4><p>Positions, NAV/P&amp;L and attribution; exposure, leverage and stress; sizing and execution; liquidity, funding and counterparties; compliance, operations and investor reporting.</p></div></div></section>' +
       '</div></div>';
 }
 
@@ -2044,7 +2256,7 @@ function renderActiveFilters() {
   if (state.range !== 'all') chips.push('<button class="filter-chip" type="button" data-remove-filter="range" data-value="' + state.range + '">' + filterLabel('range',state.range) + '<span class="chip-x">×</span></button>');
   if (state.view === 'research' && state.coverage !== 'all') chips.push('<button class="filter-chip" type="button" data-remove-filter="coverage" data-value="' + state.coverage + '">' + filterLabel('coverage',state.coverage) + '<span class="chip-x">×</span></button>');
   if (state.documentation !== 'all') chips.push('<button class="filter-chip" type="button" data-remove-filter="documentation" data-value="' + state.documentation + '">' + filterLabel('documentation',state.documentation) + '<span class="chip-x">×</span></button>');
-  if (state.newOnly) chips.push('<button class="filter-chip" type="button" data-remove-filter="new" data-value="1">New since last visit<span class="chip-x">×</span></button>');
+  if (state.newOnly) chips.push('<button class="filter-chip" type="button" data-remove-filter="new" data-value="1">New since last review<span class="chip-x">×</span></button>');
   state.queueStatuses.forEach(function (value) {
     chips.push('<button class="filter-chip" type="button" data-remove-filter="queue-status" data-value="' + value + '">' + filterLabel('queue-status',value) + '<span class="chip-x">×</span></button>');
   });
@@ -2134,14 +2346,38 @@ function renderIdeaInspector(idea) {
   }).join('');
   const unassessed = ['Live price / valuation','Catalyst / horizon','Sizing','Liquidity / capacity','Downside / exit','Portfolio fit'];
   const unassessedDiligence = unassessed.map(function (label) {
-    return '<div class="diligence-item"><span class="diligence-mark">!</span><span>' + label + ' not assessed</span></div>';
+    return '<div class="diligence-item"><span class="diligence-mark">!</span><span>' + label + ' not assessed by source extraction</span></div>';
   }).join('');
+  const packet = packetCoverage(workflow);
+  const gateControls = workflow ? DILIGENCE_GATES.map(function (row) {
+    return '<label class="workflow-gate"><input type="checkbox" data-workflow-id="' + idea.id + '" data-workflow-gate="' + row[0] + '"' + (workflow.checks[row[0]] ? ' checked' : '') + '><span>' + escapeHtml(row[1]) + '</span></label>';
+  }).join('') : '';
   const workflowPanel = workflow ?
-    '<section class="workflow-panel"><h3>Device-local decision queue</h3>' +
-      '<label class="workflow-field">Status<select data-workflow-status="' + idea.id + '"><option value="review"' + (workflow.status === 'review' ? ' selected' : '') + '>Review</option><option value="monitor"' + (workflow.status === 'monitor' ? ' selected' : '') + '>Monitor</option><option value="archived"' + (workflow.status === 'archived' ? ' selected' : '') + '>Archived</option></select></label>' +
-      '<label class="workflow-field">Tags<input data-workflow-tags="' + idea.id + '" value="' + escapeHtml(workflow.tags) + '" maxlength="500" placeholder="e.g. macro, RV, diligence"></label>' +
-      '<label class="workflow-field">Research memo<textarea data-workflow-note="' + idea.id + '" maxlength="4000" placeholder="Record public-source diligence only…">' + escapeHtml(workflow.note) + '</textarea></label>' +
-      '<p class="workflow-warning">Stored only in this browser unless backed up. Do not enter confidential, personal, client, or regulated information.</p></section>' : '';
+    '<section class="workflow-panel"><div class="workflow-header"><h3>Human-entered IC decision packet</h3><span class="workflow-coverage" aria-label="Decision packet coverage ' + packet.completed + ' of ' + packet.total + '; not approval">' + packet.completed + '/' + packet.total + '</span></div>' +
+      '<p class="workflow-warning">Packet coverage counts populated analyst fields and self-attested control gates. It is not a confidence score, approval, recommendation, or evidence that a control was performed.</p>' +
+      '<div class="workflow-subhead">Decision control</div><div class="workflow-grid">' +
+        '<label class="workflow-field">Status<select data-workflow-id="' + idea.id + '" data-workflow-select="status"><option value="review"' + (workflow.status === 'review' ? ' selected' : '') + '>Review</option><option value="diligence"' + (workflow.status === 'diligence' ? ' selected' : '') + '>Diligence</option><option value="monitor"' + (workflow.status === 'monitor' ? ' selected' : '') + '>Monitor</option><option value="archived"' + (workflow.status === 'archived' ? ' selected' : '') + '>Archived</option></select></label>' +
+        '<label class="workflow-field">Priority<select data-workflow-id="' + idea.id + '" data-workflow-select="priority"><option value="low"' + (workflow.priority === 'low' ? ' selected' : '') + '>Low</option><option value="normal"' + (workflow.priority === 'normal' ? ' selected' : '') + '>Normal</option><option value="high"' + (workflow.priority === 'high' ? ' selected' : '') + '>High</option></select></label>' +
+        '<label class="workflow-field">Decision owner<input data-workflow-id="' + idea.id + '" data-workflow-field="owner" value="' + escapeHtml(workflow.owner) + '" maxlength="120" autocomplete="off" placeholder="Initials or role"></label>' +
+        '<label class="workflow-field">Next review<input type="date" data-workflow-id="' + idea.id + '" data-workflow-field="review_date" value="' + escapeHtml(workflow.review_date) + '"></label>' +
+        '<label class="workflow-field">Analyst confidence<select data-workflow-id="' + idea.id + '" data-workflow-select="confidence"><option value="unrated"' + (workflow.confidence === 'unrated' ? ' selected' : '') + '>Unrated</option><option value="low"' + (workflow.confidence === 'low' ? ' selected' : '') + '>Low</option><option value="medium"' + (workflow.confidence === 'medium' ? ' selected' : '') + '>Medium</option><option value="high"' + (workflow.confidence === 'high' ? ' selected' : '') + '>High</option></select></label>' +
+        '<label class="workflow-field">Tags<input data-workflow-id="' + idea.id + '" data-workflow-field="tags" value="' + escapeHtml(workflow.tags) + '" maxlength="500" autocomplete="off" placeholder="macro, RV, event"></label>' +
+        '<label class="workflow-field wide">Next action<input data-workflow-id="' + idea.id + '" data-workflow-field="next_action" value="' + escapeHtml(workflow.next_action) + '" maxlength="700" autocomplete="off" placeholder="Evidence, call, model, or review required next"></label>' +
+      '</div>' +
+      '<div class="workflow-subhead">Investment case</div>' +
+      '<label class="workflow-field">Variant thesis / edge<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="thesis" maxlength="1800" placeholder="What is mispriced, and why can this process identify it?">' + escapeHtml(workflow.thesis) + '</textarea></label>' +
+      '<label class="workflow-field">Contrary evidence<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="contrary" maxlength="1600" placeholder="Strongest disconfirming evidence or alternative explanation">' + escapeHtml(workflow.contrary) + '</textarea></label>' +
+      '<div class="workflow-grid"><label class="workflow-field">Catalyst / expected path<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="catalyst" maxlength="1400" placeholder="What closes the gap?">' + escapeHtml(workflow.catalyst) + '</textarea></label>' +
+      '<label class="workflow-field">Horizon<input data-workflow-id="' + idea.id + '" data-workflow-field="horizon" value="' + escapeHtml(workflow.horizon) + '" maxlength="160" autocomplete="off" placeholder="Days, months, event window"></label></div>' +
+      '<label class="workflow-field">Valuation / entry / payoff<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="payoff" maxlength="1800" placeholder="Market as-of, entry reference, base/bull/bear payoff">' + escapeHtml(workflow.payoff) + '</textarea></label>' +
+      '<label class="workflow-field">Falsifier / downside / exit<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="risk" maxlength="1800" placeholder="What proves the thesis wrong, and what ends the review?">' + escapeHtml(workflow.risk) + '</textarea></label>' +
+      '<label class="workflow-field">Implementation / liquidity / funding<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="implementation" maxlength="1800" placeholder="Instrument, borrow, spread, capacity, financing and exit-cost dependencies">' + escapeHtml(workflow.implementation) + '</textarea></label>' +
+      '<label class="workflow-field">Mandate / portfolio fit<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="portfolio" maxlength="1800" placeholder="Exposure, correlation, concentration, crowding and stress considerations">' + escapeHtml(workflow.portfolio) + '</textarea></label>' +
+      '<div class="workflow-subhead">Self-attested control gates</div><fieldset class="workflow-gates"><legend>Check only after completing the work in controlled fund systems.</legend>' + gateControls + '</fieldset>' +
+      '<label class="workflow-field">Research memo<textarea data-workflow-id="' + idea.id + '" data-workflow-field="note" maxlength="4000" placeholder="Public-source diligence and decision rationale only…">' + escapeHtml(workflow.note) + '</textarea></label>' +
+      '<p class="workflow-warning">Case ' + packet.caseCount + '/8 · controls ' + packet.controlCount + '/6 · workflow ' + packet.workflowCount + '/4. Updated ' + escapeHtml(workflow.updated_at ? formatCheckedAt(workflow.updated_at) : 'not recorded') + (workflow.verified_at ? '; source marked reviewed ' + escapeHtml(formatCheckedAt(workflow.verified_at)) : '') + '.</p>' +
+      '<div class="workflow-actions"><button class="secondary-action" type="button" data-copy-packet="' + idea.id + '">Copy decision packet</button><button class="secondary-action" type="button" data-save-idea="' + idea.id + '">' + (workflow.status === 'archived' ? 'Return to review' : 'Archive packet') + '</button></div>' +
+      '<p class="workflow-warning">Stored only in this browser unless backed up. Not an enterprise audit record. Do not enter confidential, personal, client, position, or regulated information.</p></section>' : '';
   return '<div class="inspector-content">' +
     '<div class="record-eyebrow"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span><time datetime="' + article.date + '">' + formatDate(article.date) + '</time><span class="record-id">' + idea.id.toUpperCase() + '</span></div>' +
     '<h2 class="record-title">' + escapeHtml(article.title) + '</h2>' +
@@ -2149,7 +2385,7 @@ function renderIdeaInspector(idea) {
     '<div class="record-actions">' +
       '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a>' +
       (alternate ? '<a class="secondary-action" href="' + escapeHtml(safeUrl(alternate)) + '" target="_blank" rel="noopener noreferrer">Medium copy ↗</a>' : '') +
-      '<button class="secondary-action ' + (workflow ? 'saved' : '') + '" type="button" data-save-idea="' + idea.id + '">' + (workflow ? '★ Remove from queue' : '☆ Add to review') + '</button>' +
+      (workflow ? '' : '<button class="secondary-action" type="button" data-save-idea="' + idea.id + '">☆ Add to review</button>') +
       '<button class="secondary-action" type="button" data-copy-citation="' + idea.id + '">Copy citation</button>' +
     '</div>' +
     '<div class="record-facts">' + badges.join('') + '</div>' +
@@ -2164,9 +2400,9 @@ function renderIdeaInspector(idea) {
     '<section class="inspector-section"><h3>Reported outcome</h3>' +
       (idea.outcome ? '<p class="reported-outcome">' + escapeHtml(idea.outcome) + '</p>' : '<p class="missing">—</p>') +
     '</section>' +
-    '<section class="inspector-section"><h3>Due-diligence readiness</h3><div class="diligence-grid">' + capturedDiligence + unassessedDiligence + '</div></section>' +
+    '<section class="inspector-section"><h3>Source-extracted coverage</h3><div class="diligence-grid">' + capturedDiligence + unassessedDiligence + '</div></section>' +
     workflowPanel +
-    '<div class="provenance">Rules-based passage extracted from published research by one author. “No reliable stance” means the source did not express a direction the parser could safely classify. Mentions are not verified positions; reported outcomes are not independently verified. Review the original publication before any investment or execution decision.</div>' +
+    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; source collection checked ' + escapeHtml(formatCheckedAt(SNAPSHOT.checked_at)) + '. This is not a live market as-of timestamp. Rules-based passage extracted from published research by one author. “No reliable stance” means the source did not express a direction the parser could safely classify. Mentions are not verified positions; reported outcomes are not independently verified. Review the original publication before any investment or execution decision.</div>' +
     '</div>';
 }
 function renderArticleInspector(article) {
@@ -2198,19 +2434,22 @@ function renderArticleInspector(article) {
     '<div class="provenance">Research metadata and source passages are provided for discovery. Full and Excerpt describe content available to this index, not research quality. Review the original publication before making an investment or execution decision.</div>' +
     '</div>';
 }
+let renderedInspectorKey = '';
 function renderInspector() {
   const container = document.getElementById('inspector-content');
+  const inspectorKey = state.view + ':' + state.selected;
+  const shouldResetScroll = inspectorKey !== renderedInspectorKey;
   if (!state.selected) {
     container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">N/R</div><h2>Select a record</h2><p>Inspect the complete idea, evidence, provenance, and source without losing your position in the monitor.</p></div>';
-    return;
-  }
-  if (state.view === 'research') {
+  } else if (state.view === 'research') {
     const article = ARTICLE_BY_ID.get(state.selected);
     container.innerHTML = article ? renderArticleInspector(article) : '';
   } else {
     const idea = IDEA_BY_ID.get(state.selected);
     container.innerHTML = idea ? renderIdeaInspector(idea) : '';
   }
+  if (shouldResetScroll) document.getElementById('inspector').scrollTop = 0;
+  renderedInspectorKey = inspectorKey;
 }
 
 function render() {
@@ -2228,9 +2467,11 @@ function render() {
   }
   renderActiveFilters();
   updateFacetCounts();
+  renderOrphanedQueue();
   renderInspector();
+  const orphanedCount = state.view === 'queue' ? Array.from(workflowItems.keys()).filter(function (id) { return !IDEA_BY_ID.has(id); }).length : 0;
   document.getElementById('result-summary').textContent =
-    number(records.length) + ' ' + (state.view === 'research' ? 'research notes' : state.view === 'queue' ? 'queued observations' : 'research observations');
+    number(records.length) + ' ' + (state.view === 'research' ? 'research notes' : state.view === 'queue' ? 'current queued observations' : 'research observations') + (orphanedCount ? ' + ' + number(orphanedCount) + ' retained source snapshots' : '');
   updateHash();
   document.getElementById('announcer').textContent =
     number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Research Brief' : state.view === 'research' ? 'Research Library' : state.view === 'queue' ? 'Decision Queue' : 'Observation Monitor');
@@ -2385,11 +2626,52 @@ async function copyText(value,message) {
 }
 function ideaCitation(idea) {
   const article = idea._article;
-  return article.title + ' — ' + directionLabel(idea.direction) + ' — ' +
-    (idea.manager || 'Entity not stated') + ' — ' + article.url;
+  return 'Navnoor Bawa, “' + article.title + ',” ' + sourceLabel(article.source) +
+    ', ' + article.date + '. Observation ' + idea.id.toUpperCase() +
+    '; parsed stance: ' + directionLabel(idea.direction) + '; dataset ' +
+    String(SNAPSHOT.data_checksum || '').slice(0,12) + '. ' + article.url;
 }
 function articleCitation(article) {
-  return article.title + ' (' + formatDate(article.date) + ') — ' + article.url;
+  return 'Navnoor Bawa, “' + article.title + ',” ' + sourceLabel(article.source) +
+    ', ' + article.date + '; dataset ' + String(SNAPSHOT.data_checksum || '').slice(0,12) +
+    '. ' + article.url;
+}
+function decisionPacketText(idea,item) {
+  const article = idea._article;
+  const packet = packetCoverage(item);
+  const checks = DILIGENCE_GATES.map(function (row) {
+    return '- [' + (item.checks[row[0]] ? 'x' : ' ') + '] ' + row[1];
+  }).join('\n');
+  return [
+    'NAVNOOR RESEARCH TERMINAL — HUMAN-ENTERED DECISION PACKET',
+    'Packet coverage: ' + packet.completed + '/' + packet.total + ' (not approval or confidence)',
+    'Status: ' + item.status + ' | Priority: ' + item.priority + ' | Analyst confidence: ' + item.confidence,
+    'Decision owner: ' + (item.owner || 'Not assigned') + ' | Next review: ' + (item.review_date || 'Not set'),
+    'Next action: ' + (item.next_action || 'Not recorded'),
+    '',
+    'SOURCE',
+    ideaCitation(idea),
+    'Published passage: ' + passageText(idea),
+    'Content access: ' + (article.content_status === 'full' ? 'Full text indexed' : 'Excerpt indexed'),
+    '',
+    'INVESTMENT CASE (analyst-entered)',
+    'Variant thesis / edge: ' + (item.thesis || 'Not recorded'),
+    'Contrary evidence: ' + (item.contrary || 'Not recorded'),
+    'Catalyst / expected path: ' + (item.catalyst || 'Not recorded'),
+    'Horizon: ' + (item.horizon || 'Not recorded'),
+    'Valuation / entry / payoff: ' + (item.payoff || 'Not recorded'),
+    'Falsifier / downside / exit: ' + (item.risk || 'Not recorded'),
+    'Implementation / liquidity / funding: ' + (item.implementation || 'Not recorded'),
+    'Mandate / portfolio fit: ' + (item.portfolio || 'Not recorded'),
+    '',
+    'SELF-ATTESTED CONTROL GATES',
+    checks,
+    '',
+    'Tags: ' + (item.tags || 'None'),
+    'Research memo: ' + (item.note || 'Not recorded'),
+    'Updated: ' + (item.updated_at || 'Not recorded'),
+    'Terminal boundary: no live positions, pricing, P&L, sizing, execution, portfolio risk, liquidity, counterparty, investor, or compliance data.'
+  ].join('\n');
 }
 function toggleSaved(id) {
   if (!IDEA_BY_ID.has(id)) return;
@@ -2397,16 +2679,28 @@ function toggleSaved(id) {
   const restoreSave = active && active.closest && active.closest('[data-save-idea="' + CSS.escape(id) + '"]');
   const restoreRow = active && active.closest && active.closest('[data-record-id]');
   const previous = workflowItems.get(id);
-  if (previous) workflowItems.delete(id);
-  else workflowItems.set(id,{id:id,status:'review',note:'',tags:'',updated_at:new Date().toISOString()});
+  if (!previous && workflowItems.size >= MAX_QUEUE_ITEMS) {
+    showToast('Decision queue limit reached; back up and archive older packets');
+    return;
+  }
+  if (previous) {
+    previous.status = previous.status === 'archived' ? 'review' : 'archived';
+    previous.updated_at = new Date().toISOString();
+  } else {
+    const item = newWorkflowItem(id);
+    if (!item) return;
+    workflowItems.set(id,item);
+  }
   const stored = persistWorkflow();
   if (!stored) {
-    if (previous) workflowItems.set(id,previous); else workflowItems.delete(id);
+    if (previous) {
+      previous.status = previous.status === 'archived' ? 'review' : 'archived';
+    } else workflowItems.delete(id);
     savedIdeas = new Set(workflowItems.keys());
     render();
     return;
   }
-  showToast(workflowItems.has(id) ? 'Added to review on this device' : 'Removed from decision queue');
+  showToast(previous ? (previous.status === 'archived' ? 'Decision packet archived' : 'Decision packet returned to review') : 'Added to review on this device');
   render();
   if (restoreSave) {
     const replacement = document.querySelector('[data-save-idea="' + CSS.escape(id) + '"]');
@@ -2429,11 +2723,13 @@ function exportCsv() {
       return [article.date,sourceLabel(article.source),article.title,article.subtitle,article.trade_count,article.content_status,article.url];
     }));
   } else {
-    rows = [['Date','Parsed stance','Instruments','Underlying','Mentioned entity','Original entity mention','Source passage','Edge / thesis','Numeric context','Reported outcome','Documentation coverage','Review flags','Content access','Queue status','Local tags','Local memo','Article','Publication channel','URL']].concat(records.map(function (idea) {
+    rows = [['Date','Parsed stance','Instruments','Underlying','Mentioned entity','Original entity mention','Source passage','Extracted edge / thesis','Numeric context','Reported outcome','Documentation coverage','Review flags','Content access','Queue status','Priority','Decision owner','Next review','Analyst confidence','Next action','Variant thesis','Contrary evidence','Catalyst','Horizon','Valuation / payoff','Falsifier / downside / exit','Implementation / liquidity / funding','Mandate / portfolio fit','Source reviewed','Independent evidence','Live market / valuation checked','Liquidity / funding checked','Portfolio risk checked','Compliance checked','Packet coverage','Local tags','Local memo','Packet updated','Article','Publication channel','URL']].concat(records.map(function (idea) {
       const article = idea._article;
       const workflow = workflowItems.get(idea.id) || {};
+      const packet = packetCoverage(workflowItems.get(idea.id));
       const flags = [idea.negation_risk ? 'negation-risk' : '',idea.reference_line ? 'reference-line' : '',idea.description_truncated ? 'truncated' : ''].filter(Boolean).join('; ');
-      return [article.date,directionLabel(idea.direction),idea.instruments.map(instrumentLabel).join('; '),idea.underlying,idea.manager,idea.manager_raw,passageText(idea),idea.thesis,idea.quant,idea.outcome,idea.documentation_score + '/5',flags,article.content_status,workflow.status || '',workflow.tags || '',workflow.note || '',article.title,sourceLabel(article.source),article.url];
+      const checks = workflow.checks || {};
+      return [article.date,directionLabel(idea.direction),idea.instruments.map(instrumentLabel).join('; '),idea.underlying,idea.manager,idea.manager_raw,passageText(idea),idea.thesis,idea.quant,idea.outcome,idea.documentation_score + '/5',flags,article.content_status,workflow.status || '',workflow.priority || '',workflow.owner || '',workflow.review_date || '',workflow.confidence || '',workflow.next_action || '',workflow.thesis || '',workflow.contrary || '',workflow.catalyst || '',workflow.horizon || '',workflow.payoff || '',workflow.risk || '',workflow.implementation || '',workflow.portfolio || '',checks.source ? 'yes' : '',checks.independent ? 'yes' : '',checks.market ? 'yes' : '',checks.liquidity ? 'yes' : '',checks.portfolio ? 'yes' : '',checks.compliance ? 'yes' : '',workflow.id ? packet.completed + '/' + packet.total : '',workflow.tags || '',workflow.note || '',workflow.updated_at || '',article.title,sourceLabel(article.source),article.url];
     }));
   }
   const csv = '\uFEFF' + rows.map(function (row) { return row.map(csvCell).join(','); }).join('\r\n');
@@ -2479,9 +2775,21 @@ function applyPreset(name) {
   document.getElementById('search').value = '';
   render();
 }
+function markReviewedThroughLatest() {
+  try {
+    localStorage.setItem(LAST_SEEN_KEY,MAX_DATE);
+    lastSeenPublication = MAX_DATE;
+    NEW_SINCE_DATE = MAX_DATE;
+    state.newOnly = false;
+    render();
+    showToast('Research marked reviewed through ' + formatDate(MAX_DATE));
+  } catch (_error) {
+    showToast('Review baseline could not be saved in this browser');
+  }
+}
 function backupQueue() {
   const payload = {
-    schema_version:1,
+    schema_version:2,
     exported_at:new Date().toISOString(),
     data_checksum:String(SNAPSHOT.data_checksum || ''),
     items:Array.from(workflowItems.values())
@@ -2503,15 +2811,23 @@ function restoreQueueFile(file) {
   reader.onload = function () {
     try {
       const payload = JSON.parse(String(reader.result || ''));
-      if (!payload || payload.schema_version !== 1 || !Array.isArray(payload.items)) throw new Error('invalid schema');
-      const restored = new Map();
-      payload.items.slice(0,2000).forEach(function (item) {
-        if (!item || !IDEA_BY_ID.has(item.id) || !VALID_QUEUE_STATUSES.has(item.status)) return;
-        restored.set(item.id,{id:item.id,status:item.status,note:String(item.note || '').slice(0,4000),tags:String(item.tags || '').slice(0,500),updated_at:String(item.updated_at || '')});
+      if (!payload || ![1,2].includes(payload.schema_version) || !Array.isArray(payload.items)) throw new Error('invalid schema');
+      const restored = new Map(workflowItems);
+      let imported = 0;
+      payload.items.slice(0,MAX_QUEUE_ITEMS).forEach(function (value) {
+        const item = normalizeWorkflowItem(value);
+        if (!item) return;
+        const existing = restored.get(item.id);
+        if (!existing && restored.size >= MAX_QUEUE_ITEMS) return;
+        if (!existing || !existing.updated_at || item.updated_at >= existing.updated_at) {
+          restored.set(item.id,item);
+          imported += 1;
+        }
       });
       const previousItems = workflowItems;
       workflowItems = restored;
-      if (persistWorkflow()) showToast(number(restored.size) + ' queue records restored');
+      const snapshotDiffers = Boolean(payload.data_checksum && payload.data_checksum !== String(SNAPSHOT.data_checksum || ''));
+      if (persistWorkflow()) showToast(number(imported) + ' packets merged' + (snapshotDiffers ? '; backup source snapshot differs' : ''));
       else {
         workflowItems = previousItems;
         savedIdeas = new Set(workflowItems.keys());
@@ -2693,6 +3009,13 @@ document.addEventListener('click',function (event) {
     toggleSaved(save.dataset.saveIdea);
     return;
   }
+  const copyPacket = event.target.closest('[data-copy-packet]');
+  if (copyPacket) {
+    const idea = IDEA_BY_ID.get(copyPacket.dataset.copyPacket);
+    const item = workflowItems.get(copyPacket.dataset.copyPacket);
+    if (idea && item) copyText(decisionPacketText(idea,item),'Decision packet copied');
+    return;
+  }
   const copyIdea = event.target.closest('[data-copy-citation]');
   if (copyIdea) {
     const idea = IDEA_BY_ID.get(copyIdea.dataset.copyCitation);
@@ -2720,6 +3043,8 @@ document.addEventListener('click',function (event) {
       backupQueue();
     } else if (action.dataset.action === 'restore-queue') {
       document.getElementById('queue-restore-input').click();
+    } else if (action.dataset.action === 'mark-reviewed') {
+      markReviewedThroughLatest();
     } else if (action.dataset.action === 'inspector') {
       if (window.innerWidth <= 1240) {
         const wasOpen = document.body.classList.contains('inspector-open');
@@ -2740,33 +3065,59 @@ document.addEventListener('click',function (event) {
 });
 
 document.addEventListener('change',function (event) {
-  const statusControl = event.target.closest('[data-workflow-status]');
-  if (!statusControl) return;
-  const item = workflowItems.get(statusControl.dataset.workflowStatus);
-  if (!item || !VALID_QUEUE_STATUSES.has(statusControl.value)) return;
-  const previousStatus = item.status;
-  item.status = statusControl.value;
+  const selectControl = event.target.closest('[data-workflow-select]');
+  const gateControl = event.target.closest('[data-workflow-gate]');
+  const dateControl = event.target.closest('[data-workflow-field="review_date"]');
+  const control = selectControl || gateControl || dateControl;
+  if (!control) return;
+  const item = workflowItems.get(control.dataset.workflowId);
+  if (!item) return;
+  const previous = JSON.parse(JSON.stringify(item));
+  if (selectControl) {
+    const field = selectControl.dataset.workflowSelect;
+    const valid = field === 'status' ? VALID_QUEUE_STATUSES : field === 'priority' ? VALID_PRIORITIES : field === 'confidence' ? VALID_CONFIDENCE : null;
+    if (!valid || !valid.has(selectControl.value)) return;
+    item[field] = selectControl.value;
+  } else if (gateControl) {
+    const gate = gateControl.dataset.workflowGate;
+    if (!DILIGENCE_GATES.some(function (row) { return row[0] === gate; })) return;
+    item.checks[gate] = gateControl.checked;
+    if (gate === 'source') item.verified_at = gateControl.checked ? new Date().toISOString() : '';
+  } else if (dateControl) {
+    item.review_date = validDateInput(dateControl.value);
+  }
   item.updated_at = new Date().toISOString();
-  if (!persistWorkflow()) item.status = previousStatus;
+  if (!persistWorkflow()) workflowItems.set(item.id,previous);
   render();
-  const replacement = document.querySelector('[data-workflow-status="' + CSS.escape(item.id) + '"]');
+  let selector = '[data-workflow-id="' + CSS.escape(item.id) + '"]';
+  if (selectControl) selector += '[data-workflow-select="' + CSS.escape(selectControl.dataset.workflowSelect) + '"]';
+  if (gateControl) selector += '[data-workflow-gate="' + CSS.escape(gateControl.dataset.workflowGate) + '"]';
+  if (dateControl) selector += '[data-workflow-field="review_date"]';
+  const replacement = document.querySelector(selector);
   if (replacement) replacement.focus();
 });
 let workflowInputTimer;
 document.addEventListener('input',function (event) {
-  const note = event.target.closest('[data-workflow-note]');
-  const tags = event.target.closest('[data-workflow-tags]');
-  const control = note || tags;
-  if (!control) return;
-  const id = note ? note.dataset.workflowNote : tags.dataset.workflowTags;
-  const item = workflowItems.get(id);
-  if (!item) return;
-  if (note) item.note = note.value.slice(0,4000);
-  if (tags) item.tags = tags.value.slice(0,500);
+  const control = event.target.closest('[data-workflow-field]');
+  if (!control || control.dataset.workflowField === 'review_date') return;
+  const field = control.dataset.workflowField;
+  const limit = WORKFLOW_TEXT_LIMITS[field];
+  const item = workflowItems.get(control.dataset.workflowId);
+  if (!item || !limit) return;
+  item[field] = control.value.slice(0,limit);
   item.updated_at = new Date().toISOString();
   clearTimeout(workflowInputTimer);
   workflowInputTimer = setTimeout(persistWorkflow,250);
 });
+document.addEventListener('focusout',function (event) {
+  const control = event.target.closest('[data-workflow-field]');
+  if (!control) return;
+  const item = workflowItems.get(control.dataset.workflowId);
+  if (!item) return;
+  clearTimeout(workflowInputTimer);
+  persistWorkflow();
+});
+window.addEventListener('pagehide',function () { clearTimeout(workflowInputTimer); persistWorkflow(); });
 document.getElementById('queue-restore-input').addEventListener('change',function (event) {
   restoreQueueFile(event.target.files && event.target.files[0]);
   event.target.value = '';
@@ -2986,7 +3337,6 @@ document.getElementById('search').value = state.query;
 state.inspector = storedInspector;
 renderStaticStats();
 render();
-try { localStorage.setItem(LAST_SEEN_KEY,MAX_DATE); } catch (_error) {}
 </script>
 </body>
 </html>

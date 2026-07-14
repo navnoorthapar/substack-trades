@@ -32,6 +32,7 @@ cleanup() {
     trap - EXIT
     if [ -n "$WORK_DIR" ] && [ -d "$WORK_DIR" ]; then
         rm -f "$WORK_DIR"/*.json
+        rm -f "$WORK_DIR"/*.previous-missing
         rmdir "$WORK_DIR" 2>/dev/null || true
     fi
     if [ "$LOCK_OWNED" -eq 1 ]; then
@@ -157,6 +158,27 @@ if [ -f "$ROOT/snapshot_manifest.json" ]; then
     VALIDATE_ARGS+=(--previous-manifest "$ROOT/snapshot_manifest.json")
 fi
 "$PYTHON" validate_pipeline.py "${VALIDATE_ARGS[@]}"
+
+# Keep a transaction-local copy so a regression failure after candidate
+# promotion restores the exact previous workspace state. The live site is
+# already protected by the deployment quality gate; this also keeps the next
+# scheduled local run clean and repeatable.
+PROMOTED_OUTPUTS=(
+    all_posts.json
+    medium_posts.json
+    all_sources_posts.json
+    articles_index.json
+    trades_extracted.json
+    snapshot_manifest.json
+)
+for output in "${PROMOTED_OUTPUTS[@]}"; do
+    if [ -f "$ROOT/$output" ]; then
+        cp -p "$ROOT/$output" "$WORK_DIR/$output.previous.json"
+    else
+        : > "$WORK_DIR/$output.previous-missing"
+    fi
+done
+
 mv "$WORK_DIR/substack.candidate.json" "$ROOT/all_posts.json"
 mv "$WORK_DIR/medium.candidate.json" "$ROOT/medium_posts.json"
 mv "$WORK_DIR/posts.candidate.json" "$ROOT/all_sources_posts.json"
@@ -166,7 +188,17 @@ mv "$WORK_DIR/snapshot_manifest.candidate.json" "$ROOT/snapshot_manifest.json"
 
 echo
 echo "=== Running regression suite ==="
-"$PYTHON" -m unittest -q
+if ! "$PYTHON" -m unittest -q; then
+    echo "Regression suite failed; restoring the previous local snapshot." >&2
+    for output in "${PROMOTED_OUTPUTS[@]}"; do
+        if [ -f "$WORK_DIR/$output.previous.json" ]; then
+            mv "$WORK_DIR/$output.previous.json" "$ROOT/$output"
+        else
+            rm -f "$ROOT/$output"
+        fi
+    done
+    exit 1
+fi
 
 TRACKED_OUTPUTS=(articles_index.json medium_posts.json trades_extracted.json snapshot_manifest.json)
 if [ -f .direction_cache.json ]; then

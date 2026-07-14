@@ -11,6 +11,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
+from extract_trades import (
+    classify_direction,
+    extract_outcome,
+    extract_fund_name,
+    extract_quant_details,
+    extract_thesis,
+    extract_underlying,
+    find_instruments,
+    has_negated_trade_signal,
+)
+from filter_trades import clean_underlying
 from write_snapshot_manifest import data_checksum
 
 
@@ -234,7 +245,7 @@ def validate_trades(trades, article_by_url):
     represented_articles = set()
     seen = set()
     required = ('article_title', 'article_url', 'article_date', 'trade_description',
-                'instruments', 'direction')
+                'description_truncated', 'instruments', 'direction')
     for index, trade in enumerate(trades):
         require(isinstance(trade, dict), f'trade {index} is not an object')
         missing = [key for key in required if key not in trade]
@@ -246,6 +257,7 @@ def validate_trades(trades, article_by_url):
         _, calendar_date = parse_iso_date(date, f'trade {index} article date', date_only=True)
         desc = require_string(trade.get('trade_description'),
                               f'trade {index} has no description')
+        description_truncated = trade.get('description_truncated')
         instruments = trade.get('instruments')
         direction = trade.get('direction')
         require(url in article_by_url, f'trade {index} points to an unknown article')
@@ -256,6 +268,8 @@ def validate_trades(trades, article_by_url):
                 f'trade {index} date does not match its article')
         require(len(desc.strip()) >= 20,
                 f'trade {index} has an empty/short description')
+        require(type(description_truncated) is bool,
+                f'trade {index} description_truncated is not a boolean')
         require(isinstance(instruments, list) and instruments,
                 f'trade {index} has no instrument list')
         require(all(isinstance(instrument, str) for instrument in instruments),
@@ -267,11 +281,49 @@ def validate_trades(trades, article_by_url):
                 f'trade {index} has invalid instruments: {sorted(unknown_instruments)}')
         require(type(direction) is str and direction in VALID_DIRECTIONS,
                 f'trade {index} has invalid direction: {direction!r}')
+
+        # Regex directions are deterministic evidence extracted from this exact
+        # published passage.  The local LLM is allowed to resolve only a regex
+        # abstention, so it may supply a direction when this result is
+        # ``unspecified`` but must never override a concrete regex label.
+        passage_direction = classify_direction(desc)
+        require(
+            direction == 'unspecified'
+            or not has_negated_trade_signal(desc)
+            or passage_direction != 'unspecified',
+            f'trade {index} assigns direction {direction!r} to a passage with '
+            'an explicitly negated trade signal',
+        )
+        if passage_direction != 'unspecified':
+            require(direction == passage_direction,
+                    f'trade {index} direction is not derived from its exact '
+                    'trade_description')
+        require(instruments == find_instruments(desc),
+                f'trade {index} instruments are not derived from its exact '
+                'trade_description')
+
+        # These are the fields displayed as evidence in the terminal.  Compare
+        # them with a fresh extraction from the bounded, user-visible passage so
+        # adjacent paragraphs or hidden source text cannot leak into a record.
+        passage_fields = {
+            'underlying': clean_underlying(extract_underlying(desc)),
+            'edge_or_thesis': extract_thesis(desc),
+            'any_quant_detail': extract_quant_details(desc),
+            'outcome_if_mentioned': extract_outcome(desc),
+            'fund_name_if_mentioned': (
+                extract_fund_name(desc) or extract_fund_name(title)
+            ),
+        }
         for optional in ('underlying', 'edge_or_thesis', 'any_quant_detail',
                          'outcome_if_mentioned', 'fund_name_if_mentioned'):
             if optional in trade:
                 require(trade[optional] is None or isinstance(trade[optional], str),
                         f'trade {index} field {optional} has an invalid type')
+        for field, expected in passage_fields.items():
+            if field in trade:
+                require(trade[field] == expected,
+                        f'trade {index} field {field} is not derived from its exact '
+                        'trade_description')
         duplicate_key = (url, desc[:150])
         require(duplicate_key not in seen, f'trade {index} duplicates an earlier trade')
         seen.add(duplicate_key)

@@ -52,24 +52,52 @@ The core pipeline needs Python 3.9+, Git with authenticated write access to
 Ollama with `qwen2.5:14b` is optional; without it, refreshes preserve cached
 classifications and keep the regex-only direction for new residuals.
 
-## Product and data boundary
+## Product scope: institutional research intake
 
-The default Research Brief prioritizes recent, well-documented source passages;
-the Observation Monitor, Research Library, and device-local Decision Queue
-support follow-up diligence. Documentation coverage reports whether five fields
-were captured—market, parsed stance, underlying, thesis, and numeric context.
-It is not a confidence, quality, or investability score.
+This is an institutional research-intake and human-diligence terminal. It helps
+an owner, CIO, portfolio manager, trader, or quantitative researcher discover
+published ideas, inspect the exact supporting passage, triage uncertainty, and
+turn a candidate into a reviewable decision packet. It is deliberately not a
+portfolio-management, order-management, risk, accounting, compliance, or
+investor-reporting system.
 
-The terminal indexes published research by one author across two publication
-channels. It does not claim independent source corroboration, verified fund
-positions, live prices, expected returns, execution records, or portfolio fit.
-Every capital decision still requires review of the original publication and
-independent valuation, catalyst, liquidity/capacity, downside, sizing, legal,
-and portfolio-level diligence.
+That boundary follows the real operating responsibilities described by the
+[SEC's Form PF framework](https://www.sec.gov/files/formpf.pdf), the
+[AIMA 2025 manager due-diligence questionnaire](https://www.aima.org/article/presenting-the-2025-edition.html),
+and [CFA Standard V(A)](https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a).
+The terminal supports published-source discovery and pre-decision research. It
+does not manufacture NAV/P&L, attribution, exposure, leverage, VaR, stress,
+liquidity, funding, counterparty, capacity, execution, compliance, or investor
+metrics without the connected books and records required to calculate them.
 
-Queue status, tags, and memos remain in browser storage unless explicitly
-backed up. Do not put confidential, personal, client, or regulated information
-in the queue.
+The default Research Brief prioritizes recent passages and surfaces active
+diligence, overdue reviews, unverified evidence, and packet coverage. The
+Observation Monitor and Research Library support fast source review. Decision
+Workflow v2 stores an 18-part analyst packet: eight investment-case fields, six
+self-attested control gates, and four workflow controls. Coverage means only
+that fields were populated; it is not approval, conviction, investability, or
+proof that a control was completed.
+
+Each workflow packet retains a bounded source snapshot and dataset checksum.
+If a later extraction changes or removes the observation ID, the packet remains
+visible as an orphaned source snapshot instead of silently disappearing. Backup
+imports merge with existing work, and removal archives a packet rather than
+destroying its history. "New since last review" advances only when the user
+explicitly marks the review baseline; simply opening or reloading the site does
+not acknowledge new research.
+
+All passage-scored evidence fields are derived from the exact passage shown in
+the inspector—never from hidden adjacent paragraphs. Mentioned-entity labels may
+also come from the displayed article title and retain the original extracted
+mention. Truncated captures carry an explicit flag. Direction classification
+abstains when a passage negates or rejects a trade signal unless it subsequently
+states an explicit affirmative position. These controls reduce false precision;
+they do not replace reading the original article or obtaining independent
+evidence.
+
+Workflow packets remain in browser storage unless explicitly backed up. They
+are not an authenticated, shared, or immutable enterprise audit record. Do not
+enter confidential, personal, client, position, or regulated information.
 
 ## Install the scheduled updater
 
@@ -79,7 +107,8 @@ in the queue.
 
 The installer copies the versioned LaunchAgent into
 `~/Library/LaunchAgents`, loads it, verifies it, and starts one refresh. It then
-runs at 09:00, 13:00, and 22:00 local time and once after login.
+runs at **9:00 AM, 1:00 PM, and 10:00 PM local time** (09:00, 13:00, and
+22:00) and once after login.
 
 macOS may block a new background process. Open **System Settings -> General ->
 Login Items & Extensions -> Allow in Background**, enable the `bash`/Unknown
@@ -122,6 +151,14 @@ The release is then fetched over HTTPS and checked against the exact commit,
 record counts, and data checksum. Actions are restricted to GitHub-owned,
 full-SHA-pinned dependencies, and `main` rejects force pushes, deletion, and
 non-linear history while preserving the scheduled updater's normal direct push.
+
+Local refreshes are transactional: new source data is built and validated in an
+isolated candidate directory, the previous promoted snapshot is preserved, and
+any regression-test failure restores that snapshot before Git staging. A
+candidate can therefore neither leak into the next scheduled run nor trigger a
+GitHub Pages deployment unless its full local quality gate passes. GitHub Pages
+then publishes the exact tested artifact atomically and the post-deploy smoke
+test verifies HTTPS, revision, counts, and checksum before declaring it healthy.
 
 Manually redeploy the current `main` snapshot without fetching publications:
 

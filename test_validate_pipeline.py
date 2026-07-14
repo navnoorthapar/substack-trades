@@ -10,6 +10,14 @@ from validate_pipeline import (
     validate_deployable_articles,
     validate_trades,
 )
+from extract_trades import (
+    extract_fund_name,
+    extract_outcome,
+    extract_quant_details,
+    extract_thesis,
+    extract_underlying,
+)
+from filter_trades import clean_underlying
 
 
 ROOT = Path(__file__).parent
@@ -63,7 +71,8 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'article_title': 'Example',
             'article_url': article['url'],
             'article_date': '2026-07-14',
-            'trade_description': 'A sufficiently detailed extracted investment observation.',
+            'trade_description': 'A sufficiently detailed extracted equity investment observation.',
+            'description_truncated': False,
             'instruments': ['equity'],
             'direction': 'long',
         }
@@ -113,6 +122,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'article_url': article['url'],
             'article_date': '2026-07-14',
             'trade_description': 'A sufficiently detailed extracted investment observation.',
+            'description_truncated': False,
             'instruments': ['equity'],
             'direction': 'long',
         }
@@ -120,6 +130,125 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             validate_trades([dict(trade, article_title='Wrong title')], articles)
         with self.assertRaisesRegex(ValueError, 'date does not match'):
             validate_trades([dict(trade, article_date='2026-07-13')], articles)
+
+    def test_trade_requires_boolean_truncation_provenance(self):
+        article = {
+            'url': 'https://navnoorbawa.substack.com/p/example',
+            'source': 'substack',
+            'source_id': 'example',
+            'title': 'Example',
+            'post_date': '2026-07-14',
+            'content_status': 'full',
+        }
+        articles = validate_deployable_articles([article])
+        trade = {
+            'article_title': article['title'],
+            'article_url': article['url'],
+            'article_date': '2026-07-14',
+            'trade_description': 'A sufficiently detailed extracted investment observation.',
+            'instruments': ['equity'],
+            'direction': 'unspecified',
+        }
+        with self.assertRaisesRegex(ValueError, 'missing fields: description_truncated'):
+            validate_trades([trade], articles)
+        with self.assertRaisesRegex(ValueError, 'description_truncated is not a boolean'):
+            validate_trades([dict(trade, description_truncated=0)], articles)
+
+    def test_direction_rejects_negated_signal_and_regex_override(self):
+        article = {
+            'url': 'https://navnoorbawa.substack.com/p/example',
+            'source': 'substack',
+            'source_id': 'example',
+            'title': 'Example',
+            'post_date': '2026-07-14',
+            'content_status': 'full',
+        }
+        articles = validate_deployable_articles([article])
+        base = {
+            'article_title': article['title'],
+            'article_url': article['url'],
+            'article_date': '2026-07-14',
+            'description_truncated': False,
+            'instruments': ['equity'],
+        }
+        negated = dict(
+            base,
+            trade_description=(
+                'The fund did not establish a short position in the company shares '
+                'during the review period.'
+            ),
+            direction='short',
+        )
+        with self.assertRaisesRegex(ValueError, 'explicitly negated trade signal'):
+            validate_trades([negated], articles)
+
+        explicit_short = dict(
+            base,
+            trade_description=(
+                'The fund established a short position in the company shares after '
+                'completing its diligence.'
+            ),
+            direction='long',
+        )
+        with self.assertRaisesRegex(ValueError, 'direction is not derived'):
+            validate_trades([explicit_short], articles)
+
+        affirmative_contrast = dict(
+            base,
+            trade_description=(
+                'The fund did not establish a short position, but instead went long '
+                'the company shares after completing its diligence.'
+            ),
+            direction='long',
+        )
+        self.assertEqual(
+            validate_trades([affirmative_contrast], articles),
+            {article['url']},
+        )
+
+    def test_evidence_fields_are_recomputed_from_exact_visible_passage(self):
+        article = {
+            'url': 'https://navnoorbawa.substack.com/p/example',
+            'source': 'substack',
+            'source_id': 'example',
+            'title': 'Example',
+            'post_date': '2026-07-14',
+            'content_status': 'full',
+        }
+        articles = validate_deployable_articles([article])
+        description = (
+            'The fund bought Acme Capital shares because earnings would accelerate '
+            'by 25%. It made $20 million on the position.'
+        )
+        expected = {
+            'underlying': clean_underlying(extract_underlying(description)),
+            'edge_or_thesis': extract_thesis(description),
+            'any_quant_detail': extract_quant_details(description),
+            'outcome_if_mentioned': extract_outcome(description),
+            'fund_name_if_mentioned': (
+                extract_fund_name(description) or extract_fund_name(article['title'])
+            ),
+        }
+        trade = {
+            'article_title': article['title'],
+            'article_url': article['url'],
+            'article_date': '2026-07-14',
+            'trade_description': description,
+            'description_truncated': False,
+            'instruments': ['equity'],
+            'direction': 'long',
+            **expected,
+        }
+        self.assertEqual(validate_trades([trade], articles), {article['url']})
+
+        for field in expected:
+            with self.subTest(field=field):
+                unsupported = dict(trade, **{field: 'Evidence from a hidden paragraph.'})
+                with self.assertRaisesRegex(ValueError, f'field {field} is not derived'):
+                    validate_trades([unsupported], articles)
+
+        with self.assertRaisesRegex(ValueError, 'instruments are not derived'):
+            validate_trades([dict(trade, instruments=['bond'])], articles)
 
     def test_previous_articles_regression_is_enforced_per_source(self):
         previous = [

@@ -144,6 +144,15 @@ def cache_busted_url(url, revision, attempt):
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), ''))
 
 
+def verified_ssl_context():
+    """Use the platform trust store, with certifi as a verified macOS fallback."""
+    try:
+        import certifi  # Optional; GitHub-hosted runners use the system store.
+    except ImportError:
+        return ssl.create_default_context()
+    return ssl.create_default_context(cafile=certifi.where())
+
+
 def fetch_html(url, revision, attempt, timeout):
     """Fetch one uncached copy of the deployed page over verified HTTPS."""
     requested_url = cache_busted_url(url, revision, attempt)
@@ -156,7 +165,7 @@ def fetch_html(url, revision, attempt, timeout):
             'User-Agent': 'navnoor-terminal-deployment-smoke/1.0',
         },
     )
-    context = ssl.create_default_context()
+    context = verified_ssl_context()
     with urlopen(request, timeout=timeout, context=context) as response:
         final_url = response.geturl()
         if urlsplit(final_url).scheme != 'https':

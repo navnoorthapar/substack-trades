@@ -1,6 +1,8 @@
 import io
 import json
+import sys
 import tempfile
+import types
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
@@ -33,6 +35,28 @@ def fixture_html(
 
 
 class SmokeTestSiteTests(unittest.TestCase):
+    @patch('smoke_test_site.ssl.create_default_context')
+    def test_verified_ssl_context_uses_certifi_when_available(self, create_context):
+        certifi = types.SimpleNamespace(where=lambda: '/trusted/certifi-ca.pem')
+        with patch.dict(sys.modules, {'certifi': certifi}):
+            context = smoke_test_site.verified_ssl_context()
+        self.assertIs(context, create_context.return_value)
+        create_context.assert_called_once_with(cafile='/trusted/certifi-ca.pem')
+
+    @patch('smoke_test_site.ssl.create_default_context')
+    def test_verified_ssl_context_falls_back_to_platform_store(self, create_context):
+        real_import = __import__
+
+        def import_without_certifi(name, *args, **kwargs):
+            if name == 'certifi':
+                raise ImportError('certifi intentionally unavailable')
+            return real_import(name, *args, **kwargs)
+
+        with patch('builtins.__import__', side_effect=import_without_certifi):
+            context = smoke_test_site.verified_ssl_context()
+        self.assertIs(context, create_context.return_value)
+        create_context.assert_called_once_with()
+
     def test_valid_release_metadata_and_core_shell_pass(self):
         smoke_test_site.validate_html(fixture_html(), REVISION, 363, 1327, CHECKSUM)
 

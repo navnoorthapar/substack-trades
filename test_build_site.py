@@ -104,6 +104,36 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertEqual(actual_distribution, expected_distribution)
         self.assertEqual(actual_field_counts, expected_field_counts)
 
+    def test_embedded_passages_and_explicit_truncation_flags_match_the_source(self):
+        """The UI must never silently alter a bounded evidence passage."""
+        source_by_identity = {
+            (
+                str(source.get('article_url') or ''),
+                str(source.get('trade_description') or '').strip(),
+            ): source
+            for source in self.source_ideas
+        }
+        self.assertEqual(
+            len(source_by_identity),
+            len(self.source_ideas),
+            'source URL plus exact passage should identify every observation',
+        )
+        article_by_id = {article['id']: article for article in self.articles}
+        for idea in self.ideas:
+            article = article_by_id[idea['article_id']]
+            identity = (article['url'], idea['description'])
+            self.assertIn(identity, source_by_identity)
+            source = source_by_identity[identity]
+            self.assertEqual(idea['description'], str(source['trade_description']).strip())
+            self.assertIs(type(idea['description_truncated']), bool)
+            self.assertEqual(
+                idea['description_truncated'],
+                bool(source.get('description_truncated', False)),
+                'explicit source truncation metadata must survive the build unchanged',
+            )
+            if idea['description_truncated']:
+                self.assertLessEqual(len(idea['description']), 800)
+
     def test_manager_aliases_are_canonical_but_raw_mentions_are_preserved(self):
         source_mentions = Counter(
             ' '.join(str(idea.get('fund_name_if_mentioned') or '').split())
@@ -154,9 +184,18 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'not independent corroborating sources',
             'not verified positions',
             'not confidence or quality',
-            'Live price and valuation',
-            'liquidity and capacity',
-            'portfolio fit',
+            'Live market price and valuation checked',
+            'Liquidity, capacity, borrow and funding checked',
+            'Mandate / portfolio fit',
+            'New since last review',
+            'Mark reviewed through',
+            'Decision workflow',
+            'In active diligence',
+            '18/18 packet coverage—not approval',
+            'Owner operating boundary',
+            'No synthetic fund metrics',
+            'Requires connected systems',
+            'Positions, NAV/P&amp;L and attribution',
         ):
             self.assertIn(text, self.html)
 
@@ -168,29 +207,123 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn("idea._article.content_status === 'full'", briefing)
         self.assertIn('data-brief-record', briefing)
 
-    def test_decision_queue_is_schema_bounded_local_and_portable(self):
+    def test_new_since_review_requires_an_explicit_acknowledgement(self):
+        initialization_start = self.html.index("let lastSeenPublication = ''")
+        acknowledgement_start = self.html.index('function markReviewedThroughLatest()', initialization_start)
+        initialization = self.html[initialization_start:acknowledgement_start]
+        self.assertIn('localStorage.getItem(LAST_SEEN_KEY)', initialization)
+        self.assertNotIn(
+            'localStorage.setItem(LAST_SEEN_KEY',
+            initialization,
+            'loading or rendering the terminal must not silently acknowledge new research',
+        )
+
+        acknowledgement_end = self.html.index('\nfunction backupQueue()', acknowledgement_start)
+        acknowledgement = self.html[acknowledgement_start:acknowledgement_end]
+        self.assertIn('localStorage.setItem(LAST_SEEN_KEY,MAX_DATE)', acknowledgement)
+        self.assertIn('NEW_SINCE_DATE = MAX_DATE', acknowledgement)
+        self.assertIn("action.dataset.action === 'mark-reviewed'", self.html)
+        self.assertIn('markReviewedThroughLatest();', self.html)
+
+    def test_inspector_resets_only_when_the_selected_context_changes(self):
+        start = self.html.index("let renderedInspectorKey = ''")
+        end = self.html.index('\nfunction render()', start)
+        inspector = self.html[start:end]
+        self.assertIn("const inspectorKey = state.view + ':' + state.selected", inspector)
+        self.assertIn('inspectorKey !== renderedInspectorKey', inspector)
+        self.assertIn("document.getElementById('inspector').scrollTop = 0", inspector)
+        self.assertIn('renderedInspectorKey = inspectorKey', inspector)
+
+    def test_decision_queue_v2_is_structured_bounded_local_and_portable(self):
         for text in (
-            "const WORKFLOW_KEY = 'nrt-decision-queue-v1'",
-            "new Set(['review','monitor','archived'])",
+            "const WORKFLOW_KEY = 'nrt-decision-queue-v2'",
+            "const LEGACY_WORKFLOW_KEY = 'nrt-decision-queue-v1'",
+            "new Set(['review','diligence','monitor','archived'])",
+            "new Set(['low','normal','high'])",
+            "new Set(['unrated','low','medium','high'])",
+            'const MAX_QUEUE_ITEMS = 250',
             "localStorage.getItem('nrt-saved-ideas')",
-            'data-workflow-status',
-            'data-workflow-tags',
-            'data-workflow-note',
+            'Human-entered IC decision packet',
+            'data-workflow-select="status"',
+            'data-workflow-select="priority"',
+            'data-workflow-select="confidence"',
+            'data-workflow-field="owner"',
+            'data-workflow-field="review_date"',
+            'data-workflow-field="next_action"',
+            'data-workflow-field="thesis"',
+            'data-workflow-field="contrary"',
+            'data-workflow-field="catalyst"',
+            'data-workflow-field="horizon"',
+            'data-workflow-field="payoff"',
+            'data-workflow-field="risk"',
+            'data-workflow-field="implementation"',
+            'data-workflow-field="portfolio"',
+            'data-workflow-field="tags"',
+            'data-workflow-field="note"',
             'function backupQueue()',
             'function restoreQueueFile(file)',
             'data_checksum:String(SNAPSHOT.data_checksum',
+            'source_snapshot:sourceSnapshotForIdea(id)',
+            'Retained source snapshots',
+            'Passage snapshot unavailable',
+            'new Map(workflowItems)',
+            'packets merged',
+            'backup source snapshot differs',
             'Queue backup could not be validated',
             'Queue could not be saved in this browser',
             'Copy failed—select and copy manually',
+            'Copy decision packet',
+            'Archive packet',
+            'Return to review',
             'Stored only in this browser unless backed up',
+            'Not an enterprise audit record',
             'Do not enter confidential',
         ):
             self.assertIn(text, self.html)
         self.assertRegex(self.html, r'id="queue-restore-input"[^>]*accept="application/json,\.json"')
-        self.assertRegex(self.html, r'payload\.schema_version\s*!==\s*1')
-        self.assertRegex(self.html, r'payload\.items\.slice\(\s*0\s*,\s*2000\s*\)')
-        self.assertRegex(self.html, r'note:String\([^)]*\)\.slice\(0,4000\)')
-        self.assertRegex(self.html, r'tags:String\([^)]*\)\.slice\(0,500\)')
+        self.assertRegex(self.html, r'schema_version\s*:\s*2')
+        self.assertRegex(self.html, r'!\[1,2\]\.includes\(payload\.schema_version\)')
+        self.assertRegex(self.html, r'payload\.items\.slice\(\s*0\s*,\s*MAX_QUEUE_ITEMS\s*\)')
+        self.assertRegex(self.html, r'item\[field\]\s*=\s*String\(value\[field\]\s*\|\|\s*[\'\"]{2}\)\.slice\(0,WORKFLOW_TEXT_LIMITS\[field\]\)')
+        self.assertIn('note:4000', self.html)
+        self.assertIn('tags:500', self.html)
+
+        for gate_key, label in (
+            ('source', 'Original publication reviewed'),
+            ('independent', 'Independent evidence obtained'),
+            ('market', 'Live market price and valuation checked'),
+            ('liquidity', 'Liquidity, capacity, borrow and funding checked'),
+            ('portfolio', 'Portfolio exposure, correlation and stress checked'),
+            ('compliance', 'Legal and compliance constraints checked'),
+        ):
+            self.assertIn("['" + gate_key + "','" + label + "']", self.html)
+        self.assertIn("const PACKET_CASE_FIELDS = ['thesis','contrary','catalyst','horizon','payoff','risk','implementation','portfolio']", self.html)
+        self.assertIn('total:18', self.html)
+        self.assertIn('completed === 18', self.html)
+        self.assertIn('not approval', self.html)
+
+        toggle_start = self.html.index('function toggleSaved(id)')
+        toggle_end = self.html.index('\nfunction csvCell(value)', toggle_start)
+        toggle = self.html[toggle_start:toggle_end]
+        self.assertIn("previous.status === 'archived' ? 'review' : 'archived'", toggle)
+        self.assertIn('Decision packet archived', toggle)
+        self.assertIn('Decision packet returned to review', toggle)
+
+        self.assertIn("document.addEventListener('focusout'", self.html)
+        self.assertIn("window.addEventListener('pagehide'", self.html)
+
+    def test_institutional_methodology_links_and_operating_boundary_are_explicit(self):
+        for text in (
+            'Records are research observations—not verified trades, current holdings, or recommendations.',
+            'does not contain live prices, positions, P&amp;L, sizing, execution, portfolio risk, liquidity, financing, counterparties, investor records, or compliance approvals.',
+            'https://www.sec.gov/newsroom/press-releases/2024-17',
+            'https://www.aima.org/article/presenting-the-2025-edition.html',
+            'https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a',
+            'These references guide questions; they do not certify a packet.',
+            'Packet coverage counts populated analyst fields and self-attested control gates.',
+            'It is not a confidence score, approval, recommendation, or evidence that a control was performed.',
+        ):
+            self.assertIn(text, self.html)
 
     def test_institutional_views_and_workflows_are_present(self):
         for text in (
@@ -271,6 +404,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         mobile_end = self.html.index('@media(max-width:430px){', mobile_start)
         mobile = self.html[mobile_start:mobile_end]
         self.assertRegex(mobile, r'#search\{[^}]*font-size:16px')
+        self.assertRegex(
+            mobile,
+            r'\.view-tabs\{[^}]*max-width:100%[^}]*overflow-x:auto',
+            'all terminal views must remain horizontally reachable on narrow screens',
+        )
         for selector in (
             r'#search',
             r'\.utility-button',

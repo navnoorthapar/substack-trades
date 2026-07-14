@@ -122,6 +122,35 @@ class DeploymentConfigurationTests(unittest.TestCase):
             r'git commit --only[\s\S]*-- "\$\{TRACKED_OUTPUTS\[@\]\}"',
         )
 
+    def test_refresh_rolls_back_promoted_snapshot_before_any_git_staging(self):
+        for required in (
+            'PROMOTED_OUTPUTS=(',
+            '"$WORK_DIR/$output.previous.json"',
+            '"$WORK_DIR/$output.previous-missing"',
+            'if ! "$PYTHON" -m unittest -q; then',
+            'Regression suite failed; restoring the previous local snapshot.',
+            'mv "$WORK_DIR/$output.previous.json" "$ROOT/$output"',
+            'rm -f "$ROOT/$output"',
+        ):
+            self.assertIn(required, self.refresh)
+
+        validate_at = self.refresh.index('"$PYTHON" validate_pipeline.py')
+        backup_at = self.refresh.index('PROMOTED_OUTPUTS=(')
+        promote_at = self.refresh.index(
+            'mv "$WORK_DIR/substack.candidate.json" "$ROOT/all_posts.json"'
+        )
+        regression_at = self.refresh.index('if ! "$PYTHON" -m unittest -q; then')
+        git_stage_at = self.refresh.index('git add -- "${TRACKED_OUTPUTS[@]}"')
+        self.assertLess(validate_at, backup_at)
+        self.assertLess(backup_at, promote_at)
+        self.assertLess(promote_at, regression_at)
+        self.assertLess(regression_at, git_stage_at)
+
+    def test_transaction_backups_are_removed_by_cleanup(self):
+        cleanup = self.refresh.split('cleanup() {', 1)[1].split('\n}', 1)[0]
+        self.assertIn('rm -f "$WORK_DIR"/*.json', cleanup)
+        self.assertIn('rm -f "$WORK_DIR"/*.previous-missing', cleanup)
+
 
 if __name__ == '__main__':
     unittest.main()
