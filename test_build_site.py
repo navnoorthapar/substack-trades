@@ -1179,16 +1179,28 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             first, second = luminance(left), luminance(right)
             return (max(first, second) + 0.05) / (min(first, second) + 0.05)
 
+        def color_distance(left, right):
+            left_channels = [int(left[index:index + 2], 16) for index in (1, 3, 5)]
+            right_channels = [int(right[index:index + 2], 16) for index in (1, 3, 5)]
+            return sum(
+                (left_channel - right_channel) ** 2
+                for left_channel, right_channel in zip(left_channels, right_channels)
+            ) ** 0.5
+
         dark = tokens(root_match.group('body'))
         light = tokens(light_match.group('body'))
         required_tokens = {
-            'text', 'text-secondary', 'text-muted', 'accent', 'accent-strong', 'on-accent',
+            'bg', 'surface-1', 'surface-2', 'surface-3', 'surface-raised',
+            'selected', 'selected-line', 'selection-bg', 'selection-text',
+            'text', 'text-secondary', 'text-muted',
+            'accent', 'accent-strong', 'accent-hover', 'accent-active', 'accent-soft',
+            'focus', 'on-accent',
             'positive', 'positive-soft', 'negative', 'negative-soft',
             'warning', 'warning-soft', 'warning-line',
             'long', 'long-soft', 'long-line', 'short', 'short-soft', 'short-line',
             'relative', 'relative-soft', 'long-short', 'long-short-soft',
             'quant', 'quant-soft', 'number', 'number-soft', 'checkpoint',
-            'surface-1', 'control-line',
+            'control-line', 'control-line-hover',
         }
         for palette in (dark, light):
             self.assertFalse(
@@ -1196,15 +1208,34 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                 'institutional palette is missing dedicated semantic tokens: ' +
                 ', '.join(sorted(required_tokens - palette.keys())),
             )
-            for foreground in (
-                'text', 'text-secondary', 'text-muted', 'accent',
+            for foreground in ('text', 'text-secondary', 'text-muted', 'accent'):
+                for surface in ('bg', 'surface-1', 'surface-2', 'surface-3', 'surface-raised', 'selected'):
+                    self.assertGreaterEqual(
+                        contrast(palette[foreground], palette[surface]),
+                        4.5,
+                        f'{foreground} on {surface}',
+                    )
+            for semantic in (
                 'positive', 'negative', 'warning',
                 'long', 'short', 'relative', 'long-short',
                 'quant', 'number', 'checkpoint',
             ):
-                self.assertGreaterEqual(contrast(palette[foreground], palette['surface-1']), 4.5, foreground)
-            self.assertGreaterEqual(contrast(palette['on-accent'], palette['accent-strong']), 4.5)
-            self.assertGreaterEqual(contrast(palette['control-line'], palette['surface-1']), 3.0)
+                self.assertGreaterEqual(
+                    contrast(palette[semantic], palette['surface-1']),
+                    4.5,
+                    semantic,
+                )
+            for action_surface in ('accent-strong', 'accent-hover', 'accent-active'):
+                self.assertGreaterEqual(contrast(palette['on-accent'], palette[action_surface]), 4.5)
+            for boundary in ('control-line', 'control-line-hover', 'focus', 'selected-line'):
+                for surface in ('surface-1', 'surface-2', 'surface-3', 'surface-raised'):
+                    self.assertGreaterEqual(
+                        contrast(palette[boundary], palette[surface]),
+                        3.0,
+                        f'{boundary} on {surface}',
+                    )
+            self.assertGreaterEqual(contrast(palette['selection-text'], palette['selection-bg']), 4.5)
+            self.assertGreaterEqual(contrast(palette['selection-bg'], palette['surface-1']), 1.25)
             for semantic in (
                 'positive', 'negative', 'warning',
                 'long', 'short', 'relative', 'long-short',
@@ -1212,13 +1243,113 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             ):
                 self.assertGreaterEqual(contrast(palette[semantic], palette[f'{semantic}-soft']), 4.5, f'{semantic} badge')
 
-        for surface in ('bg', 'surface-1', 'surface-2', 'surface-3'):
+            for first, second in (
+                ('positive', 'long'),
+                ('negative', 'short'),
+                ('accent', 'warning'),
+                ('accent', 'checkpoint'),
+                ('warning', 'checkpoint'),
+            ):
+                self.assertGreaterEqual(
+                    color_distance(palette[first], palette[second]),
+                    30,
+                    f'{first} and {second} must retain distinct meanings',
+                )
+
+        for surface in ('bg', 'surface-1', 'surface-2', 'surface-3', 'surface-raised'):
             channels = [int(dark[surface][index:index + 2], 16) for index in (1, 3, 5)]
-            self.assertLessEqual(max(channels) - min(channels), 10, f'{surface} should remain neutral graphite')
+            self.assertLessEqual(max(channels) - min(channels), 24, f'{surface} should remain cool graphite')
+            self.assertLessEqual(channels[0], channels[1], f'{surface} should not carry a warm cast')
+            self.assertLessEqual(channels[1], channels[2], f'{surface} should not carry a warm cast')
         self.assertGreaterEqual(contrast(light['text-muted'], light['selected']), 4.5)
         self.assertIn('background:var(--accent-strong);color:var(--on-accent)', self.html)
+        self.assertIn('.primary-action:hover{background:var(--accent-hover);border-color:var(--accent-hover)}', self.html)
+        self.assertIn('.primary-action:active{background:var(--accent-active);border-color:var(--accent-active)}', self.html)
         self.assertIn('#search:focus{border-color:var(--control-line)', self.html)
+        self.assertIn('::selection{background:var(--selection-bg);color:var(--selection-text)}', self.html)
         self.assertNotEqual(dark['quant'], dark['relative'])
+
+    def test_interactive_boundaries_patterns_and_forced_colors_are_accessible(self):
+        for selector in (
+            'utility-button:hover', 'date-option:hover', 'preset-button:hover',
+            'command-button:hover', 'filter-chip:hover', 'row-open:hover',
+            'related-idea:hover', 'workflow-gate:hover', 'select-control:hover',
+            'intel-lens:hover', 'load-more:hover', 'secondary-action:hover',
+        ):
+            self.assertRegex(
+                self.html,
+                rf'\.{re.escape(selector)}\{{[^}}]*border-color:var\(--control-line-hover\)',
+                selector,
+            )
+        for selector in ('related-idea', 'workflow-gate'):
+            self.assertRegex(
+                self.html,
+                rf'\.{re.escape(selector)}\{{[^}}]*border:1px solid var\(--control-line\)',
+                selector,
+            )
+        self.assertRegex(
+            self.html,
+            r'button\.research-map-step\{[^}]*border-color:var\(--control-line\)',
+        )
+        for selector in ('mix-short', 'mix-arb', 'mix-ls', 'mix-unspecified'):
+            self.assertRegex(
+                self.html,
+                rf'\.{selector}\{{[^}}]*background-image:repeating-linear-gradient',
+                selector,
+            )
+        self.assertIn('@media(forced-colors:active)', self.html)
+        self.assertNotIn('forced-color-adjust:none', self.html)
+        self.assertIn('background-image:none!important', self.html)
+        self.assertIn('.mix-legend{display:inline!important;white-space:normal}', self.html)
+        self.assertIn('.command-button.active,.intel-lens.active,.data-row.selected,.next-item.selected{', self.html)
+        self.assertIn('@media(prefers-contrast:more)', self.html)
+        self.assertIn('::-webkit-scrollbar-thumb{background:var(--control-line)', self.html)
+        self.assertIn('::-webkit-scrollbar-thumb:hover{background:var(--control-line-hover)}', self.html)
+        self.assertIn('*{scrollbar-color:var(--control-line) transparent}', self.html)
+        self.assertIn('textarea:focus-visible,[tabindex]:focus-visible', self.html)
+        self.assertRegex(
+            self.html,
+            r'button:disabled\{[^}]*color:var\(--text-muted\)[^}]*cursor:not-allowed',
+        )
+        for selector in ('brief-record:hover', 'next-item:hover', 'intel-article-card:hover', 'data-row:hover'):
+            self.assertRegex(
+                self.html,
+                rf'\.{re.escape(selector)}\{{[^}}]*background:var\(--surface-3\)',
+                selector,
+            )
+        self.assertRegex(
+            self.html,
+            r'button\.kpi-item:hover\{[^}]*background:var\(--surface-3\)'
+            r'[^}]*box-shadow:inset 0 -2px var\(--selected-line\)',
+        )
+
+    def test_theme_and_freshness_status_do_not_depend_on_color(self):
+        root_match = re.search(r':root\s*\{(?P<body>.*?)\}\s*html\[data-theme="light"\]', self.html, re.DOTALL)
+        light_match = re.search(r'html\[data-theme="light"\]\s*\{(?P<body>.*?)\}', self.html, re.DOTALL)
+        self.assertIsNotNone(root_match)
+        self.assertIsNotNone(light_match)
+        dark_bg = re.search(r'--bg\s*:\s*(#[0-9a-fA-F]{6})', root_match.group('body')).group(1)
+        light_bg = re.search(r'--bg\s*:\s*(#[0-9a-fA-F]{6})', light_match.group('body')).group(1)
+        self.assertIn(f'<meta name="theme-color" id="theme-color" content="{dark_bg}">', self.html)
+        self.assertIn(f"theme === 'light' ? '{light_bg}' : '{dark_bg}'", self.html)
+        self.assertIn(f"next === 'light' ? '{light_bg}' : '{dark_bg}'", self.html)
+        self.assertIn("candidate === 'light' || candidate === 'dark'", self.html)
+        self.assertGreaterEqual(self.html.count("getElementById('theme-color').content"), 3)
+        self.assertIn("this.setAttribute('aria-label','Switch to '", self.html)
+        self.assertIn('id="freshness-dot" aria-hidden="true"', self.html)
+        self.assertIn('id="freshness-state">Unknown</span>', self.html)
+        self.assertIn("const freshnessStatus = freshnessClass === 'stale' ? 'Stale'", self.html)
+        self.assertIn("freshnessClass === 'fresh' ? 'Current'", self.html)
+        self.assertIn("freshnessClass === 'degraded' ? 'Degraded'", self.html)
+        self.assertIn("document.getElementById('freshness-state').textContent = freshnessStatus", self.html)
+        self.assertIn("freshnessSummary.setAttribute('aria-label',freshnessStatus", self.html)
+        mobile_start = self.html.index('@media(max-width:1020px)')
+        mobile_end = self.html.index('@media(max-width:760px)', mobile_start)
+        mobile_css = self.html[mobile_start:mobile_end]
+        self.assertNotIn('#freshness-state', mobile_css)
+        self.assertIn('.freshness-separator,.freshness>span:last-child', mobile_css)
+        self.assertRegex(self.html, r'\.status-dot\.degraded\{[^}]*transform:rotate\(45deg\)')
+        self.assertRegex(self.html, r'\.status-dot\.stale\{[^}]*border-radius:1px')
 
     def test_semantic_colors_are_scoped_to_information_states(self):
         self.assertRegex(self.html, r'\.status-dot\{[^}]*background:var\(--text-muted\)')
@@ -1289,7 +1420,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         )
         self.assertRegex(
             self.html,
-            r'\.filter-chip:hover\{[^}]*border-color:var\(--line-strong\)',
+            r'\.filter-chip:hover\{[^}]*border-color:var\(--control-line-hover\)',
         )
         self.assertNotRegex(
             self.html,
