@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-07-15T12:46:23Z",
+  "checked_at": "2026-07-15T16:32:11Z",
   "latest_publication": "2026-07-11T15:00:05.870Z",
   "article_count": 363,
   "observation_count": 1268,
   "data_checksum": "81812cf0ec6a66355a77dcb4a15e206dd5b9ca523fbb6b3b0663e5bffce31393",
   "sources": {
     "substack": {
-      "checked_at": "2026-07-15T12:44:49Z",
+      "checked_at": "2026-07-15T16:30:25Z",
       "status": "ok",
       "mode": "complete_api",
       "published_count": 229,
@@ -16,7 +16,7 @@
       "newest": "2026-07-11T15:00:05.870Z"
     },
     "medium": {
-      "checked_at": "2026-07-15T12:45:20Z",
+      "checked_at": "2026-07-15T16:31:17Z",
       "status": "ok",
       "mode": "complete_archive",
       "published_count": 361,
