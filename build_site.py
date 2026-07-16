@@ -462,9 +462,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Institutional research intelligence across hedge funds, systematic strategies, derivatives, and market structure.">
-<meta name="color-scheme" content="dark light">
+<meta name="color-scheme" content="light dark">
 <meta name="application-name" content="Navnoor Research Terminal">
-<meta name="theme-color" id="theme-color" content="#090c10">
+<meta name="theme-color" id="theme-color" content="#e8e9e5">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Navnoor Research Terminal">
 <meta property="og:description" content="Source-backed institutional research dossiers with exact passages, evidence ledgers, checkpoints, and decision boundaries.">
@@ -483,14 +483,17 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <script>
 (function () {
   try {
-    var candidate = localStorage.getItem('nrt-theme');
+    var themeRevision = 'editorial-brief-2026-07';
+    var sameRevision = localStorage.getItem('nrt-theme-revision') === themeRevision;
+    var candidate = sameRevision ? localStorage.getItem('nrt-theme') : '';
     var stored = candidate === 'light' || candidate === 'dark' ? candidate : '';
-    var theme = stored || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    var theme = stored || 'light';
+    localStorage.setItem('nrt-theme-revision',themeRevision);
     document.documentElement.dataset.theme = theme;
-    document.getElementById('theme-color').content = theme === 'light' ? '#eef1f4' : '#090c10';
+    document.getElementById('theme-color').content = theme === 'light' ? '#e8e9e5' : '#111315';
   } catch (_error) {
-    document.documentElement.dataset.theme = 'dark';
-    document.getElementById('theme-color').content = '#090c10';
+    document.documentElement.dataset.theme = 'light';
+    document.getElementById('theme-color').content = '#e8e9e5';
   }
 })();
 </script>
@@ -499,123 +502,138 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 html,body,h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}
 button,input,select,textarea{font:inherit}
 :root{
-  --header-h:58px;
-  --kpi-h:44px;
-  --rail-w:232px;
-  --inspector-w:420px;
-  --bg:#090c10;
-  --surface-1:#10161c;
-  --surface-2:#171e27;
-  --surface-3:#1e2833;
-  --surface-raised:#26313d;
-  --line:#2b3744;
-  --line-strong:#405061;
-  --control-line:#687d93;
-  --control-line-hover:#758697;
-  --text:#f3f6fa;
-  --text-secondary:#b8c2cd;
-  --text-muted:#8e9bab;
-  --accent:#78a9ff;
-  --accent-strong:#2b6fd1;
-  --accent-hover:#245fba;
-  --accent-active:#1f55a7;
-  --accent-soft:#11233f;
+  --header-h:72px;
+  --kpi-h:46px;
+  --rail-w:224px;
+  --inspector-w:384px;
+  --bg:#111315;
+  --surface-1:#181b1d;
+  --surface-2:#202427;
+  --surface-3:#292e31;
+  --surface-raised:#31373b;
+  --line:#363c40;
+  --line-strong:#596166;
+  --control-line:#78848b;
+  --control-line-hover:#95a0a6;
+  --text:#f3f2ed;
+  --text-secondary:#c5c8c6;
+  --text-muted:#9fa7a8;
+  --accent:#8ab4cd;
+  --accent-strong:#315f7b;
+  --accent-hover:#274e66;
+  --accent-active:#204457;
+  --accent-soft:#1d2c35;
   --on-accent:#ffffff;
-  --positive:#59c89c;
-  --positive-soft:#10261f;
-  --positive-line:#2e765e;
-  --negative:#f0838b;
-  --negative-soft:#2b181c;
-  --negative-line:#8a444c;
-  --warning:#e7b85f;
-  --warning-soft:#2b2213;
-  --warning-line:#80642f;
-  --relative:#70b7d3;
-  --relative-soft:#10242c;
-  --relative-line:#3a7082;
-  --long-short:#b5a3ee;
-  --long-short-soft:#211c34;
-  --long-short-line:#68588f;
-  --long:#7ab7a1;
-  --long-soft:#14231f;
-  --long-line:#4f7566;
-  --short:#d69aa0;
-  --short-soft:#271a1d;
-  --short-line:#795258;
-  --quant:#65c2c7;
-  --quant-soft:#0f2529;
-  --quant-line:#347176;
-  --number:#7cc9d3;
-  --number-soft:#11262a;
-  --number-line:#396f77;
-  --checkpoint:#9fb0c2;
+  --positive:#7fc1a5;
+  --positive-soft:#1b2d25;
+  --positive-line:#4f8a72;
+  --negative:#e49387;
+  --negative-soft:#32201e;
+  --negative-line:#a45e58;
+  --warning:#d8b06a;
+  --warning-soft:#302817;
+  --warning-line:#8d713e;
+  --relative:#afa0d1;
+  --relative-soft:#29243a;
+  --relative-line:#71668f;
+  --long-short:#d0a0c4;
+  --long-short-soft:#302333;
+  --long-short-line:#8a6682;
+  --long:#76aec5;
+  --long-soft:#192a31;
+  --long-line:#4f7789;
+  --short:#c59aad;
+  --short-soft:#2e2227;
+  --short-line:#876878;
+  --quant:#86bdcb;
+  --quant-soft:#172b30;
+  --quant-line:#537d87;
+  --number:#d0ad69;
+  --number-soft:#302817;
+  --number-line:#856f40;
+  --checkpoint:#c2a4c8;
   --source-substack:#e88b5b;
   --source-medium:#93a0ae;
-  --focus:#91b9ff;
-  --selected:#142b4a;
-  --selected-line:#78a9ff;
-  --selection-bg:#29486d;
-  --selection-text:#f3f6fa;
+  --brick:#e09488;
+  --brick-soft:#2d1e1c;
+  --brick-line:#96584f;
+  --ochre:#d5ae6d;
+  --ochre-soft:#2b2418;
+  --green:#76b29a;
+  --green-soft:#182922;
+  --focus:#a9d1e8;
+  --selected:#24333c;
+  --selected-line:#8ab4cd;
+  --selection-bg:#385465;
+  --selection-text:#f3f2ed;
   --backdrop:rgba(2,5,9,.78);
   --shadow:0 24px 64px rgba(0,0,0,.56);
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  --serif:"Iowan Old Style",IowanOldStyle,Baskerville,"Times New Roman",Times,serif;
   --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
 }
 html[data-theme="light"]{
   color-scheme:light;
-  --bg:#eef1f4;
-  --surface-1:#fafbfc;
-  --surface-2:#f3f5f7;
-  --surface-3:#e6ebef;
+  --bg:#e8e9e5;
+  --surface-1:#faf9f5;
+  --surface-2:#f1f1ec;
+  --surface-3:#e2e5e3;
   --surface-raised:#ffffff;
-  --line:#d4dbe1;
-  --line-strong:#afbac3;
-  --control-line:#75838f;
-  --control-line-hover:#52616e;
-  --text:#151b21;
-  --text-secondary:#3f4a54;
-  --text-muted:#5d6974;
-  --accent:#1d5f9f;
-  --accent-strong:#164e84;
-  --accent-hover:#103c68;
-  --accent-active:#0c3155;
-  --accent-soft:#e6eff8;
+  --line:#cfd2cd;
+  --line-strong:#9da5a6;
+  --control-line:#687279;
+  --control-line-hover:#4d5a60;
+  --text:#172027;
+  --text-secondary:#3f4a50;
+  --text-muted:#566166;
+  --accent:#173f5d;
+  --accent-strong:#173f5d;
+  --accent-hover:#0f314a;
+  --accent-active:#0c293e;
+  --accent-soft:#e2e9ed;
   --on-accent:#ffffff;
-  --positive:#176b4d;
-  --positive-soft:#e6f3ed;
-  --positive-line:#78ab94;
-  --negative:#a43a47;
-  --negative-soft:#f8e8eb;
-  --negative-line:#c98a92;
-  --warning:#7a5413;
-  --warning-soft:#f7eedb;
-  --warning-line:#c4a566;
-  --relative:#25647e;
-  --relative-soft:#e5f1f5;
-  --relative-line:#78a5b5;
-  --long-short:#5f4a91;
-  --long-short-soft:#efeaf8;
-  --long-short-line:#a396c4;
-  --long:#356e58;
-  --long-soft:#eaf2ee;
-  --long-line:#85a897;
-  --short:#87515a;
-  --short-soft:#f5ecee;
-  --short-line:#b7969c;
-  --quant:#24666b;
-  --quant-soft:#e6f2f2;
-  --quant-line:#7ba8aa;
-  --number:#255f76;
-  --number-soft:#e6f1f5;
-  --number-line:#7ba8b7;
-  --checkpoint:#516678;
-  --source-substack:#a74e24;
+  --positive:#2f6854;
+  --positive-soft:#e5eeea;
+  --positive-line:#81a99a;
+  --negative:#994238;
+  --negative-soft:#f2e8e4;
+  --negative-line:#c08279;
+  --warning:#8a6121;
+  --warning-soft:#f2ecdf;
+  --warning-line:#b49a69;
+  --relative:#596286;
+  --relative-soft:#ebeaf2;
+  --relative-line:#999db7;
+  --long-short:#6d4f78;
+  --long-short-soft:#eee9f1;
+  --long-short-line:#aa95b1;
+  --long:#2b6375;
+  --long-soft:#e3eef1;
+  --long-line:#7fa3af;
+  --short:#7b5364;
+  --short-soft:#f1e9ec;
+  --short-line:#aa8c98;
+  --quant:#255d73;
+  --quant-soft:#e4eff2;
+  --quant-line:#7d9faa;
+  --number:#6c5529;
+  --number-soft:#f1ecdf;
+  --number-line:#ae9b70;
+  --checkpoint:#50656f;
+  --source-substack:#8b3e26;
   --source-medium:#59656d;
-  --focus:#0a66c2;
-  --selected:#e5eef8;
-  --selected-line:#1d5f9f;
-  --selection-bg:#c9ddf2;
-  --selection-text:#151b21;
+  --brick:#8d3c33;
+  --brick-soft:#f2e8e4;
+  --brick-line:#b98379;
+  --ochre:#745018;
+  --ochre-soft:#f2ecdf;
+  --green:#2f6854;
+  --green-soft:#e5eeea;
+  --focus:#1b5c91;
+  --selected:#e2eaec;
+  --selected-line:#386581;
+  --selection-bg:#c9d6d9;
+  --selection-text:#172027;
   --backdrop:rgba(15,23,31,.34);
   --shadow:0 18px 46px rgba(20,31,42,.16);
 }
@@ -640,27 +658,27 @@ a{color:var(--accent)}
 
 /* Global command header */
 .app-header{
-  height:var(--header-h);display:grid;grid-template-columns:auto minmax(240px,640px) auto;
-  align-items:center;gap:20px;padding:0 16px;border-bottom:1px solid var(--line);
+  height:var(--header-h);display:grid;grid-template-columns:minmax(250px,330px) minmax(300px,680px) minmax(340px,1fr);
+  align-items:center;gap:28px;padding:0 22px;border-bottom:1px solid var(--line);
   background:var(--surface-1);position:relative;z-index:50
 }
-.brand{display:flex;align-items:center;gap:10px;min-width:205px}
+.brand{display:flex;align-items:center;gap:12px;min-width:220px}
 .brand-mark{
-  width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line-strong);
-  border-radius:4px;color:var(--accent);font:700 11px var(--mono);letter-spacing:.04em;background:var(--surface-2)
+  width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line-strong);
+  border-radius:0;color:var(--accent);font:700 10px var(--mono);letter-spacing:.08em;background:transparent
 }
-.brand-name{font-weight:650;font-size:12px;letter-spacing:.015em;white-space:nowrap}
-.brand-sub{font:10px var(--mono);color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.brand-name{font:600 18px/1.05 var(--serif);letter-spacing:-.012em;white-space:nowrap}
+.brand-sub{font:9px var(--mono);color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;margin-top:5px}
 .global-search{position:relative;width:100%}
-.search-glyph{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none}
+.search-glyph{position:absolute;left:2px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:15px;pointer-events:none}
 #search{
-  width:100%;height:36px;border:1px solid var(--control-line);border-radius:4px;
-  background:var(--surface-2);color:var(--text);padding:0 52px 0 36px
+  width:100%;height:42px;border:0;border-bottom:1px solid var(--line-strong);border-radius:0;
+  background:transparent;color:var(--text);padding:0 48px 0 26px;font-size:13px
 }
 #search::placeholder{color:var(--text-muted)}
-#search:focus{border-color:var(--control-line);background:var(--surface-1)}
-#search:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
-.search-key{position:absolute;right:9px;top:50%;transform:translateY(-50%);font:10px var(--mono);color:var(--text-muted);border:1px solid var(--control-line);border-radius:3px;padding:1px 5px}
+#search:focus{border-color:var(--control-line);background:transparent}
+#search:focus-visible{outline:0;box-shadow:inset 0 -2px var(--focus)}
+.search-key{position:absolute;right:4px;top:50%;transform:translateY(-50%);font:10px var(--mono);color:var(--text-muted);border:1px solid var(--line-strong);border-radius:0;padding:2px 6px}
 .header-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
 .freshness{display:flex;align-items:center;gap:7px;max-width:350px;overflow:hidden;color:var(--text-secondary);font:10px var(--mono);white-space:nowrap;margin-right:4px}
 .freshness>span:last-child{overflow:hidden;text-overflow:ellipsis}
@@ -670,8 +688,8 @@ a{color:var(--accent)}
 .status-dot.stale{border-radius:1px;background:var(--negative);box-shadow:0 0 0 3px var(--negative-soft)}
 .freshness-separator{color:var(--text-muted)}
 .utility-button{
-  min-height:34px;padding:0 10px;border:1px solid var(--control-line);border-radius:4px;
-  background:var(--surface-2);color:var(--text-secondary);cursor:pointer
+  min-height:36px;padding:0 11px;border:1px solid var(--control-line);border-radius:0;
+  background:transparent;color:var(--text-secondary);cursor:pointer
 }
 .utility-button:hover{background:var(--surface-3);color:var(--text);border-color:var(--control-line-hover)}
 #mobile-filter-button{display:none}
@@ -984,6 +1002,150 @@ button.research-map-step:hover{border-color:var(--control-line-hover);background
 .checkpoint-mini{display:grid;grid-template-columns:92px 1fr;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:10.5px;color:var(--text-secondary)}
 .checkpoint-mini time{font:650 10px var(--mono);color:var(--checkpoint)}
 
+/* Investment Committee Brief — editorial reading system */
+body[data-view="briefing"] .kpi-strip,
+body[data-view="briefing"] .command-bar,
+body[data-view="briefing"] .active-filters,
+body[data-view="briefing"] .orphaned-queue,
+body[data-view="briefing"] .context-bar{display:none}
+body[data-view="briefing"] .workspace{
+  height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h));
+  grid-template-columns:minmax(0,1fr)
+}
+body[data-view="briefing"] .main-panel{grid-column:1/-1;background:var(--bg)}
+body[data-view="briefing"] .briefing-shell{
+  display:block;padding:0;overflow-y:auto;overscroll-behavior:contain;background:var(--bg)
+}
+.intel-wrap{
+  width:min(1600px,100%);min-height:100%;margin:0 auto;padding:0;
+  display:grid;grid-template-columns:220px minmax(620px,1fr) 360px;align-items:start
+}
+.ic-rail{
+  position:sticky;top:0;height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h));
+  overflow-y:auto;border-right:1px solid var(--line);background:var(--surface-2);padding:28px 18px 24px
+}
+.ic-rail-brand{font:600 10px var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--text-muted);margin:0 8px 12px}
+.ic-nav{display:grid;gap:2px}
+.ic-nav-button{
+  width:100%;min-height:37px;display:flex;align-items:center;gap:9px;border:0;border-left:2px solid transparent;
+  border-radius:0;background:transparent;color:var(--text-secondary);padding:7px 9px;text-align:left;cursor:pointer;font-size:11.5px
+}
+.ic-nav-button:hover{background:var(--surface-3);color:var(--text)}
+.ic-nav-button.active{border-left-color:var(--accent);background:var(--selected);color:var(--text);font-weight:650}
+.ic-nav-index{width:20px;color:var(--text-muted);font:9px var(--mono)}
+.ic-rail-rule{height:1px;background:var(--line);margin:24px 8px}
+.ic-rail-heading{font:650 9px var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--text-muted);margin:0 8px 8px}
+.ic-lens-list{display:grid;gap:1px}
+.ic-lens{
+  width:100%;min-height:33px;border:0;border-left:2px solid transparent;border-radius:0;background:transparent;
+  color:var(--text-secondary);padding:6px 9px;text-align:left;cursor:pointer;font-size:10.5px
+}
+.ic-lens:hover{background:var(--surface-3);color:var(--text)}
+.ic-lens.active{border-left-color:var(--brick);background:var(--brick-soft);color:var(--text)}
+.ic-library-facts{display:grid;gap:11px;margin:0 8px}
+.ic-library-fact{display:flex;align-items:baseline;justify-content:space-between;gap:10px;color:var(--text-muted);font-size:10px}
+.ic-library-fact b{font:650 11px var(--mono);color:var(--text-secondary)}
+.ic-standard{margin:20px 8px 0;padding-top:15px;border-top:1px solid var(--line);color:var(--text-muted);font-size:9.5px;line-height:1.55}
+.intel-lead{
+  grid-column:2;min-width:0;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);
+  border-radius:0;background:var(--surface-1);box-shadow:none;overflow:visible
+}
+.intel-lead-inner{padding:38px clamp(32px,3.2vw,58px) 26px}
+.ic-document-meta{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.ic-document-meta-left{display:flex;align-items:center;gap:9px;flex-wrap:wrap;color:var(--text-muted);font:9.5px var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.ic-document-meta-left .source-badge{text-transform:none;letter-spacing:0}
+.ic-open-source{
+  flex:0 0 auto;min-height:32px;display:inline-flex;align-items:center;border:1px solid var(--control-line);border-radius:0;
+  color:var(--text-secondary);padding:0 10px;text-decoration:none;font-size:10px
+}
+.ic-open-source:hover{border-color:var(--control-line-hover);background:var(--surface-3);color:var(--text)}
+.ic-topic{font:650 9.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--brick);margin-bottom:11px}
+.intel-title{
+  max-width:23ch;margin-top:0;font:600 clamp(32px,2.55vw,44px)/1.03 var(--serif);
+  letter-spacing:-.035em;color:var(--text);text-wrap:balance
+}
+.ic-dek{max-width:72ch;margin-top:15px;font:400 16px/1.5 var(--serif);color:var(--text-secondary)}
+.ic-opening-claim{
+  display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;margin-top:26px;padding:17px 18px;
+  border-left:3px solid var(--brick);background:var(--brick-soft)
+}
+.ic-claim-label{font:650 9px/1.45 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--brick)}
+.ic-opening-claim p{font:400 15px/1.58 var(--serif);color:var(--text)}
+.ic-opening-claim .source-tail{grid-column:2;margin-top:-8px}
+.ic-evidence-strip{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--line)
+}
+.ic-evidence-card{min-width:0;padding:20px clamp(24px,2.5vw,40px);background:var(--surface-2)}
+.ic-evidence-card:first-child:nth-last-child(1){grid-column:1/-1}
+.ic-evidence-overline{font:650 9px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
+.ic-evidence-values{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-top:8px}
+.ic-evidence-values span{font:600 clamp(22px,2vw,31px)/1 var(--serif);color:var(--accent)}
+.ic-evidence-values i{font:10px var(--mono);font-style:normal;color:var(--text-muted)}
+.ic-evidence-card h3{margin-top:9px;font:650 10px/1.4 var(--mono);color:var(--text-secondary)}
+.ic-evidence-card p{margin-top:7px;font-size:11.5px;line-height:1.55;color:var(--text-secondary);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+.ic-evidence-card mark{background:transparent;color:var(--accent);font-weight:700}
+.ic-evidence-empty{grid-column:1/-1;padding:20px 40px;background:var(--surface-2);color:var(--text-muted);font-size:11px;line-height:1.55}
+.ic-analysis{padding:30px clamp(32px,3.2vw,58px) 34px;border-bottom:1px solid var(--line)}
+.ic-section-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:18px}
+.ic-section-header h2{font:600 25px/1.1 var(--serif);letter-spacing:-.02em;color:var(--text)}
+.ic-section-header p{max-width:42ch;text-align:right;font-size:10px;line-height:1.5;color:var(--text-muted)}
+.ic-analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.ic-analysis-card{min-width:0;padding-top:13px;border-top:2px solid var(--text)}
+.ic-analysis-card.evidence{border-top-color:var(--accent)}
+.ic-analysis-card h3{display:flex;align-items:center;justify-content:space-between;gap:12px;font:650 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
+.ic-source-kind{font:8.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap}
+.ic-analysis-card h4{margin-top:10px;font:600 15px/1.35 var(--serif);color:var(--text)}
+.ic-analysis-card p{margin-top:8px;font:400 14px/1.62 var(--serif);color:var(--text-secondary)}
+.ic-analysis-card p mark{background:var(--number-soft);color:var(--number);border-bottom:1px solid var(--number-line)}
+.ic-analysis-card.missing p{font-family:var(--sans);font-size:11px;color:var(--text-muted)}
+.ic-dossier{border-top:1px solid var(--line)}
+.ic-dossier-head{padding:30px clamp(32px,3.2vw,58px) 14px}
+.ic-dossier-head h2{font:600 25px/1.1 var(--serif);letter-spacing:-.02em}
+.ic-dossier-head p{max-width:76ch;margin-top:7px;color:var(--text-muted);font-size:10.5px;line-height:1.55}
+.intel-section-grid{border-top:1px solid var(--line)}
+.intel-section{padding:22px clamp(24px,2.5vw,40px);min-height:0}
+.intel-section h3{font:600 16px/1.35 var(--serif)}
+.intel-passage{font:400 14px/1.68 var(--serif);display:block;overflow:visible;-webkit-line-clamp:unset}
+.research-map,.evidence-ledger-section{background:var(--surface-1)}
+.research-map{padding:24px clamp(32px,3.2vw,58px)}
+.evidence-ledger-head{padding:24px clamp(32px,3.2vw,58px) 14px}
+.ledger-row{grid-template-columns:145px minmax(150px,.48fr) minmax(300px,1.52fr)}
+.ledger-passage{font:400 13px/1.62 var(--serif)}
+.intel-actions{padding:18px clamp(32px,3.2vw,58px);background:var(--surface-2)}
+.primary-action,.secondary-action{border-radius:0}
+.intel-side.ic-sheet{
+  grid-column:3;position:sticky;top:0;height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h));
+  display:block;overflow-y:auto;border:0;border-right:1px solid var(--line);background:var(--surface-1)
+}
+.ic-sheet-inner{padding:32px 26px 30px}
+.ic-sheet-eyebrow{font:650 9px var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--brick)}
+.ic-sheet-title{margin-top:8px;font:600 29px/1.06 var(--serif);letter-spacing:-.025em;color:var(--text)}
+.ic-sheet-intro{margin-top:10px;color:var(--text-muted);font-size:10.5px;line-height:1.55}
+.ic-sheet-section{padding:18px 0;border-top:1px solid var(--line)}
+.ic-sheet-section:first-of-type{margin-top:22px}
+.ic-sheet-label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;font:650 9px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted)}
+.ic-authored{display:inline-flex;align-items:center;min-height:18px;padding:0 5px;border:1px solid var(--line-strong);font:8px var(--mono);letter-spacing:.05em;color:var(--text-muted)}
+.ic-sheet-section h3{font:600 13px/1.35 var(--serif);color:var(--text);margin-bottom:7px}
+.ic-sheet-section p{font:400 12.5px/1.58 var(--serif);color:var(--text-secondary)}
+.ic-sheet-section .missing{font-family:var(--sans);font-size:10.5px;color:var(--text-muted)}
+.ic-sheet-section .source-tail{font-size:9px}
+.ic-sheet-checkpoint{padding:9px 0;border-top:1px solid var(--line)}
+.ic-sheet-checkpoint:first-child{border-top:0;padding-top:0}
+.ic-sheet-checkpoint time{display:block;font:650 10px var(--mono);color:var(--ochre)}
+.ic-sheet-checkpoint p{margin-top:4px;font-family:var(--sans);font-size:10.5px;line-height:1.48}
+.ic-sheet-local{background:var(--surface-2);margin:4px -10px 0;padding:16px 10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ic-local-count{font:600 23px var(--serif);color:var(--text)}
+.ic-local-caption{margin-top:3px!important;font-family:var(--sans)!important;font-size:10px!important;color:var(--text-muted)!important}
+.ic-sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.ic-sheet-actions .primary-action,.ic-sheet-actions .secondary-action{min-width:0;padding:7px;text-align:center}
+.ic-boundary-note{margin-top:16px;padding-left:10px;border-left:2px solid var(--line-strong);font-size:9.5px!important;line-height:1.55!important;color:var(--text-muted)!important}
+.intel-stream{grid-column:2/-1;margin:0;border:0;border-top:1px solid var(--line);border-radius:0;background:var(--surface-1)}
+.intel-stream .intel-card-head{padding:16px 20px;background:var(--surface-2)}
+.intel-stream-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+.intel-article-card .intel-card-title{font:600 15px/1.32 var(--serif)}
+.ic-archive-grid{grid-column:2/-1;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.ic-archive-grid>.intel-side-card{border:0;border-radius:0}
+
 /* Dense master tables */
 .command-bar,.active-filters,.context-bar{flex:0 0 auto}
 .table-shell{flex:1 1 auto;min-height:0;overflow:auto;position:relative;scrollbar-width:thin;background:var(--surface-1)}
@@ -1177,6 +1339,35 @@ body.density-comfortable .idea-context,body.density-comfortable .instrument-seco
 body.density-comfortable .manager-name,body.density-comfortable .article-title{font-size:12px}
 body.density-comfortable .data-cell{padding-top:9px;padding-bottom:9px}
 
+/* Quiet editorial consistency across monitor, library, queue, and evidence sheet */
+button,a{touch-action:manipulation}
+body:not([data-view="briefing"]) .main-panel{background:var(--surface-1)}
+body:not([data-view="briefing"]) .filter-rail{background:var(--surface-2)}
+body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border-bottom-color:var(--line-strong)}
+.command-bar{background:var(--surface-1);border-bottom-color:var(--line-strong);padding-left:16px;padding-right:16px}
+.view-tabs{border:0;border-radius:0;background:transparent;padding:0;gap:2px}
+.view-tab{border-radius:0;border-bottom:2px solid transparent;background:transparent}
+.view-tab.active{background:var(--selected);box-shadow:none;border-bottom-color:var(--selected-line)}
+.facet-option,.facet-clear,.date-option,.manager-search,.preset-button,
+.select-control,.command-button,.filter-chip,.load-more,.row-open,.direction-badge,.source-badge,
+.coverage-badge,.evidence-flag,.documentation-badge,.workflow-badge,.related-idea,
+.workflow-panel,.workflow-field select,.workflow-field input,.workflow-field textarea,
+.workflow-gate,.orphaned-item,.provenance,.quant-block,.review-notice{border-radius:0}
+.filter-group{padding:16px 12px}
+.facet-option.active,.facet-clear.active{box-shadow:inset 2px 0 var(--selected-line)}
+.table-shell,.data-row{background:var(--surface-1)}
+.table-head{background:var(--surface-2);border-bottom-color:var(--line-strong)}
+.data-row:hover{background:var(--surface-2)}
+.inspector{background:var(--surface-1);border-left-color:var(--line-strong)}
+.inspector-header{min-height:48px;background:var(--surface-2);border-bottom-color:var(--line-strong)}
+.inspector-content{padding:20px}
+.record-title{font:600 21px/1.24 var(--serif);letter-spacing:-.015em}
+.record-subtitle,.inspector-section p{font-family:var(--serif)}
+.inspector-section h3,.inspector-label{letter-spacing:.11em}
+.workflow-panel{border-top:2px solid var(--accent);background:var(--surface-2)}
+.kpi-strip{background:var(--surface-2)}
+.kpi-item{border-right-color:var(--line)}
+
 /* Overlays and feedback */
 .drawer-backdrop{display:none}
 .toast{
@@ -1248,7 +1439,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .intel-stream{grid-column:auto}
   .intel-stream-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media(max-width:760px){
+@media(max-width:759px){
   :root{--header-h:54px;--kpi-h:42px}
   .app-header{grid-template-columns:auto minmax(0,1fr) auto;padding:0 9px;gap:7px}
   .brand-name{display:none}
@@ -1368,11 +1559,68 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .context-metric:nth-child(n+3){display:none}
   .brief-metrics{grid-template-columns:1fr}
 }
+@media(max-width:1439px){
+  .intel-wrap{grid-template-columns:minmax(0,1fr) 350px}
+  .ic-rail{display:none}
+  .intel-lead{grid-column:1}
+  .intel-side.ic-sheet{grid-column:2}
+  .ic-archive-grid,.intel-stream{grid-column:1/-1}
+}
+@media(max-width:1023px){
+  .intel-wrap{display:block}
+  .intel-lead{border-left:0;border-right:0}
+  .intel-side.ic-sheet{position:relative;top:auto;width:100%;height:auto;max-height:none;border-top:1px solid var(--line);border-right:0;overflow:visible}
+  .ic-sheet-inner{padding:30px clamp(28px,5vw,48px)}
+  .ic-sheet-section{display:grid;grid-template-columns:minmax(120px,.34fr) minmax(0,1fr);column-gap:24px}
+  .ic-sheet-section .ic-sheet-label{grid-column:1;display:block}
+  .ic-sheet-section h3,.ic-sheet-section>p,.ic-sheet-section>.source-tail,.ic-sheet-section>.ic-sheet-checkpoint{grid-column:2}
+  .ic-sheet-section.ic-sheet-local{display:block;margin:4px 0 0;padding:20px 0;background:transparent}
+  .ic-archive-grid{display:block}
+  .ic-archive-grid>.intel-side-card+.intel-side-card{border-top:1px solid var(--line)}
+}
+@media(max-width:759px){
+  :root{--header-h:104px}
+  .app-header{
+    height:var(--header-h);grid-template-columns:minmax(0,1fr) auto;grid-template-rows:52px 52px;
+    gap:0 8px;padding:0 10px
+  }
+  .brand{grid-column:1;grid-row:1;min-width:0}
+  .brand-mark{width:32px;height:32px}
+  .brand-name{display:block;font-size:15px}
+  .brand-sub{display:none}
+  .header-right{grid-column:2;grid-row:1;gap:5px}
+  .header-library,#method-button,.freshness{display:none}
+  .global-search{grid-column:1/-1;grid-row:2}
+  #search{height:44px;padding-left:27px;font-size:16px}
+  body[data-view="briefing"] .workspace{height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h))}
+  .intel-lead-inner{padding:24px 18px 20px}
+  .ic-document-meta{display:block;margin-bottom:20px}
+  .ic-open-source{margin-top:12px;min-height:44px}
+  .intel-title{max-width:none;font-size:clamp(28px,8.2vw,35px);line-height:1.05}
+  .ic-dek{font-size:15px}
+  .ic-opening-claim{grid-template-columns:1fr;gap:9px;margin-top:21px;padding:15px}
+  .ic-opening-claim .source-tail{grid-column:1;margin-top:0}
+  .ic-evidence-strip{grid-template-columns:1fr}
+  .ic-evidence-card{padding:18px}
+  .ic-evidence-card:first-child:nth-last-child(1){grid-column:1}
+  .ic-analysis,.ic-dossier-head{padding:26px 18px}
+  .ic-section-header{display:block}
+  .ic-section-header p{margin-top:7px;text-align:left}
+  .ic-analysis-grid{grid-template-columns:1fr;gap:23px}
+  .research-map,.evidence-ledger-head{padding-left:18px;padding-right:18px}
+  .intel-section,.intel-actions{padding-left:18px;padding-right:18px}
+  .ic-sheet-inner{padding:28px 18px}
+  .ic-sheet-section{display:block}
+  .ic-sheet-section .ic-sheet-label{display:flex}
+  .ic-sheet-section h3,.ic-sheet-section>p,.ic-sheet-section>.source-tail,.ic-sheet-section>.ic-sheet-checkpoint{grid-column:auto}
+  .ic-sheet-actions{grid-template-columns:1fr}
+  .intel-stream-list{grid-template-columns:1fr}
+}
 @media print{
   @page{size:auto;margin:14mm}
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#111!important}
-  .app-header,.kpi-strip,.filter-rail,.command-bar,.active-filters,.context-bar,.inspector,
-  .drawer-backdrop,.intel-head,.intel-side,.intel-stream,.intel-actions,.toast{display:none!important}
+  .app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar,.active-filters,.context-bar,.inspector,
+  .drawer-backdrop,.intel-head,.intel-side,.ic-archive-grid,.intel-stream,.intel-actions,.toast{display:none!important}
   .workspace,.main-panel,.briefing-shell{display:block!important;height:auto!important;overflow:visible!important;background:#fff!important}
   .briefing-shell{padding:0!important}
   .intel-wrap{width:100%;padding:0}
@@ -1425,14 +1673,14 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
 </head>
 <body class="density-compact" data-view="briefing">
 <a class="skip-link" href="#main-panel">Skip to research results</a>
-<h1 class="sr-only">Navnoor Research Terminal</h1>
+<p class="sr-only">Navnoor Research Terminal</p>
 
 <header class="app-header">
   <div class="brand">
     <div class="brand-mark" aria-hidden="true">N/R</div>
     <div>
-      <div class="brand-name">Navnoor Research Terminal</div>
-      <div class="brand-sub">Source-backed article intelligence</div>
+      <div class="brand-name">Navnoor Research</div>
+      <div class="brand-sub">Investment committee library</div>
     </div>
   </div>
   <div class="global-search">
@@ -1444,6 +1692,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   </div>
   <div class="header-right">
     <div class="freshness" id="freshness-summary"><span class="status-dot" id="freshness-dot" aria-hidden="true"></span><span id="freshness-state">Unknown</span><span class="freshness-separator" aria-hidden="true">·</span><span id="freshness-label">research status loading</span></div>
+    <button class="utility-button header-library" type="button" data-view="research">Library</button>
     <button class="utility-button" id="method-button" type="button" aria-label="Show data methodology">Method</button>
     <button class="utility-button" id="theme-button" type="button" aria-label="Switch color theme">Light</button>
     <button class="utility-button" id="shortcut-button" type="button" aria-label="Show keyboard shortcuts">?</button>
@@ -1613,10 +1862,10 @@ __MANAGER_BUTTONS__
   <main class="main-panel" id="main-panel" tabindex="-1">
     <div class="command-bar">
       <nav class="view-tabs" aria-label="Terminal views">
-        <button class="view-tab active" type="button" data-view="briefing">Intelligence Brief</button>
-        <button class="view-tab" type="button" data-view="ideas">Evidence Explorer</button>
-        <button class="view-tab" type="button" data-view="research">Article Library</button>
-        <button class="view-tab" type="button" data-view="queue">Review Queue <span id="saved-count"></span></button>
+        <button class="view-tab active" type="button" data-view="briefing">Latest Brief</button>
+        <button class="view-tab" type="button" data-view="ideas">Evidence Monitor</button>
+        <button class="view-tab" type="button" data-view="research">Research Library</button>
+        <button class="view-tab" type="button" data-view="queue">Decision Queue <span id="saved-count"></span></button>
       </nav>
       <span class="result-summary" id="result-summary"></span>
       <span class="command-spacer"></span>
@@ -2477,7 +2726,7 @@ function renderTableHead() {
       '<div class="head-cell" role="columnheader"><span class="sr-only">Open</span></div>';
   }
   head.querySelectorAll('[data-sort]').forEach(function (button) {
-    button.tabIndex = window.innerWidth <= 760 ? -1 : 0;
+    button.tabIndex = window.innerWidth < 760 ? -1 : 0;
   });
   document.getElementById('data-table').setAttribute('aria-colcount',state.view === 'research' ? '7' : '8');
 }
@@ -2878,6 +3127,59 @@ function intelligenceCard(article) {
     '<span class="intel-card-title">' + escapeHtml(article.title) + '</span><span class="intel-card-claim">' + escapeHtml(articleClaim(article)) + '</span>' +
     '<span class="intel-reasons">' + reasonChips(article,3) + '</span></button>';
 }
+function evidenceSpotlightMarkup(article) {
+  const priority = {evidence:0,mechanism:1,lead:2,countercase:3,falsifier:4,implementation:5};
+  const rows = articleEvidenceLedger(article).slice().sort(function (left,right) {
+    const leftRank = Math.min.apply(null,left.kinds.map(function (kind) { return priority[kind] === undefined ? 9 : priority[kind]; }));
+    const rightRank = Math.min.apply(null,right.kinds.map(function (kind) { return priority[kind] === undefined ? 9 : priority[kind]; }));
+    return leftRank - rightRank;
+  }).slice(0,2);
+  if (!rows.length) {
+    return '<section class="ic-evidence-strip" aria-label="Source-backed numeric evidence"><div class="ic-evidence-empty"><strong>No number-bearing brief passage was identified.</strong> This is an extraction boundary, not a conclusion that the full article contains no quantitative evidence. Open the source for complete context.</div></section>';
+  }
+  return '<section class="ic-evidence-strip" aria-label="Source-backed numeric evidence">' + rows.map(function (row) {
+    const values = row.values.slice(0,5);
+    return '<article class="ic-evidence-card"><div class="ic-evidence-overline">Exact authored passage</div><div class="ic-evidence-values">' +
+      values.map(function (value,index) { return (index ? '<i>·</i>' : '') + '<span>' + escapeHtml(value) + '</span>'; }).join('') +
+      '</div><h3>' + escapeHtml(row.label) + (row.heading ? ' · ' + escapeHtml(row.heading) : '') + '</h3><p>' + highlightArticleNumbers(row.span.text) + '</p>' +
+      '<span class="source-tail" title="' + escapeHtml(String(row.span.sha256 || '')) + '">' + escapeHtml(spanProvenance(row.span)) + '</span></article>';
+  }).join('') + '</section>';
+}
+function analysisPanelMarkup(row,title,className) {
+  if (!row || !row.span || !row.span.text) {
+    return '<section class="ic-analysis-card missing ' + (className || '') + '"><h3>' + escapeHtml(title) + '<span class="ic-source-kind">Rule boundary</span></h3><p>No explicit ' + escapeHtml(title.toLowerCase()) + ' passage was identified by the high-precision section rules. This is not evidence that the argument is absent from the full source.</p></section>';
+  }
+  return '<section class="ic-analysis-card ' + (className || '') + '"><h3>' + escapeHtml(title) + '<span class="ic-source-kind">Authored · exact span</span></h3>' +
+    (row.heading ? '<h4>' + escapeHtml(row.heading) + '</h4>' : '') + '<p>' + highlightArticleNumbers(row.span.text) + '</p>' + exactPassageTail(row.span) + '</section>';
+}
+function decisionSheetSectionMarkup(row,label) {
+  if (!row || !row.span || !row.span.text) {
+    return '<section class="ic-sheet-section"><div class="ic-sheet-label"><span>' + escapeHtml(label) + '</span><span class="ic-authored">Rule boundary</span></div><p class="missing">Not identified by the high-precision section rules. Absence cannot be inferred from this index.</p></section>';
+  }
+  return '<section class="ic-sheet-section"><div class="ic-sheet-label"><span>' + escapeHtml(label) + '</span><span class="ic-authored">Authored</span></div>' +
+    (row.heading ? '<h3>' + escapeHtml(row.heading) + '</h3>' : '') + '<p>' + highlightArticleNumbers(row.span.text) + '</p>' + exactPassageTail(row.span) + '</section>';
+}
+function briefRailMarkup(lenses) {
+  const sourceSnapshot = SNAPSHOT.sources || {};
+  const substackCount = Number(sourceSnapshot.substack && sourceSnapshot.substack.included_count || ARTICLES.filter(function (article) { return article.source === 'substack'; }).length);
+  const mediumCount = Number(sourceSnapshot.medium && sourceSnapshot.medium.included_count || ARTICLES.filter(function (article) { return article.source === 'medium'; }).length);
+  const facts = [
+    [number(Number(SNAPSHOT.article_count || ARTICLES.length)),'Published dossiers'],
+    [number(Number(SNAPSHOT.observation_count || 0)),'Parser observations'],
+    [number(substackCount),'Substack'],[number(mediumCount),'Unique Medium']
+  ];
+  const views = [
+    ['01','briefing','Latest Brief'],['02','ideas','Evidence Monitor'],
+    ['03','research','Research Library'],['04','queue','Decision Queue']
+  ];
+  return '<aside class="ic-rail" aria-label="Research desk navigation"><div class="ic-rail-brand">Research desk</div><nav class="ic-nav">' +
+    views.map(function (row) { return '<button class="ic-nav-button' + (row[1] === 'briefing' ? ' active' : '') + '" type="button" data-view="' + row[1] + '"><span class="ic-nav-index">' + row[0] + '</span><span>' + row[2] + '</span></button>'; }).join('') +
+    '</nav><div class="ic-rail-rule"></div><div class="ic-rail-heading">Article lens</div><div class="ic-lens-list">' +
+    lenses.map(function (row) { return '<button class="ic-lens' + (state.briefLens === row[0] ? ' active' : '') + '" type="button" data-brief-lens="' + row[0] + '" aria-pressed="' + String(state.briefLens === row[0]) + '">' + row[1] + '</button>'; }).join('') +
+    '</div><div class="ic-rail-rule"></div><div class="ic-rail-heading">Library facts</div><div class="ic-library-facts">' +
+    facts.map(function (row) { return '<div class="ic-library-fact"><span>' + row[1] + '</span><b>' + row[0] + '</b></div>'; }).join('') +
+    '</div><p class="ic-standard">Exact published passages remain attached to dates, offsets, and hashes. Rules organize the source; they do not create a recommendation, confidence score, or live market view.</p></aside>';
+}
 let pendingBriefFocus = null;
 function restorePendingBriefFocus() {
   if (!pendingBriefFocus) return;
@@ -2904,13 +3206,18 @@ function renderIntelligenceBrief(records) {
     ['all','Latest'],['checkpoint','Public checkpoints'],['evidence','Contextual evidence'],
     ['countercase','Countercase'],['falsifier','Falsifiers'],['implementation','Implementation / capacity']
   ];
-  if (state.briefLens !== 'all' && briefArchiveFailed && !briefArchiveReady) {
-    shell.innerHTML = '<div class="intel-wrap"><div class="intel-head"><div class="intel-head-copy"><div class="brief-kicker">Research intelligence brief</div><h2>Older dossiers could not be verified</h2><p>The release-bound article asset did not load. The terminal will not mix passages from a different release.</p></div></div><div class="intel-empty"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div></div>';
+  function renderBriefStatus(title,body,actionMarkup) {
+    shell.innerHTML = '<div class="intel-wrap">' + briefRailMarkup(lenses) +
+      '<article class="intel-lead"><div class="intel-lead-inner"><div class="ic-topic">Investment committee brief · source-backed</div><h1 class="intel-title" id="brief-status-title">' + escapeHtml(title) + '</h1><p class="ic-dek">' + escapeHtml(body) + '</p>' + (actionMarkup || '') + '</div></article>' +
+      '<aside class="intel-side ic-sheet"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">Evidence boundary</div><h2 class="ic-sheet-title">Release integrity first</h2><p class="ic-sheet-intro">The terminal will not mix source passages from a different release or treat an unavailable asset as evidence absence.</p></div></aside></div>';
     restorePendingBriefFocus();
+  }
+  if (state.briefLens !== 'all' && briefArchiveFailed && !briefArchiveReady) {
+    renderBriefStatus('Older dossiers could not be verified','The release-bound article asset did not load. The terminal will not mix passages from a different release.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>');
     return;
   }
   if (state.briefLens !== 'all' && !briefArchiveReady && !briefArchiveFailed) {
-    shell.innerHTML = '<div class="intel-wrap"><div class="intel-head"><div class="intel-head-copy"><div class="brief-kicker">Research intelligence brief · source-backed</div><h2>Loading the complete article lens…</h2><p>Retrieving deferred exact passages for older articles and checking them against this release.</p></div></div><div class="intel-side-card"><div class="intel-empty">Preparing ' + escapeHtml(lenses.find(function (row) { return row[0] === state.briefLens; })[1]) + ' across the archive…</div></div></div>';
+    renderBriefStatus('Loading the complete article lens…','Retrieving deferred exact passages for older articles and checking them against this release. Preparing ' + lenses.find(function (row) { return row[0] === state.briefLens; })[1] + ' across the archive.','');
     loadBriefArchive().then(function () {
       if (state.view === 'briefing' && state.briefLens !== 'all') render();
     }).catch(function () {
@@ -2920,15 +3227,14 @@ function renderIntelligenceBrief(records) {
     return;
   }
   if (!records.length) {
-    shell.innerHTML = '<div class="intel-wrap"><div class="intel-head"><div class="intel-head-copy"><div class="brief-kicker">Research intelligence brief</div><h2>No article matches this lens</h2><p>Clear the search or return to the latest-article lens.</p></div><div class="intel-lenses">' + lenses.map(function (row) { return '<button class="intel-lens' + (state.briefLens === row[0] ? ' active' : '') + '" type="button" data-brief-lens="' + row[0] + '" aria-pressed="' + String(state.briefLens === row[0]) + '">' + row[1] + '</button>'; }).join('') + '</div></div><div class="intel-empty"><button class="secondary-action" type="button" data-brief-lens="all">Show latest research</button></div></div>';
-    restorePendingBriefFocus();
+    renderBriefStatus('No article matches this lens','Clear the search or return to the latest published research.','<div class="intel-actions"><button class="secondary-action" type="button" data-brief-lens="all">Show latest research</button></div>');
     return;
   }
   let selected = ARTICLE_BY_ID.get(state.selected);
   if (!selected || !records.some(function (article) { return article.id === selected.id; })) selected = records[0];
   state.selected = selected.id;
   if (!selected.brief && !selected._briefLoadFailed) {
-    shell.innerHTML = '<div class="intel-wrap"><div class="intel-head"><div class="intel-head-copy"><div class="brief-kicker">Research intelligence brief · source-backed</div><h2>Loading the exact article dossier…</h2><p>The older dossier is stored as a deferred release asset so the latest research opens immediately.</p></div></div><div class="intel-side-card"><div class="intel-empty">Validating this dossier against release ' + escapeHtml(String(SNAPSHOT.data_checksum || '').slice(0,12)) + '…</div></div></div>';
+    renderBriefStatus('Loading the exact article dossier…','The older dossier is stored as a deferred release asset. Validating it against release ' + String(SNAPSHOT.data_checksum || '').slice(0,12) + ' before display.','');
     ensureArticleBrief(selected).then(function (briefValue) {
       if (briefValue && state.view === 'briefing' && state.selected === selected.id) render();
       else if (!briefValue && state.view === 'briefing' && state.selected === selected.id) renderIntelligenceBrief(records);
@@ -2936,38 +3242,61 @@ function renderIntelligenceBrief(records) {
     return;
   }
   if (!selected.brief && selected._briefLoadFailed) {
-    shell.innerHTML = '<div class="intel-wrap"><div class="intel-head"><div class="intel-head-copy"><div class="brief-kicker">Research intelligence brief</div><h2>This exact dossier could not be verified</h2><p>The release-bound article asset did not load. No evidence-absence conclusion has been drawn.</p></div></div><div class="intel-empty"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div></div>';
-    restorePendingBriefFocus();
+    renderBriefStatus('This exact dossier could not be verified','The release-bound article asset did not load. No evidence-absence conclusion has been drawn.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>');
     return;
   }
   const brief = selected.brief || {lead:null,sections:[],fallback_evidence:null,checkpoints:[]};
   const sourceSpans = articleBriefSpans(selected);
   const ledger = articleEvidenceLedger(selected);
-  const sectionMarkup = sourceSpans.map(function (row) {
-    return intelligenceSection(row,row.kinds.some(function (kind) { return ['lead','evidence','implementation'].includes(kind); }));
+  const leadRow = sourceSpans.find(function (row) { return row.kinds.includes('lead'); });
+  const evidenceRow = sourceSpans.find(function (row) { return row.kinds.includes('evidence'); });
+  const mechanismRow = sourceSpans.find(function (row) { return row.kinds.includes('mechanism'); });
+  const countercaseRow = sourceSpans.find(function (row) { return row.kinds.includes('countercase'); });
+  const falsifierRow = sourceSpans.find(function (row) { return row.kinds.includes('falsifier'); });
+  const implementationRow = sourceSpans.find(function (row) { return row.kinds.includes('implementation'); });
+  const sectionMarkup = sourceSpans.filter(function (row) {
+    return !row.kinds.some(function (kind) { return ['lead','evidence','mechanism'].includes(kind); });
+  }).map(function (row) {
+    return intelligenceSection(row,row.kinds.includes('implementation'));
   }).join('');
   const checkedDate = String(SNAPSHOT.checked_at || '').slice(0,10) || MAX_DATE;
   const checkpoints = (brief.checkpoints || []).slice().sort(function (left,right) { return left.date.localeCompare(right.date); });
   const checkpointMarkup = checkpoints.map(function (checkpoint) {
     const stateLabel = checkpoint.date < checkedDate ? 'Cited date passed · verification due' : checkpoint.date === checkedDate ? 'Cited date equals dataset check date · verify status' : 'Upcoming cited date';
-    return '<div class="checkpoint"><time datetime="' + checkpoint.date + '">' + escapeHtml(formatDate(checkpoint.date)) + '</time><span class="next-title">' + escapeHtml(stateLabel) + '</span><span class="next-summary">' + escapeHtml(checkpoint.text) + '</span><span class="source-tail" title="' + escapeHtml(String(checkpoint.sha256 || '')) + '">' + escapeHtml(spanProvenance(checkpoint)) + '</span></div>';
+    return '<div class="ic-sheet-checkpoint"><time datetime="' + checkpoint.date + '">' + escapeHtml(formatDate(checkpoint.date)) + ' · ' + escapeHtml(stateLabel) + '</time><p>' + escapeHtml(checkpoint.text) + '</p><span class="source-tail" title="' + escapeHtml(String(checkpoint.sha256 || '')) + '">' + escapeHtml(spanProvenance(checkpoint)) + '</span></div>';
   }).join('');
-  const checkpointCard = checkpoints.length ? '<section class="intel-side-card" id="brief-checkpoints"><div class="intel-card-head"><h3>Public checkpoints cited</h3><span>' + number(checkpoints.length) + ' exact source span' + (checkpoints.length === 1 ? '' : 's') + '</span></div><div class="checkpoint-list">' + checkpointMarkup + '</div><p class="coverage-caveat">Status is measured against the dataset check date. A passed cited date means verification is due; it does not assert that the event occurred.</p></section>' : '';
-  const stream = records.filter(function (article) { return article.id !== selected.id; }).slice(0,9).map(intelligenceCard).join('');
+  const stream = records.filter(function (article) { return article.id !== selected.id; }).slice(0,6).map(intelligenceCard).join('');
   const readLabel = selected.content_status === 'excerpt' ? 'Excerpt indexed' : selected.read_minutes ? selected.read_minutes + ' min read' : 'Full text indexed';
   const exactSpanCount = sourceSpans.length + checkpoints.length;
-  shell.innerHTML = '<div class="intel-wrap">' +
-    '<div class="intel-head"><div class="intel-head-copy"><div class="brief-kicker">Institutional article workbench · source-backed</div><h2>Read the argument. Audit the evidence. Preserve the boundary.</h2><p>Opening authored passage, detected numbers, mechanism, limitations, falsifiers, implementation, and cited checkpoints—organized for diligence while retaining exact authored language and provenance.</p></div>' +
-      '<div class="intel-lenses" aria-label="Article intelligence lenses">' + lenses.map(function (row) { return '<button class="intel-lens' + (state.briefLens === row[0] ? ' active' : '') + '" type="button" data-brief-lens="' + row[0] + '" aria-pressed="' + String(state.briefLens === row[0]) + '">' + row[1] + '</button>'; }).join('') + '</div></div>' +
-    '<div class="intel-grid"><article class="intel-lead" aria-labelledby="lead-article-title"><div class="intel-lead-inner">' +
-      '<div class="intel-meta"><span class="source-badge source-' + selected.source + '">' + sourceLabel(selected.source) + '</span><time datetime="' + selected.date + '">' + escapeHtml(formatDate(selected.date)) + '</time><span>·</span><span>' + escapeHtml(readLabel) + '</span><span>·</span><span>' + number(selected.trade_count) + ' parser-derived observation' + (selected.trade_count === 1 ? '' : 's') + '</span></div>' +
-      '<h2 class="intel-title" id="lead-article-title">' + escapeHtml(selected.title) + '</h2><div class="intel-label" style="margin-top:13px">Opening authored passage</div><p class="intel-claim">' + escapeHtml(articleClaim(selected)) + '</p><div class="intel-reasons" aria-label="Captured article structure">' + reasonChips(selected,8) + '</div></div>' +
-      '<div class="intel-fact-strip"><div class="intel-fact"><b>' + number(exactSpanCount) + '</b><span>Exact source spans</span></div><div class="intel-fact"><b>' + number(ledger.length) + '</b><span>Number-bearing spans</span></div><div class="intel-fact"><b>' + number((brief.sections || []).length) + '</b><span>Authored sections</span></div><div class="intel-fact"><b>' + escapeHtml(selected.content_status === 'full' ? 'Full text' : 'Excerpt') + '</b><span>Indexed source access</span></div></div>' +
-      researchMapMarkup(selected) + evidenceLedgerMarkup(selected) +
-      '<div class="intel-section-grid">' + (sectionMarkup || '<div class="intel-empty">No exact authored section passage is available in this index. Open the original article for full context.</div>') + '</div>' +
-      '<div class="intel-actions"><a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a><button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open source dossier</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy institutional brief</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">Published-source research; not independently verified, a live market as-of, or a portfolio recommendation.</span></div></article>' +
-      '<aside class="intel-side">' + archiveCoverageMarkup(records) + checkpointCard + relatedResearchMarkup(selected) + '</aside>' +
-      '<section class="intel-stream"><div class="intel-card-head"><h3>Recent article dossiers</h3><span>' + number(records.length) + ' in this lens</span></div><div class="intel-stream-list">' + (stream || '<div class="intel-empty">No additional articles in this lens.</div>') + '</div></section></div></div>';
+  const articlePosition = Math.max(1,ARTICLES.findIndex(function (article) { return article.id === selected.id; }) + 1);
+  const localPackets = observationsReady ? (selected._ideas || []).map(function (idea) { return workflowItems.get(idea.id); }).filter(Boolean) : [];
+  const activePackets = localPackets.filter(function (item) { return item.status !== 'archived'; }).length;
+  const subtitleMarkup = selected.subtitle ? '<p class="ic-dek">' + escapeHtml(selected.subtitle) + '</p>' : '';
+  const openingText = leadRow && leadRow.span && leadRow.span.text || articleClaim(selected);
+  const openingLabel = leadRow ? 'Author’s opening thesis' : 'Published article framing';
+  const openingTail = leadRow ? exactPassageTail(leadRow.span) : '<span class="source-tail">Captured article framing · open the original for full context</span>';
+  const checkpointSection = '<section class="ic-sheet-section" id="brief-checkpoints"><div class="ic-sheet-label"><span>Public checkpoints</span><span class="ic-authored">Authored</span></div>' +
+    (checkpointMarkup || '<p class="missing">No dated public checkpoint was identified by the high-precision rules.</p>') +
+    '<p class="ic-boundary-note">Status is measured against the dataset check date. A passed cited date means verification is due; it does not assert that the event occurred.</p></section>';
+  shell.innerHTML = '<div class="intel-wrap">' + briefRailMarkup(lenses) +
+    '<article class="intel-lead" aria-labelledby="lead-article-title"><div class="intel-lead-inner">' +
+      '<div class="ic-document-meta"><div class="ic-document-meta-left"><span class="source-badge source-' + selected.source + '">' + sourceLabel(selected.source) + '</span><time datetime="' + selected.date + '">' + escapeHtml(formatDate(selected.date)) + '</time><span>·</span><span>' + escapeHtml(readLabel) + '</span><span>·</span><span>Dossier ' + number(articlePosition) + ' of ' + number(ARTICLES.length) + '</span></div><a class="ic-open-source" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a></div>' +
+      '<div class="ic-topic">Investment committee brief · published information</div><h1 class="intel-title" id="lead-article-title">' + escapeHtml(selected.title) + '</h1>' + subtitleMarkup +
+      '<section class="ic-opening-claim"><div class="ic-claim-label">' + openingLabel + '</div><p>' + highlightArticleNumbers(openingText) + '</p>' + openingTail + '</section></div>' +
+      evidenceSpotlightMarkup(selected) +
+      '<section class="ic-analysis" aria-labelledby="analysis-title"><div class="ic-section-header"><h2 id="analysis-title">How the argument works</h2><p>Exact authored passages, organized by research role. No analyst conclusion, score, or portfolio recommendation is inferred.</p></div><div class="ic-analysis-grid">' +
+        analysisPanelMarkup(mechanismRow,'Mechanism','') + analysisPanelMarkup(evidenceRow,'Evidence','evidence') +
+      '</div></section>' +
+      '<section class="ic-dossier"><div class="ic-dossier-head"><div class="ic-topic">Audit trail</div><h2>Source dossier and decision boundaries</h2><p>The evidence ledger retains detected values with their original context. Section coverage records what the rules captured; it is not a judgment of research quality.</p></div>' +
+        researchMapMarkup(selected) + evidenceLedgerMarkup(selected) +
+        '<div class="intel-section-grid">' + (sectionMarkup || '<div class="intel-empty">No additional countercase, falsifier, or implementation passage was identified. Open the original article for full context.</div>') + '</div>' +
+      '</section><div class="intel-actions"><a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a><button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open source dossier</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy IC brief</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
+    '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">IC decision sheet · source + local</div><h2 class="ic-sheet-title" id="decision-sheet-title">What changes our mind</h2><p class="ic-sheet-intro">The source-defined thesis, contrary case, falsifier, and public watch items remain separate from device-local workflow.</p>' +
+      decisionSheetSectionMarkup(leadRow,'Author’s thesis') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase') + decisionSheetSectionMarkup(falsifierRow,'What would change the view') + decisionSheetSectionMarkup(implementationRow,'What to watch') + checkpointSection +
+      '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Device-local IC overlay</span><span class="ic-authored">Local · this device</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active source-passage packet' + (activePackets === 1 ? '' : 's') + ' for this article. Packets attach to individual observations; this brief never silently assigns an article-level recommendation.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open decision queue</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy brief</button></div></section>' +
+      '<p class="ic-boundary-note">Evidence boundary: exact published-source passages; not independently verified, not a live market as-of, and not a portfolio recommendation. Full source context remains controlling.</p></div></aside>' +
+    '<section class="ic-archive-grid">' + archiveCoverageMarkup(records) + relatedResearchMarkup(selected) + '</section>' +
+    '<section class="intel-stream"><div class="intel-card-head"><h3>Recent article dossiers</h3><span>' + number(records.length) + ' in this lens</span></div><div class="intel-stream-list">' + (stream || '<div class="intel-empty">No additional articles in this lens.</div>') + '</div></section></div>';
   restorePendingBriefFocus();
 }
 
@@ -3343,7 +3672,7 @@ function render() {
     number(records.length) + ' ' + (isArticleView() ? 'article dossiers' : state.view === 'queue' ? 'current queued observations' : 'research observations') + (orphanedCount ? ' + ' + number(orphanedCount) + ' retained source snapshots' : '');
   updateHash();
   document.getElementById('announcer').textContent =
-    number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Intelligence Brief' : state.view === 'research' ? 'Article Library' : state.view === 'queue' ? 'Review Queue' : 'Evidence Explorer');
+    number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Latest Brief' : state.view === 'research' ? 'Research Library' : state.view === 'queue' ? 'Decision Queue' : 'Evidence Monitor');
 }
 
 function resetFilters() {
@@ -4168,7 +4497,7 @@ document.getElementById('inspector-close').addEventListener('click',function () 
 document.getElementById('theme-button').addEventListener('click',function () {
   const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
   document.documentElement.dataset.theme = next;
-  document.getElementById('theme-color').content = next === 'light' ? '#eef1f4' : '#090c10';
+  document.getElementById('theme-color').content = next === 'light' ? '#e8e9e5' : '#111315';
   try { localStorage.setItem('nrt-theme',next); } catch (_error) {}
   this.textContent = next === 'light' ? 'Dark' : 'Light';
   this.setAttribute('aria-label','Switch to ' + (next === 'light' ? 'dark' : 'light') + ' theme');
@@ -4286,7 +4615,7 @@ window.addEventListener('resize',function () {
   if (window.innerWidth > 1240) document.body.classList.remove('inspector-open');
   if (window.innerWidth > 1020) document.body.classList.remove('filters-open');
   document.querySelectorAll('#table-head [data-sort]').forEach(function (button) {
-    button.tabIndex = window.innerWidth <= 760 ? -1 : 0;
+    button.tabIndex = window.innerWidth < 760 ? -1 : 0;
   });
   syncOverlayAccessibility();
 });
@@ -4328,7 +4657,7 @@ function renderStaticStats() {
   const freshnessSummary = document.getElementById('freshness-summary');
   freshnessSummary.title = healthDetail + ' | Next scheduled checks: 9 AM, 1 PM, and 10 PM Asia/Kolkata';
   freshnessSummary.setAttribute('aria-label',freshnessStatus + '. ' + label.textContent + '. ' + healthDetail);
-  const theme = document.documentElement.dataset.theme || 'dark';
+  const theme = document.documentElement.dataset.theme || 'light';
   const themeButton = document.getElementById('theme-button');
   themeButton.textContent = theme === 'light' ? 'Dark' : 'Light';
   themeButton.setAttribute('aria-label','Switch to ' + (theme === 'light' ? 'dark' : 'light') + ' theme');

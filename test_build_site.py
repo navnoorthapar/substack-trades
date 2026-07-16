@@ -294,23 +294,28 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertRegex(self.html, r"const state\s*=\s*\{\s*view:['\"]briefing['\"]")
         self.assertIn('function renderIntelligenceBrief(records)', self.html)
         for text in (
-            'Intelligence Brief',
-            'Institutional article workbench · source-backed',
-            'Read the argument. Audit the evidence. Preserve the boundary.',
-            'Opening authored passage, detected numbers, mechanism, limitations, falsifiers, implementation, and cited checkpoints',
-            'retaining exact authored language and provenance',
-            'Opening authored passage',
-            'Captured article structure',
+            'Latest Brief',
+            'Investment committee brief · published information',
+            'Author’s opening thesis',
+            'Exact authored passage',
+            'How the argument works',
+            'No analyst conclusion, score, or portfolio recommendation is inferred.',
+            'Source dossier and decision boundaries',
             'Institutional diligence map',
             'Evidence ledger',
             'Detected numbers with their authored context',
             'Dossier coverage in this lens',
             'Related archive context',
             'Recent article dossiers',
+            'What changes our mind',
+            'Author’s countercase',
+            'What would change the view',
+            'Device-local IC overlay',
+            'Local · this device',
             'Open source dossier',
-            'Copy institutional brief',
+            'Copy IC brief',
             'Print / PDF',
-            'Published-source research; not independently verified, a live market as-of, or a portfolio recommendation.',
+            'not independently verified, not a live market as-of, and not a portfolio recommendation',
             'Evidence boundaries',
             'Instrument extraction map',
             'Parser-derived observations',
@@ -329,6 +334,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('articleEvidenceLedger(selected)', briefing)
         self.assertIn('researchMapMarkup(selected)', briefing)
         self.assertIn('evidenceLedgerMarkup(selected)', briefing)
+        self.assertIn('evidenceSpotlightMarkup(selected)', briefing)
+        self.assertIn("analysisPanelMarkup(mechanismRow,'Mechanism'", briefing)
+        self.assertIn("decisionSheetSectionMarkup(countercaseRow,'Author’s countercase')", briefing)
+        self.assertIn('briefRailMarkup(lenses)', briefing)
         self.assertIn('archiveCoverageMarkup(records)', briefing)
         self.assertIn('relatedResearchMarkup(selected)', briefing)
         self.assertIn('map(intelligenceCard)', briefing)
@@ -340,6 +349,56 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         contextual_start = self.html.index('function contextualRecords(skip)')
         contextual_end = self.html.index('\nfunction recordArticle', contextual_start)
         self.assertIn('return ARTICLES.filter', self.html[contextual_start:contextual_end])
+
+    def test_editorial_brief_uses_article_evidence_without_inventing_analysis(self):
+        spotlight_start = self.html.index('function evidenceSpotlightMarkup(article)')
+        spotlight_end = self.html.index('\nfunction analysisPanelMarkup', spotlight_start)
+        spotlight = self.html[spotlight_start:spotlight_end]
+        for text in (
+            'articleEvidenceLedger(article)',
+            'row.values.slice(0,5)',
+            'row.span.text',
+            'spanProvenance(row.span)',
+            'Exact authored passage',
+            'not a conclusion that the full article contains no quantitative evidence',
+        ):
+            self.assertIn(text, spotlight)
+        for forbidden in ('documentation_score', 'confidence', 'portfolio relevance', 'Math.round'):
+            self.assertNotIn(forbidden, spotlight)
+
+        briefing_start = self.html.index('function renderIntelligenceBrief(records)')
+        briefing_end = self.html.index('\nfunction contextualRecords', briefing_start)
+        briefing = self.html[briefing_start:briefing_end]
+        self.assertIn("const openingLabel = leadRow ? 'Author’s opening thesis' : 'Published article framing'", briefing)
+        self.assertIn('Packets attach to individual observations', briefing)
+        self.assertIn('never silently assigns an article-level recommendation', briefing)
+        self.assertNotIn('Analyst synthesis', briefing)
+        self.assertNotIn('Evidence quality', briefing)
+
+    def test_editorial_visual_system_is_light_first_and_responsive(self):
+        for text in (
+            '--serif:"Iowan Old Style"',
+            '--bg:#e8e9e5',
+            '--surface-1:#faf9f5',
+            '--text:#172027',
+            '--accent:#173f5d',
+            '.intel-title{',
+            'var(--serif)',
+            '.ic-rail{',
+            '.intel-side.ic-sheet{',
+            '@media(max-width:1439px)',
+            '@media(max-width:1023px)',
+            '@media(max-width:759px)',
+        ):
+            self.assertIn(text, self.html)
+        self.assertIn("var theme = stored || 'light'", self.html)
+        self.assertIn("var themeRevision = 'editorial-brief-2026-07'", self.html)
+        self.assertRegex(
+            self.html,
+            r'body\[data-view="briefing"\] \.kpi-strip,\s*body\[data-view="briefing"\] \.command-bar',
+        )
+        self.assertRegex(self.html, r'\.intel-wrap\{[^}]*grid-template-columns:220px minmax\(620px,1fr\) 360px')
+        self.assertNotIn('min-width:1180px', self.html)
 
     def test_displayed_article_framing_rejects_boilerplate(self):
         contaminated = [
@@ -628,7 +687,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
         self.assertIn('data-copy-brief="', self.html)
         self.assertIn('data-print-brief', self.html)
-        self.assertIn('Copy institutional brief', self.html)
+        self.assertIn('Copy IC brief', self.html)
         self.assertIn('Print / PDF', self.html)
         self.assertRegex(
             self.html,
@@ -649,7 +708,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         print_end = self.html.index('@media(prefers-reduced-motion', print_start)
         print_css = self.html[print_start:print_end]
         self.assertIn('.intel-passage{display:block;overflow:visible;-webkit-line-clamp:unset}', print_css)
-        self.assertIn('.app-header,.kpi-strip,.filter-rail,.command-bar', print_css)
+        self.assertIn('.app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar', print_css)
 
     def test_checkpoint_status_uses_snapshot_check_date_not_viewer_clock(self):
         start = self.html.index('function renderIntelligenceBrief(records)')
@@ -806,10 +865,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_institutional_views_and_workflows_are_present(self):
         for text in (
-            'Intelligence Brief',
-            'Evidence Explorer',
-            'Article Library',
-            'Review Queue',
+            'Latest Brief',
+            'Evidence Monitor',
+            'Research Library',
+            'Decision Queue',
             'Research evidence',
             'Export CSV',
             'Copy view',
@@ -845,7 +904,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_accessibility_structure_and_focus_behavior(self):
         self.assertIn('class="skip-link"', self.html)
-        self.assertIn('<h1 class="sr-only">', self.html)
+        self.assertIn('<p class="sr-only">Navnoor Research Terminal</p>', self.html)
+        self.assertIn('<h1 class="intel-title" id="lead-article-title">', self.html)
         self.assertIn('role="grid"', self.html)
         self.assertIn('aria-multiselectable="false"', self.html)
         self.assertIn('role="gridcell"', self.html)
@@ -957,7 +1017,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertRegex(self.html, r"setAttribute\(['\"]role['\"],['\"]dialog['\"]\)")
         self.assertRegex(self.html, r"setAttribute\(['\"]aria-modal['\"],['\"]true['\"]\)")
 
-        mobile_start = self.html.index('@media(max-width:760px){')
+        mobile_start = self.html.index('@media(max-width:759px){')
         mobile_end = self.html.index('@media(max-width:430px){', mobile_start)
         mobile = self.html[mobile_start:mobile_end]
         self.assertRegex(mobile, r'#search\{[^}]*font-size:16px')
@@ -1330,10 +1390,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIsNotNone(light_match)
         dark_bg = re.search(r'--bg\s*:\s*(#[0-9a-fA-F]{6})', root_match.group('body')).group(1)
         light_bg = re.search(r'--bg\s*:\s*(#[0-9a-fA-F]{6})', light_match.group('body')).group(1)
-        self.assertIn(f'<meta name="theme-color" id="theme-color" content="{dark_bg}">', self.html)
+        self.assertIn(f'<meta name="theme-color" id="theme-color" content="{light_bg}">', self.html)
         self.assertIn(f"theme === 'light' ? '{light_bg}' : '{dark_bg}'", self.html)
         self.assertIn(f"next === 'light' ? '{light_bg}' : '{dark_bg}'", self.html)
         self.assertIn("candidate === 'light' || candidate === 'dark'", self.html)
+        self.assertIn("var theme = stored || 'light'", self.html)
+        self.assertIn("localStorage.setItem('nrt-theme-revision',themeRevision)", self.html)
         self.assertGreaterEqual(self.html.count("getElementById('theme-color').content"), 3)
         self.assertIn("this.setAttribute('aria-label','Switch to '", self.html)
         self.assertIn('id="freshness-dot" aria-hidden="true"', self.html)
@@ -1344,7 +1406,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn("document.getElementById('freshness-state').textContent = freshnessStatus", self.html)
         self.assertIn("freshnessSummary.setAttribute('aria-label',freshnessStatus", self.html)
         mobile_start = self.html.index('@media(max-width:1020px)')
-        mobile_end = self.html.index('@media(max-width:760px)', mobile_start)
+        mobile_end = self.html.index('@media(max-width:759px)', mobile_start)
         mobile_css = self.html[mobile_start:mobile_end]
         self.assertNotIn('#freshness-state', mobile_css)
         self.assertIn('.freshness-separator,.freshness>span:last-child', mobile_css)
