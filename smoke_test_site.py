@@ -16,12 +16,16 @@ from urllib.request import Request, urlopen
 
 MAX_RESPONSE_BYTES = 12 * 1024 * 1024
 MAX_DEFERRED_BYTES = 2 * 1024 * 1024
+HTML_ASSET_NAME = 'index.html'
 DEFERRED_ASSET_NAME = 'article_briefs.json'
+OBSERVATION_ASSET_NAME = 'observations.json'
 REQUIRED_META = {
     'nrt-revision',
     'nrt-article-count',
     'nrt-observation-count',
     'nrt-data-checksum',
+    'nrt-brief-archive-sha256',
+    'nrt-observation-archive-sha256',
 }
 REQUIRED_ELEMENT_IDS = {
     'search',
@@ -32,6 +36,10 @@ REQUIRED_ELEMENT_IDS = {
     'inspector',
 }
 CHECKSUM_RE = re.compile(r'^[0-9a-f]{64}$')
+ASSET_DIGEST_META = {
+    DEFERRED_ASSET_NAME: 'nrt-brief-archive-sha256',
+    OBSERVATION_ASSET_NAME: 'nrt-observation-archive-sha256',
+}
 
 
 class TerminalHTMLParser(HTMLParser):
@@ -40,6 +48,7 @@ class TerminalHTMLParser(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.meta = {}
+        self.meta_values = {}
         self.element_ids = set()
         self.title_parts = []
         self._in_title = False
@@ -52,7 +61,10 @@ class TerminalHTMLParser(HTMLParser):
         if tag.casefold() == 'meta':
             name = attributes.get('name')
             if name:
-                self.meta[name.casefold()] = attributes.get('content', '')
+                normalized_name = name.casefold()
+                content = attributes.get('content', '')
+                self.meta[normalized_name] = content
+                self.meta_values.setdefault(normalized_name, []).append(content)
         elif tag.casefold() == 'title':
             self._in_title = True
 
@@ -136,6 +148,28 @@ def validate_html(
         raise ValueError(f'missing core interface elements: {", ".join(missing_ids)}')
     if parser.title != 'Navnoor Research Terminal':
         raise ValueError(f'unexpected page title: {parser.title!r}')
+    return embedded_asset_digests(html)
+
+
+def embedded_asset_digests(html):
+    """Return the exact deferred-asset digests bound into the tested HTML."""
+    parser = TerminalHTMLParser()
+    parser.feed(html)
+    parser.close()
+    digests = {}
+    for asset_name, meta_name in ASSET_DIGEST_META.items():
+        values = parser.meta_values.get(meta_name, [])
+        if len(values) != 1:
+            raise ValueError(
+                f'expected exactly one embedded SHA-256 digest for {asset_name}; '
+                f'found {len(values)}'
+            )
+        if not CHECKSUM_RE.fullmatch(values[0]):
+            raise ValueError(
+                f'embedded digest for {asset_name} is not a lowercase SHA-256 digest'
+            )
+        digests[asset_name] = values[0]
+    return digests
 
 
 def cache_busted_url(url, revision, attempt):
@@ -162,19 +196,21 @@ def same_origin(first_url, second_url):
     return origin(first) == origin(second)
 
 
-def deferred_asset_url(page_url):
-    """Resolve the deferred dossier beside the deployed page, never off-origin."""
+def deferred_asset_url(page_url, asset_name=DEFERRED_ASSET_NAME):
+    """Resolve a release-bound JSON asset beside the page, never off-origin."""
+    if asset_name not in ASSET_DIGEST_META:
+        raise ValueError(f'unsupported deferred asset: {asset_name}')
     parts = urlsplit(page_url)
     path = parts.path or '/'
     if path.endswith('/'):
-        asset_path = f'{path}{DEFERRED_ASSET_NAME}'
+        asset_path = f'{path}{asset_name}'
     else:
         leaf = path.rsplit('/', 1)[-1].casefold()
         if leaf.endswith(('.html', '.htm')):
             parent = path.rsplit('/', 1)[0]
-            asset_path = f'{parent}/{DEFERRED_ASSET_NAME}'
+            asset_path = f'{parent}/{asset_name}'
         else:
-            asset_path = f'{path}/{DEFERRED_ASSET_NAME}'
+            asset_path = f'{path}/{asset_name}'
     return urlunsplit((parts.scheme, parts.netloc, asset_path, '', ''))
 
 
@@ -200,11 +236,40 @@ def validate_deferred_payload(payload, expected_checksum):
         raise ValueError('deferred article dossier briefs must be a non-empty object')
 
 
-def fetch_deferred_briefs(page_url, revision, attempt, timeout):
-    """Fetch and decode the same-origin deferred dossier over verified HTTPS."""
-    asset_url = deferred_asset_url(page_url)
+def validate_observation_payload(payload, expected_checksum, expected_count):
+    """Fail closed unless parser observations belong to the exact snapshot."""
+    if not isinstance(payload, dict):
+        raise ValueError('deferred observation archive must be a JSON object')
+    if type(payload.get('schema_version')) is not int or payload['schema_version'] != 1:
+        raise ValueError('deferred observation archive schema_version must be 1')
+    checksum = payload.get('data_checksum')
+    if not isinstance(checksum, str) or not CHECKSUM_RE.fullmatch(checksum):
+        raise ValueError('deferred observation data_checksum is not a lowercase SHA-256 digest')
+    if checksum != expected_checksum:
+        raise ValueError(f'deferred observation data_checksum is {checksum}, expected {expected_checksum}')
+    rows = payload.get('observations')
+    if not isinstance(rows, list) or len(rows) != expected_count:
+        raise ValueError(f'deferred observation count is {len(rows) if isinstance(rows, list) else "invalid"}, expected {expected_count}')
+    ids = [str(row.get('id') or '') for row in rows if isinstance(row, dict)]
+    if len(ids) != expected_count or not all(ids) or len(ids) != len(set(ids)):
+        raise ValueError('deferred observation identities are missing or duplicated')
+
+
+def fetch_deferred_json(
+    page_url,
+    asset_name,
+    revision,
+    attempt,
+    timeout,
+    *,
+    expected_sha256,
+):
+    """Fetch, byte-verify, and decode a same-origin release asset over HTTPS."""
+    if not CHECKSUM_RE.fullmatch(str(expected_sha256 or '')):
+        raise ValueError(f'expected digest for {asset_name} is invalid')
+    asset_url = deferred_asset_url(page_url, asset_name)
     if not same_origin(page_url, asset_url):
-        raise ValueError('deferred article dossier URL is not same-origin')
+        raise ValueError(f'{asset_name} URL is not same-origin')
     requested_url = cache_busted_url(asset_url, revision, attempt)
     request = Request(
         requested_url,
@@ -220,33 +285,62 @@ def fetch_deferred_briefs(page_url, revision, attempt, timeout):
         final_url = response.geturl()
         if urlsplit(final_url).scheme != 'https':
             raise ValueError(
-                f'deferred article dossier redirected away from HTTPS: {final_url}'
+                f'{asset_name} redirected away from HTTPS: {final_url}'
             )
         if not same_origin(page_url, final_url):
             raise ValueError(
-                f'deferred article dossier redirected off-origin: {final_url}'
+                f'{asset_name} redirected off-origin: {final_url}'
             )
         status = getattr(response, 'status', None)
         if status is None:
             status = response.getcode()
         if status != 200:
-            raise ValueError(f'deferred article dossier returned HTTP {status}')
+            raise ValueError(f'{asset_name} returned HTTP {status}')
         content_type = response.headers.get_content_type()
         if content_type != 'application/json':
             raise ValueError(
-                'deferred article dossier returned '
+                f'{asset_name} returned '
                 f'{content_type}, not application/json'
             )
         payload = response.read(MAX_DEFERRED_BYTES + 1)
     if len(payload) > MAX_DEFERRED_BYTES:
         raise ValueError(
-            f'deferred article dossier exceeds {MAX_DEFERRED_BYTES} bytes'
+            f'{asset_name} exceeds {MAX_DEFERRED_BYTES} bytes'
         )
+    actual_sha256 = hashlib.sha256(payload).hexdigest()
+    if actual_sha256 != expected_sha256:
+        raise ValueError(f'{asset_name} SHA-256 is {actual_sha256}, expected {expected_sha256}')
     try:
         value = json.loads(payload.decode('utf-8'))
     except (UnicodeError, json.JSONDecodeError) as exc:
-        raise ValueError(f'deferred article dossier is not valid UTF-8 JSON: {exc}') from exc
+        raise ValueError(f'{asset_name} is not valid UTF-8 JSON: {exc}') from exc
     return value
+
+
+def fetch_deferred_briefs(
+    page_url, revision, attempt, timeout, *, expected_sha256,
+):
+    return fetch_deferred_json(
+        page_url,
+        DEFERRED_ASSET_NAME,
+        revision,
+        attempt,
+        timeout,
+        expected_sha256=expected_sha256,
+    )
+
+
+def fetch_deferred_observations(
+    page_url, revision, attempt, timeout, *, expected_sha256,
+):
+    return fetch_deferred_json(
+        page_url,
+        OBSERVATION_ASSET_NAME,
+        revision,
+        attempt,
+        timeout,
+        expected_sha256=expected_sha256,
+    )
 
 
 def verified_ssl_context():
@@ -258,8 +352,10 @@ def verified_ssl_context():
     return ssl.create_default_context(cafile=certifi.where())
 
 
-def fetch_html(url, revision, attempt, timeout):
+def fetch_html(url, revision, attempt, timeout, *, expected_sha256):
     """Fetch one uncached copy of the deployed page over verified HTTPS."""
+    if not CHECKSUM_RE.fullmatch(str(expected_sha256 or '')):
+        raise ValueError('trusted build digest for index.html is invalid')
     requested_url = cache_busted_url(url, revision, attempt)
     request = Request(
         requested_url,
@@ -275,6 +371,8 @@ def fetch_html(url, revision, attempt, timeout):
         final_url = response.geturl()
         if urlsplit(final_url).scheme != 'https':
             raise ValueError(f'deployment redirected away from HTTPS: {final_url}')
+        if not same_origin(url, final_url):
+            raise ValueError(f'deployment redirected off-origin: {final_url}')
         status = getattr(response, 'status', None)
         if status is None:
             status = response.getcode()
@@ -286,7 +384,12 @@ def fetch_html(url, revision, attempt, timeout):
         payload = response.read(MAX_RESPONSE_BYTES + 1)
     if len(payload) > MAX_RESPONSE_BYTES:
         raise ValueError(f'deployed page exceeds {MAX_RESPONSE_BYTES} bytes')
-    return payload.decode('utf-8')
+    actual_sha256 = hashlib.sha256(payload).hexdigest()
+    if actual_sha256 != expected_sha256:
+        raise ValueError(
+            f'index.html SHA-256 is {actual_sha256}, expected {expected_sha256}'
+        )
+    return payload.decode('utf-8'), final_url
 
 
 def smoke_test(
@@ -295,6 +398,9 @@ def smoke_test(
     expected_articles,
     expected_observations,
     expected_checksum,
+    expected_html_sha256,
+    expected_brief_sha256,
+    expected_observation_sha256,
     retries=12,
     retry_delay=10.0,
     timeout=20.0,
@@ -307,29 +413,65 @@ def smoke_test(
         raise ValueError('retries must be at least 1')
     if retry_delay < 0 or timeout <= 0:
         raise ValueError('retry delay cannot be negative and timeout must be positive')
+    trusted_asset_digests = {
+        HTML_ASSET_NAME: expected_html_sha256,
+        DEFERRED_ASSET_NAME: expected_brief_sha256,
+        OBSERVATION_ASSET_NAME: expected_observation_sha256,
+    }
+    for asset_name, digest in trusted_asset_digests.items():
+        if not CHECKSUM_RE.fullmatch(str(digest or '')):
+            raise ValueError(
+                f'trusted build digest for {asset_name} is not a lowercase SHA-256 digest'
+            )
 
     last_error = None
     for attempt in range(1, retries + 1):
         try:
-            html = fetch_html(url, expected_revision, attempt, timeout)
-            validate_html(
+            html, page_url = fetch_html(
+                url,
+                expected_revision,
+                attempt,
+                timeout,
+                expected_sha256=expected_html_sha256,
+            )
+            declared_asset_digests = validate_html(
                 html,
                 expected_revision,
                 expected_articles,
                 expected_observations,
                 expected_checksum,
             )
+            for asset_name, expected_digest in trusted_asset_digests.items():
+                if asset_name == HTML_ASSET_NAME:
+                    continue
+                declared_digest = declared_asset_digests[asset_name]
+                if declared_digest != expected_digest:
+                    raise ValueError(
+                        f'{asset_name} HTML digest is {declared_digest}, '
+                        f'expected trusted build digest {expected_digest}'
+                    )
             deferred = fetch_deferred_briefs(
-                url,
+                page_url,
                 expected_revision,
                 attempt,
                 timeout,
+                expected_sha256=expected_brief_sha256,
             )
             validate_deferred_payload(deferred, expected_checksum)
+            observations = fetch_deferred_observations(
+                page_url,
+                expected_revision,
+                attempt,
+                timeout,
+                expected_sha256=expected_observation_sha256,
+            )
+            validate_observation_payload(
+                observations, expected_checksum, expected_observations,
+            )
             print(
                 f'Smoke test passed on attempt {attempt}: HTTPS, revision '
                 f'{expected_revision[:12]}, {expected_articles} articles, '
-                f'{expected_observations} observations, same-release deferred dossiers.'
+                f'{expected_observations} observations, exact release-bound HTML and deferred assets.'
             )
             return
         except Exception as exc:  # Retries intentionally cover HTTP and stale-cache failures.
@@ -348,6 +490,9 @@ def main():
     parser.add_argument('--expected-revision', required=True)
     parser.add_argument('--articles-file', type=Path, required=True)
     parser.add_argument('--observations-file', type=Path, required=True)
+    parser.add_argument('--expected-html-sha256', required=True)
+    parser.add_argument('--expected-brief-sha256', required=True)
+    parser.add_argument('--expected-observation-sha256', required=True)
     parser.add_argument('--retries', type=int, default=12)
     parser.add_argument('--retry-delay', type=float, default=10.0)
     parser.add_argument('--timeout', type=float, default=20.0)
@@ -363,6 +508,9 @@ def main():
             article_count,
             observation_count,
             checksum,
+            args.expected_html_sha256,
+            args.expected_brief_sha256,
+            args.expected_observation_sha256,
             retries=args.retries,
             retry_delay=args.retry_delay,
             timeout=args.timeout,

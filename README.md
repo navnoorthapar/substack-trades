@@ -65,10 +65,14 @@ turn a candidate into a reviewable decision packet. It is deliberately not a
 portfolio-management, order-management, risk, accounting, compliance, or
 investor-reporting system.
 
-That boundary follows the real operating responsibilities described by the
-[SEC's Form PF framework](https://www.sec.gov/files/formpf.pdf), the
-[AIMA 2025 manager due-diligence questionnaire](https://www.aima.org/article/presenting-the-2025-edition.html),
-and [CFA Standard V(A)](https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a).
+That boundary and diligence structure are informed by
+[CFA Institute's manager-selection framework](https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/investment-manager-selection),
+the [AIMA 2025 manager due-diligence questionnaire](https://www.aima.org/article/presenting-the-2025-edition.html),
+[CFA Standard V(A)](https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a),
+[CFA Standard V(C)](https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-c),
+and the [SEC investment-adviser marketing guide](https://www.sec.gov/resources-small-businesses/small-business-compliance-guides/investment-adviser-marketing).
+Those references shape questions, evidence retention, and disclosure boundaries;
+they do not certify the product or establish legal compliance.
 The terminal supports published-source discovery and pre-decision research. It
 does not manufacture NAV/P&L, attribution, exposure, leverage, VaR, stress,
 liquidity, funding, counterparty, capacity, execution, compliance, or investor
@@ -82,6 +86,22 @@ original passage; tokens are lexical, deduplicated, capped, and never presented
 as normalized or comparable facts. Duplicate spans are collapsed by source
 identity, related research requires an exact mentioned-entity or underlying
 overlap, and excerpt gaps are marked not assessable rather than absent.
+Older article dossiers are release-bound deferred assets. The browser rejects
+missing, unknown, malformed, or hash-mismatched dossier records before installing
+any of them, and it never converts an unavailable dossier into a claim that
+evidence is absent. Exact SHA-256 digests for both deferred assets are embedded
+in the tested HTML, so swapped, reordered, truncated, or otherwise altered asset
+bytes fail closed before JSON installation. Deployment additionally requires a
+three-way match between each independently recorded deferred-asset build digest,
+its HTML metadata binding, and the bytes fetched from production. The complete
+HTML document is also matched byte-for-byte to its tested build digest, and every
+generated inline script must pass Node.js syntax validation before upload. The
+larger observation archive loads only when a selected view or filter needs it,
+avoiding a late rerender of the active brief.
+
+The briefing navigation remains complete when the desktop rail collapses, and
+the print/PDF layout preserves the authored IC decision sheet and public
+checkpoints while removing device-local workflow fields.
 
 The Observation Monitor and Research Library provide fast passage-level review.
 Directional labels describe parsed language, not an actor, verified position,
@@ -171,10 +191,12 @@ any regression-test failure restores that snapshot before Git staging. A
 candidate can therefore neither leak into the next scheduled run nor trigger a
 GitHub Pages deployment unless its full local quality gate passes. GitHub Pages
 then publishes the exact tested artifact atomically and the post-deploy smoke
-test verifies HTTPS, revision, counts, and checksum before declaring it healthy.
-A separate least-privilege watchdog checks the exact published revision every
-four hours and rejects a research snapshot older than 16 hours, leaving margin
-above the longest scheduled refresh interval.
+test verifies HTTPS, revision, counts, snapshot checksum, and both independently
+recorded deferred-asset hashes plus the exact HTML hash before declaring it
+healthy. A separate least-privilege watchdog deterministically rebuilds those
+three fingerprints, verifies the exact published revision every four hours,
+and rejects a research snapshot older than
+16 hours, leaving margin above the longest scheduled refresh interval.
 
 Manually redeploy the current `main` snapshot without fetching publications:
 

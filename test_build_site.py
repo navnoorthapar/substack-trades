@@ -149,6 +149,9 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         for required in (
             "'observations.json?v='",
             "cache:'no-cache'",
+            'response.text()',
+            'actualHash !== OBSERVATION_ARCHIVE_SHA256',
+            'JSON.parse(archiveText)',
             'payload.schema_version !== 1',
             'payload.data_checksum !== SNAPSHOT.data_checksum',
             'rows.length !== Number(SNAPSHOT.observation_count || 0)',
@@ -168,12 +171,17 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         gate = self.html[gate_start:render_end]
         for text in (
             'if (!isArticleView()) return true',
+            "if (state.view === 'research') return true",
             'state.query || state.directions.size || state.instruments.size',
+            'function requestObservationsForCurrentState(forceRetry)',
+            'if (observationsFailed && !forceRetry)',
+            'const request = forceRetry ? retryObservations() : loadObservations()',
             'function renderObservationGate()',
             'release-bound observation asset',
             'data-retry-observations',
             'no evidence-absence conclusion has been drawn',
             'if (!observationsReady && currentStateNeedsObservations())',
+            'requestObservationsForCurrentState(false)',
         ):
             self.assertIn(text, gate)
         self.assertLess(
@@ -186,6 +194,71 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertNotIn("state.selected = ''", observation_gate)
         self.assertIn('function retryObservations()', self.html)
         self.assertIn("event.target.closest('[data-retry-observations]')", self.html)
+
+    def test_observations_are_requested_lazily_without_a_late_brief_rerender(self):
+        startup_start = self.html.rindex('hydrateFromHash();')
+        startup_end = self.html.index('</script>', startup_start)
+        startup = self.html[startup_start:startup_end]
+        self.assertIn('if (state.query && isArticleView()) renderArticleAwareSearch(false);', startup)
+        self.assertIn('else render();', startup)
+        self.assertNotIn('loadObservations()', startup)
+        self.assertNotIn('retryObservations()', startup)
+
+        request_start = self.html.index('function requestObservationsForCurrentState(forceRetry)')
+        request_end = self.html.index('\nfunction renderObservationGate()', request_start)
+        request = self.html[request_start:request_end]
+        self.assertIn(
+            'if (observationsReady || !currentStateNeedsObservations()) return Promise.resolve(IDEAS);',
+            request,
+        )
+        self.assertIn('if (observationGatePromise) return observationGatePromise;', request)
+        self.assertIn('if (observationsFailed && !forceRetry) return Promise.resolve(null);', request)
+        completion_gate = request.index('if (currentStateNeedsObservations()) {')
+        self.assertLess(completion_gate, request.index('render();', completion_gate))
+        self.assertIn('else {\n      pendingObservationFocus = null;', request)
+        error_render = request.index('render();', request.index('}).catch(function ()'))
+        self.assertLess(error_render, request.index('focusObservationGate(true);', error_render))
+
+        retry_start = self.html.index("const retryObservationButton = event.target.closest('[data-retry-observations]');")
+        retry_end = self.html.index('\n  const briefJump', retry_start)
+        retry = self.html[retry_start:retry_end]
+        self.assertIn('queueObservationResultFocus();', retry)
+        self.assertIn('requestObservationsForCurrentState(true);', retry)
+        self.assertIn('render();\n    focusObservationGate();', retry)
+        self.assertNotIn('retryObservations().then', retry)
+
+        search_start = self.html.index('function renderArticleAwareSearch(focusResult)')
+        search_end = self.html.index("document.getElementById('search').addEventListener('input'", search_start)
+        search = self.html[search_start:search_end]
+        self.assertIn('if (!observationsReady && currentStateNeedsObservations())', search)
+        self.assertIn('queueObservationResultFocus();', search)
+
+    def test_dynamic_view_navigation_preserves_focus_through_async_loading(self):
+        helper_start = self.html.index('function queueObservationResultFocus(kind)')
+        helper_end = self.html.index('\nfunction requestObservationsForCurrentState', helper_start)
+        helper = self.html[helper_start:helper_end]
+        for text in (
+            "kind:kind || 'entry'",
+            'function focusViewEntry()',
+            "document.getElementById('observation-gate-title')",
+            'function focusObservationGate(consumePending)',
+            "const retry = observationsFailed ? document.querySelector('[data-retry-observations]') : null",
+            'if (consumePending) pendingObservationFocus = null',
+            "if (pending.kind === 'inspector') openInspector(true)",
+            'function renderObservationAwareNavigation(focusKind)',
+            'const waiting = !observationsReady && currentStateNeedsObservations()',
+            'if (waiting) queueObservationResultFocus(focusKind)',
+            'if (waiting) focusObservationGate()',
+            "else focusViewEntry()",
+        ):
+            self.assertIn(text, helper)
+
+        handler_start = self.html.index("const view = event.target.closest('button[data-view]');")
+        handler_end = self.html.index('\n  const kpiView', handler_start)
+        handler = self.html[handler_start:handler_end]
+        self.assertIn('state.view = view.dataset.view', handler)
+        self.assertIn("renderObservationAwareNavigation('entry')", handler)
+        self.assertNotIn('\n    render();', handler)
 
     def test_documentation_coverage_matches_the_five_source_fields_exactly(self):
         field_names = {'market', 'stance', 'underlying', 'thesis', 'numeric'}
@@ -372,6 +445,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn("const openingLabel = leadRow ? 'Author’s opening thesis' : 'Published article framing'", briefing)
         self.assertIn('Packets attach to individual observations', briefing)
         self.assertIn('never silently assigns an article-level recommendation', briefing)
+        self.assertIn('const articleIdeaIds = new Set(selected.idea_ids || [])', briefing)
+        self.assertIn('Array.from(workflowItems.values()).filter', briefing)
+        self.assertIn('item.source_snapshot.article_id === selected.id', briefing)
+        self.assertNotIn('const localPackets = observationsReady ?', briefing)
         self.assertNotIn('Analyst synthesis', briefing)
         self.assertNotIn('Evidence quality', briefing)
 
@@ -399,6 +476,132 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         )
         self.assertRegex(self.html, r'\.intel-wrap\{[^}]*grid-template-columns:220px minmax\(620px,1fr\) 360px')
         self.assertNotIn('min-width:1180px', self.html)
+
+        compact_header_start = self.html.index('@media(max-width:899px)')
+        compact_header_end = self.html.index('@media(max-width:759px)', compact_header_start)
+        compact_header = self.html[compact_header_start:compact_header_end]
+        self.assertIn(':root{--header-h:104px}', compact_header)
+        self.assertIn('grid-template-rows:52px 52px', compact_header)
+        self.assertIn('.header-library,#method-button{display:none}', compact_header)
+        self.assertNotIn('.freshness{display:none}', compact_header)
+        self.assertIn('.global-search{grid-column:1/-1;grid-row:2}', compact_header)
+        self.assertIn('.utility-button{min-height:44px}', compact_header)
+        tiny_start = self.html.rindex('@media(max-width:430px)')
+        tiny_end = self.html.index('@media print{', tiny_start)
+        self.assertIn('.brand-name{display:none}', self.html[tiny_start:tiny_end])
+
+    def test_hidden_brief_rail_has_complete_compact_navigation(self):
+        start = self.html.index('function briefCompactNavMarkup(lenses)')
+        end = self.html.index('\nlet pendingBriefFocus', start)
+        compact = self.html[start:end]
+        for text in (
+            'aria-label="Briefing navigation"',
+            'aria-label="Research views"',
+            'aria-label="Archive lenses"',
+            "['briefing','Latest Brief']",
+            "['ideas','Evidence Monitor']",
+            "['research','Research Library']",
+            "['queue','Decision Queue']",
+            'data-brief-lens=',
+            'aria-pressed=',
+            'aria-current="page"',
+        ):
+            self.assertIn(text, compact)
+
+        briefing_start = self.html.index('function renderIntelligenceBrief(records)')
+        briefing_end = self.html.index('\nfunction contextualRecords', briefing_start)
+        briefing = self.html[briefing_start:briefing_end]
+        self.assertGreaterEqual(briefing.count('briefCompactNavMarkup(lenses)'), 2)
+        self.assertIn('const lenses = BRIEF_LENSES', briefing)
+        lens_start = self.html.index('const BRIEF_LENSES = Object.freeze([')
+        lens_end = self.html.index(']);', lens_start)
+        lens_definition = self.html[lens_start:lens_end]
+        for lens in ('all', 'checkpoint', 'evidence', 'countercase', 'falsifier', 'implementation'):
+            self.assertIn("['" + lens + "',", lens_definition)
+
+        narrow_start = self.html.index('@media(max-width:1439px)')
+        narrow_end = self.html.index('@media(max-width:1023px)', narrow_start)
+        self.assertIn('.ic-rail{display:none}', self.html[narrow_start:narrow_end])
+        self.assertIn('.ic-compact-nav{display:grid}', self.html[narrow_start:narrow_end])
+        narrow_css = self.html[narrow_start:narrow_end]
+        self.assertIn('#brief-thesis,#brief-key-evidence,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:calc(var(--brief-compact-nav-h) + 7px)}', narrow_css)
+        self.assertIn('.intel-side.ic-sheet{', narrow_css)
+        self.assertIn('top:var(--brief-compact-nav-h)', narrow_css)
+        self.assertIn('height:calc(100dvh - var(--header-h) - var(--brief-compact-nav-h))', narrow_css)
+        mobile_start = self.html.index('@media(max-width:759px)', narrow_end)
+        mobile_end = self.html.index('@media print{', mobile_start)
+        self.assertRegex(
+            self.html[mobile_start:mobile_end],
+            r'\.ic-compact-button\{[^}]*min-height:44px',
+        )
+
+        focus_start = self.html.index('function restorePendingBriefFocus(consumePending,preferStatusFocus)')
+        focus_end = self.html.index('\nfunction renderIntelligenceBrief', focus_start)
+        focus = self.html[focus_start:focus_end]
+        self.assertIn('window.innerWidth < 1440', focus)
+        self.assertIn("document.querySelector('.ic-compact-nav ' + lensSelector)", focus)
+        self.assertIn('if (consumePending !== false) pendingBriefFocus = null', focus)
+        self.assertIn("document.getElementById('brief-status-title')", focus)
+        self.assertIn("document.querySelector('[data-retry-briefs]')", focus)
+        briefing_status = self.html[briefing_start:briefing_end]
+        self.assertIn('restorePendingBriefFocus(!preservePendingFocus,preferStatusFocus)', briefing_status)
+        self.assertGreaterEqual(briefing_status.count("','',true);"), 2)
+        self.assertGreaterEqual(briefing_status.count("',false,true);"), 2)
+        self.assertIn('shell.dataset.statusAnnouncement = title', briefing_status)
+        self.assertIn('briefStatusAnnouncement ||', self.html)
+        inspector_start = self.html.index('function renderInspector()')
+        inspector_end = self.html.index('\nfunction currentStateNeedsObservations', inspector_start)
+        inspector = self.html[inspector_start:inspector_end]
+        self.assertEqual(
+            inspector.count("if (state.view !== 'briefing') restorePendingBriefFocus();"),
+            2,
+        )
+        render_start = self.html.index('function render() {')
+        render_end = self.html.index('\nfunction resetFilters', render_start)
+        self.assertIn(
+            "if (state.view !== 'briefing') pendingBriefFocus = null;",
+            self.html[render_start:render_end],
+        )
+        self.assertIn('.ic-jump.unavailable{cursor:default;color:var(--text-muted)}', self.html)
+        self.assertNotIn('.ic-jump.unavailable{cursor:default;color:var(--text-muted);opacity:', self.html)
+
+        gate_start = self.html.index('function renderObservationGate()')
+        gate_end = self.html.index('\nfunction render() {', gate_start)
+        gate = self.html[gate_start:gate_end]
+        self.assertIn('briefRailMarkup(BRIEF_LENSES)', gate)
+        self.assertIn('briefCompactNavMarkup(BRIEF_LENSES)', gate)
+        self.assertIn('An unavailable asset is never presented as missing evidence.', gate)
+
+    def test_print_forces_light_ic_sheet_and_removes_only_local_overlay(self):
+        print_start = self.html.index('@media print{')
+        print_end = self.html.index('@media(prefers-reduced-motion', print_start)
+        print_css = self.html[print_start:print_end]
+        for text in (
+            ':root,html[data-theme="light"],html[data-theme="dark"]',
+            '--bg:#ffffff!important',
+            '--surface-1:#ffffff!important',
+            '--text:#172027!important',
+            '.ic-sheet-local,.ic-sheet-actions,.toast{display:none!important}',
+            '.intel-side.ic-sheet{',
+            'display:block!important',
+            'position:static!important',
+            'order:3',
+            'height:auto!important',
+            'overflow:visible!important',
+            '.ic-sheet-checkpoint{display:block!important;break-inside:avoid',
+            '.intel-lead{display:contents!important',
+            '.intel-lead-inner{order:1',
+            '.ic-evidence-strip{order:2}',
+            '.ic-analysis{order:4}',
+            '.ic-dossier{order:5}',
+            '.screen-only{display:none!important}',
+            '.print-only{display:inline!important}',
+        ):
+            self.assertIn(text, print_css)
+        hidden_rule = print_css[print_css.index('.app-header,'):print_css.index('{display:none!important}', print_css.index('.app-header,'))]
+        self.assertNotIn('.intel-side,', hidden_rule)
+        self.assertIn('IC decision sheet · published source', self.html)
+        self.assertIn('Independent diligence remains required.', self.html)
 
     def test_displayed_article_framing_rejects_boilerplate(self):
         contaminated = [
@@ -517,14 +720,113 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "'article_briefs.json?v='",
             "cache:'no-cache'",
             'response.ok',
+            'response.text()',
+            'actualHash !== BRIEF_ARCHIVE_SHA256',
+            'JSON.parse(archiveText)',
             'payload.schema_version !== 1',
             'payload.data_checksum !== SNAPSHOT.data_checksum',
-            "article.brief = payload.briefs[id]",
+            'validateDeferredBriefArchive(payload)',
+            "article.brief = validatedBriefs[id]",
             'refreshArticleSearch(article)',
             'Loading the exact article dossier',
             'Checking the deferred dossier against this release.',
         ):
             self.assertIn(text, self.html)
+
+    def test_deferred_assets_are_bound_to_exact_embedded_release_hashes(self):
+        brief_match = re.search(
+            r'<meta name="nrt-brief-archive-sha256" content="([0-9a-f]{64})">',
+            self.html,
+        )
+        observation_match = re.search(
+            r'<meta name="nrt-observation-archive-sha256" content="([0-9a-f]{64})">',
+            self.html,
+        )
+        self.assertIsNotNone(brief_match)
+        self.assertIsNotNone(observation_match)
+        self.assertEqual(brief_match.group(1), hashlib.sha256(self.brief_bytes).hexdigest())
+        self.assertEqual(observation_match.group(1), hashlib.sha256(self.observation_bytes).hexdigest())
+        self.assertIn(
+            "const BRIEF_ARCHIVE_SHA256 = document.querySelector('meta[name=\"nrt-brief-archive-sha256\"]').content",
+            self.html,
+        )
+        self.assertIn(
+            "const OBSERVATION_ARCHIVE_SHA256 = document.querySelector('meta[name=\"nrt-observation-archive-sha256\"]').content",
+            self.html,
+        )
+
+        corrupted_brief = self.brief_bytes.replace(b'"lead":', b'"lead" :', 1)
+        corrupted_observations = self.observation_bytes.replace(b'"observations":', b'"observations" :', 1)
+        self.assertNotEqual(hashlib.sha256(corrupted_brief).hexdigest(), brief_match.group(1))
+        self.assertNotEqual(hashlib.sha256(corrupted_observations).hexdigest(), observation_match.group(1))
+
+    def test_generated_release_is_reproducible_across_python_hash_seeds(self):
+        with tempfile.TemporaryDirectory() as first, tempfile.TemporaryDirectory() as second:
+            outputs = []
+            for seed, directory in (('1', first), ('987654', second)):
+                environment = os.environ.copy()
+                environment['PYTHONHASHSEED'] = seed
+                environment['SITE_OUTPUT_DIR'] = directory
+                environment['SITE_REVISION'] = 'reproducible-release'
+                subprocess.run(
+                    [sys.executable, str(ROOT / 'build_site.py')],
+                    cwd=ROOT,
+                    env=environment,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                outputs.append({
+                    name: (Path(directory) / name).read_bytes()
+                    for name in ('index.html', 'article_briefs.json', 'observations.json')
+                })
+            self.assertEqual(outputs[0], outputs[1])
+
+    def test_deferred_article_dossier_loader_fails_closed_before_install(self):
+        validator_start = self.html.index("const DEFERRED_BRIEF_KEYS")
+        loader_start = self.html.index("function loadBriefArchive()", validator_start)
+        validator = self.html[validator_start:loader_start]
+        for required in (
+            "const DEFERRED_BRIEF_KEYS = ['checkpoints','fallback_evidence','lead','sections']",
+            "const DEFERRED_SPAN_KEYS = ['end','sha256','start','text','truncated']",
+            "const DEFERRED_SECTION_KEYS = ['end','heading','kind','sha256','source_order','start','text','truncated']",
+            "const DEFERRED_CHECKPOINT_KEYS = ['context_kind','date','date_label','end','sha256','start','text','truncated']",
+            "ARTICLES.filter(function (article) { return article.brief === null; })",
+            "actualIds.length !== expectedIds.length",
+            "!expectedIdSet.has(id)",
+            "!Object.prototype.hasOwnProperty.call(payload.briefs,id)",
+            "span.end - span.start !== Array.from(span.text).length",
+            "!/^[0-9a-f]{64}$/.test(span.sha256)",
+            "window.crypto.subtle.digest('SHA-256'",
+            "hashChecks.push({text:span.text,sha256:span.sha256,label:label})",
+            "await Promise.all(hashChecks.map",
+            "actualHash !== check.sha256",
+            "validDeferredCheckpointDate(checkpoint && checkpoint.date)",
+            "DEFERRED_SECTION_KINDS.has(section && section.kind)",
+            "validateDeferredFeatureParity(ARTICLE_BY_ID.get(id),brief)",
+        ):
+            self.assertIn(required, validator)
+
+        for required in (
+            "uniqueKinds.size !== kinds.length",
+            "new Set(sourceOrders).size !== sourceOrders.length",
+            "value <= sourceOrders[index - 1]",
+            "value < checkpointDates[index - 1]",
+            "uniqueKinds.has('evidence') && brief.fallback_evidence !== null",
+            "captured[key] !== Boolean(features[key])",
+            "brief.checkpoints.length !== Number(features.checkpoint_count || 0)",
+        ):
+            self.assertIn(required, validator)
+
+        loader_end = self.html.index("\nconst ARTICLE_BY_ID", loader_start)
+        loader = self.html[loader_start:loader_end]
+        validation_call = loader.index('return validateDeferredBriefArchive(payload)')
+        install = loader.index('article.brief = validatedBriefs[id]')
+        self.assertLess(validation_call, install)
+        self.assertIn("if (!Object.prototype.hasOwnProperty.call(briefs,article.id))", loader)
+        ensure_start = loader.index('function ensureArticleBrief(article)')
+        ensure = loader[ensure_start:]
+        self.assertNotIn("{lead:null,sections:[],fallback_evidence:null,checkpoints:[]}", ensure)
 
     def test_client_article_briefs_retain_exact_source_span_provenance(self):
         """Every workbench passage must retain its validated source identity."""
@@ -632,6 +934,40 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'not that the argument is correct, complete, investable, or independently verified',
         ):
             self.assertIn(text, workbench_map)
+
+    def test_brief_navigation_targets_real_sections_and_shows_release_time(self):
+        map_start = self.html.index('function researchMapMarkup(article)')
+        map_end = self.html.index('\nfunction archiveCoverageMarkup', map_start)
+        workbench_map = self.html[map_start:map_end]
+        for mapping in (
+            "lead:'brief-thesis'",
+            "evidence:'brief-analysis'",
+            "mechanism:'brief-analysis'",
+            "checkpoint:'brief-checkpoints'",
+        ):
+            self.assertIn(mapping, workbench_map)
+
+        briefing_start = self.html.index('function renderIntelligenceBrief(records)')
+        briefing_end = self.html.index('\nfunction contextualRecords', briefing_start)
+        briefing = self.html[briefing_start:briefing_end]
+        for target in (
+            'id="brief-thesis"',
+            'id="brief-key-evidence"',
+            'id="brief-analysis"',
+            'id="brief-dossier"',
+            'id="brief-evidence-ledger"',
+            'id="brief-checkpoints"',
+            'id="brief-archive"',
+        ):
+            self.assertIn(target, self.html)
+        self.assertIn('briefRailMarkup(lenses,selected)', briefing)
+        self.assertIn('Dataset assembled <time datetime=', briefing)
+        self.assertIn('formatReleaseCheckedAt(SNAPSHOT.checked_at)', briefing)
+        self.assertIn('sourceCollectionSummary(selected.source)', briefing)
+        self.assertIn("sourceRelease.status === 'degraded' ? ' degraded'", briefing)
+        self.assertIn("cached_archive_plus_rss:'Cached archive + RSS'", self.html)
+        self.assertIn("statusLabels = {ok:'OK',degraded:'Degraded',error:'Unavailable'}", self.html)
+        self.assertIn("return iso.slice(0,10) + ' ' + iso.slice(11,16) + ' UTC';", self.html)
 
     def test_lens_coverage_bars_are_counts_not_quality_scores(self):
         start = self.html.index('function archiveCoverageMarkup(records)')
@@ -854,10 +1190,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         for text in (
             'Records are research observations—not verified trades, current holdings, or recommendations.',
             'does not contain live prices, positions, P&amp;L, sizing, execution, portfolio risk, liquidity, financing, counterparties, investor records, or compliance approvals.',
-            'https://www.sec.gov/newsroom/press-releases/2024-17',
+            'https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/investment-manager-selection',
             'https://www.aima.org/article/presenting-the-2025-edition.html',
             'https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a',
-            'These references guide questions; they do not certify a packet.',
+            'https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-c',
+            'https://www.sec.gov/resources-small-businesses/small-business-compliance-guides/investment-adviser-marketing',
+            'These references shape research questions, evidence retention, and disclosure boundaries; they do not certify a packet or establish legal compliance.',
             'Packet coverage counts populated analyst fields and self-attested control gates.',
             'It is not a confidence score, approval, recommendation, or evidence that a control was performed.',
         ):
@@ -979,7 +1317,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn("document.getElementById('search').value = state.query", popstate)
         self.assertIn('render();', popstate)
         self.assertIn('restoringHistory = false', popstate)
-        self.assertIn('target.focus()', popstate)
+        self.assertIn('const waiting = !observationsReady && currentStateNeedsObservations()', popstate)
+        self.assertIn("queueObservationResultFocus('entry')", popstate)
+        self.assertIn('if (waiting) focusObservationGate()', popstate)
+        self.assertIn('else focusViewEntry()', popstate)
         self.assertGreaterEqual(
             self.html.count('markMeaningfulNavigation();'),
             4,
@@ -1071,6 +1412,14 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertEqual(meta_content('nrt-article-count'), str(len(self.articles)))
         self.assertEqual(meta_content('nrt-observation-count'), str(len(self.ideas)))
         self.assertEqual(meta_content('nrt-data-checksum'), self.snapshot['data_checksum'])
+        self.assertEqual(
+            meta_content('nrt-brief-archive-sha256'),
+            hashlib.sha256(self.brief_bytes).hexdigest(),
+        )
+        self.assertEqual(
+            meta_content('nrt-observation-archive-sha256'),
+            hashlib.sha256(self.observation_bytes).hexdigest(),
+        )
         self.assertIn('<meta name="referrer" content="no-referrer">', self.html)
         csp_match = re.search(
             r'<meta http-equiv="Content-Security-Policy" content="([^"]+)">', self.html
@@ -1094,6 +1443,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.assertIn(freshness_class, freshness)
         self.assertRegex(freshness, r'ageHours\s*>\s*16')
         self.assertNotRegex(freshness, r'ageHours\s*>\s*36')
+        self.assertIn('futureToleranceMs = 10 * 60 * 1000', freshness)
+        self.assertIn('manifestClockInvalid', freshness)
+        self.assertIn('sourceClockInvalid', freshness)
+        self.assertIn('Refresh clock invalid', freshness)
+        self.assertNotIn('Math.max(0,(Date.now() - checked.getTime())', freshness)
         self.assertIn('9 AM, 1 PM, and 10 PM Asia/Kolkata', self.html)
 
     def test_outcomes_are_not_assigned_a_success_state(self):

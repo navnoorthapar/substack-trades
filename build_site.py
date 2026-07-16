@@ -298,7 +298,7 @@ for article_position, article in enumerate(articles):
     idea_ids = []
     directions = set()
     instruments = set()
-    underlyings = set()
+    underlyings = {}
     managers = set()
     manager_keys = set()
 
@@ -335,7 +335,8 @@ for article_position, article in enumerate(articles):
         for underlying_value in re.split(r'\s*;\s*', str(underlying or '')):
             underlying_value = underlying_value.strip()
             if underlying_value and underlying_value not in {'—', '-'}:
-                underlyings.add(underlying_value)
+                underlying_key = normalize_identity_text(underlying_value)
+                underlyings.setdefault(underlying_key, underlying_value)
         if manager:
             managers.add(manager)
             manager_keys.add(manager_key)
@@ -386,8 +387,10 @@ for article_position, article in enumerate(articles):
         'trade_count': len(idea_ids),
         'directions': sorted(directions),
         'instruments': sorted(instruments),
-        'underlyings': sorted(underlyings, key=str.casefold),
-        'managers': sorted(managers, key=str.casefold),
+        'underlyings': sorted(
+            underlyings.values(), key=lambda value: (value.casefold(), value)
+        ),
+        'managers': sorted(managers, key=lambda value: (value.casefold(), value)),
         'manager_keys': sorted(manager_keys),
         'has_quant': any(bool(trade.get('any_quant_detail')) for trade in article['trades']),
         'has_thesis': any(bool(trade.get('edge_or_thesis')) for trade in article['trades']),
@@ -409,7 +412,9 @@ manager_counts = Counter(
 )
 manager_rows = sorted(
     manager_counts.items(),
-    key=lambda row: (-row[1], manager_labels[row[0]].casefold()),
+    key=lambda row: (
+        -row[1], manager_labels[row[0]].casefold(), manager_labels[row[0]], row[0]
+    ),
 )
 manager_buttons = []
 for manager_key, count in manager_rows:
@@ -455,6 +460,28 @@ revision_meta = html_lib.escape(site_revision, quote=True)
 checksum_meta = html_lib.escape(
     str(snapshot_manifest.get('data_checksum') or ''), quote=True,
 )
+brief_archive_payload = {
+    'schema_version': 1,
+    'data_checksum': snapshot_manifest.get('data_checksum') or '',
+    'briefs': brief_archive,
+}
+observation_archive_payload = {
+    'schema_version': 1,
+    'data_checksum': snapshot_manifest.get('data_checksum') or '',
+    'observations': client_ideas,
+}
+brief_archive_json = json.dumps(
+    brief_archive_payload, ensure_ascii=False, separators=(',', ':')
+)
+observation_archive_json = json.dumps(
+    observation_archive_payload, ensure_ascii=False, separators=(',', ':')
+)
+brief_archive_sha256 = hashlib.sha256(
+    brief_archive_json.encode('utf-8')
+).hexdigest()
+observation_archive_sha256 = hashlib.sha256(
+    observation_archive_json.encode('utf-8')
+).hexdigest()
 
 HTML_TEMPLATE = r"""<!DOCTYPE html>
 <html lang="en">
@@ -479,6 +506,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="nrt-article-count" content="__ARTICLE_COUNT__">
 <meta name="nrt-observation-count" content="__OBSERVATION_COUNT__">
 <meta name="nrt-data-checksum" content="__DATA_CHECKSUM__">
+<meta name="nrt-brief-archive-sha256" content="__BRIEF_ARCHIVE_SHA256__">
+<meta name="nrt-observation-archive-sha256" content="__OBSERVATION_ARCHIVE_SHA256__">
 <title>Navnoor Research Terminal</title>
 <script>
 (function () {
@@ -504,6 +533,7 @@ button,input,select,textarea{font:inherit}
 :root{
   --header-h:72px;
   --kpi-h:46px;
+  --brief-compact-nav-h:89px;
   --rail-w:224px;
   --inspector-w:384px;
   --bg:#111315;
@@ -655,6 +685,7 @@ a{color:var(--accent)}
 }
 .skip-link:focus{transform:translateY(0)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.print-only{display:none}
 
 /* Global command header */
 .app-header{
@@ -1033,6 +1064,17 @@ body[data-view="briefing"] .briefing-shell{
 .ic-nav-button:hover{background:var(--surface-3);color:var(--text)}
 .ic-nav-button.active{border-left-color:var(--accent);background:var(--selected);color:var(--text);font-weight:650}
 .ic-nav-index{width:20px;color:var(--text-muted);font:9px var(--mono)}
+.ic-jump-list{display:grid;gap:2px}
+.ic-jump{
+  width:100%;min-height:37px;display:grid;grid-template-columns:20px minmax(0,1fr) auto;align-items:center;gap:8px;
+  border:0;border-left:2px solid transparent;border-radius:0;background:transparent;color:var(--text-secondary);
+  padding:7px 9px;text-align:left;cursor:pointer;font-size:10.5px
+}
+.ic-jump:hover{border-left-color:var(--line-strong);background:var(--surface-3);color:var(--text)}
+.ic-jump:focus-visible{border-left-color:var(--focus);background:var(--surface-3)}
+.ic-jump i{font:8px var(--mono);font-style:normal;letter-spacing:.04em;text-transform:uppercase;color:var(--positive)}
+.ic-jump.unavailable{cursor:default;color:var(--text-muted)}
+.ic-jump.unavailable i{color:var(--text-muted)}
 .ic-rail-rule{height:1px;background:var(--line);margin:24px 8px}
 .ic-rail-heading{font:650 9px var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--text-muted);margin:0 8px 8px}
 .ic-lens-list{display:grid;gap:1px}
@@ -1046,6 +1088,22 @@ body[data-view="briefing"] .briefing-shell{
 .ic-library-fact{display:flex;align-items:baseline;justify-content:space-between;gap:10px;color:var(--text-muted);font-size:10px}
 .ic-library-fact b{font:650 11px var(--mono);color:var(--text-secondary)}
 .ic-standard{margin:20px 8px 0;padding-top:15px;border-top:1px solid var(--line);color:var(--text-muted);font-size:9.5px;line-height:1.55}
+.ic-compact-nav{
+  display:none;grid-column:1/-1;position:sticky;top:0;z-index:30;
+  border-bottom:1px solid var(--line-strong);background:var(--surface-2)
+}
+.ic-compact-group{min-width:0;display:grid;grid-template-columns:92px minmax(0,1fr);align-items:stretch;border-top:1px solid var(--line)}
+.ic-compact-group:first-child{border-top:0}
+.ic-compact-label{display:flex;align-items:center;padding:0 14px;border-right:1px solid var(--line);font:650 8.5px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted)}
+.ic-compact-scroll{min-width:0;display:flex;align-items:stretch;gap:2px;padding:4px 6px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.ic-compact-button{
+  flex:0 0 auto;min-height:36px;display:inline-flex;align-items:center;border:1px solid transparent;border-radius:0;
+  background:transparent;color:var(--text-secondary);padding:0 10px;white-space:nowrap;cursor:pointer;font-size:10.5px
+}
+.ic-compact-button:hover{border-color:var(--control-line);background:var(--surface-3);color:var(--text)}
+.ic-compact-button.active,.ic-compact-button[aria-current="page"]{border-color:var(--selected-line);background:var(--selected);color:var(--text);font-weight:650}
+.ic-compact-button.lens.active{border-color:var(--brick-line);background:var(--brick-soft)}
+#brief-thesis,#brief-key-evidence,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:12px}
 .intel-lead{
   grid-column:2;min-width:0;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);
   border-radius:0;background:var(--surface-1);box-shadow:none;overflow:visible
@@ -1054,6 +1112,8 @@ body[data-view="briefing"] .briefing-shell{
 .ic-document-meta{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
 .ic-document-meta-left{display:flex;align-items:center;gap:9px;flex-wrap:wrap;color:var(--text-muted);font:9.5px var(--mono);letter-spacing:.04em;text-transform:uppercase}
 .ic-document-meta-left .source-badge{text-transform:none;letter-spacing:0}
+.ic-source-health.ok{color:var(--positive)}
+.ic-source-health.degraded,.ic-source-health.unavailable{color:var(--warning);font-weight:650}
 .ic-open-source{
   flex:0 0 auto;min-height:32px;display:inline-flex;align-items:center;border:1px solid var(--control-line);border-radius:0;
   color:var(--text-secondary);padding:0 10px;text-decoration:none;font-size:10px
@@ -1439,6 +1499,20 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .intel-stream{grid-column:auto}
   .intel-stream-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+@media(max-width:899px){
+  :root{--header-h:104px}
+  .app-header{
+    height:var(--header-h);grid-template-columns:minmax(0,1fr) auto;grid-template-rows:52px 52px;
+    gap:0 8px;padding:0 10px
+  }
+  .brand{grid-column:1;grid-row:1;min-width:0}
+  .brand-sub{display:none}
+  .header-right{grid-column:2;grid-row:1;gap:5px}
+  .header-library,#method-button{display:none}
+  .global-search{grid-column:1/-1;grid-row:2}
+  #search{height:44px;padding-left:27px;font-size:16px}
+  .utility-button{min-height:44px}
+}
 @media(max-width:759px){
   :root{--header-h:54px;--kpi-h:42px}
   .app-header{grid-template-columns:auto minmax(0,1fr) auto;padding:0 9px;gap:7px}
@@ -1562,8 +1636,14 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
 @media(max-width:1439px){
   .intel-wrap{grid-template-columns:minmax(0,1fr) 350px}
   .ic-rail{display:none}
+  .ic-compact-nav{display:grid}
+  #brief-thesis,#brief-key-evidence,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:calc(var(--brief-compact-nav-h) + 7px)}
   .intel-lead{grid-column:1}
-  .intel-side.ic-sheet{grid-column:2}
+  .intel-side.ic-sheet{
+    grid-column:2;top:var(--brief-compact-nav-h);
+    height:calc(100vh - var(--header-h) - var(--brief-compact-nav-h));
+    height:calc(100dvh - var(--header-h) - var(--brief-compact-nav-h))
+  }
   .ic-archive-grid,.intel-stream{grid-column:1/-1}
 }
 @media(max-width:1023px){
@@ -1579,7 +1659,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .ic-archive-grid>.intel-side-card+.intel-side-card{border-top:1px solid var(--line)}
 }
 @media(max-width:759px){
-  :root{--header-h:104px}
+  :root{--header-h:104px;--brief-compact-nav-h:105px}
   .app-header{
     height:var(--header-h);grid-template-columns:minmax(0,1fr) auto;grid-template-rows:52px 52px;
     gap:0 8px;padding:0 10px
@@ -1589,10 +1669,15 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .brand-name{display:block;font-size:15px}
   .brand-sub{display:none}
   .header-right{grid-column:2;grid-row:1;gap:5px}
-  .header-library,#method-button,.freshness{display:none}
+  .header-library,#method-button{display:none}
   .global-search{grid-column:1/-1;grid-row:2}
   #search{height:44px;padding-left:27px;font-size:16px}
   body[data-view="briefing"] .workspace{height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h))}
+  .ic-compact-group{grid-template-columns:62px minmax(0,1fr)}
+  .ic-compact-label{padding:0 8px;font-size:8px}
+  .ic-compact-scroll{padding:4px}
+  .ic-compact-button{min-height:44px;padding:0 11px;font-size:11px}
+  #brief-thesis,#brief-key-evidence,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:calc(var(--brief-compact-nav-h) + 7px)}
   .intel-lead-inner{padding:24px 18px 20px}
   .ic-document-meta{display:block;margin-bottom:20px}
   .ic-open-source{margin-top:12px;min-height:44px}
@@ -1616,19 +1701,40 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .ic-sheet-actions{grid-template-columns:1fr}
   .intel-stream-list{grid-template-columns:1fr}
 }
+@media(max-width:430px){
+  .brand-name{display:none}
+}
 @media print{
   @page{size:auto;margin:14mm}
+  :root,html[data-theme="light"],html[data-theme="dark"]{
+    color-scheme:light;
+    --bg:#ffffff!important;--surface-1:#ffffff!important;--surface-2:#f4f4ef!important;
+    --surface-3:#e8e9e5!important;--surface-raised:#ffffff!important;
+    --line:#cfd2cd!important;--line-strong:#8e9799!important;--control-line:#687279!important;
+    --control-line-hover:#4d5a60!important;--text:#172027!important;--text-secondary:#3f4a50!important;
+    --text-muted:#566166!important;--accent:#173f5d!important;--accent-strong:#173f5d!important;
+    --brick:#8d3c33!important;--brick-soft:#f2e8e4!important;--brick-line:#b98379!important;
+    --positive:#2f6854!important;--warning:#745018!important;
+    --ochre:#745018!important;--number:#6c5529!important;--number-soft:#f1ecdf!important;
+    --number-line:#ae9b70!important;--checkpoint:#50656f!important;--selected:#e2eaec!important;
+    --selected-line:#386581!important;--shadow:none!important
+  }
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#111!important}
   .app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar,.active-filters,.context-bar,.inspector,
-  .drawer-backdrop,.intel-head,.intel-side,.ic-archive-grid,.intel-stream,.intel-actions,.toast{display:none!important}
+  .drawer-backdrop,.intel-head,.ic-compact-nav,.ic-archive-grid,.intel-stream,.intel-actions,.ic-sheet-local,.ic-sheet-actions,.toast{display:none!important}
   .workspace,.main-panel,.briefing-shell{display:block!important;height:auto!important;overflow:visible!important;background:#fff!important}
   .briefing-shell{padding:0!important}
-  .intel-wrap{width:100%;padding:0}
+  .intel-wrap{display:flex!important;flex-direction:column!important;width:100%;min-height:0;padding:0}
   .intel-grid{display:block}
-  .intel-lead{border:0;box-shadow:none;background:#fff!important;overflow:visible}
-  .intel-lead-inner{padding:0 0 12px}
+  .intel-lead{display:contents!important;border:0;box-shadow:none;background:#fff!important;overflow:visible}
+  .intel-lead-inner{order:1;padding:0 0 12px}
+  .ic-evidence-strip{order:2}
+  .ic-analysis{order:4}
+  .ic-dossier{order:5}
   .intel-title{font-size:24pt;color:#111!important}
-  .intel-claim,.intel-passage,.ledger-passage{color:#222!important}
+  .ic-opening-claim,.ic-evidence-card,.ic-analysis,.ic-dossier,.intel-passage,.ledger-passage{background:#fff!important;color:#222!important}
+  .ic-opening-claim p,.ic-evidence-card p,.ic-analysis-card p,.ic-sheet-section p{color:#222!important}
+  .ic-evidence-card p{display:block!important;overflow:visible!important;-webkit-line-clamp:unset!important}
   .intel-meta,.intel-label,.source-tail,.ledger-provenance,.research-map-head p{color:#555!important}
   .intel-fact-strip,.research-map,.evidence-ledger-section,.intel-section,.ledger-head{background:#fff!important}
   .research-map-step,.intel-reason,.ledger-value{background:#fff!important;color:#222!important;border-color:#888!important}
@@ -1637,6 +1743,18 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .intel-passage{display:block;overflow:visible;-webkit-line-clamp:unset}
   .ledger-row{break-inside:avoid;border-color:#bbb!important}
   .evidence-ledger-section,.research-map{break-inside:avoid}
+  .intel-side.ic-sheet{
+    display:block!important;position:static!important;width:100%!important;height:auto!important;max-height:none!important;
+    order:3;margin-top:12mm;overflow:visible!important;border:1px solid #9da5a6!important;background:#fff!important;break-before:page
+  }
+  .screen-only{display:none!important}
+  .print-only{display:inline!important}
+  .ic-sheet-inner{padding:8mm!important}
+  .ic-sheet-section{display:block!important;break-inside:avoid;border-color:#bbb!important}
+  .ic-sheet-section h3,.ic-sheet-section>p,.ic-sheet-section>.source-tail,.ic-sheet-section>.ic-sheet-checkpoint{grid-column:auto!important}
+  .ic-sheet-checkpoint{display:block!important;break-inside:avoid;border-color:#bbb!important}
+  .ic-sheet-checkpoint time{color:#50656f!important}
+  .ic-sheet-title,.ic-sheet-section h3{color:#172027!important}
   mark{background:transparent!important;color:#111!important;font-weight:700}
 }
 @media(prefers-contrast:more){
@@ -1982,7 +2100,7 @@ __MANAGER_BUTTONS__
     </section>
     <section class="method-card">
       <h3>Institutional basis</h3>
-      <p>The workflow is informed by the <a href="https://www.sec.gov/newsroom/press-releases/2024-17" target="_blank" rel="noopener noreferrer">SEC’s private-fund risk dimensions</a>, <a href="https://www.aima.org/article/presenting-the-2025-edition.html" target="_blank" rel="noopener noreferrer">AIMA’s 2025 manager DDQ</a>, and <a href="https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a" target="_blank" rel="noopener noreferrer">CFA Institute’s reasonable-basis standard</a>. These references guide questions; they do not certify a packet.</p>
+      <p>The workflow is informed by <a href="https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/investment-manager-selection" target="_blank" rel="noopener noreferrer">CFA Institute’s manager-selection framework</a>, <a href="https://www.aima.org/article/presenting-the-2025-edition.html" target="_blank" rel="noopener noreferrer">AIMA’s 2025 manager DDQ</a>, <a href="https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a" target="_blank" rel="noopener noreferrer">CFA Institute’s reasonable-basis standard</a>, <a href="https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-c" target="_blank" rel="noopener noreferrer">its research-record guidance</a>, and the <a href="https://www.sec.gov/resources-small-businesses/small-business-compliance-guides/investment-adviser-marketing" target="_blank" rel="noopener noreferrer">SEC’s substantiation and presentation principles for adviser marketing</a>. These references shape research questions, evidence retention, and disclosure boundaries; they do not certify a packet or establish legal compliance.</p>
     </section>
     <section class="method-card">
       <h3>Owner operating stack</h3>
@@ -1999,32 +2117,125 @@ const ARTICLES = __ARTICLES_JSON__;
 let IDEAS = [];
 const SNAPSHOT = __SNAPSHOT_JSON__;
 const EMBEDDED_MANAGER_LABELS = __MANAGER_LABELS_JSON__;
+const BRIEF_ARCHIVE_SHA256 = document.querySelector('meta[name="nrt-brief-archive-sha256"]').content;
+const OBSERVATION_ARCHIVE_SHA256 = document.querySelector('meta[name="nrt-observation-archive-sha256"]').content;
 
 let briefArchivePromise = null;
 let briefArchiveReady = false;
 let briefArchiveFailed = false;
+const DEFERRED_BRIEF_KEYS = ['checkpoints','fallback_evidence','lead','sections'];
+const DEFERRED_SPAN_KEYS = ['end','sha256','start','text','truncated'];
+const DEFERRED_SECTION_KEYS = ['end','heading','kind','sha256','source_order','start','text','truncated'];
+const DEFERRED_CHECKPOINT_KEYS = ['context_kind','date','date_label','end','sha256','start','text','truncated'];
+const DEFERRED_SECTION_KINDS = new Set(['evidence','mechanism','countercase','falsifier','implementation']);
+function hasExactObjectKeys(value,expectedKeys) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const actualKeys = Object.keys(value).sort();
+  return actualKeys.length === expectedKeys.length && actualKeys.every(function (key,index) { return key === expectedKeys[index]; });
+}
+function sha256Text(value) {
+  if (!window.crypto || !window.crypto.subtle || typeof TextEncoder !== 'function') {
+    return Promise.reject(new Error('Cryptographic dossier verification is unavailable'));
+  }
+  return window.crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)).then(function (buffer) {
+    return Array.from(new Uint8Array(buffer)).map(function (byte) { return byte.toString(16).padStart(2,'0'); }).join('');
+  });
+}
+function validateDeferredSpan(span,expectedKeys,label,hashChecks) {
+  if (!hasExactObjectKeys(span,expectedKeys)) throw new Error(label + ' has an invalid shape');
+  if (typeof span.text !== 'string' || !span.text.length || typeof span.truncated !== 'boolean') throw new Error(label + ' has invalid source text');
+  if (!Number.isSafeInteger(span.start) || !Number.isSafeInteger(span.end) || span.start < 0 || span.end <= span.start) throw new Error(label + ' has invalid source offsets');
+  if (span.end - span.start !== Array.from(span.text).length) throw new Error(label + ' source offsets do not match its text');
+  if (typeof span.sha256 !== 'string' || !/^[0-9a-f]{64}$/.test(span.sha256)) throw new Error(label + ' has an invalid source hash');
+  hashChecks.push({text:span.text,sha256:span.sha256,label:label});
+}
+function validDeferredCheckpointDate(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed = new Date(value + 'T00:00:00Z');
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0,10) === value;
+}
+function validateDeferredFeatureParity(article,brief) {
+  const features = article && article.brief_features || {};
+  const kinds = brief.sections.map(function (section) { return section.kind; });
+  const uniqueKinds = new Set(kinds);
+  const sourceOrders = brief.sections.map(function (section) { return section.source_order; });
+  const checkpointDates = brief.checkpoints.map(function (checkpoint) { return checkpoint.date; });
+  if (uniqueKinds.size !== kinds.length) throw new Error('Deferred article dossier contains duplicate section kinds');
+  if (new Set(sourceOrders).size !== sourceOrders.length || sourceOrders.some(function (value,index) { return index > 0 && value <= sourceOrders[index - 1]; })) {
+    throw new Error('Deferred article dossier sections are not in unique source order');
+  }
+  if (checkpointDates.some(function (value,index) { return index > 0 && value < checkpointDates[index - 1]; })) {
+    throw new Error('Deferred article checkpoints are not date ordered');
+  }
+  if (uniqueKinds.has('evidence') && brief.fallback_evidence !== null) throw new Error('Deferred dossier cannot contain explicit and fallback evidence together');
+  const captured = {
+    lead:brief.lead !== null,
+    evidence:uniqueKinds.has('evidence') || brief.fallback_evidence !== null,
+    mechanism:uniqueKinds.has('mechanism'),countercase:uniqueKinds.has('countercase'),
+    falsifier:uniqueKinds.has('falsifier'),implementation:uniqueKinds.has('implementation')
+  };
+  ['lead','evidence','mechanism','countercase','falsifier','implementation'].forEach(function (key) {
+    if (captured[key] !== Boolean(features[key])) throw new Error('Deferred dossier coverage does not match embedded release features');
+  });
+  if (brief.checkpoints.length !== Number(features.checkpoint_count || 0)) throw new Error('Deferred dossier checkpoint count does not match embedded release features');
+}
+async function validateDeferredBriefArchive(payload) {
+  if (!payload || payload.schema_version !== 1 || payload.data_checksum !== SNAPSHOT.data_checksum || !payload.briefs || typeof payload.briefs !== 'object' || Array.isArray(payload.briefs)) {
+    throw new Error('Deferred article dossiers do not match this release');
+  }
+  const expectedIds = ARTICLES.filter(function (article) { return article.brief === null; }).map(function (article) { return article.id; });
+  const expectedIdSet = new Set(expectedIds);
+  const actualIds = Object.keys(payload.briefs);
+  if (actualIds.length !== expectedIds.length || actualIds.some(function (id) { return !expectedIdSet.has(id); }) || expectedIds.some(function (id) { return !Object.prototype.hasOwnProperty.call(payload.briefs,id); })) {
+    throw new Error('Deferred article dossier identities do not match this release');
+  }
+  const hashChecks = [];
+  expectedIds.forEach(function (id) {
+    const brief = payload.briefs[id];
+    if (!hasExactObjectKeys(brief,DEFERRED_BRIEF_KEYS) || !Array.isArray(brief.sections) || !Array.isArray(brief.checkpoints)) throw new Error('Deferred article dossier has an invalid shape');
+    if (brief.lead !== null) validateDeferredSpan(brief.lead,DEFERRED_SPAN_KEYS,'Deferred lead',hashChecks);
+    if (brief.fallback_evidence !== null) validateDeferredSpan(brief.fallback_evidence,DEFERRED_SPAN_KEYS,'Deferred fallback evidence',hashChecks);
+    brief.sections.forEach(function (section) {
+      if (!DEFERRED_SECTION_KINDS.has(section && section.kind) || typeof section.heading !== 'string' || !section.heading.length || !Number.isSafeInteger(section.source_order) || section.source_order < 0) throw new Error('Deferred article section has invalid metadata');
+      validateDeferredSpan(section,DEFERRED_SECTION_KEYS,'Deferred article section',hashChecks);
+    });
+    brief.checkpoints.forEach(function (checkpoint) {
+      if (!validDeferredCheckpointDate(checkpoint && checkpoint.date) || typeof checkpoint.date_label !== 'string' || !checkpoint.date_label.length || typeof checkpoint.context_kind !== 'string' || !DEFERRED_SECTION_KINDS.has(checkpoint.context_kind)) throw new Error('Deferred article checkpoint has invalid metadata');
+      validateDeferredSpan(checkpoint,DEFERRED_CHECKPOINT_KEYS,'Deferred article checkpoint',hashChecks);
+    });
+    validateDeferredFeatureParity(ARTICLE_BY_ID.get(id),brief);
+  });
+  await Promise.all(hashChecks.map(function (check) {
+    return sha256Text(check.text).then(function (actualHash) {
+      if (actualHash !== check.sha256) throw new Error(check.label + ' source hash does not match its text');
+    });
+  }));
+  return payload.briefs;
+}
 function loadBriefArchive() {
   if (briefArchivePromise) return briefArchivePromise;
   briefArchiveFailed = false;
   const archiveUrl = 'article_briefs.json?v=' + encodeURIComponent(String(SNAPSHOT.data_checksum || ''));
   briefArchivePromise = fetch(archiveUrl,{credentials:'same-origin',cache:'no-cache'}).then(function (response) {
     if (!response.ok) throw new Error('Deferred article dossiers are unavailable');
-    return response.json();
+    return response.text();
+  }).then(function (archiveText) {
+    return sha256Text(archiveText).then(function (actualHash) {
+      if (actualHash !== BRIEF_ARCHIVE_SHA256) throw new Error('Deferred article dossier asset does not match this release');
+      try { return JSON.parse(archiveText); } catch (_error) { throw new Error('Deferred article dossier asset is invalid JSON'); }
+    });
   }).then(function (payload) {
-    if (!payload || payload.schema_version !== 1 || payload.data_checksum !== SNAPSHOT.data_checksum || !payload.briefs || typeof payload.briefs !== 'object') {
-      throw new Error('Deferred article dossiers do not match this release');
-    }
-    Object.keys(payload.briefs).forEach(function (id) {
+    return validateDeferredBriefArchive(payload);
+  }).then(function (validatedBriefs) {
+    Object.keys(validatedBriefs).forEach(function (id) {
       const article = ARTICLE_BY_ID.get(id);
-      if (article) {
-        article.brief = payload.briefs[id];
-        refreshArticleSearch(article);
-      }
+      article.brief = validatedBriefs[id];
+      refreshArticleSearch(article);
     });
     briefArchiveReady = true;
     briefArchiveFailed = false;
     relevanceScoreCache = new WeakMap();
-    return payload.briefs;
+    return validatedBriefs;
   }).catch(function (error) {
     briefArchiveFailed = true;
     briefArchivePromise = null;
@@ -2042,7 +2253,8 @@ function retryBriefArchive() {
 function ensureArticleBrief(article) {
   if (!article || article.brief) return Promise.resolve(article && article.brief);
   return loadBriefArchive().then(function (briefs) {
-    article.brief = briefs[article.id] || {lead:null,sections:[],fallback_evidence:null,checkpoints:[]};
+    if (!Object.prototype.hasOwnProperty.call(briefs,article.id)) throw new Error('Exact deferred article dossier is unavailable');
+    article.brief = briefs[article.id];
     return article.brief;
   }).catch(function () {
     article._briefLoadFailed = true;
@@ -2055,8 +2267,10 @@ let IDEA_BY_ID = new Map();
 const MANAGER_LABELS = new Map(Object.entries(EMBEDDED_MANAGER_LABELS));
 const MANAGERS = Array.from(MANAGER_LABELS.keys()).sort(function (a, b) { return MANAGER_LABELS.get(a).localeCompare(MANAGER_LABELS.get(b)); });
 let observationsPromise = null;
+let observationGatePromise = null;
 let observationsReady = false;
 let observationsFailed = false;
+let pendingObservationFocus = null;
 function installObservations(rows) {
   if (!Array.isArray(rows) || rows.length !== Number(SNAPSHOT.observation_count || 0)) throw new Error('Observation count does not match this release');
   const expectedArticleById = new Map();
@@ -2104,7 +2318,12 @@ function loadObservations() {
   const url = 'observations.json?v=' + encodeURIComponent(String(SNAPSHOT.data_checksum || ''));
   observationsPromise = fetch(url,{credentials:'same-origin',cache:'no-cache'}).then(function (response) {
     if (!response.ok) throw new Error('Observation archive is unavailable');
-    return response.json();
+    return response.text();
+  }).then(function (archiveText) {
+    return sha256Text(archiveText).then(function (actualHash) {
+      if (actualHash !== OBSERVATION_ARCHIVE_SHA256) throw new Error('Observation archive asset does not match this release');
+      try { return JSON.parse(archiveText); } catch (_error) { throw new Error('Observation archive asset is invalid JSON'); }
+    });
   }).then(function (payload) {
     if (!payload || payload.schema_version !== 1 || payload.data_checksum !== SNAPSHOT.data_checksum) throw new Error('Observation archive does not match this release');
     return installObservations(payload.observations);
@@ -2131,7 +2350,11 @@ const VALID_DOCUMENTATION = new Set(['triage','documented','strong','needs-conte
 const VALID_QUEUE_STATUSES = new Set(['review','diligence','monitor','archived']);
 const VALID_PRIORITIES = new Set(['low','normal','high']);
 const VALID_CONFIDENCE = new Set(['unrated','low','medium','high']);
-const VALID_BRIEF_LENSES = new Set(['all','checkpoint','evidence','countercase','falsifier','implementation']);
+const BRIEF_LENSES = Object.freeze([
+  ['all','Latest'],['checkpoint','Public checkpoints'],['evidence','Contextual evidence'],
+  ['countercase','Countercase'],['falsifier','Falsifiers'],['implementation','Implementation / capacity']
+]);
+const VALID_BRIEF_LENSES = new Set(BRIEF_LENSES.map(function (row) { return row[0]; }));
 const DILIGENCE_GATES = [
   ['source','Original publication reviewed'],
   ['independent','Independent evidence obtained'],
@@ -2207,6 +2430,16 @@ function directionClass(value) {
 }
 function sourceLabel(value) {
   return value === 'medium' ? 'Medium' : 'Substack';
+}
+function sourceModeLabel(value) {
+  const labels = {complete_api:'Complete API',cached_archive_plus_rss:'Cached archive + RSS',rss:'RSS'};
+  return labels[value] || String(value || 'Mode not recorded').replace(/_/g,' ');
+}
+function sourceCollectionSummary(value) {
+  const info = SNAPSHOT.sources && SNAPSHOT.sources[value] || {};
+  const statusLabels = {ok:'OK',degraded:'Degraded',error:'Unavailable'};
+  const status = statusLabels[info.status] || 'Status unknown';
+  return sourceLabel(value) + ' collection: ' + status + ' · ' + sourceModeLabel(info.mode) + ' · checked ' + formatReleaseCheckedAt(info.checked_at);
 }
 function escapeHtml(value) {
   return String(value || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
@@ -3021,11 +3254,14 @@ function evidenceLedgerMarkup(article) {
 function researchMapMarkup(article) {
   const spans = articleBriefSpans(article);
   const checkpointCount = Number(article.brief && article.brief.checkpoints && article.brief.checkpoints.length || 0);
+  const canonicalTargets = {
+    lead:'brief-thesis',evidence:'brief-analysis',mechanism:'brief-analysis',checkpoint:'brief-checkpoints'
+  };
   const steps = BRIEF_SEQUENCE.concat([['checkpoint','Public checkpoint']]).map(function (row,index) {
     const capturedSpan = spans.find(function (span) { return span.kinds.includes(row[0]); });
     const captured = row[0] === 'checkpoint' ? checkpointCount > 0 : Boolean(capturedSpan);
     const detail = captured ? (row[0] === 'checkpoint' ? number(checkpointCount) + ' dated cited checkpoint' + (checkpointCount === 1 ? '' : 's') : 'Exact passage captured') : 'Not identified by rules';
-    const target = row[0] === 'checkpoint' ? 'brief-checkpoints' : capturedSpan && capturedSpan.anchor;
+    const target = canonicalTargets[row[0]] || capturedSpan && capturedSpan.anchor;
     const inner = '<b>' + String(index + 1).padStart(2,'0') + ' · ' + escapeHtml(row[1]) + '</b><span>' + escapeHtml(detail) + '</span>';
     return captured ? '<button class="research-map-step captured" type="button" data-brief-jump="' + target + '">' + inner + '</button>' : '<div class="research-map-step not-captured">' + inner + '</div>';
   }).join('');
@@ -3111,6 +3347,8 @@ function articleBriefText(article) {
     sourceLabel(article.source) + ' · published ' + formatDate(article.date) + ' · ' + (article.content_status === 'full' ? 'full text indexed' : 'excerpt indexed'),
     'Source: ' + article.url,
     'Dataset: ' + String(SNAPSHOT.data_checksum || ''),
+    'Dataset assembled: ' + formatReleaseCheckedAt(SNAPSHOT.checked_at),
+    sourceCollectionSummary(article.source),
   ];
   spans.forEach(function (row) {
     lines.push(row.label.toUpperCase() + (row.heading ? ' — ' + row.heading : '') + '\n' + row.span.text + '\n[' + spanProvenance(row.span) + ']');
@@ -3134,16 +3372,16 @@ function evidenceSpotlightMarkup(article) {
     const rightRank = Math.min.apply(null,right.kinds.map(function (kind) { return priority[kind] === undefined ? 9 : priority[kind]; }));
     return leftRank - rightRank;
   }).slice(0,2);
-  if (!rows.length) {
-    return '<section class="ic-evidence-strip" aria-label="Source-backed numeric evidence"><div class="ic-evidence-empty"><strong>No number-bearing brief passage was identified.</strong> This is an extraction boundary, not a conclusion that the full article contains no quantitative evidence. Open the source for complete context.</div></section>';
-  }
-  return '<section class="ic-evidence-strip" aria-label="Source-backed numeric evidence">' + rows.map(function (row) {
+  const content = !rows.length
+    ? '<div class="ic-evidence-empty"><strong>No number-bearing brief passage was identified.</strong> This is an extraction boundary, not a conclusion that the full article contains no quantitative evidence. Open the source for complete context.</div>'
+    : rows.map(function (row) {
     const values = row.values.slice(0,5);
     return '<article class="ic-evidence-card"><div class="ic-evidence-overline">Exact authored passage</div><div class="ic-evidence-values">' +
       values.map(function (value,index) { return (index ? '<i>·</i>' : '') + '<span>' + escapeHtml(value) + '</span>'; }).join('') +
       '</div><h3>' + escapeHtml(row.label) + (row.heading ? ' · ' + escapeHtml(row.heading) : '') + '</h3><p>' + highlightArticleNumbers(row.span.text) + '</p>' +
       '<span class="source-tail" title="' + escapeHtml(String(row.span.sha256 || '')) + '">' + escapeHtml(spanProvenance(row.span)) + '</span></article>';
-  }).join('') + '</section>';
+  }).join('');
+  return '<section class="ic-evidence-strip" id="brief-key-evidence" aria-label="Source-backed numeric evidence">' + content + '</section>';
 }
 function analysisPanelMarkup(row,title,className) {
   if (!row || !row.span || !row.span.text) {
@@ -3159,7 +3397,7 @@ function decisionSheetSectionMarkup(row,label) {
   return '<section class="ic-sheet-section"><div class="ic-sheet-label"><span>' + escapeHtml(label) + '</span><span class="ic-authored">Authored</span></div>' +
     (row.heading ? '<h3>' + escapeHtml(row.heading) + '</h3>' : '') + '<p>' + highlightArticleNumbers(row.span.text) + '</p>' + exactPassageTail(row.span) + '</section>';
 }
-function briefRailMarkup(lenses) {
+function briefRailMarkup(lenses,article) {
   const sourceSnapshot = SNAPSHOT.sources || {};
   const substackCount = Number(sourceSnapshot.substack && sourceSnapshot.substack.included_count || ARTICLES.filter(function (article) { return article.source === 'substack'; }).length);
   const mediumCount = Number(sourceSnapshot.medium && sourceSnapshot.medium.included_count || ARTICLES.filter(function (article) { return article.source === 'medium'; }).length);
@@ -3172,25 +3410,66 @@ function briefRailMarkup(lenses) {
     ['01','briefing','Latest Brief'],['02','ideas','Evidence Monitor'],
     ['03','research','Research Library'],['04','queue','Decision Queue']
   ];
+  let jumpMarkup = '';
+  if (article) {
+    const spans = articleBriefSpans(article);
+    const ledger = articleEvidenceLedger(article);
+    const hasKind = function (kind) { return spans.some(function (row) { return row.kinds.includes(kind); }); };
+    const jumps = [
+      ['01','brief-thesis','Opening thesis',true],
+      ['02','brief-key-evidence','Key figures',ledger.length > 0],
+      ['03','brief-analysis','Mechanism & evidence',hasKind('mechanism') || hasKind('evidence')],
+      ['04','brief-dossier','Decision boundaries',hasKind('countercase') || hasKind('falsifier') || hasKind('implementation')],
+      ['05','brief-evidence-ledger','Full evidence ledger',ledger.length > 0],
+      ['06','brief-archive','Archive context',true]
+    ];
+    jumpMarkup = '<div class="ic-rail-rule"></div><div class="ic-rail-heading">In this brief</div><div class="ic-jump-list">' + jumps.map(function (row) {
+      return row[3]
+        ? '<button class="ic-jump" type="button" data-brief-jump="' + row[1] + '"><span class="ic-nav-index">' + row[0] + '</span><span>' + row[2] + '</span><i>Captured</i></button>'
+        : '<div class="ic-jump unavailable"><span class="ic-nav-index">' + row[0] + '</span><span>' + row[2] + '</span><i>Not captured</i></div>';
+    }).join('') + '</div>';
+  }
   return '<aside class="ic-rail" aria-label="Research desk navigation"><div class="ic-rail-brand">Research desk</div><nav class="ic-nav">' +
-    views.map(function (row) { return '<button class="ic-nav-button' + (row[1] === 'briefing' ? ' active' : '') + '" type="button" data-view="' + row[1] + '"><span class="ic-nav-index">' + row[0] + '</span><span>' + row[2] + '</span></button>'; }).join('') +
-    '</nav><div class="ic-rail-rule"></div><div class="ic-rail-heading">Article lens</div><div class="ic-lens-list">' +
+    views.map(function (row) { return '<button class="ic-nav-button' + (row[1] === 'briefing' ? ' active' : '') + '" type="button" data-view="' + row[1] + '"' + (row[1] === 'briefing' ? ' aria-current="page"' : '') + '><span class="ic-nav-index">' + row[0] + '</span><span>' + row[2] + '</span></button>'; }).join('') +
+    '</nav>' + jumpMarkup + '<div class="ic-rail-rule"></div><div class="ic-rail-heading">Archive lens</div><div class="ic-lens-list">' +
     lenses.map(function (row) { return '<button class="ic-lens' + (state.briefLens === row[0] ? ' active' : '') + '" type="button" data-brief-lens="' + row[0] + '" aria-pressed="' + String(state.briefLens === row[0]) + '">' + row[1] + '</button>'; }).join('') +
     '</div><div class="ic-rail-rule"></div><div class="ic-rail-heading">Library facts</div><div class="ic-library-facts">' +
     facts.map(function (row) { return '<div class="ic-library-fact"><span>' + row[1] + '</span><b>' + row[0] + '</b></div>'; }).join('') +
     '</div><p class="ic-standard">Exact published passages remain attached to dates, offsets, and hashes. Rules organize the source; they do not create a recommendation, confidence score, or live market view.</p></aside>';
 }
+function briefCompactNavMarkup(lenses) {
+  const views = [
+    ['briefing','Latest Brief'],['ideas','Evidence Monitor'],
+    ['research','Research Library'],['queue','Decision Queue']
+  ];
+  return '<nav class="ic-compact-nav" aria-label="Briefing navigation"><div class="ic-compact-group" role="group" aria-label="Research views"><span class="ic-compact-label" aria-hidden="true">Views</span><div class="ic-compact-scroll">' +
+    views.map(function (row) {
+      const current = row[0] === 'briefing';
+      return '<button class="ic-compact-button' + (current ? ' active' : '') + '" type="button" data-view="' + row[0] + '"' + (current ? ' aria-current="page"' : '') + '>' + row[1] + '</button>';
+    }).join('') + '</div></div><div class="ic-compact-group" role="group" aria-label="Archive lenses"><span class="ic-compact-label" aria-hidden="true">Lens</span><div class="ic-compact-scroll">' +
+    lenses.map(function (row) {
+      const active = state.briefLens === row[0];
+      return '<button class="ic-compact-button lens' + (active ? ' active' : '') + '" type="button" data-brief-lens="' + row[0] + '" aria-pressed="' + String(active) + '">' + row[1] + '</button>';
+    }).join('') + '</div></div></nav>';
+}
 let pendingBriefFocus = null;
-function restorePendingBriefFocus() {
+function restorePendingBriefFocus(consumePending,preferStatusFocus) {
   if (!pendingBriefFocus) return;
   const pending = pendingBriefFocus;
-  pendingBriefFocus = null;
+  if (consumePending !== false) pendingBriefFocus = null;
   requestAnimationFrame(function () {
     let target = null;
-    if (pending.kind === 'lens') {
-      target = document.querySelector('[data-brief-lens="' + pending.value + '"]');
+    if (preferStatusFocus) {
+      target = document.querySelector('[data-retry-briefs]') || document.getElementById('brief-status-title');
+    } else if (pending.kind === 'lens') {
+      const lensSelector = '[data-brief-lens="' + pending.value + '"]';
+      target = window.innerWidth < 1440
+        ? document.querySelector('.ic-compact-nav ' + lensSelector)
+        : document.querySelector('.ic-rail ' + lensSelector);
+      target = target || document.querySelector(lensSelector);
     } else {
       target = document.getElementById('lead-article-title') ||
+        document.getElementById('brief-status-title') ||
         document.querySelector('#inspector-content .record-title');
     }
     target = target || document.querySelector('[data-retry-briefs]');
@@ -3202,22 +3481,21 @@ function restorePendingBriefFocus() {
 }
 function renderIntelligenceBrief(records) {
   const shell = document.getElementById('briefing-shell');
-  const lenses = [
-    ['all','Latest'],['checkpoint','Public checkpoints'],['evidence','Contextual evidence'],
-    ['countercase','Countercase'],['falsifier','Falsifiers'],['implementation','Implementation / capacity']
-  ];
-  function renderBriefStatus(title,body,actionMarkup) {
-    shell.innerHTML = '<div class="intel-wrap">' + briefRailMarkup(lenses) +
+  delete shell.dataset.statusAnnouncement;
+  const lenses = BRIEF_LENSES;
+  function renderBriefStatus(title,body,actionMarkup,preservePendingFocus,preferStatusFocus) {
+    shell.innerHTML = '<div class="intel-wrap">' + briefRailMarkup(lenses) + briefCompactNavMarkup(lenses) +
       '<article class="intel-lead"><div class="intel-lead-inner"><div class="ic-topic">Investment committee brief · source-backed</div><h1 class="intel-title" id="brief-status-title">' + escapeHtml(title) + '</h1><p class="ic-dek">' + escapeHtml(body) + '</p>' + (actionMarkup || '') + '</div></article>' +
       '<aside class="intel-side ic-sheet"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">Evidence boundary</div><h2 class="ic-sheet-title">Release integrity first</h2><p class="ic-sheet-intro">The terminal will not mix source passages from a different release or treat an unavailable asset as evidence absence.</p></div></aside></div>';
-    restorePendingBriefFocus();
+    shell.dataset.statusAnnouncement = title;
+    restorePendingBriefFocus(!preservePendingFocus,preferStatusFocus);
   }
   if (state.briefLens !== 'all' && briefArchiveFailed && !briefArchiveReady) {
-    renderBriefStatus('Older dossiers could not be verified','The release-bound article asset did not load. The terminal will not mix passages from a different release.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>');
+    renderBriefStatus('Older dossiers could not be verified','The release-bound article asset did not load. The terminal will not mix passages from a different release.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>',false,true);
     return;
   }
   if (state.briefLens !== 'all' && !briefArchiveReady && !briefArchiveFailed) {
-    renderBriefStatus('Loading the complete article lens…','Retrieving deferred exact passages for older articles and checking them against this release. Preparing ' + lenses.find(function (row) { return row[0] === state.briefLens; })[1] + ' across the archive.','');
+    renderBriefStatus('Loading the complete article lens…','Retrieving deferred exact passages for older articles and checking them against this release. Preparing ' + lenses.find(function (row) { return row[0] === state.briefLens; })[1] + ' across the archive.','',true);
     loadBriefArchive().then(function () {
       if (state.view === 'briefing' && state.briefLens !== 'all') render();
     }).catch(function () {
@@ -3234,7 +3512,7 @@ function renderIntelligenceBrief(records) {
   if (!selected || !records.some(function (article) { return article.id === selected.id; })) selected = records[0];
   state.selected = selected.id;
   if (!selected.brief && !selected._briefLoadFailed) {
-    renderBriefStatus('Loading the exact article dossier…','The older dossier is stored as a deferred release asset. Validating it against release ' + String(SNAPSHOT.data_checksum || '').slice(0,12) + ' before display.','');
+    renderBriefStatus('Loading the exact article dossier…','The older dossier is stored as a deferred release asset. Validating it against release ' + String(SNAPSHOT.data_checksum || '').slice(0,12) + ' before display.','',true);
     ensureArticleBrief(selected).then(function (briefValue) {
       if (briefValue && state.view === 'briefing' && state.selected === selected.id) render();
       else if (!briefValue && state.view === 'briefing' && state.selected === selected.id) renderIntelligenceBrief(records);
@@ -3242,7 +3520,7 @@ function renderIntelligenceBrief(records) {
     return;
   }
   if (!selected.brief && selected._briefLoadFailed) {
-    renderBriefStatus('This exact dossier could not be verified','The release-bound article asset did not load. No evidence-absence conclusion has been drawn.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>');
+    renderBriefStatus('This exact dossier could not be verified','The release-bound article asset did not load. No evidence-absence conclusion has been drawn.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>',false,true);
     return;
   }
   const brief = selected.brief || {lead:null,sections:[],fallback_evidence:null,checkpoints:[]};
@@ -3269,7 +3547,12 @@ function renderIntelligenceBrief(records) {
   const readLabel = selected.content_status === 'excerpt' ? 'Excerpt indexed' : selected.read_minutes ? selected.read_minutes + ' min read' : 'Full text indexed';
   const exactSpanCount = sourceSpans.length + checkpoints.length;
   const articlePosition = Math.max(1,ARTICLES.findIndex(function (article) { return article.id === selected.id; }) + 1);
-  const localPackets = observationsReady ? (selected._ideas || []).map(function (idea) { return workflowItems.get(idea.id); }).filter(Boolean) : [];
+  const sourceRelease = SNAPSHOT.sources && SNAPSHOT.sources[selected.source] || {};
+  const sourceHealthClass = sourceRelease.status === 'ok' ? ' ok' : sourceRelease.status === 'degraded' ? ' degraded' : ' unavailable';
+  const articleIdeaIds = new Set(selected.idea_ids || []);
+  const localPackets = Array.from(workflowItems.values()).filter(function (item) {
+    return Boolean(item && ((item.source_snapshot && item.source_snapshot.article_id === selected.id) || articleIdeaIds.has(item.id)));
+  });
   const activePackets = localPackets.filter(function (item) { return item.status !== 'archived'; }).length;
   const subtitleMarkup = selected.subtitle ? '<p class="ic-dek">' + escapeHtml(selected.subtitle) + '</p>' : '';
   const openingText = leadRow && leadRow.span && leadRow.span.text || articleClaim(selected);
@@ -3278,24 +3561,24 @@ function renderIntelligenceBrief(records) {
   const checkpointSection = '<section class="ic-sheet-section" id="brief-checkpoints"><div class="ic-sheet-label"><span>Public checkpoints</span><span class="ic-authored">Authored</span></div>' +
     (checkpointMarkup || '<p class="missing">No dated public checkpoint was identified by the high-precision rules.</p>') +
     '<p class="ic-boundary-note">Status is measured against the dataset check date. A passed cited date means verification is due; it does not assert that the event occurred.</p></section>';
-  shell.innerHTML = '<div class="intel-wrap">' + briefRailMarkup(lenses) +
+  shell.innerHTML = '<div class="intel-wrap">' + briefRailMarkup(lenses,selected) + briefCompactNavMarkup(lenses) +
     '<article class="intel-lead" aria-labelledby="lead-article-title"><div class="intel-lead-inner">' +
-      '<div class="ic-document-meta"><div class="ic-document-meta-left"><span class="source-badge source-' + selected.source + '">' + sourceLabel(selected.source) + '</span><time datetime="' + selected.date + '">' + escapeHtml(formatDate(selected.date)) + '</time><span>·</span><span>' + escapeHtml(readLabel) + '</span><span>·</span><span>Dossier ' + number(articlePosition) + ' of ' + number(ARTICLES.length) + '</span></div><a class="ic-open-source" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a></div>' +
+      '<div class="ic-document-meta"><div class="ic-document-meta-left"><span class="source-badge source-' + selected.source + '">' + sourceLabel(selected.source) + '</span><time datetime="' + selected.date + '">' + escapeHtml(formatDate(selected.date)) + '</time><span>·</span><span>' + escapeHtml(readLabel) + '</span><span>·</span><span>Dossier ' + number(articlePosition) + ' of ' + number(ARTICLES.length) + '</span><span>·</span><span class="ic-checked-at">Dataset assembled <time datetime="' + escapeHtml(String(SNAPSHOT.checked_at || '')) + '">' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '</time></span><span>·</span><span class="ic-source-health' + sourceHealthClass + '">' + escapeHtml(sourceCollectionSummary(selected.source)) + '</span></div><a class="ic-open-source" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a></div>' +
       '<div class="ic-topic">Investment committee brief · published information</div><h1 class="intel-title" id="lead-article-title">' + escapeHtml(selected.title) + '</h1>' + subtitleMarkup +
-      '<section class="ic-opening-claim"><div class="ic-claim-label">' + openingLabel + '</div><p>' + highlightArticleNumbers(openingText) + '</p>' + openingTail + '</section></div>' +
+      '<section class="ic-opening-claim" id="brief-thesis"><div class="ic-claim-label">' + openingLabel + '</div><p>' + highlightArticleNumbers(openingText) + '</p>' + openingTail + '</section></div>' +
       evidenceSpotlightMarkup(selected) +
-      '<section class="ic-analysis" aria-labelledby="analysis-title"><div class="ic-section-header"><h2 id="analysis-title">How the argument works</h2><p>Exact authored passages, organized by research role. No analyst conclusion, score, or portfolio recommendation is inferred.</p></div><div class="ic-analysis-grid">' +
+      '<section class="ic-analysis" id="brief-analysis" aria-labelledby="analysis-title"><div class="ic-section-header"><h2 id="analysis-title">How the argument works</h2><p>Exact authored passages, organized by research role. No analyst conclusion, score, or portfolio recommendation is inferred.</p></div><div class="ic-analysis-grid">' +
         analysisPanelMarkup(mechanismRow,'Mechanism','') + analysisPanelMarkup(evidenceRow,'Evidence','evidence') +
       '</div></section>' +
-      '<section class="ic-dossier"><div class="ic-dossier-head"><div class="ic-topic">Audit trail</div><h2>Source dossier and decision boundaries</h2><p>The evidence ledger retains detected values with their original context. Section coverage records what the rules captured; it is not a judgment of research quality.</p></div>' +
+      '<section class="ic-dossier" id="brief-dossier"><div class="ic-dossier-head"><div class="ic-topic">Audit trail</div><h2>Source dossier and decision boundaries</h2><p>The evidence ledger retains detected values with their original context. Section coverage records what the rules captured; it is not a judgment of research quality.</p></div>' +
         researchMapMarkup(selected) + evidenceLedgerMarkup(selected) +
         '<div class="intel-section-grid">' + (sectionMarkup || '<div class="intel-empty">No additional countercase, falsifier, or implementation passage was identified. Open the original article for full context.</div>') + '</div>' +
       '</section><div class="intel-actions"><a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a><button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open source dossier</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy IC brief</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
-    '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">IC decision sheet · source + local</div><h2 class="ic-sheet-title" id="decision-sheet-title">What changes our mind</h2><p class="ic-sheet-intro">The source-defined thesis, contrary case, falsifier, and public watch items remain separate from device-local workflow.</p>' +
+    '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">IC decision sheet · source + local</span><span class="print-only">IC decision sheet · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">What changes our mind</h2><p class="ic-sheet-intro"><span class="screen-only">The source-defined thesis, contrary case, falsifier, and public watch items remain separate from device-local workflow.</span><span class="print-only">Source-defined thesis, contrary case, falsifier, and public watch items. Independent diligence remains required.</span></p>' +
       decisionSheetSectionMarkup(leadRow,'Author’s thesis') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase') + decisionSheetSectionMarkup(falsifierRow,'What would change the view') + decisionSheetSectionMarkup(implementationRow,'What to watch') + checkpointSection +
       '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Device-local IC overlay</span><span class="ic-authored">Local · this device</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active source-passage packet' + (activePackets === 1 ? '' : 's') + ' for this article. Packets attach to individual observations; this brief never silently assigns an article-level recommendation.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open decision queue</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy brief</button></div></section>' +
       '<p class="ic-boundary-note">Evidence boundary: exact published-source passages; not independently verified, not a live market as-of, and not a portfolio recommendation. Full source context remains controlling.</p></div></aside>' +
-    '<section class="ic-archive-grid">' + archiveCoverageMarkup(records) + relatedResearchMarkup(selected) + '</section>' +
+    '<section class="ic-archive-grid" id="brief-archive">' + archiveCoverageMarkup(records) + relatedResearchMarkup(selected) + '</section>' +
     '<section class="intel-stream"><div class="intel-card-head"><h3>Recent article dossiers</h3><span>' + number(records.length) + ' in this lens</span></div><div class="intel-stream-list">' + (stream || '<div class="intel-empty">No additional articles in this lens.</div>') + '</div></section></div>';
   restorePendingBriefFocus();
 }
@@ -3532,7 +3815,7 @@ function renderIdeaInspector(idea) {
     '</section>' +
     '<section class="inspector-section"><h3>Source-extracted coverage</h3><div class="diligence-grid">' + capturedDiligence + unassessedDiligence + '</div></section>' +
     workflowPanel +
-    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; source collection checked ' + escapeHtml(formatCheckedAt(SNAPSHOT.checked_at)) + '. This is not a live market as-of timestamp. Rules-based passage extracted from published research by one author. “No reliable stance” means the source did not express a direction the parser could safely classify. Mentions are not verified positions; reported outcomes are not independently verified. Review the original publication before any investment or execution decision.</div>' +
+    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; dataset assembled ' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '; ' + escapeHtml(sourceCollectionSummary(article.source)) + '. This is not a live market as-of timestamp. Rules-based passage extracted from published research by one author. “No reliable stance” means the source did not express a direction the parser could safely classify. Mentions are not verified positions; reported outcomes are not independently verified. Review the original publication before any investment or execution decision.</div>' +
     '</div>';
 }
 function renderArticleInspector(article) {
@@ -3577,7 +3860,7 @@ function renderArticleInspector(article) {
     (gaps.length ? '<section class="article-dossier-section"><h3>Evidence boundaries</h3><div class="review-notice">' + gaps.map(function (gap) { return '<div>• ' + escapeHtml(gap) + '</div>'; }).join('') + '</div></section>' : '') +
     articleExtractionMap(article) +
     (related ? '<details class="article-dossier-section"><summary>Parser-derived observations (' + number(article.trade_count) + ')</summary><div class="related-ideas" style="margin-top:9px">' + related + '</div></details>' : (observationsReady ? '<section class="article-dossier-section"><h3>Parser-derived observations</h3><p class="missing">None captured. The article dossier remains available because it is built from exact authored sections, not observation count.</p></section>' : '')) +
-    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; source collection checked ' + escapeHtml(formatCheckedAt(SNAPSHOT.checked_at)) + '. Every dossier passage is stored with source offsets and a SHA-256 hash and was validated against the article body before publication. Structured direction fields classify passage language only; they do not identify the actor, a verified position, or a current view. The brief does not infer holdings, conviction, expected return, portfolio fit, or a live market view.</div>' +
+    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; dataset assembled ' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '; ' + escapeHtml(sourceCollectionSummary(article.source)) + '. Every dossier passage is stored with source offsets and a SHA-256 hash and was validated against the article body before publication. Structured direction fields classify passage language only; they do not identify the actor, a verified position, or a current view. The brief does not infer holdings, conviction, expected return, portfolio fit, or a live market view.</div>' +
     '</div>';
 }
 let renderedInspectorKey = '';
@@ -3596,10 +3879,10 @@ function renderInspector() {
       });
     } else if (article && article._briefLoadFailed && !article.brief) {
       container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">!</div><h2>Exact dossier unavailable</h2><p>The same-release article asset could not be verified. This is a load failure, not evidence absence.</p><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>';
-      restorePendingBriefFocus();
+      if (state.view !== 'briefing') restorePendingBriefFocus();
     } else {
       container.innerHTML = article ? renderArticleInspector(article) : '';
-      restorePendingBriefFocus();
+      if (state.view !== 'briefing') restorePendingBriefFocus();
     }
   } else {
     const idea = IDEA_BY_ID.get(state.selected);
@@ -3611,10 +3894,74 @@ function renderInspector() {
 
 function currentStateNeedsObservations() {
   if (!isArticleView()) return true;
+  if (state.view === 'research') return true;
   return Boolean(
     state.query || state.directions.size || state.instruments.size || state.managers.size ||
     state.quality.size || state.documentation !== 'all'
   );
+}
+function queueObservationResultFocus(kind) {
+  pendingObservationFocus = {view:state.view,query:state.query,kind:kind || 'entry'};
+}
+function focusViewEntry() {
+  const target = state.view === 'briefing'
+    ? document.getElementById('lead-article-title') || document.getElementById('brief-status-title') || document.getElementById('observation-gate-title')
+    : document.querySelector('[data-record-id][tabindex="0"]') || document.getElementById('empty-title');
+  if (!target) return;
+  if (!target.matches('button,a,input,select,textarea,[tabindex]')) target.tabIndex = -1;
+  target.focus();
+}
+function focusObservationGate(consumePending) {
+  const retry = observationsFailed ? document.querySelector('[data-retry-observations]') : null;
+  const target = retry || (state.view === 'briefing' ? document.getElementById('observation-gate-title') : document.getElementById('empty-title'));
+  if (target) {
+    if (!target.matches('button,a,input,select,textarea,[tabindex]')) target.tabIndex = -1;
+    target.focus();
+  }
+  if (consumePending) pendingObservationFocus = null;
+}
+function restoreObservationResultFocus() {
+  const pending = pendingObservationFocus;
+  pendingObservationFocus = null;
+  if (!pending || pending.view !== state.view || pending.query !== state.query) return;
+  if (pending.kind === 'inspector') openInspector(true);
+  else focusViewEntry();
+}
+function renderObservationAwareNavigation(focusKind) {
+  const waiting = !observationsReady && currentStateNeedsObservations();
+  if (waiting) queueObservationResultFocus(focusKind);
+  render();
+  if (waiting) focusObservationGate();
+  else if (focusKind === 'inspector') openInspector(true);
+  else focusViewEntry();
+}
+function requestObservationsForCurrentState(forceRetry) {
+  if (observationsReady || !currentStateNeedsObservations()) return Promise.resolve(IDEAS);
+  if (observationGatePromise) return observationGatePromise;
+  if (observationsFailed && !forceRetry) return Promise.resolve(null);
+  const request = forceRetry ? retryObservations() : loadObservations();
+  const gatePromise = request.then(function (rows) {
+    if (observationGatePromise === gatePromise) observationGatePromise = null;
+    if (currentStateNeedsObservations()) {
+      render();
+      restoreObservationResultFocus();
+    } else {
+      pendingObservationFocus = null;
+    }
+    return rows;
+  }).catch(function () {
+    if (observationGatePromise === gatePromise) observationGatePromise = null;
+    if (currentStateNeedsObservations()) {
+      render();
+      focusObservationGate(true);
+      showToast('Deferred evidence archive could not be verified');
+    } else {
+      pendingObservationFocus = null;
+    }
+    return null;
+  });
+  observationGatePromise = gatePromise;
+  return gatePromise;
 }
 function renderObservationGate() {
   setSortOptions();
@@ -3625,7 +3972,9 @@ function renderObservationGate() {
     : 'Validating observation identities, article ownership, and source fields before showing observation-dependent results.';
   const action = observationsFailed ? '<button class="secondary-action" type="button" data-retry-observations>Retry evidence archive</button>' : '';
   if (state.view === 'briefing') {
-    document.getElementById('briefing-shell').innerHTML = '<div class="intel-wrap"><div class="intel-head"><div class="intel-head-copy"><div class="brief-kicker">Release integrity check</div><h2>' + escapeHtml(title) + '</h2><p>' + escapeHtml(copy) + '</p></div></div><div class="intel-empty">' + action + '</div></div>';
+    document.getElementById('briefing-shell').innerHTML = '<div class="intel-wrap">' + briefRailMarkup(BRIEF_LENSES) + briefCompactNavMarkup(BRIEF_LENSES) +
+      '<article class="intel-lead"><div class="intel-lead-inner"><div class="ic-topic">Release integrity check</div><h1 class="intel-title" id="observation-gate-title">' + escapeHtml(title) + '</h1><p class="ic-dek">' + escapeHtml(copy) + '</p>' + (action ? '<div class="intel-actions">' + action + '</div>' : '') + '</div></article>' +
+      '<aside class="intel-side ic-sheet"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">Evidence boundary</div><h2 class="ic-sheet-title">Fail closed</h2><p class="ic-sheet-intro">Article dossiers remain separate from the deferred parser archive. An unavailable asset is never presented as missing evidence.</p></div></aside></div>';
   } else {
     renderTableHead();
     document.getElementById('table-body').replaceChildren();
@@ -3645,10 +3994,12 @@ function renderObservationGate() {
   updateHash();
 }
 function render() {
+  if (state.view !== 'briefing') pendingBriefFocus = null;
   document.querySelectorAll('.observation-retry').forEach(function (element) { element.remove(); });
   document.querySelector('#empty-state .empty-actions').hidden = false;
   if (!observationsReady && currentStateNeedsObservations()) {
     renderObservationGate();
+    requestObservationsForCurrentState(false);
     return;
   }
   setSortOptions();
@@ -3668,10 +4019,11 @@ function render() {
   renderOrphanedQueue();
   renderInspector();
   const orphanedCount = state.view === 'queue' ? Array.from(workflowItems.keys()).filter(function (id) { return !IDEA_BY_ID.has(id); }).length : 0;
-  document.getElementById('result-summary').textContent =
+  const briefStatusAnnouncement = state.view === 'briefing' ? document.getElementById('briefing-shell').dataset.statusAnnouncement || '' : '';
+  document.getElementById('result-summary').textContent = briefStatusAnnouncement ||
     number(records.length) + ' ' + (isArticleView() ? 'article dossiers' : state.view === 'queue' ? 'current queued observations' : 'research observations') + (orphanedCount ? ' + ' + number(orphanedCount) + ' retained source snapshots' : '');
   updateHash();
-  document.getElementById('announcer').textContent =
+  document.getElementById('announcer').textContent = briefStatusAnnouncement ||
     number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Latest Brief' : state.view === 'research' ? 'Research Library' : state.view === 'queue' ? 'Decision Queue' : 'Evidence Monitor');
 }
 
@@ -3978,7 +4330,7 @@ function applyPreset(name) {
   state.selected = '';
   state.limit = PAGE_SIZE.ideas;
   document.getElementById('search').value = '';
-  render();
+  renderObservationAwareNavigation('entry');
 }
 function markReviewedThroughLatest() {
   try {
@@ -4085,12 +4437,11 @@ document.getElementById('table-head').addEventListener('click',function (event) 
 document.addEventListener('click',function (event) {
   const retryObservationButton = event.target.closest('[data-retry-observations]');
   if (retryObservationButton) {
+    queueObservationResultFocus();
     document.querySelectorAll('[data-retry-observations]').forEach(function (button) { button.disabled = true; });
-    retryObservations().then(function () { render(); }).catch(function () {
-      showToast('Release-bound evidence archive is still unavailable');
-      render();
-    });
+    requestObservationsForCurrentState(true);
     render();
+    focusObservationGate();
     return;
   }
   const briefJump = event.target.closest('[data-brief-jump]');
@@ -4153,8 +4504,7 @@ document.addEventListener('click',function (event) {
     state.selected = articleDossier.dataset.articleDossier;
     state.sort = 'newest';
     state.limit = PAGE_SIZE.research;
-    render();
-    openInspector(true);
+    renderObservationAwareNavigation('inspector');
     return;
   }
   const view = event.target.closest('button[data-view]');
@@ -4164,7 +4514,7 @@ document.addEventListener('click',function (event) {
     state.sort = 'newest';
     state.selected = '';
     state.limit = PAGE_SIZE[state.view];
-    render();
+    renderObservationAwareNavigation('entry');
     return;
   }
   const kpiView = event.target.closest('[data-kpi-view]');
@@ -4174,7 +4524,7 @@ document.addEventListener('click',function (event) {
     state.sort = 'newest';
     state.selected = '';
     state.limit = PAGE_SIZE[state.view];
-    render();
+    renderObservationAwareNavigation('entry');
     return;
   }
   const preset = event.target.closest('[data-preset],[data-kpi-preset]');
@@ -4188,8 +4538,7 @@ document.addEventListener('click',function (event) {
     state.view = 'ideas';
     state.selected = briefRecord.dataset.briefRecord;
     state.limit = PAGE_SIZE.ideas;
-    render();
-    openInspector(true);
+    renderObservationAwareNavigation('inspector');
     return;
   }
   const kpiQuality = event.target.closest('[data-kpi-quality]');
@@ -4197,7 +4546,7 @@ document.addEventListener('click',function (event) {
     state.view = 'ideas';
     state.quality.add(kpiQuality.dataset.kpiQuality);
     state.limit = PAGE_SIZE.ideas;
-    render();
+    renderObservationAwareNavigation('entry');
     return;
   }
   const facet = event.target.closest('[data-filter]');
@@ -4415,6 +4764,10 @@ function renderArticleAwareSearch(focusResult) {
   const finish = function () {
     render();
     if (!focusResult) return;
+    if (!observationsReady && currentStateNeedsObservations()) {
+      queueObservationResultFocus();
+      return;
+    }
     if (state.view === 'briefing') {
       const leadTitle = document.getElementById('lead-article-title');
       if (leadTitle) { leadTitle.tabIndex = -1; leadTitle.focus(); }
@@ -4558,8 +4911,7 @@ document.addEventListener('keydown',function (event) {
     if (state.view === 'briefing') {
       markMeaningfulNavigation();
       state.view = 'research';
-      render();
-      openInspector(true);
+      renderObservationAwareNavigation('inspector');
     } else openInspector(true);
   } else if (event.key.toLowerCase() === 'o') {
     const article = selectedArticle();
@@ -4593,8 +4945,7 @@ document.addEventListener('keydown',function (event) {
     state.sort = 'newest';
     state.selected = '';
     state.limit = PAGE_SIZE[state.view];
-    render();
-    if (state.view !== 'briefing') focusSelectedRow();
+    renderObservationAwareNavigation('entry');
   }
 });
 
@@ -4602,13 +4953,12 @@ window.addEventListener('popstate',function () {
   restoringHistory = true;
   hydrateFromHash();
   document.getElementById('search').value = state.query;
+  const waiting = !observationsReady && currentStateNeedsObservations();
+  if (waiting) queueObservationResultFocus('entry');
   render();
   restoringHistory = false;
-  const target = state.view === 'briefing' ? document.getElementById('lead-article-title') : document.querySelector('[data-record-id][tabindex="0"]');
-  if (target) {
-    if (!target.matches('[data-record-id]')) target.tabIndex = -1;
-    target.focus();
-  }
+  if (waiting) focusObservationGate();
+  else focusViewEntry();
 });
 
 window.addEventListener('resize',function () {
@@ -4624,6 +4974,12 @@ function formatCheckedAt(value) {
   const date = new Date(String(value || ''));
   if (Number.isNaN(date.getTime())) return 'time not recorded';
   return date.toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'});
+}
+function formatReleaseCheckedAt(value) {
+  const date = new Date(String(value || ''));
+  if (Number.isNaN(date.getTime())) return 'time not recorded';
+  const iso = date.toISOString();
+  return iso.slice(0,10) + ' ' + iso.slice(11,16) + ' UTC';
 }
 function renderStaticStats() {
   const evidenceArticles = ARTICLES.filter(function (article) { return articleHasEvidence(article); }).length;
@@ -4641,15 +4997,23 @@ function renderStaticStats() {
   document.getElementById('kpi-checkpoints').textContent = number(checkpointCount);
   const sourceHealth = Object.values(SNAPSHOT.sources || {});
   const checked = new Date(String(SNAPSHOT.checked_at || ''));
-  const ageHours = Number.isNaN(checked.getTime()) ? Infinity : Math.max(0,(Date.now() - checked.getTime()) / 3600000);
+  const nowMs = Date.now();
+  const futureToleranceMs = 10 * 60 * 1000;
+  const checkedMs = checked.getTime();
+  const manifestClockInvalid = Number.isNaN(checkedMs) || checkedMs > nowMs + futureToleranceMs;
+  const sourceClockInvalid = sourceHealth.some(function (source) {
+    const sourceCheckedMs = new Date(String(source && source.checked_at || '')).getTime();
+    return Number.isNaN(sourceCheckedMs) || sourceCheckedMs > nowMs + futureToleranceMs;
+  });
+  const ageHours = manifestClockInvalid ? Infinity : (nowMs - checkedMs) / 3600000;
   const allHealthy = sourceHealth.length >= 2 && sourceHealth.every(function (source) { return source.status === 'ok'; });
-  const freshnessClass = ageHours > 16 ? 'stale' : allHealthy ? 'fresh' : sourceHealth.length ? 'degraded' : '';
+  const freshnessClass = manifestClockInvalid || sourceClockInvalid || ageHours > 16 ? 'stale' : allHealthy ? 'fresh' : sourceHealth.length ? 'degraded' : '';
   const freshnessStatus = freshnessClass === 'stale' ? 'Stale' : freshnessClass === 'fresh' ? 'Current' : freshnessClass === 'degraded' ? 'Degraded' : 'Unknown';
   const dot = document.getElementById('freshness-dot');
   dot.className = 'status-dot' + (freshnessClass ? ' ' + freshnessClass : '');
   document.getElementById('freshness-state').textContent = freshnessStatus;
   const label = document.getElementById('freshness-label');
-  label.textContent = 'Research through ' + formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10)) + ' · checked ' + formatCheckedAt(SNAPSHOT.checked_at);
+  label.textContent = (manifestClockInvalid || sourceClockInvalid ? 'Refresh clock invalid · ' : '') + 'Research through ' + formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10)) + ' · checked ' + formatCheckedAt(SNAPSHOT.checked_at);
   const healthDetail = ['substack','medium'].map(function (source) {
     const info = SNAPSHOT.sources && SNAPSHOT.sources[source] || {};
     return sourceLabel(source) + ': ' + (info.status || 'unknown') + ', ' + number(info.included_count || 0) + ' included, ' + (info.mode || 'mode unknown');
@@ -4669,13 +5033,6 @@ state.inspector = storedInspector;
 renderStaticStats();
 if (state.query && isArticleView()) renderArticleAwareSearch(false);
 else render();
-loadObservations().then(function () {
-  if (state.query && isArticleView()) renderArticleAwareSearch(false);
-  else render();
-}).catch(function () {
-  render();
-  showToast('Deferred evidence archive could not be verified');
-});
 </script>
 </body>
 </html>
@@ -4686,6 +5043,8 @@ HTML = (HTML_TEMPLATE
         .replace('__MANAGER_LABELS_JSON__', manager_labels_json)
         .replace('__SNAPSHOT_JSON__', snapshot_json)
         .replace('__MANAGER_BUTTONS__', manager_html)
+        .replace('__BRIEF_ARCHIVE_SHA256__', brief_archive_sha256)
+        .replace('__OBSERVATION_ARCHIVE_SHA256__', observation_archive_sha256)
         .replace('__REVISION__', revision_meta)
         .replace('__ARTICLE_COUNT__', str(len(client_articles)))
         .replace('__OBSERVATION_COUNT__', str(len(client_ideas)))
@@ -4697,19 +5056,11 @@ with open(out, 'w', encoding='utf-8') as handle:
 
 brief_out = DOCS_DIR / 'article_briefs.json'
 with open(brief_out, 'w', encoding='utf-8') as handle:
-    json.dump({
-        'schema_version': 1,
-        'data_checksum': snapshot_manifest.get('data_checksum') or '',
-        'briefs': brief_archive,
-    }, handle, ensure_ascii=False, separators=(',', ':'))
+    handle.write(brief_archive_json)
 
 observations_out = DOCS_DIR / 'observations.json'
 with open(observations_out, 'w', encoding='utf-8') as handle:
-    json.dump({
-        'schema_version': 1,
-        'data_checksum': snapshot_manifest.get('data_checksum') or '',
-        'observations': client_ideas,
-    }, handle, ensure_ascii=False, separators=(',', ':'))
+    handle.write(observation_archive_json)
 
 print(
     f'Built {out} ({len(HTML) // 1024} KB + '

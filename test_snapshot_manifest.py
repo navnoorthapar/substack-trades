@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest import mock
 
@@ -114,6 +115,21 @@ class SnapshotManifestTests(unittest.TestCase):
                 validate_manifest(
                     manifest, sample_articles(), sample_observations(),
                     article_path, trade_path,
+                )
+
+    def test_manifest_rejects_a_future_dated_refresh_clock(self):
+        with tempfile.TemporaryDirectory() as raw_directory:
+            directory = Path(raw_directory)
+            article_path, trade_path, manifest = self._fixture(directory)
+            manifest['checked_at'] = '2026-07-14T02:11:00Z'
+            with self.assertRaisesRegex(ValueError, 'far in the future'):
+                validate_manifest(
+                    manifest,
+                    sample_articles(),
+                    sample_observations(),
+                    article_path,
+                    trade_path,
+                    now=datetime(2026, 7, 14, 2, 0, 0, tzinfo=timezone.utc),
                 )
 
     def test_previous_manifest_rejects_time_rollback_and_inconsistent_counts(self):

@@ -7,7 +7,7 @@ import re
 import sys
 from collections import Counter
 from datetime import date as Date
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
@@ -44,6 +44,7 @@ TIMESTAMP_RE = re.compile(
 )
 SHA256_RE = re.compile(r'^[0-9a-f]{64}$')
 MEDIUM_ID_RE = re.compile(r'(?:-|/)([0-9a-f]{12})$', re.IGNORECASE)
+MAX_FUTURE_CLOCK_SKEW = timedelta(minutes=10)
 
 
 def load_json(path, label):
@@ -392,13 +393,19 @@ def validate_article_regression(articles, previous_path, minimum_ratio):
                 f'{current_counts[source]} (minimum allowed: {minimum})')
 
 
-def validate_manifest(manifest, articles, trades, article_path, trade_path):
+def validate_manifest(manifest, articles, trades, article_path, trade_path, now=None):
     require(manifest.get('schema_version') == 1,
             'snapshot manifest has an unsupported schema version')
     checked_at_value = manifest.get('checked_at')
     checked_at, _ = parse_iso_date(checked_at_value, 'manifest checked_at')
     require(TIMESTAMP_RE.fullmatch(checked_at_value),
             'manifest checked_at must be a timezone-qualified timestamp')
+    validation_now = now or datetime.now(timezone.utc)
+    require(validation_now.tzinfo is not None,
+            'manifest validation clock must be timezone-aware')
+    future_cutoff = validation_now.astimezone(timezone.utc) + MAX_FUTURE_CLOCK_SKEW
+    require(checked_at <= future_cutoff,
+            'manifest checked_at is implausibly far in the future')
     latest_publication = manifest.get('latest_publication')
     parse_iso_date(latest_publication, 'manifest latest_publication')
     expected_latest = max(
@@ -435,6 +442,8 @@ def validate_manifest(manifest, articles, trades, article_path, trade_path):
                 f'manifest {source} checked_at must be a timestamp')
         require(source_checked <= checked_at,
                 f'manifest {source} checked_at is later than the manifest')
+        require(source_checked <= future_cutoff,
+                f'manifest {source} checked_at is implausibly far in the future')
         require(item.get('status') in VALID_FETCH_STATUSES,
                 f'manifest {source} has an invalid fetch status')
         require(isinstance(item.get('mode'), str) and item['mode'].strip(),

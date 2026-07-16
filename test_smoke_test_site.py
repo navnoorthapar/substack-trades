@@ -6,13 +6,16 @@ import types
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
 
 import smoke_test_site
 
 
 REVISION = 'a' * 40
 CHECKSUM = 'b' * 64
+HTML_DIGEST = 'c' * 64
+BRIEF_DIGEST = 'd' * 64
+OBSERVATION_DIGEST = 'e' * 64
 
 
 def fixture_deferred(checksum=CHECKSUM, schema_version=1, briefs=None):
@@ -25,12 +28,22 @@ def fixture_deferred(checksum=CHECKSUM, schema_version=1, briefs=None):
     }
 
 
+def fixture_observations(checksum=CHECKSUM, schema_version=1, count=1327):
+    return {
+        'schema_version': schema_version,
+        'data_checksum': checksum,
+        'observations': [{'id': f'i_{index}'} for index in range(count)],
+    }
+
+
 def fixture_html(
     revision=REVISION,
     articles='363',
     observations='1327',
     checksum=CHECKSUM,
     omitted_id=None,
+    brief_digest=BRIEF_DIGEST,
+    observation_digest=OBSERVATION_DIGEST,
 ):
     ids = smoke_test_site.REQUIRED_ELEMENT_IDS - ({omitted_id} if omitted_id else set())
     elements = ''.join(f'<div id="{element_id}"></div>' for element_id in sorted(ids))
@@ -41,7 +54,10 @@ def fixture_html(
 <meta name="nrt-article-count" content="{articles}">
 <meta name="nrt-observation-count" content="{observations}">
 <meta name="nrt-data-checksum" content="{checksum}">
-</head><body>{elements}</body></html>'''
+<meta name="nrt-brief-archive-sha256" content="{brief_digest}">
+<meta name="nrt-observation-archive-sha256" content="{observation_digest}">
+</head><body>{elements}
+</body></html>'''
 
 
 class SmokeTestSiteTests(unittest.TestCase):
@@ -68,7 +84,15 @@ class SmokeTestSiteTests(unittest.TestCase):
         create_context.assert_called_once_with()
 
     def test_valid_release_metadata_and_core_shell_pass(self):
-        smoke_test_site.validate_html(fixture_html(), REVISION, 363, 1327, CHECKSUM)
+        self.assertEqual(
+            smoke_test_site.validate_html(
+                fixture_html(), REVISION, 363, 1327, CHECKSUM,
+            ),
+            {
+                smoke_test_site.DEFERRED_ASSET_NAME: BRIEF_DIGEST,
+                smoke_test_site.OBSERVATION_ASSET_NAME: OBSERVATION_DIGEST,
+            },
+        )
 
     def test_wrong_revision_or_counts_fail_closed(self):
         with self.assertRaisesRegex(ValueError, 'deployed revision'):
@@ -96,6 +120,40 @@ class SmokeTestSiteTests(unittest.TestCase):
                 fixture_html(), REVISION, 363, 1327, 'c' * 64,
             )
 
+    def test_missing_or_invalid_deferred_asset_digest_fails_closed(self):
+        with self.assertRaisesRegex(ValueError, 'article_briefs.json'):
+            smoke_test_site.validate_html(
+                fixture_html(brief_digest='not-a-digest'),
+                REVISION,
+                363,
+                1327,
+                CHECKSUM,
+            )
+
+    def test_duplicate_or_decoy_asset_digest_declaration_fails_closed(self):
+        duplicate = fixture_html().replace(
+            '</head>',
+            f'<meta name="nrt-brief-archive-sha256" content="{BRIEF_DIGEST}">\n</head>',
+        )
+        with self.assertRaisesRegex(ValueError, 'found 2'):
+            smoke_test_site.validate_html(
+                duplicate, REVISION, 363, 1327, CHECKSUM,
+            )
+        decoy_only = fixture_html().replace(
+            f'<meta name="nrt-brief-archive-sha256" content="{BRIEF_DIGEST}">',
+            f'<!--\n<meta name="nrt-brief-archive-sha256" content="{BRIEF_DIGEST}">\n-->',
+        )
+        with self.assertRaisesRegex(ValueError, 'found 0'):
+            smoke_test_site.embedded_asset_digests(decoy_only)
+        with self.assertRaisesRegex(ValueError, 'observations.json'):
+            smoke_test_site.validate_html(
+                fixture_html(observation_digest='ABC'),
+                REVISION,
+                363,
+                1327,
+                CHECKSUM,
+            )
+
     def test_deferred_dossier_must_match_exact_release(self):
         smoke_test_site.validate_deferred_payload(fixture_deferred(), CHECKSUM)
         with self.assertRaisesRegex(ValueError, 'schema_version must be 1'):
@@ -111,6 +169,35 @@ class SmokeTestSiteTests(unittest.TestCase):
                 fixture_deferred(briefs={}), CHECKSUM,
             )
 
+    def test_observation_archive_must_match_exact_release(self):
+        smoke_test_site.validate_observation_payload(
+            fixture_observations(), CHECKSUM, 1327,
+        )
+        with self.assertRaisesRegex(ValueError, 'schema_version must be 1'):
+            smoke_test_site.validate_observation_payload(
+                fixture_observations(schema_version=2), CHECKSUM, 1327,
+            )
+        with self.assertRaisesRegex(ValueError, 'expected'):
+            smoke_test_site.validate_observation_payload(
+                fixture_observations(checksum='c' * 64), CHECKSUM, 1327,
+            )
+        with self.assertRaisesRegex(ValueError, 'count is 1, expected 1327'):
+            smoke_test_site.validate_observation_payload(
+                fixture_observations(count=1), CHECKSUM, 1327,
+            )
+        duplicate_ids = fixture_observations(count=2)
+        duplicate_ids['observations'][1]['id'] = duplicate_ids['observations'][0]['id']
+        with self.assertRaisesRegex(ValueError, 'missing or duplicated'):
+            smoke_test_site.validate_observation_payload(
+                duplicate_ids, CHECKSUM, 2,
+            )
+        malformed_row = fixture_observations(count=1)
+        malformed_row['observations'][0] = 'not-an-object'
+        with self.assertRaisesRegex(ValueError, 'missing or duplicated'):
+            smoke_test_site.validate_observation_payload(
+                malformed_row, CHECKSUM, 1,
+            )
+
     def test_deferred_asset_resolves_beside_page_without_inheriting_query(self):
         self.assertEqual(
             smoke_test_site.deferred_asset_url(
@@ -124,6 +211,17 @@ class SmokeTestSiteTests(unittest.TestCase):
             ),
             'https://example.test/research/article_briefs.json',
         )
+        self.assertEqual(
+            smoke_test_site.deferred_asset_url(
+                'https://example.test/research/?old=1',
+                smoke_test_site.OBSERVATION_ASSET_NAME,
+            ),
+            'https://example.test/research/observations.json',
+        )
+        with self.assertRaisesRegex(ValueError, 'unsupported deferred asset'):
+            smoke_test_site.deferred_asset_url(
+                'https://example.test/research/', 'other.json',
+            )
 
     @patch('smoke_test_site.verified_ssl_context')
     @patch('smoke_test_site.urlopen')
@@ -134,7 +232,11 @@ class SmokeTestSiteTests(unittest.TestCase):
         urlopen.return_value = response
         with self.assertRaisesRegex(ValueError, 'redirected off-origin'):
             smoke_test_site.fetch_deferred_briefs(
-                'https://example.test/research/', REVISION, 1, 20,
+                'https://example.test/research/',
+                REVISION,
+                1,
+                20,
+                expected_sha256=BRIEF_DIGEST,
             )
         request = urlopen.call_args.args[0]
         self.assertEqual(
@@ -143,6 +245,117 @@ class SmokeTestSiteTests(unittest.TestCase):
             f'nrt_smoke_revision={REVISION}&nrt_smoke_attempt=1',
         )
         ssl_context.assert_called_once_with()
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_page_fetch_rejects_https_off_origin_redirect(self, urlopen, ssl_context):
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.geturl.return_value = 'https://attacker.test/research/'
+        urlopen.return_value = response
+        with self.assertRaisesRegex(ValueError, 'redirected off-origin'):
+            smoke_test_site.fetch_html(
+                'https://example.test/research/',
+                REVISION,
+                1,
+                20,
+                expected_sha256=HTML_DIGEST,
+            )
+        ssl_context.assert_called_once_with()
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_page_fetch_requires_the_exact_tested_html_bytes(self, urlopen, ssl_context):
+        import hashlib
+        payload = fixture_html().encode('utf-8')
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.geturl.return_value = 'https://example.test/research/'
+        response.status = 200
+        response.headers.get_content_type.return_value = 'text/html'
+        response.read.return_value = payload
+        urlopen.return_value = response
+        expected = hashlib.sha256(payload).hexdigest()
+        self.assertEqual(
+            smoke_test_site.fetch_html(
+                'https://example.test/research/',
+                REVISION,
+                1,
+                20,
+                expected_sha256=expected,
+            ),
+            (fixture_html(), 'https://example.test/research/'),
+        )
+        with self.assertRaisesRegex(ValueError, 'index.html SHA-256'):
+            smoke_test_site.fetch_html(
+                'https://example.test/research/',
+                REVISION,
+                2,
+                20,
+                expected_sha256=HTML_DIGEST,
+            )
+        self.assertEqual(ssl_context.call_count, 2)
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_deferred_fetch_rejects_bytes_that_do_not_match_html_digest(
+        self, urlopen, ssl_context,
+    ):
+        payload = json.dumps(fixture_deferred()).encode('utf-8')
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.geturl.return_value = 'https://example.test/research/article_briefs.json'
+        response.status = 200
+        response.headers.get_content_type.return_value = 'application/json'
+        response.read.return_value = payload
+        urlopen.return_value = response
+        with self.assertRaisesRegex(ValueError, 'SHA-256 is'):
+            smoke_test_site.fetch_deferred_briefs(
+                'https://example.test/research/',
+                REVISION,
+                1,
+                20,
+                expected_sha256=BRIEF_DIGEST,
+            )
+        ssl_context.assert_called_once_with()
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_deferred_fetch_accepts_only_the_exact_build_bytes(
+        self, urlopen, ssl_context,
+    ):
+        import hashlib
+        payload = json.dumps(fixture_deferred()).encode('utf-8')
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.geturl.return_value = 'https://example.test/research/article_briefs.json'
+        response.status = 200
+        response.headers.get_content_type.return_value = 'application/json'
+        response.read.return_value = payload
+        urlopen.return_value = response
+        self.assertEqual(
+            smoke_test_site.fetch_deferred_briefs(
+                'https://example.test/research/',
+                REVISION,
+                1,
+                20,
+                expected_sha256=hashlib.sha256(payload).hexdigest(),
+            ),
+            fixture_deferred(),
+        )
+        ssl_context.assert_called_once_with()
+
+    @patch('smoke_test_site.urlopen')
+    def test_invalid_expected_asset_digest_is_rejected_before_network(self, urlopen):
+        with self.assertRaisesRegex(ValueError, 'expected digest'):
+            smoke_test_site.fetch_deferred_observations(
+                'https://example.test/research/',
+                REVISION,
+                1,
+                20,
+                expected_sha256='invalid',
+            )
+        urlopen.assert_not_called()
 
     def test_snapshot_counts_require_non_empty_json_lists(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -165,15 +378,58 @@ class SmokeTestSiteTests(unittest.TestCase):
                 smoke_test_site.snapshot_checksum(articles, observations), expected,
             )
 
+    @patch(
+        'smoke_test_site.fetch_deferred_observations',
+        return_value=fixture_observations(),
+    )
+    @patch('smoke_test_site.fetch_deferred_briefs', return_value=fixture_deferred())
+    @patch(
+        'smoke_test_site.fetch_html',
+        return_value=(fixture_html(), 'https://example.test/canonical/'),
+    )
+    def test_same_origin_canonical_page_url_is_used_as_the_asset_base(
+        self, fetch_html, fetch_deferred, fetch_observations,
+    ):
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            smoke_test_site.smoke_test(
+                'https://example.test/research',
+                REVISION,
+                363,
+                1327,
+                CHECKSUM,
+                HTML_DIGEST,
+                BRIEF_DIGEST,
+                OBSERVATION_DIGEST,
+                retries=1,
+            )
+        fetch_deferred.assert_called_once_with(
+            'https://example.test/canonical/',
+            REVISION,
+            1,
+            20.0,
+            expected_sha256=BRIEF_DIGEST,
+        )
+        fetch_observations.assert_called_once_with(
+            'https://example.test/canonical/',
+            REVISION,
+            1,
+            20.0,
+            expected_sha256=OBSERVATION_DIGEST,
+        )
+
+    @patch(
+        'smoke_test_site.fetch_deferred_observations',
+        return_value=fixture_observations(),
+    )
     @patch('smoke_test_site.fetch_deferred_briefs', return_value=fixture_deferred())
     @patch('smoke_test_site.time.sleep')
     @patch('smoke_test_site.fetch_html')
     def test_stale_release_is_retried_until_expected_revision_appears(
-        self, fetch_html, sleep, fetch_deferred,
+        self, fetch_html, sleep, fetch_deferred, fetch_observations,
     ):
         fetch_html.side_effect = [
-            fixture_html(revision='c' * 40),
-            fixture_html(),
+            (fixture_html(revision='c' * 40), 'https://example.test/research/'),
+            (fixture_html(), 'https://example.test/research/'),
         ]
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             smoke_test_site.smoke_test(
@@ -182,20 +438,60 @@ class SmokeTestSiteTests(unittest.TestCase):
                 363,
                 1327,
                 CHECKSUM,
+                HTML_DIGEST,
+                BRIEF_DIGEST,
+                OBSERVATION_DIGEST,
                 retries=2,
                 retry_delay=0.01,
             )
         self.assertEqual(fetch_html.call_count, 2)
+        self.assertEqual(
+            fetch_html.call_args_list,
+            [
+                call(
+                    'https://example.test/research/',
+                    REVISION,
+                    1,
+                    20.0,
+                    expected_sha256=HTML_DIGEST,
+                ),
+                call(
+                    'https://example.test/research/',
+                    REVISION,
+                    2,
+                    20.0,
+                    expected_sha256=HTML_DIGEST,
+                ),
+            ],
+        )
         fetch_deferred.assert_called_once_with(
-            'https://example.test/research/', REVISION, 2, 20.0,
+            'https://example.test/research/',
+            REVISION,
+            2,
+            20.0,
+            expected_sha256=BRIEF_DIGEST,
+        )
+        fetch_observations.assert_called_once_with(
+            'https://example.test/research/',
+            REVISION,
+            2,
+            20.0,
+            expected_sha256=OBSERVATION_DIGEST,
         )
         sleep.assert_called_once_with(0.01)
 
+    @patch(
+        'smoke_test_site.fetch_deferred_observations',
+        return_value=fixture_observations(),
+    )
     @patch('smoke_test_site.time.sleep')
     @patch('smoke_test_site.fetch_deferred_briefs')
-    @patch('smoke_test_site.fetch_html', return_value=fixture_html())
+    @patch(
+        'smoke_test_site.fetch_html',
+        return_value=(fixture_html(), 'https://example.test/research/'),
+    )
     def test_stale_deferred_asset_is_retried_with_page(
-        self, fetch_html, fetch_deferred, sleep,
+        self, fetch_html, fetch_deferred, sleep, fetch_observations,
     ):
         fetch_deferred.side_effect = [
             fixture_deferred(checksum='c' * 64),
@@ -208,14 +504,80 @@ class SmokeTestSiteTests(unittest.TestCase):
                 363,
                 1327,
                 CHECKSUM,
+                HTML_DIGEST,
+                BRIEF_DIGEST,
+                OBSERVATION_DIGEST,
                 retries=2,
                 retry_delay=0.01,
             )
         self.assertEqual(fetch_html.call_count, 2)
         self.assertEqual(fetch_deferred.call_count, 2)
+        fetch_observations.assert_called_once_with(
+            'https://example.test/research/',
+            REVISION,
+            2,
+            20.0,
+            expected_sha256=OBSERVATION_DIGEST,
+        )
         sleep.assert_called_once_with(0.01)
 
-    @patch('smoke_test_site.fetch_html', return_value=fixture_html(revision='c' * 40))
+    @patch('smoke_test_site.time.sleep')
+    @patch('smoke_test_site.fetch_deferred_observations')
+    @patch('smoke_test_site.fetch_deferred_briefs', return_value=fixture_deferred())
+    @patch(
+        'smoke_test_site.fetch_html',
+        return_value=(fixture_html(), 'https://example.test/research/'),
+    )
+    def test_stale_observation_asset_retries_the_entire_release(
+        self, fetch_html, fetch_deferred, fetch_observations, sleep,
+    ):
+        fetch_observations.side_effect = [
+            fixture_observations(checksum='c' * 64),
+            fixture_observations(),
+        ]
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            smoke_test_site.smoke_test(
+                'https://example.test/research/',
+                REVISION,
+                363,
+                1327,
+                CHECKSUM,
+                HTML_DIGEST,
+                BRIEF_DIGEST,
+                OBSERVATION_DIGEST,
+                retries=2,
+                retry_delay=0.01,
+            )
+        self.assertEqual(fetch_html.call_count, 2)
+        self.assertEqual(fetch_deferred.call_count, 2)
+        self.assertEqual(fetch_observations.call_count, 2)
+        sleep.assert_called_once_with(0.01)
+
+    @patch(
+        'smoke_test_site.fetch_html',
+        return_value=(fixture_html(), 'https://example.test/research/'),
+    )
+    def test_html_asset_digest_must_match_independent_build_digest(self, fetch_html):
+        with redirect_stderr(io.StringIO()):
+            with self.assertRaisesRegex(ValueError, 'trusted build digest'):
+                smoke_test_site.smoke_test(
+                    'https://example.test/research/',
+                    REVISION,
+                    363,
+                    1327,
+                    CHECKSUM,
+                    HTML_DIGEST,
+                    'f' * 64,
+                    OBSERVATION_DIGEST,
+                    retries=1,
+                    retry_delay=0,
+                )
+        fetch_html.assert_called_once()
+
+    @patch(
+        'smoke_test_site.fetch_html',
+        return_value=(fixture_html(revision='c' * 40), 'https://example.test/'),
+    )
     def test_retry_exhaustion_fails_the_deployment(self, fetch_html):
         with redirect_stderr(io.StringIO()):
             with self.assertRaisesRegex(ValueError, 'did not become healthy'):
@@ -225,6 +587,9 @@ class SmokeTestSiteTests(unittest.TestCase):
                     363,
                     1327,
                     CHECKSUM,
+                    HTML_DIGEST,
+                    BRIEF_DIGEST,
+                    OBSERVATION_DIGEST,
                     retries=1,
                     retry_delay=0,
                 )
@@ -232,7 +597,15 @@ class SmokeTestSiteTests(unittest.TestCase):
     def test_non_https_url_is_rejected_before_fetch(self):
         with self.assertRaisesRegex(ValueError, 'absolute HTTPS URL'):
             smoke_test_site.smoke_test(
-                'http://example.test/', REVISION, 1, 1, CHECKSUM, retries=1,
+                'http://example.test/',
+                REVISION,
+                1,
+                1,
+                CHECKSUM,
+                HTML_DIGEST,
+                BRIEF_DIGEST,
+                OBSERVATION_DIGEST,
+                retries=1,
             )
 
 

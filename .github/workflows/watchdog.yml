@@ -23,12 +23,39 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up deterministic Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Rebuild trusted asset fingerprints
+        shell: bash
+        env:
+          SITE_OUTPUT_DIR: ${{ runner.temp }}/expected-site
+          SITE_REVISION: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test ! -e "$SITE_OUTPUT_DIR"
+          python3 build_site.py
+          html_sha256=$(sha256sum "$SITE_OUTPUT_DIR/index.html" | awk '{print $1}')
+          brief_sha256=$(sha256sum "$SITE_OUTPUT_DIR/article_briefs.json" | awk '{print $1}')
+          observation_sha256=$(sha256sum "$SITE_OUTPUT_DIR/observations.json" | awk '{print $1}')
+          [[ "$html_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$brief_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$observation_sha256" =~ ^[0-9a-f]{64}$ ]]
+          echo "EXPECTED_HTML_SHA256=$html_sha256" >> "$GITHUB_ENV"
+          echo "EXPECTED_BRIEF_SHA256=$brief_sha256" >> "$GITHUB_ENV"
+          echo "EXPECTED_OBSERVATION_SHA256=$observation_sha256" >> "$GITHUB_ENV"
+
       - name: Verify exact live release
         run: >-
           python3 smoke_test_site.py
           --expected-revision "$GITHUB_SHA"
           --articles-file articles_index.json
           --observations-file trades_extracted.json
+          --expected-html-sha256 "$EXPECTED_HTML_SHA256"
+          --expected-brief-sha256 "$EXPECTED_BRIEF_SHA256"
+          --expected-observation-sha256 "$EXPECTED_OBSERVATION_SHA256"
           --retries 2
           --retry-delay 5
           https://navnoorthapar.github.io/substack-trades/
@@ -37,11 +64,19 @@ jobs:
         run: |
           python3 - <<'PY'
           import json
-          from datetime import datetime, timezone
+          from datetime import datetime, timedelta, timezone
 
           snapshot = json.load(open('snapshot_manifest.json', encoding='utf-8'))
           checked_at = datetime.fromisoformat(str(snapshot['checked_at']).replace('Z', '+00:00'))
-          age = datetime.now(timezone.utc) - checked_at.astimezone(timezone.utc)
+          now = datetime.now(timezone.utc)
+          future_cutoff = now + timedelta(minutes=10)
+          if checked_at.astimezone(timezone.utc) > future_cutoff:
+              raise SystemExit('Published research snapshot check time is implausibly far in the future')
+          for source, status in snapshot.get('sources', {}).items():
+              source_checked = datetime.fromisoformat(str(status['checked_at']).replace('Z', '+00:00'))
+              if source_checked.astimezone(timezone.utc) > future_cutoff:
+                  raise SystemExit(f'{source} check time is implausibly far in the future')
+          age = now - checked_at.astimezone(timezone.utc)
           if age.total_seconds() > 16 * 3600:
               raise SystemExit(
                   f"Published research snapshot is stale: {age.total_seconds() / 3600:.1f} hours old"

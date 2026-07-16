@@ -64,6 +64,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
         for required in (
             'SITE_OUTPUT_DIR:',
             'SITE_REVISION: ${{ github.sha }}',
+            'python validate_inline_scripts.py _site/index.html',
             'test -f _site/index.html',
             'test -f _site/article_briefs.json',
             'test -f _site/observations.json',
@@ -96,6 +97,13 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'Deferred observation identities do not match the source snapshot.',
             'Deferred observation content differs from the source snapshot.',
             'from smoke_test_site import snapshot_checksum, validate_html',
+            'id: asset_hashes',
+            'html_sha256=$(sha256sum _site/index.html',
+            'brief_sha256=$(sha256sum _site/article_briefs.json',
+            'observation_sha256=$(sha256sum _site/observations.json',
+            'html_sha256: ${{ steps.asset_hashes.outputs.html_sha256 }}',
+            'brief_sha256: ${{ steps.asset_hashes.outputs.brief_sha256 }}',
+            'observation_sha256: ${{ steps.asset_hashes.outputs.observation_sha256 }}',
         ):
             self.assertIn(required, self.workflow)
 
@@ -107,6 +115,12 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--expected-revision "$EXPECTED_REVISION"',
             '--articles-file articles_index.json',
             '--observations-file trades_extracted.json',
+            'EXPECTED_HTML_SHA256: ${{ needs.quality.outputs.html_sha256 }}',
+            'EXPECTED_BRIEF_SHA256: ${{ needs.quality.outputs.brief_sha256 }}',
+            'EXPECTED_OBSERVATION_SHA256: ${{ needs.quality.outputs.observation_sha256 }}',
+            '--expected-html-sha256 "$EXPECTED_HTML_SHA256"',
+            '--expected-brief-sha256 "$EXPECTED_BRIEF_SHA256"',
+            '--expected-observation-sha256 "$EXPECTED_OBSERVATION_SHA256"',
             '--retries 12',
         ):
             self.assertIn(required, deploy_job)
@@ -125,11 +139,23 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--expected-revision "$GITHUB_SHA"',
             '--articles-file articles_index.json',
             '--observations-file trades_extracted.json',
+            'Rebuild trusted asset fingerprints',
+            'SITE_OUTPUT_DIR: ${{ runner.temp }}/expected-site',
+            'SITE_REVISION: ${{ github.sha }}',
+            'html_sha256=$(sha256sum "$SITE_OUTPUT_DIR/index.html"',
+            'brief_sha256=$(sha256sum "$SITE_OUTPUT_DIR/article_briefs.json"',
+            'observation_sha256=$(sha256sum "$SITE_OUTPUT_DIR/observations.json"',
+            '--expected-html-sha256 "$EXPECTED_HTML_SHA256"',
+            '--expected-brief-sha256 "$EXPECTED_BRIEF_SHA256"',
+            '--expected-observation-sha256 "$EXPECTED_OBSERVATION_SHA256"',
             '--retries 2',
             'https://navnoorthapar.github.io/substack-trades/',
             "json.load(open('snapshot_manifest.json'",
             "snapshot['checked_at']",
             'datetime.now(timezone.utc)',
+            'timedelta(minutes=10)',
+            'implausibly far in the future',
+            "snapshot.get('sources', {}).items()",
             'age.total_seconds() > 16 * 3600',
         ):
             self.assertIn(required, self.watchdog)
