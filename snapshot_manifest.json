@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-07-15T18:02:13Z",
+  "checked_at": "2026-07-16T05:34:41Z",
   "latest_publication": "2026-07-11T15:00:05.870Z",
   "article_count": 363,
   "observation_count": 1268,
   "data_checksum": "81812cf0ec6a66355a77dcb4a15e206dd5b9ca523fbb6b3b0663e5bffce31393",
   "sources": {
     "substack": {
-      "checked_at": "2026-07-15T18:00:52Z",
+      "checked_at": "2026-07-16T03:32:41Z",
       "status": "ok",
       "mode": "complete_api",
       "published_count": 229,
@@ -16,11 +16,11 @@
       "newest": "2026-07-11T15:00:05.870Z"
     },
     "medium": {
-      "checked_at": "2026-07-15T18:01:16Z",
-      "status": "ok",
-      "mode": "complete_archive",
+      "checked_at": "2026-07-16T04:33:42Z",
+      "status": "degraded",
+      "mode": "cached_archive_plus_rss",
       "published_count": 361,
-      "fetched_count": 361,
+      "fetched_count": 10,
       "included_count": 134,
       "newest": "2026-07-11T15:00:24.330Z"
     }
