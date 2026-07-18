@@ -8,12 +8,34 @@ MAX_AGE_SECONDS=${MAX_AGE_SECONDS:-57600} # 16 hours; the longest normal schedul
 REPOSITORY=navnoorthapar/substack-trades
 ok=1
 updater_issue=0
+updater_loaded=0
+updater_exit_issue=0
 refresh_issue=0
 deployment_issue=0
 failed_run_id=""
 
-if launchctl print "$DOMAIN/$LABEL" >/dev/null 2>&1; then
+launchctl_output=$(launchctl print "$DOMAIN/$LABEL" 2>&1)
+launchctl_status=$?
+if [ "$launchctl_status" -eq 0 ]; then
     echo "Updater: loaded"
+    updater_loaded=1
+    last_exit_code=$(printf '%s\n' "$launchctl_output" | awk '
+        $1 == "last" && $2 == "exit" && $3 == "code" && $4 == "=" &&
+        $5 ~ /^-?[0-9]+$/ { print $5; exit }
+    ')
+    if [ "$last_exit_code" = "0" ]; then
+        echo "Updater last exit: successful"
+    elif [[ "$last_exit_code" =~ ^-?[0-9]+$ ]]; then
+        echo "Updater last exit: FAILED (code $last_exit_code)"
+        ok=0
+        updater_issue=1
+        updater_exit_issue=1
+    else
+        echo "Updater last exit: unavailable (no completed run recorded)"
+        ok=0
+        updater_issue=1
+        updater_exit_issue=1
+    fi
 else
     echo "Updater: NOT LOADED"
     ok=0
@@ -92,7 +114,12 @@ fi
 
 ROOT=$(cd "$(dirname "$0")" && pwd)
 if [ "$updater_issue" -eq 1 ]; then
-    echo "Repair updater with: $ROOT/install_automation.sh"
+    if [ "$updater_loaded" -eq 0 ]; then
+        echo "Repair updater with: $ROOT/install_automation.sh"
+    elif [ "$updater_exit_issue" -eq 1 ]; then
+        echo "Inspect updater errors: $HOME/Library/Logs/SubstackTrades/refresh-error.log"
+        echo "Run updater now with: launchctl kickstart -k $DOMAIN/$LABEL"
+    fi
 fi
 if [ "$refresh_issue" -eq 1 ]; then
     echo "Run a fresh ingestion with: $ROOT/refresh.sh"

@@ -118,6 +118,8 @@ def fetch_posts(limit=50, offset=0, attempts=3):
             last_error = exc
             if attempt < attempts:
                 time.sleep(2 ** (attempt - 1))
+    if last_error is None:
+        raise ValueError('Substack fetch attempts must be at least one')
     raise last_error
 
 

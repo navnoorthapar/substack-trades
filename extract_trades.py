@@ -7,8 +7,6 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
-
 from pathlib import Path
 ROOT = Path(__file__).parent
 INPUT_PATH = Path(os.environ.get('POSTS_INPUT', ROOT / 'all_posts.json')).expanduser()
@@ -424,7 +422,7 @@ def classify_direction(text):
     return _classify_direction_without_negation(text)
 
 def find_instruments(text):
-    found = []
+    found: list[str] = []
     for instrument, pattern in INSTRUMENTS.items():
         if re.search(pattern, text, re.IGNORECASE):
             found.append(instrument)
@@ -487,7 +485,7 @@ def extract_underlying(text):
         (r'\b(USD|EUR|GBP|JPY|CHF|AUD|CAD|CNY|EM currencies?)\b', re.IGNORECASE),
         (r'\b(Bitcoin|Ethereum|crypto)\b', re.IGNORECASE),
     ]
-    found = []
+    found: list[str] = []
     for pattern, flags in patterns:
         matches = re.findall(pattern, text, flags)
         found.extend(m if isinstance(m, str) else m[0] for m in matches[:3])
@@ -555,7 +553,6 @@ def is_trade_block(block):
     signal_text = _mask_negated_trade_signals(block)
     has_trigger = any(re.search(p, signal_text, re.IGNORECASE) for p in TRADE_TRIGGERS)
     has_instrument = any(re.search(p, block, re.IGNORECASE) for p in INSTRUMENTS.values())
-    has_quant = any(re.search(p, block, re.IGNORECASE) for p in QUANT_PATTERNS[:8])
     has_direction = (re.search(DIRECTION_LONG, signal_text, re.IGNORECASE) or
                      re.search(DIRECTION_SHORT, signal_text, re.IGNORECASE) or
                      re.search(DIRECTION_ARB, signal_text, re.IGNORECASE))
@@ -657,7 +654,7 @@ def main():
     all_trades = []
     articles_with_trades = 0
     articles_no_trades = 0
-    instrument_counts = {}
+    instrument_counts: dict[str, int] = {}
 
     for i, post in enumerate(all_posts, 1):
         sys.stdout.write(f'\r  Article {i}/{len(all_posts)}: {post["title"][:50]:<50}')

@@ -1,6 +1,6 @@
 # Launch and operations runbook
 
-Target launch: 2026-07-18
+Target launch: 2026-07-19
 Production: <https://navnoorthapar.github.io/substack-trades/>
 
 ## 1. Release authority and prerequisites
@@ -23,10 +23,11 @@ Run from a clean `main` worktree:
 git status --short
 python3 -m unittest discover -s . -p 'test_*.py' -v
 python3 validate_pipeline.py \
-  --posts all_sources_posts.json \
   --articles articles_index.json \
   --trades trades_extracted.json \
   --manifest snapshot_manifest.json
+ruff check *.py
+mypy --cache-dir "${TMPDIR:-/tmp}/nrt-mypy-cache"
 PREVIEW_DIR="$(mktemp -d)/site"
 SITE_OUTPUT_DIR="$PREVIEW_DIR" SITE_REVISION="$(git rev-parse HEAD)" python3 build_site.py
 python3 validate_inline_scripts.py "$PREVIEW_DIR/index.html"
@@ -34,10 +35,13 @@ python3 validate_inline_scripts.py "$PREVIEW_DIR/index.html"
 gh auth status
 ```
 
-Confirm the test suite, data manifest, inline JavaScript compilation, updater,
-snapshot freshness, and GitHub authentication all pass. Confirm the generated
-artifact contains exactly `index.html`, both deferred JSON assets, `robots.txt`,
-`sitemap.xml`, `site.webmanifest`, `favicon.svg`, and `og.jpg`.
+Confirm the test suite, tracked data manifest, lint, type check, inline
+JavaScript compilation, updater, snapshot freshness, and GitHub authentication
+all pass. On the scheduled Mac, repeat data validation with
+`--posts all_sources_posts.json` to bind the release to the ignored full-source
+cache. Confirm the generated artifact contains exactly `index.html`, both
+deferred JSON assets, `robots.txt`, `sitemap.xml`, `site.webmanifest`,
+`favicon.svg`, and `og.jpg`.
 
 ## 3. Release
 

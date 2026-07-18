@@ -33,6 +33,7 @@ USERNAME = 'navnoorbawa'
 GRAPHQL_URL = f'https://{USERNAME}.medium.com/_/graphql'
 RSS_URL = f'https://medium.com/feed/@{USERNAME}'
 PAGE_LIMIT = 25
+MAX_RSS_BYTES = 2_000_000
 
 HEADERS = {
     'User-Agent': 'substack-trades/1.0 (+https://github.com/navnoorthapar/substack-trades)',
@@ -116,6 +117,8 @@ def request_json(url, payload, attempts=3):
             last_error = exc
             if attempt < attempts:
                 time.sleep(2 ** (attempt - 1))
+    if last_error is None:
+        raise ValueError('Medium GraphQL attempts must be at least one')
     raise last_error
 
 
@@ -336,7 +339,26 @@ def fetch_rss_posts(attempts=3):
         try:
             request = urllib.request.Request(RSS_URL, headers=headers)
             with urllib.request.urlopen(request, timeout=30, context=SSL_CONTEXT) as response:
-                root = ET.fromstring(response.read())
+                final_url = urllib.parse.urlsplit(response.geturl())
+                if (
+                        final_url.scheme != 'https'
+                        or final_url.hostname != 'medium.com'
+                        or final_url.username is not None
+                        or final_url.password is not None
+                        or final_url.port is not None):
+                    raise ValueError('Medium RSS redirected away from canonical HTTPS')
+                payload = response.read(MAX_RSS_BYTES + 1)
+            if len(payload) > MAX_RSS_BYTES:
+                raise ValueError(f'Medium RSS exceeds {MAX_RSS_BYTES} bytes')
+            try:
+                xml_text = payload.decode('utf-8-sig')
+            except UnicodeDecodeError:
+                raise ValueError('Medium RSS is not UTF-8 XML') from None
+            upper_xml = xml_text.upper()
+            if '<!DOCTYPE' in upper_xml or '<!ENTITY' in upper_xml:
+                raise ValueError('Medium RSS contains a prohibited XML declaration')
+            # The input is bounded, UTF-8-only, and has no entity declarations.
+            root = ET.fromstring(xml_text)  # noqa: S314
             items = root.findall('./channel/item')
             posts = []
             for item in items:
@@ -379,6 +401,8 @@ def fetch_rss_posts(attempts=3):
             last_error = exc
             if attempt < attempts:
                 time.sleep(2 ** (attempt - 1))
+    if last_error is None:
+        raise ValueError('Medium RSS attempts must be at least one')
     raise last_error
 
 

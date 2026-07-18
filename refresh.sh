@@ -13,6 +13,8 @@ MIN_REFRESH_SECONDS=${MIN_REFRESH_SECONDS:-1800}
 LOCK_DIR="${TMPDIR:-/tmp}/com.navnoor.substacktrades.lock"
 LOCK_OWNED=0
 WORK_DIR=""
+PROMOTION_ACTIVE=0
+PROMOTED_OUTPUTS=()
 
 if [ -n "${PYTHON_BIN:-}" ]; then
     PYTHON=$PYTHON_BIN
@@ -32,6 +34,7 @@ cleanup() {
     trap - EXIT
     if [ -n "$WORK_DIR" ] && [ -d "$WORK_DIR" ]; then
         rm -f "$WORK_DIR"/*.json
+        rm -f "$WORK_DIR"/*.tmp
         rm -f "$WORK_DIR"/*.previous-missing
         rmdir "$WORK_DIR" 2>/dev/null || true
     fi
@@ -42,9 +45,44 @@ cleanup() {
     exit "$exit_code"
 }
 
+restore_promoted_outputs() {
+    if [ "$PROMOTION_ACTIVE" -ne 1 ]; then
+        return 0
+    fi
+
+    rollback_failed=0
+    for index in "${!PROMOTED_OUTPUTS[@]}"; do
+        output=${PROMOTED_OUTPUTS[$index]}
+        previous="$WORK_DIR/promoted-$index.previous.json"
+        missing="$WORK_DIR/promoted-$index.previous-missing"
+        if [ -f "$previous" ]; then
+            if ! mv "$previous" "$ROOT/$output"; then
+                echo "Could not restore $output from the refresh transaction backup." >&2
+                rollback_failed=1
+            fi
+        elif [ -f "$missing" ]; then
+            if ! rm -f "$ROOT/$output"; then
+                echo "Could not remove newly promoted $output during rollback." >&2
+                rollback_failed=1
+            fi
+        else
+            echo "Refresh transaction backup is missing for $output." >&2
+            rollback_failed=1
+        fi
+    done
+    PROMOTION_ACTIVE=0
+    return "$rollback_failed"
+}
+
 on_error() {
     exit_code=$?
     trap - ERR
+    if [ "$PROMOTION_ACTIVE" -eq 1 ]; then
+        echo "Refresh failed during candidate promotion; restoring the previous local snapshot." >&2
+        if ! restore_promoted_outputs; then
+            echo "Refresh rollback was incomplete; manual recovery is required before another run." >&2
+        fi
+    fi
     echo "Refresh failed at line $1 (exit $exit_code). Previous published data was preserved." >&2
     exit "$exit_code"
 }
@@ -143,9 +181,18 @@ TRADES_OUTPUT="$WORK_DIR/trades.candidate.json" \
 echo
 echo "=== Restoring cached directions / resolving new residuals ==="
 # The local model is optional and fail-safe. The tracked cache preserves prior
-# validated classifications when Ollama is not running.
+# validated classifications when Ollama is not running. Work against a private
+# candidate so an invalid snapshot can never dirty the scheduled writer's
+# tracked cache or block the next run.
+DIRECTION_CACHE_CANDIDATE="$WORK_DIR/direction-cache.candidate.json"
+if [ -f "$ROOT/.direction_cache.json" ]; then
+    cp -p "$ROOT/.direction_cache.json" "$DIRECTION_CACHE_CANDIDATE"
+else
+    printf '{}\n' > "$DIRECTION_CACHE_CANDIDATE"
+fi
 DIRECTION_LLM_ENABLE=1 DIRECTION_LLM_MODEL=qwen2.5:14b \
 TRADES_PATH="$WORK_DIR/trades.candidate.json" \
+DIRECTION_CACHE_PATH="$DIRECTION_CACHE_CANDIDATE" \
     "$PYTHON" llm_direction.py || echo "(direction resolver skipped/failed; regex output kept)"
 
 echo
@@ -187,35 +234,44 @@ PROMOTED_OUTPUTS=(
     articles_index.json
     trades_extracted.json
     snapshot_manifest.json
+    .direction_cache.json
 )
-for output in "${PROMOTED_OUTPUTS[@]}"; do
+PROMOTION_CANDIDATES=(
+    "$WORK_DIR/substack.candidate.json"
+    "$WORK_DIR/medium.candidate.json"
+    "$WORK_DIR/posts.candidate.json"
+    "$WORK_DIR/articles.candidate.json"
+    "$WORK_DIR/trades.candidate.json"
+    "$WORK_DIR/snapshot_manifest.candidate.json"
+    "$DIRECTION_CACHE_CANDIDATE"
+)
+for index in "${!PROMOTED_OUTPUTS[@]}"; do
+    output=${PROMOTED_OUTPUTS[$index]}
     if [ -f "$ROOT/$output" ]; then
-        cp -p "$ROOT/$output" "$WORK_DIR/$output.previous.json"
+        cp -p "$ROOT/$output" "$WORK_DIR/promoted-$index.previous.json"
     else
-        : > "$WORK_DIR/$output.previous-missing"
+        : > "$WORK_DIR/promoted-$index.previous-missing"
     fi
 done
 
-mv "$WORK_DIR/substack.candidate.json" "$ROOT/all_posts.json"
-mv "$WORK_DIR/medium.candidate.json" "$ROOT/medium_posts.json"
-mv "$WORK_DIR/posts.candidate.json" "$ROOT/all_sources_posts.json"
-mv "$WORK_DIR/articles.candidate.json" "$ROOT/articles_index.json"
-mv "$WORK_DIR/trades.candidate.json" "$ROOT/trades_extracted.json"
-mv "$WORK_DIR/snapshot_manifest.candidate.json" "$ROOT/snapshot_manifest.json"
+PROMOTION_ACTIVE=1
+for index in "${!PROMOTED_OUTPUTS[@]}"; do
+    mv "${PROMOTION_CANDIDATES[$index]}" "$ROOT/${PROMOTED_OUTPUTS[$index]}"
+done
 
 echo
 echo "=== Running regression suite ==="
 if ! "$PYTHON" -m unittest -q; then
     echo "Regression suite failed; restoring the previous local snapshot." >&2
-    for output in "${PROMOTED_OUTPUTS[@]}"; do
-        if [ -f "$WORK_DIR/$output.previous.json" ]; then
-            mv "$WORK_DIR/$output.previous.json" "$ROOT/$output"
-        else
-            rm -f "$ROOT/$output"
-        fi
-    done
+    if ! restore_promoted_outputs; then
+        echo "Refresh rollback was incomplete; manual recovery is required before another run." >&2
+    fi
     exit 1
 fi
+# From this point forward the promoted snapshot and cache have passed the full
+# local gate. Git staging/commit/push failures must retain that validated state
+# so the next run can retry publication instead of rolling back accepted data.
+PROMOTION_ACTIVE=0
 
 TRACKED_OUTPUTS=(articles_index.json medium_posts.json trades_extracted.json snapshot_manifest.json)
 if [ -f .direction_cache.json ]; then

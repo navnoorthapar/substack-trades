@@ -91,7 +91,7 @@ for i, (url, article_trades) in enumerate(articles_sorted, 1):
 
         desc = t.get('trade_description', '')
         if desc:
-            lines.append(f'**Description:**  ')
+            lines.append('**Description:**  ')
             lines.append(desc)
             lines.append('')
 
@@ -119,8 +119,8 @@ for i, (url, article_trades) in enumerate(articles_sorted, 1):
 lines.append('## Summary Statistics')
 lines.append('')
 
-instrument_counts = defaultdict(int)
-direction_counts  = defaultdict(int)
+instrument_counts: defaultdict[str, int] = defaultdict(int)
+direction_counts: defaultdict[str, int] = defaultdict(int)
 for t in trades:
     for instr in (t.get('instruments') or []):
         if instr and instr != 'unspecified':

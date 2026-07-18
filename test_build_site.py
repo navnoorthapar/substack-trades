@@ -651,6 +651,37 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('IC decision sheet · published source', self.html)
         self.assertIn('Independent diligence remains required.', self.html)
 
+    def test_clipboard_failure_preserves_text_in_accessible_manual_fallback(self):
+        self.assertIn('id="manual-copy-dialog" aria-labelledby="manual-copy-title"', self.html)
+        self.assertIn('id="manual-copy-text" readonly aria-label="Text ready to copy"', self.html)
+        self.assertIn("else showManualCopyDialog(value);", self.html)
+        self.assertIn("textarea.value = String(value || '');", self.html)
+        self.assertIn('textarea.focus();', self.html)
+        self.assertIn('textarea.select();', self.html)
+        self.assertNotIn('Copy failed—select and copy manually', self.html)
+
+    def test_mobile_monitor_is_bounded_and_lighthouse_a11y_defects_are_closed(self):
+        self.assertIn('const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100};', self.html)
+        self.assertIn(
+            'aria-label="Restore decision queue from a JSON file" tabindex="-1"',
+            self.html,
+        )
+        self.assertIn(
+            'aria-labelledby="brief-key-evidence-title"><h2 class="sr-only" '
+            'id="brief-key-evidence-title">Source-backed numeric evidence</h2>',
+            self.html,
+        )
+        self.assertIn(
+            '.ic-evidence-card p,.intel-article-card .intel-card-claim,'
+            '.next-item .next-summary{font-size:12px}',
+            self.html,
+        )
+        self.assertIn('.data-row,.data-row *{font-size:12px}', self.html)
+        self.assertIn(
+            '.filter-heading h2,.preset-button,.freshness,.primary-action,.secondary-action,',
+            self.html,
+        )
+
     def test_displayed_article_framing_rejects_boilerplate(self):
         contaminated = [
             (article['id'], article['subtitle'])
@@ -1217,7 +1248,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'window.addEventListener(\'beforeunload\'',
             'Queue backup could not be validated',
             'Queue could not be saved in this tab session',
-            'Copy failed—select and copy manually',
+            'Automatic clipboard access was blocked. The complete text is preserved below',
             'Copy decision packet',
             'Archive packet',
             'Return to review',

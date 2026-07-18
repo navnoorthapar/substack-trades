@@ -268,7 +268,7 @@ for url, article_trades in trades_by_url.items():
 
 articles.sort(key=lambda article: article['date'], reverse=True)
 
-manager_variants = defaultdict(Counter)
+manager_variants: defaultdict[str, Counter[str]] = defaultdict(Counter)
 for trade in trades:
     raw_manager, canonical_manager = canonical_manager_label(
         trade.get('fund_name_if_mentioned')
@@ -306,7 +306,7 @@ for article_position, article in enumerate(articles):
     idea_ids = []
     directions = set()
     instruments = set()
-    underlyings = {}
+    underlyings: dict[str, str] = {}
     managers = set()
     manager_keys = set()
 
@@ -1177,7 +1177,7 @@ body[data-view="briefing"] .briefing-shell{
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--line)
 }
 .ic-evidence-card{min-width:0;padding:20px clamp(24px,2.5vw,40px);background:var(--surface-2)}
-.ic-evidence-card:first-child:nth-last-child(1){grid-column:1/-1}
+.ic-evidence-card:only-of-type{grid-column:1/-1}
 .ic-evidence-overline{font:650 9px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
 .ic-evidence-values{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-top:8px}
 .ic-evidence-values span{font:600 clamp(22px,2vw,31px)/1 var(--serif);color:var(--accent)}
@@ -1562,6 +1562,13 @@ dialog::backdrop{background:var(--backdrop)}
 .shortcut-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px;background:var(--surface-2);font-size:10.5px;color:var(--text-secondary)}
 kbd{font:10px var(--mono);border:1px solid var(--line-strong);background:var(--surface-1);border-radius:3px;padding:2px 6px;color:var(--text)}
 .dialog-foot{padding:0 15px 15px;color:var(--text-muted);font-size:10px}
+.manual-copy-body{display:grid;gap:10px;padding:15px}
+.manual-copy-body p{color:var(--text-secondary);font-size:11px;line-height:1.55}
+.manual-copy-text{
+  width:100%;min-height:150px;resize:vertical;padding:10px;border:1px solid var(--control-line);
+  border-radius:3px;background:var(--surface-1);color:var(--text);font:11px/1.5 var(--mono)
+}
+.manual-copy-actions{display:flex;justify-content:flex-end;gap:8px}
 .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:15px;border-top:1px solid var(--line)}
 .method-card{border:1px solid var(--line);border-radius:3px;background:var(--surface-2);padding:11px}
 .method-card h3{font:650 10px var(--mono);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
@@ -1727,7 +1734,12 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .ledger-row+.ledger-row{border-top:1px solid var(--line)}
   .ledger-cell{padding:0;border:0}
   .ledger-values{margin:8px 0}
-  .ledger-passage{font-size:11px}
+  .ledger-passage{font-size:12px}
+  .data-row,.data-row *{font-size:12px}
+  .checkpoint-mini,.checkpoint-mini time,.provenance,.record-subtitle,
+  .rail-disclaimer,.filter-note,.facet-option,.facet-clear,.kpi-label,
+  .filter-heading h2,.preset-button,.freshness,.primary-action,.secondary-action,
+  .result-summary,.inspector-label,.rail-title{font-size:12px}
   .intel-section-grid{grid-template-columns:1fr}
   .intel-section,.intel-section.full{grid-column:1;min-height:0;padding:13px 14px}
   .intel-passage{font-size:12px}
@@ -1808,7 +1820,8 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .ic-opening-claim .source-tail{grid-column:1;margin-top:0}
   .ic-evidence-strip{grid-template-columns:1fr}
   .ic-evidence-card{padding:18px}
-  .ic-evidence-card:first-child:nth-last-child(1){grid-column:1}
+  .ic-evidence-card:only-of-type{grid-column:1}
+  .ic-evidence-card p,.intel-article-card .intel-card-claim,.next-item .next-summary{font-size:12px}
   .ic-analysis,.ic-dossier-head{padding:26px 18px}
   .ic-section-header{display:block}
   .ic-section-header p{margin-top:7px;text-align:left}
@@ -2182,7 +2195,8 @@ __MANAGER_BUTTONS__
   </aside>
 </div>
 
-<input class="sr-only" id="queue-restore-input" type="file" accept="application/json,.json" tabindex="-1">
+<input class="sr-only" id="queue-restore-input" type="file" accept="application/json,.json"
+  aria-label="Restore decision queue from a JSON file" tabindex="-1">
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="persistent-notice" id="persistent-notice" role="alert" hidden>
@@ -2248,6 +2262,21 @@ __MANAGER_BUTTONS__
     </section>
   </div>
   <p class="dialog-foot">Shortcuts are disabled while typing in a form control. Always review the original publication and perform independent diligence.</p>
+</dialog>
+
+<dialog id="manual-copy-dialog" aria-labelledby="manual-copy-title">
+  <div class="dialog-header">
+    <h2 id="manual-copy-title">Copy text manually</h2>
+    <button class="inspector-close" id="manual-copy-close" type="button" aria-label="Close manual copy dialog">×</button>
+  </div>
+  <div class="manual-copy-body">
+    <p>Automatic clipboard access was blocked. The complete text is preserved below; select it and use your system copy command.</p>
+    <textarea class="manual-copy-text" id="manual-copy-text" readonly aria-label="Text ready to copy"></textarea>
+    <div class="manual-copy-actions">
+      <button class="command-button" id="manual-copy-select" type="button">Select all text</button>
+      <button class="primary-action" id="manual-copy-done" type="button">Done</button>
+    </div>
+  </div>
 </dialog>
 
 <noscript><div>This research terminal requires JavaScript to filter and inspect the embedded dataset.</div></noscript>
@@ -2535,7 +2564,7 @@ const WORKFLOW_TEXT_LIMITS = {
   next_action:700
 };
 const MAX_QUEUE_ITEMS = 250;
-const PAGE_SIZE = {briefing:24,ideas:100,research:80,queue:100};
+const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100};
 const WORKFLOW_KEY = 'nrt-decision-queue-session-v3';
 const RESTORE_ROLLBACK_KEY = 'nrt-decision-queue-restore-rollback-v1';
 const LEGACY_LOCAL_WORKFLOW_KEYS = ['nrt-decision-queue-v2','nrt-decision-queue-v1','nrt-saved-ideas'];
@@ -3701,7 +3730,7 @@ function evidenceSpotlightMarkup(article) {
       '</div><h3>' + escapeHtml(row.label) + (row.heading ? ' · ' + escapeHtml(row.heading) : '') + '</h3><p>' + highlightArticleNumbers(row.span.text) + '</p>' +
       '<span class="source-tail" title="' + escapeHtml(String(row.span.sha256 || '')) + '">' + escapeHtml(spanProvenance(row.span)) + '</span></article>';
   }).join('');
-  return '<section class="ic-evidence-strip" id="brief-key-evidence" aria-label="Source-backed numeric evidence">' + content + '</section>';
+  return '<section class="ic-evidence-strip" id="brief-key-evidence" aria-labelledby="brief-key-evidence-title"><h2 class="sr-only" id="brief-key-evidence-title">Source-backed numeric evidence</h2>' + content + '</section>';
 }
 function analysisPanelMarkup(row,title,className) {
   if (!row || !row.span || !row.span.text) {
@@ -4509,6 +4538,14 @@ function dismissPersistentNotice() {
   action.hidden = true;
   action.dataset.noticeAction = '';
 }
+function showManualCopyDialog(value) {
+  const dialog = document.getElementById('manual-copy-dialog');
+  const textarea = document.getElementById('manual-copy-text');
+  textarea.value = String(value || '');
+  if (!dialog.open) dialog.showModal();
+  textarea.focus();
+  textarea.select();
+}
 async function copyText(value,message) {
   let copied = false;
   try {
@@ -4524,7 +4561,8 @@ async function copyText(value,message) {
     try { copied = document.execCommand('copy'); } catch (_copyError) { copied = false; }
     textarea.remove();
   }
-  showToast(copied ? (message || 'Copied') : 'Copy failed—select and copy manually');
+  if (copied) showToast(message || 'Copied');
+  else showManualCopyDialog(value);
   return copied;
 }
 function ideaCitation(idea) {
@@ -5394,15 +5432,24 @@ document.getElementById('theme-button').addEventListener('click',function () {
   this.setAttribute('aria-label','Switch to ' + (next === 'light' ? 'dark' : 'light') + ' theme');
 });
 const shortcutDialog = document.getElementById('shortcut-dialog');
+const manualCopyDialog = document.getElementById('manual-copy-dialog');
 document.getElementById('shortcut-button').addEventListener('click',function () { shortcutDialog.showModal(); });
 document.getElementById('method-button').addEventListener('click',function () { shortcutDialog.showModal(); });
 document.querySelector('[data-close-dialog]').addEventListener('click',function () { shortcutDialog.close(); });
+document.getElementById('manual-copy-select').addEventListener('click',function () {
+  const textarea = document.getElementById('manual-copy-text');
+  textarea.focus();
+  textarea.select();
+});
+document.getElementById('manual-copy-close').addEventListener('click',function () { manualCopyDialog.close(); });
+document.getElementById('manual-copy-done').addEventListener('click',function () { manualCopyDialog.close(); });
 
 document.addEventListener('keydown',function (event) {
   const target = event.target;
   const editable = target.matches('input,textarea,select,[contenteditable="true"]');
   const interactive = target.closest && target.closest('button,a,[role="button"]');
   if (event.key === 'Escape') {
+    if (manualCopyDialog.open) { manualCopyDialog.close(); return; }
     if (shortcutDialog.open) { shortcutDialog.close(); return; }
     const filtersWereOpen = document.body.classList.contains('filters-open');
     const inspectorWasOpen = document.body.classList.contains('inspector-open');
@@ -5421,7 +5468,7 @@ document.addEventListener('keydown',function (event) {
     }
     return;
   }
-  if (shortcutDialog.open || editable || interactive || event.metaKey || event.ctrlKey) return;
+  if (shortcutDialog.open || manualCopyDialog.open || editable || interactive || event.metaKey || event.ctrlKey) return;
   if (!event.altKey && (event.key === 'Home' || event.key === 'End') && document.querySelector('[data-record-id]')) {
     event.preventDefault();
     const rows = document.querySelectorAll('[data-record-id]');

@@ -1,10 +1,41 @@
 import unittest
+from unittest import mock
 
 import fetch_medium_posts
 import merge_article_sources
 
 
 class MediumFetchTests(unittest.TestCase):
+    class FakeResponse:
+        def __init__(self, payload, final_url=None):
+            self.payload = payload
+            self.final_url = final_url or fetch_medium_posts.RSS_URL
+            self.read_size = None
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            return False
+
+        def geturl(self):
+            return self.final_url
+
+        def read(self, size=-1):
+            self.read_size = size
+            return self.payload if size < 0 else self.payload[:size]
+
+    @staticmethod
+    def _rss_payload(prefix=b''):
+        return prefix + b'''<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel><item>
+<title>Bounded Medium research</title>
+<link>https://medium.com/@navnoorbawa/bounded-medium-research-abcdef123456</link>
+<guid>https://medium.com/@navnoorbawa/bounded-medium-research-abcdef123456</guid>
+<pubDate>Fri, 17 Jul 2026 12:00:00 GMT</pubDate>
+<description>Source-backed research evidence.</description>
+</item></channel></rss>'''
+
     def _post(self, paragraphs):
         return {
             'id': 'abcdef123456',
@@ -54,6 +85,64 @@ class MediumFetchTests(unittest.TestCase):
             fetch_medium_posts.convert_post(mirror)['mirror_substack_slug'],
             'the-same-story',
         )
+
+    def test_rss_fetch_is_bounded_and_accepts_valid_medium_xml(self):
+        response = self.FakeResponse(self._rss_payload())
+        with mock.patch.object(
+                fetch_medium_posts.urllib.request, 'urlopen', return_value=response):
+            posts = fetch_medium_posts.fetch_rss_posts(attempts=1)
+
+        self.assertEqual(response.read_size, fetch_medium_posts.MAX_RSS_BYTES + 1)
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(posts[0]['medium_id'], 'abcdef123456')
+
+    def test_rss_fetch_rejects_oversized_response_before_parsing(self):
+        response = self.FakeResponse(b'x' * (fetch_medium_posts.MAX_RSS_BYTES + 1))
+        with mock.patch.object(
+                fetch_medium_posts.urllib.request, 'urlopen', return_value=response), \
+                mock.patch.object(fetch_medium_posts.ET, 'fromstring') as parse_xml:
+            with self.assertRaisesRegex(ValueError, 'exceeds 2000000 bytes'):
+                fetch_medium_posts.fetch_rss_posts(attempts=1)
+        parse_xml.assert_not_called()
+
+    def test_rss_fetch_rejects_doctype_and_entity_declarations(self):
+        declarations = (
+            b'<!DOCTYPE rss SYSTEM "https://example.test/rss.dtd">',
+            b'<!ENTITY unsafe "expanded">',
+        )
+        for declaration in declarations:
+            with self.subTest(declaration=declaration):
+                response = self.FakeResponse(self._rss_payload(declaration))
+                with mock.patch.object(
+                        fetch_medium_posts.urllib.request, 'urlopen', return_value=response), \
+                        mock.patch.object(fetch_medium_posts.ET, 'fromstring') as parse_xml:
+                    with self.assertRaisesRegex(ValueError, 'prohibited XML declaration'):
+                        fetch_medium_posts.fetch_rss_posts(attempts=1)
+                parse_xml.assert_not_called()
+
+    def test_rss_fetch_rejects_non_utf8_xml_before_parsing(self):
+        response = self.FakeResponse(self._rss_payload().decode().encode('utf-16'))
+        with mock.patch.object(
+                fetch_medium_posts.urllib.request, 'urlopen', return_value=response), \
+                mock.patch.object(fetch_medium_posts.ET, 'fromstring') as parse_xml:
+            with self.assertRaisesRegex(ValueError, 'not UTF-8 XML'):
+                fetch_medium_posts.fetch_rss_posts(attempts=1)
+        parse_xml.assert_not_called()
+
+    def test_rss_fetch_rejects_non_https_and_off_origin_redirects(self):
+        final_urls = (
+            'http://medium.com/feed/@navnoorbawa',
+            'https://attacker.example/feed/@navnoorbawa',
+        )
+        for final_url in final_urls:
+            with self.subTest(final_url=final_url):
+                response = self.FakeResponse(self._rss_payload(), final_url=final_url)
+                with mock.patch.object(
+                        fetch_medium_posts.urllib.request, 'urlopen', return_value=response), \
+                        mock.patch.object(fetch_medium_posts.ET, 'fromstring') as parse_xml:
+                    with self.assertRaisesRegex(ValueError, 'canonical HTTPS'):
+                        fetch_medium_posts.fetch_rss_posts(attempts=1)
+                parse_xml.assert_not_called()
 
 
 class SourceMergeTests(unittest.TestCase):

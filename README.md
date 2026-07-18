@@ -53,8 +53,8 @@ every production artifact is rebuilt, tested, and deployed without a bot commit
 or a second source of truth.
 
 The core pipeline needs Python 3.9+, Node.js for generated-script compilation,
-Git with authenticated write access to `origin`, and network access to Substack
-and GitHub. It has no third-party Python dependencies.
+Git with authenticated write access to `origin`, and network access to Substack,
+Medium, and GitHub. It has no third-party Python runtime dependencies.
 Ollama with `qwen2.5:14b` is optional; without it, refreshes preserve cached
 classifications and keep the regex-only direction for new residuals.
 
@@ -114,7 +114,7 @@ references only; the project does not copy either product or imply affiliation.
 Both modes use the same semantic data colors, text labels, focus treatment, and
 contrast gates.
 
-The Observation Monitor and Research Library provide fast passage-level review.
+The Evidence Monitor and Research Library provide fast passage-level review.
 Directional labels describe parsed language, not an actor, verified position,
 exposure, conviction, or current view. Decision Workflow stores an 18-part
 analyst packet: eight investment-case fields, six self-attested control gates,
@@ -251,16 +251,23 @@ boundary.
 
 ## Validate and preview locally
 
-Run all regression tests and the strict local-data validation:
+Run all regression tests and validate the complete tracked deployment snapshot.
+This command works in a fresh clone because it does not depend on ignored local
+publication caches:
 
 ```bash
 python3 -m unittest discover -s . -p 'test_*.py' -v
 python3 validate_pipeline.py \
-  --posts all_sources_posts.json \
   --articles articles_index.json \
   --trades trades_extracted.json \
   --manifest snapshot_manifest.json
+ruff check *.py
+mypy --cache-dir "${TMPDIR:-/tmp}/nrt-mypy-cache"
 ```
+
+On the scheduled ingestion Mac, add
+`--posts all_sources_posts.json` to perform the stricter validation that binds
+the tracked snapshot back to the ignored full-source cache.
 
 Build the ignored local preview and serve it at <http://localhost:8000>:
 

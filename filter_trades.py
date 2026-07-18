@@ -184,8 +184,8 @@ def main():
 
     # ─── Summary ──────────────────────────────────────────────────────────────
     articles = {}
-    instrument_counts = {}
-    direction_counts = {}
+    instrument_counts: dict[str, int] = {}
+    direction_counts: dict[str, int] = {}
 
     for t in unique:
         url = t.get('article_url', '')

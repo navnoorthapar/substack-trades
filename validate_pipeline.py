@@ -126,14 +126,16 @@ def canonical_url_identity(source, url):
         require(host == 'navnoorbawa.substack.com',
                 'Substack URL has the wrong host')
         match = re.fullmatch(r'/p/([A-Za-z0-9][A-Za-z0-9_-]*)', parsed.path)
-        require(match is not None, 'Substack URL has no canonical post slug')
+        if match is None:
+            raise ValueError('Substack URL has no canonical post slug')
         return match.group(1)
     if source == 'medium':
         require(host == 'medium.com', 'Medium URL has the wrong host')
         prefix = '/@navnoorbawa/'
         require(parsed.path.startswith(prefix), 'Medium URL has the wrong author path')
         match = MEDIUM_ID_RE.search(parsed.path)
-        require(match is not None, 'Medium URL has no canonical post ID')
+        if match is None:
+            raise ValueError('Medium URL has no canonical post ID')
         return match.group(1).casefold()
     raise ValueError('article has an invalid source')
 
@@ -500,8 +502,8 @@ def validate_previous_manifest(manifest, previous):
     for source in VALID_SOURCES:
         previous_source = previous_sources.get(source)
         current_source = (manifest.get('sources') or {}).get(source)
-        require(isinstance(previous_source, dict) and isinstance(current_source, dict),
-                f'previous manifest has no {source} status')
+        if not isinstance(previous_source, dict) or not isinstance(current_source, dict):
+            raise ValueError(f'previous manifest has no {source} status')
         previous_source_checked, _ = parse_iso_date(
             previous_source.get('checked_at'), f'previous manifest {source} checked_at'
         )

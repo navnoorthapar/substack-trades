@@ -1,4 +1,8 @@
+import os
 import re
+import subprocess
+import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -24,6 +28,86 @@ class DeploymentConfigurationTests(unittest.TestCase):
         cls.refresh = (ROOT / 'refresh.sh').read_text(encoding='utf-8')
         cls.automation_status = (ROOT / 'automation_status.sh').read_text(encoding='utf-8')
         cls.ignore = (ROOT / '.gitignore').read_text(encoding='utf-8').splitlines()
+
+    def run_automation_status(self, launchctl_output):
+        with tempfile.TemporaryDirectory() as directory:
+            test_root = Path(directory)
+            home = test_root / 'home'
+            fake_bin = test_root / 'bin'
+            home.mkdir()
+            fake_bin.mkdir()
+            (home / '.substack_trades_last_run').write_text(
+                f'{int(time.time())}\n', encoding='utf-8',
+            )
+
+            launchctl = fake_bin / 'launchctl'
+            launchctl.write_text(
+                '#!/bin/sh\n'
+                'if [ "$1" = "print" ]; then\n'
+                '    printf \'%s\\n\' "${FAKE_LAUNCHCTL_OUTPUT-}"\n'
+                '    exit "${FAKE_LAUNCHCTL_STATUS-0}"\n'
+                'fi\n'
+                'exit 2\n',
+                encoding='utf-8',
+            )
+            launchctl.chmod(0o755)
+
+            gh = fake_bin / 'gh'
+            gh.write_text(
+                '#!/bin/sh\n'
+                'case "$1" in\n'
+                '    api) printf \'workflow\\n\' ;;\n'
+                '    run) printf \'completed|success|4242\\n\' ;;\n'
+                '    *) exit 2 ;;\n'
+                'esac\n',
+                encoding='utf-8',
+            )
+            gh.chmod(0o755)
+
+            environment = os.environ.copy()
+            environment.update({
+                'FAKE_LAUNCHCTL_OUTPUT': launchctl_output,
+                'HOME': str(home),
+                'MAX_AGE_SECONDS': '57600',
+                'PATH': f'{fake_bin}:{environment.get("PATH", "")}',
+            })
+            return subprocess.run(
+                ['/bin/bash', str(ROOT / 'automation_status.sh')],
+                cwd=ROOT,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=10,
+                check=False,
+            )
+
+    def test_automation_status_accepts_a_successful_latest_updater_exit(self):
+        result = self.run_automation_status(
+            'state = not running\nruns = 3\nlast exit code = 0',
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('Updater: loaded', result.stdout)
+        self.assertIn('Updater last exit: successful', result.stdout)
+        self.assertIn('Latest deployment: successful (run 4242)', result.stdout)
+
+    def test_automation_status_rejects_a_failed_latest_updater_exit(self):
+        result = self.run_automation_status(
+            'state = not running\nruns = 4\nlast exit code = 78',
+        )
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn('Updater last exit: FAILED (code 78)', result.stdout)
+        self.assertIn('Inspect updater errors:', result.stdout)
+        self.assertIn('launchctl kickstart -k', result.stdout)
+        self.assertNotIn('Repair updater with:', result.stdout)
+
+    def test_automation_status_rejects_missing_latest_exit_evidence(self):
+        result = self.run_automation_status('state = waiting\nruns = 0')
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn(
+            'Updater last exit: unavailable (no completed run recorded)',
+            result.stdout,
+        )
+        self.assertIn('Inspect updater errors:', result.stdout)
 
     def test_every_third_party_action_is_immutable_and_version_annotated(self):
         for label, workflow, checkout_count in (
@@ -243,31 +327,45 @@ class DeploymentConfigurationTests(unittest.TestCase):
 
     def test_refresh_rolls_back_promoted_snapshot_before_any_git_staging(self):
         for required in (
+            'DIRECTION_CACHE_CANDIDATE="$WORK_DIR/direction-cache.candidate.json"',
+            'cp -p "$ROOT/.direction_cache.json" "$DIRECTION_CACHE_CANDIDATE"',
+            'DIRECTION_CACHE_PATH="$DIRECTION_CACHE_CANDIDATE"',
             'PROMOTED_OUTPUTS=(',
-            '"$WORK_DIR/$output.previous.json"',
-            '"$WORK_DIR/$output.previous-missing"',
+            '.direction_cache.json',
+            'PROMOTION_CANDIDATES=(',
+            '"$WORK_DIR/promoted-$index.previous.json"',
+            '"$WORK_DIR/promoted-$index.previous-missing"',
+            'PROMOTION_ACTIVE=1',
+            'restore_promoted_outputs()',
+            'if [ "$PROMOTION_ACTIVE" -eq 1 ]',
             'if ! "$PYTHON" -m unittest -q; then',
             'Regression suite failed; restoring the previous local snapshot.',
-            'mv "$WORK_DIR/$output.previous.json" "$ROOT/$output"',
+            'mv "$previous" "$ROOT/$output"',
             'rm -f "$ROOT/$output"',
         ):
             self.assertIn(required, self.refresh)
 
-        validate_at = self.refresh.index('"$PYTHON" validate_pipeline.py')
-        backup_at = self.refresh.index('PROMOTED_OUTPUTS=(')
-        promote_at = self.refresh.index(
-            'mv "$WORK_DIR/substack.candidate.json" "$ROOT/all_posts.json"'
+        cache_candidate_at = self.refresh.index(
+            'DIRECTION_CACHE_CANDIDATE="$WORK_DIR/direction-cache.candidate.json"'
         )
+        validate_at = self.refresh.index('"$PYTHON" validate_pipeline.py')
+        backup_at = self.refresh.index('PROMOTED_OUTPUTS=(', validate_at)
+        promote_at = self.refresh.index('PROMOTION_ACTIVE=1', backup_at)
         regression_at = self.refresh.index('if ! "$PYTHON" -m unittest -q; then')
+        accepted_at = self.refresh.index('PROMOTION_ACTIVE=0', regression_at)
         git_stage_at = self.refresh.index('git add -- "${TRACKED_OUTPUTS[@]}"')
+        self.assertLess(cache_candidate_at, validate_at)
         self.assertLess(validate_at, backup_at)
         self.assertLess(backup_at, promote_at)
         self.assertLess(promote_at, regression_at)
+        self.assertLess(regression_at, accepted_at)
+        self.assertLess(accepted_at, git_stage_at)
         self.assertLess(regression_at, git_stage_at)
 
     def test_transaction_backups_are_removed_by_cleanup(self):
         cleanup = self.refresh.split('cleanup() {', 1)[1].split('\n}', 1)[0]
         self.assertIn('rm -f "$WORK_DIR"/*.json', cleanup)
+        self.assertIn('rm -f "$WORK_DIR"/*.tmp', cleanup)
         self.assertIn('rm -f "$WORK_DIR"/*.previous-missing', cleanup)
 
 

@@ -239,7 +239,7 @@ def merge_sources(substack_posts, medium_posts, overrides=None):
     medium = [_canonical_medium_post(post) for post in medium_posts]
 
     substack_by_slug = {post.get('slug'): post for post in substack if post.get('slug')}
-    substack_by_title = {}
+    substack_by_title: dict[str, list[dict]] = {}
     for post in substack:
         substack_by_title.setdefault(normalize_title(post.get('title')), []).append(post)
 
@@ -287,19 +287,22 @@ def merge_sources(substack_posts, medium_posts, overrides=None):
 
     combined.sort(key=lambda post: str(post.get('post_date') or ''), reverse=True)
     articles = [article_metadata(post) for post in combined]
+    match_reasons: dict[str, int] = {}
     report = {
         'substack_articles': len(substack),
         'medium_articles': len(medium),
         'duplicate_medium_articles': len(matches),
         'unique_medium_articles': len(unique_medium),
         'published_articles': len(articles),
-        'match_reasons': {},
+        'match_reasons': match_reasons,
         'matches': matches,
         'unique_medium_ids': [post.get('medium_id') for post in unique_medium],
     }
     for match in matches:
-        reason = match['reason']
-        report['match_reasons'][reason] = report['match_reasons'].get(reason, 0) + 1
+        reason = match.get('reason')
+        if not isinstance(reason, str):
+            raise ValueError('matched Medium article has no deduplication reason')
+        match_reasons[reason] = match_reasons.get(reason, 0) + 1
     return combined, articles, report
 
 
