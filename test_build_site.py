@@ -469,13 +469,16 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertNotIn('Analyst synthesis', briefing)
         self.assertNotIn('Evidence quality', briefing)
 
-    def test_editorial_visual_system_is_light_first_and_responsive(self):
+    def test_editorial_light_and_terminal_dark_system_is_light_first_and_responsive(self):
         for text in (
             '--serif:"Iowan Old Style"',
-            '--bg:#e8e9e5',
-            '--surface-1:#faf9f5',
-            '--text:#172027',
-            '--accent:#173f5d',
+            '--bg:#f2e8dd',
+            '--surface-1:#fffaf4',
+            '--text:#28221f',
+            '--accent:#075c63',
+            '--bg:#050607',
+            '--surface-1:#0b0d0e',
+            '--selected-line:#ffb000',
             '.intel-title{',
             'var(--serif)',
             '.ic-rail{',
@@ -486,7 +489,27 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         ):
             self.assertIn(text, self.html)
         self.assertIn("var theme = stored || 'light'", self.html)
-        self.assertIn("var themeRevision = 'editorial-brief-2026-07'", self.html)
+        self.assertIn("var themeRevision = 'editorial-terminal-2026-07'", self.html)
+        self.assertIn(
+            "storedRevision === themeRevision || storedRevision === 'editorial-brief-2026-07'",
+            self.html,
+        )
+        self.assertIn(
+            'id="theme-button" type="button" aria-label="Switch to dark theme">Dark</button>',
+            self.html,
+        )
+        self.assertIn('html[data-theme="light"] .app-header{', self.html)
+        self.assertIn('html[data-theme="dark"] .app-header{', self.html)
+        self.assertIn('html[data-theme="dark"] #search{', self.html)
+        self.assertIn('html[data-theme="dark"] .brand-name{', self.html)
+        self.assertLess(
+            self.html.index("var themeRevision = 'editorial-terminal-2026-07'"),
+            self.html.index('<style>'),
+            'theme bootstrap must run before styles to prevent a wrong-theme first paint',
+        )
+        narrow_brand_start = self.html.rindex('@media(max-width:520px)')
+        narrow_brand_end = self.html.index('@media print{', narrow_brand_start)
+        self.assertIn('.brand-name{display:none}', self.html[narrow_brand_start:narrow_brand_end])
         self.assertRegex(
             self.html,
             r'body\[data-view="briefing"\] \.kpi-strip,\s*body\[data-view="briefing"\] \.command-bar',
@@ -605,7 +628,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             ':root,html[data-theme="light"],html[data-theme="dark"]',
             '--bg:#ffffff!important',
             '--surface-1:#ffffff!important',
-            '--text:#172027!important',
+            '--text:#28221f!important',
             '.ic-sheet-local,.ic-sheet-actions,.toast,.persistent-notice,.storage-alert{display:none!important}',
             '.intel-side.ic-sheet{',
             'display:block!important',
@@ -1585,8 +1608,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertEqual(manifest['start_url'], './')
         self.assertEqual(manifest['scope'], './')
         self.assertEqual(manifest['icons'][0]['src'], 'favicon.svg')
-        self.assertEqual(manifest['background_color'], '#e8e9e5')
-        self.assertEqual(manifest['theme_color'], '#e8e9e5')
+        self.assertEqual(manifest['background_color'], '#f2e8dd')
+        self.assertEqual(manifest['theme_color'], '#f2e8dd')
         social = (self.site_dir / 'og.jpg').read_bytes()
         self.assertTrue(social.startswith(b'\xff\xd8') and social.rstrip().endswith(b'\xff\xd9'))
         self.assertLessEqual(len(social), 500_000)
@@ -1819,11 +1842,42 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                     f'{first} and {second} must retain distinct meanings',
                 )
 
+        def channels(color):
+            return [int(color[index:index + 2], 16) for index in (1, 3, 5)]
+
+        self.assertLessEqual(
+            sum(channels(dark['bg'])), 24,
+            'terminal canvas should remain visibly near-black',
+        )
         for surface in ('bg', 'surface-1', 'surface-2', 'surface-3', 'surface-raised'):
-            channels = [int(dark[surface][index:index + 2], 16) for index in (1, 3, 5)]
-            self.assertLessEqual(max(channels) - min(channels), 24, f'{surface} should remain cool graphite')
-            self.assertLessEqual(channels[0], channels[1], f'{surface} should not carry a warm cast')
-            self.assertLessEqual(channels[1], channels[2], f'{surface} should not carry a warm cast')
+            dark_channels = channels(dark[surface])
+            self.assertLessEqual(
+                max(dark_channels) - min(dark_channels), 12,
+                f'{surface} should remain neutral terminal graphite',
+            )
+            self.assertLessEqual(dark_channels[0], dark_channels[1], f'{surface} should not carry a warm cast')
+            self.assertLessEqual(dark_channels[1], dark_channels[2], f'{surface} should not carry a warm cast')
+
+            light_channels = channels(light[surface])
+            self.assertGreaterEqual(light_channels[0], light_channels[1], f'{surface} should read as warm paper')
+            self.assertGreaterEqual(light_channels[1], light_channels[2], f'{surface} should read as warm paper')
+            self.assertGreaterEqual(
+                light_channels[0] - light_channels[2], 4,
+                f'{surface} should remain visibly warmer than neutral white',
+            )
+
+        dark_accent = channels(dark['accent'])
+        dark_action = channels(dark['accent-strong'])
+        dark_selection = channels(dark['selected-line'])
+        self.assertGreater(dark_accent[2], dark_accent[0], 'terminal links should retain a cyan information cue')
+        for amber in (dark_action, dark_selection):
+            self.assertGreater(amber[0], amber[1], 'terminal actions should retain an amber cue')
+            self.assertGreater(amber[1], amber[2], 'terminal actions should retain an amber cue')
+
+        light_accent = channels(light['accent'])
+        light_brick = channels(light['brick'])
+        self.assertGreater(light_accent[1], light_accent[0], 'editorial interactions should retain a restrained teal cue')
+        self.assertGreater(light_brick[0], light_brick[1], 'editorial hierarchy should retain a claret cue')
         self.assertGreaterEqual(contrast(light['text-muted'], light['selected']), 4.5)
         self.assertIn('background:var(--accent-strong);color:var(--on-accent)', self.html)
         self.assertIn('.primary-action:hover{background:var(--accent-hover);border-color:var(--accent-hover)}', self.html)

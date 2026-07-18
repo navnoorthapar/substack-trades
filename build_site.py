@@ -23,6 +23,9 @@ DOCS_DIR.mkdir(parents=True, exist_ok=True)
 SITE_URL = 'https://navnoorthapar.github.io/substack-trades/'
 SOCIAL_IMAGE_URL = f'{SITE_URL}og.jpg'
 SOCIAL_IMAGE_SOURCE = ROOT / 'assets' / 'og.jpg'
+THEME_REVISION = 'editorial-terminal-2026-07'
+LIGHT_THEME_BG = '#f2e8dd'
+DARK_THEME_BG = '#050607'
 
 with open(ROOT / 'trades_extracted.json', encoding='utf-8') as handle:
     trades = json.load(handle)
@@ -497,7 +500,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="color-scheme" content="light dark">
 <meta name="application-name" content="Navnoor Research Terminal">
-<meta name="theme-color" id="theme-color" content="#e8e9e5">
+<meta name="theme-color" id="theme-color" content="__LIGHT_THEME_BG__">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Navnoor Research Terminal">
@@ -539,17 +542,18 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     throw new Error('Navnoor Research Terminal cannot run inside a frame');
   }
   try {
-    var themeRevision = 'editorial-brief-2026-07';
-    var sameRevision = localStorage.getItem('nrt-theme-revision') === themeRevision;
+    var themeRevision = '__THEME_REVISION__';
+    var storedRevision = localStorage.getItem('nrt-theme-revision');
+    var sameRevision = storedRevision === themeRevision || storedRevision === 'editorial-brief-2026-07';
     var candidate = sameRevision ? localStorage.getItem('nrt-theme') : '';
     var stored = candidate === 'light' || candidate === 'dark' ? candidate : '';
     var theme = stored || 'light';
     localStorage.setItem('nrt-theme-revision',themeRevision);
     document.documentElement.dataset.theme = theme;
-    document.getElementById('theme-color').content = theme === 'light' ? '#e8e9e5' : '#111315';
+    document.getElementById('theme-color').content = theme === 'light' ? '__LIGHT_THEME_BG__' : '__DARK_THEME_BG__';
   } catch (_error) {
     document.documentElement.dataset.theme = 'light';
-    document.getElementById('theme-color').content = '#e8e9e5';
+    document.getElementById('theme-color').content = '__LIGHT_THEME_BG__';
   }
 })();
 </script>
@@ -563,136 +567,138 @@ button,input,select,textarea{font:inherit}
   --brief-compact-nav-h:89px;
   --rail-w:224px;
   --inspector-w:384px;
-  --bg:#111315;
-  --surface-1:#181b1d;
-  --surface-2:#202427;
-  --surface-3:#292e31;
-  --surface-raised:#31373b;
-  --line:#363c40;
-  --line-strong:#596166;
-  --control-line:#78848b;
-  --control-line-hover:#95a0a6;
-  --text:#f3f2ed;
-  --text-secondary:#c5c8c6;
-  --text-muted:#9fa7a8;
-  --accent:#8ab4cd;
-  --accent-strong:#315f7b;
-  --accent-hover:#274e66;
-  --accent-active:#204457;
-  --accent-soft:#1d2c35;
-  --on-accent:#ffffff;
-  --positive:#7fc1a5;
-  --positive-soft:#1b2d25;
-  --positive-line:#4f8a72;
-  --negative:#e49387;
-  --negative-soft:#32201e;
-  --negative-line:#a45e58;
-  --warning:#d8b06a;
-  --warning-soft:#302817;
-  --warning-line:#8d713e;
-  --relative:#afa0d1;
-  --relative-soft:#29243a;
-  --relative-line:#71668f;
-  --long-short:#d0a0c4;
-  --long-short-soft:#302333;
-  --long-short-line:#8a6682;
-  --long:#76aec5;
-  --long-soft:#192a31;
-  --long-line:#4f7789;
-  --short:#c59aad;
-  --short-soft:#2e2227;
-  --short-line:#876878;
-  --quant:#86bdcb;
-  --quant-soft:#172b30;
-  --quant-line:#537d87;
-  --number:#d0ad69;
-  --number-soft:#302817;
-  --number-line:#856f40;
-  --checkpoint:#c2a4c8;
-  --source-substack:#e88b5b;
-  --source-medium:#93a0ae;
-  --brick:#e09488;
-  --brick-soft:#2d1e1c;
-  --brick-line:#96584f;
-  --ochre:#d5ae6d;
-  --ochre-soft:#2b2418;
-  --green:#76b29a;
-  --green-soft:#182922;
-  --focus:#a9d1e8;
-  --selected:#24333c;
-  --selected-line:#8ab4cd;
-  --selection-bg:#385465;
-  --selection-text:#f3f2ed;
-  --backdrop:rgba(2,5,9,.78);
-  --shadow:0 24px 64px rgba(0,0,0,.56);
+  --bg:__DARK_THEME_BG__;
+  --surface-1:#0b0d0e;
+  --surface-2:#101315;
+  --surface-3:#171b1e;
+  --surface-raised:#1d2226;
+  --line:#2c3439;
+  --line-strong:#4e5b62;
+  --control-line:#6c7b83;
+  --control-line-hover:#91a1aa;
+  --text:#f4f6f7;
+  --text-secondary:#c6ced3;
+  --text-muted:#98a4ab;
+  --accent:#62c8ff;
+  --accent-strong:#d88900;
+  --accent-hover:#f0a000;
+  --accent-active:#bd7800;
+  --accent-soft:#102936;
+  --on-accent:#080909;
+  --positive:#29d391;
+  --positive-soft:#0c2a20;
+  --positive-line:#238f65;
+  --negative:#ff756e;
+  --negative-soft:#321514;
+  --negative-line:#a84542;
+  --warning:#ffbe3d;
+  --warning-soft:#2d220b;
+  --warning-line:#9a6e11;
+  --relative:#c39bff;
+  --relative-soft:#251a38;
+  --relative-line:#7053a5;
+  --long-short:#e48bd2;
+  --long-short-soft:#30172d;
+  --long-short-line:#8f4f83;
+  --long:#4cc9f0;
+  --long-soft:#0c2831;
+  --long-line:#2d809a;
+  --short:#ff7aa2;
+  --short-soft:#321824;
+  --short-line:#a84464;
+  --quant:#28d7e5;
+  --quant-soft:#0b292c;
+  --quant-line:#18818a;
+  --number:#ffc857;
+  --number-soft:#2d230d;
+  --number-line:#9b7424;
+  --checkpoint:#b7a7ff;
+  --source-substack:#ff8b48;
+  --source-medium:#a6b2b8;
+  --brick:#ffb000;
+  --brick-soft:#2a210d;
+  --brick-line:#8f6500;
+  --ochre:#ffbe3d;
+  --ochre-soft:#2d220b;
+  --green:#29d391;
+  --green-soft:#0c2a20;
+  --focus:#54c8ff;
+  --selected:#2a210d;
+  --selected-line:#ffb000;
+  --selection-bg:#775600;
+  --selection-text:#ffffff;
+  --backdrop:rgba(0,0,0,.84);
+  --shadow:0 24px 68px rgba(0,0,0,.72);
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
-  --serif:"Iowan Old Style",IowanOldStyle,Baskerville,"Times New Roman",Times,serif;
+  --serif:"Helvetica Neue",Arial,Helvetica,sans-serif;
   --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
 }
 html[data-theme="light"]{
   color-scheme:light;
-  --bg:#e8e9e5;
-  --surface-1:#faf9f5;
-  --surface-2:#f1f1ec;
-  --surface-3:#e2e5e3;
-  --surface-raised:#ffffff;
-  --line:#cfd2cd;
-  --line-strong:#9da5a6;
-  --control-line:#687279;
-  --control-line-hover:#4d5a60;
-  --text:#172027;
-  --text-secondary:#3f4a50;
-  --text-muted:#566166;
-  --accent:#173f5d;
-  --accent-strong:#173f5d;
-  --accent-hover:#0f314a;
-  --accent-active:#0c293e;
-  --accent-soft:#e2e9ed;
+  --bg:__LIGHT_THEME_BG__;
+  --surface-1:#fffaf4;
+  --surface-2:#f7eee5;
+  --surface-3:#e9ddd1;
+  --surface-raised:#fffdf9;
+  --line:#d4c6b8;
+  --line-strong:#9b8775;
+  --control-line:#6a5a4f;
+  --control-line-hover:#443931;
+  --text:#28221f;
+  --text-secondary:#514741;
+  --text-muted:#665a52;
+  --accent:#075c63;
+  --accent-strong:#075c63;
+  --accent-hover:#034b52;
+  --accent-active:#003c43;
+  --accent-soft:#dcebea;
   --on-accent:#ffffff;
-  --positive:#2f6854;
-  --positive-soft:#e5eeea;
-  --positive-line:#81a99a;
-  --negative:#994238;
-  --negative-soft:#f2e8e4;
-  --negative-line:#c08279;
-  --warning:#805817;
-  --warning-soft:#f2ecdf;
-  --warning-line:#b49a69;
-  --relative:#596286;
-  --relative-soft:#ebeaf2;
-  --relative-line:#999db7;
-  --long-short:#6d4f78;
-  --long-short-soft:#eee9f1;
-  --long-short-line:#aa95b1;
-  --long:#2b6375;
-  --long-soft:#e3eef1;
-  --long-line:#7fa3af;
-  --short:#7b5364;
-  --short-soft:#f1e9ec;
-  --short-line:#aa8c98;
-  --quant:#255d73;
-  --quant-soft:#e4eff2;
-  --quant-line:#7d9faa;
-  --number:#6c5529;
-  --number-soft:#f1ecdf;
-  --number-line:#ae9b70;
-  --checkpoint:#50656f;
-  --source-substack:#8b3e26;
-  --source-medium:#59656d;
-  --brick:#8d3c33;
-  --brick-soft:#f2e8e4;
-  --brick-line:#b98379;
-  --ochre:#745018;
-  --ochre-soft:#f2ecdf;
-  --green:#2f6854;
-  --green-soft:#e5eeea;
-  --focus:#1b5c91;
-  --selected:#e2eaec;
-  --selected-line:#386581;
-  --selection-bg:#c9d6d9;
-  --selection-text:#172027;
-  --backdrop:rgba(15,23,31,.34);
-  --shadow:0 18px 46px rgba(20,31,42,.16);
+  --positive:#28604b;
+  --positive-soft:#e1eee8;
+  --positive-line:#7fa393;
+  --negative:#96342d;
+  --negative-soft:#f4e3df;
+  --negative-line:#bd7d75;
+  --warning:#78500c;
+  --warning-soft:#f3ead5;
+  --warning-line:#a98b54;
+  --relative:#5c4f86;
+  --relative-soft:#eae6f2;
+  --relative-line:#968daf;
+  --long-short:#6d3f75;
+  --long-short-soft:#eee3f0;
+  --long-short-line:#a58aa9;
+  --long:#285e73;
+  --long-soft:#e1edf0;
+  --long-line:#789eaa;
+  --short:#7b4157;
+  --short-soft:#f1e4e9;
+  --short-line:#aa8292;
+  --quant:#075f69;
+  --quant-soft:#dfecee;
+  --quant-line:#739aa0;
+  --number:#6f5016;
+  --number-soft:#f2ead7;
+  --number-line:#aa9360;
+  --checkpoint:#4d5867;
+  --source-substack:#963d21;
+  --source-medium:#50595d;
+  --brick:#8b2f3d;
+  --brick-soft:#f1dfe3;
+  --brick-line:#b87a84;
+  --ochre:#78500c;
+  --ochre-soft:#f3ead5;
+  --green:#28604b;
+  --green-soft:#e1eee8;
+  --focus:#005f73;
+  --selected:#d8e5e3;
+  --selected-line:#075c63;
+  --selection-bg:#bdd8d1;
+  --selection-text:#28221f;
+  --backdrop:rgba(40,34,31,.38);
+  --shadow:0 18px 46px rgba(67,47,36,.18);
+  --sans:"Helvetica Neue",Arial,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:"Iowan Old Style",IowanOldStyle,Baskerville,Georgia,"Times New Roman",Times,serif;
 }
 html[data-theme="dark"]{color-scheme:dark}
 html{background:var(--bg);color:var(--text);font:13px/1.45 var(--sans);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;accent-color:var(--accent-strong)}
@@ -1463,6 +1469,70 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .kpi-strip{background:var(--surface-2)}
 .kpi-item{border-right-color:var(--line)}
 
+/* Two purposeful visual modes: warm editorial paper and high-density terminal */
+html[data-theme="light"] .app-header{
+  border-top:3px solid var(--brick);border-bottom-color:var(--line-strong)
+}
+html[data-theme="light"] .brand-mark{
+  border-color:var(--brick);background:var(--brick);color:var(--surface-1)
+}
+html[data-theme="light"] .brand-name{font-weight:700;letter-spacing:-.02em}
+html[data-theme="light"] .brand-sub{color:var(--brick);font-family:var(--sans);font-weight:700}
+html[data-theme="light"] .kpi-strip{border-bottom:2px solid var(--text)}
+html[data-theme="light"] .table-head{border-top:1px solid var(--text);border-bottom-color:var(--text)}
+html[data-theme="light"] .intel-title,
+html[data-theme="light"] .ic-section-header h2,
+html[data-theme="light"] .ic-dossier-head h2,
+html[data-theme="light"] .ic-sheet-title,
+html[data-theme="light"] .record-title{font-family:var(--serif)}
+html[data-theme="light"] .intel-lead-inner{box-shadow:inset 0 3px var(--brick)}
+
+html[data-theme="dark"] .app-header{
+  border-top:3px solid var(--selected-line);border-bottom-color:var(--line-strong)
+}
+html[data-theme="dark"] .brand-mark{
+  border-color:var(--selected-line);background:var(--selected-line);color:var(--on-accent)
+}
+html[data-theme="dark"] .brand-name{
+  font:700 13px/1 var(--mono);letter-spacing:.045em;text-transform:uppercase
+}
+html[data-theme="dark"] .brand-sub{color:var(--accent);letter-spacing:.14em}
+html[data-theme="dark"] #search{
+  border:1px solid var(--line-strong);background:var(--surface-2);padding-left:34px
+}
+html[data-theme="dark"] #search:focus{border-color:var(--selected-line);background:var(--surface-2)}
+html[data-theme="dark"] #search:focus-visible{box-shadow:inset 0 0 0 1px var(--selected-line)}
+html[data-theme="dark"] .search-glyph{left:11px;color:var(--accent)}
+html[data-theme="dark"] .search-key{right:8px;border-color:var(--control-line)}
+html[data-theme="dark"] .utility-button,
+html[data-theme="dark"] .view-tab,
+html[data-theme="dark"] .command-button,
+html[data-theme="dark"] .select-control{font-family:var(--mono);letter-spacing:.025em}
+html[data-theme="dark"] .kpi-strip{border-bottom:2px solid var(--selected-line)}
+html[data-theme="dark"] .kpi-value{color:var(--selected-line)}
+html[data-theme="dark"] .view-tab.active{color:var(--selected-line)}
+html[data-theme="dark"] .table-head{
+  border-bottom-color:var(--selected-line);box-shadow:inset 0 -1px var(--selected-line)
+}
+html[data-theme="dark"] .intel-title{
+  max-width:30ch;font-family:var(--sans);font-size:clamp(28px,2.1vw,36px);font-weight:700;
+  line-height:1.08;letter-spacing:-.024em
+}
+html[data-theme="dark"] .ic-section-header h2,
+html[data-theme="dark"] .ic-dossier-head h2,
+html[data-theme="dark"] .ic-sheet-title,
+html[data-theme="dark"] .record-title{font-family:var(--sans);font-weight:700}
+html[data-theme="dark"] .ic-evidence-values span{font-family:var(--mono);color:var(--number)}
+html[data-theme="dark"] .intel-side.ic-sheet{background:var(--surface-2)}
+html[data-theme="dark"] .workflow-panel{border-top-color:var(--selected-line)}
+html[data-theme="dark"] .primary-action{font-family:var(--mono);letter-spacing:.025em}
+html[data-theme="dark"] .toast,
+html[data-theme="dark"] .persistent-notice,
+html[data-theme="dark"] dialog,
+html[data-theme="dark"] kbd,
+html[data-theme="dark"] .method-card{border-radius:0}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-radius:0}
+
 /* Overlays and feedback */
 .drawer-backdrop{display:none}
 .toast{
@@ -1752,23 +1822,24 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .ic-sheet-actions{grid-template-columns:1fr}
   .intel-stream-list{grid-template-columns:1fr}
 }
-@media(max-width:430px){
+@media(max-width:520px){
   .brand-name{display:none}
 }
 @media print{
   @page{size:auto;margin:14mm}
   :root,html[data-theme="light"],html[data-theme="dark"]{
     color-scheme:light;
-    --bg:#ffffff!important;--surface-1:#ffffff!important;--surface-2:#f4f4ef!important;
-    --surface-3:#e8e9e5!important;--surface-raised:#ffffff!important;
-    --line:#cfd2cd!important;--line-strong:#8e9799!important;--control-line:#687279!important;
-    --control-line-hover:#4d5a60!important;--text:#172027!important;--text-secondary:#3f4a50!important;
-    --text-muted:#566166!important;--accent:#173f5d!important;--accent-strong:#173f5d!important;
-    --brick:#8d3c33!important;--brick-soft:#f2e8e4!important;--brick-line:#b98379!important;
-    --positive:#2f6854!important;--warning:#745018!important;
-    --ochre:#745018!important;--number:#6c5529!important;--number-soft:#f1ecdf!important;
-    --number-line:#ae9b70!important;--checkpoint:#50656f!important;--selected:#e2eaec!important;
-    --selected-line:#386581!important;--shadow:none!important
+    --bg:#ffffff!important;--surface-1:#ffffff!important;--surface-2:#f7eee5!important;
+    --surface-3:#e9ddd1!important;--surface-raised:#ffffff!important;
+    --line:#d4c6b8!important;--line-strong:#8f7c6c!important;--control-line:#6a5a4f!important;
+    --control-line-hover:#443931!important;--text:#28221f!important;--text-secondary:#514741!important;
+    --text-muted:#665a52!important;--accent:#075c63!important;--accent-strong:#075c63!important;
+    --brick:#8b2f3d!important;--brick-soft:#f1dfe3!important;--brick-line:#b87a84!important;
+    --positive:#28604b!important;--warning:#78500c!important;
+    --ochre:#78500c!important;--number:#6f5016!important;--number-soft:#f2ead7!important;
+    --number-line:#aa9360!important;--checkpoint:#4d5867!important;--selected:#d8e5e3!important;
+    --selected-line:#075c63!important;--shadow:none!important;
+    --serif:"Iowan Old Style",IowanOldStyle,Baskerville,Georgia,"Times New Roman",Times,serif!important
   }
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#111!important}
   .app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar,.active-filters,.context-bar,.inspector,
@@ -1778,7 +1849,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .intel-wrap{display:flex!important;flex-direction:column!important;width:100%;min-height:0;padding:0}
   .intel-grid{display:block}
   .intel-lead{display:contents!important;border:0;box-shadow:none;background:#fff!important;overflow:visible}
-  .intel-lead-inner{order:1;padding:0 0 12px}
+  .intel-lead-inner{order:1;padding:0 0 12px;box-shadow:none!important}
   .ic-evidence-strip{order:2}
   .ic-analysis{order:4}
   .ic-dossier{order:5}
@@ -1804,8 +1875,8 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .ic-sheet-section{display:block!important;break-inside:avoid;border-color:#bbb!important}
   .ic-sheet-section h3,.ic-sheet-section>p,.ic-sheet-section>.source-tail,.ic-sheet-section>.ic-sheet-checkpoint{grid-column:auto!important}
   .ic-sheet-checkpoint{display:block!important;break-inside:avoid;border-color:#bbb!important}
-  .ic-sheet-checkpoint time{color:#50656f!important}
-  .ic-sheet-title,.ic-sheet-section h3{color:#172027!important}
+  .ic-sheet-checkpoint time{color:#4d5867!important}
+  .ic-sheet-title,.ic-sheet-section h3{color:#28221f!important}
   mark{background:transparent!important;color:#111!important;font-weight:700}
 }
 @media(prefers-contrast:more){
@@ -1817,11 +1888,11 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
     --text-muted:#aab5c1;
   }
   html[data-theme="light"]{
-    --line:#aeb8c2;
-    --line-strong:#8794a0;
-    --control-line:#556370;
-    --control-line-hover:#33414e;
-    --text-muted:#47535f;
+    --line:#aa9786;
+    --line-strong:#7f6e60;
+    --control-line:#5a4c42;
+    --control-line-hover:#342b25;
+    --text-muted:#554a43;
   }
 }
 @media(prefers-reduced-motion:reduce){
@@ -1863,7 +1934,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
     <div class="freshness" id="freshness-summary"><span class="status-dot" id="freshness-dot" aria-hidden="true"></span><span id="freshness-state">Unknown</span><span class="freshness-separator" aria-hidden="true">·</span><span id="freshness-label">research status loading</span></div>
     <button class="utility-button header-library" type="button" data-view="research">Library</button>
     <button class="utility-button" id="method-button" type="button" aria-label="Show data methodology">Method</button>
-    <button class="utility-button" id="theme-button" type="button" aria-label="Switch color theme">Light</button>
+    <button class="utility-button" id="theme-button" type="button" aria-label="Switch to dark theme">Dark</button>
     <button class="utility-button" id="shortcut-button" type="button" aria-label="Show keyboard shortcuts" aria-keyshortcuts="Alt+Shift+?">?</button>
     <button class="utility-button" id="mobile-filter-button" type="button" aria-expanded="false" aria-controls="filter-rail">Filters</button>
   </div>
@@ -5317,7 +5388,7 @@ document.getElementById('inspector-close').addEventListener('click',function () 
 document.getElementById('theme-button').addEventListener('click',function () {
   const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
   document.documentElement.dataset.theme = next;
-  document.getElementById('theme-color').content = next === 'light' ? '#e8e9e5' : '#111315';
+  document.getElementById('theme-color').content = next === 'light' ? '__LIGHT_THEME_BG__' : '__DARK_THEME_BG__';
   try { localStorage.setItem('nrt-theme',next); } catch (_error) {}
   this.textContent = next === 'light' ? 'Dark' : 'Light';
   this.setAttribute('aria-label','Switch to ' + (next === 'light' ? 'dark' : 'light') + ' theme');
@@ -5542,6 +5613,9 @@ HTML = (HTML_TEMPLATE
         .replace('__MANAGER_LABELS_JSON__', manager_labels_json)
         .replace('__SNAPSHOT_JSON__', snapshot_json)
         .replace('__MANAGER_BUTTONS__', manager_html)
+        .replace('__THEME_REVISION__', THEME_REVISION)
+        .replace('__LIGHT_THEME_BG__', LIGHT_THEME_BG)
+        .replace('__DARK_THEME_BG__', DARK_THEME_BG)
         .replace('__BRIEF_ARCHIVE_SHA256__', brief_archive_sha256)
         .replace('__OBSERVATION_ARCHIVE_SHA256__', observation_archive_sha256)
         .replace('__REVISION__', revision_meta)
@@ -5610,8 +5684,8 @@ web_manifest = json.dumps({
     'start_url': './',
     'scope': './',
     'display': 'standalone',
-    'background_color': '#e8e9e5',
-    'theme_color': '#e8e9e5',
+    'background_color': LIGHT_THEME_BG,
+    'theme_color': LIGHT_THEME_BG,
     'icons': [{
         'src': 'favicon.svg',
         'sizes': 'any',
@@ -5619,10 +5693,10 @@ web_manifest = json.dumps({
         'purpose': 'any',
     }],
 }, ensure_ascii=False, indent=2) + '\n'
-favicon_svg = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-<rect width="64" height="64" rx="9" fill="#111315"/>
-<rect x="2" y="2" width="60" height="60" rx="7" fill="none" stroke="#5f9cf5" stroke-width="2"/>
-<text x="32" y="39" fill="#e8e9e5" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">N/R</text>
+favicon_svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<rect width="64" height="64" rx="6" fill="{DARK_THEME_BG}"/>
+<rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#ffb000" stroke-width="2"/>
+<text x="32" y="39" fill="#f4f6f7" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">N/R</text>
 </svg>
 '''
 

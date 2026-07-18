@@ -105,6 +105,15 @@ The briefing navigation remains complete when the desktop rail collapses, and
 the print/PDF layout preserves the authored IC decision sheet and public
 checkpoints while removing tab-session workflow fields.
 
+The default Light theme uses a Financial Times-inspired editorial grammar:
+warm paper surfaces, dark ink, serif research headlines, claret hierarchy, and
+restrained teal interaction cues. Dark mode uses a Bloomberg Terminal-inspired
+grammar: near-black panes, square geometry, compact sans/monospace controls,
+amber command states, and cyan information cues. These are independent visual
+references only; the project does not copy either product or imply affiliation.
+Both modes use the same semantic data colors, text labels, focus treatment, and
+contrast gates.
+
 The Observation Monitor and Research Library provide fast passage-level review.
 Directional labels describe parsed language, not an actor, verified position,
 exposure, conviction, or current view. Decision Workflow stores an 18-part
