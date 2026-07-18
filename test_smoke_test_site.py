@@ -16,6 +16,7 @@ CHECKSUM = 'b' * 64
 HTML_DIGEST = 'c' * 64
 BRIEF_DIGEST = 'd' * 64
 OBSERVATION_DIGEST = 'e' * 64
+SUPPORT_DIGEST = 'f' * 64
 
 
 def fixture_deferred(checksum=CHECKSUM, schema_version=1, briefs=None):
@@ -377,6 +378,114 @@ class SmokeTestSiteTests(unittest.TestCase):
             self.assertEqual(
                 smoke_test_site.snapshot_checksum(articles, observations), expected,
             )
+
+    def test_support_bundle_checksum_binds_name_order_and_exact_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            payloads = {}
+            for index, name in enumerate(smoke_test_site.SUPPORT_ASSET_NAMES):
+                payload = f'asset-{index}-{name}'.encode('utf-8')
+                (root / name).write_bytes(payload)
+                payloads[name] = payload
+            self.assertEqual(
+                smoke_test_site.support_bundle_checksum(root),
+                smoke_test_site.support_payload_checksum(payloads),
+            )
+            payloads[smoke_test_site.SUPPORT_ASSET_NAMES[0]] += b'changed'
+            self.assertNotEqual(
+                smoke_test_site.support_bundle_checksum(root),
+                smoke_test_site.support_payload_checksum(payloads),
+            )
+
+    def test_support_asset_names_resolve_beside_page_without_path_traversal(self):
+        self.assertEqual(
+            smoke_test_site.sibling_asset_url(
+                'https://example.test/research/?old=1', 'robots.txt',
+            ),
+            'https://example.test/research/robots.txt',
+        )
+        with self.assertRaisesRegex(ValueError, 'plain basename'):
+            smoke_test_site.sibling_asset_url(
+                'https://example.test/research/', '../robots.txt',
+            )
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_support_fetch_validates_and_hashes_every_exact_asset(
+        self, urlopen, ssl_context,
+    ):
+        payloads = {}
+        responses = {}
+        for name in smoke_test_site.SUPPORT_ASSET_NAMES:
+            payloads[name] = f'exact-{name}'.encode('utf-8')
+            response = MagicMock()
+            response.__enter__.return_value = response
+            response.geturl.return_value = f'https://example.test/research/{name}'
+            response.status = 200
+            response.headers.get_content_type.return_value = next(
+                iter(smoke_test_site.SUPPORT_CONTENT_TYPES[name])
+            )
+            response.read.return_value = payloads[name]
+            responses[name] = response
+
+        def response_for_request(request, **_kwargs):
+            name = Path(request.full_url.split('?', 1)[0]).name
+            return responses[name]
+
+        urlopen.side_effect = response_for_request
+        self.assertEqual(
+            smoke_test_site.fetch_support_bundle(
+                'https://example.test/research/', REVISION, 2, 20,
+            ),
+            smoke_test_site.support_payload_checksum(payloads),
+        )
+        self.assertEqual(urlopen.call_count, len(smoke_test_site.SUPPORT_ASSET_NAMES))
+        self.assertEqual(ssl_context.call_count, len(smoke_test_site.SUPPORT_ASSET_NAMES))
+        self.assertEqual(
+            {request_call.args[0].full_url for request_call in urlopen.call_args_list},
+            {
+                f'https://example.test/research/{name}?'
+                f'nrt_smoke_revision={REVISION}&nrt_smoke_attempt=2'
+                for name in smoke_test_site.SUPPORT_ASSET_NAMES
+            },
+        )
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_support_fetch_rejects_unexpected_content_type(self, urlopen, _ssl_context):
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.geturl.return_value = 'https://example.test/research/favicon.svg'
+        response.status = 200
+        response.headers.get_content_type.return_value = 'text/html'
+        urlopen.return_value = response
+        with self.assertRaisesRegex(ValueError, 'unexpected content type'):
+            smoke_test_site.fetch_support_bundle(
+                'https://example.test/research/', REVISION, 1, 20,
+            )
+
+    @patch('smoke_test_site.fetch_support_bundle', return_value=SUPPORT_DIGEST)
+    @patch(
+        'smoke_test_site.fetch_deferred_observations',
+        return_value=fixture_observations(),
+    )
+    @patch('smoke_test_site.fetch_deferred_briefs', return_value=fixture_deferred())
+    @patch(
+        'smoke_test_site.fetch_html',
+        return_value=(fixture_html(), 'https://example.test/research/'),
+    )
+    def test_smoke_requires_expected_support_bundle_when_supplied(
+        self, _fetch_html, _fetch_deferred, _fetch_observations, fetch_support,
+    ):
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            smoke_test_site.smoke_test(
+                'https://example.test/research/', REVISION, 363, 1327,
+                CHECKSUM, HTML_DIGEST, BRIEF_DIGEST, OBSERVATION_DIGEST,
+                retries=1, expected_support_sha256=SUPPORT_DIGEST,
+            )
+        fetch_support.assert_called_once_with(
+            'https://example.test/research/', REVISION, 1, 20.0,
+        )
 
     @patch(
         'smoke_test_site.fetch_deferred_observations',

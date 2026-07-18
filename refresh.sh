@@ -85,8 +85,25 @@ if [ "${FORCE_REFRESH:-0}" != "1" ] && [ -f "$LAST_RUN_FILE" ]; then
 fi
 
 echo "=== Syncing with origin/main ==="
-# A failed sync is fatal: continuing could create a commit that cannot publish.
-git pull --rebase --autostash origin main
+# Never let the scheduled production writer run from a feature branch or a
+# detached checkout. Its commit and push targets must describe the same branch.
+CURRENT_BRANCH=$(git branch --show-current)
+if [ "$CURRENT_BRANCH" != "main" ]; then
+    echo "Production refresh must run from the checked-out main branch (current: ${CURRENT_BRANCH:-detached HEAD})." >&2
+    exit 1
+fi
+# Production ingestion must run from reviewable, committed code. Ignored local
+# caches and previews are harmless, but any staged, unstaged, or untracked
+# source file makes the run fail closed instead of autostashing development.
+WORKTREE_STATUS=$(git status --porcelain --untracked-files=normal)
+if [ -n "$WORKTREE_STATUS" ]; then
+    echo "Production refresh requires a clean worktree. Commit or remove these changes first:" >&2
+    printf '%s\n' "$WORKTREE_STATUS" >&2
+    exit 1
+fi
+# A failed or non-fast-forward sync is fatal: continuing could publish data
+# produced by code that does not match main.
+git pull --ff-only origin main
 
 echo "=== Fetching posts from Substack ==="
 POSTS_OUTPUT="$WORK_DIR/substack.candidate.json" \
@@ -222,7 +239,22 @@ fi
 # ahead of origin by a previous network failure.
 echo
 echo "=== Pushing validated source snapshot ==="
-git push origin main
+push_succeeded=0
+for attempt in 1 2 3; do
+    if git push origin main; then
+        push_succeeded=1
+        break
+    fi
+    if [ "$attempt" -lt 3 ]; then
+        retry_delay=$((attempt * 20))
+        echo "Push attempt $attempt failed; retrying in ${retry_delay}s." >&2
+        sleep "$retry_delay"
+    fi
+done
+if [ "$push_succeeded" -ne 1 ]; then
+    echo "Validated snapshot could not be pushed after three attempts." >&2
+    exit 1
+fi
 
 date +%s > "$LAST_RUN_FILE"
 

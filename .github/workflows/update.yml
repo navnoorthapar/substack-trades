@@ -33,6 +33,7 @@ jobs:
       html_sha256: ${{ steps.asset_hashes.outputs.html_sha256 }}
       brief_sha256: ${{ steps.asset_hashes.outputs.brief_sha256 }}
       observation_sha256: ${{ steps.asset_hashes.outputs.observation_sha256 }}
+      support_sha256: ${{ steps.asset_hashes.outputs.support_sha256 }}
     permissions:
       contents: read
       pages: read
@@ -108,12 +109,17 @@ jobs:
           test -f _site/index.html
           test -f _site/article_briefs.json
           test -f _site/observations.json
+          test -f _site/robots.txt
+          test -f _site/sitemap.xml
+          test -f _site/site.webmanifest
+          test -f _site/favicon.svg
+          test -f _site/og.jpg
           test ! -L _site/index.html
           test ! -L _site/article_briefs.json
           test ! -L _site/observations.json
           artifact_file_count=$(find _site -type f | wc -l | tr -d ' ')
-          if (( artifact_file_count != 3 )); then
-            echo "Generated artifact must contain exactly index.html, article_briefs.json, and observations.json." >&2
+          if (( artifact_file_count != 8 )); then
+            echo "Generated artifact must contain exactly the three application assets and five launch support assets." >&2
             exit 1
           fi
           if find _site -type l -print -quit | grep -q .; then
@@ -270,12 +276,15 @@ jobs:
           html_sha256=$(sha256sum _site/index.html | awk '{print $1}')
           brief_sha256=$(sha256sum _site/article_briefs.json | awk '{print $1}')
           observation_sha256=$(sha256sum _site/observations.json | awk '{print $1}')
+          support_sha256=$(python -c "from smoke_test_site import support_bundle_checksum; print(support_bundle_checksum('_site'))")
           [[ "$html_sha256" =~ ^[0-9a-f]{64}$ ]]
           [[ "$brief_sha256" =~ ^[0-9a-f]{64}$ ]]
           [[ "$observation_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$support_sha256" =~ ^[0-9a-f]{64}$ ]]
           echo "html_sha256=$html_sha256" >> "$GITHUB_OUTPUT"
           echo "brief_sha256=$brief_sha256" >> "$GITHUB_OUTPUT"
           echo "observation_sha256=$observation_sha256" >> "$GITHUB_OUTPUT"
+          echo "support_sha256=$support_sha256" >> "$GITHUB_OUTPUT"
 
       - name: Upload Pages artifact
         if: >-
@@ -284,7 +293,7 @@ jobs:
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
-          retention-days: 1
+          retention-days: 7
 
   deploy:
     name: Deploy production
@@ -320,6 +329,7 @@ jobs:
           EXPECTED_HTML_SHA256: ${{ needs.quality.outputs.html_sha256 }}
           EXPECTED_BRIEF_SHA256: ${{ needs.quality.outputs.brief_sha256 }}
           EXPECTED_OBSERVATION_SHA256: ${{ needs.quality.outputs.observation_sha256 }}
+          EXPECTED_SUPPORT_SHA256: ${{ needs.quality.outputs.support_sha256 }}
         run: >-
           python smoke_test_site.py "$DEPLOYED_URL"
           --expected-revision "$EXPECTED_REVISION"
@@ -328,6 +338,7 @@ jobs:
           --expected-html-sha256 "$EXPECTED_HTML_SHA256"
           --expected-brief-sha256 "$EXPECTED_BRIEF_SHA256"
           --expected-observation-sha256 "$EXPECTED_OBSERVATION_SHA256"
-          --retries 12
+          --expected-support-sha256 "$EXPECTED_SUPPORT_SHA256"
+          --retries 8
           --retry-delay 10
           --timeout 20

@@ -8,6 +8,7 @@ import re
 import ssl
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -16,9 +17,20 @@ from urllib.request import Request, urlopen
 
 MAX_RESPONSE_BYTES = 12 * 1024 * 1024
 MAX_DEFERRED_BYTES = 2 * 1024 * 1024
+MAX_SUPPORT_ASSET_BYTES = 600 * 1024
 HTML_ASSET_NAME = 'index.html'
 DEFERRED_ASSET_NAME = 'article_briefs.json'
 OBSERVATION_ASSET_NAME = 'observations.json'
+SUPPORT_ASSET_NAMES = (
+    'favicon.svg', 'og.jpg', 'robots.txt', 'site.webmanifest', 'sitemap.xml',
+)
+SUPPORT_CONTENT_TYPES = {
+    'favicon.svg': {'image/svg+xml'},
+    'og.jpg': {'image/jpeg'},
+    'robots.txt': {'text/plain'},
+    'site.webmanifest': {'application/manifest+json', 'application/json', 'text/plain'},
+    'sitemap.xml': {'application/xml', 'text/xml', 'text/plain'},
+}
 REQUIRED_META = {
     'nrt-revision',
     'nrt-article-count',
@@ -200,6 +212,13 @@ def deferred_asset_url(page_url, asset_name=DEFERRED_ASSET_NAME):
     """Resolve a release-bound JSON asset beside the page, never off-origin."""
     if asset_name not in ASSET_DIGEST_META:
         raise ValueError(f'unsupported deferred asset: {asset_name}')
+    return sibling_asset_url(page_url, asset_name)
+
+
+def sibling_asset_url(page_url, asset_name):
+    """Resolve one trusted basename beside the page without query inheritance."""
+    if not asset_name or asset_name != Path(asset_name).name:
+        raise ValueError('release asset name must be a plain basename')
     parts = urlsplit(page_url)
     path = parts.path or '/'
     if path.endswith('/'):
@@ -212,6 +231,31 @@ def deferred_asset_url(page_url, asset_name=DEFERRED_ASSET_NAME):
         else:
             asset_path = f'{path}/{asset_name}'
     return urlunsplit((parts.scheme, parts.netloc, asset_path, '', ''))
+
+
+def support_bundle_checksum(directory):
+    """Bind every launch support asset to one deterministic release digest."""
+    root = Path(directory)
+    digest = hashlib.sha256()
+    for asset_name in SUPPORT_ASSET_NAMES:
+        payload = (root / asset_name).read_bytes()
+        digest.update(asset_name.encode('ascii'))
+        digest.update(b'\0')
+        digest.update(payload)
+        digest.update(b'\0')
+    return digest.hexdigest()
+
+
+def support_payload_checksum(payloads):
+    digest = hashlib.sha256()
+    for asset_name in SUPPORT_ASSET_NAMES:
+        if asset_name not in payloads:
+            raise ValueError(f'missing support asset: {asset_name}')
+        digest.update(asset_name.encode('ascii'))
+        digest.update(b'\0')
+        digest.update(payloads[asset_name])
+        digest.update(b'\0')
+    return digest.hexdigest()
 
 
 def validate_deferred_payload(payload, expected_checksum):
@@ -343,6 +387,49 @@ def fetch_deferred_observations(
     )
 
 
+def fetch_support_bundle(page_url, revision, attempt, timeout):
+    """Fetch and validate every same-origin discovery/social support asset."""
+    def fetch_one(asset_name):
+        asset_url = sibling_asset_url(page_url, asset_name)
+        if not same_origin(page_url, asset_url):
+            raise ValueError(f'{asset_name} URL is not same-origin')
+        requested_url = cache_busted_url(asset_url, revision, attempt)
+        request = Request(
+            requested_url,
+            headers={
+                'Accept': '*/*',
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache',
+                'User-Agent': 'navnoor-terminal-deployment-smoke/1.0',
+            },
+        )
+        context = verified_ssl_context()
+        with urlopen(request, timeout=timeout, context=context) as response:
+            final_url = response.geturl()
+            if urlsplit(final_url).scheme != 'https':
+                raise ValueError(f'{asset_name} redirected away from HTTPS: {final_url}')
+            if not same_origin(page_url, final_url):
+                raise ValueError(f'{asset_name} redirected off-origin: {final_url}')
+            status = getattr(response, 'status', None)
+            if status is None:
+                status = response.getcode()
+            if status != 200:
+                raise ValueError(f'{asset_name} returned HTTP {status}')
+            content_type = response.headers.get_content_type()
+            if content_type not in SUPPORT_CONTENT_TYPES[asset_name]:
+                raise ValueError(f'{asset_name} returned unexpected content type {content_type}')
+            payload = response.read(MAX_SUPPORT_ASSET_BYTES + 1)
+        if not payload or len(payload) > MAX_SUPPORT_ASSET_BYTES:
+            raise ValueError(f'{asset_name} is empty or exceeds {MAX_SUPPORT_ASSET_BYTES} bytes')
+        return asset_name, payload
+
+    # These independent, small files are fetched concurrently so one retry has
+    # a single timeout budget rather than five sequential timeout budgets.
+    with ThreadPoolExecutor(max_workers=len(SUPPORT_ASSET_NAMES)) as executor:
+        payloads = dict(executor.map(fetch_one, SUPPORT_ASSET_NAMES))
+    return support_payload_checksum(payloads)
+
+
 def verified_ssl_context():
     """Use the platform trust store, with certifi as a verified macOS fallback."""
     try:
@@ -404,6 +491,7 @@ def smoke_test(
     retries=12,
     retry_delay=10.0,
     timeout=20.0,
+    expected_support_sha256=None,
 ):
     """Retry through Pages propagation and fail unless the exact release is live."""
     parts = urlsplit(url)
@@ -423,6 +511,10 @@ def smoke_test(
             raise ValueError(
                 f'trusted build digest for {asset_name} is not a lowercase SHA-256 digest'
             )
+    if expected_support_sha256 is not None and not CHECKSUM_RE.fullmatch(
+        str(expected_support_sha256 or '')
+    ):
+        raise ValueError('trusted build digest for support assets is invalid')
 
     last_error = None
     for attempt in range(1, retries + 1):
@@ -468,10 +560,19 @@ def smoke_test(
             validate_observation_payload(
                 observations, expected_checksum, expected_observations,
             )
+            if expected_support_sha256 is not None:
+                actual_support_sha256 = fetch_support_bundle(
+                    page_url, expected_revision, attempt, timeout,
+                )
+                if actual_support_sha256 != expected_support_sha256:
+                    raise ValueError(
+                        'support asset bundle SHA-256 is '
+                        f'{actual_support_sha256}, expected {expected_support_sha256}'
+                    )
             print(
                 f'Smoke test passed on attempt {attempt}: HTTPS, revision '
                 f'{expected_revision[:12]}, {expected_articles} articles, '
-                f'{expected_observations} observations, exact release-bound HTML and deferred assets.'
+                f'{expected_observations} observations, exact release-bound HTML, deferred assets, and support bundle.'
             )
             return
         except Exception as exc:  # Retries intentionally cover HTTP and stale-cache failures.
@@ -493,6 +594,7 @@ def main():
     parser.add_argument('--expected-html-sha256', required=True)
     parser.add_argument('--expected-brief-sha256', required=True)
     parser.add_argument('--expected-observation-sha256', required=True)
+    parser.add_argument('--expected-support-sha256', required=True)
     parser.add_argument('--retries', type=int, default=12)
     parser.add_argument('--retry-delay', type=float, default=10.0)
     parser.add_argument('--timeout', type=float, default=20.0)
@@ -514,6 +616,7 @@ def main():
             retries=args.retries,
             retry_delay=args.retry_delay,
             timeout=args.timeout,
+            expected_support_sha256=args.expected_support_sha256,
         )
     except (OSError, UnicodeError, ValueError) as exc:
         print(f'SMOKE TEST FAILED: {exc}', file=sys.stderr)

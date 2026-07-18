@@ -68,11 +68,16 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'test -f _site/index.html',
             'test -f _site/article_briefs.json',
             'test -f _site/observations.json',
+            'test -f _site/robots.txt',
+            'test -f _site/sitemap.xml',
+            'test -f _site/site.webmanifest',
+            'test -f _site/favicon.svg',
+            'test -f _site/og.jpg',
             'test ! -L _site/article_briefs.json',
             'test ! -L _site/observations.json',
             'artifact_file_count=$(find _site -type f',
-            'artifact_file_count != 3',
-            'must contain exactly index.html, article_briefs.json, and observations.json',
+            'artifact_file_count != 8',
+            'must contain exactly the three application assets and five launch support assets',
             'find _site -type l',
             'index_bytes < 100000',
             'index_bytes > 900000',
@@ -101,9 +106,13 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'html_sha256=$(sha256sum _site/index.html',
             'brief_sha256=$(sha256sum _site/article_briefs.json',
             'observation_sha256=$(sha256sum _site/observations.json',
+            'support_sha256=$(python -c',
+            "support_bundle_checksum('_site')",
             'html_sha256: ${{ steps.asset_hashes.outputs.html_sha256 }}',
             'brief_sha256: ${{ steps.asset_hashes.outputs.brief_sha256 }}',
             'observation_sha256: ${{ steps.asset_hashes.outputs.observation_sha256 }}',
+            'support_sha256: ${{ steps.asset_hashes.outputs.support_sha256 }}',
+            'retention-days: 7',
         ):
             self.assertIn(required, self.workflow)
 
@@ -118,10 +127,12 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'EXPECTED_HTML_SHA256: ${{ needs.quality.outputs.html_sha256 }}',
             'EXPECTED_BRIEF_SHA256: ${{ needs.quality.outputs.brief_sha256 }}',
             'EXPECTED_OBSERVATION_SHA256: ${{ needs.quality.outputs.observation_sha256 }}',
+            'EXPECTED_SUPPORT_SHA256: ${{ needs.quality.outputs.support_sha256 }}',
             '--expected-html-sha256 "$EXPECTED_HTML_SHA256"',
             '--expected-brief-sha256 "$EXPECTED_BRIEF_SHA256"',
             '--expected-observation-sha256 "$EXPECTED_OBSERVATION_SHA256"',
-            '--retries 12',
+            '--expected-support-sha256 "$EXPECTED_SUPPORT_SHA256"',
+            '--retries 8',
         ):
             self.assertIn(required, deploy_job)
         self.assertIn('contents: read', deploy_job)
@@ -145,9 +156,11 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'html_sha256=$(sha256sum "$SITE_OUTPUT_DIR/index.html"',
             'brief_sha256=$(sha256sum "$SITE_OUTPUT_DIR/article_briefs.json"',
             'observation_sha256=$(sha256sum "$SITE_OUTPUT_DIR/observations.json"',
+            'support_sha256=$(SITE_OUTPUT_DIR="$SITE_OUTPUT_DIR" python3 -c',
             '--expected-html-sha256 "$EXPECTED_HTML_SHA256"',
             '--expected-brief-sha256 "$EXPECTED_BRIEF_SHA256"',
             '--expected-observation-sha256 "$EXPECTED_OBSERVATION_SHA256"',
+            '--expected-support-sha256 "$EXPECTED_SUPPORT_SHA256"',
             '--retries 2',
             'https://navnoorthapar.github.io/substack-trades/',
             "json.load(open('snapshot_manifest.json'",
@@ -206,6 +219,27 @@ class DeploymentConfigurationTests(unittest.TestCase):
             self.refresh,
             r'git commit --only[\s\S]*-- "\$\{TRACKED_OUTPUTS\[@\]\}"',
         )
+
+    def test_scheduled_refresh_fails_closed_on_dirty_source_and_retries_push(self):
+        for required in (
+            'CURRENT_BRANCH=$(git branch --show-current)',
+            'if [ "$CURRENT_BRANCH" != "main" ]',
+            'git status --porcelain --untracked-files=normal',
+            'git pull --ff-only origin main',
+            'for attempt in 1 2 3',
+            'push_succeeded=0',
+            'git push origin main',
+            'failed; retrying in ${retry_delay}s',
+        ):
+            self.assertIn(required, self.refresh)
+        self.assertNotIn('--autostash', self.refresh)
+        branch_gate_at = self.refresh.index('CURRENT_BRANCH=$(git branch --show-current)')
+        clean_gate_at = self.refresh.index(
+            'git status --porcelain --untracked-files=normal'
+        )
+        pull_at = self.refresh.index('git pull --ff-only origin main')
+        self.assertLess(branch_gate_at, clean_gate_at)
+        self.assertLess(clean_gate_at, pull_at)
 
     def test_refresh_rolls_back_promoted_snapshot_before_any_git_staging(self):
         for required in (

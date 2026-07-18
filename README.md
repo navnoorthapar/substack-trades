@@ -27,6 +27,7 @@ GitHub Actions
   tracked snapshot -> validation + tests -> _site/index.html (fast shell + latest dossiers)
                                          -> _site/article_briefs.json (older exact spans)
                                          -> _site/observations.json (parser observations)
+                                         -> robots/sitemap/manifest/favicon/social image
                                          -> immutable Pages artifact
                                          -> atomic production deployment
 ```
@@ -51,8 +52,9 @@ fields do not match. Generated site files are intentionally ignored:
 every production artifact is rebuilt, tested, and deployed without a bot commit
 or a second source of truth.
 
-The core pipeline needs Python 3.9+, Git with authenticated write access to
-`origin`, and network access to Substack and GitHub. It has no pip dependencies.
+The core pipeline needs Python 3.9+, Node.js for generated-script compilation,
+Git with authenticated write access to `origin`, and network access to Substack
+and GitHub. It has no third-party Python dependencies.
 Ollama with `qwen2.5:14b` is optional; without it, refreshes preserve cached
 classifications and keep the regex-only direction for new residuals.
 
@@ -101,11 +103,11 @@ avoiding a late rerender of the active brief.
 
 The briefing navigation remains complete when the desktop rail collapses, and
 the print/PDF layout preserves the authored IC decision sheet and public
-checkpoints while removing device-local workflow fields.
+checkpoints while removing tab-session workflow fields.
 
 The Observation Monitor and Research Library provide fast passage-level review.
 Directional labels describe parsed language, not an actor, verified position,
-exposure, conviction, or current view. Decision Workflow v2 stores an 18-part
+exposure, conviction, or current view. Decision Workflow stores an 18-part
 analyst packet: eight investment-case fields, six self-attested control gates,
 and four workflow controls. Coverage means only that fields were populated; it
 is not approval, conviction, investability, or proof that a control was
@@ -128,9 +130,16 @@ states an explicit affirmative position. These controls reduce false precision;
 they do not replace reading the original article or obtaining independent
 evidence.
 
-Workflow packets remain in browser storage unless explicitly backed up. They
-are not an authenticated, shared, or immutable enterprise audit record. Do not
-enter confidential, personal, client, position, or regulated information.
+Workflow packets use plaintext `sessionStorage`, which is isolated to the
+current top-level browser tab and survives reloads only until that tab session
+closes. Explicit exports are plaintext backups. On first use, the terminal
+states these boundaries and prohibits confidential or regulated entries. A
+valid legacy origin-wide queue is transactionally moved into the tab session
+and removed from persistent storage; malformed legacy records fail closed and
+can be preserved before cleanup. Restore keeps a tab-scoped rollback across
+reloads. These packets are not an authenticated, shared, encrypted, or immutable
+enterprise audit record. See [PRIVACY.md](PRIVACY.md) and
+[SECURITY.md](SECURITY.md).
 
 ## Install the scheduled updater
 
@@ -176,8 +185,11 @@ tail -n 100 "$HOME/Library/Logs/SubstackTrades/refresh.log"
 tail -n 100 "$HOME/Library/Logs/SubstackTrades/refresh-error.log"
 ```
 
-Every push to `main` runs the regression suite, validates the tracked snapshot,
-builds a fresh immutable artifact, and deploys it. Pull requests run the same
+`refresh.sh` refuses to ingest from a dirty worktree and synchronizes with
+`origin/main` using fast-forward-only semantics. Its production push is retried
+three times for transient network failures. Every push to `main` runs the
+regression suite, validates the tracked snapshot, builds a fresh immutable
+eight-file artifact, and deploys it. Pull requests run the same
 quality gate without production credentials or deployment. Production runs are
 serialized and never cancelled midway; stale pull-request runs are cancelled.
 The release is then fetched over HTTPS and checked against the exact commit,
@@ -191,10 +203,12 @@ any regression-test failure restores that snapshot before Git staging. A
 candidate can therefore neither leak into the next scheduled run nor trigger a
 GitHub Pages deployment unless its full local quality gate passes. GitHub Pages
 then publishes the exact tested artifact atomically and the post-deploy smoke
-test verifies HTTPS, revision, counts, snapshot checksum, and both independently
-recorded deferred-asset hashes plus the exact HTML hash before declaring it
-healthy. A separate least-privilege watchdog deterministically rebuilds those
-three fingerprints, verifies the exact published revision every four hours,
+test verifies HTTPS, revision, counts, snapshot checksum, the two independently
+recorded deferred-asset hashes, the exact HTML hash, and one deterministic hash
+covering all five discovery/social support assets before declaring it healthy.
+Deployment artifacts are retained for seven days. A separate least-privilege
+watchdog deterministically rebuilds all four fingerprints, verifies the exact
+published revision every four hours,
 and rejects a research snapshot older than
 16 hours, leaving margin above the longest scheduled refresh interval.
 
@@ -207,6 +221,24 @@ gh run list --workflow update.yml --limit 5
 
 Only the scheduled Mac can discover new publication posts. A manual workflow
 run rebuilds and redeploys the already tracked snapshot.
+
+## Privacy-respecting measurement
+
+The site intentionally ships no analytics SDK, tracking pixel, advertising
+cookie, session replay, or background telemetry. Search text and tab-session
+decision packets are not sent to this project. Explicit **Copy view** actions
+may place the active research query in the copied URL so the user can choose to
+share it. Maintainers can use GitHub's aggregate repository traffic window and
+Google Search Console for discovery health without embedding reader tracking in
+the terminal. Search Console ownership and sitemap submission are manual owner
+steps documented in [LAUNCH_RUNBOOK.md](LAUNCH_RUNBOOK.md).
+
+## Launch and incident operations
+
+The complete preflight, deploy verification, rollback, monitoring, and incident
+checklists live in [LAUNCH_RUNBOOK.md](LAUNCH_RUNBOOK.md). Treat a successful
+post-deploy exact-release smoke test—not merely a green upload—as the release
+boundary.
 
 ## Validate and preview locally
 

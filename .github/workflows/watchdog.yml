@@ -40,12 +40,15 @@ jobs:
           html_sha256=$(sha256sum "$SITE_OUTPUT_DIR/index.html" | awk '{print $1}')
           brief_sha256=$(sha256sum "$SITE_OUTPUT_DIR/article_briefs.json" | awk '{print $1}')
           observation_sha256=$(sha256sum "$SITE_OUTPUT_DIR/observations.json" | awk '{print $1}')
+          support_sha256=$(SITE_OUTPUT_DIR="$SITE_OUTPUT_DIR" python3 -c "import os; from smoke_test_site import support_bundle_checksum; print(support_bundle_checksum(os.environ['SITE_OUTPUT_DIR']))")
           [[ "$html_sha256" =~ ^[0-9a-f]{64}$ ]]
           [[ "$brief_sha256" =~ ^[0-9a-f]{64}$ ]]
           [[ "$observation_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$support_sha256" =~ ^[0-9a-f]{64}$ ]]
           echo "EXPECTED_HTML_SHA256=$html_sha256" >> "$GITHUB_ENV"
           echo "EXPECTED_BRIEF_SHA256=$brief_sha256" >> "$GITHUB_ENV"
           echo "EXPECTED_OBSERVATION_SHA256=$observation_sha256" >> "$GITHUB_ENV"
+          echo "EXPECTED_SUPPORT_SHA256=$support_sha256" >> "$GITHUB_ENV"
 
       - name: Verify exact live release
         run: >-
@@ -56,6 +59,7 @@ jobs:
           --expected-html-sha256 "$EXPECTED_HTML_SHA256"
           --expected-brief-sha256 "$EXPECTED_BRIEF_SHA256"
           --expected-observation-sha256 "$EXPECTED_OBSERVATION_SHA256"
+          --expected-support-sha256 "$EXPECTED_SUPPORT_SHA256"
           --retries 2
           --retry-delay 5
           https://navnoorthapar.github.io/substack-trades/

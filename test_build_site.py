@@ -1,3 +1,4 @@
+import base64
 import gzip
 import hashlib
 import json
@@ -161,6 +162,19 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'nextMap.size !== expectedArticleById.size',
             'relevanceScoreCache = new WeakMap()',
             'Observation archive does not match this release',
+            'function fetchReleaseText(url,unavailableMessage)',
+            'const controller = new AbortController()',
+            'controller.abort()',
+            'signal:controller.signal',
+            "error.name === 'AbortError'",
+            'request timed out',
+            'clearTimeout(timeoutId)',
+            'function releaseMismatchError(message)',
+            'function recoverFromStaleReleaseShell()',
+            "current.searchParams.get('nrt_release') === token",
+            "current.searchParams.set('nrt_release',token)",
+            'window.location.replace(current.href)',
+            'if (error && error.releaseMismatch) recoverFromStaleReleaseShell()',
         ):
             self.assertIn(required, self.html)
 
@@ -171,8 +185,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         gate = self.html[gate_start:render_end]
         for text in (
             'if (!isArticleView()) return true',
-            "if (state.view === 'research') return true",
-            'state.query || state.directions.size || state.instruments.size',
+            'state.directions.size || state.instruments.size || state.managers.size',
             'function requestObservationsForCurrentState(forceRetry)',
             'if (observationsFailed && !forceRetry)',
             'const request = forceRetry ? retryObservations() : loadObservations()',
@@ -184,6 +197,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'requestObservationsForCurrentState(false)',
         ):
             self.assertIn(text, gate)
+        self.assertNotIn("if (state.view === 'research') return true", gate)
+        self.assertNotIn('state.query || state.directions.size', gate)
+        self.assertIn('function syncExportAvailability()', gate)
+        self.assertIn('exportButton.disabled = unavailable', gate)
         self.assertLess(
             gate.index('if (!observationsReady && currentStateNeedsObservations())'),
             gate.index('const records = filteredRecords()'),
@@ -383,8 +400,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'What changes our mind',
             'Author’s countercase',
             'What would change the view',
-            'Device-local IC overlay',
-            'Local · this device',
+            'Tab-session IC overlay',
+            'Local · this tab',
             'Open source dossier',
             'Copy IC brief',
             'Print / PDF',
@@ -486,6 +503,14 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertNotIn('.freshness{display:none}', compact_header)
         self.assertIn('.global-search{grid-column:1/-1;grid-row:2}', compact_header)
         self.assertIn('.utility-button{min-height:44px}', compact_header)
+        mobile_header_start = self.html.index('@media(max-width:759px)', compact_header_end)
+        mobile_header_end = self.html.index('@media(max-width:430px)', mobile_header_start)
+        mobile_header = self.html[mobile_header_start:mobile_header_end]
+        self.assertIn(':root{--header-h:104px;--kpi-h:42px}', mobile_header)
+        self.assertIn('grid-template-rows:52px 52px', mobile_header)
+        self.assertIn('.brand{grid-column:1;grid-row:1;min-width:auto}', mobile_header)
+        self.assertIn('.global-search{grid-column:1/-1;grid-row:2}', mobile_header)
+        self.assertIn('.header-right{grid-column:2/4;grid-row:1;gap:5px}', mobile_header)
         tiny_start = self.html.rindex('@media(max-width:430px)')
         tiny_end = self.html.index('@media print{', tiny_start)
         self.assertIn('.brand-name{display:none}', self.html[tiny_start:tiny_end])
@@ -581,7 +606,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             '--bg:#ffffff!important',
             '--surface-1:#ffffff!important',
             '--text:#172027!important',
-            '.ic-sheet-local,.ic-sheet-actions,.toast{display:none!important}',
+            '.ic-sheet-local,.ic-sheet-actions,.toast,.persistent-notice,.storage-alert{display:none!important}',
             '.intel-side.ic-sheet{',
             'display:block!important',
             'position:static!important',
@@ -627,7 +652,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         search_start = self.html.index('function renderArticleAwareSearch(focusResult)')
         search_end = self.html.index("document.getElementById('search').addEventListener('input'", search_start)
         search = self.html[search_start:search_end]
-        self.assertIn('loadBriefArchive().then(finish)', search)
+        self.assertIn('loadBriefArchive().then(function ()', search)
+        self.assertIn('generation !== articleSearchGeneration', search)
         self.assertIn('briefArchiveReady', search)
 
     def test_deferred_article_dossiers_are_complete_release_bound_and_lossless(self):
@@ -1082,20 +1108,29 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('not proof of absence', full_branch)
 
     def test_new_since_review_requires_an_explicit_acknowledgement(self):
-        initialization_start = self.html.index("let lastSeenPublication = ''")
+        initialization_start = self.html.index('let reviewedArticleIds = new Set()')
         acknowledgement_start = self.html.index('function markReviewedThroughLatest()', initialization_start)
         initialization = self.html[initialization_start:acknowledgement_start]
-        self.assertIn('localStorage.getItem(LAST_SEEN_KEY)', initialization)
+        self.assertIn('localStorage.getItem(REVIEWED_ARTICLE_IDS_KEY)', initialization)
+        self.assertIn('localStorage.getItem(LEGACY_LAST_SEEN_KEY)', initialization)
+        self.assertIn('reviewedArticleIds = new Set(ARTICLES.filter', initialization)
         self.assertNotIn(
-            'localStorage.setItem(LAST_SEEN_KEY',
+            'localStorage.setItem(REVIEWED_ARTICLE_IDS_KEY',
             initialization,
             'loading or rendering the terminal must not silently acknowledge new research',
         )
 
-        acknowledgement_end = self.html.index('\nfunction backupQueue()', acknowledgement_start)
+        acknowledgement_end = self.html.index('\nfunction downloadLocalFile', acknowledgement_start)
         acknowledgement = self.html[acknowledgement_start:acknowledgement_end]
-        self.assertIn('localStorage.setItem(LAST_SEEN_KEY,MAX_DATE)', acknowledgement)
-        self.assertIn('NEW_SINCE_DATE = MAX_DATE', acknowledgement)
+        self.assertIn('ARTICLES.map(function (article) { return article.id; })', acknowledgement)
+        self.assertIn('localStorage.setItem(REVIEWED_ARTICLE_IDS_KEY,JSON.stringify(currentIds))', acknowledgement)
+        self.assertIn('reviewedArticleIds = new Set(currentIds)', acknowledgement)
+        new_helper_start = self.html.index('function isNewArticle(article)')
+        new_helper_end = self.html.index('\nfunction reviewFlagged', new_helper_start)
+        new_helper = self.html[new_helper_start:new_helper_end]
+        self.assertIn('!reviewedArticleIds.has(article.id)', new_helper)
+        self.assertIn('reviewBaselineExists', new_helper)
+        self.assertNotIn('article.date > NEW_SINCE_DATE', self.html)
         self.assertIn("action.dataset.action === 'mark-reviewed'", self.html)
         self.assertIn('markReviewedThroughLatest();', self.html)
 
@@ -1108,10 +1143,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn("document.getElementById('inspector').scrollTop = 0", inspector)
         self.assertIn('renderedInspectorKey = inspectorKey', inspector)
 
-    def test_decision_queue_v2_is_structured_bounded_local_and_portable(self):
+    def test_decision_queue_v3_is_structured_tab_scoped_and_portable(self):
         for text in (
-            "const WORKFLOW_KEY = 'nrt-decision-queue-v2'",
-            "const LEGACY_WORKFLOW_KEY = 'nrt-decision-queue-v1'",
+            "const WORKFLOW_KEY = 'nrt-decision-queue-session-v3'",
+            "const RESTORE_ROLLBACK_KEY = 'nrt-decision-queue-restore-rollback-v1'",
+            "const LEGACY_LOCAL_WORKFLOW_KEYS = ['nrt-decision-queue-v2','nrt-decision-queue-v1','nrt-saved-ideas']",
             "new Set(['review','diligence','monitor','archived'])",
             "new Set(['low','normal','high'])",
             "new Set(['unrated','low','medium','high'])",
@@ -1140,16 +1176,29 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'source_snapshot:sourceSnapshotForIdea(id)',
             'Retained source snapshots',
             'Passage snapshot unavailable',
-            'new Map(workflowItems)',
-            'packets merged',
-            'backup source snapshot differs',
+            'cloneWorkflowMap(workflowItems)',
+            'Queue import preview',
+            'Source snapshot mismatch',
+            'undoLastQueueRestore()',
+            'plaintext storage scoped to this browser tab session',
+            'data-action="clear-queue"',
+            'data-action="backup-raw-storage"',
+            'data-action="clear-unreadable-storage"',
+            'workflowLoadBlocked',
+            'stored queue schema is not an array',
+            'stored queue item is invalid or duplicated',
+            'legacy saved queue schema is not an array',
+            'workflowStorageDirty',
+            'legacyCleanupPending',
+            'lastPersistedWorkflow',
+            'window.addEventListener(\'beforeunload\'',
             'Queue backup could not be validated',
-            'Queue could not be saved in this browser',
+            'Queue could not be saved in this tab session',
             'Copy failed—select and copy manually',
             'Copy decision packet',
             'Archive packet',
             'Return to review',
-            'Stored only in this browser unless backed up',
+            'Stored only in this tab session unless exported',
             'Not an enterprise audit record',
             'Do not enter confidential',
         ):
@@ -1161,6 +1210,15 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertRegex(self.html, r'item\[field\]\s*=\s*String\(value\[field\]\s*\|\|\s*[\'\"]{2}\)\.slice\(0,WORKFLOW_TEXT_LIMITS\[field\]\)')
         self.assertIn('note:4000', self.html)
         self.assertIn('tags:500', self.html)
+        self.assertIn("parsed.toISOString().slice(0,10) === text", self.html)
+        self.assertIn('sessionStorage.setItem(WORKFLOW_KEY,serialized)', self.html)
+        self.assertNotIn('localStorage.setItem(WORKFLOW_KEY,serialized)', self.html)
+        persist_start = self.html.index('function persistWorkflow()')
+        persist_end = self.html.index('\n\nARTICLES.forEach', persist_start)
+        persist = self.html[persist_start:persist_end]
+        self.assertIn('if (legacyCleanupPending)', persist)
+        self.assertIn('clearLegacyLocalWorkflowKeys()', persist)
+        self.assertIn('legacyCleanupPending = false', persist)
 
         for gate_key, label in (
             ('source', 'Original publication reviewed'),
@@ -1185,6 +1243,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
         self.assertIn("document.addEventListener('focusout'", self.html)
         self.assertIn("window.addEventListener('pagehide'", self.html)
+        self.assertIn('validTimestamp(value.updated_at)', self.html)
+        self.assertIn('item.updated_at > existing.updated_at', self.html)
+        self.assertIn('The current queue will be retained as a tab-scoped rollback across reloads.', self.html)
+        self.assertIn('sessionStorage.setItem(\n          RESTORE_ROLLBACK_KEY', self.html)
 
     def test_institutional_methodology_links_and_operating_boundary_are_explicit(self):
         for text in (
@@ -1337,6 +1399,29 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.assertIn('target="_blank"', link)
             self.assertIn('rel="noopener noreferrer"', link)
 
+        self.assertIn('aria-label="Research results"', self.html)
+        self.assertIn('aria-keyshortcuts="Alt+/"', self.html)
+        self.assertIn('aria-keyshortcuts="Alt+Shift+?"', self.html)
+        self.assertIn('Alt+Shift+O Alt+Shift+S Alt+Shift+C', self.html)
+        shortcut_start = self.html.index("document.addEventListener('keydown'")
+        shortcut_end = self.html.index("window.addEventListener('popstate'", shortcut_start)
+        shortcuts = self.html[shortcut_start:shortcut_end]
+        self.assertIn("event.altKey && !event.shiftKey && event.code === 'Slash'", shortcuts)
+        self.assertIn('if (!event.altKey || !event.shiftKey) return;', shortcuts)
+        for code in ('KeyG', 'KeyJ', 'KeyK', 'KeyO', 'KeyS', 'KeyC', 'KeyF'):
+            self.assertIn("event.code === '" + code + "'", shortcuts)
+        self.assertNotIn("event.key.toLowerCase() === 'g'", shortcuts)
+        self.assertNotIn("event.key === '/'", shortcuts)
+
+        self.assertRegex(self.html, r'id="search"[^>]*maxlength="300"')
+        self.assertIn("state.query = String(params.get('q') || '').slice(0,300)", self.html)
+        hash_start = self.html.index('function updateHash(includeQuery)')
+        hash_end = self.html.index('\nlet queryCacheKey', hash_start)
+        hash_logic = self.html[hash_start:hash_end]
+        self.assertIn('if (includeQuery && state.query)', hash_logic)
+        self.assertIn('updateHash(true);', self.html)
+        self.assertIn('Shareable view copied with search phrase', self.html)
+
         search_start = self.html.find("document.getElementById('search').addEventListener('keydown'")
         search_end = self.html.find("document.getElementById('manager-search')", search_start)
         self.assertGreaterEqual(search_start, 0, 'search Enter handler is missing')
@@ -1349,7 +1434,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         article_search = self.html[article_search_start:article_search_end]
         self.assertIn('render();', article_search)
         self.assertIn('focusSelectedRow();', article_search)
-        self.assertIn('loadBriefArchive().then(finish)', article_search)
+        self.assertIn('loadBriefArchive().then(function ()', article_search)
+        self.assertIn('generation !== articleSearchGeneration', article_search)
 
         self.assertIn("button.setAttribute('aria-label','Remove filter: '", self.html)
         self.assertIn("mark.setAttribute('aria-hidden','true')", self.html)
@@ -1432,6 +1518,17 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         ):
             self.assertIn(directive, csp)
         self.assertNotIn("connect-src 'none'", csp)
+        self.assertNotIn("script-src 'unsafe-inline'", csp)
+        script_bodies = re.findall(
+            r'<script(?:\s[^>]*)?>(.*?)</script>', self.html,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        expected_script_hashes = {
+            base64.b64encode(hashlib.sha256(body.encode('utf-8')).digest()).decode('ascii')
+            for body in script_bodies
+        }
+        actual_script_hashes = set(re.findall(r"'sha256-([^']+)'", csp))
+        self.assertEqual(actual_script_hashes, expected_script_hashes)
 
         freshness_start = self.html.index('function renderStaticStats()')
         freshness = self.html[freshness_start:]
@@ -1449,6 +1546,54 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('Refresh clock invalid', freshness)
         self.assertNotIn('Math.max(0,(Date.now() - checked.getTime())', freshness)
         self.assertIn('9 AM, 1 PM, and 10 PM Asia/Kolkata', self.html)
+
+    def test_search_social_and_discovery_metadata_are_complete_and_private(self):
+        for text in (
+            '<meta name="robots" content="index,follow,max-image-preview:large">',
+            '<meta property="og:site_name" content="Navnoor Research Terminal">',
+            '<meta property="og:image" content="https://navnoorthapar.github.io/substack-trades/og.jpg">',
+            '<meta property="og:image:width" content="1200">',
+            '<meta property="og:image:height" content="630">',
+            '<meta name="twitter:card" content="summary_large_image">',
+            '<link rel="icon" type="image/svg+xml" href="favicon.svg">',
+            '<link rel="manifest" href="site.webmanifest">',
+            '<link rel="sitemap" type="application/xml" href="sitemap.xml">',
+        ):
+            self.assertIn(text, self.html)
+
+        structured_match = re.search(
+            r'<script type="application/ld\+json">\s*(.*?)\s*</script>',
+            self.html,
+            flags=re.DOTALL,
+        )
+        self.assertIsNotNone(structured_match)
+        structured = json.loads(structured_match.group(1))
+        self.assertEqual(structured['@type'], 'WebApplication')
+        self.assertEqual(structured['applicationCategory'], 'FinanceApplication')
+        self.assertEqual(structured['url'], 'https://navnoorthapar.github.io/substack-trades/')
+
+        robots = (self.site_dir / 'robots.txt').read_text(encoding='utf-8')
+        self.assertEqual(
+            robots,
+            'User-agent: *\nAllow: /\nSitemap: '
+            'https://navnoorthapar.github.io/substack-trades/sitemap.xml\n',
+        )
+        sitemap = (self.site_dir / 'sitemap.xml').read_text(encoding='utf-8')
+        self.assertIn('<loc>https://navnoorthapar.github.io/substack-trades/</loc>', sitemap)
+        self.assertIn(f'<lastmod>{self.snapshot["checked_at"][:10]}</lastmod>', sitemap)
+        manifest = json.loads((self.site_dir / 'site.webmanifest').read_text(encoding='utf-8'))
+        self.assertEqual(manifest['start_url'], './')
+        self.assertEqual(manifest['scope'], './')
+        self.assertEqual(manifest['icons'][0]['src'], 'favicon.svg')
+        self.assertEqual(manifest['background_color'], '#e8e9e5')
+        self.assertEqual(manifest['theme_color'], '#e8e9e5')
+        social = (self.site_dir / 'og.jpg').read_bytes()
+        self.assertTrue(social.startswith(b'\xff\xd8') and social.rstrip().endswith(b'\xff\xd9'))
+        self.assertLessEqual(len(social), 500_000)
+        self.assertIn('no advertising, cookies, third-party analytics, session replay', self.html)
+        self.assertIn('if (window.top !== window.self)', self.html)
+        self.assertIn('window.top.location.replace(window.self.location.href)', self.html)
+        self.assertIn('cannot run inside a frame', self.html)
 
     def test_outcomes_are_not_assigned_a_success_state(self):
         self.assertNotIn('trade-outcome-loss', self.html)
@@ -1547,7 +1692,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         artifact_files = [path for path in self.site_dir.rglob('*') if path.is_file()]
         self.assertEqual(
             {path.relative_to(self.site_dir).as_posix() for path in artifact_files},
-            {'index.html', 'article_briefs.json', 'observations.json'},
+            {
+                'index.html', 'article_briefs.json', 'observations.json',
+                'robots.txt', 'sitemap.xml', 'site.webmanifest',
+                'favicon.svg', 'og.jpg',
+            },
         )
         self.assertTrue(all(not path.is_symlink() for path in artifact_files))
         self.assertLess(
