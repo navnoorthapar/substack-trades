@@ -1,6 +1,6 @@
 # Launch and operations runbook
 
-Target launch: 2026-07-19
+Launch certification: 2026-07-21 (original target: 2026-07-19)
 Production: <https://navnoorthapar.github.io/substack-trades/>
 
 ## 1. Release authority and prerequisites
@@ -51,12 +51,20 @@ deferred JSON assets, `robots.txt`, `sitemap.xml`, `site.webmanifest`,
 3. Require the post-deploy smoke step to confirm HTTPS, exact Git revision,
    snapshot checksum/counts, exact HTML, both deferred JSON files, and the
    combined discovery/social support bundle.
-4. Record the successful commit and create an annotated launch tag only after
-   production smoke succeeds.
+4. Dispatch **Monitor Published Research** against the same `main` commit with
+   `gh workflow run watchdog.yml --ref main`; require its exact-release and
+   freshness checks to pass.
 5. Open production and manually verify the default workbench, a recent article,
    an older deferred dossier, observation loading, keyboard-only navigation,
    mobile layout, light/dark themes, print preview, and an intentionally offline
    asset failure. Do not enter confidential data during testing.
+6. Run Lighthouse against Latest, Evidence, Library, and Queue on the exact
+   production release. Record performance plus Accessibility, Best Practices,
+   and SEO results; inspect 375 px, 768 px, and desktop layouts for overflow and
+   touch-target regressions.
+7. Create the annotated launch tag only after production smoke, the independent
+   watchdog, and the production checks above succeed. Put the exact release SHA
+   and both workflow URLs in the tag annotation.
 
 If a push queues no run, use:
 
@@ -72,8 +80,10 @@ gh run list --workflow update.yml --limit 5
 - Submit
   `https://navnoorthapar.github.io/substack-trades/sitemap.xml` and verify it is
   fetched successfully.
-- Confirm `robots.txt`, the canonical URL, social preview image, manifest, and
-  favicon resolve over HTTPS.
+- Confirm the project-path `substack-trades/robots.txt`, canonical URL, social
+  preview image, manifest, and favicon resolve over HTTPS. GitHub project Pages
+  cannot publish an origin-root `navnoorthapar.github.io/robots.txt`; that
+  accepted boundary is tracked in `ISSUES.md`.
 - Set the GitHub repository description, homepage, and topics if they are still
   blank. This requires an authenticated repository owner.
 - Use GitHub's aggregate repository traffic and Search Console for discovery
@@ -115,17 +125,60 @@ For Critical or High incidents:
 
 ## 7. Launch completion record
 
-Record these values in the launch notes:
+Certification date: **2026-07-21**
 
-- release commit and annotated tag;
-- deployment and post-deploy smoke run URLs;
-- snapshot `checked_at`, article count, and observation count;
-- successful desktop/mobile, keyboard, theme, print, offline, and source-link
-  spot checks;
-- Search Console sitemap status;
-- any accepted limitation, owner, and target date.
+- **Immutable release identity:** annotated tag `launch-2026-07-21`. Its
+  annotation is the authoritative durable record of the final release SHA, the
+  exact **Validate and Deploy Pages** URL, the independent **Monitor Published
+  Research** URL, and the final Lighthouse scores. The tag must not exist unless
+  every Section 3 gate has passed for its peeled commit.
+- **Implementation and data lineage:** the release contains the updater/print
+  correction from `93b18f2d45d7888f89bdee09e7ae57f050552203` and the fresh
+  publication snapshot from `551ce56c345f97e95239eb132e7a90a515af06ce`.
+  Their exact-production deployments passed in GitHub Actions runs
+  [29852762167](https://github.com/navnoorthapar/substack-trades/actions/runs/29852762167)
+  and
+  [29853041159](https://github.com/navnoorthapar/substack-trades/actions/runs/29853041159).
+- **Snapshot:** checked `2026-07-21T17:26:54Z`; 363 unique articles and 1,268
+  source observations. Substack was healthy in `complete_api` mode with 229
+  included articles. Medium was healthy in `complete_archive` mode with 361
+  authored posts fetched and 134 unique articles included after cross-post
+  deduplication. The latest publication remained 2026-07-11; the successful
+  source checks prove this is current source state, not a stalled refresh.
+- **Automated gates:** all 177 tests passed. Tracked and strict cached-source
+  validation, Ruff, mypy, Python compilation, shell syntax, plist validation,
+  deterministic eight-file build, inline JavaScript compilation, exact release
+  fingerprints, and post-deploy asset/support-bundle smoke checks passed.
+- **Production quality baseline:** on exact deployed product/data revision
+  `551ce56c345f97e95239eb132e7a90a515af06ce`, Lighthouse performance scored 98
+  Latest, 93 Evidence, 93 Library, and 92 Queue. Accessibility, Best Practices,
+  and SEO scored 100 on all four routes, with zero failing accessibility audits.
+  The final documentation-only certification revision is rerun before tagging;
+  its exact scores are retained in the immutable tag annotation and must keep
+  performance at or above 90 and the other three categories at 100.
+- **Interaction and layout:** Latest, Evidence, Library, and Queue were checked
+  at 375 px, 768 px, and 1,440 px with no horizontal overflow; mobile and tablet
+  controls met the 44 px touch-target floor. Financial Times-inspired light and
+  Bloomberg Terminal-inspired dark themes were visually checked. Automated
+  keyboard/focus semantics passed; empty search and queue recovery actions were
+  verified; network, storage, malformed-import, timeout, and stale-shell paths
+  fail closed with bounded recovery.
+- **Print and provenance:** an exact-production six-page brief was rendered to
+  PDF after the print fix. The rendered and inspected pages show no repeated
+  skip-link overlay or visible clipping; text extraction confirms the hidden
+  link is absent, and source identity/citation remains present.
+- **Operations:** the scheduled LaunchAgent completed a real refresh with latest
+  exit 0; `automation_status.sh` passed. Refreshes run at 09:00, 13:00, and 22:00
+  Asia/Kolkata and after login; the independent watchdog runs every four hours.
+- **Accepted follow-up:** Search Console ownership and sitemap submission require
+  an owner-authenticated browser action and are not claimed complete. Owner:
+  repository owner. Target: **2026-07-28**. The deployed canonical/meta robots,
+  project sitemap, project-path robots file, manifest, favicon, and social image
+  already validate. No reader-level analytics is shipped; GitHub aggregate
+  traffic and Search Console remain the privacy-approved measurement approach.
 
-Known platform boundaries at launch: GitHub Pages controls response headers;
-inline styles require CSP `unsafe-inline`; workflow packets are plaintext but
-limited to a top-level tab session, while exports remain plaintext files; and
-the project deliberately has no reader-level analytics.
+Known platform boundaries at launch: GitHub Pages controls response headers and
+the origin-root robots file; inline styles require CSP `unsafe-inline`;
+workflow packets are plaintext but limited to a top-level tab session, while
+exports remain plaintext files; hash-selected views share canonical social
+metadata; and the project deliberately has no reader-level analytics.
