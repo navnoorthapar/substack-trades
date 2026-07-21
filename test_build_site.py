@@ -1513,11 +1513,13 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             r'\.facet-option,\.facet-clear,\.date-option,\.manager-search,\.preset-button',
             r'\.view-tab',
             r'\.select-control,\.command-button',
-            r'\.filter-chip,\.primary-action,\.secondary-action,\.inspector-close,\.load-more',
+            r'\.text-button,\.filter-chip,\.primary-action,\.secondary-action,\.inspector-close,\.load-more',
         ):
             match = re.search(selector + r'\{[^}]*(?:min-)?height:(\d+)px', mobile)
             self.assertIsNotNone(match, f'mobile target size missing for {selector}')
             self.assertGreaterEqual(int(match.group(1)), 44, f'mobile target too small for {selector}')
+        self.assertRegex(mobile, r'\.inspector-close\{[^}]*min-width:44px')
+        self.assertRegex(self.html, r'\.inspector-close\{[^}]*min-width:24px')
 
     def test_literal_dom_id_references_resolve_and_ids_are_unique(self):
         ids = re.findall(r'\bid=["\']([^"\']+)["\']', self.html)

@@ -175,11 +175,12 @@ Certification date: **2026-07-21**
   performance at or above 90 and the other three categories at 100.
 - **Interaction and layout:** Latest, Evidence, Library, and Queue were checked
   at 375 px, 768 px, and 1,440 px with no horizontal overflow; mobile and tablet
-  controls met the 44 px touch-target floor. Financial Times-inspired light and
-  Bloomberg Terminal-inspired dark themes were visually checked. Automated
-  keyboard/focus semantics passed; empty search and queue recovery actions were
-  verified; network, storage, malformed-import, timeout, and stale-shell paths
-  fail closed with bounded recovery.
+  layouts expose no visible non-inline control below 24 CSS px, while mobile
+  controls use 44 px hit targets. Financial Times-inspired light and Bloomberg
+  Terminal-inspired dark themes were visually checked. Automated keyboard/focus
+  semantics passed; empty search and queue recovery actions were verified;
+  network, storage, malformed-import, timeout, and stale-shell paths fail closed
+  with bounded recovery.
 - **Print and provenance:** an exact-production six-page brief was rendered to
   PDF after the print fix. The rendered and inspected pages show no repeated
   skip-link overlay or visible clipping; text extraction confirms the hidden
