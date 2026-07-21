@@ -3,8 +3,9 @@
 ## Supported version
 
 Only the current production release built from `main` is supported. The live
-release exposes its exact Git revision and is checked against that revision and
-the tested artifact fingerprints after deployment and every four hours.
+release exposes its exact Git revision. It is checked against that revision and
+the tested artifact fingerprints after deployment, with an independent check
+scheduled every four hours.
 
 ## Reporting a vulnerability
 

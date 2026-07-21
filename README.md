@@ -208,18 +208,18 @@ non-linear history while preserving the scheduled updater's normal direct push.
 
 Local refreshes are transactional: new source data is built and validated in an
 isolated candidate directory, the previous promoted snapshot is preserved, and
-any regression-test failure restores that snapshot before Git staging. A
-candidate can therefore neither leak into the next scheduled run nor trigger a
-GitHub Pages deployment unless its full local quality gate passes. GitHub Pages
+any regression-test, staging, or local-commit failure restores that snapshot.
+A push failure retains the clean local commit for the next retry. A candidate
+can therefore neither leak into the next scheduled run nor trigger a GitHub
+Pages deployment unless its full local quality gate passes. GitHub Pages
 then publishes the exact tested artifact atomically and the post-deploy smoke
 test verifies HTTPS, revision, counts, snapshot checksum, the two independently
 recorded deferred-asset hashes, the exact HTML hash, and one deterministic hash
 covering all five discovery/social support assets before declaring it healthy.
 Deployment artifacts are retained for seven days. A separate least-privilege
-watchdog deterministically rebuilds all four fingerprints, verifies the exact
-published revision every four hours,
-and rejects a research snapshot older than
-16 hours, leaving margin above the longest scheduled refresh interval.
+watchdog is scheduled every four hours to rebuild all four fingerprints, verify
+the exact published revision, and reject a research snapshot older than 16
+hours, leaving margin above the longest scheduled refresh interval.
 
 Manually redeploy the current `main` snapshot without fetching publications:
 
