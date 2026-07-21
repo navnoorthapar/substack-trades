@@ -1518,7 +1518,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             match = re.search(selector + r'\{[^}]*(?:min-)?height:(\d+)px', mobile)
             self.assertIsNotNone(match, f'mobile target size missing for {selector}')
             self.assertGreaterEqual(int(match.group(1)), 44, f'mobile target too small for {selector}')
-        self.assertRegex(mobile, r'\.inspector-close\{[^}]*min-width:44px')
+        self.assertRegex(mobile, r'\.text-button,\.inspector-close\{[^}]*min-width:44px')
         self.assertRegex(self.html, r'\.inspector-close\{[^}]*min-width:24px')
 
     def test_literal_dom_id_references_resolve_and_ids_are_unique(self):
