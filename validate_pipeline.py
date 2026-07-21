@@ -34,8 +34,19 @@ VALID_INSTRUMENTS = {
     'repo', 'swap', 'CDS', 'prediction_market', 'weather_derivative',
     'unspecified',
 }
-VALID_SOURCES = {'substack', 'medium'}
-VALID_CONTENT_STATUSES = {'full', 'excerpt'}
+VALID_SOURCES = {'substack', 'medium', 'patreon', 'fxempire'}
+CONTENT_SOURCES = {'substack', 'medium'}
+REGISTRY_SOURCES = {'patreon', 'fxempire'}
+VALID_CONTENT_STATUSES = {'full', 'excerpt', 'registry'}
+VALID_FAMILIES = {
+    'firm-mechanics',
+    'career-structure',
+    'model-critique',
+    'scandal-enforcement',
+    'event-reaction',
+    'market-structure',
+    'other',
+}
 VALID_FETCH_STATUSES = {'ok', 'degraded'}
 DATE_ONLY_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 TIMESTAMP_RE = re.compile(
@@ -45,6 +56,15 @@ TIMESTAMP_RE = re.compile(
 SHA256_RE = re.compile(r'^[0-9a-f]{64}$')
 MEDIUM_ID_RE = re.compile(r'(?:-|/)([0-9a-f]{12})$', re.IGNORECASE)
 MAX_FUTURE_CLOCK_SKEW = timedelta(minutes=10)
+EMPTY_BODY_SHA256 = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+REGISTRY_BRIEF_KEYS = {
+    'schema_version', 'body_sha256', 'lead', 'sections', 'fallback_evidence',
+    'checkpoints',
+}
+REGISTRY_ARTICLE_KEYS = {
+    'source', 'source_id', 'slug', 'title', 'subtitle', 'post_date', 'url',
+    'audience', 'wordcount', 'content_status', 'brief', 'family',
+}
 
 
 def load_json(path, label):
@@ -78,6 +98,24 @@ def require_string(value, message, allow_empty=False):
     require(isinstance(value, str), message)
     require(allow_empty or bool(value.strip()), message)
     return value
+
+
+def validate_registry_brief(brief, label):
+    """Require the exact brief emitted for a metadata-only, empty-body row."""
+    require(isinstance(brief, dict),
+            f'{label} registry brief is not an object')
+    require(set(brief) == REGISTRY_BRIEF_KEYS,
+            f'{label} registry brief does not match the exact empty-body contract')
+    require(type(brief.get('schema_version')) is int
+            and brief['schema_version'] == 1,
+            f'{label} registry brief does not match the exact empty-body contract')
+    require(brief.get('body_sha256') == EMPTY_BODY_SHA256,
+            f'{label} registry brief does not match the exact empty-body contract')
+    require(brief.get('lead') is None
+            and brief.get('fallback_evidence') is None,
+            f'{label} registry brief does not match the exact empty-body contract')
+    require(brief.get('sections') == [] and brief.get('checkpoints') == [],
+            f'{label} registry brief does not match the exact empty-body contract')
 
 
 def parse_iso_date(value, label, date_only=False):
@@ -137,6 +175,25 @@ def canonical_url_identity(source, url):
         if match is None:
             raise ValueError('Medium URL has no canonical post ID')
         return match.group(1).casefold()
+    if source == 'patreon':
+        require(host == 'www.patreon.com', 'Patreon URL has the wrong host')
+        match = re.fullmatch(
+            r'/NavnoorBawa/posts/[A-Za-z0-9][A-Za-z0-9_-]*-([0-9]+)',
+            parsed.path,
+        )
+        if match is None:
+            raise ValueError('Patreon URL has no canonical creator post ID')
+        return match.group(1)
+    if source == 'fxempire':
+        require(host == 'www.fxempire.com', 'FX Empire URL has the wrong host')
+        match = re.fullmatch(
+            r'/(?:forecasts|news|education)/article/'
+            r'[A-Za-z0-9][A-Za-z0-9_-]*-([0-9]+)',
+            parsed.path,
+        )
+        if match is None:
+            raise ValueError('FX Empire URL has no canonical article ID')
+        return match.group(1)
     raise ValueError('article has an invalid source')
 
 
@@ -164,12 +221,51 @@ def validate_article_record(record, index, label):
     content_status = record.get('content_status')
     require(type(content_status) is str and content_status in VALID_CONTENT_STATUSES,
             f'{label} {index} has an invalid content status')
+    if source in CONTENT_SOURCES:
+        require(content_status in {'full', 'excerpt'},
+                f'{label} {index} content source cannot be registry-only')
+    else:
+        require(content_status == 'registry',
+                f'{label} {index} registry source must be metadata-only')
+        require(record.get('audience') in {'public', 'paid'},
+                f'{label} {index} registry entry has no public/paid access flag')
+    if label == 'article':
+        family = record.get('family')
+        require(family in VALID_FAMILIES, f'{label} {index} has an invalid family')
+        if content_status == 'registry':
+            allowed_keys = REGISTRY_ARTICLE_KEYS | {'alternate_urls'}
+            if source == 'patreon':
+                allowed_keys.add('access')
+            require(set(record) >= REGISTRY_ARTICLE_KEYS
+                    and set(record) <= allowed_keys,
+                    f'{label} {index} has fields outside the metadata-only '
+                    'registry contract')
+            if source == 'patreon':
+                require(record.get('access') in {'public', 'paid'}
+                        and record.get('access') == record.get('audience'),
+                        f'{label} {index} Patreon access is missing or inconsistent')
+            else:
+                require(record.get('audience') == 'public',
+                        f'{label} {index} FX Empire metadata must be public')
+            require('brief' in record,
+                    f'{label} {index} has no metadata-only brief boundary')
+            validate_registry_brief(record['brief'], f'{label} {index}')
     timestamp = record.get('post_date')
     _, calendar_date = parse_iso_date(timestamp, f'{label} {index} publication date')
     if 'wordcount' in record:
         wordcount = record['wordcount']
         require(type(wordcount) is int and wordcount >= 0,
                 f'{label} {index} has an invalid word count')
+        if content_status == 'registry':
+            require(wordcount == 0,
+                    f'{label} {index} registry entry has a non-zero word count')
+    alternate_urls = record.get('alternate_urls', {})
+    require(isinstance(alternate_urls, dict),
+            f'{label} {index} alternate URLs are not an object')
+    require(set(alternate_urls).issubset(VALID_SOURCES - {source}),
+            f'{label} {index} alternate URLs contain an invalid source')
+    for alternate_source, alternate_url in alternate_urls.items():
+        canonical_url_identity(alternate_source, alternate_url)
     return {
         'source': source,
         'source_id': source_id,
@@ -209,29 +305,45 @@ def validate_article_index(articles, post_by_url):
     for index, article in enumerate(articles):
         metadata = validate_article_record(article, index, 'article')
         url = metadata['url']
-        require(url in post_by_url,
-                f'article {index} is not present in the fetched post snapshot')
-        post = post_by_url[url]
-        require(metadata['identity'] == post['identity'],
-                f'article {index} source metadata does not match its post')
-        require(metadata['title'] == post['title'],
-                f'article {index} title does not match its fetched post')
-        require(metadata['post_date'] == post['post_date'],
-                f'article {index} date does not match its fetched post')
-        require(metadata['content_status'] == post['content_status'],
-                f'article {index} content status does not match its fetched post')
-        require('brief' in article, f'article {index} has no source-backed brief')
-        try:
-            validate_brief_against_body(article['brief'], post['body_text'])
-        except ValueError as exc:
-            raise ValueError(f'article {index} brief validation failed: {exc}') from None
+        if metadata['content_status'] != 'registry':
+            require(url in post_by_url,
+                    f'article {index} is not present in the fetched post snapshot')
+            post = post_by_url[url]
+            require(metadata['identity'] == post['identity'],
+                    f'article {index} source metadata does not match its post')
+            require(metadata['title'] == post['title'],
+                    f'article {index} title does not match its fetched post')
+            require(metadata['post_date'] == post['post_date'],
+                    f'article {index} date does not match its fetched post')
+            require(metadata['content_status'] == post['content_status'],
+                    f'article {index} content status does not match its fetched post')
+            require('brief' in article, f'article {index} has no source-backed brief')
+            try:
+                validate_brief_against_body(article['brief'], post['body_text'])
+            except ValueError as exc:
+                raise ValueError(
+                    f'article {index} brief validation failed: {exc}'
+                ) from None
+        else:
+            require('brief' in article,
+                    f'article {index} has no metadata-only brief boundary')
+            try:
+                validate_brief_structure(article['brief'])
+            except ValueError as exc:
+                raise ValueError(
+                    f'article {index} brief validation failed: {exc}'
+                ) from None
         require(url not in article_by_url,
                 'article index contains duplicate canonical URLs')
         article_by_url[url] = metadata
         identities.append(metadata['identity'])
     require(len(identities) == len(set(identities)),
             'article index contains duplicate canonical source identities')
-    require(set(article_by_url) == set(post_by_url),
+    content_urls = {
+        url for url, metadata in article_by_url.items()
+        if metadata['content_status'] != 'registry'
+    }
+    require(content_urls == set(post_by_url),
             'article index does not exactly match the fetched posts')
     return article_by_url
 
@@ -396,7 +508,7 @@ def validate_article_regression(articles, previous_path, minimum_ratio):
 
 
 def validate_manifest(manifest, articles, trades, article_path, trade_path, now=None):
-    require(manifest.get('schema_version') == 1,
+    require(manifest.get('schema_version') == 2,
             'snapshot manifest has an unsupported schema version')
     checked_at_value = manifest.get('checked_at')
     checked_at, _ = parse_iso_date(checked_at_value, 'manifest checked_at')
@@ -410,15 +522,36 @@ def validate_manifest(manifest, articles, trades, article_path, trade_path, now=
             'manifest checked_at is implausibly far in the future')
     latest_publication = manifest.get('latest_publication')
     parse_iso_date(latest_publication, 'manifest latest_publication')
+    content_articles = [
+        article for article in articles if article.get('content_status') != 'registry'
+    ]
+    registry_articles = [
+        article for article in articles if article.get('content_status') == 'registry'
+    ]
+    require(content_articles, 'article index has no content-backed research')
     expected_latest = max(
-        (article['post_date'] for article in articles),
+        (article['post_date'] for article in content_articles),
         key=lambda value: parse_iso_date(value, 'article publication date')[0],
     )
     require(latest_publication == expected_latest,
             'manifest latest_publication does not match the article index')
     require(type(manifest.get('article_count')) is int
-            and manifest['article_count'] == len(articles),
+            and manifest['article_count'] == len(content_articles),
             'manifest article count does not match the article index')
+    require(type(manifest.get('catalog_count')) is int
+            and manifest['catalog_count'] == len(articles),
+            'manifest catalog count does not match the article index')
+    require(type(manifest.get('registry_count')) is int
+            and manifest['registry_count'] == len(registry_articles),
+            'manifest registry count does not match the article index')
+    catalog_latest = manifest.get('catalog_latest_publication')
+    parse_iso_date(catalog_latest, 'manifest catalog_latest_publication')
+    expected_catalog_latest = max(
+        (article['post_date'] for article in articles),
+        key=lambda value: parse_iso_date(value, 'catalog publication date')[0],
+    )
+    require(catalog_latest == expected_catalog_latest,
+            'manifest catalog_latest_publication does not match the article index')
     require(type(manifest.get('observation_count')) is int
             and manifest['observation_count'] == len(trades),
             'manifest observation count does not match the trade output')
@@ -430,10 +563,10 @@ def validate_manifest(manifest, articles, trades, article_path, trade_path, now=
             'manifest data checksum does not match the deployed snapshot')
 
     sources = manifest.get('sources')
-    require(isinstance(sources, dict) and set(sources) == VALID_SOURCES,
-            'manifest must contain exactly the Substack and Medium sources')
     included = Counter(article['source'] for article in articles)
-    for source in sorted(VALID_SOURCES):
+    require(isinstance(sources, dict) and set(sources) == set(included),
+            'manifest source set does not match the article index')
+    for source in sorted(included):
         item = sources[source]
         require(isinstance(item, dict), f'manifest {source} status is not an object')
         source_checked_value = item.get('checked_at')
@@ -473,7 +606,7 @@ def validate_manifest(manifest, articles, trades, article_path, trade_path, now=
 
 
 def validate_previous_manifest(manifest, previous):
-    require(previous.get('schema_version') == 1,
+    require(previous.get('schema_version') in {1, 2},
             'previous manifest has an unsupported schema version')
     current_checked, _ = parse_iso_date(manifest.get('checked_at'),
                                         'manifest checked_at')
@@ -492,16 +625,23 @@ def validate_previous_manifest(manifest, previous):
         require(type(previous.get(field)) is int and previous[field] >= 0,
                 f'previous manifest {field} is invalid')
     if manifest.get('data_checksum') == previous_checksum:
-        for field in ('article_count', 'observation_count', 'latest_publication'):
+        consistency_fields = ['article_count', 'observation_count', 'latest_publication']
+        if previous.get('schema_version') == 2:
+            consistency_fields.extend((
+                'catalog_count', 'registry_count', 'catalog_latest_publication',
+            ))
+        for field in consistency_fields:
             require(manifest.get(field) == previous.get(field),
                     f'unchanged checksum has inconsistent {field}')
     previous_sources = previous.get('sources')
     require(isinstance(previous_sources, dict)
-            and set(previous_sources) == VALID_SOURCES,
+            and set(previous_sources).issubset(VALID_SOURCES)
+            and CONTENT_SOURCES.issubset(previous_sources),
             'previous manifest sources are invalid')
-    for source in VALID_SOURCES:
+    current_sources = manifest.get('sources') or {}
+    for source in previous_sources:
         previous_source = previous_sources.get(source)
-        current_source = (manifest.get('sources') or {}).get(source)
+        current_source = current_sources.get(source)
         if not isinstance(previous_source, dict) or not isinstance(current_source, dict):
             raise ValueError(f'previous manifest has no {source} status')
         previous_source_checked, _ = parse_iso_date(

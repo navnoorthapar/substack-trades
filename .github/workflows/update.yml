@@ -34,6 +34,8 @@ jobs:
       brief_sha256: ${{ steps.asset_hashes.outputs.brief_sha256 }}
       observation_sha256: ${{ steps.asset_hashes.outputs.observation_sha256 }}
       support_sha256: ${{ steps.asset_hashes.outputs.support_sha256 }}
+      data_sha256: ${{ steps.asset_hashes.outputs.data_sha256 }}
+      share_sha256: ${{ steps.asset_hashes.outputs.share_sha256 }}
     permissions:
       contents: read
       pages: read
@@ -125,16 +127,25 @@ jobs:
           test -f _site/site.webmanifest
           test -f _site/favicon.svg
           test -f _site/og.jpg
+          test -d _site/data
+          test -d _site/cards
+          test -d _site/a
           test ! -L _site/index.html
           test ! -L _site/article_briefs.json
           test ! -L _site/observations.json
+          catalog_count=$(python -c "import json; print(len(json.load(open('articles_index.json', encoding='utf-8'))))")
+          expected_file_count=$((14 + 2 * catalog_count))
           artifact_file_count=$(find _site -type f | wc -l | tr -d ' ')
-          if (( artifact_file_count != 8 )); then
-            echo "Generated artifact must contain exactly the three application assets and five launch support assets." >&2
+          if (( artifact_file_count != expected_file_count )); then
+            echo "Generated artifact has ${artifact_file_count} files; expected ${expected_file_count} for ${catalog_count} catalogue records." >&2
             exit 1
           fi
           if find _site -type l -print -quit | grep -q .; then
             echo "Generated artifact contains a symbolic link." >&2
+            exit 1
+          fi
+          if find _site -type f -name '*.tmp' -print -quit | grep -q .; then
+            echo "Generated artifact contains a temporary file." >&2
             exit 1
           fi
 
@@ -142,7 +153,12 @@ jobs:
           brief_bytes=$(wc -c < _site/article_briefs.json | tr -d ' ')
           observation_bytes=$(wc -c < _site/observations.json | tr -d ' ')
           gzip_bytes=$(gzip -9 -c _site/index.html | wc -c | tr -d ' ')
-          total_bytes=$(du -sk _site | awk '{print $1 * 1024}')
+          data_bytes=$(python -c "from pathlib import Path; print(sum(path.stat().st_size for path in Path('_site/data').iterdir() if path.is_file()))")
+          search_bytes=$(wc -c < _site/data/search_index.json | tr -d ' ')
+          cards_bytes=$(python -c "from pathlib import Path; print(sum(path.stat().st_size for path in Path('_site/cards').iterdir() if path.is_file()))")
+          max_card_bytes=$(python -c "from pathlib import Path; print(max((path.stat().st_size for path in Path('_site/cards').iterdir() if path.is_file()), default=0))")
+          stubs_bytes=$(python -c "from pathlib import Path; print(sum(path.stat().st_size for path in Path('_site/a').iterdir() if path.is_file()))")
+          total_bytes=$(python -c "from pathlib import Path; print(sum(path.stat().st_size for path in Path('_site').rglob('*') if path.is_file()))")
           if (( index_bytes < 100000 || index_bytes > 900000 )); then
             echo "index.html size ${index_bytes} is outside the 100–900 KB first-load policy." >&2
             exit 1
@@ -159,26 +175,119 @@ jobs:
             echo "Deferred observation size ${observation_bytes} is outside the 500 KB–1.5 MB policy." >&2
             exit 1
           fi
-          if (( total_bytes > 3000000 )); then
-            echo "Site artifact size ${total_bytes} exceeds the 3.0 MB policy." >&2
+          if (( data_bytes > 4000000 )); then
+            echo "Machine-readable data size ${data_bytes} exceeds the 4 MB policy." >&2
             exit 1
           fi
-          echo "Size policy passed: raw=${index_bytes}, gzip=${gzip_bytes}, dossiers=${brief_bytes}, observations=${observation_bytes}, total=${total_bytes} bytes."
+          if (( search_bytes >= 500000 )); then
+            echo "Search index size ${search_bytes} must remain below 500 KB." >&2
+            exit 1
+          fi
+          if (( cards_bytes > 10000000 || max_card_bytes > 100000 )); then
+            echo "Share cards exceed the 10 MB aggregate or 100 KB per-card policy." >&2
+            exit 1
+          fi
+          if (( stubs_bytes > 5000000 )); then
+            echo "Article stubs size ${stubs_bytes} exceeds the 5 MB policy." >&2
+            exit 1
+          fi
+          if (( total_bytes > 20000000 )); then
+            echo "Site artifact size ${total_bytes} exceeds the 20 MB policy." >&2
+            exit 1
+          fi
+          echo "Size policy passed: raw=${index_bytes}, gzip=${gzip_bytes}, dossiers=${brief_bytes}, observations=${observation_bytes}, data=${data_bytes}, cards=${cards_bytes}, stubs=${stubs_bytes}, total=${total_bytes} bytes."
 
           python - <<'PY'
+          import binascii
           import json
           import os
           import re
+          import struct
           import unicodedata
           from pathlib import Path
+          from data_contract import DATA_ENDPOINT_NAMES, validate_data_layer
           from smoke_test_site import snapshot_checksum, validate_html
 
+          site = Path('_site')
           articles = json.loads(Path('articles_index.json').read_text(encoding='utf-8'))
           source_observations = json.loads(Path('trades_extracted.json').read_text(encoding='utf-8'))
-          html = Path('_site/index.html').read_text(encoding='utf-8')
-          deferred = json.loads(Path('_site/article_briefs.json').read_text(encoding='utf-8'))
-          observation_asset = json.loads(Path('_site/observations.json').read_text(encoding='utf-8'))
+          html = (site / 'index.html').read_text(encoding='utf-8')
+          deferred = json.loads((site / 'article_briefs.json').read_text(encoding='utf-8'))
+          observation_asset = json.loads((site / 'observations.json').read_text(encoding='utf-8'))
           expected_checksum = snapshot_checksum('articles_index.json', 'trades_extracted.json')
+          data_summary = validate_data_layer(
+              site,
+              Path('articles_index.json'),
+              Path('snapshot_manifest.json'),
+          )
+          if data_summary.get('article_count') != len(articles):
+              raise SystemExit('Validated data-layer count does not match the master catalogue.')
+
+          slugs = [str(article.get('slug') or '') for article in articles]
+          if not all(slugs) or len(slugs) != len(set(slugs)):
+              raise SystemExit('Master catalogue slugs are missing or duplicated.')
+          core_assets = {
+              'index.html', 'article_briefs.json', 'observations.json',
+              'robots.txt', 'sitemap.xml', 'site.webmanifest', 'favicon.svg',
+              'og.jpg',
+          }
+          if len(core_assets) != 8 or len(DATA_ENDPOINT_NAMES) != 6:
+              raise SystemExit('Artifact contract must contain eight core/support assets and six data endpoints.')
+          data_assets = {f'data/{name}' for name in DATA_ENDPOINT_NAMES}
+          card_assets = {f'cards/{slug}.png' for slug in slugs}
+          stub_assets = {f'a/{slug}.html' for slug in slugs}
+          expected_assets = core_assets | data_assets | card_assets | stub_assets
+          all_entries = list(site.rglob('*'))
+          if any(path.is_symlink() for path in all_entries):
+              raise SystemExit('Generated artifact contains a symbolic link.')
+          if any(path.is_file() and path.name.endswith('.tmp') for path in all_entries):
+              raise SystemExit('Generated artifact contains a temporary file.')
+          actual_assets = {
+              path.relative_to(site).as_posix()
+              for path in all_entries if path.is_file()
+          }
+          if actual_assets != expected_assets:
+              missing = sorted(expected_assets - actual_assets)[:5]
+              extra = sorted(actual_assets - expected_assets)[:5]
+              raise SystemExit(
+                  f'Artifact allowlist mismatch; missing={missing}, extra={extra}.'
+              )
+          expected_directories = {'a', 'cards', 'data'}
+          actual_directories = {
+              path.relative_to(site).as_posix()
+              for path in all_entries if path.is_dir()
+          }
+          if actual_directories != expected_directories:
+              raise SystemExit('Artifact contains an unexpected directory.')
+          if len(actual_assets) != 14 + 2 * len(articles):
+              raise SystemExit('Artifact file count does not match its catalogue.')
+
+          png_signature = b'\x89PNG\r\n\x1a\n'
+          card_paths = sorted(site / path for path in card_assets)
+          for card_path in card_paths:
+              header = card_path.read_bytes()[:33]
+              if (
+                  len(header) != 33
+                  or header[:8] != png_signature
+                  or header[8:12] != struct.pack('>I', 13)
+                  or header[12:16] != b'IHDR'
+                  or struct.unpack('>IIBBBBB', header[16:29])
+                  != (1200, 630, 8, 3, 0, 0, 0)
+                  or struct.unpack('>I', header[29:33])[0]
+                  != binascii.crc32(header[12:29]) & 0xffffffff
+              ):
+                  raise SystemExit(
+                      f'Share card {card_path.name} lacks the exact 1200x630 indexed-PNG header.'
+                  )
+          print(
+              f'PNG audit passed for all {len(card_paths)} cards; '
+              f'sample={card_paths[0].name}:{card_paths[0].read_bytes()[:33].hex()}.'
+          )
+
+          content_articles = [
+              article for article in articles
+              if article.get('content_status') != 'registry'
+          ]
           if deferred.get('schema_version') != 1:
               raise SystemExit('Deferred article dossier schema mismatch.')
           if deferred.get('data_checksum') != expected_checksum:
@@ -199,6 +308,8 @@ jobs:
           if not article_match:
               raise SystemExit('Generated article identity map is missing.')
           generated_articles = json.loads(article_match.group(1))
+          if len(generated_articles) != len(content_articles):
+              raise SystemExit('Generated UI article count does not match body-backed catalogue records.')
           article_url_by_id = {
               row['id']: str(row['url']).rstrip('/') for row in generated_articles
           }
@@ -272,7 +383,7 @@ jobs:
           validate_html(
               html,
               os.environ['SITE_REVISION'],
-              len(articles),
+              len(content_articles),
               len(source_observations),
               expected_checksum,
           )
@@ -288,14 +399,20 @@ jobs:
           brief_sha256=$(sha256sum _site/article_briefs.json | awk '{print $1}')
           observation_sha256=$(sha256sum _site/observations.json | awk '{print $1}')
           support_sha256=$(python -c "from smoke_test_site import support_bundle_checksum; print(support_bundle_checksum('_site'))")
+          data_sha256=$(python -c "from data_contract import data_bundle_checksum; print(data_bundle_checksum('_site'))")
+          share_sha256=$(python -c "from smoke_test_site import share_proof_bundle_checksum; print(share_proof_bundle_checksum('_site', 'articles_index.json'))")
           [[ "$html_sha256" =~ ^[0-9a-f]{64}$ ]]
           [[ "$brief_sha256" =~ ^[0-9a-f]{64}$ ]]
           [[ "$observation_sha256" =~ ^[0-9a-f]{64}$ ]]
           [[ "$support_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$data_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$share_sha256" =~ ^[0-9a-f]{64}$ ]]
           echo "html_sha256=$html_sha256" >> "$GITHUB_OUTPUT"
           echo "brief_sha256=$brief_sha256" >> "$GITHUB_OUTPUT"
           echo "observation_sha256=$observation_sha256" >> "$GITHUB_OUTPUT"
           echo "support_sha256=$support_sha256" >> "$GITHUB_OUTPUT"
+          echo "data_sha256=$data_sha256" >> "$GITHUB_OUTPUT"
+          echo "share_sha256=$share_sha256" >> "$GITHUB_OUTPUT"
 
       - name: Upload Pages artifact
         if: >-
@@ -341,6 +458,8 @@ jobs:
           EXPECTED_BRIEF_SHA256: ${{ needs.quality.outputs.brief_sha256 }}
           EXPECTED_OBSERVATION_SHA256: ${{ needs.quality.outputs.observation_sha256 }}
           EXPECTED_SUPPORT_SHA256: ${{ needs.quality.outputs.support_sha256 }}
+          EXPECTED_DATA_SHA256: ${{ needs.quality.outputs.data_sha256 }}
+          EXPECTED_SHARE_SHA256: ${{ needs.quality.outputs.share_sha256 }}
         run: >-
           python smoke_test_site.py "$DEPLOYED_URL"
           --expected-revision "$EXPECTED_REVISION"
@@ -350,6 +469,8 @@ jobs:
           --expected-brief-sha256 "$EXPECTED_BRIEF_SHA256"
           --expected-observation-sha256 "$EXPECTED_OBSERVATION_SHA256"
           --expected-support-sha256 "$EXPECTED_SUPPORT_SHA256"
+          --expected-data-sha256 "$EXPECTED_DATA_SHA256"
+          --expected-share-sha256 "$EXPECTED_SHARE_SHA256"
           --retries 8
           --retry-delay 10
           --timeout 20

@@ -12,6 +12,13 @@ from pathlib import Path
 
 from article_briefs import build_article_brief
 from fetch_all_posts import atomic_write_json
+from registry_sources import (
+    crosslink_registry,
+    load_overrides as load_registry_overrides,
+    load_registry,
+    registry_article_metadata,
+)
+from research_taxonomy import classify_family
 
 
 ROOT = Path(__file__).parent
@@ -25,6 +32,15 @@ POSTS_OUTPUT = Path(os.environ.get(
 )).expanduser()
 ARTICLES_OUTPUT = Path(os.environ.get(
     'ARTICLES_OUTPUT', ROOT / 'articles_index.json'
+)).expanduser()
+PATREON_PATH = Path(os.environ.get(
+    'PATREON_REGISTRY', ROOT / 'patreon_registry.json'
+)).expanduser()
+FXEMPIRE_PATH = Path(os.environ.get(
+    'FXEMPIRE_REGISTRY', ROOT / 'fxempire_registry.json'
+)).expanduser()
+REGISTRY_OVERRIDES_PATH = Path(os.environ.get(
+    'REGISTRY_OVERRIDES', ROOT / 'registry_crosslink_overrides.json'
 )).expanduser()
 REPORT_OUTPUT_VALUE = os.environ.get('DEDUPE_REPORT_OUTPUT')
 REPORT_OUTPUT = Path(REPORT_OUTPUT_VALUE).expanduser() if REPORT_OUTPUT_VALUE else None
@@ -226,13 +242,16 @@ def article_metadata(post):
         'wordcount': post.get('wordcount', 0),
         'content_status': post.get('content_status', 'full'),
         'brief': build_article_brief(post),
+        'family': classify_family(post),
     }
     if post.get('alternate_urls'):
         value['alternate_urls'] = post['alternate_urls']
     return value
 
 
-def merge_sources(substack_posts, medium_posts, overrides=None):
+def merge_sources(
+        substack_posts, medium_posts, overrides=None, patreon_records=None,
+        fxempire_records=None, registry_overrides=None):
     """Return combined posts, article metadata, and an auditable match report."""
     overrides = load_overrides() if overrides is None else overrides
     substack = [_canonical_substack_post(post) for post in substack_posts]
@@ -286,14 +305,45 @@ def merge_sources(substack_posts, medium_posts, overrides=None):
             combined.append(post)
 
     combined.sort(key=lambda post: str(post.get('post_date') or ''), reverse=True)
-    articles = [article_metadata(post) for post in combined]
+
+    # Registry-only sources enrich the public catalogue without entering the
+    # body-text extraction pipeline. Exact or reviewed twins become additive
+    # alternate URLs; distinct metadata rows remain searchable catalogue
+    # records with an explicitly empty, checksum-bound brief.
+    catalogue_posts = [copy.deepcopy(post) for post in combined]
+    registry_report = []
+    decisions = list(registry_overrides or [])
+    for source, records in (
+            ('patreon', list(patreon_records or [])),
+            ('fxempire', list(fxempire_records or []))):
+        catalogue_posts, source_report = crosslink_registry(
+            catalogue_posts, records, source, decisions,
+        )
+        registry_report.extend(source_report)
+
+    combined = [
+        post for post in catalogue_posts
+        if post.get('content_status') != 'registry'
+    ]
+    articles = [
+        registry_article_metadata(post)
+        if post.get('content_status') == 'registry'
+        else article_metadata(post)
+        for post in catalogue_posts
+    ]
     match_reasons: dict[str, int] = {}
     report = {
         'substack_articles': len(substack),
         'medium_articles': len(medium),
         'duplicate_medium_articles': len(matches),
         'unique_medium_articles': len(unique_medium),
-        'published_articles': len(articles),
+        'published_articles': len(combined),
+        'catalogue_articles': len(articles),
+        'registry_articles': len(articles) - len(combined),
+        'registry_crosslinks': sum(
+            1 for item in registry_report if item.get('target')
+        ),
+        'registry_report': registry_report,
         'match_reasons': match_reasons,
         'matches': matches,
         'unique_medium_ids': [post.get('medium_id') for post in unique_medium],
@@ -309,7 +359,16 @@ def merge_sources(substack_posts, medium_posts, overrides=None):
 def main():
     substack_posts = load_list(SUBSTACK_PATH, 'Substack post snapshot')
     medium_posts = load_list(MEDIUM_PATH, 'Medium post snapshot')
-    combined, articles, report = merge_sources(substack_posts, medium_posts)
+    patreon_records = load_registry(PATREON_PATH, 'patreon')
+    fxempire_records = load_registry(FXEMPIRE_PATH, 'fxempire')
+    registry_overrides = load_registry_overrides(REGISTRY_OVERRIDES_PATH)
+    combined, articles, report = merge_sources(
+        substack_posts,
+        medium_posts,
+        patreon_records=patreon_records,
+        fxempire_records=fxempire_records,
+        registry_overrides=registry_overrides,
+    )
 
     urls = [post.get('url') for post in combined]
     if any(not url for url in urls) or len(urls) != len(set(urls)):
@@ -326,7 +385,12 @@ def main():
     for reason, count in sorted(report['match_reasons'].items()):
         print(f'  {reason}: {count}')
     print(f"Unique Medium articles added: {report['unique_medium_articles']}")
-    print(f"Combined published catalogue: {report['published_articles']} articles")
+    print(f"Body-backed publication archive: {report['published_articles']} articles")
+    print(
+        f"Metadata-only registry records: {report['registry_articles']} "
+        f"({report['registry_crosslinks']} additional registry twins cross-linked)"
+    )
+    print(f"Combined published catalogue: {report['catalogue_articles']} articles")
     print(f'Saved combined posts to {POSTS_OUTPUT}')
     print(f'Saved article index to {ARTICLES_OUTPUT}')
     return 0

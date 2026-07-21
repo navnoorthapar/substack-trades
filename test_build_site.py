@@ -49,6 +49,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             if isinstance(article_payload, dict)
             else article_payload
         )
+        cls.source_content_articles = [
+            article for article in cls.source_articles
+            if article.get('content_status') != 'registry'
+        ]
         cls.source_ideas = json.loads((ROOT / 'trades_extracted.json').read_text(encoding='utf-8'))
         article_match = re.search(r'const ARTICLES = (.*?);\n', cls.html)
         snapshot_match = re.search(r'const SNAPSHOT = (.*?);\n', cls.html)
@@ -63,11 +67,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         cls._site_temp.cleanup()
 
     def test_complete_multi_source_dataset_is_deferred_once(self):
-        self.assertEqual(len(self.articles), len(self.source_articles))
+        self.assertEqual(len(self.articles), len(self.source_content_articles))
         self.assertEqual(len(self.ideas), len(self.source_ideas))
         self.assertEqual(
             Counter(article['source'] for article in self.articles),
-            Counter(article['source'] for article in self.source_articles),
+            Counter(article['source'] for article in self.source_content_articles),
         )
         self.assertEqual(sum(article['trade_count'] for article in self.articles), len(self.source_ideas))
 
@@ -857,8 +861,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                     text=True,
                 )
                 outputs.append({
-                    name: (Path(directory) / name).read_bytes()
-                    for name in ('index.html', 'article_briefs.json', 'observations.json')
+                    path.relative_to(directory).as_posix(): path.read_bytes()
+                    for path in Path(directory).rglob('*') if path.is_file()
                 })
             self.assertEqual(outputs[0], outputs[1])
 
@@ -1534,8 +1538,16 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         manifest = json.loads((ROOT / 'snapshot_manifest.json').read_text(encoding='utf-8'))
         self.assertEqual(self.snapshot, manifest)
         self.assertEqual(self.snapshot['article_count'], len(self.articles))
+        self.assertEqual(self.snapshot['catalog_count'], len(self.source_articles))
+        self.assertEqual(
+            self.snapshot['registry_count'],
+            len(self.source_articles) - len(self.source_content_articles),
+        )
         self.assertEqual(self.snapshot['observation_count'], len(self.ideas))
-        self.assertEqual(set(self.snapshot['sources']), {'substack', 'medium'})
+        self.assertEqual(
+            set(self.snapshot['sources']),
+            {'substack', 'medium', 'patreon', 'fxempire'},
+        )
 
         checksum = hashlib.sha256()
         checksum.update((ROOT / 'articles_index.json').read_bytes())
@@ -1746,20 +1758,39 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'deferred observation payload exceeded its reviewed 1.5 MB budget',
         )
         artifact_files = [path for path in self.site_dir.rglob('*') if path.is_file()]
+        slugs = {str(article['slug']) for article in self.source_articles}
+        expected_files = {
+            'index.html', 'article_briefs.json', 'observations.json',
+            'robots.txt', 'sitemap.xml', 'site.webmanifest',
+            'favicon.svg', 'og.jpg',
+            'data/articles_index.json', 'data/latest.json',
+            'data/manifest.json', 'data/search_index.json',
+            'data/related.json', 'data/families.json',
+        }
+        expected_files.update(f'cards/{slug}.png' for slug in slugs)
+        expected_files.update(f'a/{slug}.html' for slug in slugs)
         self.assertEqual(
             {path.relative_to(self.site_dir).as_posix() for path in artifact_files},
-            {
-                'index.html', 'article_briefs.json', 'observations.json',
-                'robots.txt', 'sitemap.xml', 'site.webmanifest',
-                'favicon.svg', 'og.jpg',
-            },
+            expected_files,
         )
         self.assertTrue(all(not path.is_symlink() for path in artifact_files))
         self.assertLess(
             sum(path.stat().st_size for path in artifact_files),
-            3_000_000,
-            'complete static artifact exceeded the reviewed 3.0 MB policy',
+            20_000_000,
+            'complete static artifact exceeded the reviewed 20 MB policy',
         )
+        self.assertEqual(
+            (self.site_dir / 'data' / 'articles_index.json').read_bytes(),
+            (ROOT / 'articles_index.json').read_bytes(),
+        )
+        search_bytes = (self.site_dir / 'data' / 'search_index.json').stat().st_size
+        self.assertLess(search_bytes, 500_000)
+        self.assertTrue(all(
+            (self.site_dir / 'cards' / f'{slug}.png').read_bytes().startswith(
+                b'\x89PNG\r\n\x1a\n'
+            )
+            for slug in slugs
+        ))
 
     def test_direction_mix_legend_names_all_supported_states(self):
         context_start = self.html.index('function renderContext(records)')

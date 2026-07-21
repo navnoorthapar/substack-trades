@@ -1,5 +1,90 @@
 [
   {
+    "source": "patreon",
+    "source_id": "164428294",
+    "slug": "section-20a-caps-164428294",
+    "title": "Section 20A Caps Susquehanna and Citadel's $99M Recovery Before a Single Defendant Is Named",
+    "subtitle": "",
+    "post_date": "2026-07-21",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/section-20a-caps-164428294",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1611512",
+    "slug": "premium-is-golds-bull-market-over-three-reasons-the-fundamentals-say-no-1611512",
+    "title": "Is Gold’s Bull Market Over? Three Reasons the Fundamentals Say No",
+    "subtitle": "",
+    "post_date": "2026-07-20",
+    "url": "https://www.fxempire.com/forecasts/article/premium-is-golds-bull-market-over-three-reasons-the-fundamentals-say-no-1611512",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other"
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1611030",
+    "slug": "premium-the-sp-500-just-flipped-regimes-twice-here-are-the-levels-that-matter-1611030",
+    "title": "The S&P 500 Just Flipped Regimes Twice: Here Are the Levels That Matter",
+    "subtitle": "",
+    "post_date": "2026-07-17",
+    "url": "https://www.fxempire.com/forecasts/article/premium-the-sp-500-just-flipped-regimes-twice-here-are-the-levels-that-matter-1611030",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other"
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1610570",
+    "slug": "premium-natural-gas-futures-analysis-why-winter-risk-is-still-underpriced-1610570",
+    "title": "Natural Gas Futures Analysis: Why Winter Risk Is Still Underpriced",
+    "subtitle": "",
+    "post_date": "2026-07-15",
+    "url": "https://www.fxempire.com/forecasts/article/premium-natural-gas-futures-analysis-why-winter-risk-is-still-underpriced-1610570",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other"
+  },
+  {
     "source": "substack",
     "source_id": "optiver-wrote-the-neutral-fix-for",
     "slug": "optiver-wrote-the-neutral-fix-for",
@@ -106,9 +191,31 @@
         }
       ]
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/optiver-wrote-the-neutral-fix-for-european-markets-3-out-of-its-5-ideas-would-also-enrich-optiver-78d6b0e0e380"
     }
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1609274",
+    "slug": "premium-bitcoin-forecast-58000-holds-despite-the-falling-yen-1609274",
+    "title": "Bitcoin Forecast: $58,000 Holds Despite the Falling Yen",
+    "subtitle": "",
+    "post_date": "2026-07-09",
+    "url": "https://www.fxempire.com/forecasts/article/premium-bitcoin-forecast-58000-holds-despite-the-falling-yen-1609274",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -175,9 +282,31 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "model-critique",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/hull-whites-mean-reversion-problem-a-smarter-model-lost-to-a-naive-guess-in-2022-80644eb567b6"
     }
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1608677",
+    "slug": "premium-oil-crashed-on-mechanical-selling-a-squeeze-to-75-is-next-1608677",
+    "title": "Oil Crashed on Mechanical Selling: A Squeeze to $75 Is Next",
+    "subtitle": "",
+    "post_date": "2026-07-07",
+    "url": "https://www.fxempire.com/forecasts/article/premium-oil-crashed-on-mechanical-selling-a-squeeze-to-75-is-next-1608677",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -257,6 +386,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/avellaneda-stoikov-charges-up-to-48-76-of-profit-for-inventory-skew-hsbc-funded-quants-traced-why-76caece5183d"
     }
@@ -345,9 +475,32 @@
       },
       "checkpoints": []
     },
+    "family": "market-structure",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/mica-locked-tethers-184-billion-stablecoin-out-of-europe-circle-holds-the-rent-473af098e793"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "162841890",
+    "slug": "micas-fungible-162841890",
+    "title": "MiCA's Fungible-Token Trap: Long Circle Into the 31 Aug EC Consultation",
+    "subtitle": "",
+    "post_date": "2026-07-03",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/micas-fungible-162841890",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "market-structure",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -427,6 +580,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-895x-gap-behind-volmageddon-credit-suisses-500m-question-still-isn-t-settled-19b715e4310b"
     }
@@ -509,9 +663,31 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "model-critique",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/black-scholes-delta-is-wrong-hull-whites-fix-beats-sabr-4cf02f5d62b0"
     }
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1607204",
+    "slug": "premium-copper-price-analysis-why-5-50-beckons-before-the-tariff-verdict-1607204",
+    "title": "Copper Price Analysis: Why $5.50 Beckons Before the Tariff Verdict",
+    "subtitle": "",
+    "post_date": "2026-06-29",
+    "url": "https://www.fxempire.com/forecasts/article/premium-copper-price-analysis-why-5-50-beckons-before-the-tariff-verdict-1607204",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "event-reaction"
   },
   {
     "source": "substack",
@@ -571,6 +747,7 @@
       },
       "checkpoints": []
     },
+    "family": "model-critique",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/d-e-shaw-citadel-and-renaissance-run-stat-arb-its-ols-bias-has-been-known-since-1954-55398460aa0a"
     }
@@ -646,9 +823,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/alphabet-baillie-gifford-and-founders-fund-made-billions-from-spacex-dc23f4f70a24"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "162119089",
+    "slug": "rklb-asts-pair-162119089",
+    "title": "RKLB / ASTS Pair Trade: The Revenue Recognition Gap the Market Has Not Priced",
+    "subtitle": "",
+    "post_date": "2026-06-26",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/rklb-asts-pair-162119089",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -708,9 +908,31 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/universa-built-20b-calling-stochastic-vol-wrong-a-bis-rule-just-proved-it-eaa23bf6b356"
     }
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1606550",
+    "slug": "premium-silver-falls-to-6-month-lows-why-the-68-71-setup-will-survive-1606550",
+    "title": "Silver Falls to 6-Month Lows: Why the $68–71 Setup Will Survive",
+    "subtitle": "",
+    "post_date": "2026-06-25",
+    "url": "https://www.fxempire.com/forecasts/article/premium-silver-falls-to-6-month-lows-why-the-68-71-setup-will-survive-1606550",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -783,6 +1005,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/oils-variance-premium-40-sharpe-zero-disclosed-track-records-81979fe01912"
     }
@@ -817,7 +1040,51 @@
         "truncated": true
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
+  },
+  {
+    "source": "patreon",
+    "source_id": "161835319",
+    "slug": "crude-oil-risk-161835319",
+    "title": "Crude Oil Variance Risk Premium Replication: A Data-Gated 40% Sharpe Edge",
+    "subtitle": "",
+    "post_date": "2026-06-23",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/crude-oil-risk-161835319",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1605978",
+    "slug": "premium-usd-jpy-analysis-has-the-yen-carry-trade-finally-peaked-1605978",
+    "title": "USD/JPY Analysis: Has the Yen Carry Trade Finally Peaked?",
+    "subtitle": "",
+    "post_date": "2026-06-23",
+    "url": "https://www.fxempire.com/forecasts/article/premium-usd-jpy-analysis-has-the-yen-carry-trade-finally-peaked-1605978",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -849,7 +1116,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "scandal-enforcement"
   },
   {
     "source": "medium",
@@ -875,7 +1143,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -907,7 +1176,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -933,7 +1203,29 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1605422",
+    "slug": "premium-sp-500-analysis-the-fed-changed-nothing-yet-stocks-felt-the-shock-1605422",
+    "title": "S&P 500 Faces $7,150 Pullback Risk as Warsh’s Fed Turns Hawkish",
+    "subtitle": "",
+    "post_date": "2026-06-19",
+    "url": "https://www.fxempire.com/forecasts/article/premium-sp-500-analysis-the-fed-changed-nothing-yet-stocks-felt-the-shock-1605422",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "event-reaction"
   },
   {
     "source": "substack",
@@ -1006,6 +1298,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/12-private-equity-funds-are-chasing-the-same-30-football-clubs-8031ee2bcf0b"
     }
@@ -1081,6 +1374,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/ai-hedge-funds-now-run-0-99-beta-to-the-s-p-youre-paying-2-and-20-for-an-index-fund-f961db9519f3"
     }
@@ -1109,7 +1403,52 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "patreon",
+    "source_id": "161362934",
+    "slug": "football-club-pe-161362934",
+    "title": "The Football Club PE Bifurcation: 18–21% Net IRR at Mid-Tier vs 6–7% at Trophy, and Why the Gap Closes by Mid-2028",
+    "subtitle": "",
+    "post_date": "2026-06-17",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/football-club-pe-161362934",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "161319655",
+    "slug": "ai-hedge-funds-0-161319655",
+    "title": "AI Hedge Funds at 0.99 Beta: Capacity Overflow and the Collapse of TMT Alpha",
+    "subtitle": "",
+    "post_date": "2026-06-17",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/ai-hedge-funds-0-161319655",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -1189,6 +1528,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "model-critique",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-barra-axioma-and-commercial-risk-models-missed-january-2022s-9-1-growth-equity-crash-9932ae3f2a20"
     }
@@ -1223,7 +1563,30 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "patreon",
+    "source_id": "161116632",
+    "slug": "path-factor-40-161116632",
+    "title": "Path Factor Latency: The 40–70 Day Lead That Commercial Risk Models Cannot See",
+    "subtitle": "",
+    "post_date": "2026-06-15",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/path-factor-40-161116632",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "model-critique",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -1255,7 +1618,29 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1604320",
+    "slug": "premium-golds-war-hedge-is-failing-can-central-banks-hold-the-4000-floor-1604320",
+    "title": "Gold’s War Hedge Is Failing: Can Central Banks Hold the $4,000 Floor?",
+    "subtitle": "",
+    "post_date": "2026-06-13",
+    "url": "https://www.fxempire.com/forecasts/article/premium-golds-war-hedge-is-failing-can-central-banks-hold-the-4000-floor-1604320",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -1287,7 +1672,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -1313,7 +1699,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -1345,7 +1732,51 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "model-critique"
+  },
+  {
+    "source": "patreon",
+    "source_id": "160695234",
+    "slug": "commodity-crisis-160695234",
+    "title": "Commodity Crisis Alpha Is Not in the Signal. It Is in the Credit Architecture.",
+    "subtitle": "",
+    "post_date": "2026-06-10",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/commodity-crisis-160695234",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "fxempire",
+    "source_id": "1603326",
+    "slug": "premium-goldmans-six-month-hedge-fund-high-hides-a-fragility-signal-1603326",
+    "title": "Goldman’s Six-Month Hedge Fund High Hides a Fragility Signal",
+    "subtitle": "",
+    "post_date": "2026-06-09",
+    "url": "https://www.fxempire.com/forecasts/article/premium-goldmans-six-month-hedge-fund-high-hides-a-fragility-signal-1603326",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -1385,7 +1816,8 @@
       ],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -1418,6 +1850,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/prediction-market-alpha-the-3-14-who-win-the-federal-cases-and-the-hedge-funds-moving-in-947c6df94e33"
     }
@@ -1452,7 +1885,30 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
+  },
+  {
+    "source": "patreon",
+    "source_id": "160039781",
+    "slug": "prediction-alpha-160039781",
+    "title": "Prediction Market Alpha: The Structural Edge and Its Surveillance Constraint",
+    "subtitle": "",
+    "post_date": "2026-06-03",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/prediction-alpha-160039781",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -1492,7 +1948,8 @@
       ],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "model-critique"
   },
   {
     "source": "medium",
@@ -1518,7 +1975,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -1550,7 +2008,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -1576,7 +2035,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -1602,7 +2062,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -1635,6 +2096,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hrt-and-jane-street-made-22-5b-in-one-quarter-the-models-the-50-1-edge-and-the-sebi-order-82fcbcedbef9"
     }
@@ -1663,7 +2125,30 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "model-critique"
+  },
+  {
+    "source": "patreon",
+    "source_id": "159476992",
+    "slug": "market-making-6-159476992",
+    "title": "Market Making With Alpha Signals: The Mechanism Behind HRT's $6.4B and Jane Street's $16.1B Quarter",
+    "subtitle": "",
+    "post_date": "2026-05-28",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/market-making-6-159476992",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -1695,7 +2180,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -1727,7 +2213,8 @@
         "truncated": true
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -1759,7 +2246,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -1785,7 +2273,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -1811,7 +2300,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -1844,9 +2334,32 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/a-nomura-trader-made-10-284-spoofing-400-billion-in-jgb-orders-e93d7312537c"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "158957374",
+    "slug": "jgb-10s-30s-post-158957374",
+    "title": "JGB 10s/30s structural steepener: post-YCC supply-demand impairment at the long end",
+    "subtitle": "",
+    "post_date": "2026-05-22",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/jgb-10s-30s-post-158957374",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -1879,9 +2392,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-cram%C3%A9r-rao-bound-killed-ltcm-its-why-the-sec-just-fined-two-sigma-90m-54e47fbb0504"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "157814849",
+    "slug": "market-making-1-157814849",
+    "title": "Market Making Autopsy: Virtu's 1,237 Days, Jane Street's $1B Collapse, and Three Levers Never Disclosed",
+    "subtitle": "",
+    "post_date": "2026-05-09",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/market-making-1-157814849",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
   },
   {
     "source": "substack",
@@ -1948,6 +2484,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-making-alpha-how-virtu-won-1-237-days-and-why-jane-street-keeps-ending-up-in-court-6894a05cd980"
     }
@@ -1976,7 +2513,30 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "patreon",
+    "source_id": "157069693",
+    "slug": "market-making-is-157069693",
+    "title": "Market making infrastructure is a structural monopoly — and the moat is widening, not compressing",
+    "subtitle": "",
+    "post_date": "2026-05-01",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/market-making-is-157069693",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -2002,7 +2562,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -2028,7 +2589,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -2060,7 +2622,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "scandal-enforcement"
   },
   {
     "source": "medium",
@@ -2086,7 +2649,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -2112,7 +2676,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -2138,7 +2703,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -2170,7 +2736,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -2202,7 +2769,8 @@
         "truncated": true
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -2234,7 +2802,30 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "patreon",
+    "source_id": "156011055",
+    "slug": "gaming-as-asset-156011055",
+    "title": "Gaming Currencies as an Asset Class",
+    "subtitle": "",
+    "post_date": "2026-04-19",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/gaming-as-asset-156011055",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -2266,7 +2857,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -2298,7 +2890,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "market-structure"
   },
   {
     "source": "substack",
@@ -2358,9 +2951,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-billions-from-softbank-five-structural-trades-from-the-nav-discount-to-the-660a30fc7d8a"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "155359762",
+    "slug": "softbank-9984-jp-155359762",
+    "title": "SoftBank (9984 JP): The Recurring Discount Trade",
+    "subtitle": "",
+    "post_date": "2026-04-11",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/softbank-9984-jp-155359762",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -2392,7 +3008,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -2424,7 +3041,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "substack",
@@ -2484,9 +3102,32 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/non-deliverable-forwards-ndfs-and-emerging-market-currency-alpha-how-hedge-funds-profit-bank-61fcd862c8c8"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "154887451",
+    "slug": "global-macro-5-154887451",
+    "title": "GLOBAL MACRO — TRADE NOTE Classification: Subscriber Research Date: April 5, 2026",
+    "subtitle": "",
+    "post_date": "2026-04-06",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/global-macro-5-154887451",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -2512,7 +3153,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "substack",
@@ -2559,9 +3201,32 @@
       },
       "checkpoints": []
     },
+    "family": "event-reaction",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-turned-defense-stocks-into-their-best-trade-of-2022-pre-invasion-ceo-signals-sec-07580eb20b19"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "154596278",
+    "slug": "trade-note-alpha-154596278",
+    "title": "TRADE NOTE — Defense Sector Alpha: The Backlog Re-Rating Thesis",
+    "subtitle": "",
+    "post_date": "2026-04-02",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/trade-note-alpha-154596278",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -2593,7 +3258,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -2640,9 +3306,32 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/iran-war-hedge-fund-alpha-map-every-winner-every-loser-and-the-complete-insider-trading-evidence-f5c0f05a0eb8"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "154226191",
+    "slug": "macro-strategy-154226191",
+    "title": "MACRO STRATEGY | TRADE NOTE",
+    "subtitle": "",
+    "post_date": "2026-03-29",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/macro-strategy-154226191",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -2683,6 +3372,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/joint-spx-vix-calibration-follow-up-bates-svj-degenerates-on-daily-data-hmm-fails-on-novel-7b4603b52722"
     }
@@ -2718,6 +3408,7 @@
       },
       "checkpoints": []
     },
+    "family": "event-reaction",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/indias-oil-war-market-crisis-30-day-nifty-outlook-rbi-april-2026-mpc-decision-and-emergency-5370a3f4d03e"
     }
@@ -2752,7 +3443,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "substack",
@@ -2793,9 +3485,54 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-holy-grail-of-volatility-modelling-what-happens-when-you-actually-try-to-build-it-e24c370d3cd6"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "153894369",
+    "slug": "volatility-trade-153894369",
+    "title": "VOLATILITY RESEARCH — TRADE NOTE",
+    "subtitle": "",
+    "post_date": "2026-03-25",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/volatility-trade-153894369",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "153837908",
+    "slug": "india-macro-note-153837908",
+    "title": "INDIA MACRO — TACTICAL TRADE NOTE",
+    "subtitle": "",
+    "post_date": "2026-03-24",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/india-macro-note-153837908",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -2827,7 +3564,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -2860,6 +3598,7 @@
       },
       "checkpoints": []
     },
+    "family": "event-reaction",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/iran-war-oil-shock-292-8-hedge-fund-leverage-and-powells-last-fomc-a-deep-macro-framework-fo-03ddbd3980a0"
     }
@@ -2894,7 +3633,30 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
+  },
+  {
+    "source": "patreon",
+    "source_id": "153586236",
+    "slug": "trade-note-march-153586236",
+    "title": "TRADE NOTE — March 21, 2026",
+    "subtitle": "",
+    "post_date": "2026-03-21",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/trade-note-march-153586236",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -2927,9 +3689,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-desert-playbook-how-hedge-funds-extracted-alpha-from-dubai-aed-peg-speculation-dubai-world-9fbfab056327"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "153357182",
+    "slug": "dubai-alpha-153357182",
+    "title": "DUBAI ALPHA DOSSIER",
+    "subtitle": "",
+    "post_date": "2026-03-18",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/dubai-alpha-153357182",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -2962,9 +3747,32 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-profit-every-time-pension-funds-banks-and-ldi-managers-have-no-choice-but-to-tr-89e95a21648d"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "153109667",
+    "slug": "alm-alpha-how-153109667",
+    "title": "ALM ALPHA: How Hedge Funds Monetise Institutional Constraints",
+    "subtitle": "",
+    "post_date": "2026-03-15",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/alm-alpha-how-153109667",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3011,9 +3819,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-index-fund-toll-booth-how-hedge-funds-systematically-extract-billions-from-passive-investors-89a8c6d199ba"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "152868887",
+    "slug": "index-fund-toll-152868887",
+    "title": "The Index Fund Toll Booth",
+    "subtitle": "",
+    "post_date": "2026-03-12",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/index-fund-toll-152868887",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3046,9 +3877,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-blackrocks-esg-retreat-triggered-100-billion-in-pension-exits-and-1-5-c2b800e03348"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "152704347",
+    "slug": "esg-arbitrage-152704347",
+    "title": "ESG ARBITRAGE: FULL TRADE DOCUMENTATION",
+    "subtitle": "",
+    "post_date": "2026-03-10",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/esg-arbitrage-152704347",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3095,9 +3949,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/elliott-management-azoria-and-the-esg-forced-selling-short-how-the-anti-woke-trade-actually-b9bac652b266"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "152530063",
+    "slug": "equity-strategy-152530063",
+    "title": "Equity Strategy & Event-Driven Analysis— RESEARCH NOTE",
+    "subtitle": "",
+    "post_date": "2026-03-08",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/equity-strategy-152530063",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3130,9 +4007,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-2022-uk-gilt-market-crisis-how-hedge-funds-pre-positioned-65-billion-and-extracted-billions-50b507567f43"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "152456965",
+    "slug": "trade-note-152456965",
+    "title": "TRADE RECONSTRUCTION NOTE",
+    "subtitle": "",
+    "post_date": "2026-03-07",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/trade-note-152456965",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3159,6 +4059,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/gold-65-silver-144-in-2025-how-bridgewater-crescat-greenlight-tudor-jones-and-a1c639899505"
     }
@@ -3208,9 +4109,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-monetise-options-time-decay-theta-harvesting-the-volatility-risk-premium-insti-f85b987f2a79"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "152396513",
+    "slug": "precious-metals-152396513",
+    "title": "PRECIOUS METALS 2025 — INSTITUTIONAL TRADE LOG",
+    "subtitle": "",
+    "post_date": "2026-03-06",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/precious-metals-152396513",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3243,6 +4167,7 @@
       },
       "checkpoints": []
     },
+    "family": "event-reaction",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-trade-war-dividend-druckenmillers-exact-positions-bridgewater-s-50-year-record-34-a6231d8b0a17"
     }
@@ -3271,7 +4196,30 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "patreon",
+    "source_id": "152308095",
+    "slug": "2025-tariff-152308095",
+    "title": "2025 TARIFF REGIME: TRADE FORENSICS",
+    "subtitle": "",
+    "post_date": "2026-03-05",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/2025-tariff-152308095",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3318,9 +4266,32 @@
       },
       "checkpoints": []
     },
+    "family": "event-reaction",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/blood-crude-capital-how-russias-energy-sanctions-generated-over-30-billion-in-documented-pr-0b62d5db850f"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "152224755",
+    "slug": "russia-sanctions-152224755",
+    "title": "Russia Sanctions Arbitrage: Institutional Trade Reference",
+    "subtitle": "",
+    "post_date": "2026-03-04",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/russia-sanctions-152224755",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "event-reaction",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3353,6 +4324,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/securities-class-action-settlements-the-15-billion-recovery-pool-79-of-hedge-funds-are-surrend-8500a78b1ca0"
     }
@@ -3381,7 +4353,30 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
+  },
+  {
+    "source": "patreon",
+    "source_id": "152138794",
+    "slug": "settlement-five-152138794",
+    "title": "Settlement Recovery: The Five Systematic Trades",
+    "subtitle": "",
+    "post_date": "2026-03-03",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/settlement-five-152138794",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3414,9 +4409,32 @@
       },
       "checkpoints": []
     },
+    "family": "event-reaction",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-pre-positioned-for-the-iran-war-eight-weeks-of-oil-gold-defense-tankers-airli-bd0a426b4200"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "152030898",
+    "slug": "iran-war-trade-152030898",
+    "title": "The Iran War Trade — Full Reference Document",
+    "subtitle": "",
+    "post_date": "2026-03-02",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/iran-war-trade-152030898",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "event-reaction",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3463,9 +4481,32 @@
       },
       "checkpoints": []
     },
+    "family": "market-structure",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-systematically-profit-from-european-market-structure-index-rebalancing-arbitrage-25ea8c3eb1a6"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "151951095",
+    "slug": "trade-reference-151951095",
+    "title": "The Trade Reference: Structural Arbitrage in European Markets",
+    "subtitle": "",
+    "post_date": "2026-03-01",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/trade-reference-151951095",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3519,9 +4560,32 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-three-trades-inside-japans-halo-position-buffett-s-yen-carry-elliott-s-governance-arbitra-56644b788d49"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "151880953",
+    "slug": "japan-halo-trade-151880953",
+    "title": "JAPAN HALO TRADE — MASTER REFERENCE",
+    "subtitle": "",
+    "post_date": "2026-02-28",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/japan-halo-trade-151880953",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3568,6 +4632,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/koreas-170-billion-retail-wave-broadcast-its-own-signal-the-13f-filings-goldman-research-jpmo-00379d235eb7"
     }
@@ -3596,7 +4661,30 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
+  },
+  {
+    "source": "patreon",
+    "source_id": "151805733",
+    "slug": "korea-2025-trade-151805733",
+    "title": "Korea 2025 — Complete Trade Reference",
+    "subtitle": "",
+    "post_date": "2026-02-27",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/korea-2025-trade-151805733",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3629,9 +4717,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-17-9-billion-loop-298c359d7c5f"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "151721113",
+    "slug": "2025-trade-loop-151721113",
+    "title": "2025 Trade Reference — The Closed Loop",
+    "subtitle": "",
+    "post_date": "2026-02-26",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/2025-trade-loop-151721113",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3664,9 +4775,32 @@
       },
       "checkpoints": []
     },
+    "family": "market-structure",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-cme-group-outage-november-2025-human-error-froze-1-trillion-in-derivatives-a-post-mortem-67cf48f85cce"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "151637776",
+    "slug": "cme-outage-28-151637776",
+    "title": "CME Outage — November 28, 2025: Full Trade Reference",
+    "subtitle": "",
+    "post_date": "2026-02-25",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/cme-outage-28-151637776",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3699,9 +4833,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-3-6-billion-forecast-edge-how-incommodities-and-danske-commodities-built-a-systematic-advant-f543d76f97e5"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "151556304",
+    "slug": "exact-trades-151556304",
+    "title": "The Exact Trades: InCommodities & Danske Commodities 2022",
+    "subtitle": "",
+    "post_date": "2026-02-24",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/exact-trades-151556304",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3734,6 +4891,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/eu-ets-alpha-andurands-30-85-eua-trade-four-hedge-fund-strategies-decoded-and-how-one-merz-e335de92149f"
     }
@@ -3769,9 +4927,54 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-energy-trading-edge-how-hedge-funds-built-the-infrastructure-to-extract-billions-from-energy-9e2e2c16f172"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "151462471",
+    "slug": "eu-ets-carbon-151462471",
+    "title": "EU ETS Carbon Market: Trade Reference Document",
+    "subtitle": "",
+    "post_date": "2026-02-23",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/eu-ets-carbon-151462471",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "151381001",
+    "slug": "energy-trading-151381001",
+    "title": "Energy Trading: Exact Trade Structures for Future Reference",
+    "subtitle": "",
+    "post_date": "2026-02-22",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/energy-trading-151381001",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3804,6 +5007,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/us-investment-grade-spreads-hit-30-year-lows-as-a-400-billion-ai-bond-wave-arrives-vanguard-says-eea6e0f90a52"
     }
@@ -3832,7 +5036,30 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "patreon",
+    "source_id": "151332364",
+    "slug": "trade-reference-151332364",
+    "title": "Trade Reference: US IG Credit Crowding Thesis",
+    "subtitle": "",
+    "post_date": "2026-02-21",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/trade-reference-151332364",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3865,9 +5092,54 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/kem-one-apollos-600m-acquisition-collapsed-to-2-cents-as-china-flooded-europe-with-cheap-pvc-b29af9ce274c"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "151245385",
+    "slug": "kem-one-full-151245385",
+    "title": "KEM ONE — FULL TRADE REFERENCE",
+    "subtitle": "",
+    "post_date": "2026-02-20",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/kem-one-full-151245385",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "151206547",
+    "slug": "brazil-macro-151206547",
+    "title": "Brazil Macro Rotation 2025–2026",
+    "subtitle": "",
+    "post_date": "2026-02-20",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/brazil-macro-151206547",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -3900,6 +5172,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-druckenmiller-rokos-and-vista-front-ran-brazils-r-33b-institutional-flood-the-complete-d3602104387e"
     }
@@ -3935,6 +5208,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-basis-traders-and-a-200m-whale-extracted-alpha-from-cryptos-19-billion-october-76f4f2732eaf"
     }
@@ -3970,9 +5244,32 @@
       },
       "checkpoints": []
     },
+    "family": "model-critique",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/black-scholes-is-a-quoting-language-not-a-pricing-truth-how-citadel-universa-and-saba-turn-ev-bc638a91673c"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "151098840",
+    "slug": "october-10-2025-151098840",
+    "title": "October 10, 2025 — Full Trade Autopsy",
+    "subtitle": "",
+    "post_date": "2026-02-18",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/october-10-2025-151098840",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4005,6 +5302,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-costars-3-billion-homes-com-proxy-fight-third-point-d-e-shaw-and-the-10-billion-val-1b2de62c849d"
     }
@@ -4033,7 +5331,30 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "patreon",
+    "source_id": "151003694",
+    "slug": "csgp-activist-151003694",
+    "title": "CSGP Activist Trade — Full Reference File",
+    "subtitle": "",
+    "post_date": "2026-02-17",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/csgp-activist-151003694",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4066,9 +5387,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/mason-capital-management-from-ascents-bankruptcy-to-6b-continuation-fund-fight-a-playbook-for-9c7fe0644570"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "150923858",
+    "slug": "mason-capital-150923858",
+    "title": "Mason Capital Trade Breakdown: Event-Driven Distressed Playbook",
+    "subtitle": "",
+    "post_date": "2026-02-16",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/mason-capital-150923858",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4115,6 +5459,7 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/first-brands-2-3b-fraud-2025-the-complete-winners-losers-playbook-apollos-95-50-short-18d04c6f62ce"
     }
@@ -4149,7 +5494,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "substack",
@@ -4181,7 +5527,30 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150841602",
+    "slug": "first-brands-150841602",
+    "title": "First Brands Trade Execution Breakdown: Winners & Losers Autopsy",
+    "subtitle": "",
+    "post_date": "2026-02-15",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/first-brands-150841602",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4214,6 +5583,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/blue-owl-capital-obdc-merger-failure-the-complete-analysis-of-nav-discount-150m-redemptions-5ca69466ba1a"
     }
@@ -4242,7 +5612,30 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150783819",
+    "slug": "blue-owl-capital-150783819",
+    "title": "Blue Owl Capital (OBDC): The NAV Convergence Trade That Backfired (So Far)",
+    "subtitle": "",
+    "post_date": "2026-02-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/blue-owl-capital-150783819",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4275,9 +5668,54 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/boaz-weinsteins-5-engine-strategy-at-saba-capital-london-whale-300m-covid-trade-99-spac-73e74507ccd0"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "150661658",
+    "slug": "boaz-weinsteins-150661658",
+    "title": "Boaz Weinstein's 5-Engine Trading System: Complete Trade Breakdown",
+    "subtitle": "",
+    "post_date": "2026-02-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/boaz-weinsteins-150661658",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150634641",
+    "slug": "2025-hedge-fund-150634641",
+    "title": "2025 Hedge Fund Trades: What Worked, What Failed, and Why",
+    "subtitle": "",
+    "post_date": "2026-02-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/2025-hedge-fund-150634641",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4310,6 +5748,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/2025-hedge-fund-performance-analysis-complete-industry-report-on-returns-strategies-and-systemic-c2deb296ccd0"
     }
@@ -4345,9 +5784,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/elliott-managements-ac-milan-investment-analysis-2017-2026-700m-deployed-1-2b-exit-120m-0f5aa1decbbe"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "150520663",
+    "slug": "elliott-x-ac-150520663",
+    "title": "Elliott Management × AC Milan (2017-2026)",
+    "subtitle": "",
+    "post_date": "2026-02-11",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/elliott-x-ac-150520663",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4394,6 +5856,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/alphabets-20-billion-bond-offering-spread-compression-100-year-sterling-bond-and-the-ai-infra-1239db375c1c"
     }
@@ -4429,6 +5892,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-36-souths-long-volatility-strategy-gained-35-in-early-2020-long-dated-options-negative-b6d116d94a1c"
     }
@@ -4457,7 +5921,30 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "scandal-enforcement"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150382802",
+    "slug": "36-souths-q1-150382802",
+    "title": "36 South's Q1 2020 Trade Reconstruction",
+    "subtitle": "",
+    "post_date": "2026-02-10",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/36-souths-q1-150382802",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4490,8 +5977,10 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/how-elite-funds-made-16b-from-illiquidity-burford-blackstone-covenant-arbitrage-a4122ac254e7"
+      "medium": "https://medium.com/@navnoorbawa/how-elite-funds-made-16b-from-illiquidity-burford-blackstone-covenant-arbitrage-a4122ac254e7",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/illiquidity-how-150334689"
     }
   },
   {
@@ -4539,9 +6028,54 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/tanakas-formula-in-practice-how-hedge-funds-use-local-time-to-trade-corridor-swaps-timer-82dba7eda949"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "150314849",
+    "slug": "illiquidity-four-150314849",
+    "title": "Illiquidity Arbitrage: Four Trade Reconstructions",
+    "subtitle": "",
+    "post_date": "2026-02-09",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/illiquidity-four-150314849",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150298311",
+    "slug": "i-just-published-150298311",
+    "title": "I just published the complete institutional trade breakdowns for Corridor Variance Swaps, Timer Options, and Local Volatility Arbitrage.",
+    "subtitle": "",
+    "post_date": "2026-02-09",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/i-just-published-150298311",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
   },
   {
     "source": "substack",
@@ -4574,8 +6108,10 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/music-royalty-tax-arbitrage-how-institutional-buyers-engineer-returns-through-irc-section-197-050f2609cbd2"
+      "medium": "https://medium.com/@navnoorbawa/music-royalty-tax-arbitrage-how-institutional-buyers-engineer-returns-through-irc-section-197-050f2609cbd2",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/music-royalty-150164369"
     }
   },
   {
@@ -4608,7 +6144,74 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150251747",
+    "slug": "music-royalty-150251747",
+    "title": "Music Royalty Tax Arbitrage: Trade Mechanics Analysis",
+    "subtitle": "",
+    "post_date": "2026-02-08",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/music-royalty-150251747",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150250315",
+    "slug": "music-royalty-150250315",
+    "title": "Music Royalty Tax Arbitrage: Trade Mechanics Analysis",
+    "subtitle": "",
+    "post_date": "2026-02-08",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/music-royalty-150250315",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150262867",
+    "slug": "institutional-150262867",
+    "title": "Institutional Volatility Strategies: Complete Trade Breakdowns",
+    "subtitle": "",
+    "post_date": "2026-02-08",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/institutional-150262867",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4668,9 +6271,79 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/leap-year-alpha-how-the-366th-day-misprices-interest-rates-retail-revenue-and-options-ca58bfafcd86"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "150165154",
+    "slug": "leap-year-alpha-150165154",
+    "title": "Leap Year Alpha: Complete Trade Reference (What the Free Article Didn't Cover)",
+    "subtitle": "",
+    "post_date": "2026-02-07",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/leap-year-alpha-150165154",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150151846",
+    "slug": "leap-year-alpha-150151846",
+    "title": "Leap Year Alpha: Complete Trade Reference",
+    "subtitle": "",
+    "post_date": "2026-02-07",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/leap-year-alpha-150151846",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150164262",
+    "slug": "illiquidity-how-150164262",
+    "title": "The Illiquidity Arbitrage Playbook: How Burford Capital ($16B Argentina Win), Blackstone (Hipgnosis), and Elite Funds Manufacture Alpha from Covenant Loopholes, Litigation Finance, Life Settlements, and Valuation Manipulation",
+    "subtitle": "",
+    "post_date": "2026-02-07",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/illiquidity-how-150164262",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "scandal-enforcement",
+    "alternate_urls": {
+      "substack": "https://navnoorbawa.substack.com/p/the-illiquidity-arbitrage-playbook"
+    },
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4703,6 +6376,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/pharma-alpha-point72s-56-foia-requests-baker-bros-warrants-cassava-40m-martoma-s-276m-jail-a535e02750f6"
     }
@@ -4737,7 +6411,30 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
+  },
+  {
+    "source": "patreon",
+    "source_id": "150100579",
+    "slug": "trade-alpha-2008-150100579",
+    "title": "Trade Reconstruction: Pharmaceutical Alpha Generation (2008-2024)",
+    "subtitle": "",
+    "post_date": "2026-02-06",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/trade-alpha-2008-150100579",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4784,6 +6481,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/from-soross-2b-win-to-ltcm-s-4-6b-loss-the-complete-emerging-markets-hedge-fund-playbook-b17db2be4719"
     }
@@ -4812,7 +6510,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -4853,6 +6552,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-billions-in-gaming-distressed-debt-activist-campaigns-reit-strategies-ef58e2cb24cd"
     }
@@ -4887,7 +6587,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -4920,9 +6621,32 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-billions-in-china-muddy-waters-11-260-hour-luckin-investigation-bridgewater-6dc079eca9c9"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "149838291",
+    "slug": "china-hedge-fund-149838291",
+    "title": "China Hedge Fund Trades: Complete Execution Reference",
+    "subtitle": "",
+    "post_date": "2026-02-03",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/china-hedge-fund-149838291",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -4955,6 +6679,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/odeys-193-return-explained-how-hedge-funds-profited-from-uk-gilt-crisis-while-bank-of-england-4fae39be258d"
     }
@@ -4989,7 +6714,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "substack",
@@ -5022,6 +6748,7 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/6-market-mechanisms-that-generated-40m-from-legal-arbitrage-to-sec-fraud-cases-467df0bd26e7"
     }
@@ -5050,7 +6777,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -5083,6 +6811,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-250b-ipo-underpricing-system-how-hedge-funds-gained-systematic-allocation-advantages-49e4b9d83ad4"
     }
@@ -5117,7 +6846,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "substack",
@@ -5177,6 +6907,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-deutsche-banks-10b-collapse-the-trades-that-built-and-destroyed-germany-s-largest-bank-6fbab778d891"
     }
@@ -5205,7 +6936,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "substack",
@@ -5238,6 +6970,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-elite-traders-made-250b-from-commodities-2022-2023-citadels-8b-vitol-s-15b-and-the-1b4114ca6921"
     }
@@ -5273,6 +7006,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-scott-bessents-30-return-how-elite-hedge-funds-turned-japan-s-widow-maker-trade-into-a-35a2c339b676"
     }
@@ -5316,6 +7050,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-kite-lake-capitals-2b-event-driven-strategy-merger-arbitrage-mechanics-reverse-arb-9365c814c365"
     }
@@ -5351,9 +7086,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/4-hidden-market-mechanisms-that-make-financial-crashes-inevitable-6ce06931ee6c"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "149133908",
+    "slug": "tcp-packet-trade-149133908",
+    "title": "The TCP Packet Splitting Exploit: Complete Trade Breakdown Verified Facts vs. Logical Inferences",
+    "subtitle": "",
+    "post_date": "2026-01-26",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/tcp-packet-trade-149133908",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -5386,6 +7144,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-the-tcp-packet-splitting-exploit-how-cmes-3-microsecond-penalty-killed-hft-front-loading-0c233de22196"
     }
@@ -5421,9 +7180,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/copper-tc-rcs-hit-60-why-andurand-predicts-40-000-and-currie-calls-it-his-highest-conviction-a8d21dd928a8"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "149020969",
+    "slug": "copper-tc-rc-149020969",
+    "title": "The Copper TC/RC Collapse: Complete Trade Analysis",
+    "subtitle": "",
+    "post_date": "2026-01-24",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/copper-tc-rc-149020969",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -5470,6 +7252,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/20-billion-in-3-credit-trades-how-ackman-paulson-elliott-made-history-with-exact-mechanics-a8e9444c6330"
     }
@@ -5505,6 +7288,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-the-oil-trades-that-generated-15b-in-profits-during-2020-2022-bf26464df4f5"
     }
@@ -5540,9 +7324,32 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/volatility-trading-case-studies-19-documented-hedge-fund-strategies-670ac35961d6"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "148734430",
+    "slug": "tci-fund-trade-148734430",
+    "title": "TCI Fund Management: Complete Trade Reconstruction",
+    "subtitle": "",
+    "post_date": "2026-01-21",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/tci-fund-trade-148734430",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -5575,6 +7382,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/tci-fund-management-2025-inside-chris-hohns-record-18-9-billion-year-7ae37d753bb1"
     }
@@ -5610,6 +7418,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/investigative-short-sellers-vs-systematic-multi-managers-075e0dc457ef"
     }
@@ -5659,9 +7468,98 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-5b-from-sovereign-debt-argentina-greece-ukraine-case-studies-225edaf8911e"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "148502919",
+    "slug": "treasury-basis-148502919",
+    "title": "Treasury Basis Trade: Complete Execution Reference",
+    "subtitle": "",
+    "post_date": "2026-01-18",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/treasury-basis-148502919",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "148291445",
+    "slug": "treasury-basis-148291445",
+    "title": "TREASURY BASIS TRADE: FAST REFERENCE",
+    "subtitle": "",
+    "post_date": "2026-01-18",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/treasury-basis-148291445",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "148390269",
+    "slug": "jain-global-q3-148390269",
+    "title": "JAIN GLOBAL Q3 2025 - INSTITUTIONAL TRADE BREAKDOWN",
+    "subtitle": "",
+    "post_date": "2026-01-18",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/jain-global-q3-148390269",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "148526546",
+    "slug": "gdp-warrant-148526546",
+    "title": "GDP Warrant Trades: Complete Breakdown (Verified + Inferred)",
+    "subtitle": "",
+    "post_date": "2026-01-18",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/gdp-warrant-148526546",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -5694,6 +7592,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/florida-captured-11-of-new-hedge-fund-launches-in-2024-ca1c93411693"
     }
@@ -5729,6 +7628,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bobby-jains-new-hedge-fund-complete-13f-breakdown-of-21b-portfolio-e9207bd331eb"
     }
@@ -5764,6 +7664,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-2-trillion-treasury-basis-trade-march-2020s-crisis-structure-returns-at-record-scale-486867fff1b6"
     }
@@ -5799,6 +7700,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-nick-train-lost-16-billion-in-4-years-and-kept-buying-53d9f1c80dbc"
     }
@@ -5848,9 +7750,54 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-prime-brokers-make-37b-revenue-models-behind-6-2t-hedge-fund-leverage-8a4305207926"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "148110940",
+    "slug": "nick-train-trade-148110940",
+    "title": "Nick Train Trade Reference: Winners & Losers",
+    "subtitle": "",
+    "post_date": "2026-01-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/nick-train-trade-148110940",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "148097765",
+    "slug": "brevan-howard-vs-148097765",
+    "title": "BREVAN HOWARD VS ROKOS CAPITAL: COMPLETE TRADE BREAKDOWN",
+    "subtitle": "",
+    "post_date": "2026-01-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/brevan-howard-vs-148097765",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -5877,6 +7824,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/why-one-hedge-fund-returned-21-while-another-made-0-75-in-2025-9d000b17eaab"
     }
@@ -5912,6 +7860,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/i-mapped-every-entry-level-position-to-portfolio-manager-at-600-hedge-funds-verified-salaries-c0a78494706b"
     }
@@ -5947,9 +7896,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-one-trader-made-1-billion-in-one-month-betting-against-the-fed-41cb3ef5d335"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "147943073",
+    "slug": "rokos-february-147943073",
+    "title": "The Rokos February 2024 Trade - Complete Reference Card",
+    "subtitle": "",
+    "post_date": "2026-01-11",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/rokos-february-147943073",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -5982,6 +7954,7 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/eight-banks-paid-1-3b-for-silver-manipulation-then-in-2025-silver-hit-83-and-shorts-collapsed-5483a4421c72"
     }
@@ -6011,9 +7984,32 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "career-structure",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/i-analyzed-40-hedge-fund-billionaires-heres-the-exact-career-path-that-made-them-500b-49ea615f610d"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "147793511",
+    "slug": "how-market-math-147793511",
+    "title": "How Market Making Math (Citadel: $9.7B) Ported to Prediction Markets ($78.7M Trump Trade)",
+    "subtitle": "",
+    "post_date": "2026-01-09",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/how-market-math-147793511",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -6046,6 +8042,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bluecrest-73-renaissance-14-39-october-inside-2025s-nuclear-trade-and-quant-catastrophe-200f31ca65a8"
     }
@@ -6108,6 +8105,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-30-in-the-first-days-of-2026-on-venezuelas-distressed-debt-39dc9462b600"
     }
@@ -6137,6 +8135,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-bluecrest-made-6-billion-shorting-bonds-the-court-documents-2e9326aab007"
     }
@@ -6186,6 +8185,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bridgewaters-pure-alpha-returned-33-in-2025-here-s-the-exact-system-behind-it-f5b6355ea7ff"
     }
@@ -6221,6 +8221,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/point72-delivered-19-returns-after-returning-3-5b-to-investors-45b47cd7fe5f"
     }
@@ -6256,6 +8257,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/squarepoint-capital-teardown-statistical-arbitrage-vol-surface-arb-ml-alpha-at-182b-scale-5bef81757a20"
     }
@@ -6291,6 +8293,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-founders-fund-captured-polymarkets-rise-to-9b-the-platform-economics-breakdown-15bbacbaeac3"
     }
@@ -6326,6 +8329,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/what-3-000-years-of-economic-history-teaches-us-about-where-wealth-flows-next-9c0e42a3d8df"
     }
@@ -6355,6 +8359,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/36-returns-how-d-e-shaw-beat-citadel-millennium-to-top-2024-8bd31bfb553b"
     }
@@ -6390,6 +8395,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-the-168b-systematic-fund-making-money-while-others-lose-man-ahl-03e0997f566d"
     }
@@ -6425,6 +8431,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-catastrophe-bonds-returned-19-7-while-hedge-funds-struggled-981ea5157f6f"
     }
@@ -6460,6 +8467,7 @@
       },
       "checkpoints": []
     },
+    "family": "career-structure",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-millennium-citadel-point72-structure-pods-team-economics-behind-428b-multi-manager-4f532f76292a"
     }
@@ -6509,6 +8517,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-cliff-asnesss-35b-quarter-the-multi-factor-math-behind-micron-412-and-walmart-188-1635bf2ca1cf"
     }
@@ -6544,6 +8553,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/millenniums-234b-q3-portfolio-what-330-pods-actually-trade-acf7057e4ffd"
     }
@@ -6579,6 +8589,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/polymarket-prediction-system-v2-from-100-samples-to-9-862-markets-a-technical-update-23b76865bd4c"
     }
@@ -6614,6 +8625,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/building-a-quantitative-prediction-system-for-polymarket-a-transparent-technical-deep-dive-be6d1dd1bea9"
     }
@@ -6663,9 +8675,32 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-math-of-prediction-markets-binary-options-kelly-criterion-and-clob-pricing-mechanics-6dc3f579481b"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "146571643",
+    "slug": "hedge-funds-just-146571643",
+    "title": "Hedge Funds Just Poured $18B Into Cat Bonds at Compressed Spreads: Here’s Why It Ends Badly",
+    "subtitle": "",
+    "post_date": "2025-12-24",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/hedge-funds-just-146571643",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -6698,6 +8733,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/arbitrage-evolution-from-morgan-stanleys-50m-1987-to-crypto-and-prediction-markets-cfb012023ffe"
     }
@@ -6747,6 +8783,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-julian-robertsons-22b-hedge-fund-spawned-200-firms-38-he-seeded-directly-26a87aaab5ac"
     }
@@ -6782,6 +8819,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-generated-2-62-alpha-in-2024-0094c8cb7c40"
     }
@@ -6844,6 +8882,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-1-85-trillion-arbitrage-how-hedge-funds-profit-from-forward-mispricings-7a9609b8a26a"
     }
@@ -6893,8 +8932,10 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/the-1-85-trillion-treasury-trade-that-nearly-broke-markets-in-2020-and-its-back-527077d5dc41"
+      "medium": "https://medium.com/@navnoorbawa/the-1-85-trillion-treasury-trade-that-nearly-broke-markets-in-2020-and-its-back-527077d5dc41",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/1-85-trillion-in-146205494"
     }
   },
   {
@@ -6942,6 +8983,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/why-renaissances-medallion-made-76-while-their-own-rief-lost-22-6-in-2020-1ed318548100"
     }
@@ -6977,6 +9019,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/millennium-managements-multi-strategy-trading-architecture-four-core-strategies-behind-14-bd576cbe38a5"
     }
@@ -7012,6 +9055,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/why-millennium-deployed-55b-to-100-external-hedge-fund-managers-b99702d8cd9f"
     }
@@ -7061,6 +9105,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-neutral-funds-returned-7-21-in-2024-most-were-accidentally-long-momentum-bb3b5f5c44c1"
     }
@@ -7096,6 +9141,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-extract-4-9-annual-fx-alpha-the-3-factor-framework-institutions-use-f235b45a7b9b"
     }
@@ -7131,6 +9177,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-institutional-traders-exploit-gamma-explosion-at-options-expiration-a9ed925c67b7"
     }
@@ -7174,6 +9221,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-mathematical-execution-behind-prediction-market-alpha-2d3016b04e9c"
     }
@@ -7217,6 +9265,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-llm-sentiment-analysis-generated-355-returns-3-05-sharpe-by-fixing-the-fatal-flaw-afa81e9548c0"
     }
@@ -7252,6 +9301,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-qis-products-democratized-dispersion-trading-packaging-systematic-correlation-premium-for-81ef1451a8b6"
     }
@@ -7314,6 +9364,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-really-trade-the-30-trillion-treasury-market-inside-the-basis-trade-that-has-e9ea55877c59"
     }
@@ -7349,6 +9400,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-making-in-derivatives-crushes-directional-hedge-fund-trading-a-20b-revenue-gap-a1f5d78e7fc9"
     }
@@ -7398,6 +9450,7 @@
       },
       "checkpoints": []
     },
+    "family": "event-reaction",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-profit-from-uk-budget-shorts-the-p-l-mechanics-behind-policy-driven-equity-4412c7cef0bb"
     }
@@ -7447,6 +9500,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-investment-banks-profit-from-dispersion-trading-volatility-arbitrage-at-scale-513cfb5fdb0d"
     }
@@ -7496,6 +9550,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/beyond-the-smile-how-hedge-funds-trade-3d-volatility-surfaces-for-spatial-arbitrage-74746cdd357e"
     }
@@ -7545,8 +9600,10 @@
       },
       "checkpoints": []
     },
+    "family": "market-structure",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/market-making-in-sports-betting-how-quant-firms-extract-alpha-from-exchange-microstructure-b83b47812055"
+      "medium": "https://medium.com/@navnoorbawa/market-making-in-sports-betting-how-quant-firms-extract-alpha-from-exchange-microstructure-b83b47812055",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/market-making-in-145027439"
     }
   },
   {
@@ -7580,6 +9637,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bank-of-americas-macro-trading-desk-how-25-revenue-growth-was-engineered-in-h1-2025-9128356360aa"
     }
@@ -7609,6 +9667,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-citibanks-trading-engine-how-event-driven-fx-architecture-and-systematic-execution-drive-e0496a6a11c8"
     }
@@ -7671,6 +9730,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bridgewaters-alpha-beta-framework-how-risk-parity-and-portable-alpha-generate-returns-faa386a867cb"
     }
@@ -7720,6 +9780,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/marshall-waces-tops-how-crowdsourcing-alpha-built-a-75-billion-systematic-edge-c20fb6314a38"
     }
@@ -7749,6 +9810,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/which-hedge-funds-are-trading-prediction-markets-and-how-are-they-making-money-1a0d66810025"
     }
@@ -7798,6 +9860,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-aqr-capital-management-how-multi-factor-systematic-strategies-generate-returns-34ec98d97abe"
     }
@@ -7847,6 +9910,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/two-sigmas-china-alpha-machine-52-returns-in-a-retail-dominated-market-3677decc020f"
     }
@@ -7876,6 +9940,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/ml-signal-extraction-6-hypotheses-with-documented-capital-deployment-65cce4a1d5d9"
     }
@@ -7911,6 +9976,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/long-gamma-captures-excess-realized-volatility-the-p-l-mechanics-behind-volatility-arbitrage-3fe1e5dc0925"
     }
@@ -7946,8 +10012,10 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/quant-discovered-vs-discretionary-trades-how-hedge-funds-actually-find-alpha-08709df2dd15"
+      "medium": "https://medium.com/@navnoorbawa/quant-discovered-vs-discretionary-trades-how-hedge-funds-actually-find-alpha-08709df2dd15",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/quant-discovered-144344878"
     }
   },
   {
@@ -7981,8 +10049,10 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-extract-billions-from-volatility-mispricings-the-systematic-arbitrage-playbook-9ab90af1fa6a"
+      "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-extract-billions-from-volatility-mispricings-the-systematic-arbitrage-playbook-9ab90af1fa6a",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-hedge-funds-144296075"
     }
   },
   {
@@ -8030,8 +10100,10 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-then-lost-billions-timing-220b-in-predictable-index-flows-eadc9c76c03d"
+      "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-then-lost-billions-timing-220b-in-predictable-index-flows-eadc9c76c03d",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-hedge-funds-144261449"
     }
   },
   {
@@ -8065,8 +10137,10 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/i-added-transaction-costs-to-my-goldman-sachs-backtest-the-49-return-became-a-9-6-loss-b4991ffeb77d"
+      "medium": "https://medium.com/@navnoorbawa/i-added-transaction-costs-to-my-goldman-sachs-backtest-the-49-return-became-a-9-6-loss-b4991ffeb77d",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/i-added-costs-to-144223076"
     }
   },
   {
@@ -8100,8 +10174,10 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/goldman-sachs-claims-18-returns-on-event-driven-options-6a0335076060"
+      "medium": "https://medium.com/@navnoorbawa/goldman-sachs-claims-18-returns-on-event-driven-options-6a0335076060",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/goldman-sachs-18-144193304"
     }
   },
   {
@@ -8135,8 +10211,10 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/goldman-sachs-event-driven-options-three-strategies-with-11-18-reported-returns-07a44af8a868"
+      "medium": "https://medium.com/@navnoorbawa/goldman-sachs-event-driven-options-three-strategies-with-11-18-reported-returns-07a44af8a868",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/goldman-sachs-11-144141966"
     }
   },
   {
@@ -8170,6 +10248,7 @@
       },
       "checkpoints": []
     },
+    "family": "market-structure",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/jpmorgans-29-8b-trading-operation-machine-learning-execution-c6527a679518"
     }
@@ -8205,8 +10284,10 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/quadeye-securities-extracting-0-5-basis-points-from-indias-hft-infrastructure-game-039f6b3effd7"
+      "medium": "https://medium.com/@navnoorbawa/quadeye-securities-extracting-0-5-basis-points-from-indias-hft-infrastructure-game-039f6b3effd7",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/quadeye-0-5-from-143620431"
     }
   },
   {
@@ -8240,6 +10321,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/ices-2b-polymarket-investment-the-12-month-retail-arbitrage-extinction-window-ac10d8fd4ed0"
     }
@@ -8275,8 +10357,10 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/how-citadel-avoided-the-2024-steepener-massacre-ditching-pca-for-market-observables-cbc6ab28b8bc"
+      "medium": "https://medium.com/@navnoorbawa/how-citadel-avoided-the-2024-steepener-massacre-ditching-pca-for-market-observables-cbc6ab28b8bc",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-citadel-2024-143472447"
     }
   },
   {
@@ -8324,8 +10408,10 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/multi-strategy-hedge-funds-face-structural-headwinds-in-private-credit-expansion-5edc72b14917"
+      "medium": "https://medium.com/@navnoorbawa/multi-strategy-hedge-funds-face-structural-headwinds-in-private-credit-expansion-5edc72b14917",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/multi-strategy-143928379"
     }
   },
   {
@@ -8359,8 +10445,10 @@
       },
       "checkpoints": []
     },
+    "family": "market-structure",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/how-major-hedge-funds-value-crypto-trading-market-structure-while-traditional-valuation-fails-400896195de5"
+      "medium": "https://medium.com/@navnoorbawa/how-major-hedge-funds-value-crypto-trading-market-structure-while-traditional-valuation-fails-400896195de5",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-major-hedge-143861276"
     }
   },
   {
@@ -8394,8 +10482,10 @@
       },
       "checkpoints": []
     },
+    "family": "career-structure",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/point72s-multi-pod-engine-how-41-5b-delivers-19-returns-through-systematic-diversification-c174e4e25404"
+      "medium": "https://medium.com/@navnoorbawa/point72s-multi-pod-engine-how-41-5b-delivers-19-returns-through-systematic-diversification-c174e4e25404",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/point72s-multi-143752186"
     }
   },
   {
@@ -8429,8 +10519,10 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/how-futures-first-generates-returns-liquidity-provision-across-global-derivatives-markets-43e247d381fb"
+      "medium": "https://medium.com/@navnoorbawa/how-futures-first-generates-returns-liquidity-provision-across-global-derivatives-markets-43e247d381fb",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-futures-143621148"
     }
   },
   {
@@ -8464,9 +10556,55 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/graviton-research-capital-deconstructing-indias-largest-hft-firm-s-statistical-arbitrage-dd826a29af86"
+      "medium": "https://medium.com/@navnoorbawa/graviton-research-capital-deconstructing-indias-largest-hft-firm-s-statistical-arbitrage-dd826a29af86",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/graviton-capital-143549251"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "143624042",
+    "slug": "tower-research-143624042",
+    "title": "Tower Research Capital: Decoding Pod-Based HFT Market-Making Strategy",
+    "subtitle": "",
+    "post_date": "2025-11-15",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/tower-research-143624042",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "143623324",
+    "slug": "alphagreps-hft-143623324",
+    "title": "AlphaGrep’s HFT Playbook: Market Making + Stat Arb in India’s March 2020 Volatility",
+    "subtitle": "",
+    "post_date": "2025-11-15",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/alphagreps-hft-143623324",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -8499,9 +10637,33 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/da-vinci-trading-volatility-arbitrage-and-crypto-market-making-deconstructed-507755031666"
+      "medium": "https://medium.com/@navnoorbawa/da-vinci-trading-volatility-arbitrage-and-crypto-market-making-deconstructed-507755031666",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/da-vinci-trading-143474576"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "143548715",
+    "slug": "worldquants-how-143548715",
+    "title": "WorldQuant’s Statistical Arbitrage Engine: How $17B in AUM Emerged From Industrial-Scale Alpha Mining",
+    "subtitle": "",
+    "post_date": "2025-11-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/worldquants-how-143548715",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -8534,9 +10696,121 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/d-e-shaws-1998-crisis-how-a-372-million-loss-built-a-65-billion-quant-giant-b15c6bac91cd"
+      "medium": "https://medium.com/@navnoorbawa/d-e-shaws-1998-crisis-how-a-372-million-loss-built-a-65-billion-quant-giant-b15c6bac91cd",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/d-e-shaws-1998-143468518"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "143470521",
+    "slug": "two-sigma-model-143470521",
+    "title": "Two Sigma Model Manipulation: $165M in Hidden Concentration Risk from Parameter Tampering",
+    "subtitle": "",
+    "post_date": "2025-11-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/two-sigma-model-143470521",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "scandal-enforcement",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "143469815",
+    "slug": "jump-tradings-1-143469815",
+    "title": "Jump Trading’s $1.28B Terra Play: When Market-Making Becomes Market Manipulation",
+    "subtitle": "",
+    "post_date": "2025-11-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/jump-tradings-1-143469815",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "scandal-enforcement",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "143530676",
+    "slug": "jpmorgans-29-9b-143530676",
+    "title": "JPMorgan’s $29.9B Trading Operation: Machine Learning Execution, Dark Pool Economics, and Systematic Alpha",
+    "subtitle": "",
+    "post_date": "2025-11-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/jpmorgans-29-9b-143530676",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "market-structure",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "143472965",
+    "slug": "jane-streets-4-143472965",
+    "title": "Jane Street’s $4.3B India Options Manipulation: A Forensic Breakdown",
+    "subtitle": "",
+    "post_date": "2025-11-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/jane-streets-4-143472965",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "scandal-enforcement",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "143514796",
+    "slug": "elite-quant-how-143514796",
+    "title": "Elite Quant Trading: How 10 Firms Extract Billions from Market Microstructure",
+    "subtitle": "",
+    "post_date": "2025-11-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/elite-quant-how-143514796",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "market-structure",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -8569,8 +10843,10 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/hudson-river-trading-how-8b-in-revenue-reveals-the-death-of-latency-arbitrage-9317930dd848"
+      "medium": "https://medium.com/@navnoorbawa/hudson-river-trading-how-8b-in-revenue-reveals-the-death-of-latency-arbitrage-9317930dd848",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/hudson-river-how-143389328"
     }
   },
   {
@@ -8618,8 +10894,10 @@
       },
       "checkpoints": []
     },
+    "family": "career-structure",
     "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/how-qrt-built-28b-through-centralized-allocation-not-star-portfolio-managers-6de8c3ab6c9d"
+      "medium": "https://medium.com/@navnoorbawa/how-qrt-built-28b-through-centralized-allocation-not-star-portfolio-managers-6de8c3ab6c9d",
+      "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-qrt-built-143346742"
     }
   },
   {
@@ -8667,6 +10945,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-volatility-arbitrage-funds-use-the-heston-model-to-extract-alpha-from-equity-options-e0a1d3bf5342"
     }
@@ -8716,6 +10995,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-multi-strategy-hedge-funds-win-at-fx-carry-risk-control-over-alpha-generation-c363457c9a64"
     }
@@ -8765,6 +11045,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-xtx-markets-turned-2024s-volatility-into-1-28-billion-4334810dbf2d"
     }
@@ -8800,6 +11081,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-flow-traders-captured-495m-in-q1-2020-market-makings-3-543-profit-surge-bc6a1890ed27"
     }
@@ -8849,6 +11131,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/optivers-3-5b-market-making-engine-avellaneda-stoikov-inventory-optimization-at-scale-a28fede5a85a"
     }
@@ -8884,6 +11167,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-2m-arbitrageur-playbook-reverse-engineering-top-performer-strategies-51b75aeaaf0e"
     }
@@ -8933,6 +11217,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/susquehannas-black-monday-trade-exploiting-black-scholes-model-risk-in-the-1987-crash-90ecbaf18ca9"
     }
@@ -8982,6 +11267,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/negrisk-market-rebalancing-how-29m-was-extracted-from-multi-condition-prediction-markets-2f1f91644c5b"
     }
@@ -9017,6 +11303,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/combinatorial-arbitrage-in-prediction-markets-why-62-of-llm-detected-dependencies-fail-to-26f614804e8d"
     }
@@ -9052,6 +11339,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/building-a-prediction-market-arbitrage-bot-technical-implementation-dd6e930efc03"
     }
@@ -9127,6 +11415,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/prediction-market-arbitrage-how-quants-extracted-40m-from-structural-mispricing-81ba031ab0cf"
     }
@@ -9162,6 +11451,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-generated-30-returns-in-the-convertible-arbitrage-boom-of-2025-ed801a02abd2"
     }
@@ -9197,6 +11487,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/one-million-options-contracts-isnt-one-million-euros-or-even-close-14f0467fea94"
     }
@@ -9232,6 +11523,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-volatility-carry-trade-how-selling-vol-makes-10-until-it-can-lose-80-f0c7b064c546"
     }
@@ -9288,6 +11580,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hidden-volatility-feedback-loops-determine-your-p-l-the-multivariate-quadratic-hawkes-f1966eff8063"
     }
@@ -9337,6 +11630,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-short-sellers-extracted-127m-from-the-bdc-collapse-dissecting-a-credit-quality-arbitrage-478b4fea3377"
     }
@@ -9372,6 +11666,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-multi-million-dollar-misdiagnosis-when-fx-desks-blame-brokers-for-internal-routing-failures-201eb51e6260"
     }
@@ -9407,6 +11702,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-4-6-billion-lesson-why-european-options-trade-below-value-and-how-market-makers-profit-8b0afd0896fa"
     }
@@ -9463,6 +11759,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-markov-processes-print-money-in-market-chaos-the-400b-strategy-that-profited-from-covids-694d50057544"
     }
@@ -9506,6 +11803,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-40-year-bond-trade-how-systematic-forecast-errors-generated-excess-returns-c5418e37ea60"
     }
@@ -9541,6 +11839,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-amaranth-advisors-lost-6-billion-in-20-days-a-quantitative-post-mortem-60d28b483907"
     }
@@ -9590,6 +11889,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-misusing-the-sharpe-ratio-cost-hedge-funds-150-billion-twice-1a0ab2b7e1ad"
     }
@@ -9633,6 +11933,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-vol-arb-desks-actually-make-money-from-correlation-the-complete-playbook-with-real-trades-63ea60e57617"
     }
@@ -9682,6 +11983,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/weather-derivatives-explode-260-inside-the-25b-climate-risk-transfer-market-f8c90428fe99"
     }
@@ -9711,6 +12013,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-statistical-arbitrage-desks-made-7-79-during-the-april-tariff-crash-a6aca7ce3e03"
     }
@@ -9760,6 +12063,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-martingale-paradox-why-mathematically-perfect-trading-strategies-fail-in-real-markets-a4b943323a1a"
     }
@@ -9809,6 +12113,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-use-machine-learning-for-derivatives-pricing-and-where-they-make-money-e5381f8674e7"
     }
@@ -9844,6 +12149,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-50-returns-betting-against-microstrategy-while-buying-bitcoin-f7f6ee64d962"
     }
@@ -9879,6 +12185,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-2-billion-oil-storage-trade-how-wall-street-turned-super-contango-into-historic-profits-52b4396ecc7e"
     }
@@ -9922,6 +12229,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-deepseek-shock-how-systematic-hedge-funds-profited-while-fundamentals-lost-billions-3ceb3feacb6d"
     }
@@ -9971,6 +12279,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/when-hedge-funds-lost-money-while-markets-hit-all-time-highs-the-october-2025-crowding-crisis-e576ccf925d7"
     }
@@ -10020,6 +12329,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-multi-strategy-funds-generated-10-returns-in-2025-inside-balyasnys-pod-allocation-model-0b2479bd311b"
     }
@@ -10055,6 +12365,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/anatomy-of-a-468-million-collapse-how-pierre-andurand-lost-52-in-four-months-5ab76e56f63d"
     }
@@ -10090,6 +12401,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/commodity-derivatives-pricing-engine-mathematical-validation-of-forward-curves-using-real-market-b2c2364d1878"
     }
@@ -10125,6 +12437,7 @@
       },
       "checkpoints": []
     },
+    "family": "event-reaction",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-5-6-billion-unwind-how-trumps-tariff-shock-broke-the-quant-machine-9dae40b4c5c8"
     }
@@ -10160,6 +12473,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-bridgewaters-pure-alpha-captured-26-2-returns-from-tariff-volatility-23d5b293c39a"
     }
@@ -10209,6 +12523,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/statistical-arbitrage-the-quant-strategy-seeing-record-inflows-a2988c83471a"
     }
@@ -10258,6 +12573,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/volatility-arbitrage-how-funds-profited-during-the-august-2024-vix-spike-d31cf0da1949"
     }
@@ -10293,6 +12609,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-ackman-made-2-6b-installing-one-ceo-the-activist-alpha-playbook-11758162abbd"
     }
@@ -10336,6 +12653,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-bridgewaters-pure-alpha-how-systematic-macro-translates-economic-views-into-portfolio-29fc13aad6c6"
     }
@@ -10365,6 +12683,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/long-short-equity-dissecting-robert-citrones-52-return-in-2024-fe2be00c7153"
     }
@@ -10421,6 +12740,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/renaissance-technologies-the-100-billion-built-on-statistical-arbitrage-908ca7653fa2"
     }
@@ -10456,6 +12776,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-pod-shop-revolution-how-multi-strategy-funds-generated-13-6-returns-while-markets-stumbled-8e090d97b68b"
     }
@@ -10491,6 +12812,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-one-hedge-fund-turned-27m-into-2-6b-in-30-days-4dc515329a0a"
     }
@@ -10526,6 +12848,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-4-74-trillion-inflection-point-your-complete-guide-to-launching-a-hedge-fund-in-2025s-d13ddb0a5369"
     }
@@ -10561,6 +12884,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-george-weiss-collapse-how-a-46-year-hedge-fund-dynasty-died-on-zoom-59e6172d3dc2"
     }
@@ -10596,6 +12920,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-242k-cross-trading-scheme-how-palmer-square-turned-cost-saving-arbitrage-into-systematic-c9383cfc5ea8"
     }
@@ -10631,6 +12956,7 @@
       },
       "checkpoints": []
     },
+    "family": "firm-mechanics",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-d-e-shaw-generated-11-1-billion-inside-the-macro-trade-that-defined-2024-ab029e5cd976"
     }
@@ -10666,6 +12992,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-20-billion-meltdown-how-two-junior-traders-broke-the-worlds-oldest-metal-exchange-b7b3d6091113"
     }
@@ -10715,6 +13042,7 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-ecor1-capital-lost-10-million-manipulating-a-cross-listed-ipo-a-quantitative-breakdown-038b65ad11de"
     }
@@ -10750,6 +13078,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/weather-derivatives-market-explodes-260-inside-the-25-billion-climate-risk-transfer-revolution-2b47b424dee3"
     }
@@ -10785,6 +13114,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-17-1-billion-cftc-enforcement-bonanza-why-crypto-killed-traditional-trading-cases-54a636a68ca1"
     }
@@ -10834,6 +13164,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-40-trillion-reality-check-how-systematic-funds-extract-alpha-from-esg-market-maturation-fc421ebf2791"
     }
@@ -10869,6 +13200,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-and-lost-millions-with-rough-volatility-models-a-deep-dive-into-modern-3af465b0ba5d"
     }
@@ -10904,6 +13236,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-morgan-stanley-made-100m-through-systematic-information-arbitrage-and-paid-249m-for-it-66d890e57d7e"
     }
@@ -10953,6 +13286,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-josh-resnicks-120-6-return-cracked-the-475-million-rich-list-code-95c96dfbfd89"
     }
@@ -10996,6 +13330,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-jpmorgan-lost-617-million-in-2024s-perfect-compliance-storm-1f6e957ada66"
     }
@@ -11031,6 +13366,7 @@
       },
       "checkpoints": []
     },
+    "family": "event-reaction",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/riefs-1-6-7fcf6268d787"
     }
@@ -11093,6 +13429,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-chris-rokos-made-1-billion-in-a-single-day-deconstructing-the-trump-trade-d5462e96b38a"
     }
@@ -11155,6 +13492,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-quants-made-4-144-returns-in-2020-while-markets-crashed-the-heston-model-edge-b1558ec7aac1"
     }
@@ -11204,6 +13542,7 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hsbc-made-millions-gaming-bond-pricing-screens-a-quants-guide-to-market-manipulation-def8599b970b"
     }
@@ -11247,6 +13586,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/pre-ipo-arbitrage-fraud-how-120m-was-stolen-through-corrupted-market-making-cd9c7e91451d"
     }
@@ -11282,6 +13622,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-soci%C3%A9t%C3%A9-g%C3%A9n%C3%A9rales-a-3-88m-mark-the-close-strategy-exploited-war-driven-market-volatility-bf9a744c7898"
     }
@@ -11311,6 +13652,7 @@
       "fallback_evidence": null,
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/singapores-8-billion-market-manipulation-how-187-trading-accounts-generated-massive-profits-e68cfeaa8524"
     }
@@ -11346,6 +13688,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-totalenergies-lost-48m-trying-to-game-european-gasoline-markets-035870b8c206"
     }
@@ -11395,6 +13738,7 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-trafigura-turned-a-100m-arbitrage-into-a-55m-fraud-deconstructing-the-usgc-singapore-fuel-205ac452010c"
     }
@@ -11430,6 +13774,7 @@
       },
       "checkpoints": []
     },
+    "family": "scandal-enforcement",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-jpmorgan-made-172-million-manipulating-markets-the-spoofing-strategy-that-broke-the-system-97b5d9b13b4e"
     }
@@ -11492,6 +13837,7 @@
       },
       "checkpoints": []
     },
+    "family": "other",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-650m-volmageddon-collapse-how-ljms-leveraged-short-vol-strategy-imploded-in-48-hours-61ad04060f2d"
     }
@@ -11540,7 +13886,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "scandal-enforcement"
   },
   {
     "source": "medium",
@@ -11566,7 +13913,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "scandal-enforcement"
   },
   {
     "source": "medium",
@@ -11612,7 +13960,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11644,7 +13993,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11676,7 +14026,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11708,7 +14059,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11734,7 +14086,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11766,7 +14119,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11798,7 +14152,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11830,7 +14185,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11856,7 +14212,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11888,7 +14245,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11920,7 +14278,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -11946,7 +14305,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11972,7 +14332,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -11998,7 +14359,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12044,7 +14406,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12076,7 +14439,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -12108,7 +14472,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12140,7 +14505,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "scandal-enforcement"
   },
   {
     "source": "medium",
@@ -12166,7 +14532,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12192,7 +14559,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12224,7 +14592,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12256,7 +14625,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12288,7 +14658,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12320,7 +14691,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12352,7 +14724,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -12384,7 +14757,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12416,7 +14790,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12442,7 +14817,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -12468,7 +14844,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12500,7 +14877,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12526,7 +14904,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12566,7 +14945,8 @@
       ],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12592,7 +14972,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12624,7 +15005,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12656,7 +15038,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12682,7 +15065,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12708,7 +15092,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12740,7 +15125,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12772,7 +15158,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12798,7 +15185,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12830,7 +15218,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12856,7 +15245,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12882,7 +15272,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12908,7 +15299,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12934,7 +15326,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12966,7 +15359,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -12992,7 +15386,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "scandal-enforcement"
   },
   {
     "source": "medium",
@@ -13032,7 +15427,8 @@
       ],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "firm-mechanics"
   },
   {
     "source": "medium",
@@ -13064,7 +15460,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13090,7 +15487,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13122,7 +15520,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13154,7 +15553,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13194,7 +15594,8 @@
       ],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13234,7 +15635,8 @@
       ],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13266,7 +15668,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13292,7 +15695,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13332,7 +15736,8 @@
       ],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13364,7 +15769,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13396,7 +15802,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13422,7 +15829,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13454,7 +15862,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13507,7 +15916,8 @@
       ],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13533,7 +15943,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "scandal-enforcement"
   },
   {
     "source": "medium",
@@ -13559,7 +15970,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13605,7 +16017,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13631,7 +16044,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13663,7 +16077,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13689,7 +16104,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13715,7 +16131,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13761,7 +16178,8 @@
         "truncated": false
       },
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13787,7 +16205,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13813,7 +16232,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13839,7 +16259,8 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   },
   {
     "source": "medium",
@@ -13865,6 +16286,7 @@
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
-    }
+    },
+    "family": "other"
   }
 ]

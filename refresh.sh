@@ -85,7 +85,8 @@ on_error() {
         fi
         if [ "$GIT_PUBLICATION_ACTIVE" -eq 1 ]; then
             if ! git reset --quiet HEAD -- \
-                articles_index.json medium_posts.json trades_extracted.json \
+                articles_index.json medium_posts.json patreon_registry.json \
+                trades_extracted.json \
                 snapshot_manifest.json .direction_cache.json; then
                 echo "Could not clear the failed publication staging state; manual recovery is required." >&2
             fi
@@ -166,9 +167,19 @@ FETCH_STATUS_OUTPUT="$WORK_DIR/medium-status.json" \
     "$PYTHON" fetch_medium_posts.py
 
 echo
-echo "=== Merging sources and removing Medium cross-posts ==="
+echo "=== Fetching sparse public Patreon catalogue metadata ==="
+PATREON_OUTPUT="$WORK_DIR/patreon.candidate.json" \
+PREVIOUS_PATREON="$ROOT/patreon_registry.json" \
+PATREON_STATUS_OUTPUT="$WORK_DIR/patreon-status.json" \
+    "$PYTHON" fetch_patreon_posts.py
+
+echo
+echo "=== Merging sources, registries, and reviewed cross-posts ==="
 SUBSTACK_POSTS="$WORK_DIR/substack.candidate.json" \
 MEDIUM_POSTS="$WORK_DIR/medium.candidate.json" \
+PATREON_REGISTRY="$WORK_DIR/patreon.candidate.json" \
+FXEMPIRE_REGISTRY="$ROOT/fxempire_registry.json" \
+REGISTRY_OVERRIDES="$ROOT/registry_crosslink_overrides.json" \
 POSTS_OUTPUT="$WORK_DIR/posts.candidate.json" \
 ARTICLES_OUTPUT="$WORK_DIR/articles.candidate.json" \
 DEDUPE_REPORT_OUTPUT="$WORK_DIR/dedupe-report.json" \
@@ -210,6 +221,7 @@ echo "=== Creating verifiable snapshot manifest ==="
     --trades "$WORK_DIR/trades.candidate.json" \
     --substack-status "$WORK_DIR/substack-status.json" \
     --medium-status "$WORK_DIR/medium-status.json" \
+    --patreon-status "$WORK_DIR/patreon-status.json" \
     --output "$WORK_DIR/snapshot_manifest.candidate.json"
 
 echo
@@ -238,6 +250,7 @@ fi
 PROMOTED_OUTPUTS=(
     all_posts.json
     medium_posts.json
+    patreon_registry.json
     all_sources_posts.json
     articles_index.json
     trades_extracted.json
@@ -247,6 +260,7 @@ PROMOTED_OUTPUTS=(
 PROMOTION_CANDIDATES=(
     "$WORK_DIR/substack.candidate.json"
     "$WORK_DIR/medium.candidate.json"
+    "$WORK_DIR/patreon.candidate.json"
     "$WORK_DIR/posts.candidate.json"
     "$WORK_DIR/articles.candidate.json"
     "$WORK_DIR/trades.candidate.json"
@@ -276,7 +290,13 @@ if ! "$PYTHON" -m unittest -q; then
     fi
     exit 1
 fi
-TRACKED_OUTPUTS=(articles_index.json medium_posts.json trades_extracted.json snapshot_manifest.json)
+TRACKED_OUTPUTS=(
+    articles_index.json
+    medium_posts.json
+    patreon_registry.json
+    trades_extracted.json
+    snapshot_manifest.json
+)
 if [ -f .direction_cache.json ]; then
     TRACKED_OUTPUTS+=(.direction_cache.json)
 fi

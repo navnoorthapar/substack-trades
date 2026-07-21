@@ -11,10 +11,14 @@ import unicodedata
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import quote, urlsplit, urlunsplit
 
 from article_briefs import is_boilerplate_text
+from data_contract import validate_data_layer, write_data_layer
 from extract_trades import has_negated_trade_signal
+from research_graph import build_related_graph, build_search_index
+from research_taxonomy import build_families_index
+from share_cards import emit_share_assets
 
 
 ROOT = Path(__file__).parent
@@ -31,16 +35,25 @@ with open(ROOT / 'trades_extracted.json', encoding='utf-8') as handle:
     trades = json.load(handle)
 
 article_index_path = ROOT / 'articles_index.json'
-article_index = []
+catalog_index = []
 if article_index_path.exists():
     with open(article_index_path, encoding='utf-8') as handle:
         payload = json.load(handle)
-    article_index = payload.get('articles', []) if isinstance(payload, dict) else payload
-    if not isinstance(article_index, list) or not all(
-            isinstance(article, dict) for article in article_index):
+    catalog_index = payload.get('articles', []) if isinstance(payload, dict) else payload
+    if not isinstance(catalog_index, list) or not all(
+            isinstance(article, dict) for article in catalog_index):
         raise ValueError('articles_index.json must contain a list of article objects')
 else:
     print('Warning: articles_index.json missing; building from trade metadata only')
+
+# Metadata-only Patreon and FX Empire registry records power the public data
+# catalogue, discovery graph, share cards, and article stubs. They deliberately
+# stay out of the body-backed terminal so every existing UI flow and dossier
+# count remains unchanged.
+article_index = [
+    article for article in catalog_index
+    if article.get('content_status') != 'registry'
+]
 
 
 def clean_date(value):
@@ -461,6 +474,20 @@ else:
         'data_checksum': checksum.hexdigest(),
         'sources': {},
     }
+
+# The public automation contract is generated from the exact tracked master,
+# including metadata-only registry records that are intentionally absent from
+# the consumer terminal payload above.
+search_index = build_search_index(catalog_index)
+related_graph = build_related_graph(catalog_index, search_index)
+families_index = build_families_index(catalog_index)
+share_articles = [
+    {
+        **article,
+        'id': stable_id('a', canonical_url_identity(str(article.get('url') or ''))),
+    }
+    for article in catalog_index
+]
 
 site_revision = str(os.environ.get('SITE_REVISION') or 'local')
 snapshot_json = json_for_script(snapshot_manifest)
@@ -5713,14 +5740,27 @@ robots_text = (
     'Allow: /\n'
     f'Sitemap: {SITE_URL}sitemap.xml\n'
 )
-sitemap_xml = (
-    '<?xml version="1.0" encoding="UTF-8"?>\n'
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+sitemap_rows = [
     '  <url>\n'
     f'    <loc>{SITE_URL}</loc>\n'
     f'    <lastmod>{last_modified}</lastmod>\n'
-    '  </url>\n'
-    '</urlset>\n'
+    '  </url>'
+]
+for article in catalog_index:
+    slug = quote(str(article.get('slug') or ''), safe='-')
+    location = html_lib.escape(f'{SITE_URL}a/{slug}.html', quote=False)
+    publication_date = clean_date(article.get('post_date'))
+    sitemap_rows.append(
+        '  <url>\n'
+        f'    <loc>{location}</loc>\n'
+        f'    <lastmod>{publication_date}</lastmod>\n'
+        '  </url>'
+    )
+sitemap_xml = (
+    '<?xml version="1.0" encoding="UTF-8"?>\n'
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + '\n'.join(sitemap_rows)
+    + '\n</urlset>\n'
 )
 web_manifest = json.dumps({
     'name': 'Navnoor Research Terminal',
@@ -5818,10 +5858,27 @@ for asset_name, asset_text in support_assets.items():
     (DOCS_DIR / asset_name).write_text(asset_text, encoding='utf-8')
 shutil.copyfile(SOCIAL_IMAGE_SOURCE, DOCS_DIR / 'og.jpg')
 
+share_summary = emit_share_assets(share_articles, DOCS_DIR, SITE_URL)
+write_data_layer(
+    DOCS_DIR,
+    article_index_path,
+    snapshot_manifest,
+    search_index,
+    related_graph,
+    families_index,
+)
+data_summary = validate_data_layer(
+    DOCS_DIR,
+    article_index_path,
+    snapshot_manifest,
+)
+
 print(
     f'Built {out} ({len(HTML) // 1024} KB + '
     f'{brief_out.stat().st_size // 1024} KB deferred dossiers + '
     f'{observations_out.stat().st_size // 1024} KB deferred observations, '
     f'{len(support_assets) + 1} support assets, '
-    f'{len(client_articles)} research notes, {len(client_ideas)} extracted ideas)'
+    f'{len(client_articles)} research notes, {len(client_ideas)} extracted ideas, '
+    f'{data_summary["article_count"]} public catalogue records, '
+    f'{share_summary["count"]} share cards/stubs)'
 )

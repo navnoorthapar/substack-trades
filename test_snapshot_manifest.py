@@ -96,9 +96,14 @@ class SnapshotManifestTests(unittest.TestCase):
                 article_path, trade_path,
             )
             self.assertEqual(checked_at.isoformat(), '2026-07-14T02:00:02+00:00')
-            self.assertEqual(manifest['schema_version'], 1)
+            self.assertEqual(manifest['schema_version'], 2)
             self.assertEqual(manifest['latest_publication'], '2026-07-14T01:00:00Z')
+            self.assertEqual(
+                manifest['catalog_latest_publication'], '2026-07-14T01:00:00Z',
+            )
             self.assertEqual(manifest['article_count'], 2)
+            self.assertEqual(manifest['catalog_count'], 2)
+            self.assertEqual(manifest['registry_count'], 0)
             self.assertEqual(manifest['observation_count'], 1)
             self.assertEqual(manifest['sources']['medium']['included_count'], 1)
             self.assertRegex(manifest['data_checksum'], r'^[0-9a-f]{64}$')

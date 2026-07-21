@@ -1,6 +1,6 @@
 # Privacy
 
-Last updated: 2026-07-18
+Last updated: 2026-07-21
 
 Navnoor Research Terminal is a static, public research-intake website. It is
 designed to work without an account and without collecting reader data for the
@@ -18,6 +18,29 @@ request metadata under GitHub's own terms and privacy practices. Maintainers may
 view GitHub's aggregate, limited-window repository traffic statistics. Google
 Search Console may be used to understand search discovery without adding a
 tracking script to the application.
+
+## Public archive and data endpoints
+
+The site publishes a six-file, machine-readable `/data/` bundle containing the
+same public research catalogue used by the terminal. It includes public source
+metadata, bounded captured Substack/Medium research, deterministic topic and
+related-article indexes, and integrity/freshness counts. Article-specific social
+cards and crawler stubs contain only bounded public title, source, publication
+date, and route metadata. All of these files are public and may be cached by
+browsers, search engines, GitHub Pages, and downstream consumers.
+
+Patreon and FX Empire are metadata-only registry sources. Patreon records may
+state whether an anonymous visitor sees the item as `public` or `paid`; the
+project does not persist or publish the article body, teaser, pledge amount,
+subscriber count, revenue, or creator-dashboard data. FX Empire records are
+manually reviewed public byline metadata and do not include article bodies.
+
+> C3. PRIVACY RULE (absolute): this is a PUBLIC repo and PUBLIC site. NEVER add private analytics — no email open rates, subscriber counts, revenue, pledges, or dashboard-derived numbers. Only content metadata and already-public information (public reaction/comment counts are acceptable ONLY if already collected; do not build new private-data collection).
+
+The public data validator rejects forbidden private-analytics keys recursively.
+The data bundle does not contain reader identities, search history, decision
+packets, cookies, or behavioral events. The endpoint contract is documented in
+[SCHEMA.md](SCHEMA.md).
 
 ## Data stored on the reader's device
 

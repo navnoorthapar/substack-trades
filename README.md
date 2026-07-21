@@ -1,7 +1,8 @@
 # Navnoor Research Terminal
 
-This project collects research from `navnoorbawa.substack.com` and
-`medium.com/@navnoorbawa`, extracts structured investment observations, and
+This project collects authored research from `navnoorbawa.substack.com` and
+`medium.com/@navnoorbawa`, adds privacy-safe public catalogue metadata from
+Patreon and FX Empire, extracts structured investment observations, and
 publishes the institutional research terminal at
 <https://navnoorthapar.github.io/substack-trades/>.
 
@@ -13,23 +14,23 @@ deployment run independently on GitHub Actions:
 
 ```text
 Scheduled Mac
-  Substack API ----> all_posts.json ---------\
-                                             +-> cross-source dedupe
-  Medium archive -> medium_posts.json -------/          |
-                                                        +-> articles_index.json
-                                                        +-> trades_extracted.json
-                                                        +-> snapshot_manifest.json
-                                                        +-> strict validation + tests
-                                                        +-> commit tracked data
-                                                                  |
-                                                                  v
+  Substack API --------> all_posts.json --------\
+  Medium archive -----> medium_posts.json -------+-> conservative dedupe/cross-linking
+  Patreon public index -> patreon_registry.json -+                 |
+  Reviewed FX byline --> fxempire_registry.json -/                 +-> four-source articles_index.json
+                                                                  +-> trades_extracted.json
+                                                                  +-> snapshot_manifest.json
+                                                                  +-> strict validation + tests
+                                                                  +-> commit tracked data
+                                                                            |
+                                                                            v
 GitHub Actions
-  tracked snapshot -> validation + tests -> _site/index.html (fast shell + latest dossiers)
-                                         -> _site/article_briefs.json (older exact spans)
-                                         -> _site/observations.json (parser observations)
+  tracked snapshot -> validation + tests -> terminal shell + deferred research JSON
+                                         -> six versioned data/*.json endpoints
+                                         -> article-specific /cards/*.png + /a/*.html
                                          -> robots/sitemap/manifest/favicon/social image
-                                         -> immutable Pages artifact
-                                         -> atomic production deployment
+                                         -> one immutable Pages artifact
+                                         -> atomic deployment + exact smoke test
 ```
 
 Medium's public author archive is paginated; its ten-item RSS feed can extend a
@@ -41,9 +42,12 @@ mappings in `medium_dedupe_overrides.json`. Substack remains the canonical card
 for cross-posts; only Medium-only articles are added.
 
 `all_posts.json` and `all_sources_posts.json` stay local. The tracked pipeline
-state is `medium_posts.json`, `articles_index.json`, `trades_extracted.json`,
-`snapshot_manifest.json`, and `.direction_cache.json`; retaining the Medium
-catalogue prevents a temporary archive failure from erasing older articles.
+state includes `medium_posts.json`, `patreon_registry.json`,
+`fxempire_registry.json`, `registry_crosslink_overrides.json`,
+`articles_index.json`, `trades_extracted.json`, `snapshot_manifest.json`, and
+`.direction_cache.json`; retaining the catalogues prevents a temporary source
+failure from erasing older articles. Patreon and FX Empire records are
+metadata-only: the project does not scrape or republish their article bodies.
 Production builds consume the validated article and observation snapshots. The
 manifest binds exact input bytes, counts, publication freshness, and per-channel
 fetch health. Deferred assets carry the same checksum and are rejected by the
@@ -53,10 +57,51 @@ every production artifact is rebuilt, tested, and deployed without a bot commit
 or a second source of truth.
 
 The core pipeline needs Python 3.9+, Node.js for generated-script compilation,
-Git with authenticated write access to `origin`, and network access to Substack,
-Medium, and GitHub. It has no third-party Python runtime dependencies.
+Git with authenticated write access to `origin`, and network access to
+Substack, Medium, Patreon, and GitHub. FX Empire is a manually reviewed byline
+registry rather than an automated scraper. The project has no third-party
+Python runtime dependencies.
 Ollama with `qwen2.5:14b` is optional; without it, refreshes preserve cached
 classifications and keep the regex-only direction for new residuals.
+
+## Machine-readable data layer
+
+Each deployment publishes six static, UTF-8 JSON endpoints from the same
+validated four-source snapshot as the terminal:
+
+- [`data/articles_index.json`](https://navnoorthapar.github.io/substack-trades/data/articles_index.json) — the complete Substack, Medium, Patreon, and FX Empire catalogue with bounded briefs.
+- [`data/latest.json`](https://navnoorthapar.github.io/substack-trades/data/latest.json) — the deterministic newest-20 projection.
+- [`data/manifest.json`](https://navnoorthapar.github.io/substack-trades/data/manifest.json) — schema version, dataset identity, freshness, counts, and endpoint discovery.
+- [`data/search_index.json`](https://navnoorthapar.github.io/substack-trades/data/search_index.json) — a compact deterministic entity/topic index.
+- [`data/related.json`](https://navnoorthapar.github.io/substack-trades/data/related.json) — five explainable related-research candidates per article.
+- [`data/families.json`](https://navnoorthapar.github.io/substack-trades/data/families.json) — the deterministic seven-family catalogue partition.
+
+There is no API server or write method. Fetch the manifest first, reject schema
+versions your integration does not support, and treat `dataset_version` as the
+identity of the complete snapshot. Manifest endpoint entries are
+project-relative; resolve them against
+`https://navnoorthapar.github.io/substack-trades/`, not the GitHub Pages origin
+alone. Search-index integers are positions in that single `search_index.json`
+release; immediately resolve them to `source:slug` and never retain them across
+dataset versions. For example:
+
+```bash
+BASE='https://navnoorthapar.github.io/substack-trades'
+curl --fail --silent --show-error "$BASE/data/manifest.json" | python3 -m json.tool
+curl --fail --silent --show-error "$BASE/data/latest.json" | python3 -m json.tool
+curl --fail --silent --show-error "$BASE/data/articles_index.json" > /tmp/navnoor-research.json
+```
+
+Downstream research tools can poll `latest.json`, join full records by
+`source:slug`, use `search_index.json` for retrieval, review the reasons in
+`related.json` before creating links, and use `families.json` for coverage
+planning. These signals organize published research; they are not positions,
+recommendations, confidence scores, or performance claims. Every catalogue row
+also produces `/cards/<slug>.png` and `/a/<slug>.html` for an article-specific
+social preview and crawler-readable entry point. Content-bearing stubs enter the
+matching terminal dossier; registry-only stubs open the original public source.
+The exact field, ranking, versioning, registry, privacy, and share-asset
+contracts are in [SCHEMA.md](SCHEMA.md).
 
 ## Product scope: institutional research intake
 
@@ -198,8 +243,9 @@ tail -n 100 "$HOME/Library/Logs/SubstackTrades/refresh-error.log"
 `origin/main` using fast-forward-only semantics. Its production push is retried
 three times for transient network failures. Every push to `main` runs the
 regression suite, validates the tracked snapshot, builds a fresh immutable
-eight-file artifact, and deploys it. Pull requests run the same
-quality gate without production credentials or deployment. Production runs are
+Pages artifact—including the terminal, deferred archives, six-endpoint public
+data bundle, and per-article share assets—and deploys it. Pull requests run the
+same quality gate without production credentials or deployment. Production runs are
 serialized and never cancelled midway; stale pull-request runs are cancelled.
 The release is then fetched over HTTPS and checked against the exact commit,
 record counts, and data checksum. Actions are restricted to GitHub-owned,
@@ -214,12 +260,15 @@ can therefore neither leak into the next scheduled run nor trigger a GitHub
 Pages deployment unless its full local quality gate passes. GitHub Pages
 then publishes the exact tested artifact atomically and the post-deploy smoke
 test verifies HTTPS, revision, counts, snapshot checksum, the two independently
-recorded deferred-asset hashes, the exact HTML hash, and one deterministic hash
-covering all five discovery/social support assets before declaring it healthy.
+recorded deferred-asset hashes, the exact HTML hash, the complete six-endpoint
+data bundle, and the discovery/social support assets before declaring it
+healthy. Artifact validation separately proves complete catalogue-to-card/stub
+coverage; the release checklist spot-checks representative pairs in production.
 Deployment artifacts are retained for seven days. A separate least-privilege
-watchdog is scheduled every four hours to rebuild all four fingerprints, verify
-the exact published revision, and reject a research snapshot older than 16
-hours, leaving margin above the longest scheduled refresh interval.
+watchdog is scheduled every four hours to rebuild the release fingerprints,
+verify the exact published revision and public-data bundle, and reject a
+research snapshot older than 16 hours, leaving margin above the longest
+scheduled refresh interval.
 
 Manually redeploy the current `main` snapshot without fetching publications:
 

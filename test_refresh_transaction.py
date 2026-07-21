@@ -12,6 +12,7 @@ ROOT = Path(__file__).parent
 PROMOTED_OUTPUTS = (
     'all_posts.json',
     'medium_posts.json',
+    'patreon_registry.json',
     'all_sources_posts.json',
     'articles_index.json',
     'trades_extracted.json',
@@ -58,6 +59,9 @@ if script == 'fetch_all_posts.py':
 elif script == 'fetch_medium_posts.py':
     write_json(os.environ['MEDIUM_OUTPUT'], [{'candidate': 'medium'}])
     write_json(os.environ['FETCH_STATUS_OUTPUT'], {'candidate': 'medium-status'})
+elif script == 'fetch_patreon_posts.py':
+    write_json(os.environ['PATREON_OUTPUT'], [{'candidate': 'patreon'}])
+    write_json(os.environ['PATREON_STATUS_OUTPUT'], {'candidate': 'patreon-status'})
 elif script == 'merge_article_sources.py':
     write_json(os.environ['POSTS_OUTPUT'], [{'candidate': 'combined'}])
     write_json(os.environ['ARTICLES_OUTPUT'], [{'candidate': 'articles'}])

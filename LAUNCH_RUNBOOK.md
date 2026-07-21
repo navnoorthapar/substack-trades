@@ -36,7 +36,30 @@ plutil -lint launchd/com.navnoor.substacktrades.plist
 PREVIEW_DIR="$(mktemp -d)"
 SITE_OUTPUT_DIR="$PREVIEW_DIR" SITE_REVISION="$(git rev-parse HEAD)" python3 build_site.py
 python3 validate_inline_scripts.py "$PREVIEW_DIR/index.html"
-test "$(find "$PREVIEW_DIR" -maxdepth 1 -type f | wc -l | tr -d ' ')" -eq 8
+python3 - "$PREVIEW_DIR" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+from data_contract import validate_data_layer
+from share_cards import MAX_CARD_BYTES
+
+root = Path(sys.argv[1])
+articles = json.loads(Path('articles_index.json').read_text(encoding='utf-8'))
+summary = validate_data_layer(
+    root, Path('articles_index.json'), Path('snapshot_manifest.json'),
+)
+slugs = {article['slug'] for article in articles}
+cards = {path.stem for path in (root / 'cards').glob('*.png')}
+stubs = {path.stem for path in (root / 'a').glob('*.html')}
+assert cards == slugs, 'share-card set does not equal the catalogue slug set'
+assert stubs == slugs, 'article-stub set does not equal the catalogue slug set'
+for path in (root / 'cards').glob('*.png'):
+    payload = path.read_bytes()
+    assert payload.startswith(b'\x89PNG\r\n\x1a\n')
+    assert len(payload) <= MAX_CARD_BYTES
+print(summary)
+PY
 rm -r "$PREVIEW_DIR"
 git diff --check
 ./automation_status.sh
@@ -48,9 +71,12 @@ and plist syntax, inline JavaScript compilation, updater, snapshot freshness,
 clean diff, and GitHub authentication all pass. On the scheduled Mac, repeat
 data validation with
 `--posts all_sources_posts.json` to bind the release to the ignored full-source
-cache. Confirm the generated artifact contains exactly `index.html`, both
-deferred JSON assets, `robots.txt`, `sitemap.xml`, `site.webmanifest`,
-`favicon.svg`, and `og.jpg`.
+cache. Confirm the generated artifact contains `index.html`, both deferred JSON
+assets, all six contract files under `data/`, exactly one PNG under `cards/` and
+one HTML stub under `a/` for every catalogue slug, plus `robots.txt`,
+`sitemap.xml`, `site.webmanifest`, `favicon.svg`, and `og.jpg`. Inspect the
+reported public-data bundle digest and article/card/stub counts; do not replace
+this directory-aware check with a fixed top-level file count.
 
 ## 3. Release
 
@@ -58,14 +84,20 @@ deferred JSON assets, `robots.txt`, `sitemap.xml`, `site.webmanifest`,
 2. Watch **Validate and Deploy Pages**. The quality job must pass before the
    immutable Pages artifact can deploy.
 3. Require the post-deploy smoke step to confirm HTTPS, exact Git revision,
-   snapshot checksum/counts, exact HTML, both deferred JSON files, and the
-   combined discovery/social support bundle.
+   snapshot checksum/counts, exact HTML, both deferred JSON files, every file in
+   the six-endpoint public-data bundle, and the combined discovery/social
+   support bundle. Complete card/stub coverage is proved against the built
+   artifact in Section 2; representative live pairs are checked in Step 5.
 4. Dispatch **Monitor Published Research** against the same `main` commit with
    `gh workflow run watchdog.yml --ref main`; require its exact-release and
    freshness checks to pass.
 5. Open production and manually verify the default workbench, a recent article,
    an older deferred dossier, observation loading, mobile layout, light/dark
-   themes, print preview, and source links. Execute the keyboard/focus and
+   themes, print preview, and source links. Open one recent and one registry-only
+   `/a/<slug>.html` URL, confirm its title/preview/canonical URL, verify the
+   content-bearing stub enters the terminal while the registry-only stub opens
+   its original public source, and fetch each matching 1200×630
+   `/cards/<slug>.png`. Execute the keyboard/focus and
    offline/deferred-asset recovery tests against the generated client. Do not
    enter confidential data during testing.
 6. Run Lighthouse against Latest, Evidence, Library, and Queue on the exact
@@ -91,9 +123,12 @@ gh run list --workflow update.yml --limit 5
   `https://navnoorthapar.github.io/substack-trades/sitemap.xml` and verify it is
   fetched successfully.
 - Confirm the project-path `substack-trades/robots.txt`, canonical URL, social
-  preview image, manifest, and favicon resolve over HTTPS. GitHub project Pages
-  cannot publish an origin-root `navnoorthapar.github.io/robots.txt`; that
-  accepted boundary is tracked in `ISSUES.md`.
+  preview image, web manifest, favicon, and all six `/data/` endpoints resolve
+  over HTTPS. Confirm the sitemap includes the generated article-stub URLs and
+  that a representative `/a/<slug>.html` advertises its matching
+  `/cards/<slug>.png`. GitHub project Pages cannot publish an origin-root
+  `navnoorthapar.github.io/robots.txt`; that accepted boundary is tracked in
+  `ISSUES.md`.
 - Set the GitHub repository description, homepage, and topics if they are still
   blank. This requires an authenticated repository owner.
 - Use GitHub's aggregate repository traffic and Search Console for discovery
@@ -106,7 +141,14 @@ gh run list --workflow update.yml --limit 5
 - The production watchdog is scheduled every four hours and rejects snapshots
   older than 16 hours.
 - At least daily during launch week, inspect the latest updater log, deployment,
-  watchdog, source counts, per-source health, and published release timestamp.
+  watchdog, four source counts, per-source health, and published release
+  timestamp. Fetch `/data/manifest.json` and verify its `dataset_version`,
+  `generated_at`, endpoint list, and counts agree with the release; fetch
+  `/data/latest.json` and open its newest canonical source link.
+- Weekly, spot-check a recent, an old, and a registry-only article stub/card
+  pair, and confirm the sitemap still exposes article stubs. A missing card,
+  incorrect redirect, or mixed-version data response is a release failure, not
+  a cosmetic defect.
 - Monthly, confirm `watchdog.yml` remains enabled with
   `gh workflow view watchdog.yml`. GitHub can disable public-repository
   schedules after 60 days without repository activity; if needed, restore it
@@ -119,10 +161,12 @@ gh run list --workflow update.yml --limit 5
 
 Severity guidance:
 
-- **Critical:** misleading/corrupt research data, sensitive-data exposure,
-  malicious content execution, or production serving an unverified artifact.
-- **High:** terminal unavailable, stale beyond policy, major navigation failure,
-  or inability to inspect original evidence.
+- **Critical:** misleading/corrupt research data, private-analytics or other
+  sensitive-data exposure, malicious content execution, cross-release API
+  incoherence, or production serving an unverified artifact.
+- **High:** terminal unavailable, stale beyond policy, a missing/malformed public
+  endpoint, incomplete catalogue-to-card/stub coverage, major navigation
+  failure, or inability to inspect original evidence.
 - **Normal:** isolated presentation defects with a safe workaround.
 
 For Critical or High incidents:
@@ -138,9 +182,39 @@ For Critical or High incidents:
 5. Verify production and the watchdog, then communicate scope and resolution.
 6. Document root cause, detection gap, corrective test, and follow-up owner.
 
-## 7. Launch completion record
+## 7. Public data, registry, and share-asset release
+
+Before certifying a release that changes the public archive or its contract:
+
+1. Review the diff for all registry and cross-link files. Patreon rows may
+   contain only anonymous public metadata and `public`/`paid` access; FX Empire
+   updates are manual public byline records. Do not approve scraped bodies,
+   teasers, pledge data, subscriber data, revenue, or dashboard-derived fields.
+2. Confirm the master archive includes all four sources, registry entries have
+   `content_status: "registry"` and `wordcount: 0`, and ambiguous twins remain
+   separate unless a reviewed override explains the decision.
+3. Run Section 2 and retain the printed public-data summary. Inspect the six
+   endpoint names, schema and dataset versions, four source counts, seven family
+   counts, endpoint bundle digest, and exact card/stub count.
+4. After deploy, fetch `/data/manifest.json` from production without a browser
+   cache. Fetch every path it lists and compare the result to the tested
+   artifact. Verify at least one content-bearing and one registry-only stub/card
+   pair, including its title, source, date, image dimensions, and terminal route.
+5. Treat schema changes as an explicit compatibility release. Within a schema
+   version, fields are additive-only; consumers must be able to ignore new
+   fields. Record the schema version, dataset version, release SHA, workflow
+   URLs, and bundle/card checks in the annotated release tag.
+
+The full endpoint, deterministic ranking, taxonomy, metadata-only registry,
+versioning, and privacy contract is [SCHEMA.md](SCHEMA.md).
+
+## 8. Prior launch completion record
 
 Certification date: **2026-07-21**
+
+This record certifies the then-current consumer-terminal baseline. It does not
+by itself certify the later four-source public-data and per-article share-asset
+surfaces; those require a new successful Section 7 record for the deployed SHA.
 
 - **Protected release identity:** annotated tag `launch-2026-07-21`. Its
   annotation is the authoritative durable record of the final release SHA, the
@@ -164,8 +238,9 @@ Certification date: **2026-07-21**
   source checks prove this is current source state, not a stalled refresh.
 - **Automated gates:** all 177 tests passed. Tracked and strict cached-source
   validation, Ruff, mypy, Python compilation, shell syntax, plist validation,
-  deterministic eight-file build, inline JavaScript compilation, exact release
-  fingerprints, and post-deploy asset/support-bundle smoke checks passed.
+  the then-current deterministic core Pages artifact, inline JavaScript
+  compilation, exact release fingerprints, and post-deploy asset/support-bundle
+  smoke checks passed.
 - **Production quality baseline:** on exact deployed product/data revision
   `551ce56c345f97e95239eb132e7a90a515af06ce`, Lighthouse performance scored 98
   Latest, 93 Evidence, 93 Library, and 92 Queue. Accessibility, Best Practices,

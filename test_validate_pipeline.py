@@ -1,3 +1,5 @@
+import copy
+import hashlib
 import json
 import subprocess
 import sys
@@ -49,11 +51,60 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'title': 'Example',
             'post_date': '2026-07-14',
             'content_status': 'full',
+            'family': 'other',
         }
         # The same canonical identity cannot appear twice.
         duplicate = dict(article)
         with self.assertRaisesRegex(ValueError, 'duplicate canonical URLs'):
             validate_deployable_articles([article, duplicate])
+
+    def test_paid_registry_brief_must_preserve_exact_empty_body_boundary(self):
+        article = {
+            'url': 'https://www.patreon.com/NavnoorBawa/posts/example-123456789',
+            'source': 'patreon',
+            'source_id': '123456789',
+            'slug': 'example-123456789',
+            'title': 'Paid research metadata title',
+            'subtitle': '',
+            'post_date': '2026-07-14',
+            'audience': 'paid',
+            'access': 'paid',
+            'wordcount': 0,
+            'content_status': 'registry',
+            'family': 'other',
+            'brief': {
+                'schema_version': 1,
+                'body_sha256': hashlib.sha256(b'').hexdigest(),
+                'lead': None,
+                'sections': [],
+                'fallback_evidence': None,
+                'checkpoints': [],
+            },
+        }
+        self.assertIn(article['url'], validate_deployable_articles([article]))
+
+        leaked_text = 'Paid article body must never enter the public registry.'
+        corruptions = {
+            'body digest': {
+                'body_sha256': hashlib.sha256(leaked_text.encode('utf-8')).hexdigest(),
+            },
+            'lead': {'lead': {'text': leaked_text}},
+            'fallback': {'fallback_evidence': {'text': leaked_text}},
+            'sections': {'sections': [{'text': leaked_text}]},
+            'checkpoints': {'checkpoints': [{'text': leaked_text}]},
+            'extra brief body field': {'body_text': leaked_text},
+        }
+        for label, changes in corruptions.items():
+            with self.subTest(label=label):
+                corrupted = copy.deepcopy(article)
+                corrupted['brief'].update(changes)
+                with self.assertRaisesRegex(ValueError, 'exact empty-body contract'):
+                    validate_deployable_articles([corrupted])
+
+        top_level_body = copy.deepcopy(article)
+        top_level_body['body_text'] = leaked_text
+        with self.assertRaisesRegex(ValueError, 'metadata-only registry contract'):
+            validate_deployable_articles([top_level_body])
 
     def test_trade_validation_remains_strict_without_post_cache(self):
         article = {
@@ -63,6 +114,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'title': 'Example',
             'post_date': '2026-07-14',
             'content_status': 'excerpt',
+            'family': 'other',
         }
         article['source_id'] = 'abcdef123456'
         article['url'] = 'https://medium.com/@navnoorbawa/example-abcdef123456'
@@ -89,6 +141,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'title': 'Example',
             'post_date': '2026-02-29',
             'content_status': 'full',
+            'family': 'other',
         }
         with self.assertRaisesRegex(ValueError, 'not a real ISO date'):
             validate_deployable_articles([article])
@@ -115,6 +168,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'title': 'Canonical title',
             'post_date': '2026-07-14T09:30:00Z',
             'content_status': 'full',
+            'family': 'other',
         }
         articles = validate_deployable_articles([article])
         trade = {
@@ -139,6 +193,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'title': 'Example',
             'post_date': '2026-07-14',
             'content_status': 'full',
+            'family': 'other',
         }
         articles = validate_deployable_articles([article])
         trade = {
@@ -162,6 +217,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'title': 'Example',
             'post_date': '2026-07-14',
             'content_status': 'full',
+            'family': 'other',
         }
         articles = validate_deployable_articles([article])
         base = {
@@ -214,6 +270,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'title': 'Example',
             'post_date': '2026-07-14',
             'content_status': 'full',
+            'family': 'other',
         }
         articles = validate_deployable_articles([article])
         description = (

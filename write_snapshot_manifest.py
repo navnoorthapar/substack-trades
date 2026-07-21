@@ -11,8 +11,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-SCHEMA_VERSION = 1
-SOURCES = ('substack', 'medium')
+SCHEMA_VERSION = 2
+CONTENT_SOURCES = ('substack', 'medium')
+REGISTRY_SOURCES = ('patreon', 'fxempire')
+SOURCES = CONTENT_SOURCES + REGISTRY_SOURCES
 SUCCESS_STATUSES = {'ok', 'degraded'}
 
 
@@ -55,12 +57,20 @@ def _source_manifest(source, status, included_count):
     _require(isinstance(status, dict), f'{source} fetch status must be an object')
     _require(status.get('source') == source,
              f'{source} fetch status has the wrong source identity')
-    _require(status.get('status') in SUCCESS_STATUSES,
+    raw_status = status.get('status')
+    normalized_status = {
+        'fresh': 'ok',
+        'cached-fallback': 'degraded',
+    }.get(raw_status, raw_status)
+    _require(normalized_status in SUCCESS_STATUSES,
              f'{source} fetch did not complete successfully')
-    mode = status.get('mode')
+    mode = status.get('mode') or {
+        'fresh': 'public_metadata_api',
+        'cached-fallback': 'cached_registry',
+    }.get(raw_status)
     checked_at = status.get('checked_at')
     newest = status.get('newest')
-    fetched_count = status.get('fetched_count')
+    fetched_count = status.get('fetched_count', status.get('published_count'))
     published_count = status.get('published_count')
     _require(isinstance(mode, str) and mode.strip(),
              f'{source} fetch status has no mode')
@@ -74,11 +84,32 @@ def _source_manifest(source, status, included_count):
              f'{source} published_count is smaller than its included article count')
     return {
         'checked_at': checked_at,
-        'status': status['status'],
+        'status': normalized_status,
         'mode': mode,
         'published_count': published_count,
         'fetched_count': fetched_count,
         'included_count': included_count,
+        'newest': newest,
+    }
+
+
+def _registry_status(source, articles, checked_at):
+    source_rows = [
+        article for article in articles
+        if isinstance(article, dict) and article.get('source') == source
+    ]
+    _require(source_rows, f'{source} registry is empty')
+    newest = max(
+        (str(article.get('post_date') or '') for article in source_rows),
+        key=publication_instant,
+    )
+    return {
+        'source': source,
+        'checked_at': checked_at,
+        'status': 'ok',
+        'mode': 'manual_registry',
+        'published_count': len(source_rows),
+        'fetched_count': len(source_rows),
         'newest': newest,
     }
 
@@ -90,21 +121,49 @@ def build_manifest(articles, observations, statuses, checksum, checked_at=None):
         article.get('source') for article in articles if isinstance(article, dict)
     )
     _require(set(included).issubset(SOURCES), 'article index has an unknown source')
+    resolved_checked_at = checked_at or utc_now()
+    resolved_statuses = dict(statuses)
+    for source in REGISTRY_SOURCES:
+        if included[source] and source not in resolved_statuses:
+            resolved_statuses[source] = _registry_status(
+                source, articles, resolved_checked_at
+            )
     sources = {
-        source: _source_manifest(source, statuses[source], included[source])
-        for source in SOURCES
+        source: _source_manifest(source, resolved_statuses[source], included[source])
+        for source in SOURCES if included[source]
     }
-    publication_dates = [article.get('post_date') for article in articles
-                         if isinstance(article, dict)
-                         and isinstance(article.get('post_date'), str)]
+    content_articles = [
+        article for article in articles
+        if isinstance(article, dict)
+        and article.get('content_status') != 'registry'
+    ]
+    registry_articles = [
+        article for article in articles
+        if isinstance(article, dict)
+        and article.get('content_status') == 'registry'
+    ]
+    publication_dates = [
+        article.get('post_date') for article in content_articles
+        if isinstance(article.get('post_date'), str)
+    ]
+    catalogue_dates = [
+        article.get('post_date') for article in articles
+        if isinstance(article, dict) and isinstance(article.get('post_date'), str)
+    ]
     latest_publication = max(
         publication_dates, key=publication_instant, default=''
     )
+    catalogue_latest_publication = max(
+        catalogue_dates, key=publication_instant, default=''
+    )
     return {
         'schema_version': SCHEMA_VERSION,
-        'checked_at': checked_at or utc_now(),
+        'checked_at': resolved_checked_at,
         'latest_publication': latest_publication,
-        'article_count': len(articles),
+        'catalog_latest_publication': catalogue_latest_publication,
+        'article_count': len(content_articles),
+        'catalog_count': len(articles),
+        'registry_count': len(registry_articles),
         'observation_count': len(observations),
         'data_checksum': checksum,
         'sources': sources,
@@ -131,6 +190,7 @@ def main():
                         help='extracted observations consumed by the website')
     parser.add_argument('--substack-status', type=Path, required=True)
     parser.add_argument('--medium-status', type=Path, required=True)
+    parser.add_argument('--patreon-status', type=Path)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--checked-at', help='override UTC timestamp (primarily for tests)')
     args = parser.parse_args()
@@ -144,6 +204,10 @@ def main():
             'substack': load_json(args.substack_status, 'Substack fetch status'),
             'medium': load_json(args.medium_status, 'Medium fetch status'),
         }
+        if args.patreon_status:
+            statuses['patreon'] = load_json(
+                args.patreon_status, 'Patreon fetch status'
+            )
         checksum = data_checksum(article_bytes, observation_bytes)
         manifest = build_manifest(
             articles, observations, statuses, checksum, args.checked_at
@@ -154,7 +218,8 @@ def main():
         return 1
 
     print(
-        f'Wrote snapshot manifest: {manifest["article_count"]} articles, '
+        f'Wrote snapshot manifest: {manifest["article_count"]} research articles, '
+        f'{manifest["registry_count"]} registry entries, '
         f'{manifest["observation_count"]} observations, {manifest["data_checksum"]}.'
     )
     return 0

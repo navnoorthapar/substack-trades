@@ -5,8 +5,10 @@ These instructions apply to the entire repository.
 ## Product and architecture
 
 Navnoor Research Terminal is a dependency-free Python data pipeline and static
-GitHub Pages application. `build_site.py` generates the ignored eight-file site
-artifact from the tracked article, observation, and snapshot JSON files.
+GitHub Pages application. `build_site.py` generates the ignored Pages artifact
+from the tracked article, observation, registry, and snapshot JSON files. That
+artifact includes the terminal, deferred research archives, six public `/data/`
+endpoints, one social card and crawler stub per article, and support assets.
 Publication ingestion runs on the scheduled Mac; GitHub Actions validates,
 builds, deploys, and verifies the exact published release.
 
@@ -74,7 +76,8 @@ Do not weaken production or test behavior merely to silence a type warning.
 ## Deployment acceptance
 
 A push is not a successful release until **Validate and Deploy Pages** passes
-and its post-deploy smoke test proves that production serves the exact expected
-revision, HTML, deferred JSON assets, and support bundle. Run or inspect the
-independent watchdog for freshness-sensitive releases. See
-`LAUNCH_RUNBOOK.md` for rollback and incident handling.
+after artifact validation proves complete catalogue-to-card/stub coverage and
+the post-deploy smoke test proves that production serves the exact expected
+revision, HTML, deferred JSON assets, all six public data endpoints, and support
+bundle. Run or inspect the independent watchdog for freshness-sensitive
+releases. See `LAUNCH_RUNBOOK.md` for rollback and incident handling.

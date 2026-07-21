@@ -5,10 +5,20 @@ import tempfile
 import types
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import MagicMock, call, patch
+from urllib.parse import urlsplit
 
 import smoke_test_site
+import share_cards
+from data_contract import DATA_ENDPOINT_NAMES, write_data_layer
+from test_data_contract import (
+    article_fixture,
+    families_fixture,
+    related_fixture,
+    search_fixture,
+)
 
 
 REVISION = 'a' * 40
@@ -17,6 +27,8 @@ HTML_DIGEST = 'c' * 64
 BRIEF_DIGEST = 'd' * 64
 OBSERVATION_DIGEST = 'e' * 64
 SUPPORT_DIGEST = 'f' * 64
+DATA_DIGEST = '1' * 64
+SHARE_DIGEST = '2' * 64
 
 
 def fixture_deferred(checksum=CHECKSUM, schema_version=1, briefs=None):
@@ -59,6 +71,61 @@ def fixture_html(
 <meta name="nrt-observation-archive-sha256" content="{observation_digest}">
 </head><body>{elements}
 </body></html>'''
+
+
+def fixture_data_payloads():
+    articles = [article_fixture(index) for index in range(24)]
+    generated_at = datetime.now(timezone.utc).isoformat(
+        timespec='seconds'
+    ).replace('+00:00', 'Z')
+    snapshot = {
+        'schema_version': 1,
+        'checked_at': generated_at,
+        'article_count': len(articles),
+        'data_checksum': CHECKSUM,
+    }
+    with tempfile.TemporaryDirectory(prefix='nrt-smoke-data-fixture-') as directory:
+        root = Path(directory)
+        source = root / 'articles.json'
+        site = root / 'site'
+        source.write_text(
+            json.dumps(articles, ensure_ascii=False, indent=2) + '\n',
+            encoding='utf-8',
+        )
+        write_data_layer(
+            site,
+            source,
+            snapshot,
+            search_fixture(articles),
+            related_fixture(articles),
+            families_fixture(articles),
+        )
+        payloads = {
+            name: (site / 'data' / name).read_bytes()
+            for name in DATA_ENDPOINT_NAMES
+        }
+    content_count = sum(
+        article['content_status'] != 'registry' for article in articles
+    )
+    return payloads, content_count
+
+
+def fixture_share_payloads(page_url='https://example.test/research/'):
+    data_payloads, _ = fixture_data_payloads()
+    articles = json.loads(data_payloads['articles_index.json'])
+    root = smoke_test_site._site_root(page_url)
+    payloads = {}
+    for article in smoke_test_site.representative_share_articles(articles):
+        slug = article['slug']
+        payloads[f'cards/{slug}.png'] = share_cards.render_share_card(
+            article['title'], article['source'], article['post_date'],
+        )
+        payloads[f'a/{slug}.html'] = share_cards.render_article_stub(
+            article,
+            smoke_test_site._stable_article_id(article),
+            root,
+        ).encode('utf-8')
+    return payloads, articles
 
 
 class SmokeTestSiteTests(unittest.TestCase):
@@ -367,6 +434,20 @@ class SmokeTestSiteTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'non-empty JSON list'):
                 smoke_test_site.load_list_count(path, 'records')
 
+    def test_terminal_article_count_excludes_metadata_only_registry_rows(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'articles.json'
+            path.write_text(json.dumps([
+                {'content_status': 'full'},
+                {'content_status': 'excerpt'},
+                {'content_status': 'registry'},
+                {'content_status': 'registry'},
+            ]), encoding='utf-8')
+            self.assertEqual(smoke_test_site.load_content_article_count(path), 2)
+            path.write_text(json.dumps([{'title': 'missing status'}]), encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'without content_status'):
+                smoke_test_site.load_content_article_count(path)
+
     def test_snapshot_checksum_uses_exact_input_bytes_with_separator(self):
         with tempfile.TemporaryDirectory() as directory:
             articles = Path(directory) / 'articles.json'
@@ -408,6 +489,219 @@ class SmokeTestSiteTests(unittest.TestCase):
             smoke_test_site.sibling_asset_url(
                 'https://example.test/research/', '../robots.txt',
             )
+
+    def test_data_endpoint_urls_are_nested_and_strictly_allowlisted(self):
+        self.assertEqual(
+            smoke_test_site.data_asset_url(
+                'https://example.test/research/?old=1#fragment', 'manifest.json',
+            ),
+            'https://example.test/research/data/manifest.json',
+        )
+        self.assertEqual(
+            smoke_test_site.data_asset_url(
+                'https://example.test/research/index.html?old=1', 'latest.json',
+            ),
+            'https://example.test/research/data/latest.json',
+        )
+        for unsafe in ('../manifest.json', 'data/manifest.json', 'other.json'):
+            with self.subTest(unsafe=unsafe):
+                with self.assertRaisesRegex(ValueError, 'unsupported data endpoint'):
+                    smoke_test_site.data_asset_url(
+                        'https://example.test/research/', unsafe,
+                    )
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_data_fetch_validates_every_nested_endpoint_and_exact_bytes(
+        self, urlopen, ssl_context,
+    ):
+        payloads, _ = fixture_data_payloads()
+
+        def response_for_request(request, **_kwargs):
+            asset_name = Path(request.full_url.split('?', 1)[0]).name
+            response = MagicMock()
+            response.__enter__.return_value = response
+            response.geturl.return_value = request.full_url.split('?', 1)[0]
+            response.status = 200
+            response.headers.get_content_type.return_value = 'application/json'
+            response.read.return_value = payloads[asset_name]
+            return response
+
+        urlopen.side_effect = response_for_request
+        actual = smoke_test_site.fetch_data_bundle(
+            'https://example.test/research/', REVISION, 3, 20,
+        )
+        self.assertEqual(actual, payloads)
+        self.assertEqual(urlopen.call_count, len(DATA_ENDPOINT_NAMES))
+        self.assertEqual(ssl_context.call_count, len(DATA_ENDPOINT_NAMES))
+        self.assertEqual(
+            {request_call.args[0].full_url for request_call in urlopen.call_args_list},
+            {
+                f'https://example.test/research/data/{name}?'
+                f'nrt_smoke_revision={REVISION}&nrt_smoke_attempt=3'
+                for name in DATA_ENDPOINT_NAMES
+            },
+        )
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_data_fetch_rejects_html_404_fallback_and_off_origin_redirect(
+        self, urlopen, _ssl_context,
+    ):
+        def html_response(request, **_kwargs):
+            response = MagicMock()
+            response.__enter__.return_value = response
+            response.geturl.return_value = request.full_url.split('?', 1)[0]
+            response.status = 200
+            response.headers.get_content_type.return_value = 'text/html'
+            response.read.return_value = b'<html>GitHub Pages 404</html>'
+            return response
+
+        urlopen.side_effect = html_response
+        with self.assertRaisesRegex(ValueError, 'not application/json'):
+            smoke_test_site.fetch_data_bundle(
+                'https://example.test/research/', REVISION, 1, 20,
+            )
+
+        def redirect_response(request, **_kwargs):
+            response = MagicMock()
+            response.__enter__.return_value = response
+            response.geturl.return_value = 'https://attacker.test/data/articles_index.json'
+            return response
+
+        urlopen.side_effect = redirect_response
+        with self.assertRaisesRegex(ValueError, 'redirected off-origin'):
+            smoke_test_site.fetch_data_bundle(
+                'https://example.test/research/', REVISION, 2, 20,
+            )
+
+    def test_live_data_semantics_reject_corrupt_cross_endpoint_counts(self):
+        payloads, content_count = fixture_data_payloads()
+        summary = smoke_test_site.validate_live_data_bundle(
+            payloads, content_count, CHECKSUM,
+        )
+        self.assertEqual(summary['article_count'], 24)
+        self.assertEqual(
+            summary['data_bundle_sha256'],
+            smoke_test_site.data_payload_checksum(payloads),
+        )
+
+        corrupt = dict(payloads)
+        manifest = json.loads(corrupt['manifest.json'])
+        manifest['article_count'] += 1
+        corrupt['manifest.json'] = (
+            json.dumps(manifest, ensure_ascii=False, indent=2) + '\n'
+        ).encode('utf-8')
+        with self.assertRaisesRegex(ValueError, 'article_count'):
+            smoke_test_site.validate_live_data_bundle(
+                corrupt, content_count, CHECKSUM,
+            )
+
+    def test_share_proof_selects_and_hashes_content_and_registry_pairs(self):
+        payloads, articles = fixture_share_payloads()
+        selected = smoke_test_site.representative_share_articles(articles)
+        self.assertNotEqual(selected[0]['content_status'], 'registry')
+        self.assertEqual(selected[1]['content_status'], 'registry')
+        self.assertEqual(
+            set(payloads), set(smoke_test_site.share_proof_asset_names(articles)),
+        )
+        expected = smoke_test_site.share_proof_payload_checksum(payloads, articles)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name, payload in payloads.items():
+                path = root / name
+                path.parent.mkdir(exist_ok=True)
+                path.write_bytes(payload)
+            catalogue = root / 'articles.json'
+            catalogue.write_text(json.dumps(articles), encoding='utf-8')
+            self.assertEqual(
+                smoke_test_site.share_proof_bundle_checksum(root, catalogue),
+                expected,
+            )
+
+        corrupt = dict(payloads)
+        first_name = smoke_test_site.share_proof_asset_names(articles)[0]
+        corrupt[first_name] += b'changed'
+        self.assertNotEqual(
+            smoke_test_site.share_proof_payload_checksum(corrupt, articles),
+            expected,
+        )
+
+    def test_share_asset_urls_are_nested_encoded_and_allowlisted(self):
+        _payloads, articles = fixture_share_payloads()
+        asset_name = smoke_test_site.share_proof_asset_names(articles)[0]
+        self.assertEqual(
+            smoke_test_site.share_asset_url(
+                'https://example.test/research/index.html?old=1',
+                asset_name,
+                articles,
+            ),
+            f'https://example.test/research/{asset_name}',
+        )
+        with self.assertRaisesRegex(ValueError, 'unsupported share-proof asset'):
+            smoke_test_site.share_asset_url(
+                'https://example.test/research/', '../index.html', articles,
+            )
+
+    def test_share_proof_validates_exact_png_stub_and_redirect_contracts(self):
+        page_url = 'https://example.test/research/'
+        payloads, articles = fixture_share_payloads(page_url)
+        summary = smoke_test_site.validate_share_proof(
+            payloads, articles, page_url,
+        )
+        self.assertEqual(summary['article_count'], 2)
+        self.assertEqual(summary['asset_count'], 4)
+
+        first_card = smoke_test_site.share_proof_asset_names(articles)[0]
+        invalid_card = dict(payloads)
+        invalid_card[first_card] = b'not-a-png'
+        with self.assertRaisesRegex(ValueError, '1200x630 indexed PNG'):
+            smoke_test_site.validate_share_proof(
+                invalid_card, articles, page_url,
+            )
+
+        registry = smoke_test_site.representative_share_articles(articles)[1]
+        registry_stub = f'a/{registry["slug"]}.html'
+        invalid_stub = dict(payloads)
+        invalid_stub[registry_stub] = invalid_stub[registry_stub].replace(
+            registry['url'].encode('utf-8'), b'https://attacker.test/',
+        )
+        with self.assertRaisesRegex(ValueError, 'trusted build bytes'):
+            smoke_test_site.validate_share_proof(
+                invalid_stub, articles, page_url,
+            )
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_share_proof_fetches_both_exact_pairs_with_strict_types(
+        self, urlopen, ssl_context,
+    ):
+        page_url = 'https://example.test/research/'
+        payloads, articles = fixture_share_payloads(page_url)
+
+        def response_for_request(request, **_kwargs):
+            path = urlsplit(request.full_url).path
+            asset_name = path.split('/research/', 1)[1]
+            response = MagicMock()
+            response.__enter__.return_value = response
+            response.geturl.return_value = request.full_url.split('?', 1)[0]
+            response.status = 200
+            response.headers.get_content_type.return_value = (
+                'image/png' if asset_name.endswith('.png') else 'text/html'
+            )
+            response.read.return_value = payloads[asset_name]
+            return response
+
+        urlopen.side_effect = response_for_request
+        self.assertEqual(
+            smoke_test_site.fetch_share_proof(
+                page_url, articles, REVISION, 4, 20,
+            ),
+            payloads,
+        )
+        self.assertEqual(urlopen.call_count, 4)
+        self.assertEqual(ssl_context.call_count, 4)
 
     @patch('smoke_test_site.verified_ssl_context')
     @patch('smoke_test_site.urlopen')
@@ -486,6 +780,150 @@ class SmokeTestSiteTests(unittest.TestCase):
         fetch_support.assert_called_once_with(
             'https://example.test/research/', REVISION, 1, 20.0,
         )
+
+    def test_smoke_requires_exact_live_data_bundle_when_supplied(self):
+        payloads, content_count = fixture_data_payloads()
+        expected_digest = smoke_test_site.data_payload_checksum(payloads)
+        with (
+            patch(
+                'smoke_test_site.fetch_html',
+                return_value=(
+                    fixture_html(articles=str(content_count)),
+                    'https://example.test/research/',
+                ),
+            ),
+            patch(
+                'smoke_test_site.fetch_deferred_briefs',
+                return_value=fixture_deferred(),
+            ),
+            patch(
+                'smoke_test_site.fetch_deferred_observations',
+                return_value=fixture_observations(),
+            ),
+            patch('smoke_test_site.fetch_data_bundle', return_value=payloads) as fetch_data,
+            patch('smoke_test_site.validate_live_data_bundle') as validate_data,
+            redirect_stdout(io.StringIO()),
+            redirect_stderr(io.StringIO()),
+        ):
+            smoke_test_site.smoke_test(
+                'https://example.test/research/',
+                REVISION,
+                content_count,
+                1327,
+                CHECKSUM,
+                HTML_DIGEST,
+                BRIEF_DIGEST,
+                OBSERVATION_DIGEST,
+                retries=1,
+                expected_data_sha256=expected_digest,
+            )
+        fetch_data.assert_called_once_with(
+            'https://example.test/research/', REVISION, 1, 20.0,
+        )
+        validate_data.assert_called_once_with(payloads, content_count, CHECKSUM)
+
+        with (
+            patch(
+                'smoke_test_site.fetch_html',
+                return_value=(
+                    fixture_html(articles=str(content_count)),
+                    'https://example.test/research/',
+                ),
+            ),
+            patch(
+                'smoke_test_site.fetch_deferred_briefs',
+                return_value=fixture_deferred(),
+            ),
+            patch(
+                'smoke_test_site.fetch_deferred_observations',
+                return_value=fixture_observations(),
+            ),
+            patch('smoke_test_site.fetch_data_bundle', return_value=payloads),
+            redirect_stdout(io.StringIO()),
+            redirect_stderr(io.StringIO()),
+        ):
+            with self.assertRaisesRegex(ValueError, 'data endpoint bundle SHA-256'):
+                smoke_test_site.smoke_test(
+                    'https://example.test/research/',
+                    REVISION,
+                    content_count,
+                    1327,
+                    CHECKSUM,
+                    HTML_DIGEST,
+                    BRIEF_DIGEST,
+                    OBSERVATION_DIGEST,
+                    retries=1,
+                    expected_data_sha256=DATA_DIGEST,
+                )
+
+    def test_smoke_requires_exact_semantic_share_proof_when_supplied(self):
+        data_payloads, content_count = fixture_data_payloads()
+        articles = json.loads(data_payloads['articles_index.json'])
+        share_payloads, _ = fixture_share_payloads()
+        data_digest = smoke_test_site.data_payload_checksum(data_payloads)
+        share_digest = smoke_test_site.share_proof_payload_checksum(
+            share_payloads, articles,
+        )
+        with (
+            patch(
+                'smoke_test_site.fetch_html',
+                return_value=(
+                    fixture_html(articles=str(content_count)),
+                    'https://example.test/research/',
+                ),
+            ),
+            patch(
+                'smoke_test_site.fetch_deferred_briefs',
+                return_value=fixture_deferred(),
+            ),
+            patch(
+                'smoke_test_site.fetch_deferred_observations',
+                return_value=fixture_observations(),
+            ),
+            patch(
+                'smoke_test_site.fetch_data_bundle', return_value=data_payloads,
+            ),
+            patch(
+                'smoke_test_site.fetch_share_proof', return_value=share_payloads,
+            ) as fetch_share,
+            patch('smoke_test_site.validate_live_data_bundle'),
+            patch('smoke_test_site.validate_share_proof') as validate_share,
+            redirect_stdout(io.StringIO()),
+            redirect_stderr(io.StringIO()),
+        ):
+            smoke_test_site.smoke_test(
+                'https://example.test/research/',
+                REVISION,
+                content_count,
+                1327,
+                CHECKSUM,
+                HTML_DIGEST,
+                BRIEF_DIGEST,
+                OBSERVATION_DIGEST,
+                retries=1,
+                expected_data_sha256=data_digest,
+                expected_share_sha256=share_digest,
+            )
+        fetch_share.assert_called_once_with(
+            'https://example.test/research/', articles, REVISION, 1, 20.0,
+        )
+        validate_share.assert_called_once_with(
+            share_payloads, articles, 'https://example.test/research/',
+        )
+
+        with self.assertRaisesRegex(ValueError, 'requires the exact live data bundle'):
+            smoke_test_site.smoke_test(
+                'https://example.test/research/',
+                REVISION,
+                content_count,
+                1327,
+                CHECKSUM,
+                HTML_DIGEST,
+                BRIEF_DIGEST,
+                OBSERVATION_DIGEST,
+                retries=1,
+                expected_share_sha256=SHARE_DIGEST,
+            )
 
     @patch(
         'smoke_test_site.fetch_deferred_observations',

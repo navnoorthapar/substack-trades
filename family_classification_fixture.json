@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "examples": [
+    {"source": "substack", "slug": "optivers-35b-market-making-engine", "family": "firm-mechanics"},
+    {"source": "substack", "slug": "inside-da-vinci-tradings-multi-market", "family": "firm-mechanics"},
+    {"source": "substack", "slug": "how-de-shaw-generated-111-billion", "family": "firm-mechanics"},
+    {"source": "substack", "slug": "i-analyzed-40-hedge-fund-billionaires", "family": "career-structure"},
+    {"source": "substack", "slug": "how-millennium-citadel-and-point72", "family": "career-structure"},
+    {"source": "substack", "slug": "how-qrt-built-28b-through-centralized", "family": "career-structure"},
+    {"source": "substack", "slug": "black-scholes-delta-is-wrong-hull", "family": "model-critique"},
+    {"source": "substack", "slug": "hull-whites-mean-reversion-problem", "family": "model-critique"},
+    {"source": "substack", "slug": "how-barra-axioma-and-commercial-risk", "family": "model-critique"},
+    {"source": "substack", "slug": "eight-banks-paid-13b-for-silver-manipulation", "family": "scandal-enforcement"},
+    {"source": "substack", "slug": "a-nomura-trader-made-10284-spoofing", "family": "scandal-enforcement"},
+    {"source": "substack", "slug": "how-ecor1-capital-lost-10-million", "family": "scandal-enforcement"},
+    {"source": "substack", "slug": "iran-war-oil-shock-2928-hedge-fund", "family": "event-reaction"},
+    {"source": "substack", "slug": "indias-oil-war-market-crisis-30-day", "family": "event-reaction"},
+    {"source": "substack", "slug": "the-56-billion-unwind-how-trumps", "family": "event-reaction"},
+    {"source": "substack", "slug": "mica-locked-tethers-184-billion-stablecoin", "family": "market-structure"},
+    {"source": "substack", "slug": "how-hedge-funds-systematically-profit", "family": "market-structure"},
+    {"source": "substack", "slug": "how-major-hedge-funds-value-crypto", "family": "market-structure"},
+    {"source": "medium", "slug": "building-a-comprehensive-options-pricing-and-analysis-platform-for-quantitative-research-de56a8e52ff6", "family": "other"},
+    {"source": "medium", "slug": "equity-factor-model-development-d064d426bbca", "family": "other"}
+  ]
+}
