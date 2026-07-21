@@ -1855,7 +1855,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
     --serif:"Iowan Old Style",IowanOldStyle,Baskerville,Georgia,"Times New Roman",Times,serif!important
   }
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#111!important}
-  .app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar,.active-filters,.context-bar,.inspector,
+  .skip-link,.app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar,.active-filters,.context-bar,.inspector,
   .drawer-backdrop,.intel-head,.ic-compact-nav,.ic-archive-grid,.intel-stream,.intel-actions,.ic-sheet-local,.ic-sheet-actions,.toast,.persistent-notice,.storage-alert{display:none!important}
   .workspace,.main-panel,.briefing-shell{display:block!important;height:auto!important;overflow:visible!important;background:#fff!important}
   .briefing-shell{padding:0!important}

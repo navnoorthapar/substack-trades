@@ -325,7 +325,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertLess(branch_gate_at, clean_gate_at)
         self.assertLess(clean_gate_at, pull_at)
 
-    def test_refresh_rolls_back_promoted_snapshot_before_any_git_staging(self):
+    def test_refresh_rolls_back_until_commit_then_retries_push_without_rollback(self):
         for required in (
             'DIRECTION_CACHE_CANDIDATE="$WORK_DIR/direction-cache.candidate.json"',
             'cp -p "$ROOT/.direction_cache.json" "$DIRECTION_CACHE_CANDIDATE"',
@@ -340,6 +340,8 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'if [ "$PROMOTION_ACTIVE" -eq 1 ]',
             'if ! "$PYTHON" -m unittest -q; then',
             'Regression suite failed; restoring the previous local snapshot.',
+            'GIT_PUBLICATION_ACTIVE=1',
+            'git reset --quiet HEAD --',
             'mv "$previous" "$ROOT/$output"',
             'rm -f "$ROOT/$output"',
         ):
@@ -352,15 +354,18 @@ class DeploymentConfigurationTests(unittest.TestCase):
         backup_at = self.refresh.index('PROMOTED_OUTPUTS=(', validate_at)
         promote_at = self.refresh.index('PROMOTION_ACTIVE=1', backup_at)
         regression_at = self.refresh.index('if ! "$PYTHON" -m unittest -q; then')
-        accepted_at = self.refresh.index('PROMOTION_ACTIVE=0', regression_at)
         git_stage_at = self.refresh.index('git add -- "${TRACKED_OUTPUTS[@]}"')
+        git_commit_at = self.refresh.index('git commit --only', git_stage_at)
+        accepted_at = self.refresh.index('PROMOTION_ACTIVE=0', git_commit_at)
+        push_at = self.refresh.index('git push origin main', accepted_at)
         self.assertLess(cache_candidate_at, validate_at)
         self.assertLess(validate_at, backup_at)
         self.assertLess(backup_at, promote_at)
         self.assertLess(promote_at, regression_at)
-        self.assertLess(regression_at, accepted_at)
-        self.assertLess(accepted_at, git_stage_at)
         self.assertLess(regression_at, git_stage_at)
+        self.assertLess(git_stage_at, git_commit_at)
+        self.assertLess(git_commit_at, accepted_at)
+        self.assertLess(accepted_at, push_at)
 
     def test_transaction_backups_are_removed_by_cleanup(self):
         cleanup = self.refresh.split('cleanup() {', 1)[1].split('\n}', 1)[0]

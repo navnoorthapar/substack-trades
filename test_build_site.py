@@ -1407,7 +1407,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         print_end = self.html.index('@media(prefers-reduced-motion', print_start)
         print_css = self.html[print_start:print_end]
         for selector in (
-            '.app-header', '.kpi-strip', '.filter-rail', '.command-bar',
+            '.skip-link', '.app-header', '.kpi-strip', '.filter-rail', '.command-bar',
             '.active-filters', '.context-bar', '.inspector', '.drawer-backdrop',
         ):
             self.assertIn(selector, print_css)

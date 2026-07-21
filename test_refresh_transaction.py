@@ -44,6 +44,9 @@ with open(os.environ['FAKE_PYTHON_LOG'], 'a', encoding='utf-8') as handle:
 arguments = sys.argv[1:]
 if arguments[:3] == ['-m', 'unittest', '-q']:
     raise SystemExit(42 if os.environ.get('FAKE_FAILURE') == 'regression' else 0)
+if arguments[:1] == ['-c']:
+    print('1')
+    raise SystemExit(0)
 if not arguments:
     raise SystemExit(90)
 
@@ -93,9 +96,24 @@ if [ "${1:-}" = "pull" ]; then
     exit 0
 fi
 if [ "${1:-}" = "add" ]; then
+    if [ "${FAKE_FAILURE:-}" = "git-add" ]; then
+        exit 70
+    fi
     exit 0
 fi
 if [ "${1:-}" = "diff" ]; then
+    if [ "${FAKE_FAILURE:-}" = "git-commit" ]; then
+        exit 1
+    fi
+    exit 0
+fi
+if [ "${1:-}" = "commit" ]; then
+    if [ "${FAKE_FAILURE:-}" = "git-commit" ]; then
+        exit 71
+    fi
+    exit 0
+fi
+if [ "${1:-}" = "reset" ]; then
     exit 0
 fi
 if [ "${1:-}" = "push" ]; then
@@ -205,6 +223,27 @@ class RefreshTransactionTests(unittest.TestCase):
         path = self.base / 'git.log'
         return path.read_text(encoding='utf-8') if path.exists() else ''
 
+    def assert_retry_publishes_from_a_clean_restored_state(self, failure, code):
+        failed = self.run_refresh(failure)
+        self.assertEqual(failed.returncode, code, failed.stdout + failed.stderr)
+        self.assertIn(
+            'restoring the previous local snapshot',
+            failed.stderr,
+        )
+        self.assertIn('\nreset --quiet HEAD -- ', '\n' + self.git_log())
+        self.assertNotIn('\npush ', '\n' + self.git_log())
+        self.assert_previous_state_is_exact_and_temporary_state_is_gone()
+
+        retry = self.run_refresh('')
+        self.assertEqual(retry.returncode, 0, retry.stdout + retry.stderr)
+        self.assertIn('\npush origin main', '\n' + self.git_log())
+        self.assertTrue(
+            any((self.repo / name).read_bytes() != self.before[name] for name in PROMOTED_OUTPUTS),
+            'the successful retry did not retain its validated candidate',
+        )
+        self.assertEqual(list(self.tmp.glob('substack-trades-refresh.*')), [])
+        self.assertFalse((self.tmp / 'com.navnoor.substacktrades.lock').exists())
+
     def test_validation_failure_never_promotes_candidate_cache_or_snapshot(self):
         result = self.run_refresh('validation')
         self.assertEqual(result.returncode, 41, result.stdout + result.stderr)
@@ -229,6 +268,12 @@ class RefreshTransactionTests(unittest.TestCase):
         self.assertIn('restoring the previous local snapshot', result.stderr)
         self.assertNotIn('\nadd ', '\n' + self.git_log())
         self.assert_previous_state_is_exact_and_temporary_state_is_gone()
+
+    def test_git_add_failure_restores_clean_state_and_next_run_retries(self):
+        self.assert_retry_publishes_from_a_clean_restored_state('git-add', 70)
+
+    def test_git_commit_failure_restores_clean_state_and_next_run_retries(self):
+        self.assert_retry_publishes_from_a_clean_restored_state('git-commit', 71)
 
 
 if __name__ == '__main__':

@@ -14,6 +14,7 @@ LOCK_DIR="${TMPDIR:-/tmp}/com.navnoor.substacktrades.lock"
 LOCK_OWNED=0
 WORK_DIR=""
 PROMOTION_ACTIVE=0
+GIT_PUBLICATION_ACTIVE=0
 PROMOTED_OUTPUTS=()
 
 if [ -n "${PYTHON_BIN:-}" ]; then
@@ -78,9 +79,16 @@ on_error() {
     exit_code=$?
     trap - ERR
     if [ "$PROMOTION_ACTIVE" -eq 1 ]; then
-        echo "Refresh failed during candidate promotion; restoring the previous local snapshot." >&2
+        echo "Refresh failed before the validated snapshot was committed; restoring the previous local snapshot." >&2
         if ! restore_promoted_outputs; then
             echo "Refresh rollback was incomplete; manual recovery is required before another run." >&2
+        fi
+        if [ "$GIT_PUBLICATION_ACTIVE" -eq 1 ]; then
+            if ! git reset --quiet HEAD -- \
+                articles_index.json medium_posts.json trades_extracted.json \
+                snapshot_manifest.json .direction_cache.json; then
+                echo "Could not clear the failed publication staging state; manual recovery is required." >&2
+            fi
         fi
     fi
     echo "Refresh failed at line $1 (exit $exit_code). Previous published data was preserved." >&2
@@ -268,15 +276,15 @@ if ! "$PYTHON" -m unittest -q; then
     fi
     exit 1
 fi
-# From this point forward the promoted snapshot and cache have passed the full
-# local gate. Git staging/commit/push failures must retain that validated state
-# so the next run can retry publication instead of rolling back accepted data.
-PROMOTION_ACTIVE=0
-
 TRACKED_OUTPUTS=(articles_index.json medium_posts.json trades_extracted.json snapshot_manifest.json)
 if [ -f .direction_cache.json ]; then
     TRACKED_OUTPUTS+=(.direction_cache.json)
 fi
+# Keep rollback armed through staging and the local commit. If either operation
+# fails, the error trap restores and unstages the old snapshot so the next
+# scheduled run starts clean. Once a commit exists, the worktree is clean and a
+# push failure is safely retried by the next run.
+GIT_PUBLICATION_ACTIVE=1
 git add -- "${TRACKED_OUTPUTS[@]}"
 
 if git diff --staged --quiet -- "${TRACKED_OUTPUTS[@]}"; then
@@ -290,6 +298,8 @@ else
         -m "update: ${ARTICLE_COUNT} articles, ${TRADE_COUNT} trades ($(date -u '+%Y-%m-%d'))" \
         -- "${TRACKED_OUTPUTS[@]}"
 fi
+GIT_PUBLICATION_ACTIVE=0
+PROMOTION_ACTIVE=0
 
 # Always push, even when this run produced no diff. This retries a commit left
 # ahead of origin by a previous network failure.
