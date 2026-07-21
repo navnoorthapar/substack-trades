@@ -28,16 +28,21 @@ python3 validate_pipeline.py \
   --manifest snapshot_manifest.json
 ruff check *.py
 mypy --cache-dir "${TMPDIR:-/tmp}/nrt-mypy-cache"
+python3 -m py_compile *.py
+for file in *.sh; do bash -n "$file"; done
+plutil -lint launchd/com.navnoor.substacktrades.plist
 PREVIEW_DIR="$(mktemp -d)/site"
 SITE_OUTPUT_DIR="$PREVIEW_DIR" SITE_REVISION="$(git rev-parse HEAD)" python3 build_site.py
 python3 validate_inline_scripts.py "$PREVIEW_DIR/index.html"
+git diff --check
 ./automation_status.sh
 gh auth status
 ```
 
-Confirm the test suite, tracked data manifest, lint, type check, inline
-JavaScript compilation, updater, snapshot freshness, and GitHub authentication
-all pass. On the scheduled Mac, repeat data validation with
+Confirm the test suite, tracked data manifest, lint, type check, Python/shell/
+plist syntax, inline JavaScript compilation, updater, snapshot freshness, clean
+diff, and GitHub authentication all pass. On the scheduled Mac, repeat data
+validation with
 `--posts all_sources_posts.json` to bind the release to the ignored full-source
 cache. Confirm the generated artifact contains exactly `index.html`, both
 deferred JSON assets, `robots.txt`, `sitemap.xml`, `site.webmanifest`,
