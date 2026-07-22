@@ -1,5 +1,53 @@
 [
   {
+    "article_title": "Susquehanna, Citadel's $137M Insider-Trading Suit Won't Make Them Whole",
+    "article_url": "https://navnoorbawa.substack.com/p/susquehanna-citadels-137m-insider",
+    "article_date": "2026-07-21",
+    "trade_description": "The mechanic behind that loss is ordinary options math, not anything exotic: Susquehanna and Citadel, as market makers, sold puts and collected the premium upfront, pricing the flow as if it were routine; when FUTU and TIGR gapped down more than 30% on news they didn’t see coming, they owed the buyers the difference between the strike price and the crashed price on every contract — a payout due the moment the options settled in the money, regardless of who eventually turns out to have been on the other side of the trade. Susquehanna’s own exposure: it says it was the seller on contracts where buyers paid $6.7 million in premium and made approximately $71.4 million in profit — hence the $71.4 million floor on the damages it’s seeking (complaint; Bloomberg). The firm won a court order on",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$6.7 million, $71.4 million, 30%",
+    "outcome_if_mentioned": "made approximately $71.4 million in profit — hence the $71.",
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": true
+  },
+  {
+    "article_title": "Susquehanna, Citadel's $137M Insider-Trading Suit Won't Make Them Whole",
+    "article_url": "https://navnoorbawa.substack.com/p/susquehanna-citadels-137m-insider",
+    "article_date": "2026-07-21",
+    "trade_description": "Susquehanna was not the only counterparty. On July 2, Citadel Securities filed a motion to join the suit, saying it was “the victim of a brazen insider trader scheme” on the same FUTU and TIGR options and had lost about $28 million as counterparty to trades it, too, did not know were informed (Claims Journal/Bloomberg). Citadel’s own filing puts the total scheme profit at roughly $137 million (Finance Magnates, independently corroborating Claims Journal/Bloomberg) — higher than Susquehanna’s “$100 million-plus” estimate, a discrepancy the two firms’ pleadings don’t reconcile and that is itself a data point: even the two market makers who were on the losing side of most of the flow don’t agree on the size of what hit them, which says something about how fragmented the visibility into this",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "counterparty to trades it, too, did not know were informed (Claims Journal/Bloomberg).",
+    "any_quant_detail": "$28 million, $137 million, $100 million",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": true
+  },
+  {
+    "article_title": "Susquehanna, Citadel's $137M Insider-Trading Suit Won't Make Them Whole",
+    "article_url": "https://navnoorbawa.substack.com/p/susquehanna-citadels-137m-insider",
+    "article_date": "2026-07-21",
+    "trade_description": "Every account of this story so far — the wire reports, the aggregators, the trade press — converges on the same frame: unidentified, sophisticated traders exploited leaked Chinese regulatory information for an extraordinary payoff; Susquehanna is suing to unmask them and recover its loss; the SEC and DOJ are now investigating; justice, in some form, is likely to follow. That’s a reasonable summary of the public record, and nothing in it is wrong. It’s also not the part of the story that matters most to anyone who prices risk in these names, because it treats the lawsuit as a recovery mechanism when the statute it’s built on was written to make sure it mostly isn’t one — and it treats the surveillance apparatus that exists around U.S. options markets as more real-time than it actually is.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "more real-time than it actually is.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
     "article_title": "Optiver Wrote the 'Neutral' Fix for European Markets. Three of Its Five Ideas Would Also Enrich Optiver.",
     "article_url": "https://navnoorbawa.substack.com/p/optiver-wrote-the-neutral-fix-for",
     "article_date": "2026-07-11",

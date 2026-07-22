@@ -1,5 +1,55 @@
 [
   {
+    "source": "substack",
+    "source_id": "susquehanna-citadels-137m-insider",
+    "slug": "susquehanna-citadels-137m-insider",
+    "title": "Susquehanna, Citadel's $137M Insider-Trading Suit Won't Make Them Whole",
+    "subtitle": "The statute they sued under caps and offsets private recovery, the defendants likely sit outside U.S. judgment enforcement, and six weeks in, the case has gone quiet.",
+    "post_date": "2026-07-21T19:54:06.683Z",
+    "url": "https://navnoorbawa.substack.com/p/susquehanna-citadels-137m-insider",
+    "audience": "everyone",
+    "wordcount": 5363,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "53e680072a7563b9e31657e2db99f1dc1c58e3ec11538fd1d23e857d7d9c492f",
+      "lead": {
+        "text": "Susquehanna Securities says unidentified traders turned $12 million into more than $100 million by front-running a Chinese regulatory crackdown, and it filed a 100-defendant “John Doe” suit in Manhattan federal court to find out who they are. Citadel Securities has since asked to join that suit, saying it lost $28 million more on the same trades — and said so explicitly because Susquehanna’s recovery could shrink the pool left for its own. The consensus read — echoed across Bloomberg, Reuters, and the trade press — is that this is a blockbuster insider-trading bust that the SEC and DOJ will now run down.",
+        "start": 0,
+        "end": 611,
+        "sha256": "8cfe39705813022d4c6fce1f733fad547101cfc0dcbfebb12488a8fb21d8a631",
+        "truncated": true
+      },
+      "sections": [
+        {
+          "kind": "countercase",
+          "source_order": 38,
+          "heading": "The obvious objection",
+          "heading_start": 31250,
+          "heading_end": 31271,
+          "heading_sha256": "5e0b5d449a4adbefdcdbd96232bfa595fce2e2566a2f1d7d14bab86978e32fdc",
+          "text": "A sophisticated reader’s response to all this is predictable: the SEC and DOJ are already investigating, FINRA covers 100% of the market, and this is exactly the kind of egregious, coordinated pattern that regulatory infrastructure is built to catch and punish — so isn’t the pessimism about recovery overstated? Doesn’t “the system worked, just slower than we’d like” undercut the structural argument?",
+          "start": 31273,
+          "end": 31675,
+          "sha256": "42fef7a3aaf1603aa8c3e3f6d48b4b3084dc626ec1fed567753e2779b88006bd",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "Everything that follows about the trading itself comes from one source: Susquehanna’s own complaint, an adversarial pleading that hasn’t been tested in court and was written by the party claiming the loss. It should be read as Susquehanna’s account, not adjudicated fact — though the underlying numbers (trade counts, strikes, expirations, broker names) are the kind of granular, falsifiable detail a firm would risk sanctions for fabricating, and no defendant has yet appeared to contest them. Susquehanna’s complaint — filed June 29 in the Southern District of New York as Susquehanna Securities, LLC v.",
+        "start": 2663,
+        "end": 3268,
+        "sha256": "c261d77bd4c2465c02f5c0ed8d84d565b842cdbb283ffae6f66cf25d05e0bd33",
+        "truncated": true
+      },
+      "checkpoints": []
+    },
+    "family": "scandal-enforcement",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/susquehanna-citadels-137m-insider-trading-suit-won-t-make-them-whole-bb1d94ba503a"
+    }
+  },
+  {
     "source": "patreon",
     "source_id": "164428294",
     "slug": "section-20a-caps-164428294",
