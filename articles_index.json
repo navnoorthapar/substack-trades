@@ -1,5 +1,38 @@
 [
   {
+    "source": "medium",
+    "source_id": "0e2d7c02dca8",
+    "slug": "how-blackrock-msci-and-goldman-sachs-kept-markowitzs-error-maximizer-alive-0e2d7c02dca8",
+    "title": "How BlackRock, MSCI, and Goldman Sachs Kept Markowitz’s “Error Maximizer” Alive",
+    "subtitle": "The claim: Institutional portfolio construction never abandoned mean-variance optimization: it industrialized a fix for the input that made it an “error maximizer,” and that fix is now a proprietary-data moat smaller funds cannot close, not a technique anyone can copy.\nThe numbers: MSCI’s Barra optimizer, an explicit mean-variance, efficient-frontier engine, sits inside a duopoly with BlackRock’s Aladdin, whose third-party clients alone carried $21.6 trillion on the platform as of 2020 Financial Times reporting; BlackRock’s own book has since grown to $15.3 trillion (Q2 2026), with Aladdin’s technology-licensing revenue still up 13% year over year. Errors in expected-return inputs are roughly 11x as damaging to a mean-variance portfolio as errors in variances, and variances themselves roughly 2x as damaging as errors in covariances (Chopra & Ziemba, 1993), a chain that puts expected-return errors at roughly 88% of total estimation-error damage.\nThe catalyst: BlackRock’s July 15, 2026 earnings show Aladdin’s technology-services revenue still compounding at double digits, even as investment content keeps repeating that Markowitz-style optimization was replaced by risk parity and machine learning years ago.\nWrong if: the dominant institutional risk platforms turn out not to run mean-variance optimizers at their core, or a cheap, public…",
+    "post_date": "2026-07-22T21:51:23.522Z",
+    "url": "https://medium.com/@navnoorbawa/how-blackrock-msci-and-goldman-sachs-kept-markowitzs-error-maximizer-alive-0e2d7c02dca8",
+    "audience": "locked",
+    "wordcount": 227,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "ae79efaa500428aa681bb2df510932d5f462b9c43834a5d7461ac30be9e44ae0",
+      "lead": {
+        "text": "The claim: Institutional portfolio construction never abandoned mean-variance optimization: it industrialized a fix for the input that made it an “error maximizer,” and that fix is now a proprietary-data moat smaller funds cannot close, not a technique anyone can copy.",
+        "start": 81,
+        "end": 350,
+        "sha256": "7ab4bc627b9f6b7320f01d60792580d26a804889c4c2af70f001a60a08e316e3",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": {
+        "text": "The numbers: MSCI’s Barra optimizer, an explicit mean-variance, efficient-frontier engine, sits inside a duopoly with BlackRock’s Aladdin, whose third-party clients alone carried $21.6 trillion on the platform as of 2020 Financial Times reporting; BlackRock’s own book has since grown to $15.3 trillion (Q2 2026), with Aladdin’s technology-licensing revenue still up 13% year over year.",
+        "start": 351,
+        "end": 737,
+        "sha256": "37ed2ff06358b7e6318c5f5982ab8d495cf385864cf9e8a0d68ce16eb644e0eb",
+        "truncated": true
+      },
+      "checkpoints": []
+    },
+    "family": "other"
+  },
+  {
     "source": "substack",
     "source_id": "susquehanna-citadels-137m-insider",
     "slug": "susquehanna-citadels-137m-insider",
