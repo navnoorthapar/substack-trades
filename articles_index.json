@@ -3140,7 +3140,7 @@
     "content_status": "full",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "7101e28ace21ab55b440a5238b688b5774b590823f4690879076add6b45f869e",
+      "body_sha256": "f50927509cb82188991b3ad2b97146553c3bc3e25181c80231a23189e86e67ae",
       "lead": {
         "text": "Covering directional currency attacks, carry trades, basis arbitrage, fixing window exploitation, calendar spreads, and NDF price discovery — with CFTC enforcement orders, central bank speeches, BIS and IMF research, and fund manager interviews.",
         "start": 111,
