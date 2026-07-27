@@ -315,7 +315,9 @@ jobs:
           }
           expected_owner_by_id = {}
           for article in generated_articles:
-              idea_ids = article.get('idea_ids')
+              # The compact client wire format intentionally omits empty lists.
+              # A present value must still fail closed unless it is a list.
+              idea_ids = article.get('idea_ids', [])
               if not isinstance(idea_ids, list):
                   raise SystemExit('Generated article observation references are invalid.')
               for idea_id in idea_ids:

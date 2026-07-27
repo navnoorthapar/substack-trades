@@ -210,6 +210,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
             "if article.get('content_status') != 'registry'",
             'len(content_articles)',
             'len(generated_articles) != len(content_articles)',
+            "idea_ids = article.get('idea_ids', [])",
             "deferred.get('schema_version') != 1",
             "deferred.get('data_checksum') != expected_checksum",
             "not isinstance(deferred.get('briefs'), dict)",
