@@ -55,10 +55,49 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         ]
         cls.source_ideas = json.loads((ROOT / 'trades_extracted.json').read_text(encoding='utf-8'))
         article_match = re.search(r'const ARTICLES = (.*?);\n', cls.html)
+        threads_match = re.search(r'const THREADS = (.*?);\n', cls.html)
         snapshot_match = re.search(r'const SNAPSHOT = (.*?);\n', cls.html)
-        if not article_match or not snapshot_match:
+        if not article_match or not threads_match or not snapshot_match:
             raise AssertionError('generated client payload is missing')
-        cls.articles = json.loads(article_match.group(1))
+        cls.article_payload = json.loads(article_match.group(1))
+        cls.articles = []
+        for wire_article in cls.article_payload:
+            article = dict(wire_article)
+            published_at = str(article['published_at'])
+            wordcount = int(article.get('wordcount') or 0)
+            brief_code = article.pop('_b', [0, 0])
+            coverage_mask = int(article.pop('_q', 0))
+            brief_mask = int(brief_code[0])
+            article.update({
+                'date': published_at[:10],
+                'publication_precision': (
+                    'day' if len(published_at) == 10 else 'instant'
+                ),
+                'read_minutes': max(1, round(wordcount / 220)) if wordcount else 0,
+                'alternate_urls': article.get('alternate_urls') or {},
+                'brief': article.get('brief'),
+                'idea_ids': article.get('idea_ids') or [],
+                'directions': article.get('directions') or [],
+                'instruments': article.get('instruments') or [],
+                'underlyings': article.get('underlyings') or [],
+                'managers': article.get('managers') or [],
+                'manager_keys': article.get('manager_keys') or [],
+                'brief_features': {
+                    'lead': bool(brief_mask & 1),
+                    'evidence': bool(brief_mask & 2),
+                    'countercase': bool(brief_mask & 4),
+                    'falsifier': bool(brief_mask & 8),
+                    'implementation': bool(brief_mask & 16),
+                    'mechanism': bool(brief_mask & 32),
+                    'checkpoint_count': int(brief_code[1]),
+                },
+                'has_quant': bool(coverage_mask & 1),
+                'has_thesis': bool(coverage_mask & 2),
+                'has_outcome': bool(coverage_mask & 4),
+            })
+            article['trade_count'] = len(article['idea_ids'])
+            cls.articles.append(article)
+        cls.threads = json.loads(threads_match.group(1))
         cls.ideas = cls.observation_archive['observations']
         cls.snapshot = json.loads(snapshot_match.group(1))
 
@@ -429,6 +468,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('researchMapMarkup(selected)', briefing)
         self.assertIn('evidenceLedgerMarkup(selected)', briefing)
         self.assertIn('evidenceSpotlightMarkup(selected)', briefing)
+        self.assertIn('researchThreadMarkup(selected)', briefing)
         self.assertIn("analysisPanelMarkup(mechanismRow,'Mechanism'", briefing)
         self.assertIn("decisionSheetSectionMarkup(countercaseRow,'Author’s countercase')", briefing)
         self.assertIn('briefRailMarkup(lenses)', briefing)
@@ -446,7 +486,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_editorial_brief_uses_article_evidence_without_inventing_analysis(self):
         spotlight_start = self.html.index('function evidenceSpotlightMarkup(article)')
-        spotlight_end = self.html.index('\nfunction analysisPanelMarkup', spotlight_start)
+        spotlight_end = self.html.index('\nconst THREAD_ROLE_DEFINITIONS', spotlight_start)
         spotlight = self.html[spotlight_start:spotlight_end]
         for text in (
             'articleEvidenceLedger(article)',
@@ -472,6 +512,123 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertNotIn('const localPackets = observationsReady ?', briefing)
         self.assertNotIn('Analyst synthesis', briefing)
         self.assertNotIn('Evidence quality', briefing)
+
+    def test_research_threads_preserve_exact_source_chronology_and_membership(self):
+        source_by_url = {
+            str(article['url']).rstrip('/'): article
+            for article in self.source_content_articles
+        }
+        article_by_id = {article['id']: article for article in self.articles}
+        search = json.loads(
+            (self.site_dir / 'data' / 'search_index.json').read_text(
+                encoding='utf-8',
+            ),
+        )
+        entities_by_url = {
+            str(row['url']).rstrip('/'): set(row['entities'])
+            for row in search['articles']
+        }
+
+        for article in self.articles:
+            source = source_by_url[article['url'].rstrip('/')]
+            self.assertEqual(article['published_at'], source['post_date'])
+            self.assertEqual(
+                article['publication_precision'],
+                'day' if len(source['post_date']) == 10 else 'instant',
+            )
+
+        self.assertEqual(self.threads['schema_version'], 1)
+        self.assertEqual(self.threads['topic_count'], len(self.threads['topics']))
+        self.assertEqual(
+            self.threads['article_count'],
+            len(self.threads['defaults']),
+        )
+        self.assertGreaterEqual(self.threads['topic_count'], 50)
+        self.assertGreaterEqual(self.threads['article_count'], 250)
+        self.assertLess(
+            len(json.dumps(
+                self.threads,
+                ensure_ascii=False,
+                separators=(',', ':'),
+            ).encode('utf-8')),
+            150_000,
+        )
+
+        for key, topic in self.threads['topics'].items():
+            self.assertGreaterEqual(topic['article_count'], 2)
+            self.assertEqual(topic['article_count'], len(topic['article_ids']))
+            self.assertEqual(len(topic['match_codes']), len(topic['article_ids']))
+            self.assertTrue(all(topic['match_codes']))
+            values = [
+                article_by_id[article_id]['published_at']
+                for article_id in topic['article_ids']
+            ]
+            self.assertEqual(values, sorted(values))
+            for article_id in topic['article_ids']:
+                article = article_by_id[article_id]
+                self.assertIn(key, entities_by_url[article['url'].rstrip('/')])
+                default_topic = self.threads['defaults'][article_id]
+                self.assertIn(
+                    article_id,
+                    self.threads['topics'][default_topic]['article_ids'],
+                )
+
+    def test_research_threads_are_bounded_accessible_and_evidence_safe(self):
+        start = self.html.index('const THREAD_ROLE_DEFINITIONS')
+        end = self.html.index('\nfunction analysisPanelMarkup', start)
+        markup = self.html[start:end]
+        for text in (
+            'Research history across related publications',
+            'Capture comparison with preceding indexed publication',
+            'threadWindow(topic.article_ids,article.id,7)',
+            'Exact prior passage is deferred',
+            'Load exact passage comparison',
+            'Opening-passage numeric tokens',
+            'Matched in: ',
+            'does not establish a changed view, contradiction, conviction, or portfolio action',
+            'they do not infer the author’s current position, consistency, conviction, accuracy, performance, or portfolio suitability',
+            'role="table"',
+            'aria-current="true"',
+            'datetime=',
+        ):
+            self.assertIn(text, markup)
+        self.assertNotIn('ensureArticleBrief(', markup)
+        self.assertNotIn('documentation_score', markup)
+        self.assertNotIn('expected return', markup)
+        self.assertIn('const attachedTopics = row.topics.slice();', markup)
+        self.assertNotIn('row.topics.slice(0,6)', markup)
+
+        update_hash_start = self.html.index('function updateHash(includeQuery)')
+        update_hash_end = self.html.index('\nlet queryCacheKey', update_hash_start)
+        update_hash = self.html[update_hash_start:update_hash_end]
+        self.assertIn("threadRow.topics.includes(state.threadTopic)", update_hash)
+        self.assertIn("params.set('topic',state.threadTopic)", update_hash)
+        self.assertIn('const THREAD_ARTICLES = (function () {', self.html)
+
+        click_start = self.html.index("const threadTopic = event.target.closest('[data-thread-topic]')")
+        click_end = self.html.index("const briefLens = event.target.closest('[data-brief-lens]')", click_start)
+        click_handlers = self.html[click_start:click_end]
+        self.assertIn('row.topics.includes(threadTopic.dataset.threadTopic)', click_handlers)
+        self.assertIn('topic.article_ids.includes(threadArticle.dataset.threadArticle)', click_handlers)
+        self.assertIn('ensureArticleBrief(prior)', click_handlers)
+        self.assertIn('threadComparisonRequest !== request', click_handlers)
+        self.assertIn("state.view === 'briefing'", click_handlers)
+        self.assertIn("kind:'thread-comparison'", click_handlers)
+
+        mobile_start = self.html.rindex('@media(max-width:759px)')
+        mobile_end = self.html.index('@media(max-width:520px)', mobile_start)
+        mobile = self.html[mobile_start:mobile_end]
+        self.assertIn('.thread-topic{min-height:44px;font-size:12px}', mobile)
+        self.assertIn('.thread-load-boundary .secondary-action{width:100%;min-height:44px', mobile)
+        self.assertIn(
+            '.thread-role-row{grid-template-columns:minmax(105px,1fr) 60px 74px}',
+            mobile,
+        )
+        self.assertIn('.thread-kind,.thread-topic span,.thread-facts b', mobile)
+        self.assertIn(
+            '.thread-node{position:relative;min-width:0;padding-left:25px}',
+            self.html,
+        )
 
     def test_editorial_light_and_terminal_dark_system_is_light_first_and_responsive(self):
         for text in (
@@ -576,7 +733,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('.ic-rail{display:none}', self.html[narrow_start:narrow_end])
         self.assertIn('.ic-compact-nav{display:grid}', self.html[narrow_start:narrow_end])
         narrow_css = self.html[narrow_start:narrow_end]
-        self.assertIn('#brief-thesis,#brief-key-evidence,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:calc(var(--brief-compact-nav-h) + 7px)}', narrow_css)
+        self.assertIn('#brief-thesis,#brief-key-evidence,#brief-thread,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:calc(var(--brief-compact-nav-h) + 7px)}', narrow_css)
         self.assertIn('.intel-side.ic-sheet{', narrow_css)
         self.assertIn('top:var(--brief-compact-nav-h)', narrow_css)
         self.assertIn('height:calc(100dvh - var(--header-h) - var(--brief-compact-nav-h))', narrow_css)
@@ -633,7 +790,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             '--bg:#ffffff!important',
             '--surface-1:#ffffff!important',
             '--text:#28221f!important',
-            '.ic-sheet-local,.ic-sheet-actions,.toast,.persistent-notice,.storage-alert{display:none!important}',
+            '.thread-topic-list,.thread-load-boundary .secondary-action',
             '.intel-side.ic-sheet{',
             'display:block!important',
             'position:static!important',
@@ -646,6 +803,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             '.ic-evidence-strip{order:2}',
             '.ic-analysis{order:4}',
             '.ic-dossier{order:5}',
+            '.research-thread{order:6',
             '.screen-only{display:none!important}',
             '.print-only{display:inline!important}',
         ):
@@ -1725,6 +1883,49 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'a deep selection must not expand the render limit to the full result set',
         )
         self.assertNotRegex(self.html, r'state\.limit\s*=\s*Math\.ceil\s*\(')
+
+    def test_embedded_article_wire_payload_is_compact_and_losslessly_hydrated(self):
+        always_derived = {
+            'date',
+            'publication_precision',
+            'read_minutes',
+            'trade_count',
+            'brief_features',
+            'has_quant',
+            'has_thesis',
+            'has_outcome',
+        }
+        for wire_article in self.article_payload:
+            self.assertFalse(always_derived.intersection(wire_article))
+        compact_bytes = json.dumps(
+            self.article_payload,
+            ensure_ascii=False,
+            separators=(',', ':'),
+        ).encode('utf-8')
+        self.assertLess(
+            len(compact_bytes) / len(self.article_payload),
+            1_100,
+            'embedded article wire rows lost their compact growth headroom',
+        )
+
+        hydrate_start = self.html.index('function hydrateEmbeddedArticle(article)')
+        hydrate_end = self.html.index('\nconst THREADS =', hydrate_start)
+        hydrate = self.html[hydrate_start:hydrate_end]
+        for text in (
+            "article.date = publishedAt.slice(0,10)",
+            "article.publication_precision = /^\\d{4}-\\d{2}-\\d{2}$/.test",
+            'remainder === 110 && wholeMinutes % 2 === 1',
+            'article.trade_count = article.idea_ids.length',
+            'lead:Boolean(briefMask & 1)',
+            'evidence:Boolean(briefMask & 2)',
+            'has_quant = Boolean(coverageMask & 1)',
+            'has_thesis = Boolean(coverageMask & 2)',
+            'has_outcome = Boolean(coverageMask & 4)',
+            'delete article._b',
+            'delete article._q',
+            'ARTICLES.forEach(hydrateEmbeddedArticle)',
+        ):
+            self.assertIn(text, hydrate)
 
     def test_static_artifact_stays_inside_the_institutional_performance_budget(self):
         self.assertLessEqual(

@@ -31,6 +31,226 @@ def run_node(script):
 
 
 class ClientErrorRuntimeTests(unittest.TestCase):
+    def test_compact_article_payload_hydrates_exact_runtime_fields(self):
+        function = javascript_between(
+            'function hydrateEmbeddedArticle(article) {',
+            '\nconst THREADS =',
+        )
+        run_node(
+            r'''
+const ARTICLES = [
+  {
+    id:'instant',published_at:'2026-01-02T08:00:00Z',wordcount:550,
+    idea_ids:['i_1','i_2'],_b:[63,3],_q:5
+  },
+  {id:'day',published_at:'2026-01-03',wordcount:330}
+];
+'''
+            + function
+            + r'''
+const instant = ARTICLES[0];
+if (instant.date !== '2026-01-02' || instant.publication_precision !== 'instant') {
+  throw new Error('instant publication metadata was not restored');
+}
+if (instant.read_minutes !== 2 || instant.trade_count !== 2) {
+  throw new Error('Python-compatible read time or observation count changed');
+}
+if (!instant.brief_features.lead || !instant.brief_features.mechanism ||
+    instant.brief_features.checkpoint_count !== 3) {
+  throw new Error('brief feature mask was not restored');
+}
+if (!instant.has_quant || instant.has_thesis || !instant.has_outcome) {
+  throw new Error('coverage feature mask was not restored');
+}
+if ('_b' in instant || '_q' in instant) throw new Error('wire fields leaked into runtime state');
+
+const day = ARTICLES[1];
+if (day.date !== '2026-01-03' || day.publication_precision !== 'day' ||
+    day.read_minutes !== 2 || day.brief !== null ||
+    day.idea_ids.length || day.managers.length) {
+  throw new Error('omitted article defaults were not restored');
+}
+'''
+        )
+
+    def test_thread_hashes_accept_only_owned_topics_and_canonicalize_invalid_input(self):
+        functions = javascript_between(
+            'function hydrateFromHash() {',
+            '\nlet queryCacheKey',
+        )
+        run_node(
+            r'''
+const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100};
+const THREAD_ARTICLES = {
+  a_current:{topics:['vix','options'],default_topic:'vix'}
+};
+const MANAGERS = [];
+const VALID_SOURCES = new Set();
+const VALID_DIRECTIONS = new Set();
+const VALID_INSTRUMENTS = new Set();
+const VALID_QUALITY = new Set();
+const VALID_CONTENT = new Set();
+const VALID_QUEUE_STATUSES = new Set();
+const VALID_DOCUMENTATION = new Set(['all']);
+const VALID_BRIEF_LENSES = new Set(['all']);
+const storedDensity = 'compact';
+const setFromParam = () => new Set();
+const state = {
+  view:'briefing',query:'',sources:new Set(),directions:new Set(),
+  instruments:new Set(),managers:new Set(),quality:new Set(),content:new Set(),
+  queueStatuses:new Set(),documentation:'all',newOnly:false,range:'all',
+  coverage:'all',briefLens:'all',threadTopic:'',sort:'newest',
+  density:'compact',selected:'',limit:24
+};
+const historyCalls = [];
+globalThis.history = {
+  pushState(_state,_title,target) { historyCalls.push(['push',target]); },
+  replaceState(_state,_title,target) { historyCalls.push(['replace',target]); }
+};
+globalThis.location = {
+  hash:'#selected=a_current&topic=vix',pathname:'/terminal/',search:''
+};
+'''
+            + functions
+            + r'''
+hydrateFromHash();
+if (state.threadTopic !== 'vix') throw new Error('owned thread topic was rejected');
+
+location.hash = '#selected=a_current&topic=unowned';
+hydrateFromHash();
+if (state.threadTopic !== '') throw new Error('unowned thread topic was accepted');
+updateHash();
+if (historyCalls.length !== 1 || historyCalls[0][0] !== 'replace' ||
+    historyCalls[0][1] !== '#selected=a_current' ||
+    historyCalls[0][1].includes('topic=')) {
+  throw new Error('invalid topic hash was not canonicalized safely');
+}
+
+location.hash = '#view=ideas&selected=a_current&topic=vix';
+hydrateFromHash();
+if (state.threadTopic !== '') throw new Error('topic escaped the briefing view');
+'''
+        )
+
+    def test_deferred_thread_comparison_ignores_stale_context_and_reports_outcomes(self):
+        branch = javascript_between(
+            "  const threadLoad = event.target.closest('[data-thread-load]');",
+            "  const threadArticle = event.target.closest('[data-thread-article]');",
+        )
+        run_node(
+            r'''
+const prior = {id:'a_prior'};
+const ARTICLE_BY_ID = new Map([['a_prior',prior]]);
+const state = {view:'briefing',selected:'a_current',threadTopic:'vix'};
+let threadComparisonRequest = null;
+let pendingBriefFocus = null;
+let renderCount = 0;
+let resolver = null;
+const messages = [];
+const announcer = {textContent:''};
+const document = {getElementById(id) {
+  if (id !== 'announcer') throw new Error('unexpected document lookup');
+  return announcer;
+}};
+const render = () => { renderCount += 1; };
+const showToast = (message) => messages.push(message);
+const ensureArticleBrief = () => new Promise((resolve) => { resolver = resolve; });
+const eventForPrior = {
+  target:{closest(selector) {
+    return selector === '[data-thread-load]' ? {dataset:{threadLoad:'a_prior'}} : null;
+  }}
+};
+function handleThreadLoad(event) {
+'''
+            + branch
+            + r'''
+}
+
+handleThreadLoad(eventForPrior);
+if (!threadComparisonRequest || renderCount !== 1 ||
+    pendingBriefFocus.kind !== 'thread-comparison' ||
+    !announcer.textContent.startsWith('Loading and verifying')) {
+  throw new Error('comparison did not enter an announced loading state');
+}
+resolver({lead:{text:'exact prior passage'}});
+await Promise.resolve();
+if (threadComparisonRequest !== null || renderCount !== 2 ||
+    announcer.textContent !== 'Exact prior passage comparison loaded and verified') {
+  throw new Error('verified comparison did not complete in the current context');
+}
+
+handleThreadLoad(eventForPrior);
+resolver(null);
+await Promise.resolve();
+if (renderCount !== 4 ||
+    announcer.textContent !== 'Exact prior dossier could not be verified; retry is available' ||
+    messages.at(-1) !== 'Exact prior dossier could not be verified') {
+  throw new Error('failed comparison did not expose a bounded retry state');
+}
+
+handleThreadLoad(eventForPrior);
+const beforeStaleCompletion = renderCount;
+state.selected = 'a_other';
+resolver({lead:{text:'stale prior passage'}});
+await Promise.resolve();
+if (renderCount !== beforeStaleCompletion ||
+    announcer.textContent !== 'Loading and verifying the exact prior article dossier') {
+  throw new Error('stale comparison completion changed the active context');
+}
+'''
+        )
+
+    def test_thread_timeline_navigation_requires_exact_topic_membership(self):
+        branch = javascript_between(
+            "  const threadArticle = event.target.closest('[data-thread-article]');",
+            "  const briefLens = event.target.closest('[data-brief-lens]');",
+        )
+        run_node(
+            r'''
+const THREADS = {
+  topics:{vix:{article_ids:['a_prior','a_current']}}
+};
+const state = {
+  view:'briefing',briefLens:'evidence',selected:'a_current',threadTopic:'vix'
+};
+let pendingBriefFocus = null;
+let navigationMarked = false;
+let renderCount = 0;
+const shell = {scrollTop:900};
+const markMeaningfulNavigation = () => { navigationMarked = true; };
+const render = () => { renderCount += 1; };
+const document = {getElementById(id) {
+  if (id !== 'briefing-shell') throw new Error('unexpected document lookup');
+  return shell;
+}};
+function eventFor(articleId) {
+  return {target:{closest(selector) {
+    return selector === '[data-thread-article]'
+      ? {dataset:{threadArticle:articleId}} : null;
+  }}};
+}
+function handleThreadArticle(event) {
+'''
+            + branch
+            + r'''
+}
+
+handleThreadArticle(eventFor('a_unowned'));
+if (state.selected !== 'a_current' || renderCount || navigationMarked) {
+  throw new Error('unowned timeline article changed the dossier');
+}
+
+handleThreadArticle(eventFor('a_prior'));
+if (state.selected !== 'a_prior' || state.view !== 'briefing' ||
+    state.briefLens !== 'all' || state.threadTopic !== 'vix' ||
+    pendingBriefFocus.kind !== 'article' ||
+    pendingBriefFocus.value !== 'a_prior' || renderCount !== 1 ||
+    !navigationMarked || shell.scrollTop !== 0) {
+  throw new Error('owned timeline article did not preserve its thread context');
+}
+'''
+        )
+
     def test_malformed_and_oversized_queue_imports_fail_closed(self):
         function = javascript_between(
             'function restoreQueueFile(file) {',

@@ -211,6 +211,11 @@ def _normalized_words(value: Any) -> Tuple[str, ...]:
     return tuple(_WORD_RE.findall(text))
 
 
+def normalized_search_words(value: Any) -> Tuple[str, ...]:
+    """Return the exact public token normalization used by entity matching."""
+    return _normalized_words(value)
+
+
 def _normalize_term(value: Any) -> str:
     return '-'.join(_normalized_words(value))
 
@@ -754,4 +759,5 @@ def build_related_graph(
 
 __all__ = [
     'article_feature_terms', 'build_related_graph', 'build_search_index',
+    'normalized_search_words',
 ]

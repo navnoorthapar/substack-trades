@@ -9,7 +9,7 @@ import re
 import shutil
 import unicodedata
 from collections import Counter, defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote, urlsplit, urlunsplit
 
@@ -18,6 +18,7 @@ from data_contract import validate_data_layer, write_data_layer
 from extract_trades import has_negated_trade_signal
 from research_graph import build_related_graph, build_search_index
 from research_taxonomy import build_families_index
+from research_threads import build_thread_index
 from share_cards import emit_share_assets
 
 
@@ -64,6 +65,33 @@ def clean_date(value):
     except ValueError:
         return '1970-01-01'
     return date
+
+
+def clean_publication_time(value):
+    """Return an exact, sortable publication value and its known precision."""
+    raw = str(value or '').strip()
+    if re.fullmatch(r'\d{4}-\d{2}-\d{2}', raw):
+        datetime.strptime(raw, '%Y-%m-%d')
+        return raw, 'day'
+    try:
+        parsed = datetime.fromisoformat(raw.replace('Z', '+00:00'))
+    except ValueError as error:
+        raise ValueError(f'Invalid publication timestamp: {raw!r}') from error
+    if parsed.tzinfo is None:
+        raise ValueError(f'Publication timestamp must include a timezone: {raw!r}')
+    parsed.astimezone(timezone.utc)
+    return raw, 'instant'
+
+
+def publication_sort_key(article):
+    """Return exact UTC publication chronology with deterministic ties."""
+    value = str(article['published_at'])
+    if article['publication_precision'] == 'day':
+        instant = datetime.strptime(value, '%Y-%m-%d').replace(tzinfo=timezone.utc)
+    else:
+        instant = datetime.fromisoformat(value.replace('Z', '+00:00'))
+        instant = instant.astimezone(timezone.utc)
+    return instant, canonical_url_identity(article['url'])
 
 
 def clean_source(value, url=''):
@@ -248,10 +276,15 @@ for metadata in article_index:
     subtitle = str(metadata.get('subtitle') or '').strip()
     if is_boilerplate_text(subtitle):
         subtitle = ''
+    published_at, publication_precision = clean_publication_time(
+        metadata.get('post_date') or first.get('article_date'),
+    )
     articles.append({
         'title': metadata.get('title') or first.get('article_title') or url,
         'subtitle': subtitle,
         'date': clean_date(metadata.get('post_date') or first.get('article_date')),
+        'published_at': published_at,
+        'publication_precision': publication_precision,
         'url': url,
         'source': clean_source(metadata.get('source'), url),
         'alternate_urls': metadata.get('alternate_urls') or {},
@@ -266,10 +299,15 @@ for url, article_trades in trades_by_url.items():
     if url in seen_urls:
         continue
     first = article_trades[0]
+    published_at, publication_precision = clean_publication_time(
+        first.get('article_date'),
+    )
     articles.append({
         'title': first.get('article_title') or url,
         'subtitle': '',
         'date': clean_date(first.get('article_date')),
+        'published_at': published_at,
+        'publication_precision': publication_precision,
         'url': url,
         'source': clean_source(None, url),
         'alternate_urls': {},
@@ -279,7 +317,7 @@ for url, article_trades in trades_by_url.items():
         'trades': article_trades,
     })
 
-articles.sort(key=lambda article: article['date'], reverse=True)
+articles.sort(key=publication_sort_key, reverse=True)
 
 manager_variants: defaultdict[str, Counter[str]] = defaultdict(Counter)
 for trade in trades:
@@ -396,6 +434,8 @@ for article_position, article in enumerate(articles):
         'title': article['title'],
         'subtitle': article['subtitle'],
         'date': article['date'],
+        'published_at': article['published_at'],
+        'publication_precision': article['publication_precision'],
         'url': article['url'],
         'source': article['source'],
         'alternate_urls': article['alternate_urls'],
@@ -448,7 +488,77 @@ for manager_key, count in manager_rows:
         f'data-count-manager="{escaped_attr}">{count}</span></button>'
     )
 
-articles_json = json_for_script(client_articles)
+search_index = build_search_index(catalog_index)
+search_urls = {
+    str(row.get('url') or '').rstrip('/')
+    for row in search_index.get('articles', [])
+    if isinstance(row, dict)
+}
+source_article_by_url = {
+    str(article['url']).rstrip('/'): article for article in articles
+}
+thread_index = build_thread_index(
+    [
+        {
+            **article,
+            'brief': source_article_by_url[str(article['url']).rstrip('/')]['brief'],
+        }
+        for article in client_articles
+        if str(article['url']).rstrip('/') in search_urls
+    ],
+    search_index,
+)
+
+# The terminal hydrates this compact wire representation before any article is
+# indexed or rendered. Derived values and empty defaults are intentionally not
+# repeated hundreds of times in the HTML release shell.
+embedded_articles = []
+for client_article in client_articles:
+    embedded_article = dict(client_article)
+    for derived_key in (
+            'date', 'publication_precision', 'read_minutes', 'trade_count'):
+        embedded_article.pop(derived_key)
+
+    brief_features = embedded_article.pop('brief_features')
+    brief_feature_mask = sum(
+        bit for bit, key in (
+            (1, 'lead'),
+            (2, 'evidence'),
+            (4, 'countercase'),
+            (8, 'falsifier'),
+            (16, 'implementation'),
+            (32, 'mechanism'),
+        )
+        if brief_features[key]
+    )
+    checkpoint_count = int(brief_features['checkpoint_count'])
+    if brief_feature_mask or checkpoint_count:
+        embedded_article['_b'] = [brief_feature_mask, checkpoint_count]
+
+    coverage_mask = (
+        (1 if embedded_article.pop('has_quant') else 0)
+        | (2 if embedded_article.pop('has_thesis') else 0)
+        | (4 if embedded_article.pop('has_outcome') else 0)
+    )
+    if coverage_mask:
+        embedded_article['_q'] = coverage_mask
+
+    for default_key, default_value in (
+        ('alternate_urls', {}),
+        ('brief', None),
+        ('idea_ids', []),
+        ('directions', []),
+        ('instruments', []),
+        ('underlyings', []),
+        ('managers', []),
+        ('manager_keys', []),
+    ):
+        if embedded_article.get(default_key) == default_value:
+            embedded_article.pop(default_key)
+    embedded_articles.append(embedded_article)
+
+articles_json = json_for_script(embedded_articles)
+threads_json = json_for_script(thread_index)
 manager_labels_json = json_for_script(manager_labels)
 manager_html = '\n'.join(manager_buttons)
 
@@ -478,7 +588,6 @@ else:
 # The public automation contract is generated from the exact tracked master,
 # including metadata-only registry records that are intentionally absent from
 # the consumer terminal payload above.
-search_index = build_search_index(catalog_index)
 related_graph = build_related_graph(catalog_index, search_index)
 families_index = build_families_index(catalog_index)
 share_articles = [
@@ -1171,7 +1280,7 @@ body[data-view="briefing"] .briefing-shell{
 .ic-compact-button:hover{border-color:var(--control-line);background:var(--surface-3);color:var(--text)}
 .ic-compact-button.active,.ic-compact-button[aria-current="page"]{border-color:var(--selected-line);background:var(--selected);color:var(--text);font-weight:650}
 .ic-compact-button.lens.active{border-color:var(--brick-line);background:var(--brick-soft)}
-#brief-thesis,#brief-key-evidence,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:12px}
+#brief-thesis,#brief-key-evidence,#brief-thread,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:12px}
 .intel-lead{
   grid-column:2;min-width:0;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);
   border-radius:0;background:var(--surface-1);box-shadow:none;overflow:visible
@@ -1213,6 +1322,73 @@ body[data-view="briefing"] .briefing-shell{
 .ic-evidence-card p{margin-top:7px;font-size:11.5px;line-height:1.55;color:var(--text-secondary);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
 .ic-evidence-card mark{background:transparent;color:var(--accent);font-weight:700}
 .ic-evidence-empty{grid-column:1/-1;padding:20px 40px;background:var(--surface-2);color:var(--text-muted);font-size:11px;line-height:1.55}
+.research-thread{padding:30px clamp(32px,3.2vw,58px) 32px;border-bottom:1px solid var(--line);background:var(--surface-1)}
+.thread-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
+.thread-header h2{font:600 27px/1.08 var(--serif);letter-spacing:-.025em;color:var(--text)}
+.thread-header p{max-width:68ch;margin-top:8px;font:400 13px/1.55 var(--serif);color:var(--text-secondary)}
+.thread-header p strong{color:var(--text);font-weight:600}
+.thread-kind{flex:0 0 auto;padding:5px 7px;border:1px solid var(--line-strong);font:650 8.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.thread-topic-list{display:flex;gap:5px;margin-top:18px;padding-bottom:4px;overflow-x:auto;scrollbar-width:thin}
+.thread-topic{flex:0 0 auto;min-height:34px;display:inline-flex;align-items:center;gap:8px;padding:0 9px;border:1px solid var(--control-line);border-radius:0;background:var(--surface-2);color:var(--text-secondary);font-size:10.5px;cursor:pointer}
+.thread-topic:hover{border-color:var(--control-line-hover);background:var(--surface-3);color:var(--text)}
+.thread-topic.active{border-color:var(--selected-line);box-shadow:inset 2px 0 var(--selected-line);background:var(--selected);color:var(--text);font-weight:650}
+.thread-topic span{font:9px var(--mono);color:var(--text-muted)}
+.thread-facts{display:grid;grid-template-columns:.7fr 1.45fr 1fr .8fr;margin-top:13px;border:1px solid var(--line);background:var(--surface-2)}
+.thread-facts>div{min-width:0;padding:11px 12px;border-right:1px solid var(--line)}
+.thread-facts>div:last-child{border-right:0}
+.thread-facts b{display:block;overflow:hidden;text-overflow:ellipsis;font:650 11px var(--mono);color:var(--text)}
+.thread-facts span{display:block;margin-top:4px;font:8.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.thread-comparison,.thread-timeline{margin-top:24px;border-top:2px solid var(--text)}
+.thread-timeline{border-top-color:var(--accent)}
+.thread-subhead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:12px 0 11px}
+.thread-subhead span{display:block;margin-bottom:3px;font:650 8.5px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted)}
+.thread-subhead h3{font:600 16px/1.25 var(--serif);color:var(--text)}
+.thread-subhead>b{font:9px var(--mono);font-weight:500;color:var(--text-muted);white-space:nowrap}
+.thread-first-note{padding:15px;border:1px solid var(--line);background:var(--surface-2);font-size:11px;line-height:1.55;color:var(--text-muted)}
+.thread-role-table{border:1px solid var(--line)}
+.thread-role-row{display:grid;grid-template-columns:minmax(120px,1fr) 62px 62px minmax(150px,1.2fr);align-items:center;min-height:33px;border-top:1px solid var(--line);font-size:10px;color:var(--text-secondary)}
+.thread-role-row:first-child{border-top:0}
+.thread-role-row>*{min-width:0;padding:7px 9px;border-right:1px solid var(--line)}
+.thread-role-row>*:last-child{border-right:0}
+.thread-role-row span{font-weight:600;color:var(--text)}
+.thread-role-row i{font:10px var(--mono);font-style:normal;text-align:center;color:var(--text-muted)}
+.thread-role-row i.captured{color:var(--accent);font-weight:700}
+.thread-role-row b{font-size:9.5px;font-weight:500;color:var(--text-muted)}
+.thread-role-row.head{min-height:29px;background:var(--surface-2);font:650 8.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.thread-role-row.head span,.thread-role-row.head b{font:inherit;color:inherit}
+.thread-passage-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:12px;background:var(--line);border:1px solid var(--line)}
+.thread-passage-card{min-width:0;padding:15px;background:var(--surface-2)}
+.thread-passage-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;font:8.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted)}
+.thread-passage-card h4{margin-top:8px;font:600 13px/1.35 var(--serif);color:var(--text)}
+.thread-passage-card>p{margin-top:7px;font-size:11px;line-height:1.55;color:var(--text-secondary);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:hidden}
+.thread-passage-card>p mark{background:var(--number-soft);color:var(--number);border-bottom:1px solid var(--number-line)}
+.thread-token-row{margin-top:11px;padding-top:9px;border-top:1px solid var(--line)}
+.thread-token-row>span{display:block;font:8.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted)}
+.thread-token-row>div{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.thread-token-row i{padding:3px 5px;border:1px solid var(--number-line);background:var(--number-soft);font:650 9px var(--mono);font-style:normal;color:var(--number)}
+.thread-token-row em{font-size:9.5px;font-style:normal;color:var(--text-muted)}
+.thread-token-note{margin-top:7px;font-size:9.5px;line-height:1.45;color:var(--text-muted)}
+.thread-load-boundary{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:12px;padding:14px;border:1px dashed var(--line-strong);background:var(--surface-2)}
+.thread-load-boundary strong{font-size:11px;color:var(--text)}
+.thread-load-boundary p{max-width:62ch;margin-top:3px;font-size:9.5px;line-height:1.45;color:var(--text-muted)}
+.thread-timeline ol{position:relative;display:grid;gap:0;margin:0;padding:0;list-style:none}
+.thread-timeline ol::before{content:"";position:absolute;left:7px;top:19px;bottom:19px;width:1px;background:var(--line-strong)}
+.thread-node{position:relative;min-width:0;padding-left:25px}
+.thread-node::before{content:"";position:absolute;z-index:1;left:3px;top:20px;width:9px;height:9px;border:2px solid var(--line-strong);border-radius:50%;background:var(--surface-1)}
+.thread-node.active::before{border-color:var(--accent);background:var(--accent)}
+.thread-node button{width:100%;min-height:58px;display:block;padding:11px 12px;border:0;border-top:1px solid var(--line);background:transparent;color:var(--text-secondary);text-align:left;cursor:pointer}
+.thread-node:first-child button{border-top:0}
+.thread-node button:hover{background:var(--surface-3)}
+.thread-node.active button{background:var(--selected);box-shadow:inset 2px 0 var(--selected-line)}
+.thread-node-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;font:8.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted)}
+.thread-node-meta i{font-style:normal;color:var(--text-muted)}
+.thread-node strong{display:block;margin-top:5px;font:600 12.5px/1.35 var(--serif);color:var(--text)}
+.thread-node-match{display:block;margin-top:5px;font:650 8.5px var(--mono);letter-spacing:.045em;text-transform:uppercase;color:var(--accent)}
+.thread-node-framing{display:block;margin-top:4px;font-size:10px;line-height:1.45;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thread-node-roles{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}
+.thread-node-roles i{padding:2px 5px;border:1px solid var(--line);font:8px var(--mono);font-style:normal;color:var(--text-muted)}
+.thread-boundary{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-size:9.5px;line-height:1.5;color:var(--text-muted)}
+.thread-boundary.compact{margin-top:10px;padding-top:0;border-top:0}
 .ic-analysis{padding:30px clamp(32px,3.2vw,58px) 34px;border-bottom:1px solid var(--line)}
 .ic-section-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:18px}
 .ic-section-header h2{font:600 25px/1.1 var(--serif);letter-spacing:-.02em;color:var(--text)}
@@ -1798,7 +1974,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .intel-wrap{grid-template-columns:minmax(0,1fr) 350px}
   .ic-rail{display:none}
   .ic-compact-nav{display:grid}
-  #brief-thesis,#brief-key-evidence,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:calc(var(--brief-compact-nav-h) + 7px)}
+  #brief-thesis,#brief-key-evidence,#brief-thread,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:calc(var(--brief-compact-nav-h) + 7px)}
   .intel-lead{grid-column:1}
   .intel-side.ic-sheet{
     grid-column:2;top:var(--brief-compact-nav-h);
@@ -1838,7 +2014,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .ic-compact-label{padding:0 8px;font-size:8px}
   .ic-compact-scroll{padding:4px}
   .ic-compact-button{min-height:44px;padding:0 11px;font-size:11px}
-  #brief-thesis,#brief-key-evidence,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:calc(var(--brief-compact-nav-h) + 7px)}
+  #brief-thesis,#brief-key-evidence,#brief-thread,#brief-analysis,#brief-dossier,#brief-evidence-ledger,#brief-checkpoints,#brief-archive{scroll-margin-top:calc(var(--brief-compact-nav-h) + 7px)}
   .intel-lead-inner{padding:24px 18px 20px}
   .ic-document-meta{display:block;margin-bottom:20px}
   .ic-open-source{margin-top:12px;min-height:44px}
@@ -1850,6 +2026,27 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .ic-evidence-card{padding:18px}
   .ic-evidence-card:only-of-type{grid-column:1}
   .ic-evidence-card p,.intel-article-card .intel-card-claim,.next-item .next-summary{font-size:12px}
+  .research-thread{padding:26px 18px}
+  .thread-header{display:block}
+  .thread-kind{display:inline-block;margin-top:11px}
+  .thread-topic{min-height:44px;font-size:12px}
+  .thread-facts{grid-template-columns:1fr 1fr}
+  .thread-facts>div:nth-child(2){border-right:0}
+  .thread-facts>div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .thread-role-row{grid-template-columns:minmax(105px,1fr) 60px 74px}
+  .thread-role-row>b{display:none}
+  .thread-passage-grid{grid-template-columns:1fr}
+  .thread-load-boundary{display:block}
+  .thread-load-boundary .secondary-action{width:100%;min-height:44px;margin-top:12px}
+  .thread-node button{min-height:72px;padding:12px}
+  .thread-node-meta{display:block}
+  .thread-node-meta i{display:block;margin-top:3px}
+  .thread-node-framing{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+  .thread-kind,.thread-topic span,.thread-facts b,.thread-facts span,.thread-subhead span,.thread-subhead>b,
+  .thread-role-row,.thread-role-row i,.thread-role-row b,.thread-passage-meta,.thread-passage-card>p,
+  .thread-token-row>span,.thread-token-row i,.thread-token-row em,.thread-token-note,
+  .thread-load-boundary strong,.thread-load-boundary p,.thread-node-meta,.thread-node strong,
+  .thread-node-match,.thread-node-framing,.thread-node-roles i,.thread-boundary,.thread-first-note{font-size:12px}
   .ic-analysis,.ic-dossier-head{padding:26px 18px}
   .ic-section-header{display:block}
   .ic-section-header p{margin-top:7px;text-align:left}
@@ -1884,7 +2081,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   }
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#111!important}
   .skip-link,.app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar,.active-filters,.context-bar,.inspector,
-  .drawer-backdrop,.intel-head,.ic-compact-nav,.ic-archive-grid,.intel-stream,.intel-actions,.ic-sheet-local,.ic-sheet-actions,.toast,.persistent-notice,.storage-alert{display:none!important}
+  .drawer-backdrop,.intel-head,.ic-compact-nav,.ic-archive-grid,.intel-stream,.intel-actions,.ic-sheet-local,.ic-sheet-actions,.thread-topic-list,.thread-load-boundary .secondary-action,.toast,.persistent-notice,.storage-alert{display:none!important}
   .workspace,.main-panel,.briefing-shell{display:block!important;height:auto!important;overflow:visible!important;background:#fff!important}
   .briefing-shell{padding:0!important}
   .intel-wrap{display:flex!important;flex-direction:column!important;width:100%;min-height:0;padding:0}
@@ -1892,20 +2089,21 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .intel-lead{display:contents!important;border:0;box-shadow:none;background:#fff!important;overflow:visible}
   .intel-lead-inner{order:1;padding:0 0 12px;box-shadow:none!important}
   .ic-evidence-strip{order:2}
+  .research-thread{order:6;padding:7mm 0;background:#fff!important}
   .ic-analysis{order:4}
   .ic-dossier{order:5}
   .intel-title{font-size:24pt;color:#111!important}
-  .ic-opening-claim,.ic-evidence-card,.ic-analysis,.ic-dossier,.intel-passage,.ledger-passage{background:#fff!important;color:#222!important}
+  .ic-opening-claim,.ic-evidence-card,.research-thread,.ic-analysis,.ic-dossier,.intel-passage,.ledger-passage{background:#fff!important;color:#222!important}
   .ic-opening-claim p,.ic-evidence-card p,.ic-analysis-card p,.ic-sheet-section p{color:#222!important}
   .ic-evidence-card p{display:block!important;overflow:visible!important;-webkit-line-clamp:unset!important}
   .intel-meta,.intel-label,.source-tail,.ledger-provenance,.research-map-head p{color:#555!important}
   .intel-fact-strip,.research-map,.evidence-ledger-section,.intel-section,.ledger-head{background:#fff!important}
-  .research-map-step,.intel-reason,.ledger-value{background:#fff!important;color:#222!important;border-color:#888!important}
+  .research-map-step,.intel-reason,.ledger-value,.thread-topic,.thread-passage-card,.thread-node button{background:#fff!important;color:#222!important;border-color:#888!important}
   .intel-section-grid{display:block;background:#fff;border-color:#aaa}
   .intel-section{break-inside:avoid;border-bottom:1px solid #bbb}
   .intel-passage{display:block;overflow:visible;-webkit-line-clamp:unset}
   .ledger-row{break-inside:avoid;border-color:#bbb!important}
-  .evidence-ledger-section,.research-map{break-inside:avoid}
+  .evidence-ledger-section,.research-map,.thread-comparison{break-inside:avoid}
   .intel-side.ic-sheet{
     display:block!important;position:static!important;width:100%!important;height:auto!important;max-height:none!important;
     order:3;margin-top:12mm;overflow:visible!important;border:1px solid #9da5a6!important;background:#fff!important;break-before:page
@@ -2269,6 +2467,10 @@ __MANAGER_BUTTONS__
       </ul>
     </section>
     <section class="method-card">
+      <h3>Research Threads method</h3>
+      <p>Threads connect body-backed articles only when the release’s high-precision topic index captures the same normalized organization, institution, market, instrument, model, or mechanism in at least two publications. Every timeline entry identifies the matched source field, uses the exact available publication timestamp, and sits inside a bounded seven-entry window. Capture comparisons report only whether research-role passages were detected in each source; opening-passage numbers stay attached to that exact passage. These fields do not infer a current view, reversal, contradiction, conviction, accuracy, performance, or portfolio action. Exact older passages load only on request and must match this release’s checksum.</p>
+    </section>
+    <section class="method-card">
       <h3>Decision boundary</h3>
       <p>Records are research observations—not verified trades, current holdings, or recommendations. This terminal supports published-source intake and a human-entered decision packet. It does not contain live prices, positions, P&amp;L, sizing, execution, portfolio risk, liquidity, financing, counterparties, investor records, or compliance approvals.</p>
     </section>
@@ -2311,6 +2513,67 @@ __MANAGER_BUTTONS__
 
 <script>
 const ARTICLES = __ARTICLES_JSON__;
+function hydrateEmbeddedArticle(article) {
+  const publishedAt = String(article.published_at || '');
+  const wordcount = Number(article.wordcount || 0);
+  const wholeMinutes = Math.floor(wordcount / 220);
+  const remainder = wordcount % 220;
+  const roundedMinutes = wholeMinutes + (
+    remainder > 110 || (remainder === 110 && wholeMinutes % 2 === 1) ? 1 : 0
+  );
+  const briefCode = Array.isArray(article._b) ? article._b : [0,0];
+  const briefMask = Number(briefCode[0] || 0);
+  const coverageMask = Number(article._q || 0);
+  article.date = publishedAt.slice(0,10);
+  article.publication_precision = /^\d{4}-\d{2}-\d{2}$/.test(publishedAt) ? 'day' : 'instant';
+  article.read_minutes = wordcount ? Math.max(1,roundedMinutes) : 0;
+  article.alternate_urls = article.alternate_urls || {};
+  article.brief = article.brief || null;
+  article.idea_ids = article.idea_ids || [];
+  article.trade_count = article.idea_ids.length;
+  article.directions = article.directions || [];
+  article.instruments = article.instruments || [];
+  article.underlyings = article.underlyings || [];
+  article.managers = article.managers || [];
+  article.manager_keys = article.manager_keys || [];
+  article.brief_features = {
+    lead:Boolean(briefMask & 1),
+    evidence:Boolean(briefMask & 2),
+    countercase:Boolean(briefMask & 4),
+    falsifier:Boolean(briefMask & 8),
+    implementation:Boolean(briefMask & 16),
+    mechanism:Boolean(briefMask & 32),
+    checkpoint_count:Number(briefCode[1] || 0)
+  };
+  article.has_quant = Boolean(coverageMask & 1);
+  article.has_thesis = Boolean(coverageMask & 2);
+  article.has_outcome = Boolean(coverageMask & 4);
+  delete article._b;
+  delete article._q;
+  return article;
+}
+ARTICLES.forEach(hydrateEmbeddedArticle);
+const THREADS = __THREADS_JSON__;
+const THREAD_ARTICLES = (function () {
+  const rows = Object.create(null);
+  Object.keys(THREADS.topics || {}).forEach(function (topicKey) {
+    const topic = THREADS.topics[topicKey];
+    (topic.article_ids || []).forEach(function (articleId) {
+      if (!rows[articleId]) rows[articleId] = {topics:[],default_topic:''};
+      rows[articleId].topics.push(topicKey);
+    });
+  });
+  Object.keys(rows).forEach(function (articleId) {
+    rows[articleId].topics.sort(function (left,right) {
+      const leftTopic = THREADS.topics[left];
+      const rightTopic = THREADS.topics[right];
+      return leftTopic.article_count - rightTopic.article_count ||
+        leftTopic.label.localeCompare(rightTopic.label) || left.localeCompare(right);
+    });
+    rows[articleId].default_topic = THREADS.defaults[articleId];
+  });
+  return rows;
+})();
 let IDEAS = [];
 const SNAPSHOT = __SNAPSHOT_JSON__;
 const EMBEDDED_MANAGER_LABELS = __MANAGER_LABELS_JSON__;
@@ -3076,6 +3339,7 @@ const state = {
   range:'all',
   coverage:'all',
   briefLens:'all',
+  threadTopic:'',
   sort:'newest',
   density:storedDensity,
   selected:'',
@@ -3103,6 +3367,10 @@ function hydrateFromHash() {
   state.sort = params.get('sort') || 'newest';
   state.density = ['compact','comfortable'].includes(params.get('density')) ? params.get('density') : storedDensity;
   state.selected = params.get('selected') || '';
+  const requestedTopic = String(params.get('topic') || '').slice(0,120);
+  const threadRow = THREAD_ARTICLES[state.selected];
+  state.threadTopic = state.view === 'briefing' && threadRow && threadRow.topics.includes(requestedTopic)
+    ? requestedTopic : '';
   state.limit = PAGE_SIZE[state.view];
 }
 
@@ -3127,6 +3395,8 @@ function updateHash(includeQuery) {
   if (state.range !== 'all') params.set('range',state.range);
   if (state.coverage !== 'all' && state.view === 'research') params.set('coverage',state.coverage);
   if (state.briefLens !== 'all' && state.view === 'briefing') params.set('lens',state.briefLens);
+  const threadRow = THREAD_ARTICLES[state.selected];
+  if (state.view === 'briefing' && threadRow && threadRow.topics.includes(state.threadTopic)) params.set('topic',state.threadTopic);
   if (state.sort !== 'newest') params.set('sort',state.sort);
   if (state.density !== 'compact') params.set('density',state.density);
   if (state.selected) params.set('selected',state.selected);
@@ -3760,6 +4030,128 @@ function evidenceSpotlightMarkup(article) {
   }).join('');
   return '<section class="ic-evidence-strip" id="brief-key-evidence" aria-labelledby="brief-key-evidence-title"><h2 class="sr-only" id="brief-key-evidence-title">Source-backed numeric evidence</h2>' + content + '</section>';
 }
+const THREAD_ROLE_DEFINITIONS = [
+  ['lead','Opening'],['mechanism','Mechanism'],['evidence','Evidence'],
+  ['countercase','Countercase'],['falsifier','Falsifier'],
+  ['implementation','Implementation'],['checkpoint','Checkpoint']
+];
+const THREAD_MATCH_LABELS = {
+  t:'title',s:'subtitle',o:'opening',e:'evidence',m:'mechanism',
+  c:'countercase',f:'falsifier',i:'implementation',x:'indexed section'
+};
+function threadArticleRow(article) {
+  return article && THREAD_ARTICLES[article.id] || null;
+}
+function selectedThreadTopic(article) {
+  const row = threadArticleRow(article);
+  if (!row || !Array.isArray(row.topics) || !row.topics.length) {
+    state.threadTopic = '';
+    return '';
+  }
+  const topic = row.topics.includes(state.threadTopic) ? state.threadTopic : row.default_topic;
+  state.threadTopic = topic;
+  return topic;
+}
+function threadRoleCaptured(article,key) {
+  const features = article && article.brief_features || {};
+  if (key === 'checkpoint') return Number(features.checkpoint_count || 0) > 0;
+  return Boolean(features[key]);
+}
+function threadRoleLabels(article) {
+  return THREAD_ROLE_DEFINITIONS.filter(function (row) {
+    return threadRoleCaptured(article,row[0]);
+  }).map(function (row) { return row[1]; });
+}
+function threadPublishedLabel(article) {
+  const raw = String(article && article.published_at || article && article.date || '');
+  if (article && article.publication_precision === 'instant') {
+    const zone = raw.endsWith('Z') ? 'UTC' : (raw.match(/[+-]\d{2}:\d{2}$/) || ['time'])[0];
+    return shortDate(raw.slice(0,10)) + ' · ' + raw.slice(11,16) + ' ' + zone;
+  }
+  return shortDate(raw.slice(0,10)) + ' · publication day';
+}
+function threadMatchLabel(topic,articleId) {
+  const position = topic.article_ids.indexOf(articleId);
+  const codes = position >= 0 ? String(topic.match_codes[position] || '') : '';
+  const labels = Array.from(codes).map(function (code) {
+    return THREAD_MATCH_LABELS[code] || '';
+  }).filter(Boolean);
+  return labels.length ? labels.join(' / ') : 'high-precision topic index';
+}
+function threadWindow(articleIds,selectedId,limit) {
+  const ids = articleIds.filter(function (id) { return ARTICLE_BY_ID.has(id); });
+  if (ids.length <= limit) return ids;
+  const position = Math.max(0,ids.indexOf(selectedId));
+  const start = Math.max(0,Math.min(position - Math.floor(limit / 2),ids.length - limit));
+  return ids.slice(start,start + limit);
+}
+function threadNumericTokens(article) {
+  const lead = article && article.brief && article.brief.lead;
+  return lead && lead.text ? extractNumberTokens(lead.text).slice(0,10) : [];
+}
+function threadExactPassageCard(article,label) {
+  const lead = article && article.brief && article.brief.lead;
+  const values = threadNumericTokens(article);
+  return '<article class="thread-passage-card"><div class="thread-passage-meta"><span>' + escapeHtml(label) + '</span><time datetime="' + escapeHtml(String(article.published_at || article.date)) + '">' + escapeHtml(threadPublishedLabel(article)) + '</time></div><h4>' + escapeHtml(article.title) + '</h4>' +
+    (lead && lead.text ? '<p>' + highlightArticleNumbers(lead.text) + '</p>' + exactPassageTail(lead) : '<p class="missing">No opening passage was identified by the high-precision brief rules. This is an extraction boundary.</p>') +
+    '<div class="thread-token-row"><span>Opening-passage numeric tokens</span><div>' + (values.length ? values.map(function (value) { return '<i>' + escapeHtml(value) + '</i>'; }).join('') : '<em>None in the captured opening passage</em>') + '</div></div></article>';
+}
+function threadComparisonMarkup(current,topic) {
+  const position = topic.article_ids.indexOf(current.id);
+  if (position <= 0) {
+    return '<section class="thread-comparison" aria-labelledby="thread-comparison-first-title"><div class="thread-subhead"><div><span>Capture comparison</span><h3 id="thread-comparison-first-title">Earliest indexed publication in this topic thread</h3></div><b>No prior topic match</b></div><p class="thread-first-note">There is no earlier body-backed article linked by this exact topic key. The bounded chronology below shows up to seven of ' + number(topic.article_count) + ' indexed publications.</p></section>';
+  }
+  const prior = ARTICLE_BY_ID.get(topic.article_ids[position - 1]);
+  if (!prior) return '';
+  const sameDayUnordered = current.date === prior.date && (current.publication_precision === 'day' || prior.publication_precision === 'day');
+  const roleRows = THREAD_ROLE_DEFINITIONS.map(function (definition) {
+    const before = threadRoleCaptured(prior,definition[0]);
+    const now = threadRoleCaptured(current,definition[0]);
+    const status = before === now ? (now ? 'Both captured' : 'Neither captured') : now ? 'Current capture only' : 'Prior capture only';
+    return '<div class="thread-role-row" role="row"><span role="cell">' + escapeHtml(definition[1]) + '</span><i role="cell" class="' + (before ? 'captured' : '') + '">' + (before ? 'Yes' : '—') + '</i><i role="cell" class="' + (now ? 'captured' : '') + '">' + (now ? 'Yes' : '—') + '</i><b role="cell">' + status + '</b></div>';
+  }).join('');
+  const changedCount = THREAD_ROLE_DEFINITIONS.filter(function (definition) {
+    return threadRoleCaptured(prior,definition[0]) !== threadRoleCaptured(current,definition[0]);
+  }).length;
+  let exactMarkup;
+  if (prior.brief) {
+    exactMarkup = '<div class="thread-passage-grid">' + threadExactPassageCard(prior,'Preceding indexed publication') + threadExactPassageCard(current,'Current dossier') + '</div><p class="thread-token-note">Opening-passage numeric tokens remain attached to the displayed source passage. They are not normalized, netted, or treated as comparable values.</p>';
+  } else {
+    const loading = Boolean(threadComparisonRequest && threadComparisonRequest.articleId === prior.id && threadComparisonRequest.selectedId === current.id && threadComparisonRequest.topic === state.threadTopic);
+    exactMarkup = '<div class="thread-load-boundary"' + (loading ? ' aria-busy="true"' : '') + '><div><strong>' + (loading ? 'Validating exact prior dossier…' : 'Exact prior passage is deferred') + '</strong><p>' + (loading ? 'The release-bound archive is loading and its checksum and record identities will be verified before display.' : 'Load the release-bound prior dossier only when you want a side-by-side passage and numeric-token comparison.') + '</p></div><button class="secondary-action" type="button" data-thread-load="' + prior.id + '"' + (loading ? ' disabled aria-busy="true"' : '') + '>' + (loading ? 'Loading exact comparison…' : prior._briefLoadFailed ? 'Retry exact prior dossier' : 'Load exact passage comparison') + '</button></div>';
+  }
+  return '<section class="thread-comparison" aria-labelledby="thread-comparison-title"><div class="thread-subhead"><div><span>Capture comparison with preceding indexed publication</span><h3 id="thread-comparison-title">' + escapeHtml(sameDayUnordered ? 'Adjacent same-day capture; order unavailable' : 'Prior-to-current capture comparison') + '</h3></div><b>' + number(changedCount) + ' role field' + (changedCount === 1 ? '' : 's') + ' differ</b></div><div class="thread-role-table" role="table" aria-label="Captured research roles in prior and current publications"><div class="thread-role-row head" role="row"><span role="columnheader">Research role</span><i role="columnheader">Prior</i><i role="columnheader">Current</i><b role="columnheader">Coverage comparison</b></div>' + roleRows + '</div>' + exactMarkup + '<p class="thread-boundary compact">A field difference means the extraction rules captured different research roles in two publications. It does not establish a changed view, contradiction, conviction, or portfolio action.</p></section>';
+}
+function researchThreadMarkup(article) {
+  const row = threadArticleRow(article);
+  const topicKey = selectedThreadTopic(article);
+  const topic = topicKey && THREADS.topics && THREADS.topics[topicKey];
+  if (!row || !topic) return '';
+  const attachedTopics = row.topics.slice();
+  const topicButtons = Array.from(new Set(attachedTopics)).map(function (key) {
+    const candidate = THREADS.topics[key];
+    const active = key === topicKey;
+    return '<button class="thread-topic' + (active ? ' active' : '') + '" type="button" data-thread-topic="' + escapeHtml(key) + '" aria-pressed="' + String(active) + '">' + escapeHtml(candidate.label) + '<span>' + number(candidate.article_count) + '</span></button>';
+  }).join('');
+  const topicArticles = topic.article_ids.map(function (id) { return ARTICLE_BY_ID.get(id); }).filter(Boolean);
+  const firstArticle = ARTICLE_BY_ID.get(topic.article_ids[0]);
+  const lastArticle = ARTICLE_BY_ID.get(topic.article_ids[topic.article_ids.length - 1]);
+  const fullCount = topicArticles.filter(function (candidate) { return candidate.content_status === 'full'; }).length;
+  const sourceCount = new Set(topicArticles.map(function (candidate) { return candidate.source; })).size;
+  const timelineIds = threadWindow(topic.article_ids,article.id,7);
+  const hiddenCount = topic.article_ids.length - timelineIds.length;
+  const timeline = timelineIds.map(function (id) {
+    const candidate = ARTICLE_BY_ID.get(id);
+    const active = candidate.id === article.id;
+    const roles = threadRoleLabels(candidate);
+    const matchLabel = threadMatchLabel(topic,candidate.id);
+    const framing = candidate.brief && candidate.brief.lead && candidate.brief.lead.text || candidate.subtitle || 'Open this dossier to inspect its exact captured passages.';
+    return '<li class="thread-node' + (active ? ' active' : '') + '"><button type="button" data-thread-article="' + candidate.id + '"' + (active ? ' aria-current="true"' : '') + '><span class="thread-node-meta"><time datetime="' + escapeHtml(String(candidate.published_at || candidate.date)) + '">' + escapeHtml(threadPublishedLabel(candidate)) + '</time><i>' + sourceLabel(candidate.source) + (active ? ' · current dossier' : '') + '</i></span><strong>' + escapeHtml(candidate.title) + '</strong><span class="thread-node-match">Matched in: ' + escapeHtml(matchLabel) + '</span><span class="thread-node-framing">' + escapeHtml(framing) + '</span><span class="thread-node-roles">' + (roles.length ? roles.slice(0,5).map(function (label) { return '<i>' + escapeHtml(label) + '</i>'; }).join('') + (roles.length > 5 ? '<i>+' + number(roles.length - 5) + '</i>' : '') : '<i>No brief role captured</i>') + '</span></button></li>';
+  }).join('');
+  return '<section class="research-thread" id="brief-thread" aria-labelledby="research-thread-title"><div class="thread-header"><div><div class="ic-topic">Research threads · exact topic history</div><h2 id="research-thread-title">Research history across related publications</h2><p>Trace the published record for <strong>' + escapeHtml(topic.label) + '</strong> after reviewing the current dossier’s evidence and decision boundaries.</p></div><span class="thread-kind">' + escapeHtml(topic.kind) + '</span></div><div class="thread-topic-list" role="group" aria-label="Repeated topics captured in this article">' + topicButtons + '</div><div class="thread-facts"><div><b>' + number(topic.article_count) + '</b><span>Indexed publications</span></div><div><b>' + escapeHtml(shortDate(firstArticle.date)) + ' — ' + escapeHtml(shortDate(lastArticle.date)) + '</b><span>Published span</span></div><div><b>' + number(fullCount) + ' full · ' + number(topic.article_count - fullCount) + ' excerpt</b><span>Indexed text coverage</span></div><div><b>' + number(sourceCount) + '</b><span>Publication channel' + (sourceCount === 1 ? '' : 's') + '</span></div></div>' +
+    threadComparisonMarkup(article,topic) +
+    '<section class="thread-timeline" aria-labelledby="thread-timeline-title"><div class="thread-subhead"><div><span>Publication chronology</span><h3 id="thread-timeline-title">' + escapeHtml(topic.label) + ' research history</h3></div><b>' + number(timelineIds.length) + ' shown' + (hiddenCount > 0 ? ' · ' + number(hiddenCount) + ' outside window' : '') + '</b></div><ol>' + timeline + '</ol></section><p class="thread-boundary">Thread membership is an exact match from the release’s high-precision topic index. Chronology and captured fields organize published evidence; they do not infer the author’s current position, consistency, conviction, accuracy, performance, or portfolio suitability.</p></section>';
+}
 function analysisPanelMarkup(row,title,className) {
   if (!row || !row.span || !row.span.text) {
     return '<section class="ic-analysis-card missing ' + (className || '') + '"><h3>' + escapeHtml(title) + '<span class="ic-source-kind">Rule boundary</span></h3><p>No explicit ' + escapeHtml(title.toLowerCase()) + ' passage was identified by the high-precision section rules. This is not evidence that the argument is absent from the full source.</p></section>';
@@ -3792,13 +4184,15 @@ function briefRailMarkup(lenses,article) {
     const spans = articleBriefSpans(article);
     const ledger = articleEvidenceLedger(article);
     const hasKind = function (kind) { return spans.some(function (row) { return row.kinds.includes(kind); }); };
+    const hasThread = Boolean(threadArticleRow(article));
     const jumps = [
       ['01','brief-thesis','Opening thesis',true],
       ['02','brief-key-evidence','Key figures',ledger.length > 0],
       ['03','brief-analysis','Mechanism & evidence',hasKind('mechanism') || hasKind('evidence')],
       ['04','brief-dossier','Decision boundaries',hasKind('countercase') || hasKind('falsifier') || hasKind('implementation')],
       ['05','brief-evidence-ledger','Full evidence ledger',ledger.length > 0],
-      ['06','brief-archive','Archive context',true]
+      ['06','brief-thread','Topic history',hasThread],
+      ['07','brief-archive','Archive context',true]
     ];
     jumpMarkup = '<div class="ic-rail-rule"></div><div class="ic-rail-heading">In this brief</div><div class="ic-jump-list">' + jumps.map(function (row) {
       return row[3]
@@ -3830,6 +4224,7 @@ function briefCompactNavMarkup(lenses) {
     }).join('') + '</div></div></nav>';
 }
 let pendingBriefFocus = null;
+let threadComparisonRequest = null;
 function restorePendingBriefFocus(consumePending,preferStatusFocus) {
   if (!pendingBriefFocus) return;
   const pending = pendingBriefFocus;
@@ -3844,6 +4239,13 @@ function restorePendingBriefFocus(consumePending,preferStatusFocus) {
         ? document.querySelector('.ic-compact-nav ' + lensSelector)
         : document.querySelector('.ic-rail ' + lensSelector);
       target = target || document.querySelector(lensSelector);
+    } else if (pending.kind === 'thread') {
+      target = document.querySelector('[data-thread-topic="' + pending.value + '"]') ||
+        document.getElementById('brief-thread');
+    } else if (pending.kind === 'thread-comparison') {
+      target = document.querySelector('[data-thread-load="' + pending.value + '"]:not([disabled])') ||
+        document.getElementById('thread-comparison-title') ||
+        document.getElementById('thread-comparison-first-title');
     } else {
       target = document.getElementById('lead-article-title') ||
         document.getElementById('brief-status-title') ||
@@ -3950,7 +4352,7 @@ function renderIntelligenceBrief(records) {
       '<section class="ic-dossier" id="brief-dossier"><div class="ic-dossier-head"><div class="ic-topic">Audit trail</div><h2>Source dossier and decision boundaries</h2><p>The evidence ledger retains detected values with their original context. Section coverage records what the rules captured; it is not a judgment of research quality.</p></div>' +
         researchMapMarkup(selected) + evidenceLedgerMarkup(selected) +
         '<div class="intel-section-grid">' + (sectionMarkup || '<div class="intel-empty">No additional countercase, falsifier, or implementation passage was identified. Open the original article for full context.</div>') + '</div>' +
-      '</section><div class="intel-actions"><a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a><button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open source dossier</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy IC brief</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
+      '</section>' + researchThreadMarkup(selected) + '<div class="intel-actions"><a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a><button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open source dossier</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy IC brief</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
     '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">IC decision sheet · source + local</span><span class="print-only">IC decision sheet · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">What changes our mind</h2><p class="ic-sheet-intro"><span class="screen-only">The source-defined thesis, contrary case, falsifier, and public watch items remain separate from tab-session workflow.</span><span class="print-only">Source-defined thesis, contrary case, falsifier, and public watch items. Independent diligence remains required.</span></p>' +
       decisionSheetSectionMarkup(leadRow,'Author’s thesis') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase') + decisionSheetSectionMarkup(falsifierRow,'What would change the view') + decisionSheetSectionMarkup(implementationRow,'What to watch') + checkpointSection +
       '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Tab-session IC overlay</span><span class="ic-authored">Local · this tab</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active source-passage packet' + (activePackets === 1 ? '' : 's') + ' for this article. Packets attach to individual observations; this brief never silently assigns an article-level recommendation.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open decision queue</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy brief</button></div></section>' +
@@ -4426,6 +4828,7 @@ function resetFilters() {
   state.range = 'all';
   state.coverage = 'all';
   state.briefLens = 'all';
+  state.threadTopic = '';
   state.limit = PAGE_SIZE[state.view];
   document.getElementById('search').value = '';
   document.getElementById('manager-search').value = '';
@@ -4758,6 +5161,7 @@ function applyPreset(name) {
   if (name === 'documented') state.documentation = 'documented';
   state.sort = 'newest';
   state.selected = '';
+  state.threadTopic = '';
   state.limit = PAGE_SIZE.ideas;
   document.getElementById('search').value = '';
   renderObservationAwareNavigation('entry');
@@ -5051,6 +5455,57 @@ document.addEventListener('click',function (event) {
     });
     return;
   }
+  const threadTopic = event.target.closest('[data-thread-topic]');
+  if (threadTopic) {
+    const article = ARTICLE_BY_ID.get(state.selected);
+    const row = threadArticleRow(article);
+    if (!row || !row.topics.includes(threadTopic.dataset.threadTopic)) return;
+    markMeaningfulNavigation();
+    state.threadTopic = threadTopic.dataset.threadTopic;
+    pendingBriefFocus = {kind:'thread',value:state.threadTopic};
+    render();
+    return;
+  }
+  const threadLoad = event.target.closest('[data-thread-load]');
+  if (threadLoad) {
+    const prior = ARTICLE_BY_ID.get(threadLoad.dataset.threadLoad);
+    if (!prior) return;
+    const request = {
+      articleId:prior.id,selectedId:state.selected,topic:state.threadTopic
+    };
+    threadComparisonRequest = request;
+    pendingBriefFocus = {kind:'thread-comparison',value:prior.id};
+    render();
+    document.getElementById('announcer').textContent = 'Loading and verifying the exact prior article dossier';
+    ensureArticleBrief(prior).then(function (briefValue) {
+      if (threadComparisonRequest !== request) return;
+      threadComparisonRequest = null;
+      const contextMatches = state.view === 'briefing' &&
+        state.selected === request.selectedId && state.threadTopic === request.topic;
+      if (!contextMatches) return;
+      pendingBriefFocus = {kind:'thread-comparison',value:prior.id};
+      render();
+      const completion = briefValue
+        ? 'Exact prior passage comparison loaded and verified'
+        : 'Exact prior dossier could not be verified; retry is available';
+      document.getElementById('announcer').textContent = completion;
+      if (!briefValue) showToast('Exact prior dossier could not be verified');
+    });
+    return;
+  }
+  const threadArticle = event.target.closest('[data-thread-article]');
+  if (threadArticle) {
+    const topic = THREADS.topics && THREADS.topics[state.threadTopic];
+    if (!topic || !topic.article_ids.includes(threadArticle.dataset.threadArticle)) return;
+    markMeaningfulNavigation();
+    state.view = 'briefing';
+    state.briefLens = 'all';
+    state.selected = threadArticle.dataset.threadArticle;
+    pendingBriefFocus = {kind:'article',value:state.selected};
+    render();
+    document.getElementById('briefing-shell').scrollTop = 0;
+    return;
+  }
   const briefLens = event.target.closest('[data-brief-lens]');
   if (briefLens) {
     markMeaningfulNavigation();
@@ -5058,6 +5513,7 @@ document.addEventListener('click',function (event) {
     state.briefLens = VALID_BRIEF_LENSES.has(briefLens.dataset.briefLens) ? briefLens.dataset.briefLens : 'all';
     pendingBriefFocus = {kind:'lens',value:state.briefLens};
     state.selected = '';
+    state.threadTopic = '';
     state.sort = 'newest';
     state.limit = PAGE_SIZE.briefing;
     render();
@@ -5069,6 +5525,7 @@ document.addEventListener('click',function (event) {
     markMeaningfulNavigation();
     state.view = 'briefing';
     state.selected = briefArticle.dataset.briefArticle;
+    state.threadTopic = '';
     pendingBriefFocus = {kind:'article',value:state.selected};
     render();
     document.getElementById('briefing-shell').scrollTop = 0;
@@ -5079,6 +5536,7 @@ document.addEventListener('click',function (event) {
     markMeaningfulNavigation();
     state.view = 'research';
     state.selected = articleDossier.dataset.articleDossier;
+    state.threadTopic = '';
     state.sort = 'newest';
     state.limit = PAGE_SIZE.research;
     renderObservationAwareNavigation('inspector');
@@ -5090,6 +5548,7 @@ document.addEventListener('click',function (event) {
     state.view = view.dataset.view;
     state.sort = 'newest';
     state.selected = '';
+    state.threadTopic = '';
     state.limit = PAGE_SIZE[state.view];
     renderObservationAwareNavigation('entry');
     return;
@@ -5100,6 +5559,7 @@ document.addEventListener('click',function (event) {
     state.view = kpiView.dataset.kpiView;
     state.sort = 'newest';
     state.selected = '';
+    state.threadTopic = '';
     state.limit = PAGE_SIZE[state.view];
     renderObservationAwareNavigation('entry');
     return;
@@ -5579,6 +6039,7 @@ document.addEventListener('keydown',function (event) {
     state.view = viewNumber === '1' ? 'briefing' : viewNumber === '2' ? 'ideas' : viewNumber === '3' ? 'research' : 'queue';
     state.sort = 'newest';
     state.selected = '';
+    state.threadTopic = '';
     state.limit = PAGE_SIZE[state.view];
     renderObservationAwareNavigation('entry');
   }
@@ -5587,11 +6048,15 @@ document.addEventListener('keydown',function (event) {
 window.addEventListener('popstate',function () {
   restoringHistory = true;
   hydrateFromHash();
+  if (state.view === 'briefing' && state.threadTopic) {
+    pendingBriefFocus = {kind:'thread',value:state.threadTopic};
+  }
   document.getElementById('search').value = state.query;
   const waiting = !observationsReady && currentStateNeedsObservations();
   if (waiting) queueObservationResultFocus('entry');
   render();
   restoringHistory = false;
+  updateHash();
   if (waiting) focusObservationGate();
   else focusViewEntry();
 });
@@ -5685,6 +6150,7 @@ else render();
 
 HTML = (HTML_TEMPLATE
         .replace('__ARTICLES_JSON__', articles_json)
+        .replace('__THREADS_JSON__', threads_json)
         .replace('__MANAGER_LABELS_JSON__', manager_labels_json)
         .replace('__SNAPSHOT_JSON__', snapshot_json)
         .replace('__MANAGER_BUTTONS__', manager_html)

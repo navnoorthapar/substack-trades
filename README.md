@@ -133,6 +133,15 @@ original passage; tokens are lexical, deduplicated, capped, and never presented
 as normalized or comparable facts. Duplicate spans are collapsed by source
 identity, related research requires an exact mentioned-entity or underlying
 overlap, and excerpt gaps are marked not assessable rather than absent.
+Research Threads add a longitudinal view within each body-backed dossier. They
+connect only repeated high-precision topics from the release search index,
+identify whether each match came from the title, subtitle, opening, or a
+classified section, retain full publication timestamps, show a bounded
+seven-entry chronology, and compare captured research roles with the preceding
+indexed publication. Exact older opening passages and their attached numeric
+tokens load only on request. A capture
+difference is an extraction fact—not evidence of a changed view,
+contradiction, conviction, performance, or portfolio action.
 Older article dossiers are release-bound deferred assets. The browser rejects
 missing, unknown, malformed, or hash-mismatched dossier records before installing
 any of them, and it never converts an unavailable dossier into a claim that

@@ -92,8 +92,10 @@ this directory-aware check with a fixed top-level file count.
    `gh workflow run watchdog.yml --ref main`; require its exact-release and
    freshness checks to pass.
 5. Open production and manually verify the default workbench, a recent article,
-   an older deferred dossier, observation loading, mobile layout, light/dark
-   themes, print preview, and source links. Open one recent and one registry-only
+   an older deferred dossier, Research Thread topic switching, a timeline
+   deep-link, explicit prior-passage loading and its failure/retry focus,
+   observation loading, mobile layout, light/dark themes, print preview, and
+   source links. Open one recent and one registry-only
    `/a/<slug>.html` URL, confirm its title/preview/canonical URL, verify the
    content-bearing stub enters the terminal while the registry-only stub opens
    its original public source, and fetch each matching 1200×630
