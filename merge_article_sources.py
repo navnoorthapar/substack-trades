@@ -53,6 +53,13 @@ NUMBER_WORDS = {
     'fourteen': '14', 'fifteen': '15', 'sixteen': '16',
     'seventeen': '17', 'eighteen': '18', 'nineteen': '19', 'twenty': '20',
 }
+MEDIUM_ID_RE = re.compile(r'^[0-9a-f]{12}$')
+REVIEWED_OVERRIDE_KEYS = frozenset((
+    'medium_id',
+    'substack_slug',
+    'medium_title_key',
+    'substack_title',
+))
 
 
 def load_list(path, label):
@@ -129,11 +136,71 @@ def load_overrides(path=OVERRIDES_PATH):
     return entries
 
 
+def _validate_normalized_body_provenance(item, label):
+    revision_status = item['body_revision_status']
+    content_status = item['content_status']
+    source_updated_at = item['source_updated_at']
+    observed_updated_at = item['observed_source_updated_at']
+    if revision_status == 'current':
+        if source_updated_at != observed_updated_at:
+            raise ValueError(
+                f'{label} current body revision timestamps do not match'
+            )
+    elif revision_status == 'prior':
+        if (
+            content_status != 'excerpt'
+            or not source_updated_at
+            or not observed_updated_at
+            or source_updated_at == observed_updated_at
+        ):
+            raise ValueError(f'{label} prior body revision is inconsistent')
+    elif content_status != 'excerpt':
+        raise ValueError(f'{label} unverified body revision must be an excerpt')
+    if (
+        content_status == 'full'
+        and (
+            revision_status != 'current'
+            or not source_updated_at
+            or source_updated_at != observed_updated_at
+        )
+    ):
+        raise ValueError(
+            f'{label} full content requires a timestamp-bound current revision'
+        )
+
+
 def _canonical_substack_post(post):
     item = copy.deepcopy(post)
     item['source'] = 'substack'
     item['source_id'] = str(item.get('source_id') or item.get('slug') or '')
     item['content_status'] = item.get('content_status') or 'full'
+    revision_status = item.get('body_revision_status')
+    if revision_status is None:
+        # Legacy cache rows have no proof that their stored body still matches
+        # the publisher. Keep them searchable, but never silently promote them
+        # to a current full-text capture.
+        revision_status = 'unverified'
+        item['content_status'] = 'excerpt'
+    elif revision_status not in {'current', 'prior', 'unverified'}:
+        raise ValueError(
+            f"Substack post {item['source_id']!r} has an invalid body revision status"
+        )
+    item['body_revision_status'] = revision_status
+    if revision_status != 'current':
+        item['content_status'] = 'excerpt'
+    item['source_updated_at'] = (
+        item.get('source_updated_at')
+        if isinstance(item.get('source_updated_at'), str)
+        else ''
+    )
+    item['observed_source_updated_at'] = (
+        item.get('observed_source_updated_at')
+        if isinstance(item.get('observed_source_updated_at'), str)
+        else ''
+    )
+    _validate_normalized_body_provenance(
+        item, f"Substack post {item['source_id']!r}"
+    )
     item['url'] = str(item.get('url') or '').strip().rstrip('/')
     return item
 
@@ -144,6 +211,34 @@ def _canonical_medium_post(post):
     item['source_id'] = str(item.get('source_id') or item.get('medium_id') or '')
     item['medium_id'] = str(item.get('medium_id') or item['source_id'])
     item['content_status'] = item.get('content_status') or 'excerpt'
+    revision_status = item.get('body_revision_status')
+    if revision_status is None:
+        revision_status = 'unverified'
+        item['content_status'] = 'excerpt'
+    elif revision_status not in {'current', 'prior', 'unverified'}:
+        raise ValueError(
+            f"Medium post {item['source_id']!r} has an invalid body revision status"
+        )
+    item['body_revision_status'] = revision_status
+    if revision_status != 'current':
+        item['content_status'] = 'excerpt'
+    item['source_updated_at'] = (
+        item.get('source_updated_at')
+        if isinstance(item.get('source_updated_at'), str)
+        else (
+            item.get('latest_published_at')
+            if isinstance(item.get('latest_published_at'), str)
+            else ''
+        )
+    )
+    item['observed_source_updated_at'] = (
+        item.get('observed_source_updated_at')
+        if isinstance(item.get('observed_source_updated_at'), str)
+        else ''
+    )
+    _validate_normalized_body_provenance(
+        item, f"Medium post {item['source_id']!r}"
+    )
     item['url'] = str(item.get('url') or '').strip().rstrip('/')
     return item
 
@@ -151,9 +246,12 @@ def _canonical_medium_post(post):
 def _find_exact_or_prefix_match(medium, substack_by_title):
     variants = _title_variants(medium)
     for variant in variants:
-        candidates = substack_by_title.get(variant, [])
+        candidates = [
+            post for post in substack_by_title.get(variant, [])
+            if _date_distance(medium.get('post_date'), post.get('post_date')) <= 7
+        ]
         if len(candidates) == 1:
-            return candidates[0], 'normalized-title'
+            return candidates[0], 'normalized-title-and-date'
 
     if not _is_truncated_title(medium):
         return None, None
@@ -165,26 +263,75 @@ def _find_exact_or_prefix_match(medium, substack_by_title):
         candidates = []
         for normalized, posts in substack_by_title.items():
             if normalized.startswith(variant):
-                candidates.extend(posts)
+                candidates.extend(
+                    post for post in posts
+                    if _date_distance(
+                        medium.get('post_date'), post.get('post_date')
+                    ) <= 7
+                )
         if len(candidates) == 1:
-            return candidates[0], 'ellipsized-title-prefix'
+            return candidates[0], 'ellipsized-title-prefix-and-date'
     return None, None
 
 
-def _find_override_match(medium, overrides, substack_by_title):
-    variants = set(_title_variants(medium))
-    for override in overrides:
-        key = normalize_title(override.get('medium_title_key') or override.get('medium_title'))
-        if key not in variants:
-            continue
-        target = normalize_title(override.get('substack_title'))
-        candidates = substack_by_title.get(target, [])
-        if len(candidates) != 1:
+def _prepare_reviewed_overrides(
+        overrides, medium_by_id, substack_by_slug):
+    """Resolve reviewed mappings by immutable IDs; titles are cross-checks."""
+    prepared = {}
+    for index, override in enumerate(overrides):
+        if not isinstance(override, dict) or set(override) != REVIEWED_OVERRIDE_KEYS:
             raise ValueError(
-                f"override for {medium.get('title')!r} resolves to {len(candidates)} "
-                'Substack articles instead of exactly one'
+                f'dedupe override {index} must contain exactly the immutable '
+                'ID pair and two title cross-checks'
             )
-        return candidates[0], 'reviewed-override'
+        medium_id = override.get('medium_id')
+        substack_slug = override.get('substack_slug')
+        if (
+            not isinstance(medium_id, str)
+            or MEDIUM_ID_RE.fullmatch(medium_id) is None
+            or medium_id in prepared
+        ):
+            raise ValueError(
+                f'dedupe override {index} has an invalid or duplicate medium_id'
+            )
+        if not isinstance(substack_slug, str) or not substack_slug:
+            raise ValueError(f'dedupe override {index} has no substack_slug')
+        medium = medium_by_id.get(medium_id)
+        if medium is None:
+            raise ValueError(
+                f'dedupe override {index} refers to unknown Medium ID {medium_id!r}'
+            )
+        target = substack_by_slug.get(substack_slug)
+        if target is None:
+            raise ValueError(
+                f'dedupe override {index} refers to unknown Substack slug '
+                f'{substack_slug!r}'
+            )
+        medium_title_key = normalize_title(override.get('medium_title_key'))
+        substack_title = normalize_title(override.get('substack_title'))
+        if (
+            not medium_title_key
+            or medium_title_key not in _title_variants(medium)
+        ):
+            raise ValueError(
+                f'dedupe override {index} Medium title cross-check failed'
+            )
+        if (
+            not substack_title
+            or substack_title != normalize_title(target.get('title'))
+        ):
+            raise ValueError(
+                f'dedupe override {index} Substack title cross-check failed'
+            )
+        prepared[medium_id] = target
+    return prepared
+
+
+def _find_override_match(medium, reviewed_overrides):
+    medium_id = medium.get('medium_id') or medium.get('source_id')
+    target = reviewed_overrides.get(medium_id)
+    if target is not None:
+        return target, 'reviewed-override'
     return None, None
 
 
@@ -244,6 +391,23 @@ def article_metadata(post):
         'brief': build_article_brief(post),
         'family': classify_family(post),
     }
+    if value['content_status'] != 'registry':
+        revision_status = post.get('body_revision_status') or 'unverified'
+        if revision_status != 'current':
+            value['content_status'] = 'excerpt'
+        value.update({
+            'body_revision_status': revision_status,
+            'source_updated_at': (
+                post.get('source_updated_at')
+                if isinstance(post.get('source_updated_at'), str)
+                else ''
+            ),
+            'observed_source_updated_at': (
+                post.get('observed_source_updated_at')
+                if isinstance(post.get('observed_source_updated_at'), str)
+                else ''
+            ),
+        })
     if post.get('alternate_urls'):
         value['alternate_urls'] = post['alternate_urls']
     return value
@@ -261,6 +425,17 @@ def merge_sources(
     substack_by_title: dict[str, list[dict]] = {}
     for post in substack:
         substack_by_title.setdefault(normalize_title(post.get('title')), []).append(post)
+    medium_by_id = {}
+    for post in medium:
+        medium_id = post.get('medium_id') or post.get('source_id')
+        if not medium_id or medium_id in medium_by_id:
+            raise ValueError('Medium input contains missing or duplicate post IDs')
+        medium_by_id[medium_id] = post
+    reviewed_overrides = _prepare_reviewed_overrides(
+        overrides,
+        medium_by_id,
+        substack_by_slug,
+    )
 
     combined = list(substack)
     matches = []
@@ -283,7 +458,7 @@ def merge_sources(
         if target is None:
             target, reason = _find_exact_or_prefix_match(post, substack_by_title)
         if target is None:
-            target, reason = _find_override_match(post, overrides, substack_by_title)
+            target, reason = _find_override_match(post, reviewed_overrides)
         if target is None:
             target, reason = _find_subtitle_match(post, substack)
         if target is None:

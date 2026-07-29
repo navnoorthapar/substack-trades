@@ -11,6 +11,9 @@ from validate_pipeline import validate_manifest, validate_previous_manifest
 from write_snapshot_manifest import build_manifest, data_checksum
 
 
+FIXTURE_NOW = datetime(2026, 7, 14, 2, 5, 0, tzinfo=timezone.utc)
+
+
 def sample_articles():
     return [
         {
@@ -94,6 +97,7 @@ class SnapshotManifestTests(unittest.TestCase):
             checked_at = validate_manifest(
                 manifest, sample_articles(), sample_observations(),
                 article_path, trade_path,
+                now=FIXTURE_NOW,
             )
             self.assertEqual(checked_at.isoformat(), '2026-07-14T02:00:02+00:00')
             self.assertEqual(manifest['schema_version'], 2)
@@ -120,6 +124,7 @@ class SnapshotManifestTests(unittest.TestCase):
                 validate_manifest(
                     manifest, sample_articles(), sample_observations(),
                     article_path, trade_path,
+                    now=FIXTURE_NOW,
                 )
 
     def test_manifest_rejects_a_future_dated_refresh_clock(self):
@@ -135,6 +140,37 @@ class SnapshotManifestTests(unittest.TestCase):
                     article_path,
                     trade_path,
                     now=datetime(2026, 7, 14, 2, 0, 0, tzinfo=timezone.utc),
+                )
+
+    def test_manifest_rejects_lagging_and_stale_source_checks(self):
+        with tempfile.TemporaryDirectory() as raw_directory:
+            directory = Path(raw_directory)
+            article_path, trade_path, manifest = self._fixture(directory)
+
+            lagging = json.loads(json.dumps(manifest))
+            lagging['sources']['substack']['checked_at'] = (
+                '2026-07-14T00:59:00Z'
+            )
+            with self.assertRaisesRegex(ValueError, 'too far behind'):
+                validate_manifest(
+                    lagging,
+                    sample_articles(),
+                    sample_observations(),
+                    article_path,
+                    trade_path,
+                    now=FIXTURE_NOW,
+                )
+
+            with self.assertRaisesRegex(ValueError, 'source check is stale'):
+                validate_manifest(
+                    manifest,
+                    sample_articles(),
+                    sample_observations(),
+                    article_path,
+                    trade_path,
+                    now=datetime(
+                        2026, 7, 14, 18, 1, 0, tzinfo=timezone.utc
+                    ),
                 )
 
     def test_previous_manifest_rejects_time_rollback_and_inconsistent_counts(self):
@@ -192,6 +228,9 @@ class SnapshotManifestTests(unittest.TestCase):
             'url': 'https://medium.com/@navnoorbawa/previous-abcdef123456',
             'visibility': 'PUBLIC',
             'content_status': 'full',
+            'body_revision_status': 'current',
+            'source_updated_at': '2026-07-13T01:00:00Z',
+            'observed_source_updated_at': '2026-07-13T01:00:00Z',
         }]
         newest = dict(
             previous[0],
@@ -222,6 +261,25 @@ class SnapshotManifestTests(unittest.TestCase):
             self.assertEqual(status['mode'], 'cached_archive_plus_rss')
             self.assertEqual(status['fetched_count'], 1)
             self.assertEqual(status['published_count'], 2)
+            carried = next(
+                row for row in catalogue
+                if row['medium_id'] == 'abcdef123456'
+            )
+            live = next(
+                row for row in catalogue
+                if row['medium_id'] == '123456abcdef'
+            )
+            self.assertEqual(carried['content_status'], 'excerpt')
+            self.assertEqual(carried['body_revision_status'], 'unverified')
+            self.assertEqual(
+                carried['source_updated_at'],
+                '2026-07-13T01:00:00Z',
+            )
+            self.assertEqual(carried['observed_source_updated_at'], '')
+            self.assertEqual(live['content_status'], 'excerpt')
+            self.assertEqual(live['body_revision_status'], 'current')
+            self.assertEqual(live['source_updated_at'], '')
+            self.assertEqual(live['observed_source_updated_at'], '')
 
     def test_fetch_status_outputs_have_required_provenance_fields(self):
         post = {'post_date': '2026-07-14T01:00:00Z'}

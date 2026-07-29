@@ -23,7 +23,9 @@ snapshot identity, and then fetch the other files from the same release.
   meaning, or changing an identity rule requires a schema-version increment.
 - `manifest.schema_version` versions the public data-layer contract.
   `brief.schema_version` independently versions the bounded article-brief
-  structure.
+  structure. The terminal's embedded compact article payload has a separate
+  `ARTICLE_WIRE_SCHEMA_VERSION`; version 2 requires the three body-revision
+  provenance fields and hydrates them unchanged into every runtime article.
 - `manifest.dataset_version` is the lowercase SHA-256 snapshot checksum from
   `snapshot_manifest.json`. It identifies the exact tracked article and
   observation snapshot, not an individual article and not a durable database
@@ -82,7 +84,26 @@ JSON array in deterministic catalogue order. Every object has these fields:
 | `family` | string enum | Exactly one topic family described below |
 | `brief` | object | Bounded, source-verifiable brief described below |
 
-The following additive fields may be present:
+Every Substack and Medium row also has these body-revision provenance fields:
+
+| Field | Type | Guarantee |
+|---|---|---|
+| `body_revision_status` | string enum | `current`, `prior`, or `unverified` |
+| `source_updated_at` | string | Source revision attributed to the captured body, or `""` when the source exposes no revision timestamp |
+| `observed_source_updated_at` | string | Source revision observed by the refresh, or `""` when the live source exposes no revision timestamp |
+
+`current` requires the two revision timestamps to match. They may both be empty
+only for an excerpt from a live source, such as RSS, that exposes no separate
+update timestamp. `prior` requires two non-empty, unequal timestamps and is
+always an excerpt. `unverified` is always an excerpt and means a cached capture
+remains searchable but its body revision was not verified during the current
+refresh; either timestamp may be unavailable. Only `current` may be labelled
+`full`, and a `full` row requires two non-empty matching revision timestamps, a
+positive declared word count, and a non-empty captured-body digest. These
+fields describe captured-source provenance, not whether the article's claims
+are correct or current in the market.
+
+The following other additive fields may be present:
 
 | Field | Type | Guarantee |
 |---|---|---|
@@ -91,7 +112,8 @@ The following additive fields may be present:
 
 Substack and Medium entries have `content_status` `full` or `excerpt`. Patreon
 and FX Empire entries are metadata-only and always have `content_status`
-`registry`, `wordcount` `0`, and no republished body.
+`registry`, `wordcount` `0`, no republished body, and no body-revision
+provenance fields.
 
 ### Brief object
 
@@ -109,8 +131,10 @@ Every `brief` contains:
 A normal span carries `text`, `start`, `end`, `sha256`, and `truncated`.
 Section rows additionally carry `kind`, `heading`, and `source_order`.
 Checkpoint rows additionally carry `date`, `date_label`, and `context_kind`.
-Offsets and hashes bind displayed text to the captured source. `truncated: true`
-must be respected; it is not permission to infer the omitted text.
+Offsets and hashes bind displayed text to the captured body revision. They do
+not prove that a `prior` or `unverified` capture matches the source's current
+text. `truncated: true` must be respected; it is not permission to infer the
+omitted text.
 
 ## `data/latest.json`
 

@@ -15,6 +15,8 @@ Production: <https://navnoorthapar.github.io/substack-trades/>
   updates and deletion without bypass actors; it deliberately allows creation.
 - The scheduled Mac is logged in, connected to the internet, and allowed to run
   `com.navnoor.substacktrades` in the background.
+- `git config --local --get core.hooksPath` returns `.githooks`; the installer
+  refuses to overwrite a different existing hooks path.
 - No secrets, private datasets, or confidential decision packets are committed.
 
 ## 2. Preflight gate
@@ -36,30 +38,12 @@ plutil -lint launchd/com.navnoor.substacktrades.plist
 PREVIEW_DIR="$(mktemp -d)"
 SITE_OUTPUT_DIR="$PREVIEW_DIR" SITE_REVISION="$(git rev-parse HEAD)" python3 build_site.py
 python3 validate_inline_scripts.py "$PREVIEW_DIR/index.html"
-python3 - "$PREVIEW_DIR" <<'PY'
-import json
-import sys
-from pathlib import Path
-
-from data_contract import validate_data_layer
-from share_cards import MAX_CARD_BYTES
-
-root = Path(sys.argv[1])
-articles = json.loads(Path('articles_index.json').read_text(encoding='utf-8'))
-summary = validate_data_layer(
-    root, Path('articles_index.json'), Path('snapshot_manifest.json'),
-)
-slugs = {article['slug'] for article in articles}
-cards = {path.stem for path in (root / 'cards').glob('*.png')}
-stubs = {path.stem for path in (root / 'a').glob('*.html')}
-assert cards == slugs, 'share-card set does not equal the catalogue slug set'
-assert stubs == slugs, 'article-stub set does not equal the catalogue slug set'
-for path in (root / 'cards').glob('*.png'):
-    payload = path.read_bytes()
-    assert payload.startswith(b'\x89PNG\r\n\x1a\n')
-    assert len(payload) <= MAX_CARD_BYTES
-print(summary)
-PY
+python3 validate_release.py \
+  --site "$PREVIEW_DIR" \
+  --articles articles_index.json \
+  --trades trades_extracted.json \
+  --manifest snapshot_manifest.json \
+  --expected-revision "$(git rev-parse HEAD)"
 rm -r "$PREVIEW_DIR"
 git diff --check
 ./automation_status.sh
@@ -75,8 +59,9 @@ cache. Confirm the generated artifact contains `index.html`, both deferred JSON
 assets, all six contract files under `data/`, exactly one PNG under `cards/` and
 one HTML stub under `a/` for every catalogue slug, plus `robots.txt`,
 `sitemap.xml`, `site.webmanifest`, `favicon.svg`, and `og.jpg`. Inspect the
-reported public-data bundle digest and article/card/stub counts; do not replace
-this directory-aware check with a fixed top-level file count.
+reported six release fingerprints, public-data digest, size budgets, and
+article/card/stub counts. This shared validator is the same executable used by
+the scheduled refresh, pre-push gate, CI, and independent watchdog.
 
 ## 3. Release
 
@@ -176,13 +161,43 @@ For Critical or High incidents:
 1. Preserve the failing workflow URL, commit, UTC time, browser/OS, console text,
    and source-health state. Do not include confidential reader data.
 2. Stop further automatic publication if continued runs could worsen impact.
-3. Revert the offending commit with `git revert`; never rewrite shared history.
-4. Push the revert and require the complete quality and exact-production smoke
-   gates. Deployment accepts only the current `main` ref, so restore any older
-   tree or snapshot through a new reviewed commit on `main`; do not dispatch a
-   tag or detached SHA as a rollback.
-5. Verify production and the watchdog, then communicate scope and resolution.
-6. Document root cause, detection gap, corrective test, and follow-up owner.
+3. If a current, corrected snapshot can be produced safely, revert the
+   offending source/code commit with `git revert`; never rewrite shared history.
+   Refresh the snapshot, push, and require the complete quality and
+   exact-production smoke gates.
+4. If the deployed artifact itself must be restored immediately, select a
+   prior successful **Validate and Deploy Pages** `push` or authenticated
+   `workflow_dispatch` run on `main` that still exposes
+   `verified-pages-<release-sha>`. Record its run ID and exact head SHA, then
+   dispatch the protected manual rollback from `main`:
+
+   ```bash
+   gh workflow run rollback.yml --ref main \
+     -f source_run_id=SUCCESSFUL_RUN_ID \
+     -f release_sha=EXACT_40_CHARACTER_SHA \
+     -f confirmation=ROLLBACK
+   gh run list --workflow rollback.yml --event workflow_dispatch --limit 3
+   gh run watch ROLLBACK_RUN_ID --exit-status
+   ```
+
+   The workflow refuses non-`main` tooling, a source run other than a successful
+   push or authenticated manual release on `main`, a mismatched SHA, an
+   expired/missing artifact, unsafe archive paths, attestation or payload drift,
+   superseded rollback tooling, or any exact live-byte mismatch. The successful
+   source run is the proof that the archived release passed its original
+   contract. Rollback uses current `main` tooling only; it never checks out or
+   executes historical code. It redeploys retained bytes, then fetches every
+   archived path over HTTPS with a revision-bound cache key and requires the
+   same origin, path, length, hash, and bytes. It never rebuilds an old snapshot
+   under a new revision.
+5. A historical rollback restores known release bytes but does not make old
+   research current. The freshness watchdog should continue to report stale
+   until a corrected fresh snapshot passes the normal release path. Do not
+   certify the incident as resolved merely because the rollback smoke passed.
+6. Verify production, publish the corrected fresh release, require the normal
+   watchdog to pass again, then communicate scope and resolution.
+7. Document root cause, detection gap, corrective test, source/rollback run
+   URLs, and follow-up owner.
 
 ## 7. Public data, registry, and share-asset release
 

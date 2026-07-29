@@ -5,11 +5,12 @@ import argparse
 import json
 import re
 import sys
+import unicodedata
 from collections import Counter
 from datetime import date as Date
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import quote, unquote_to_bytes, urlsplit, urlunsplit
 
 from article_briefs import validate_brief_against_body, validate_brief_structure
 from extract_trades import (
@@ -48,14 +49,21 @@ VALID_FAMILIES = {
     'other',
 }
 VALID_FETCH_STATUSES = {'ok', 'degraded'}
+VALID_BODY_REVISION_STATUSES = {'current', 'prior', 'unverified'}
 DATE_ONLY_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 TIMESTAMP_RE = re.compile(
     r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}'
     r'(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$'
 )
 SHA256_RE = re.compile(r'^[0-9a-f]{64}$')
-MEDIUM_ID_RE = re.compile(r'(?:-|/)([0-9a-f]{12})$', re.IGNORECASE)
+MEDIUM_SLUG_ID_RE = re.compile(
+    r'^(?:.+-)?([0-9a-f]{12})$',
+    re.IGNORECASE,
+)
 MAX_FUTURE_CLOCK_SKEW = timedelta(minutes=10)
+MAX_SOURCE_MANIFEST_LAG = timedelta(hours=1)
+MAX_SOURCE_CHECK_AGE = timedelta(hours=16)
+MIN_FULL_BODY_WORD_RATIO_PERCENT = 97
 EMPTY_BODY_SHA256 = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
 REGISTRY_BRIEF_KEYS = {
     'schema_version', 'body_sha256', 'lead', 'sections', 'fallback_evidence',
@@ -98,6 +106,13 @@ def require_string(value, message, allow_empty=False):
     require(isinstance(value, str), message)
     require(allow_empty or bool(value.strip()), message)
     return value
+
+
+def body_word_count(value):
+    """Count captured-body tokens using the same rule as ingestion."""
+    if not isinstance(value, str):
+        return 0
+    return len(re.findall(r"\b[\w’'-]+\b", value, flags=re.UNICODE))
 
 
 def validate_registry_brief(brief, label):
@@ -170,8 +185,32 @@ def canonical_url_identity(source, url):
     if source == 'medium':
         require(host == 'medium.com', 'Medium URL has the wrong host')
         prefix = '/@navnoorbawa/'
-        require(parsed.path.startswith(prefix), 'Medium URL has the wrong author path')
-        match = MEDIUM_ID_RE.search(parsed.path)
+        require(
+            parsed.path.startswith(prefix),
+            'Medium URL has the wrong author path',
+        )
+        raw_slug = parsed.path[len(prefix):]
+        require(
+            bool(raw_slug)
+            and '/' not in raw_slug
+            and re.search(r'%(?![0-9A-Fa-f]{2})', raw_slug) is None,
+            'Medium URL has a non-canonical encoded path',
+        )
+        try:
+            slug = unquote_to_bytes(raw_slug).decode('utf-8')
+        except UnicodeDecodeError:
+            raise ValueError('Medium URL slug is not canonical UTF-8') from None
+        require(
+            unicodedata.normalize('NFC', slug) == slug
+            and '.' not in slug
+            and all(
+                character.isalnum() or character in {'-', '_'}
+                for character in slug
+            )
+            and raw_slug == quote(slug, safe='-_'),
+            'Medium URL has a non-canonical encoded path',
+        )
+        match = MEDIUM_SLUG_ID_RE.fullmatch(slug)
         if match is None:
             raise ValueError('Medium URL has no canonical post ID')
         return match.group(1).casefold()
@@ -224,6 +263,68 @@ def validate_article_record(record, index, label):
     if source in CONTENT_SOURCES:
         require(content_status in {'full', 'excerpt'},
                 f'{label} {index} content source cannot be registry-only')
+        for field in (
+            'body_revision_status',
+            'source_updated_at',
+            'observed_source_updated_at',
+        ):
+            require(field in record,
+                    f'{label} {index} has no explicit {field}')
+        revision_status = record.get('body_revision_status')
+        require(
+            revision_status in VALID_BODY_REVISION_STATUSES,
+            f'{label} {index} has an invalid body revision status',
+        )
+        source_updated_at = record.get('source_updated_at')
+        observed_updated_at = record.get('observed_source_updated_at')
+        require(
+            isinstance(source_updated_at, str)
+            and isinstance(observed_updated_at, str),
+            f'{label} {index} body revision timestamps must be strings',
+        )
+        for field, value in (
+            ('source_updated_at', source_updated_at),
+            ('observed_source_updated_at', observed_updated_at),
+        ):
+            if value:
+                require(
+                    TIMESTAMP_RE.fullmatch(value) is not None,
+                    f'{label} {index} {field} is not an ISO timestamp',
+                )
+                parse_iso_date(
+                    value,
+                    f'{label} {index} {field}',
+                )
+        if revision_status == 'prior':
+            require(
+                content_status == 'excerpt'
+                and bool(source_updated_at)
+                and bool(observed_updated_at)
+                and source_updated_at != observed_updated_at,
+                f'{label} {index} prior body revision is inconsistent',
+            )
+        elif revision_status == 'unverified':
+            require(
+                content_status == 'excerpt',
+                f'{label} {index} unverified body revision is inconsistent',
+            )
+        else:
+            require(
+                source_updated_at == observed_updated_at,
+                f'{label} {index} current body revision is inconsistent',
+            )
+        if content_status == 'full':
+            require(
+                revision_status == 'current'
+                and bool(source_updated_at)
+                and source_updated_at == observed_updated_at,
+                f'{label} {index} full content requires a timestamp-bound '
+                'current body revision',
+            )
+            require(
+                'wordcount' in record,
+                f'{label} {index} full content has no explicit word count',
+            )
     else:
         require(content_status == 'registry',
                 f'{label} {index} registry source must be metadata-only')
@@ -256,9 +357,21 @@ def validate_article_record(record, index, label):
         wordcount = record['wordcount']
         require(type(wordcount) is int and wordcount >= 0,
                 f'{label} {index} has an invalid word count')
+        if content_status == 'full':
+            require(
+                wordcount > 0,
+                f'{label} {index} full content has no positive word count',
+            )
         if content_status == 'registry':
             require(wordcount == 0,
                     f'{label} {index} registry entry has a non-zero word count')
+    if label == 'article' and content_status == 'full':
+        brief = record.get('brief')
+        require(
+            isinstance(brief, dict)
+            and brief.get('body_sha256') != EMPTY_BODY_SHA256,
+            f'{label} {index} full content has an empty-body brief',
+        )
     alternate_urls = record.get('alternate_urls', {})
     require(isinstance(alternate_urls, dict),
             f'{label} {index} alternate URLs are not an object')
@@ -275,6 +388,22 @@ def validate_article_record(record, index, label):
         'post_date': timestamp,
         'calendar_date': calendar_date,
         'content_status': content_status,
+        'wordcount': record.get('wordcount'),
+        'body_revision_status': (
+            record.get('body_revision_status')
+            if source in CONTENT_SOURCES
+            else None
+        ),
+        'source_updated_at': (
+            record.get('source_updated_at')
+            if source in CONTENT_SOURCES
+            else None
+        ),
+        'observed_source_updated_at': (
+            record.get('observed_source_updated_at')
+            if source in CONTENT_SOURCES
+            else None
+        ),
     }
 
 
@@ -286,6 +415,18 @@ def validate_posts(posts):
         metadata = validate_article_record(post, index, 'post')
         body_text = post.get('body_text')
         require(isinstance(body_text, str), f'post {index} has no source body text')
+        if metadata['content_status'] == 'full':
+            require(
+                bool(body_text.strip()),
+                f'post {index} full content has an empty source body',
+            )
+            captured_words = body_word_count(body_text)
+            require(
+                captured_words * 100
+                >= metadata['wordcount'] * MIN_FULL_BODY_WORD_RATIO_PERCENT,
+                f'post {index} full body covers less than 97% of its '
+                'declared word count',
+            )
         metadata['body_text'] = body_text
         require(post.get('is_published') is True,
                 f'post {index} is not explicitly published')
@@ -317,6 +458,17 @@ def validate_article_index(articles, post_by_url):
                     f'article {index} date does not match its fetched post')
             require(metadata['content_status'] == post['content_status'],
                     f'article {index} content status does not match its fetched post')
+            require(metadata['wordcount'] == post['wordcount'],
+                    f'article {index} word count does not match its fetched post')
+            for field in (
+                'body_revision_status',
+                'source_updated_at',
+                'observed_source_updated_at',
+            ):
+                require(
+                    metadata[field] == post[field],
+                    f'article {index} {field} does not match its fetched post',
+                )
             require('brief' in article, f'article {index} has no source-backed brief')
             try:
                 validate_brief_against_body(article['brief'], post['body_text'])
@@ -579,6 +731,15 @@ def validate_manifest(manifest, articles, trades, article_path, trade_path, now=
                 f'manifest {source} checked_at is later than the manifest')
         require(source_checked <= future_cutoff,
                 f'manifest {source} checked_at is implausibly far in the future')
+        require(
+            checked_at - source_checked <= MAX_SOURCE_MANIFEST_LAG,
+            f'manifest {source} checked_at is too far behind the manifest',
+        )
+        require(
+            validation_now.astimezone(timezone.utc) - source_checked
+            <= MAX_SOURCE_CHECK_AGE,
+            f'manifest {source} source check is stale',
+        )
         require(item.get('status') in VALID_FETCH_STATUSES,
                 f'manifest {source} has an invalid fetch status')
         require(isinstance(item.get('mode'), str) and item['mode'].strip(),

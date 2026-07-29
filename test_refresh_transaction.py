@@ -81,6 +81,12 @@ elif script == 'write_snapshot_manifest.py':
     write_json(option('--output'), {'candidate': 'manifest'})
 elif script == 'validate_pipeline.py':
     raise SystemExit(41 if os.environ.get('FAKE_FAILURE') == 'validation' else 0)
+elif script == 'build_site.py':
+    site = Path(os.environ['SITE_OUTPUT_DIR'])
+    site.mkdir(parents=True)
+    (site / 'index.html').write_text('candidate release', encoding='utf-8')
+elif script == 'validate_release.py':
+    raise SystemExit(43 if os.environ.get('FAKE_FAILURE') == 'release' else 0)
 else:
     raise SystemExit(91)
 '''
@@ -260,6 +266,15 @@ class RefreshTransactionTests(unittest.TestCase):
         result = self.run_refresh('regression')
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn('-m unittest -q', self.invocation_log())
+        self.assertIn('restoring the previous local snapshot', result.stderr)
+        self.assertNotIn('\nadd ', '\n' + self.git_log())
+        self.assert_previous_state_is_exact_and_temporary_state_is_gone()
+
+    def test_release_artifact_failure_restores_snapshot_before_staging(self):
+        result = self.run_refresh('release')
+        self.assertEqual(result.returncode, 43, result.stdout + result.stderr)
+        self.assertIn('build_site.py', self.invocation_log())
+        self.assertIn('validate_release.py', self.invocation_log())
         self.assertIn('restoring the previous local snapshot', result.stderr)
         self.assertNotIn('\nadd ', '\n' + self.git_log())
         self.assert_previous_state_is_exact_and_temporary_state_is_gone()

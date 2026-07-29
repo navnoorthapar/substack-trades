@@ -6,12 +6,13 @@ import json
 import math
 import os
 import re
+import unicodedata
 from collections import Counter, defaultdict
 from datetime import date as Date
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple, Union
-from urllib.parse import urlsplit
+from urllib.parse import quote, unquote_to_bytes, urlsplit, urlunsplit
 
 from research_graph import article_feature_terms
 
@@ -43,10 +44,20 @@ FAMILIES: Tuple[str, ...] = (
     'market-structure',
     'other',
 )
+BODY_REVISION_STATUSES: Tuple[str, ...] = (
+    'current',
+    'prior',
+    'unverified',
+)
 
 ARTICLE_REQUIRED_KEYS = frozenset((
     'source', 'source_id', 'slug', 'title', 'subtitle', 'post_date', 'url',
     'audience', 'wordcount', 'content_status', 'brief', 'family',
+))
+ARTICLE_BODY_PROVENANCE_KEYS = frozenset((
+    'body_revision_status',
+    'source_updated_at',
+    'observed_source_updated_at',
 ))
 LATEST_KEYS = (
     'source', 'slug', 'title', 'subtitle', 'post_date', 'url', 'alternate_urls',
@@ -73,6 +84,10 @@ DATE_ONLY_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 TIMESTAMP_RE = re.compile(
     r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}'
     r'(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$'
+)
+MEDIUM_SLUG_ID_RE = re.compile(
+    r'^(?:.+-)?([0-9a-f]{12})$',
+    re.IGNORECASE,
 )
 FORBIDDEN_PRIVACY_KEYS = frozenset((
     'openrate',
@@ -239,6 +254,59 @@ def _https_url(value: Any, label: str) -> str:
     return value
 
 
+def _medium_url_identity(value: str, label: str) -> str:
+    """Bind a Medium URL to this author and one canonical item path."""
+    try:
+        parsed = urlsplit(value)
+        port = parsed.port
+    except ValueError:
+        raise ValueError(f'{label} is not a valid Medium URL') from None
+    _require(
+        parsed.scheme == 'https'
+        and parsed.hostname == 'medium.com'
+        and parsed.username is None
+        and parsed.password is None
+        and port is None
+        and not parsed.query
+        and not parsed.fragment,
+        f'{label} must be a canonical Medium author URL',
+    )
+    prefix = '/@navnoorbawa/'
+    _require(
+        parsed.path.startswith(prefix),
+        f'{label} has the wrong Medium author path',
+    )
+    raw_slug = parsed.path[len(prefix):]
+    _require(
+        bool(raw_slug)
+        and '/' not in raw_slug
+        and re.search(r'%(?![0-9A-Fa-f]{2})', raw_slug) is None,
+        f'{label} has a non-canonical Medium path',
+    )
+    try:
+        slug = unquote_to_bytes(raw_slug).decode('utf-8')
+    except UnicodeDecodeError:
+        raise ValueError(f'{label} slug is not canonical UTF-8') from None
+    _require(
+        unicodedata.normalize('NFC', slug) == slug
+        and '.' not in slug
+        and all(
+            character.isalnum() or character in {'-', '_'}
+            for character in slug
+        )
+        and raw_slug == quote(slug, safe='-_'),
+        f'{label} has a non-canonical Medium path',
+    )
+    id_match = MEDIUM_SLUG_ID_RE.fullmatch(slug)
+    if id_match is None:
+        raise ValueError(f'{label} has no canonical Medium post ID')
+    _require(
+        value == urlunsplit(('https', 'medium.com', parsed.path, '', '')),
+        f'{label} is not in canonical Medium form',
+    )
+    return id_match.group(1).casefold()
+
+
 def _validate_brief(value: Any, label: str) -> None:
     _require(isinstance(value, dict), f'{label} must be an object')
     missing = sorted(BRIEF_REQUIRED_KEYS - value.keys())
@@ -270,6 +338,72 @@ def _validate_registry_brief(value: Any, label: str) -> None:
              f'{label} does not match the exact empty-body registry contract')
     _require(value.get('sections') == [] and value.get('checkpoints') == [],
              f'{label} does not match the exact empty-body registry contract')
+
+
+def _validate_body_provenance(
+    article: Mapping[str, Any],
+    label: str,
+    content_status: Any,
+) -> None:
+    """Validate which observed source revision supplied the captured body."""
+    missing = sorted(ARTICLE_BODY_PROVENANCE_KEYS - article.keys())
+    _require(
+        not missing,
+        f'{label} is missing body provenance fields: {", ".join(missing)}',
+    )
+    revision_status = article.get('body_revision_status')
+    _require(
+        revision_status in BODY_REVISION_STATUSES,
+        f'{label} has an invalid body_revision_status',
+    )
+    source_updated_at = article.get('source_updated_at')
+    observed_updated_at = article.get('observed_source_updated_at')
+    _require(
+        isinstance(source_updated_at, str)
+        and isinstance(observed_updated_at, str),
+        f'{label} body revision timestamps must be strings',
+    )
+    for field, value in (
+        ('source_updated_at', source_updated_at),
+        ('observed_source_updated_at', observed_updated_at),
+    ):
+        if value:
+            _require(
+                TIMESTAMP_RE.fullmatch(value) is not None,
+                f'{label} {field} must be a timezone-qualified timestamp',
+            )
+            _publication_instant(value, f'{label} {field}')
+
+    if revision_status == 'current':
+        _require(
+            source_updated_at == observed_updated_at,
+            f'{label} current body revision timestamps must match',
+        )
+    elif revision_status == 'prior':
+        _require(
+            content_status == 'excerpt'
+            and bool(source_updated_at)
+            and bool(observed_updated_at)
+            and source_updated_at != observed_updated_at,
+            f'{label} prior body revision is inconsistent',
+        )
+    else:
+        _require(
+            content_status == 'excerpt',
+            f'{label} unverified body revision must be an excerpt',
+        )
+
+    _require(
+        content_status != 'full' or revision_status == 'current',
+        f'{label} full content must come from the current source revision',
+    )
+    if content_status == 'full':
+        _require(
+            bool(source_updated_at)
+            and source_updated_at == observed_updated_at,
+            f'{label} full content requires non-empty matching body '
+            'revision timestamps',
+        )
 
 
 def _validate_articles(value: Any) -> Tuple[List[Dict[str, Any]], Dict[str, int], Dict[str, int]]:
@@ -306,6 +440,12 @@ def _validate_articles(value: Any) -> Tuple[List[Dict[str, Any]], Dict[str, int]
                  f'{label} wordcount must be a non-negative integer')
         _publication_instant(article.get('post_date'), f'{label} post_date')
         url = _https_url(article.get('url'), f'{label} url')
+        if source == 'medium':
+            _require(
+                _medium_url_identity(url, f'{label} url')
+                == source_id.casefold(),
+                f'{label} source_id does not match its canonical Medium URL',
+            )
         content_status = article.get('content_status')
         if source in {'patreon', 'fxempire'}:
             _require(content_status == 'registry',
@@ -327,6 +467,18 @@ def _validate_articles(value: Any) -> Tuple[List[Dict[str, Any]], Dict[str, int]
         else:
             _require(content_status in {'full', 'excerpt'},
                      f'{label} publication source has an invalid content_status')
+            _validate_body_provenance(article, label, content_status)
+            if content_status == 'full':
+                _require(
+                    wordcount > 0,
+                    f'{label} full content must have a positive wordcount',
+                )
+                brief = article.get('brief')
+                _require(
+                    isinstance(brief, dict)
+                    and brief.get('body_sha256') != EMPTY_BODY_SHA256,
+                    f'{label} full content must not use an empty-body brief',
+                )
         if content_status == 'registry':
             _validate_registry_brief(article.get('brief'), f'{label} brief')
         else:
@@ -343,7 +495,15 @@ def _validate_articles(value: Any) -> Tuple[List[Dict[str, Any]], Dict[str, int]
             for alternate_source, alternate_url in alternate_urls.items():
                 _require(alternate_source != source,
                          f'{label} alternate_urls must not repeat its canonical source')
-                _https_url(alternate_url, f'{label} alternate_urls.{alternate_source}')
+                alternate_url = _https_url(
+                    alternate_url,
+                    f'{label} alternate_urls.{alternate_source}',
+                )
+                if alternate_source == 'medium':
+                    _medium_url_identity(
+                        alternate_url,
+                        f'{label} alternate_urls.{alternate_source}',
+                    )
         identity = (source, source_id.casefold())
         _require(identity not in identities, f'{label} duplicates a source identity')
         _require(slug not in slugs, f'{label} duplicates slug {slug!r}')

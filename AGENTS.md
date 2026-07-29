@@ -36,6 +36,12 @@ SITE_OUTPUT_DIR="$(mktemp -d)"
 export SITE_OUTPUT_DIR
 SITE_REVISION=local-audit python3 build_site.py
 python3 validate_inline_scripts.py "$SITE_OUTPUT_DIR/index.html"
+python3 validate_release.py \
+  --site "$SITE_OUTPUT_DIR" \
+  --articles articles_index.json \
+  --trades trades_extracted.json \
+  --manifest snapshot_manifest.json \
+  --expected-revision local-audit
 rm -r "$SITE_OUTPUT_DIR"
 ```
 
@@ -49,6 +55,10 @@ for file in *.sh; do bash -n "$file"; done
 plutil -lint launchd/com.navnoor.substacktrades.plist
 git diff --check
 ```
+
+Before an update to remote `main`, run the exact committed revision through
+`./release_gate.sh "$(git rev-parse HEAD)"`. The tracked pre-push hook performs
+that check automatically when `core.hooksPath` is `.githooks`.
 
 `mypy.ini` deliberately scopes type checking to production Python modules and
 targets the supported Python 3.9 runtime. Both Ruff and mypy are required launch

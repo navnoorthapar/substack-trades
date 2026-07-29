@@ -28,7 +28,8 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Rebuild trusted asset fingerprints
+      - name: Rebuild and validate trusted release
+        id: release
         shell: bash
         env:
           SITE_OUTPUT_DIR: ${{ runner.temp }}/expected-site
@@ -37,26 +38,22 @@ jobs:
           set -euo pipefail
           test ! -e "$SITE_OUTPUT_DIR"
           python3 build_site.py
-          html_sha256=$(sha256sum "$SITE_OUTPUT_DIR/index.html" | awk '{print $1}')
-          brief_sha256=$(sha256sum "$SITE_OUTPUT_DIR/article_briefs.json" | awk '{print $1}')
-          observation_sha256=$(sha256sum "$SITE_OUTPUT_DIR/observations.json" | awk '{print $1}')
-          support_sha256=$(SITE_OUTPUT_DIR="$SITE_OUTPUT_DIR" python3 -c "import os; from smoke_test_site import support_bundle_checksum; print(support_bundle_checksum(os.environ['SITE_OUTPUT_DIR']))")
-          data_sha256=$(SITE_OUTPUT_DIR="$SITE_OUTPUT_DIR" python3 -c "import os; from data_contract import data_bundle_checksum; print(data_bundle_checksum(os.environ['SITE_OUTPUT_DIR']))")
-          share_sha256=$(SITE_OUTPUT_DIR="$SITE_OUTPUT_DIR" python3 -c "import os; from smoke_test_site import share_proof_bundle_checksum; print(share_proof_bundle_checksum(os.environ['SITE_OUTPUT_DIR'], 'articles_index.json'))")
-          [[ "$html_sha256" =~ ^[0-9a-f]{64}$ ]]
-          [[ "$brief_sha256" =~ ^[0-9a-f]{64}$ ]]
-          [[ "$observation_sha256" =~ ^[0-9a-f]{64}$ ]]
-          [[ "$support_sha256" =~ ^[0-9a-f]{64}$ ]]
-          [[ "$data_sha256" =~ ^[0-9a-f]{64}$ ]]
-          [[ "$share_sha256" =~ ^[0-9a-f]{64}$ ]]
-          echo "EXPECTED_HTML_SHA256=$html_sha256" >> "$GITHUB_ENV"
-          echo "EXPECTED_BRIEF_SHA256=$brief_sha256" >> "$GITHUB_ENV"
-          echo "EXPECTED_OBSERVATION_SHA256=$observation_sha256" >> "$GITHUB_ENV"
-          echo "EXPECTED_SUPPORT_SHA256=$support_sha256" >> "$GITHUB_ENV"
-          echo "EXPECTED_DATA_SHA256=$data_sha256" >> "$GITHUB_ENV"
-          echo "EXPECTED_SHARE_SHA256=$share_sha256" >> "$GITHUB_ENV"
+          python3 validate_release.py \
+            --site "$SITE_OUTPUT_DIR" \
+            --articles articles_index.json \
+            --trades trades_extracted.json \
+            --manifest snapshot_manifest.json \
+            --expected-revision "$SITE_REVISION" \
+            --github-output "$GITHUB_OUTPUT"
 
       - name: Verify exact live release
+        env:
+          EXPECTED_HTML_SHA256: ${{ steps.release.outputs.html_sha256 }}
+          EXPECTED_BRIEF_SHA256: ${{ steps.release.outputs.brief_sha256 }}
+          EXPECTED_OBSERVATION_SHA256: ${{ steps.release.outputs.observation_sha256 }}
+          EXPECTED_SUPPORT_SHA256: ${{ steps.release.outputs.support_sha256 }}
+          EXPECTED_DATA_SHA256: ${{ steps.release.outputs.data_sha256 }}
+          EXPECTED_SHARE_SHA256: ${{ steps.release.outputs.share_sha256 }}
         run: >-
           python3 smoke_test_site.py
           --expected-revision "$GITHUB_SHA"
@@ -82,14 +79,27 @@ jobs:
           checked_at = datetime.fromisoformat(str(snapshot['checked_at']).replace('Z', '+00:00'))
           now = datetime.now(timezone.utc)
           future_cutoff = now + timedelta(minutes=10)
+          maximum_age = timedelta(hours=16)
+          maximum_source_lag = timedelta(hours=1)
           if checked_at.astimezone(timezone.utc) > future_cutoff:
               raise SystemExit('Published research snapshot check time is implausibly far in the future')
           for source, status in snapshot.get('sources', {}).items():
               source_checked = datetime.fromisoformat(str(status['checked_at']).replace('Z', '+00:00'))
-              if source_checked.astimezone(timezone.utc) > future_cutoff:
+              source_checked = source_checked.astimezone(timezone.utc)
+              if source_checked > future_cutoff:
                   raise SystemExit(f'{source} check time is implausibly far in the future')
+              if source_checked > checked_at.astimezone(timezone.utc):
+                  raise SystemExit(f'{source} check time is later than the snapshot manifest')
+              if checked_at.astimezone(timezone.utc) - source_checked > maximum_source_lag:
+                  raise SystemExit(f'{source} check time is too far behind the snapshot manifest')
+              source_age = now - source_checked
+              if source_age > maximum_age:
+                  raise SystemExit(
+                      f'{source} source check is stale: '
+                      f'{source_age.total_seconds() / 3600:.1f} hours old'
+                  )
           age = now - checked_at.astimezone(timezone.utc)
-          if age.total_seconds() > 16 * 3600:
+          if age > maximum_age:
               raise SystemExit(
                   f"Published research snapshot is stale: {age.total_seconds() / 3600:.1f} hours old"
               )

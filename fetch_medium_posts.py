@@ -8,11 +8,13 @@ catalogue is preserved (and the RSS feed is merged into it) if that undocumented
 connection is temporarily unavailable.
 """
 import email.utils
+import hashlib
 import json
 import os
 import re
 import sys
 import time
+import unicodedata
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -20,7 +22,13 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fetch_all_posts import SSL_CONTEXT, atomic_write_json, iso_instant, strip_html
+from fetch_all_posts import (
+    SSL_CONTEXT,
+    atomic_write_json,
+    body_word_count,
+    iso_instant,
+    strip_html,
+)
 
 
 ROOT = Path(__file__).parent
@@ -34,6 +42,7 @@ GRAPHQL_URL = f'https://{USERNAME}.medium.com/_/graphql'
 RSS_URL = f'https://medium.com/feed/@{USERNAME}'
 PAGE_LIMIT = 25
 MAX_RSS_BYTES = 2_000_000
+MAX_GRAPHQL_BYTES = 12_000_000
 
 HEADERS = {
     'User-Agent': 'substack-trades/1.0 (+https://github.com/navnoorthapar/substack-trades)',
@@ -97,6 +106,121 @@ SUBSTACK_URL_RE = re.compile(
     re.IGNORECASE,
 )
 MEDIUM_ID_RE = re.compile(r'(?:-|/)([0-9a-f]{12})(?:[/?#]|$)', re.IGNORECASE)
+MEDIUM_SLUG_ID_RE = re.compile(
+    r'^(?:.+-)?([0-9a-f]{12})$',
+    re.IGNORECASE,
+)
+RSS_TRACKING_QUERY_RE = re.compile(
+    r'^source=rss-[0-9a-f]{12}-{6}[0-9]+$'
+)
+MIN_PUBLICATION_TIMESTAMP_MS = 1262304000000  # 2010-01-01T00:00:00Z
+
+
+def canonical_medium_item_identity(url, allow_rss_tracking=False):
+    """Return canonical URL, decoded slug, and ID for one exact author item."""
+    if not isinstance(url, str) or not url or url != url.strip():
+        raise ValueError('Medium item URL is not a canonical author URL')
+    try:
+        parsed = urllib.parse.urlsplit(url)
+        port = parsed.port
+    except ValueError:
+        raise ValueError('Medium item URL cannot be parsed') from None
+    if (
+        parsed.scheme != 'https'
+        or parsed.hostname != 'medium.com'
+        or parsed.username is not None
+        or parsed.password is not None
+        or port is not None
+        or parsed.fragment
+    ):
+        raise ValueError('Medium item URL is not a canonical author URL')
+    if parsed.query and (
+        not allow_rss_tracking
+        or RSS_TRACKING_QUERY_RE.fullmatch(parsed.query) is None
+    ):
+        raise ValueError('Medium item URL has an invalid query')
+    prefix = f'/@{USERNAME}/'
+    if not parsed.path.startswith(prefix):
+        raise ValueError('Medium item URL has the wrong author path')
+    raw_slug = parsed.path[len(prefix):]
+    if (
+        not raw_slug
+        or '/' in raw_slug
+        or re.search(r'%(?![0-9A-Fa-f]{2})', raw_slug)
+    ):
+        raise ValueError('Medium item URL contains a non-canonical path')
+    try:
+        slug = urllib.parse.unquote_to_bytes(raw_slug).decode('utf-8')
+    except UnicodeDecodeError:
+        raise ValueError('Medium item URL slug is not canonical UTF-8') from None
+    if (
+        unicodedata.normalize('NFC', slug) != slug
+        or '.' in slug
+        or not all(character.isalnum() or character in {'-', '_'}
+                   for character in slug)
+    ):
+        raise ValueError('Medium item URL contains a non-canonical path')
+    encoded_slug = urllib.parse.quote(slug, safe='-_')
+    if raw_slug != encoded_slug:
+        raise ValueError('Medium item URL slug is not canonically encoded')
+    id_match = MEDIUM_SLUG_ID_RE.fullmatch(slug)
+    if id_match is None:
+        raise ValueError('Medium item URL has no canonical post ID')
+    canonical = urllib.parse.urlunsplit(
+        ('https', 'medium.com', parsed.path, '', '')
+    )
+    expected = urllib.parse.urlunsplit(
+        ('https', 'medium.com', parsed.path, parsed.query, '')
+    )
+    if url != expected:
+        raise ValueError('Medium item URL is not in canonical form')
+    return canonical, slug, id_match.group(1).casefold()
+
+
+def _positive_timestamp(value):
+    """Accept only plausible integer millisecond publication epochs."""
+    return type(value) is int and value >= MIN_PUBLICATION_TIMESTAMP_MS
+
+
+def _valid_publication_timestamps(first_published_at, latest_published_at):
+    return (
+        _positive_timestamp(first_published_at)
+        and _positive_timestamp(latest_published_at)
+        and latest_published_at >= first_published_at
+    )
+
+
+def _strict_json_object(raw):
+    """Decode bounded UTF-8 JSON while rejecting non-standard/ambiguous input."""
+    try:
+        text = raw.decode('utf-8')
+    except UnicodeDecodeError:
+        raise ValueError('Medium GraphQL response is not UTF-8 JSON') from None
+
+    def reject_constant(value):
+        raise ValueError(f'Medium GraphQL response contains invalid JSON value {value}')
+
+    def unique_object(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(
+                    f'Medium GraphQL response repeats JSON key {key!r}'
+                )
+            result[key] = value
+        return result
+
+    try:
+        result = json.loads(
+            text,
+            parse_constant=reject_constant,
+            object_pairs_hook=unique_object,
+        )
+    except json.JSONDecodeError:
+        raise
+    if not isinstance(result, dict):
+        raise ValueError('Medium GraphQL response is not a JSON object')
+    return result
 
 
 def request_json(url, payload, attempts=3):
@@ -107,10 +231,50 @@ def request_json(url, payload, attempts=3):
         try:
             request = urllib.request.Request(url, data=body, headers=HEADERS, method='POST')
             with urllib.request.urlopen(request, timeout=45, context=SSL_CONTEXT) as response:
-                result = json.loads(response.read().decode('utf-8'))
-            if result.get('errors'):
-                messages = '; '.join(str(item.get('message') or item)
-                                     for item in result['errors'])
+                final_url = urllib.parse.urlsplit(response.geturl())
+                if (
+                    final_url.scheme != 'https'
+                    or final_url.hostname != f'{USERNAME}.medium.com'
+                    or final_url.username is not None
+                    or final_url.password is not None
+                    or final_url.port is not None
+                    or final_url.path != '/_/graphql'
+                    or final_url.query
+                    or final_url.fragment
+                ):
+                    raise ValueError(
+                        'Medium GraphQL redirected away from the canonical '
+                        'HTTPS author endpoint'
+                    )
+                content_length = response.headers.get('Content-Length')
+                if content_length is not None:
+                    try:
+                        declared_length = int(content_length)
+                    except (TypeError, ValueError):
+                        raise ValueError(
+                            'Medium GraphQL returned an invalid Content-Length'
+                        ) from None
+                    if declared_length < 0 or declared_length > MAX_GRAPHQL_BYTES:
+                        raise ValueError(
+                            f'Medium GraphQL exceeds {MAX_GRAPHQL_BYTES} bytes'
+                        )
+                raw = response.read(MAX_GRAPHQL_BYTES + 1)
+            if len(raw) > MAX_GRAPHQL_BYTES:
+                raise ValueError(
+                    f'Medium GraphQL exceeds {MAX_GRAPHQL_BYTES} bytes'
+                )
+            result = _strict_json_object(raw)
+            errors = result.get('errors')
+            if errors:
+                if not isinstance(errors, list):
+                    raise ValueError(
+                        'Medium GraphQL errors payload is not a list'
+                    )
+                messages = '; '.join(
+                    str(item.get('message') or item)
+                    if isinstance(item, dict) else str(item)
+                    for item in errors
+                )
                 raise ValueError(f'Medium GraphQL error: {messages}')
             return result
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError) as exc:
@@ -122,13 +286,14 @@ def request_json(url, payload, attempts=3):
     raise last_error
 
 
-def fetch_archive():
-    """Return every authored, published, non-response Medium post."""
+def _fetch_archive_pass():
+    """Return one complete duplicate-free Medium archive pass."""
     cursor = None
     seen_cursors = set()
     posts_by_id = {}
     user_id = None
     page = 0
+    seen_post_ids = set()
 
     while True:
         cursor_key = cursor or '<first-page>'
@@ -164,17 +329,63 @@ def fetch_archive():
             raise ValueError('Medium returned an unexpected posts payload')
 
         accepted = 0
-        for post in page_posts:
-            if not isinstance(post, dict) or not post.get('id'):
-                continue
-            creator = post.get('creator') or {}
+        for row_index, post in enumerate(page_posts):
+            if not isinstance(post, dict):
+                raise ValueError(
+                    f'Medium archive returned malformed post row {row_index}'
+                )
+            post_id = post.get('id')
+            creator = post.get('creator')
+            if (
+                not isinstance(post_id, str)
+                or not post_id
+                or post_id != post_id.strip()
+                or not isinstance(creator, dict)
+                or not isinstance(creator.get('id'), str)
+                or not creator['id']
+                or type(post.get('isPublished')) is not bool
+                or 'inResponseToPostResult' not in post
+                or (
+                    post.get('inResponseToPostResult') is not None
+                    and not isinstance(post['inResponseToPostResult'], dict)
+                )
+            ):
+                raise ValueError(
+                    f'Medium archive returned malformed post row {row_index}'
+                )
+            if post_id in seen_post_ids:
+                raise ValueError(
+                    'Medium archive repeated a post ID across pagination'
+                )
+            seen_post_ids.add(post_id)
             if str(creator.get('id') or '') != user_id:
                 continue
             if post.get('isPublished') is not True:
                 continue
             if post.get('inResponseToPostResult') is not None:
                 continue
-            posts_by_id[str(post['id'])] = post
+            if not _valid_publication_timestamps(
+                post.get('firstPublishedAt'),
+                post.get('latestPublishedAt'),
+            ):
+                raise ValueError(
+                    f'Medium authored post {post_id!r} has invalid '
+                    'publication timestamps'
+                )
+            _, slug, url_post_id = canonical_medium_item_identity(
+                post.get('mediumUrl')
+            )
+            unique_slug = post.get('uniqueSlug')
+            if (
+                not isinstance(unique_slug, str)
+                or unique_slug != slug
+                or url_post_id != post_id.casefold()
+            ):
+                raise ValueError(
+                    f'Medium authored post {post_id!r} has inconsistent '
+                    'canonical URL identity'
+                )
+            posts_by_id[post_id] = post
             accepted += 1
 
         next_page = ((connection.get('pagingInfo') or {}).get('next'))
@@ -189,6 +400,29 @@ def fetch_archive():
     if not posts_by_id:
         raise ValueError('Medium archive returned zero authored posts')
     return list(posts_by_id.values())
+
+
+def _archive_signature(posts):
+    payload = json.dumps(
+        sorted(posts, key=lambda post: str(post.get('id') or '')),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(',', ':'),
+    ).encode('utf-8')
+    return hashlib.sha256(payload).hexdigest()
+
+
+def fetch_archive():
+    """Return an exact archive only after two matching complete passes."""
+    print('  Medium archive verification pass 1 of 2')
+    first = _fetch_archive_pass()
+    print('  Medium archive verification pass 2 of 2')
+    second = _fetch_archive_pass()
+    if _archive_signature(first) != _archive_signature(second):
+        raise ValueError(
+            'Medium archive changed between verification passes'
+        )
+    return second
 
 
 def _paragraphs(post):
@@ -236,9 +470,10 @@ def _mirror_slug(paragraphs):
 
 
 def _iso_timestamp(milliseconds):
+    if not _positive_timestamp(milliseconds):
+        return ''
     try:
-        value = int(milliseconds)
-        return (datetime.fromtimestamp(value / 1000, tz=timezone.utc)
+        return (datetime.fromtimestamp(milliseconds / 1000, tz=timezone.utc)
                 .isoformat(timespec='milliseconds').replace('+00:00', 'Z'))
     except (TypeError, ValueError, OverflowError, OSError):
         return ''
@@ -254,10 +489,18 @@ def convert_post(post):
     display_title = str(post.get('title') or '').strip()
     post_id = str(post.get('id') or '')
     visibility = str(post.get('visibility') or '').upper()
-    url = str(post.get('mediumUrl') or '').strip()
-    unique_slug = str(post.get('uniqueSlug') or '').strip()
-    if not url and unique_slug:
-        url = f'https://medium.com/@{USERNAME}/{unique_slug}'
+    url = post.get('mediumUrl')
+    url, unique_slug, url_post_id = canonical_medium_item_identity(url)
+    if url_post_id != post_id.casefold():
+        raise ValueError('Medium post ID does not match its canonical URL')
+    if post.get('uniqueSlug') != unique_slug:
+        raise ValueError('Medium unique slug does not match its canonical URL')
+    if not _valid_publication_timestamps(
+        post.get('firstPublishedAt'),
+        post.get('latestPublishedAt'),
+    ):
+        raise ValueError('Medium post has invalid publication timestamps')
+    source_updated_at = _iso_timestamp(post.get('latestPublishedAt'))
 
     return {
         'source': 'medium',
@@ -268,17 +511,21 @@ def convert_post(post):
         'display_title': display_title,
         'subtitle': _subtitle(paragraphs),
         'post_date': _iso_timestamp(post.get('firstPublishedAt')),
-        'latest_published_at': _iso_timestamp(post.get('latestPublishedAt')),
+        'latest_published_at': source_updated_at,
         'url': url,
         'canonical_url': str(post.get('canonicalUrl') or '').strip(),
         'audience': visibility.casefold(),
         'visibility': visibility,
         'is_published': True,
-        'wordcount': len(re.findall(r'\b\w+\b', body_text, flags=re.UNICODE)),
+        'wordcount': body_word_count(body_text),
         'body_text': body_text,
-        # PUBLIC posts expose the article body; LOCKED member posts expose a
-        # preview.  Both still belong in the article catalogue.
-        'content_status': 'full' if visibility == 'PUBLIC' else 'excerpt',
+        # GraphQL supplies paragraph text but no independent declared-length
+        # field against which completeness can be proved. Keep every capture
+        # searchable as an exact current excerpt without claiming full text.
+        'content_status': 'excerpt',
+        'body_revision_status': 'current',
+        'source_updated_at': source_updated_at,
+        'observed_source_updated_at': source_updated_at,
         'mirror_substack_slug': _mirror_slug(paragraphs),
         'pinned': bool(post.get('pinnedByCreatorAt')),
     }
@@ -345,7 +592,10 @@ def fetch_rss_posts(attempts=3):
                         or final_url.hostname != 'medium.com'
                         or final_url.username is not None
                         or final_url.password is not None
-                        or final_url.port is not None):
+                        or final_url.port is not None
+                        or final_url.path != f'/feed/@{USERNAME}'
+                        or final_url.query
+                        or final_url.fragment):
                     raise ValueError('Medium RSS redirected away from canonical HTTPS')
                 payload = response.read(MAX_RSS_BYTES + 1)
             if len(payload) > MAX_RSS_BYTES:
@@ -363,11 +613,10 @@ def fetch_rss_posts(attempts=3):
             posts = []
             for item in items:
                 link = (item.findtext('link') or item.findtext('guid') or '').strip()
-                clean_url = link.split('?', 1)[0]
-                match = MEDIUM_ID_RE.search(clean_url)
-                if not match:
-                    continue
-                post_id = match.group(1).lower()
+                clean_url, slug, post_id = canonical_medium_item_identity(
+                    link,
+                    allow_rss_tracking=True,
+                )
                 date_value = item.findtext('pubDate') or ''
                 parsed = email.utils.parsedate_to_datetime(date_value)
                 if parsed.tzinfo is None:
@@ -377,7 +626,7 @@ def fetch_rss_posts(attempts=3):
                     'source': 'medium',
                     'source_id': post_id,
                     'medium_id': post_id,
-                    'slug': clean_url.rstrip('/').rsplit('/', 1)[-1],
+                    'slug': slug,
                     'title': (item.findtext('title') or '').strip(),
                     'display_title': (item.findtext('title') or '').strip(),
                     'subtitle': description,
@@ -388,9 +637,14 @@ def fetch_rss_posts(attempts=3):
                     'audience': 'unknown',
                     'visibility': 'UNKNOWN',
                     'is_published': True,
-                    'wordcount': len(description.split()),
+                    'wordcount': body_word_count(description),
                     'body_text': description,
                     'content_status': 'excerpt',
+                    # RSS proves this exact live excerpt, but does not expose a
+                    # separate article-update timestamp.
+                    'body_revision_status': 'current',
+                    'source_updated_at': '',
+                    'observed_source_updated_at': '',
                     'mirror_substack_slug': None,
                     'pinned': False,
                 })
@@ -406,6 +660,37 @@ def fetch_rss_posts(attempts=3):
     raise last_error
 
 
+def carried_cached_record(post):
+    """Retain a searchable cached body without calling it a current capture."""
+    item = dict(post)
+    item['content_status'] = 'excerpt'
+    item['body_revision_status'] = 'unverified'
+    item['source_updated_at'] = (
+        item.get('source_updated_at')
+        if isinstance(item.get('source_updated_at'), str)
+        else (
+            item.get('latest_published_at')
+            if isinstance(item.get('latest_published_at'), str)
+            else ''
+        )
+    )
+    # A carried row was not observed in this refresh. Retaining an older
+    # observation timestamp here would falsely imply the cached body was
+    # verified against the source version on this run.
+    item['observed_source_updated_at'] = ''
+    return item
+
+
+def live_rss_record(post):
+    """Normalize a live RSS match as a current, excerpt-only capture."""
+    item = dict(post)
+    item['content_status'] = 'excerpt'
+    item['body_revision_status'] = 'current'
+    item['source_updated_at'] = ''
+    item['observed_source_updated_at'] = ''
+    return item
+
+
 def validate_catalogue(posts, previous):
     ids = [post.get('medium_id') for post in posts]
     urls = [post.get('url') for post in posts]
@@ -419,11 +704,12 @@ def validate_catalogue(posts, previous):
     if previous and not os.environ.get('FORCE_FETCH'):
         previous_ids = {post.get('medium_id') or post.get('source_id')
                         for post in previous if post.get('medium_id') or post.get('source_id')}
-        minimum_safe_count = max(1, int(len(previous_ids) * 0.9))
-        if len(posts) < minimum_safe_count:
+        missing_previous_ids = previous_ids - set(ids)
+        if missing_previous_ids:
             raise ValueError(
-                f'Medium archive shrank from {len(previous_ids)} to {len(posts)}, '
-                f'below the 90% safety floor of {minimum_safe_count}'
+                f'Medium archive omitted {len(missing_previous_ids)} of '
+                f'{len(previous_ids)} previous post IDs; use FORCE_FETCH only '
+                'after reviewing intentional removals'
             )
 
 
@@ -464,14 +750,21 @@ def main():
                 f'archive: {archive_error}; RSS: {rss_error}',
             )
             return 1
-        by_id = {str(post.get('medium_id') or post.get('source_id')): post
-                 for post in previous if post.get('medium_id') or post.get('source_id')}
+        by_id = {
+            str(post.get('medium_id') or post.get('source_id')):
+                carried_cached_record(post)
+            for post in previous
+            if post.get('medium_id') or post.get('source_id')
+        }
         new_count = 0
         for post in latest:
             post_id = post['medium_id']
             if post_id not in by_id:
-                by_id[post_id] = post
                 new_count += 1
+            # A live RSS row replaces any cached row with the exact excerpt
+            # visible in this refresh. Rows absent from RSS remain searchable
+            # but explicitly unverified.
+            by_id[post_id] = live_rss_record(post)
         posts = sorted(by_id.values(), key=lambda post: post.get('post_date') or '', reverse=True)
         try:
             validate_catalogue(posts, previous)

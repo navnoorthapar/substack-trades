@@ -27,14 +27,26 @@ def article_fixture(index):
     source = SOURCES[index % len(SOURCES)]
     family = FAMILIES[index % len(FAMILIES)]
     slug = f'article-{index:02d}'
+    medium_id = f'{index:012x}'
+    body_hash = (
+        hashlib.sha256(f'captured body {index}'.encode('utf-8')).hexdigest()
+        if source in {'substack', 'medium'}
+        else hashlib.sha256(b'').hexdigest()
+    )
     article = {
         'source': source,
-        'source_id': f'{source}-{index:02d}',
+        'source_id': (
+            medium_id if source == 'medium' else f'{source}-{index:02d}'
+        ),
         'slug': slug,
         'title': f'Common mechanism research article {index}',
         'subtitle': f'Common evidence for topic {index}',
         'post_date': f'2026-07-20T{index:02d}:00:00Z',
-        'url': f'https://example.test/{source}/{slug}',
+        'url': (
+            f'https://medium.com/@navnoorbawa/{slug}-{medium_id}'
+            if source == 'medium'
+            else f'https://example.test/{source}/{slug}'
+        ),
         'audience': 'public',
         'wordcount': 0 if source in {'patreon', 'fxempire'} else 1_000 + index,
         'content_status': (
@@ -42,7 +54,7 @@ def article_fixture(index):
         ),
         'brief': {
             'schema_version': 1,
-            'body_sha256': hashlib.sha256(b'').hexdigest(),
+            'body_sha256': body_hash,
             'lead': None,
             'sections': [],
             'fallback_evidence': None,
@@ -51,13 +63,25 @@ def article_fixture(index):
         'family': family,
     }
     if index % 3 == 0:
+        alternate_medium_id = f'{index + 1000:012x}'
         article['alternate_urls'] = {
             'medium' if source != 'medium' else 'substack':
-                f'https://alternate.test/{slug}',
+                (
+                    f'https://medium.com/@navnoorbawa/'
+                    f'{slug}-{alternate_medium_id}'
+                    if source != 'medium'
+                    else f'https://alternate.test/{slug}'
+                ),
         }
     if source == 'patreon':
         article['access'] = 'public' if index % 2 else 'paid'
         article['audience'] = article['access']
+    if source in {'substack', 'medium'}:
+        article.update({
+            'body_revision_status': 'current',
+            'source_updated_at': f'2026-07-20T{index:02d}:30:00Z',
+            'observed_source_updated_at': f'2026-07-20T{index:02d}:30:00Z',
+        })
     return article
 
 
@@ -298,6 +322,145 @@ class DataContractTests(unittest.TestCase):
             validate_data_layer(
                 self.site, self.source, self.snapshot, now=VALIDATION_NOW,
             )
+
+    def test_body_revision_provenance_is_required_and_consistent(self):
+        content_index = next(
+            index for index, article in enumerate(self.articles)
+            if article['source'] == 'substack'
+        )
+        clean = copy.deepcopy(self.articles[content_index])
+
+        corruptions = (
+            (
+                'missing provenance',
+                lambda row: row.pop('body_revision_status'),
+                'missing body provenance fields',
+            ),
+            (
+                'current mismatch',
+                lambda row: row.update({
+                    'observed_source_updated_at': '2026-07-20T23:59:00Z',
+                }),
+                'current body revision timestamps must match',
+            ),
+            (
+                'full current without timestamps',
+                lambda row: row.update({
+                    'source_updated_at': '',
+                    'observed_source_updated_at': '',
+                }),
+                'full content requires non-empty matching',
+            ),
+            (
+                'prior full',
+                lambda row: row.update({
+                    'body_revision_status': 'prior',
+                    'observed_source_updated_at': '2026-07-20T23:59:00Z',
+                }),
+                'prior body revision is inconsistent',
+            ),
+            (
+                'unverified full',
+                lambda row: row.update({
+                    'body_revision_status': 'unverified',
+                }),
+                'unverified body revision must be an excerpt',
+            ),
+            (
+                'full zero wordcount',
+                lambda row: row.update({'wordcount': 0}),
+                'full content must have a positive wordcount',
+            ),
+            (
+                'full empty body hash',
+                lambda row: row['brief'].update({
+                    'body_sha256': hashlib.sha256(b'').hexdigest(),
+                }),
+                'full content must not use an empty-body brief',
+            ),
+        )
+        for label, mutation, message in corruptions:
+            with self.subTest(label=label):
+                self.articles[content_index] = copy.deepcopy(clean)
+                mutation(self.articles[content_index])
+                self._write_source()
+                write_data_layer(
+                    self.site,
+                    self.source,
+                    self.snapshot,
+                    self.search,
+                    self.related,
+                    self.families,
+                )
+                with self.assertRaisesRegex(ValueError, message):
+                    validate_data_layer(
+                        self.site,
+                        self.source,
+                        self.snapshot,
+                        now=VALIDATION_NOW,
+                    )
+
+        registry_index = next(
+            index for index, article in enumerate(self.articles)
+            if article['source'] == 'fxempire'
+        )
+        self.articles[content_index] = clean
+        self.articles[registry_index]['body_revision_status'] = 'current'
+        self.articles[registry_index]['source_updated_at'] = ''
+        self.articles[registry_index]['observed_source_updated_at'] = ''
+        self._write_source()
+        write_data_layer(
+            self.site,
+            self.source,
+            self.snapshot,
+            self.search,
+            self.related,
+            self.families,
+        )
+        with self.assertRaisesRegex(
+            ValueError, 'metadata-only registry contract',
+        ):
+            validate_data_layer(
+                self.site,
+                self.source,
+                self.snapshot,
+                now=VALIDATION_NOW,
+            )
+
+    def test_medium_urls_are_bound_to_exact_author_item_identity(self):
+        medium_index = next(
+            index for index, article in enumerate(self.articles)
+            if article['source'] == 'medium'
+        )
+        clean = copy.deepcopy(self.articles[medium_index])
+        invalid_urls = (
+            'https://medium.com/@another/story-000000000001',
+            'https://medium.com/@navnoorbawa/../story-000000000001',
+            'https://medium.com/@navnoorbawa/%2e%2e-000000000001',
+            'https://medium.com/@navnoorbawa/a%2F..%2Fstory-000000000001',
+            'https://medium.com/@navnoorbawa/'
+            'story-000000000001?source=rss-x',
+        )
+        for url in invalid_urls:
+            with self.subTest(url=url):
+                self.articles[medium_index] = copy.deepcopy(clean)
+                self.articles[medium_index]['url'] = url
+                self._write_source()
+                write_data_layer(
+                    self.site,
+                    self.source,
+                    self.snapshot,
+                    self.search,
+                    self.related,
+                    self.families,
+                )
+                with self.assertRaises(ValueError):
+                    validate_data_layer(
+                        self.site,
+                        self.source,
+                        self.snapshot,
+                        now=VALIDATION_NOW,
+                    )
 
     def test_related_why_rejects_same_family_without_shared_features(self):
         related = self._read_endpoint('related.json')

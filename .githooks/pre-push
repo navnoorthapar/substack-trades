@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# Validate only outgoing updates to the remote main branch.
+set -Eeuo pipefail
+
+ZERO_OID=0000000000000000000000000000000000000000
+
+validate_main_revision() (
+    revision=$1
+    if [[ ! "$revision" =~ ^[0-9a-f]{40}$ ]]; then
+        echo "Refusing main push with a non-exact local commit SHA." >&2
+        exit 2
+    fi
+
+    repo_root=$(git rev-parse --show-toplevel)
+    temp_root=""
+    checkout=""
+    worktree_added=0
+
+    cleanup() {
+        status=$?
+        trap - EXIT HUP INT TERM
+        if [ "$worktree_added" -eq 1 ]; then
+            git -C "$repo_root" worktree remove --force "$checkout" \
+                >/dev/null 2>&1 || true
+        fi
+        if [ -n "$temp_root" ] && [ -d "$temp_root" ]; then
+            rm -rf -- "$temp_root"
+        fi
+        exit "$status"
+    }
+    trap cleanup EXIT
+    trap 'exit 129' HUP
+    trap 'exit 130' INT
+    trap 'exit 143' TERM
+
+    temp_root=$(mktemp -d "${TMPDIR:-/tmp}/nrt-pre-push.XXXXXX")
+    checkout="$temp_root/worktree"
+    git -C "$repo_root" worktree add --detach "$checkout" "$revision"
+    worktree_added=1
+
+    if [ ! -x "$checkout/release_gate.sh" ]; then
+        echo "Outgoing main revision has no executable release_gate.sh." >&2
+        exit 2
+    fi
+    (
+        cd "$checkout"
+        ./release_gate.sh "$revision"
+    )
+)
+
+while IFS=' ' read -r local_ref local_sha remote_ref remote_sha extra; do
+    if [ -z "${local_ref:-}" ] ||
+        [ -z "${local_sha:-}" ] ||
+        [ -z "${remote_ref:-}" ] ||
+        [ -z "${remote_sha:-}" ] ||
+        [ -n "${extra:-}" ]; then
+        echo "Malformed pre-push ref update." >&2
+        exit 2
+    fi
+    if [ "$remote_ref" != "refs/heads/main" ]; then
+        continue
+    fi
+    if [ "$local_sha" = "$ZERO_OID" ]; then
+        echo "Refusing deletion of remote main." >&2
+        exit 2
+    fi
+    if [[ ! "$local_sha" =~ ^[0-9a-f]{40}$ ]]; then
+        echo "Refusing main push with a non-exact local commit SHA." >&2
+        exit 2
+    fi
+    if [[ ! "$remote_sha" =~ ^[0-9a-f]{40}$ ]] \
+        || [ "$remote_sha" = "$ZERO_OID" ]; then
+        echo "Refusing main push without an exact existing remote revision." >&2
+        exit 2
+    fi
+    if ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
+        echo "Refusing non-fast-forward history rewrite of remote main." >&2
+        exit 2
+    fi
+    validate_main_revision "$local_sha"
+done

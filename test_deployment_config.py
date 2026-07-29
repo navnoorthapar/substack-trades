@@ -24,6 +24,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
     def setUpClass(cls):
         cls.workflow = (ROOT / '.github/workflows/update.yml').read_text(encoding='utf-8')
         cls.watchdog = (ROOT / '.github/workflows/watchdog.yml').read_text(encoding='utf-8')
+        cls.rollback = (ROOT / '.github/workflows/rollback.yml').read_text(encoding='utf-8')
         cls.dependabot = (ROOT / '.github/dependabot.yml').read_text(encoding='utf-8')
         cls.refresh = (ROOT / 'refresh.sh').read_text(encoding='utf-8')
         cls.automation_status = (ROOT / 'automation_status.sh').read_text(encoding='utf-8')
@@ -113,6 +114,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
         for label, workflow, checkout_count in (
             ('deployment', self.workflow, 2),
             ('watchdog', self.watchdog, 1),
+            ('rollback', self.rollback, 1),
         ):
             action_uses = re.findall(
                 r'(?m)^\s*uses:\s*([^@\s]+)@([^\s]+)(?:\s+#\s*(\S+))?$',
@@ -132,129 +134,196 @@ class DeploymentConfigurationTests(unittest.TestCase):
 
     def test_quality_gate_validates_current_and_available_prior_snapshot(self):
         for required in (
-            'fetch-depth: 2',
+            'fetch-depth: 0',
             'python -m unittest',
             '--manifest snapshot_manifest.json',
-            'git cat-file -e HEAD^:articles_index.json',
-            'git cat-file -e HEAD^:trades_extracted.json',
-            'git cat-file -e HEAD^:snapshot_manifest.json',
+            'github.event.before',
+            'github.event.pull_request.base.sha',
+            'git cat-file -e "$BASELINE_SHA:articles_index.json"',
+            'git cat-file -e "$BASELINE_SHA:trades_extracted.json"',
+            'git cat-file -e "$BASELINE_SHA:snapshot_manifest.json"',
             '--previous-articles',
             '--previous-trades',
             '--previous-manifest',
         ):
             self.assertIn(required, self.workflow)
+        self.assertNotIn('HEAD^:', self.workflow)
 
-    def test_build_embeds_provenance_and_enforces_artifact_policy(self):
+    def test_build_uses_one_shared_release_validator_and_fingerprints(self):
         for required in (
             'SITE_OUTPUT_DIR:',
             'SITE_REVISION: ${{ github.sha }}',
+            'python build_site.py',
             'python validate_inline_scripts.py _site/index.html',
-            'test -f _site/index.html',
-            'test -f _site/article_briefs.json',
-            'test -f _site/observations.json',
-            'test -f _site/robots.txt',
-            'test -f _site/sitemap.xml',
-            'test -f _site/site.webmanifest',
-            'test -f _site/favicon.svg',
-            'test -f _site/og.jpg',
-            'test -d _site/data',
-            'test -d _site/cards',
-            'test -d _site/a',
-            'test ! -L _site/article_briefs.json',
-            'test ! -L _site/observations.json',
-            'catalog_count=$(python -c',
-            'expected_file_count=$((14 + 2 * catalog_count))',
-            'artifact_file_count=$(find _site -type f',
-            'artifact_file_count != expected_file_count',
-            'find _site -type l',
-            "find _site -type f -name '*.tmp'",
-            'index_bytes < 100000',
-            'index_bytes > 900000',
-            "brief_bytes=$(wc -c < _site/article_briefs.json",
-            "observation_bytes=$(wc -c < _site/observations.json",
-            'gzip_bytes=$(gzip -9 -c _site/index.html',
-            'gzip_bytes > 250000',
-            'brief_bytes < 100000',
-            'brief_bytes > 800000',
-            'observation_bytes < 500000',
-            'observation_bytes > 1500000',
-            "data_bytes=$(python -c",
-            "search_bytes=$(wc -c < _site/data/search_index.json",
-            "cards_bytes=$(python -c",
-            "max_card_bytes=$(python -c",
-            "stubs_bytes=$(python -c",
-            'data_bytes > 4000000',
-            'search_bytes >= 500000',
-            'cards_bytes > 10000000',
-            'max_card_bytes > 100000',
-            'stubs_bytes > 5000000',
-            'total_bytes > 20000000',
-            "(site / 'article_briefs.json').read_text",
-            "(site / 'observations.json').read_text",
-            'from data_contract import DATA_ENDPOINT_NAMES, validate_data_layer',
-            'data_summary = validate_data_layer(',
-            "Path('snapshot_manifest.json')",
-            "'index.html', 'article_briefs.json', 'observations.json'",
-            'len(core_assets) != 8 or len(DATA_ENDPOINT_NAMES) != 6',
-            "data_assets = {f'data/{name}' for name in DATA_ENDPOINT_NAMES}",
-            "card_assets = {f'cards/{slug}.png' for slug in slugs}",
-            "stub_assets = {f'a/{slug}.html' for slug in slugs}",
-            'actual_assets != expected_assets',
-            "expected_directories = {'a', 'cards', 'data'}",
-            'len(actual_assets) != 14 + 2 * len(articles)',
-            "png_signature = b'\\x89PNG\\r\\n\\x1a\\n'",
-            "struct.unpack('>IIBBBBB', header[16:29])",
-            '!= (1200, 630, 8, 3, 0, 0, 0)',
-            'binascii.crc32(header[12:29])',
-            "f'PNG audit passed for all {len(card_paths)} cards; '",
-            "if article.get('content_status') != 'registry'",
-            'len(content_articles)',
-            'len(generated_articles) != len(content_articles)',
-            "idea_ids = article.get('idea_ids', [])",
-            "deferred.get('schema_version') != 1",
-            "deferred.get('data_checksum') != expected_checksum",
-            "not isinstance(deferred.get('briefs'), dict)",
-            "observation_asset.get('schema_version') != 1",
-            "observation_asset.get('data_checksum') != expected_checksum",
-            "not isinstance(observation_asset.get('observations'), list)",
-            'len(asset_observations) != len(source_observations)',
-            'Deferred observation identities do not match the source snapshot.',
-            'Deferred observation content differs from the source snapshot.',
-            'from smoke_test_site import snapshot_checksum, validate_html',
-            'id: asset_hashes',
-            'html_sha256=$(sha256sum _site/index.html',
-            'brief_sha256=$(sha256sum _site/article_briefs.json',
-            'observation_sha256=$(sha256sum _site/observations.json',
-            'support_sha256=$(python -c',
-            'data_sha256=$(python -c',
-            'share_sha256=$(python -c',
-            "support_bundle_checksum('_site')",
-            "data_bundle_checksum('_site')",
-            "share_proof_bundle_checksum('_site', 'articles_index.json')",
-            'html_sha256: ${{ steps.asset_hashes.outputs.html_sha256 }}',
-            'brief_sha256: ${{ steps.asset_hashes.outputs.brief_sha256 }}',
-            'observation_sha256: ${{ steps.asset_hashes.outputs.observation_sha256 }}',
-            'support_sha256: ${{ steps.asset_hashes.outputs.support_sha256 }}',
-            'data_sha256: ${{ steps.asset_hashes.outputs.data_sha256 }}',
-            'share_sha256: ${{ steps.asset_hashes.outputs.share_sha256 }}',
-            'echo "data_sha256=$data_sha256" >> "$GITHUB_OUTPUT"',
-            'echo "share_sha256=$share_sha256" >> "$GITHUB_OUTPUT"',
+            '- name: Validate and fingerprint exact release artifact',
+            'id: release',
+            'python validate_release.py',
+            '--site _site',
+            '--articles articles_index.json',
+            '--trades trades_extracted.json',
+            '--manifest snapshot_manifest.json',
+            '--expected-revision "${{ github.sha }}"',
+            '--github-output "$GITHUB_OUTPUT"',
+            'html_sha256: ${{ steps.release.outputs.html_sha256 }}',
+            'brief_sha256: ${{ steps.release.outputs.brief_sha256 }}',
+            'observation_sha256: ${{ steps.release.outputs.observation_sha256 }}',
+            'support_sha256: ${{ steps.release.outputs.support_sha256 }}',
+            'data_sha256: ${{ steps.release.outputs.data_sha256 }}',
+            'share_sha256: ${{ steps.release.outputs.share_sha256 }}',
             'retention-days: 7',
         ):
             self.assertIn(required, self.workflow)
+        for removed_duplicate in (
+            'Enforce artifact integrity and size policy',
+            'Record trusted release fingerprints',
+            'id: asset_hashes',
+            'Generated article observation references are invalid.',
+            'html_sha256=$(sha256sum',
+        ):
+            self.assertNotIn(removed_duplicate, self.workflow)
         self.assertNotRegex(
             self.workflow,
             r'(?i)grep[^\n]*(?:subscriber|revenue|pledge|open.?rate)',
         )
         build_at = self.workflow.index('python build_site.py')
-        data_validation_at = self.workflow.index(
-            'data_summary = validate_data_layer(', build_at,
+        compile_at = self.workflow.index(
+            'python validate_inline_scripts.py _site/index.html', build_at,
         )
-        fingerprint_at = self.workflow.index(
-            '- name: Record trusted release fingerprints', data_validation_at,
+        release_at = self.workflow.index(
+            'python validate_release.py', compile_at,
         )
-        self.assertLess(build_at, data_validation_at)
-        self.assertLess(data_validation_at, fingerprint_at)
+        upload_at = self.workflow.index(
+            '- name: Upload Pages artifact', release_at,
+        )
+        self.assertLess(build_at, compile_at)
+        self.assertLess(compile_at, release_at)
+        self.assertLess(release_at, upload_at)
+
+    def test_release_inputs_stay_exact_and_stale_main_runs_cannot_deploy(self):
+        for required in (
+            '- name: Prove tests did not mutate release inputs',
+            '- name: Prove build kept release inputs immutable',
+            'test "$(git rev-parse --verify HEAD)" = "$GITHUB_SHA"',
+            'git status --porcelain --untracked-files=normal',
+            '- name: Refuse a stale main revision',
+            'git ls-remote --exit-code origin refs/heads/main',
+            'if [ "$remote_main" != "$GITHUB_SHA" ]',
+            'Stale deployment refused',
+        ):
+            self.assertIn(required, self.workflow)
+        self.assertEqual(
+            self.workflow.count(
+                'test "$(git rev-parse --verify HEAD)" = "$GITHUB_SHA"'
+            ),
+            2,
+        )
+        tests_at = self.workflow.index('python -m unittest')
+        prebuild_clean_at = self.workflow.index(
+            '- name: Prove tests did not mutate release inputs'
+        )
+        build_at = self.workflow.index('python build_site.py')
+        release_at = self.workflow.index('python validate_release.py')
+        postbuild_clean_at = self.workflow.index(
+            '- name: Prove build kept release inputs immutable'
+        )
+        upload_at = self.workflow.index('- name: Upload Pages artifact')
+        stale_at = self.workflow.index('- name: Refuse a stale main revision')
+        deploy_at = self.workflow.index('- name: Deploy GitHub Pages artifact')
+        self.assertLess(tests_at, prebuild_clean_at)
+        self.assertLess(prebuild_clean_at, build_at)
+        self.assertLess(release_at, postbuild_clean_at)
+        self.assertLess(postbuild_clean_at, upload_at)
+        self.assertLess(stale_at, deploy_at)
+
+    def test_verified_rollback_archive_and_manual_restore_are_fail_closed(self):
+        for required in (
+            'python rollback_bundle.py create',
+            '--revision "${{ github.sha }}"',
+            '- name: Revalidate copied rollback bundle',
+            'python rollback_bundle.py validate',
+            '--bundle "$RUNNER_TEMP/verified-pages"',
+            'name: verified-pages-${{ github.sha }}',
+            'path: ${{ runner.temp }}/verified-pages',
+            'retention-days: 90',
+        ):
+            self.assertIn(required, self.workflow)
+        prepare_at = self.workflow.index(
+            '- name: Prepare verified emergency rollback bundle'
+        )
+        revalidate_at = self.workflow.index(
+            '- name: Revalidate copied rollback bundle'
+        )
+        pages_upload_at = self.workflow.index('- name: Upload Pages artifact')
+        archive_upload_at = self.workflow.index(
+            '- name: Retain verified rollback bundle'
+        )
+        self.assertLess(prepare_at, revalidate_at)
+        self.assertLess(revalidate_at, pages_upload_at)
+        self.assertLess(revalidate_at, archive_upload_at)
+        for required in (
+            'name: Emergency Pages Rollback',
+            'workflow_dispatch:',
+            "if: github.ref == 'refs/heads/main'",
+            'group: pages-production',
+            'cancel-in-progress: false',
+            'actions: read',
+            'contents: read',
+            'pages: write',
+            'id-token: write',
+            'CONFIRMATION: ${{ inputs.confirmation }}',
+            '[ "$CONFIRMATION" = "ROLLBACK" ]',
+            '- name: Prove rollback tooling is current main',
+            'git ls-remote --exit-code origin refs/heads/main',
+            '[ "$GITHUB_SHA" = "$remote_main" ]',
+            'actions/workflows/update.yml',
+            'actions/runs/$SOURCE_RUN_ID',
+            '[[ "$event" = "push" || "$event" = "workflow_dispatch" ]]',
+            '[ "$status" = "completed" ]',
+            '[ "$conclusion" = "success" ]',
+            '[ "$head_branch" = "main" ]',
+            '[ "$head_sha" = "$RELEASE_SHA" ]',
+            '--name "verified-pages-$RELEASE_SHA"',
+            'python rollback_bundle.py extract',
+            '- name: Verify schema-neutral artifact attestation',
+            'python rollback_bundle.py verify-attestation',
+            '- name: Refuse superseded rollback tooling',
+            'path: ${{ runner.temp }}/verified-rollback/site',
+            'actions/deploy-pages@',
+            'python rollback_bundle.py smoke',
+            '--base-url "$DEPLOYED_URL"',
+            '--expected-revision "$EXPECTED_REVISION"',
+            '--concurrency 12',
+        ):
+            self.assertIn(required, self.rollback)
+        self.assertNotRegex(self.rollback, r'(?m)^\s*(?:push|schedule):')
+        for forbidden in (
+            'release-source',
+            'ref: ${{ inputs.release_sha }}',
+            'smoke_test_site.py',
+        ):
+            self.assertNotIn(forbidden, self.rollback)
+        main_at = self.rollback.index(
+            '- name: Prove rollback tooling is current main'
+        )
+        authority_at = self.rollback.index('- name: Verify source run authority')
+        validate_at = self.rollback.index(
+            '- name: Verify schema-neutral artifact attestation'
+        )
+        current_again_at = self.rollback.index(
+            '- name: Refuse superseded rollback tooling'
+        )
+        upload_at = self.rollback.index(
+            '- name: Upload exact rollback Pages artifact'
+        )
+        deploy_at = self.rollback.index('- name: Deploy verified rollback')
+        smoke_at = self.rollback.index('- name: Verify exact rollback is live')
+        self.assertLess(main_at, authority_at)
+        self.assertLess(authority_at, validate_at)
+        self.assertLess(validate_at, upload_at)
+        self.assertLess(upload_at, current_again_at)
+        self.assertLess(current_again_at, deploy_at)
+        self.assertLess(upload_at, deploy_at)
+        self.assertLess(deploy_at, smoke_at)
 
     def test_post_deploy_smoke_verifies_exact_live_release(self):
         deploy_job = self.workflow.split('\n  deploy:', 1)[1]
@@ -277,6 +346,9 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--expected-data-sha256 "$EXPECTED_DATA_SHA256"',
             '--expected-share-sha256 "$EXPECTED_SHARE_SHA256"',
             '--retries 8',
+            '- name: Publish production incident guidance',
+            "if: failure() && steps.deployment.outcome == 'success'",
+            'Follow LAUNCH_RUNBOOK.md',
         ):
             self.assertIn(required, deploy_job)
         self.assertIn('contents: read', deploy_job)
@@ -294,20 +366,20 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--expected-revision "$GITHUB_SHA"',
             '--articles-file articles_index.json',
             '--observations-file trades_extracted.json',
-            'Rebuild trusted asset fingerprints',
+            'Rebuild and validate trusted release',
+            'id: release',
             'SITE_OUTPUT_DIR: ${{ runner.temp }}/expected-site',
             'SITE_REVISION: ${{ github.sha }}',
-            'html_sha256=$(sha256sum "$SITE_OUTPUT_DIR/index.html"',
-            'brief_sha256=$(sha256sum "$SITE_OUTPUT_DIR/article_briefs.json"',
-            'observation_sha256=$(sha256sum "$SITE_OUTPUT_DIR/observations.json"',
-            'support_sha256=$(SITE_OUTPUT_DIR="$SITE_OUTPUT_DIR" python3 -c',
-            'data_sha256=$(SITE_OUTPUT_DIR="$SITE_OUTPUT_DIR" python3 -c',
-            'share_sha256=$(SITE_OUTPUT_DIR="$SITE_OUTPUT_DIR" python3 -c',
-            'from data_contract import data_bundle_checksum',
-            'from smoke_test_site import share_proof_bundle_checksum',
-            '[[ "$data_sha256" =~ ^[0-9a-f]{64}$ ]]',
-            'echo "EXPECTED_DATA_SHA256=$data_sha256" >> "$GITHUB_ENV"',
-            'echo "EXPECTED_SHARE_SHA256=$share_sha256" >> "$GITHUB_ENV"',
+            'python3 validate_release.py',
+            '--site "$SITE_OUTPUT_DIR"',
+            '--expected-revision "$SITE_REVISION"',
+            '--github-output "$GITHUB_OUTPUT"',
+            'EXPECTED_HTML_SHA256: ${{ steps.release.outputs.html_sha256 }}',
+            'EXPECTED_BRIEF_SHA256: ${{ steps.release.outputs.brief_sha256 }}',
+            'EXPECTED_OBSERVATION_SHA256: ${{ steps.release.outputs.observation_sha256 }}',
+            'EXPECTED_SUPPORT_SHA256: ${{ steps.release.outputs.support_sha256 }}',
+            'EXPECTED_DATA_SHA256: ${{ steps.release.outputs.data_sha256 }}',
+            'EXPECTED_SHARE_SHA256: ${{ steps.release.outputs.share_sha256 }}',
             '--expected-html-sha256 "$EXPECTED_HTML_SHA256"',
             '--expected-brief-sha256 "$EXPECTED_BRIEF_SHA256"',
             '--expected-observation-sha256 "$EXPECTED_OBSERVATION_SHA256"',
@@ -322,7 +394,13 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'timedelta(minutes=10)',
             'implausibly far in the future',
             "snapshot.get('sources', {}).items()",
-            'age.total_seconds() > 16 * 3600',
+            'maximum_age = timedelta(hours=16)',
+            'maximum_source_lag = timedelta(hours=1)',
+            'later than the snapshot manifest',
+            'too far behind the snapshot manifest',
+            'source check is stale',
+            'source_age > maximum_age',
+            'age > maximum_age',
         ):
             self.assertIn(required, self.watchdog)
         self.assertRegex(self.watchdog, r'(?m)^permissions:\n\s+contents: read$')
@@ -365,6 +443,8 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertIn('/_site/', self.ignore)
         self.assertNotIn('git add docs', self.refresh)
         self.assertIn('-m unittest', self.refresh)
+        self.assertIn('"$PYTHON" validate_release.py', self.refresh)
+        self.assertIn('--expected-revision scheduled-refresh-candidate', self.refresh)
         self.assertIn('TRACKED_OUTPUTS=(', self.refresh)
         self.assertIn('git add -- "${TRACKED_OUTPUTS[@]}"', self.refresh)
         self.assertIn('git diff --staged --quiet -- "${TRACKED_OUTPUTS[@]}"', self.refresh)
@@ -409,6 +489,8 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'if [ "$PROMOTION_ACTIVE" -eq 1 ]',
             'if ! "$PYTHON" -m unittest -q; then',
             'Regression suite failed; restoring the previous local snapshot.',
+            'SITE_REVISION=scheduled-refresh-candidate',
+            '"$PYTHON" validate_release.py',
             'GIT_PUBLICATION_ACTIVE=1',
             'git reset --quiet HEAD --',
             'mv "$previous" "$ROOT/$output"',
@@ -423,6 +505,9 @@ class DeploymentConfigurationTests(unittest.TestCase):
         backup_at = self.refresh.index('PROMOTED_OUTPUTS=(', validate_at)
         promote_at = self.refresh.index('PROMOTION_ACTIVE=1', backup_at)
         regression_at = self.refresh.index('if ! "$PYTHON" -m unittest -q; then')
+        release_at = self.refresh.index(
+            '"$PYTHON" validate_release.py', regression_at,
+        )
         git_stage_at = self.refresh.index('git add -- "${TRACKED_OUTPUTS[@]}"')
         git_commit_at = self.refresh.index('git commit --only', git_stage_at)
         accepted_at = self.refresh.index('PROMOTION_ACTIVE=0', git_commit_at)
@@ -431,13 +516,15 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertLess(validate_at, backup_at)
         self.assertLess(backup_at, promote_at)
         self.assertLess(promote_at, regression_at)
-        self.assertLess(regression_at, git_stage_at)
+        self.assertLess(regression_at, release_at)
+        self.assertLess(release_at, git_stage_at)
         self.assertLess(git_stage_at, git_commit_at)
         self.assertLess(git_commit_at, accepted_at)
         self.assertLess(accepted_at, push_at)
 
     def test_transaction_backups_are_removed_by_cleanup(self):
         cleanup = self.refresh.split('cleanup() {', 1)[1].split('\n}', 1)[0]
+        self.assertIn('rm -r "$RELEASE_SITE_DIR"', cleanup)
         self.assertIn('rm -f "$WORK_DIR"/*.json', cleanup)
         self.assertIn('rm -f "$WORK_DIR"/*.tmp', cleanup)
         self.assertIn('rm -f "$WORK_DIR"/*.previous-missing', cleanup)

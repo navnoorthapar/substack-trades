@@ -9,6 +9,18 @@ SOURCE="$ROOT/launchd/$LABEL.plist"
 TARGET="$HOME/Library/LaunchAgents/$LABEL.plist"
 LOG_DIR="$HOME/Library/Logs/SubstackTrades"
 
+if [ ! -x "$ROOT/.githooks/pre-push" ]; then
+    echo "The versioned pre-push release gate is missing or not executable." >&2
+    exit 1
+fi
+EXISTING_HOOKS_PATH=$(git config --local --get core.hooksPath || true)
+if [ -n "$EXISTING_HOOKS_PATH" ] && [ "$EXISTING_HOOKS_PATH" != ".githooks" ]; then
+    echo "Refusing to replace existing Git hooks path: $EXISTING_HOOKS_PATH" >&2
+    echo "Review that hook setup and chain .githooks/pre-push explicitly." >&2
+    exit 1
+fi
+git config --local core.hooksPath .githooks
+
 mkdir -p "$HOME/Library/LaunchAgents" "$LOG_DIR"
 cp "$SOURCE" "$TARGET"
 

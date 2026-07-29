@@ -36,10 +36,34 @@ GitHub Actions
 Medium's public author archive is paginated; its ten-item RSS feed can extend a
 previous complete catalogue when the archive is temporarily unavailable. A
 simultaneous archive and RSS outage fails closed and preserves the last good
-snapshot. Cross-posts are matched using Medium's explicit Substack notice,
-normalized titles, subtitles plus dates, conservative similarity, and reviewed
-mappings in `medium_dedupe_overrides.json`. Substack remains the canonical card
-for cross-posts; only Medium-only articles are added.
+snapshot. Both feeds bind every item to the exact canonical Navnoor author URL;
+the RSS collector accepts only Medium's documented-shaped tracking query and
+stores the query-free canonical identity. GraphQL paragraph arrays have no
+independent declared-length proof, so even public captures remain exact
+`current` excerpts rather than being overstated as full articles. Cross-posts
+are matched using Medium's explicit Substack notice, normalized titles,
+subtitles plus dates, conservative similarity, and reviewed immutable
+Medium-ID-to-Substack-slug mappings in `medium_dedupe_overrides.json`. The
+human-readable titles in those mappings are cross-checks, not identities.
+Substack remains the canonical card for cross-posts; only Medium-only articles
+are added.
+
+Two complete Substack pagination passes must produce the same ordered
+source-field signatures before any per-article body lookup begins; overlapping
+pages or a catalogue that changes between passes fail closed. A current body is
+labeled `full` only when the source explicitly marks it public, the detail
+revision exactly matches the list row, and the captured text covers at least
+97% of the list endpoint's declared word count.
+Paid rows never trigger a detail-body request and remain exact bounded list
+excerpts or metadata only. Public detail recovery has a hard per-refresh request
+budget. A private retry timestamp rotates that budget across refreshes: new
+rows run first, followed by never-attempted and then oldest-attempted rows, so a
+fixed newest-first catalogue cannot permanently starve an older unresolved
+article. Previously captured exact bodies may be retained for research
+continuity, but the tracked catalogue and terminal distinguish current, prior,
+and revision-unverified captures. Historical passages and their derived
+observations are visibly flagged, excluded from high-context eligibility, and
+never labeled as current full text.
 
 `all_posts.json` and `all_sources_posts.json` stay local. The tracked pipeline
 state includes `medium_posts.json`, `patreon_registry.json`,
@@ -50,7 +74,9 @@ failure from erasing older articles. Patreon and FX Empire records are
 metadata-only: the project does not scrape or republish their article bodies.
 Production builds consume the validated article and observation snapshots. The
 manifest binds exact input bytes, counts, publication freshness, and per-channel
-fetch health. Deferred assets carry the same checksum and are rejected by the
+fetch health. Every included source check must be no more than one hour behind
+the manifest and no more than sixteen hours old at validation time, so a fresh
+manifest cannot conceal stale upstream evidence. Deferred assets carry the same checksum and are rejected by the
 browser if their release identity, record IDs, article ownership, or required
 fields do not match. Generated site files are intentionally ignored:
 every production artifact is rebuilt, tested, and deployed without a bot commit
@@ -211,7 +237,9 @@ enterprise audit record. See [PRIVACY.md](PRIVACY.md) and
 ```
 
 The installer copies the versioned LaunchAgent into
-`~/Library/LaunchAgents`, loads it, verifies it, and starts one refresh. It then
+`~/Library/LaunchAgents`, installs the repository's versioned pre-push gate
+without overwriting any conflicting hook setup, loads the updater, verifies it,
+and starts one refresh. It then
 runs at **9:00 AM, 1:00 PM, and 10:00 PM local time** (09:00, 13:00, and
 22:00) and once after login.
 
@@ -263,7 +291,9 @@ non-linear history while preserving the scheduled updater's normal direct push.
 
 Local refreshes are transactional: new source data is built and validated in an
 isolated candidate directory, the previous promoted snapshot is preserved, and
-any regression-test, staging, or local-commit failure restores that snapshot.
+the same complete Pages artifact policy used by CI runs before staging. Any
+regression-test, release-artifact, staging, or local-commit failure restores
+that snapshot.
 A push failure retains the clean local commit for the next retry. A candidate
 can therefore neither leak into the next scheduled run nor trigger a GitHub
 Pages deployment unless its full local quality gate passes. GitHub Pages
@@ -273,11 +303,20 @@ recorded deferred-asset hashes, the exact HTML hash, the complete six-endpoint
 data bundle, and the discovery/social support assets before declaring it
 healthy. Artifact validation separately proves complete catalogue-to-card/stub
 coverage; the release checklist spot-checks representative pairs in production.
-Deployment artifacts are retained for seven days. A separate least-privilege
-watchdog is scheduled every four hours to rebuild the release fingerprints,
-verify the exact published revision and public-data bundle, and reject a
-research snapshot older than 16 hours, leaving margin above the longest
-scheduled refresh interval.
+Deployable artifacts are retained for seven days. Each successful release also
+retains a separately attested rollback bundle for 90 days: exact site bytes,
+source JSON, tracked social image, release revision, all six fingerprints, and
+an exact path-to-hash manifest for every published file. The original
+successful `main` push or authenticated manual release proves the release
+contract before archival. The manual emergency workflow then uses only current
+trusted `main` tooling to authenticate that run, safely extract and verify the
+schema-neutral attestation, deploy the archived site without executing
+historical code, and fetch every live file over HTTPS for an exact
+revision-cache-busted byte comparison. A separate
+least-privilege watchdog is scheduled every four hours to rebuild the release
+fingerprints, verify the exact published revision and public-data bundle, and
+reject a research snapshot older than 16 hours, leaving margin above the
+longest scheduled refresh interval.
 
 Manually redeploy the current `main` snapshot without fetching publications:
 
@@ -321,6 +360,15 @@ python3 validate_pipeline.py \
   --manifest snapshot_manifest.json
 ruff check *.py
 mypy --cache-dir "${TMPDIR:-/tmp}/nrt-mypy-cache"
+PREVIEW_DIR="$(mktemp -d)"
+SITE_OUTPUT_DIR="$PREVIEW_DIR" SITE_REVISION=local-audit python3 build_site.py
+python3 validate_release.py \
+  --site "$PREVIEW_DIR" \
+  --articles articles_index.json \
+  --trades trades_extracted.json \
+  --manifest snapshot_manifest.json \
+  --expected-revision local-audit
+rm -r "$PREVIEW_DIR"
 ```
 
 On the scheduled ingestion Mac, add
@@ -333,6 +381,11 @@ Build the ignored local preview and serve it at <http://localhost:8000>:
 python3 build_site.py
 python3 -m http.server 8000 --directory docs
 ```
+
+For a clean committed release, run
+`./release_gate.sh "$(git rev-parse HEAD)"`. A configured `.githooks/pre-push`
+repeats that full gate from a detached worktree at the exact outgoing `main`
+SHA, so uncommitted files cannot make a bad commit appear safe.
 
 If `automation_status.sh` reports `NOT LOADED`, enable the macOS background
 item and rerun `./install_automation.sh`. If refresh reaches Git but cannot push,

@@ -13,6 +13,7 @@ MIN_REFRESH_SECONDS=${MIN_REFRESH_SECONDS:-1800}
 LOCK_DIR="${TMPDIR:-/tmp}/com.navnoor.substacktrades.lock"
 LOCK_OWNED=0
 WORK_DIR=""
+RELEASE_SITE_DIR=""
 PROMOTION_ACTIVE=0
 GIT_PUBLICATION_ACTIVE=0
 PROMOTED_OUTPUTS=()
@@ -33,6 +34,9 @@ fi
 cleanup() {
     exit_code=$1
     trap - EXIT
+    if [ -n "$RELEASE_SITE_DIR" ] && [ -d "$RELEASE_SITE_DIR" ]; then
+        rm -r "$RELEASE_SITE_DIR"
+    fi
     if [ -n "$WORK_DIR" ] && [ -d "$WORK_DIR" ]; then
         rm -f "$WORK_DIR"/*.json
         rm -f "$WORK_DIR"/*.tmp
@@ -290,6 +294,21 @@ if ! "$PYTHON" -m unittest -q; then
     fi
     exit 1
 fi
+
+echo
+echo "=== Building and validating the exact release candidate ==="
+RELEASE_SITE_DIR="$WORK_DIR/release-site"
+SITE_OUTPUT_DIR="$RELEASE_SITE_DIR" SITE_REVISION=scheduled-refresh-candidate \
+    "$PYTHON" build_site.py
+"$PYTHON" validate_release.py \
+    --site "$RELEASE_SITE_DIR" \
+    --articles articles_index.json \
+    --trades trades_extracted.json \
+    --manifest snapshot_manifest.json \
+    --expected-revision scheduled-refresh-candidate
+rm -r "$RELEASE_SITE_DIR"
+RELEASE_SITE_DIR=""
+
 TRACKED_OUTPUTS=(
     articles_index.json
     medium_posts.json

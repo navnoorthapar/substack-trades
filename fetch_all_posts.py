@@ -4,7 +4,10 @@ Fetch all posts from navnoorbawa.substack.com API and save content locally.
 """
 import urllib.request
 import urllib.error
+import urllib.parse
+import hashlib
 import json
+import math
 import os
 import ssl
 import time
@@ -31,6 +34,13 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Accept': 'application/json, text/html, */*',
 }
+SUBSTACK_ORIGIN = 'https://navnoorbawa.substack.com'
+MAX_LIST_RESPONSE_BYTES = 16 * 1024 * 1024
+MAX_DETAIL_RESPONSE_BYTES = 4 * 1024 * 1024
+DETAIL_RESPONSE_TIMEOUT_SECONDS = 15
+MAX_DETAIL_REQUESTS_PER_RUN = 12
+MIN_COMPLETE_BODY_WORD_RATIO = 0.97
+MAX_EXCERPT_CHARS = 1_200
 
 
 def build_ssl_context():
@@ -101,26 +111,491 @@ def strip_html(html_content):
     return text.strip()
 
 
+def body_word_count(value):
+    """Count text tokens closely enough to verify Substack's declared total."""
+    if not isinstance(value, str):
+        return 0
+    return len(re.findall(r"\b[\w’'-]+\b", value, flags=re.UNICODE))
+
+
+def is_public_body(post):
+    """Only explicitly public Substack rows may prove current full access."""
+    return post.get('audience') == 'everyone'
+
+
+def complete_body_text(post, body_html):
+    """Return stripped HTML only when it proves full-body coverage."""
+    if (
+        not is_public_body(post)
+        or not isinstance(body_html, str)
+        or not body_html.strip()
+    ):
+        return None
+    declared_wordcount = post.get('wordcount')
+    if type(declared_wordcount) is not int or declared_wordcount <= 0:
+        return None
+    body_text = strip_html(body_html)
+    minimum_words = max(
+        1,
+        math.ceil(declared_wordcount * MIN_COMPLETE_BODY_WORD_RATIO),
+    )
+    if body_word_count(body_text) < minimum_words:
+        return None
+    return body_text
+
+
+def bounded_excerpt(value):
+    """Keep a bounded exact-source excerpt without ending on a partial word."""
+    if not isinstance(value, str):
+        return ''
+    text = value.strip()
+    if len(text) <= MAX_EXCERPT_CHARS:
+        return text
+    boundary = text.rfind(' ', 0, MAX_EXCERPT_CHARS + 1)
+    if boundary < 1:
+        return ''
+    return text[:boundary].rstrip() + '…'
+
+
+class DetailBudgetExhausted(RuntimeError):
+    """Raised when one refresh reaches its bounded detail-request budget."""
+
+
+def fetch_json(url, max_bytes, timeout=30):
+    """Fetch one bounded, same-origin UTF-8 JSON response."""
+    req = urllib.request.Request(url, headers=HEADERS)
+    with urllib.request.urlopen(
+        req,
+        timeout=timeout,
+        context=SSL_CONTEXT,
+    ) as response:
+        final_url = response.geturl()
+        expected = urllib.parse.urlsplit(SUBSTACK_ORIGIN)
+        actual = urllib.parse.urlsplit(final_url)
+        if (
+            actual.scheme != 'https'
+            or actual.hostname != expected.hostname
+            or actual.port is not None
+        ):
+            raise ValueError('Substack redirected to an untrusted origin')
+        declared_length = response.headers.get('Content-Length')
+        if declared_length:
+            try:
+                declared_bytes = int(declared_length)
+            except ValueError:
+                declared_bytes = 0
+            if declared_bytes > max_bytes:
+                raise ValueError('Substack response exceeds the configured size limit')
+        payload = response.read(max_bytes + 1)
+    if len(payload) > max_bytes:
+        raise ValueError('Substack response exceeds the configured size limit')
+    return json.loads(payload.decode('utf-8'))
+
+
 def fetch_posts(limit=50, offset=0, attempts=3):
-    url = f'https://navnoorbawa.substack.com/api/v1/posts?limit={limit}&offset={offset}'
+    url = f'{SUBSTACK_ORIGIN}/api/v1/posts?limit={limit}&offset={offset}'
     last_error = None
     for attempt in range(1, attempts + 1):
         try:
-            req = urllib.request.Request(url, headers=HEADERS)
-            with urllib.request.urlopen(req, timeout=30, context=SSL_CONTEXT) as r:
-                data = json.loads(r.read())
+            data = fetch_json(url, MAX_LIST_RESPONSE_BYTES)
             if not isinstance(data, list) or not all(isinstance(post, dict) for post in data):
                 raise ValueError('Substack returned an unexpected response shape')
-            if any(not post.get('slug') or not post.get('post_date') for post in data):
-                raise ValueError('Substack returned a post without a slug or publication date')
+            for post in data:
+                if not post.get('slug') or not post.get('post_date') or not post.get('title'):
+                    raise ValueError(
+                        'Substack returned a post without a slug, title, or publication date'
+                    )
+                if post.get('body_html') is not None and not isinstance(
+                    post.get('body_html'), str
+                ):
+                    raise ValueError('Substack returned a non-text body_html value')
+                if post.get('truncated_body_text') is not None and not isinstance(
+                    post.get('truncated_body_text'), str
+                ):
+                    raise ValueError(
+                        'Substack returned a non-text truncated_body_text value'
+                    )
             return data
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError) as exc:
+        except (
+            urllib.error.URLError,
+            TimeoutError,
+            UnicodeDecodeError,
+            json.JSONDecodeError,
+            ValueError,
+        ) as exc:
             last_error = exc
             if attempt < attempts:
                 time.sleep(2 ** (attempt - 1))
     if last_error is None:
         raise ValueError('Substack fetch attempts must be at least one')
     raise last_error
+
+
+def fetch_post_detail(slug, expected_updated_at, attempts=1):
+    """Fetch HTML omitted by the paginated list endpoint."""
+    if not isinstance(slug, str) or not slug.strip():
+        raise ValueError('Substack detail fetch requires a slug')
+    if not isinstance(expected_updated_at, str) or not expected_updated_at:
+        raise ValueError('Substack detail fetch requires a source revision')
+    encoded_slug = urllib.parse.quote(slug.strip(), safe='')
+    url = f'{SUBSTACK_ORIGIN}/api/v1/posts/{encoded_slug}'
+    last_error = None
+    for attempt in range(1, attempts + 1):
+        try:
+            data = fetch_json(
+                url,
+                MAX_DETAIL_RESPONSE_BYTES,
+                timeout=DETAIL_RESPONSE_TIMEOUT_SECONDS,
+            )
+            if not isinstance(data, dict):
+                raise ValueError('Substack detail response is not an object')
+            if data.get('slug') != slug:
+                raise ValueError('Substack detail response has the wrong slug')
+            if data.get('is_published') is not True:
+                raise ValueError('Substack detail response is not published')
+            if data.get('updated_at') != expected_updated_at:
+                raise ValueError(
+                    'Substack detail response revision differs from its list row'
+                )
+            body_html = data.get('body_html')
+            if not isinstance(body_html, str) or not body_html.strip():
+                raise ValueError('Substack detail response has no body HTML')
+            return data
+        except (
+            urllib.error.URLError,
+            TimeoutError,
+            json.JSONDecodeError,
+        ) as exc:
+            last_error = exc
+            if attempt < attempts:
+                time.sleep(2 ** (attempt - 1))
+        except (UnicodeDecodeError, ValueError):
+            raise
+    if last_error is None:
+        raise ValueError('Substack detail fetch attempts must be at least one')
+    raise last_error
+
+
+def post_record(post, body_text, body_html_length, content_status, body_source):
+    """Return one normalized post without overstating the captured access."""
+    if not isinstance(body_text, str):
+        raise ValueError('Substack body text must be a string')
+    if content_status not in {'full', 'excerpt'}:
+        raise ValueError('Substack content status is invalid')
+    if post.get('is_published', True) is not True:
+        raise ValueError('Substack returned an unpublished post')
+    wordcount = post.get('wordcount', 0)
+    if type(wordcount) is not int or wordcount < 0 or content_status == 'excerpt':
+        wordcount = 0
+    source_updated_at = post.get('updated_at')
+    if not isinstance(source_updated_at, str):
+        source_updated_at = ''
+    return {
+        'source': 'substack',
+        'source_id': post.get('slug', ''),
+        'slug': post.get('slug', ''),
+        'title': post.get('title', ''),
+        'subtitle': post.get('subtitle', ''),
+        'post_date': post.get('post_date', ''),
+        'url': f"{SUBSTACK_ORIGIN}/p/{post.get('slug', '')}",
+        'audience': post.get('audience', ''),
+        'meter_type': post.get('meter_type', ''),
+        'type': post.get('type', ''),
+        'is_published': True,
+        'wordcount': wordcount,
+        'body_text': body_text,
+        'body_html_length': body_html_length,
+        'body_source': body_source,
+        'source_updated_at': source_updated_at,
+        'observed_source_updated_at': source_updated_at,
+        'body_revision_status': 'current',
+        'content_status': content_status,
+    }
+
+
+def previous_full_body(previous):
+    """Accept cached full text only when its own declared coverage is proven."""
+    if not isinstance(previous, dict):
+        return False
+    declared_wordcount = previous.get('wordcount')
+    body_text = previous.get('body_text')
+    if (
+        previous.get('content_status') != 'full'
+        or type(declared_wordcount) is not int
+        or declared_wordcount <= 0
+        or not isinstance(body_text, str)
+        or not body_text.strip()
+    ):
+        return False
+    minimum_words = max(
+        1,
+        math.ceil(declared_wordcount * MIN_COMPLETE_BODY_WORD_RATIO),
+    )
+    return (
+        body_word_count(body_text) >= minimum_words
+    )
+
+
+def cached_body_covers_post(post, previous):
+    """Require cached text to cover the current row's declared word count."""
+    if not previous_full_body(previous):
+        return False
+    declared_wordcount = post.get('wordcount')
+    if type(declared_wordcount) is not int or declared_wordcount <= 0:
+        return False
+    minimum_words = max(
+        1,
+        math.ceil(declared_wordcount * MIN_COMPLETE_BODY_WORD_RATIO),
+    )
+    return body_word_count(previous['body_text']) >= minimum_words
+
+
+def previous_excerpt(previous):
+    return (
+        isinstance(previous, dict)
+        and previous.get('content_status') == 'excerpt'
+        and isinstance(previous.get('body_text'), str)
+        and bool(previous['body_text'].strip())
+    )
+
+
+def preserved_body_record(
+        post, previous, body_source, content_status='excerpt'):
+    """Combine current source metadata with a separately proven cached body."""
+    record = post_record(
+        post,
+        previous['body_text'],
+        previous.get('body_html_length', 0),
+        content_status,
+        body_source,
+    )
+    # source_updated_at identifies the revision that supplied body_text. Never
+    # stamp an inaccessible or failed current revision onto an older body.
+    previous_body_revision = previous.get('source_updated_at')
+    record['source_updated_at'] = (
+        previous_body_revision
+        if isinstance(previous_body_revision, str)
+        else ''
+    )
+    observed_revision = post.get('updated_at')
+    record['observed_source_updated_at'] = (
+        observed_revision if isinstance(observed_revision, str) else ''
+    )
+    if (
+        record['source_updated_at']
+        and record['observed_source_updated_at']
+    ):
+        record['body_revision_status'] = (
+            'current'
+            if record['source_updated_at']
+            == record['observed_source_updated_at']
+            else 'prior'
+        )
+    else:
+        record['body_revision_status'] = 'unverified'
+    return record
+
+
+def legacy_cache_matches(post, previous):
+    """Conservatively migrate a pre-provenance cache without network churn."""
+    if not previous_full_body(previous) or previous.get('source_updated_at'):
+        return False
+    for key in (
+        'slug',
+        'title',
+        'post_date',
+        'wordcount',
+        'meter_type',
+        'type',
+    ):
+        if post.get(key) != previous.get(key):
+            return False
+    return True
+
+
+def resolve_post_body(post, previous=None, detail_fetcher=None):
+    """Resolve a list record to full text, an honest excerpt, or a safe skip."""
+    body_html = post.get('body_html')
+    list_body_text = complete_body_text(post, body_html)
+    if list_body_text is not None:
+        return (
+            post_record(post, list_body_text, len(body_html), 'full', 'list'),
+            'list',
+            '',
+        )
+
+    source_updated_at = post.get('updated_at')
+    matching_full_cache = (
+        cached_body_covers_post(post, previous)
+        and isinstance(source_updated_at, str)
+        and source_updated_at
+        and previous.get('source_updated_at') == source_updated_at
+    )
+    if matching_full_cache and is_public_body(post):
+        return (
+            post_record(
+                post,
+                previous['body_text'],
+                previous.get('body_html_length', 0),
+                'full',
+                'cached-unchanged',
+            ),
+            'cache',
+            '',
+        )
+    if matching_full_cache:
+        return (
+            preserved_body_record(
+                post,
+                previous,
+                'cached-access-limited',
+                content_status='excerpt',
+            ),
+            'access-cache',
+            f"{post.get('slug', '')}: preserved the prior exact body because "
+            'the current source is access-limited',
+        )
+
+    if (
+        previous_excerpt(previous)
+        and not is_public_body(post)
+        and isinstance(source_updated_at, str)
+        and source_updated_at
+        and previous.get('source_updated_at') == source_updated_at
+    ):
+        return (
+            post_record(
+                post,
+                previous['body_text'],
+                0,
+                'excerpt',
+                'cached-excerpt',
+            ),
+            'excerpt-cache',
+            f"{post.get('slug', '')}: upstream still exposes only the exact "
+            'previously captured excerpt',
+        )
+
+    if (
+        previous_excerpt(previous)
+        and not is_public_body(post)
+        and isinstance(source_updated_at, str)
+        and source_updated_at
+        and previous.get('observed_source_updated_at') == source_updated_at
+    ):
+        return (
+            preserved_body_record(
+                post,
+                previous,
+                'cached-provenance-limited',
+            ),
+            'excerpt-cache',
+            f"{post.get('slug', '')}: retained a prior exact capture as an "
+            'excerpt without claiming current full-body coverage',
+        )
+
+    if not is_public_body(post) and legacy_cache_matches(post, previous):
+        return (
+            preserved_body_record(post, previous, 'cached-legacy-unverified'),
+            'legacy-cache',
+            f"{post.get('slug', '')}: preserved a metadata-matched legacy body "
+            'without claiming that it matches the currently observed revision',
+        )
+
+    truncated = post.get('truncated_body_text')
+    if not is_public_body(post):
+        if isinstance(truncated, str) and truncated.strip():
+            return (
+                post_record(
+                    post,
+                    bounded_excerpt(truncated),
+                    0,
+                    'excerpt',
+                    'list-excerpt',
+                ),
+                'excerpt',
+                f"{post.get('slug', '')}: indexed only the exact public excerpt "
+                'because the full article is access-limited',
+            )
+        return (
+            post_record(post, '', 0, 'excerpt', 'metadata-only'),
+            'metadata',
+            f"{post.get('slug', '')}: the article is access-limited and the "
+            'list endpoint supplied no exact public excerpt; indexed metadata only',
+        )
+
+    detail_excerpt = ''
+    try:
+        loader = detail_fetcher or fetch_post_detail
+        detail = loader(post.get('slug', ''), source_updated_at)
+        detail_html = detail['body_html']
+        detail_excerpt = bounded_excerpt(strip_html(detail_html))
+        full_detail_text = complete_body_text(post, detail_html)
+        if full_detail_text is None:
+            raise ValueError(
+                'detail HTML does not cover the declared article word count'
+            )
+    except Exception as exc:
+        if previous_full_body(previous):
+            return (
+                preserved_body_record(post, previous, 'cached-fallback'),
+                'fallback',
+                f"{post.get('slug', '')}: full current body could not be verified; "
+                f'preserved the prior exact body ({type(exc).__name__})',
+            )
+        if previous_excerpt(previous):
+            return (
+                preserved_body_record(
+                    post,
+                    previous,
+                    'cached-excerpt-fallback',
+                ),
+                'excerpt-cache',
+                f"{post.get('slug', '')}: full current body could not be "
+                'verified; preserved the prior exact excerpt '
+                f'({type(exc).__name__})',
+            )
+        list_html_excerpt = (
+            strip_html(body_html)
+            if isinstance(body_html, str) and body_html.strip()
+            else ''
+        )
+        excerpt_candidates = (
+            truncated if isinstance(truncated, str) else '',
+            detail_excerpt,
+            list_html_excerpt,
+        )
+        excerpt = ''
+        for candidate in excerpt_candidates:
+            excerpt = bounded_excerpt(candidate)
+            if excerpt:
+                break
+        if excerpt:
+            return (
+                post_record(post, excerpt, 0, 'excerpt', 'source-excerpt'),
+                'excerpt',
+                f"{post.get('slug', '')}: full body could not be verified; "
+                f'indexed only the exact available excerpt ({type(exc).__name__})',
+            )
+        return (
+            post_record(post, '', 0, 'excerpt', 'metadata-only'),
+            'metadata',
+            f"{post.get('slug', '')}: full body could not be verified and no "
+            f'source excerpt was available; indexed metadata only '
+            f'({type(exc).__name__})',
+        )
+
+    return (
+        post_record(
+            post,
+            full_detail_text,
+            len(detail_html),
+            'full',
+            'detail',
+        ),
+        'detail',
+        '',
+    )
 
 
 def article_metadata(post):
@@ -135,7 +610,20 @@ def article_metadata(post):
         'url': post.get('url', ''),
         'audience': post.get('audience', ''),
         'wordcount': post.get('wordcount', 0),
-        'content_status': 'full',
+        'content_status': post.get('content_status', 'full'),
+        'body_revision_status': (
+            post.get('body_revision_status') or 'current'
+        ),
+        'source_updated_at': (
+            post.get('source_updated_at')
+            if isinstance(post.get('source_updated_at'), str)
+            else ''
+        ),
+        'observed_source_updated_at': (
+            post.get('observed_source_updated_at')
+            if isinstance(post.get('observed_source_updated_at'), str)
+            else ''
+        ),
     }
     value['brief'] = build_article_brief(post)
     return value
@@ -165,6 +653,17 @@ def iso_instant(value):
         return datetime.min.replace(tzinfo=timezone.utc)
 
 
+def detail_attempt_instant(value):
+    """Parse only the strict UTC timestamp emitted for private retry state."""
+    if not isinstance(value, str) or not value.endswith('Z'):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else None
+
+
 def newest_post_date(posts):
     dates = [post.get('post_date') for post in posts
              if isinstance(post, dict) and isinstance(post.get('post_date'), str)]
@@ -175,7 +674,15 @@ def newest_post_date(posts):
     )
 
 
-def write_fetch_status(status, mode, fetched_count, posts, error=None):
+def write_fetch_status(
+    status,
+    mode,
+    fetched_count,
+    posts,
+    error=None,
+    published_count=None,
+    newest=None,
+):
     """Write optional machine-readable fetch provenance without touching content."""
     if FETCH_STATUS_PATH is None:
         return
@@ -186,8 +693,10 @@ def write_fetch_status(status, mode, fetched_count, posts, error=None):
         'status': status,
         'mode': mode,
         'fetched_count': fetched_count,
-        'published_count': len(posts),
-        'newest': newest_post_date(posts),
+        'published_count': (
+            len(posts) if published_count is None else published_count
+        ),
+        'newest': newest_post_date(posts) if newest is None else newest,
     }
     if error:
         payload['error'] = str(error)
@@ -200,100 +709,213 @@ def fail_fetch(message, mode, fetched_count, posts):
     raise SystemExit(1)
 
 
-def main():
-    all_posts = []
-    fetched_count = 0
+CATALOGUE_STABILITY_FIELDS = (
+    'id',
+    'slug',
+    'title',
+    'subtitle',
+    'post_date',
+    'updated_at',
+    'audience',
+    'meter_type',
+    'type',
+    'is_published',
+    'wordcount',
+    'body_html',
+    'truncated_body_text',
+)
+
+
+def catalogue_signature(posts):
+    """Hash only list fields that can affect the persisted source snapshot."""
+    signature = []
+    for post in posts:
+        projection = {
+            field: post.get(field) for field in CATALOGUE_STABILITY_FIELDS
+        }
+        payload = json.dumps(
+            projection,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(',', ':'),
+        ).encode('utf-8')
+        signature.append(hashlib.sha256(payload).hexdigest())
+    return tuple(signature)
+
+
+def fetch_complete_catalogue(limit=50):
+    """Return one complete offset pass, rejecting every cross-page overlap."""
+    listed_posts = []
     offset = 0
-    limit = 50
-    failed = False
-    seen_page_signatures = set()
-    seen_posts = set()
-
-    print("Fetching posts from Substack API...")
-
+    seen_ids = set()
+    seen_slugs = set()
     while True:
         print(f"  Fetching offset={offset}...", end=' ', flush=True)
-        try:
-            posts = fetch_posts(limit=limit, offset=offset)
-        except Exception as e:
-            # A mid-pagination failure must be treated as fatal, NOT as
-            # end-of-feed — otherwise we'd persist a truncated snapshot.
-            print(f"ERROR at offset={offset}: {type(e).__name__}: {e}")
-            failed = True
-            break
-
+        posts = fetch_posts(limit=limit, offset=offset)
         if not posts:
             print("No more posts.")
             break
-
-        fetched_count += len(posts)
-
-        signature = tuple((post.get('id'), post.get('slug')) for post in posts)
-        if signature in seen_page_signatures:
-            print(f"ERROR at offset={offset}: Substack repeated a page; refusing a partial snapshot")
-            failed = True
-            break
-        seen_page_signatures.add(signature)
-
-        print(f"Got {len(posts)} posts")
-
         for post in posts:
-            post_key = post.get('id') or post.get('slug')
-            if post_key in seen_posts:
-                continue
-            seen_posts.add(post_key)
-
-            body_html = post.get('body_html', '')
-            body_text = strip_html(body_html) if body_html else post.get('truncated_body_text', '')
-
-            all_posts.append({
-                'source': 'substack',
-                'source_id': post.get('slug', ''),
-                'slug': post.get('slug', ''),
-                'title': post.get('title', ''),
-                'subtitle': post.get('subtitle', ''),
-                'post_date': post.get('post_date', ''),
-                'url': f"https://navnoorbawa.substack.com/p/{post.get('slug', '')}",
-                'audience': post.get('audience', ''),
-                'meter_type': post.get('meter_type', ''),
-                'type': post.get('type', ''),
-                'is_published': post.get('is_published', True),
-                'wordcount': post.get('wordcount', 0),
-                'body_text': body_text,
-                'body_html_length': len(body_html),
-                'content_status': 'full',
-            })
-
+            slug = post.get('slug')
+            post_id = post.get('id')
+            if slug in seen_slugs or (
+                post_id is not None and post_id in seen_ids
+            ):
+                raise ValueError(
+                    'Substack pagination overlapped a prior page; '
+                    'refusing an incoherent catalogue'
+                )
+            seen_slugs.add(slug)
+            if post_id is not None:
+                seen_ids.add(post_id)
+            listed_posts.append(post)
+        print(f"Got {len(posts)} posts")
         if len(posts) < limit:
             print("Reached end of posts.")
             break
-
         offset += limit
-        time.sleep(0.5)  # Be polite
+        time.sleep(0.5)
+    return listed_posts
+
+
+def main():
+    all_posts = []  # type: list[dict]
+    fetched_count = 0
+    limit = 50
+    resolution_counts = {
+        'list': 0,
+        'detail': 0,
+        'cache': 0,
+        'access-cache': 0,
+        'excerpt-cache': 0,
+        'legacy-cache': 0,
+        'fallback': 0,
+        'excerpt': 0,
+        'metadata': 0,
+    }
+    degraded_messages = []
+    detail_request_count = 0
+    detail_attempted_slugs = set()
+    detail_attempted_at = utc_now()
+
+    def fetch_detail_with_budget(slug, expected_updated_at):
+        nonlocal detail_request_count
+        if detail_request_count >= MAX_DETAIL_REQUESTS_PER_RUN:
+            raise DetailBudgetExhausted(
+                'per-refresh Substack detail-request budget exhausted'
+            )
+        detail_request_count += 1
+        detail_attempted_slugs.add(slug)
+        return fetch_post_detail(slug, expected_updated_at)
+
+    previous_posts = []
+    previous_by_slug = {}
+    if PREVIOUS_POSTS_PATH.exists():
+        try:
+            with open(PREVIOUS_POSTS_PATH, 'r', encoding='utf-8') as handle:
+                previous_posts = json.load(handle)
+            if not isinstance(previous_posts, list) or not all(
+                isinstance(post, dict) for post in previous_posts
+            ):
+                raise ValueError('expected a list of post objects')
+            for previous_post in previous_posts:
+                slug = previous_post.get('slug')
+                if not isinstance(slug, str) or not slug or slug in previous_by_slug:
+                    raise ValueError('missing or duplicate previous post slug')
+                attempted_at = previous_post.get('detail_attempted_at')
+                if (
+                    attempted_at is not None
+                    and detail_attempt_instant(attempted_at) is None
+                ):
+                    raise ValueError(
+                        f'invalid private detail retry timestamp for {slug!r}'
+                    )
+                previous_by_slug[slug] = previous_post
+        except Exception as exc:
+            fail_fetch(
+                f'Previous Substack snapshot is invalid: {exc}',
+                'complete_api',
+                fetched_count,
+                all_posts,
+            )
+
+    print("Fetching posts from Substack API (catalogue pass 1 of 2)...")
+    try:
+        listed_posts = fetch_complete_catalogue(limit)
+        fetched_count = len(listed_posts)
+        print("Confirming stable Substack catalogue (pass 2 of 2)...")
+        confirmation_posts = fetch_complete_catalogue(limit)
+    except Exception as exc:
+        fail_fetch(
+            'Fetch did not complete coherently — leaving previous '
+            f'all_posts.json untouched ({type(exc).__name__}: {exc}).',
+            'complete_api',
+            fetched_count,
+            [],
+        )
+
+    if catalogue_signature(listed_posts) != catalogue_signature(
+        confirmation_posts
+    ):
+        fail_fetch(
+            'Substack catalogue changed between verification passes — '
+            'leaving previous all_posts.json untouched.',
+            'complete_api',
+            fetched_count,
+            listed_posts,
+        )
+    print(f"Stable catalogue confirmed: {fetched_count} unique posts")
+
+    # Resolve genuinely new public rows first, then rows never attempted, then
+    # the oldest attempted rows. The private timestamp survives only in the
+    # ignored body cache, so a fixed newest-first request budget cannot starve
+    # the thirteenth unresolved article forever.
+    def detail_priority(indexed_post):
+        index, post = indexed_post
+        previous = previous_by_slug.get(post.get('slug'))
+        if previous is None:
+            return 0, datetime.min.replace(tzinfo=timezone.utc), index
+        attempted = detail_attempt_instant(previous.get('detail_attempted_at'))
+        if attempted is None:
+            return 1, datetime.min.replace(tzinfo=timezone.utc), index
+        return 2, attempted, index
+
+    scheduled_posts = sorted(enumerate(listed_posts), key=detail_priority)
+    resolved_by_index = {}
+    for index, post in scheduled_posts:
+        slug = post.get('slug')
+        previous = previous_by_slug.get(slug)
+        resolved, resolution, warning = resolve_post_body(
+            post,
+            previous,
+            fetch_detail_with_budget,
+        )
+        if slug in detail_attempted_slugs:
+            resolved['detail_attempted_at'] = detail_attempted_at
+        elif (
+            isinstance(previous, dict)
+            and detail_attempt_instant(previous.get('detail_attempted_at'))
+            is not None
+        ):
+            resolved['detail_attempted_at'] = previous['detail_attempted_at']
+        resolution_counts[resolution] += 1
+        if warning:
+            degraded_messages.append(warning)
+            print(f'Warning: {warning}')
+        resolved_by_index[index] = resolved
+    all_posts = [
+        resolved_by_index[index] for index in range(len(listed_posts))
+    ]
 
     print(f"\nTotal posts fetched: {len(all_posts)}")
-
-    # ── Guard the existing snapshot ───────────────────────────────────────────
-    # Never overwrite a good all_posts.json with a failed or shrunken fetch:
-    # downstream extract/filter/build would regenerate from truncated data and
-    # silently drop articles (including the newest ones).
-    if failed:
-        fail_fetch("Fetch did not complete — leaving previous all_posts.json untouched.",
-                   'complete_api', fetched_count, all_posts)
 
     if not all_posts:
         fail_fetch("Fetch returned zero posts — leaving previous all_posts.json untouched.",
                    'complete_api', fetched_count, all_posts)
 
-    if PREVIOUS_POSTS_PATH.exists():
-        try:
-            with open(PREVIOUS_POSTS_PATH, 'r', encoding='utf-8') as f:
-                prev = json.load(f)
-            prev_count = len(prev) if isinstance(prev, list) else 0
-            prev_slugs = {post.get('slug') for post in prev if isinstance(post, dict) and post.get('slug')}
-        except Exception as exc:
-            fail_fetch(f"Previous Substack snapshot is invalid: {exc}",
-                       'complete_api', fetched_count, all_posts)
+    if previous_posts:
+        prev_count = len(previous_posts)
+        prev_slugs = set(previous_by_slug)
         # A small decrease can be a legitimate deletion/unpublish. A large one
         # is much more likely to be a changed or truncated API response.
         minimum_safe_count = max(1, int(prev_count * 0.9))
@@ -324,10 +946,46 @@ def main():
     article_index = [article_metadata(post) for post in all_posts]
     atomic_write_json(POSTS_PATH, all_posts)
     atomic_write_json(ARTICLE_INDEX_PATH, article_index)
-    write_fetch_status('ok', 'complete_api', fetched_count, all_posts)
+    degraded = bool(degraded_messages)
+    if degraded:
+        mode = 'complete_api_degraded_body_provenance'
+    elif resolution_counts['detail']:
+        mode = 'complete_api_plus_details'
+    elif resolution_counts['cache']:
+        mode = 'complete_api_cached_bodies'
+    else:
+        mode = 'complete_api'
+    write_fetch_status(
+        'degraded' if degraded else 'ok',
+        mode,
+        fetched_count,
+        all_posts,
+        (
+            f"{len(degraded_messages)} body record(s) could not prove current "
+            'full-body access; retained only provenance-separated prior text '
+            'or exact source excerpts'
+            if degraded
+            else None
+        ),
+        published_count=fetched_count,
+        newest=newest_post_date(listed_posts),
+    )
 
     print(f"Saved to {POSTS_PATH}")
     print(f"Saved article index to {ARTICLE_INDEX_PATH}")
+    print(
+        'Body resolution: '
+        + ', '.join(
+            f'{label}={count}'
+            for label, count in resolution_counts.items()
+            if count
+        )
+    )
+    if detail_request_count:
+        print(
+            'Body detail requests: '
+            f'{detail_request_count}/{MAX_DETAIL_REQUESTS_PER_RUN}'
+        )
 
     # Print summary
     for p in all_posts[:5]:

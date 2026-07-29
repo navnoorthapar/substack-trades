@@ -8,8 +8,10 @@ import unittest
 from pathlib import Path
 
 from validate_pipeline import (
+    validate_article_index,
     validate_article_regression,
     validate_deployable_articles,
+    validate_posts,
     validate_trades,
 )
 from extract_trades import (
@@ -23,6 +25,25 @@ from filter_trades import clean_underlying
 
 
 ROOT = Path(__file__).parent
+
+
+def current_body(article):
+    article.update({
+        'body_revision_status': 'current',
+        'source_updated_at': '2026-07-14T00:00:00Z',
+        'observed_source_updated_at': '2026-07-14T00:00:00Z',
+    })
+    if article.get('content_status') == 'full':
+        article.setdefault('wordcount', 100)
+        article.setdefault('brief', {
+            'schema_version': 1,
+            'body_sha256': hashlib.sha256(b'fixture body').hexdigest(),
+            'lead': None,
+            'sections': [],
+            'fallback_evidence': None,
+            'checkpoints': [],
+        })
+    return article
 
 
 class DeployableSnapshotValidationTests(unittest.TestCase):
@@ -44,7 +65,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
         self.assertIn('Validation passed:', result.stdout)
 
     def test_deployable_catalog_rejects_duplicate_source_identity(self):
-        article = {
+        article = current_body({
             'url': 'https://navnoorbawa.substack.com/p/example',
             'source': 'substack',
             'source_id': 'example',
@@ -52,11 +73,137 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'post_date': '2026-07-14',
             'content_status': 'full',
             'family': 'other',
-        }
+        })
         # The same canonical identity cannot appear twice.
         duplicate = dict(article)
         with self.assertRaisesRegex(ValueError, 'duplicate canonical URLs'):
             validate_deployable_articles([article, duplicate])
+
+    def test_body_revision_provenance_controls_content_claims(self):
+        article = current_body({
+            'url': 'https://navnoorbawa.substack.com/p/example',
+            'source': 'substack',
+            'source_id': 'example',
+            'title': 'Example',
+            'post_date': '2026-07-14',
+            'content_status': 'full',
+            'family': 'other',
+        })
+        self.assertIn(article['url'], validate_deployable_articles([article]))
+
+        missing = dict(article)
+        missing.pop('body_revision_status')
+        with self.assertRaisesRegex(ValueError, 'body_revision_status'):
+            validate_deployable_articles([missing])
+
+        current_mismatch = dict(
+            article,
+            observed_source_updated_at='2026-07-15T00:00:00Z',
+        )
+        with self.assertRaisesRegex(ValueError, 'current body revision'):
+            validate_deployable_articles([current_mismatch])
+
+        prior = dict(
+            current_mismatch,
+            content_status='excerpt',
+            body_revision_status='prior',
+        )
+        self.assertIn(prior['url'], validate_deployable_articles([prior]))
+
+        unverified = dict(
+            article,
+            content_status='excerpt',
+            body_revision_status='unverified',
+            source_updated_at='',
+            observed_source_updated_at='',
+        )
+        self.assertIn(
+            unverified['url'],
+            validate_deployable_articles([unverified]),
+        )
+
+        with self.assertRaisesRegex(ValueError, 'unverified body revision'):
+            validate_deployable_articles([
+                dict(article, body_revision_status='unverified')
+            ])
+
+        for missing_timestamp, message in (
+            (
+                dict(
+                    article,
+                    source_updated_at='',
+                    observed_source_updated_at='',
+                ),
+                'timestamp-bound current body revision',
+            ),
+            (
+                dict(article, source_updated_at=''),
+                'current body revision is inconsistent',
+            ),
+        ):
+            with self.assertRaisesRegex(ValueError, message):
+                validate_deployable_articles([missing_timestamp])
+
+    def test_full_content_requires_a_real_body_wordcount_and_brief(self):
+        body_text = ('captured research ' * 50).strip()
+        post = current_body({
+            'url': 'https://navnoorbawa.substack.com/p/full-evidence',
+            'source': 'substack',
+            'source_id': 'full-evidence',
+            'title': 'Full evidence',
+            'post_date': '2026-07-14',
+            'content_status': 'full',
+            'wordcount': 100,
+            'body_text': body_text,
+            'is_published': True,
+        })
+        article = {
+            key: value for key, value in post.items()
+            if key not in {'body_text', 'is_published'}
+        }
+        article['family'] = 'other'
+        article['brief'] = {
+            'schema_version': 1,
+            'body_sha256': hashlib.sha256(body_text.encode('utf-8')).hexdigest(),
+            'lead': None,
+            'sections': [],
+            'fallback_evidence': None,
+            'checkpoints': [],
+        }
+
+        posts = validate_posts([post])
+        self.assertIn(
+            article['url'],
+            validate_article_index([article], posts),
+        )
+
+        missing_wordcount = dict(post)
+        missing_wordcount.pop('wordcount')
+        invalid_posts = (
+            (missing_wordcount, 'explicit word count'),
+            (dict(post, wordcount=0), 'positive word count'),
+            (dict(post, body_text=''), 'empty source body'),
+            (
+                dict(post, body_text=('captured ' * 96).strip()),
+                'less than 97%',
+            ),
+        )
+        for invalid, message in invalid_posts:
+            with self.subTest(message=message):
+                with self.assertRaisesRegex(ValueError, message):
+                    validate_posts([invalid])
+
+        with self.assertRaisesRegex(ValueError, 'positive word count'):
+            validate_deployable_articles([dict(article, wordcount=0)])
+
+        empty_brief = copy.deepcopy(article)
+        empty_brief['brief']['body_sha256'] = hashlib.sha256(b'').hexdigest()
+        with self.assertRaisesRegex(ValueError, 'empty-body brief'):
+            validate_deployable_articles([empty_brief])
+
+        mismatched_wordcount = dict(article, wordcount=99)
+        with self.assertRaisesRegex(ValueError, 'word count does not match'):
+            validate_article_index([mismatched_wordcount], posts)
 
     def test_paid_registry_brief_must_preserve_exact_empty_body_boundary(self):
         article = {
@@ -107,7 +254,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             validate_deployable_articles([top_level_body])
 
     def test_trade_validation_remains_strict_without_post_cache(self):
-        article = {
+        article = current_body({
             'url': 'https://medium.com/@navnoorbawa/example-123',
             'source': 'medium',
             'source_id': '123',
@@ -115,7 +262,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'post_date': '2026-07-14',
             'content_status': 'excerpt',
             'family': 'other',
-        }
+        })
         article['source_id'] = 'abcdef123456'
         article['url'] = 'https://medium.com/@navnoorbawa/example-abcdef123456'
         urls = validate_deployable_articles([article])
@@ -133,8 +280,57 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'invalid direction'):
             validate_trades([invalid], urls)
 
+    def test_medium_url_identity_is_exact_and_unicode_safe(self):
+        valid_urls = (
+            'https://medium.com/@navnoorbawa/'
+            'the-cram%C3%A9r-rao-bound-54e47fbb0504',
+            'https://medium.com/@navnoorbawa/'
+            'color-%CE%B3-t-options-b7bf066746e0',
+            'https://medium.com/@navnoorbawa/'
+            'how-soci%C3%A9t%C3%A9-works-bf9a744c7898',
+        )
+        for url in valid_urls:
+            with self.subTest(url=url):
+                article = current_body({
+                    'url': url,
+                    'source': 'medium',
+                    'source_id': url[-12:],
+                    'title': 'Canonical Medium article',
+                    'post_date': '2026-07-14',
+                    'content_status': 'excerpt',
+                    'family': 'other',
+                })
+                self.assertIn(
+                    url,
+                    validate_deployable_articles([article]),
+                )
+
+        invalid_urls = (
+            'https://medium.com/@another/story-abcdef123456',
+            'https://medium.com/@navnoorbawa/../story-abcdef123456',
+            'https://medium.com/@navnoorbawa/%2e%2e-abcdef123456',
+            'https://medium.com/@navnoorbawa/a%2F..%2Fstory-abcdef123456',
+            'https://medium.com/@navnoorbawa/story-abcdef123456?source=rss-x',
+            'https://user@medium.com/@navnoorbawa/story-abcdef123456',
+            'https://medium.com:444/@navnoorbawa/story-abcdef123456',
+            'https://medium.com/@navnoorbawa/story-abcdef123456#fragment',
+        )
+        for url in invalid_urls:
+            with self.subTest(url=url):
+                article = current_body({
+                    'url': url,
+                    'source': 'medium',
+                    'source_id': 'abcdef123456',
+                    'title': 'Invalid Medium article',
+                    'post_date': '2026-07-14',
+                    'content_status': 'excerpt',
+                    'family': 'other',
+                })
+                with self.assertRaises(ValueError):
+                    validate_deployable_articles([article])
+
     def test_rejects_impossible_date_missing_status_and_noncanonical_url(self):
-        article = {
+        article = current_body({
             'url': 'https://navnoorbawa.substack.com/p/example',
             'source': 'substack',
             'source_id': 'example',
@@ -142,7 +338,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'post_date': '2026-02-29',
             'content_status': 'full',
             'family': 'other',
-        }
+        })
         with self.assertRaisesRegex(ValueError, 'not a real ISO date'):
             validate_deployable_articles([article])
 
@@ -161,7 +357,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             validate_deployable_articles([wrong_identity])
 
     def test_trade_title_and_date_must_match_article(self):
-        article = {
+        article = current_body({
             'url': 'https://navnoorbawa.substack.com/p/example',
             'source': 'substack',
             'source_id': 'example',
@@ -169,7 +365,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'post_date': '2026-07-14T09:30:00Z',
             'content_status': 'full',
             'family': 'other',
-        }
+        })
         articles = validate_deployable_articles([article])
         trade = {
             'article_title': article['title'],
@@ -186,7 +382,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             validate_trades([dict(trade, article_date='2026-07-13')], articles)
 
     def test_trade_requires_boolean_truncation_provenance(self):
-        article = {
+        article = current_body({
             'url': 'https://navnoorbawa.substack.com/p/example',
             'source': 'substack',
             'source_id': 'example',
@@ -194,7 +390,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'post_date': '2026-07-14',
             'content_status': 'full',
             'family': 'other',
-        }
+        })
         articles = validate_deployable_articles([article])
         trade = {
             'article_title': article['title'],
@@ -210,7 +406,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             validate_trades([dict(trade, description_truncated=0)], articles)
 
     def test_direction_rejects_negated_signal_and_regex_override(self):
-        article = {
+        article = current_body({
             'url': 'https://navnoorbawa.substack.com/p/example',
             'source': 'substack',
             'source_id': 'example',
@@ -218,7 +414,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'post_date': '2026-07-14',
             'content_status': 'full',
             'family': 'other',
-        }
+        })
         articles = validate_deployable_articles([article])
         base = {
             'article_title': article['title'],
@@ -263,7 +459,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
         )
 
     def test_evidence_fields_are_recomputed_from_exact_visible_passage(self):
-        article = {
+        article = current_body({
             'url': 'https://navnoorbawa.substack.com/p/example',
             'source': 'substack',
             'source_id': 'example',
@@ -271,7 +467,7 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             'post_date': '2026-07-14',
             'content_status': 'full',
             'family': 'other',
-        }
+        })
         articles = validate_deployable_articles([article])
         description = (
             'The fund bought Acme Capital shares because earnings would accelerate '

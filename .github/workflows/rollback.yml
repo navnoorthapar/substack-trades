@@ -1,0 +1,159 @@
+name: Emergency Pages Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Successful Validate and Deploy Pages run ID to restore
+        required: true
+        type: string
+      release_sha:
+        description: Exact 40-character release SHA from that run
+        required: true
+        type: string
+      confirmation:
+        description: Type ROLLBACK to authorize the production restore
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    name: Restore verified production artifact
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out trusted rollback tooling
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Set up deterministic Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.12'
+
+      - name: Prove rollback tooling is current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_main=$(
+            git ls-remote --exit-code origin refs/heads/main |
+              awk 'NR == 1 { print $1 }'
+          )
+          [[ "$remote_main" =~ ^[0-9a-f]{40}$ ]]
+          [ "$GITHUB_SHA" = "$remote_main" ]
+
+      - name: Verify source run authority
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          RELEASE_SHA: ${{ inputs.release_sha }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          [[ "$RELEASE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [ "$CONFIRMATION" = "ROLLBACK" ]
+          expected_workflow_id=$(
+            gh api \
+              "repos/$GITHUB_REPOSITORY/actions/workflows/update.yml" \
+              --jq '.id'
+          )
+          IFS=$'\t' read -r \
+            workflow_id event status conclusion head_branch head_sha <<FIELDS
+          $(gh api \
+            "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" \
+            --jq '[.workflow_id,.event,.status,.conclusion,.head_branch,.head_sha] | @tsv')
+          FIELDS
+          [ "$workflow_id" = "$expected_workflow_id" ]
+          [[ "$event" = "push" || "$event" = "workflow_dispatch" ]]
+          [ "$status" = "completed" ]
+          [ "$conclusion" = "success" ]
+          [ "$head_branch" = "main" ]
+          [ "$head_sha" = "$RELEASE_SHA" ]
+
+      - name: Download exact retained artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          RELEASE_SHA: ${{ inputs.release_sha }}
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/rollback-download"
+          gh run download "$SOURCE_RUN_ID" \
+            --repo "$GITHUB_REPOSITORY" \
+            --name "verified-pages-$RELEASE_SHA" \
+            --dir "$RUNNER_TEMP/rollback-download"
+          test -f "$RUNNER_TEMP/rollback-download/artifact.tar"
+          test "$(
+            find "$RUNNER_TEMP/rollback-download" -type f | wc -l | tr -d ' '
+          )" = "1"
+          python rollback_bundle.py extract \
+            --archive "$RUNNER_TEMP/rollback-download/artifact.tar" \
+            --output "$RUNNER_TEMP/verified-rollback"
+
+      - name: Verify schema-neutral artifact attestation
+        run: >-
+          python rollback_bundle.py verify-attestation
+          --bundle "$RUNNER_TEMP/verified-rollback"
+          --expected-revision "${{ inputs.release_sha }}"
+
+      - name: Upload exact rollback Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: ${{ runner.temp }}/verified-rollback/site
+          retention-days: 7
+
+      - name: Refuse superseded rollback tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_main=$(
+            git ls-remote --exit-code origin refs/heads/main |
+              awk 'NR == 1 { print $1 }'
+          )
+          [[ "$remote_main" =~ ^[0-9a-f]{40}$ ]]
+          [ "$GITHUB_SHA" = "$remote_main" ]
+
+      - name: Deploy verified rollback
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
+
+      - name: Verify exact rollback is live
+        env:
+          DEPLOYED_URL: ${{ steps.deployment.outputs.page_url }}
+          EXPECTED_REVISION: ${{ inputs.release_sha }}
+        run: >-
+          python rollback_bundle.py smoke
+          --bundle "$RUNNER_TEMP/verified-rollback"
+          --expected-revision "$EXPECTED_REVISION"
+          --base-url "$DEPLOYED_URL"
+          --retries 8
+          --retry-delay 10
+          --timeout 20
+          --concurrency 12
+
+      - name: Publish rollback incident guidance
+        if: failure() && steps.deployment.outcome == 'success'
+        run: >-
+          echo "::error title=Rollback verification failed::The archived Pages
+          artifact deployed but exact live verification failed. Preserve this
+          run and continue the incident procedure in LAUNCH_RUNBOOK.md section 6."

@@ -13,6 +13,10 @@ from collections import Counter
 from pathlib import Path
 
 from article_briefs import is_boilerplate_text
+from client_article_contract import (
+    ARTICLE_WIRE_SCHEMA_VERSION,
+    hydrate_client_article,
+)
 
 
 ROOT = Path(__file__).parent
@@ -60,43 +64,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         if not article_match or not threads_match or not snapshot_match:
             raise AssertionError('generated client payload is missing')
         cls.article_payload = json.loads(article_match.group(1))
-        cls.articles = []
-        for wire_article in cls.article_payload:
-            article = dict(wire_article)
-            published_at = str(article['published_at'])
-            wordcount = int(article.get('wordcount') or 0)
-            brief_code = article.pop('_b', [0, 0])
-            coverage_mask = int(article.pop('_q', 0))
-            brief_mask = int(brief_code[0])
-            article.update({
-                'date': published_at[:10],
-                'publication_precision': (
-                    'day' if len(published_at) == 10 else 'instant'
-                ),
-                'read_minutes': max(1, round(wordcount / 220)) if wordcount else 0,
-                'alternate_urls': article.get('alternate_urls') or {},
-                'brief': article.get('brief'),
-                'idea_ids': article.get('idea_ids') or [],
-                'directions': article.get('directions') or [],
-                'instruments': article.get('instruments') or [],
-                'underlyings': article.get('underlyings') or [],
-                'managers': article.get('managers') or [],
-                'manager_keys': article.get('manager_keys') or [],
-                'brief_features': {
-                    'lead': bool(brief_mask & 1),
-                    'evidence': bool(brief_mask & 2),
-                    'countercase': bool(brief_mask & 4),
-                    'falsifier': bool(brief_mask & 8),
-                    'implementation': bool(brief_mask & 16),
-                    'mechanism': bool(brief_mask & 32),
-                    'checkpoint_count': int(brief_code[1]),
-                },
-                'has_quant': bool(coverage_mask & 1),
-                'has_thesis': bool(coverage_mask & 2),
-                'has_outcome': bool(coverage_mask & 4),
-            })
-            article['trade_count'] = len(article['idea_ids'])
-            cls.articles.append(article)
+        cls.articles = [
+            hydrate_client_article(wire_article)
+            for wire_article in cls.article_payload
+        ]
         cls.threads = json.loads(threads_match.group(1))
         cls.ideas = cls.observation_archive['observations']
         cls.snapshot = json.loads(snapshot_match.group(1))
@@ -106,6 +77,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         cls._site_temp.cleanup()
 
     def test_complete_multi_source_dataset_is_deferred_once(self):
+        self.assertIn(
+            f'const ARTICLE_WIRE_SCHEMA_VERSION = {ARTICLE_WIRE_SCHEMA_VERSION};',
+            self.html,
+        )
         self.assertEqual(len(self.articles), len(self.source_content_articles))
         self.assertEqual(len(self.ideas), len(self.source_ideas))
         self.assertEqual(
@@ -1207,6 +1182,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('formatReleaseCheckedAt(SNAPSHOT.checked_at)', briefing)
         self.assertIn('sourceCollectionSummary(selected.source)', briefing)
         self.assertIn("sourceRelease.status === 'degraded' ? ' degraded'", briefing)
+        self.assertIn(
+            "complete_api_degraded_body_provenance:"
+            "'Complete catalogue · body provenance limited'",
+            self.html,
+        )
         self.assertIn("cached_archive_plus_rss:'Cached archive + RSS'", self.html)
         self.assertIn("statusLabels = {ok:'OK',degraded:'Degraded',error:'Unavailable'}", self.html)
         self.assertIn("return iso.slice(0,10) + ' ' + iso.slice(11,16) + ' UTC';", self.html)
@@ -1322,6 +1302,65 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('No contextual evidence passage', full_branch)
         self.assertIn('No explicit countercase or falsifier section', full_branch)
         self.assertIn('not proof of absence', full_branch)
+
+    def test_body_revision_provenance_is_visible_exported_and_review_flagged(self):
+        source_by_url = {
+            article['url'].rstrip('/'): article
+            for article in self.source_content_articles
+        }
+        for article in self.articles:
+            source = source_by_url[article['url'].rstrip('/')]
+            for field in (
+                'body_revision_status',
+                'source_updated_at',
+                'observed_source_updated_at',
+            ):
+                self.assertEqual(article[field], source[field])
+
+        for text in (
+            'function bodyRevisionLabel(article)',
+            'function bodyRevisionSummary(article)',
+            'function bodyRevisionWarningMarkup(article)',
+            'Prior revision capture',
+            'Cached excerpt retained for search',
+            "idea._article.body_revision_status !== 'current'",
+            "'prior-revision'",
+            "'unverified-revision'",
+            "'Body revision'",
+            "'Body source revision'",
+            "'Observed source revision'",
+            "'Body revision: ' + bodyRevisionSummary(article)",
+            "bodyRevisionSummary(article) + ' ' + article.url",
+            'data-filter="revision" data-value="current"',
+            'data-filter="revision" data-value="prior"',
+            'data-filter="revision" data-value="unverified"',
+            "state.revisions = setFromParam(params,'revision',VALID_BODY_REVISIONS)",
+            "params.set('revision',Array.from(state.revisions).join('|'))",
+            "if (facet === 'revision') return [record.body_revision_status]",
+            "if (facet === 'revision') return [record._article.body_revision_status]",
+            "['source','revision','direction','instrument','manager','quality','content']",
+            "['source',state.sources],['revision',state.revisions]",
+            'source:state.sources,revision:state.revisions',
+            'state.revisions.clear()',
+            "skip !== 'revision' && state.revisions.size",
+            'id="kpi-provenance-articles"',
+            'id="kpi-provenance-observations"',
+            '0 current · 0 prior · 0 unverified',
+            "number(provenanceArticles.current) + ' current · '",
+            "number(provenanceObservations.unverified) + ' unverified observations'",
+        ):
+            self.assertIn(text, self.html)
+        self.assertGreaterEqual(
+            self.html.count('source:state.sources,revision:state.revisions'),
+            4,
+        )
+        self.assertGreaterEqual(self.html.count('state.revisions.clear()'), 2)
+
+        triage_start = self.html.index('function documentationMatches(idea)')
+        triage_end = self.html.index('\nlet workflowStorageDirty', triage_start)
+        triage = self.html[triage_start:triage_end]
+        self.assertIn('!reviewFlagged(idea)', triage)
+        self.assertIn("idea._article.content_status === 'full'", triage)
 
     def test_new_since_review_requires_an_explicit_acknowledgement(self):
         initialization_start = self.html.index('let reviewedArticleIds = new Set()')

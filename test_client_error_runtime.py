@@ -86,6 +86,7 @@ const THREAD_ARTICLES = {
 };
 const MANAGERS = [];
 const VALID_SOURCES = new Set();
+const VALID_BODY_REVISIONS = new Set(['current','prior','unverified']);
 const VALID_DIRECTIONS = new Set();
 const VALID_INSTRUMENTS = new Set();
 const VALID_QUALITY = new Set();
@@ -96,7 +97,7 @@ const VALID_BRIEF_LENSES = new Set(['all']);
 const storedDensity = 'compact';
 const setFromParam = () => new Set();
 const state = {
-  view:'briefing',query:'',sources:new Set(),directions:new Set(),
+  view:'briefing',query:'',sources:new Set(),revisions:new Set(),directions:new Set(),
   instruments:new Set(),managers:new Set(),quality:new Set(),content:new Set(),
   queueStatuses:new Set(),documentation:'all',newOnly:false,range:'all',
   coverage:'all',briefLens:'all',threadTopic:'',sort:'newest',
