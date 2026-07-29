@@ -214,6 +214,10 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'echo "current=false" >> "$GITHUB_OUTPUT"',
             'Superseded release skipped',
             "needs.currency.outputs.current == 'true'",
+            '- name: Reconfirm release still owns main',
+            'id: current',
+            'Superseded release skipped at deploy',
+            "if: steps.current.outputs.current == 'true'",
         ):
             self.assertIn(required, self.workflow)
         self.assertEqual(
@@ -234,6 +238,9 @@ class DeploymentConfigurationTests(unittest.TestCase):
         upload_at = self.workflow.index('- name: Upload Pages artifact')
         currency_at = self.workflow.index('currency:')
         remote_at = self.workflow.index('- name: Compare release with remote main')
+        final_remote_at = self.workflow.index(
+            '- name: Reconfirm release still owns main'
+        )
         deploy_at = self.workflow.index('- name: Deploy GitHub Pages artifact')
         self.assertLess(tests_at, prebuild_clean_at)
         self.assertLess(prebuild_clean_at, build_at)
@@ -241,6 +248,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertLess(postbuild_clean_at, upload_at)
         self.assertLess(currency_at, remote_at)
         self.assertLess(remote_at, deploy_at)
+        self.assertLess(final_remote_at, deploy_at)
 
     def test_verified_rollback_archive_and_manual_restore_are_fail_closed(self):
         for required in (
@@ -284,11 +292,14 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '[ "$GITHUB_SHA" = "$remote_main" ]',
             'actions/workflows/update.yml',
             'actions/runs/$SOURCE_RUN_ID',
-            '[[ "$event" = "push" || "$event" = "workflow_dispatch" ]]',
-            '[ "$status" = "completed" ]',
-            '[ "$conclusion" = "success" ]',
-            '[ "$head_branch" = "main" ]',
-            '[ "$head_sha" = "$RELEASE_SHA" ]',
+            'jobs?filter=latest&per_page=100',
+            'python verify_workflow_run.py',
+            '--run-json "$RUNNER_TEMP/source-run.json"',
+            '--jobs-json "$RUNNER_TEMP/source-jobs.json"',
+            '--expected-workflow-id "$expected_workflow_id"',
+            '--expected-event push',
+            '--expected-event workflow_dispatch',
+            '--expected-head-sha "$RELEASE_SHA"',
             '--name "verified-pages-$RELEASE_SHA"',
             'python rollback_bundle.py extract',
             '- name: Verify schema-neutral artifact attestation',
@@ -353,6 +364,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--expected-data-sha256 "$EXPECTED_DATA_SHA256"',
             '--expected-share-sha256 "$EXPECTED_SHARE_SHA256"',
             '--retries 8',
+            "if: steps.current.outputs.current == 'true'",
             '- name: Publish production incident guidance',
             "if: failure() && steps.deployment.outcome == 'success'",
             'Follow LAUNCH_RUNBOOK.md',
@@ -455,12 +467,24 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertNotRegex(self.workflow, r'(?m)^\s*run:\s*git (?:commit|push)')
 
     def test_production_deployments_are_serialized_without_cancellation(self):
-        self.assertIn("|| 'production'", self.workflow)
-        self.assertIn('queue: max', self.workflow)
-        self.assertNotIn('cancel-in-progress:', self.workflow)
+        quality_job = self.workflow.split('\n  quality:', 1)[1].split(
+            '\n  currency:', 1,
+        )[0]
+        deploy_job = self.workflow.split('\n  deploy:', 1)[1]
+        self.assertIn('pages-quality-${{', quality_job)
+        self.assertIn('github.event.pull_request.number', quality_job)
+        self.assertIn('|| github.run_id', quality_job)
+        self.assertIn(
+            "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+            quality_job,
+        )
+        self.assertIn('group: pages-production', deploy_job)
+        self.assertIn('queue: max', deploy_job)
+        self.assertNotIn('cancel-in-progress:', deploy_job)
         self.assertIn('queue: max', self.rollback)
         self.assertNotIn('cancel-in-progress:', self.rollback)
         self.assertIn('name: Confirm current production revision', self.workflow)
+        self.assertIn('name: Reconfirm release still owns main', deploy_job)
         self.assertIn('echo "current=false" >> "$GITHUB_OUTPUT"', self.workflow)
         self.assertIn("needs.currency.outputs.current == 'true'", self.workflow)
 

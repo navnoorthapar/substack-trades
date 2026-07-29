@@ -183,13 +183,15 @@ For Critical or High incidents:
    The workflow refuses non-`main` tooling, a source run other than a successful
    push or authenticated manual release on `main`, a mismatched SHA, an
    expired/missing artifact, unsafe archive paths, attestation or payload drift,
-   superseded rollback tooling, or any exact live-byte mismatch. The successful
-   source run is the proof that the archived release passed its original
-   contract. Rollback uses current `main` tooling only; it never checks out or
-   executes historical code. It redeploys retained bytes, then fetches every
-   archived path over HTTPS with a revision-bound cache key and requires the
-   same origin, path, length, hash, and bytes. It never rebuilds an old snapshot
-   under a new revision.
+   superseded rollback tooling, or any exact live-byte mismatch. Run metadata
+   must also prove that the latest attempt contained exactly one successful
+   production job whose Pages deployment and exact-live-smoke steps both
+   completed successfully; a quality-only or superseded run is not rollback
+   authority even if its overall conclusion is green. Rollback uses current
+   `main` tooling only; it never checks out or executes historical code. It
+   redeploys retained bytes, then fetches every archived path over HTTPS with a
+   revision-bound cache key and requires the same origin, path, length, hash,
+   and bytes. It never rebuilds an old snapshot under a new revision.
 5. A historical rollback restores known release bytes but does not make old
    research current. The freshness watchdog should continue to report stale
    until a corrected fresh snapshot passes the normal release path. Do not

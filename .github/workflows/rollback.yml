@@ -76,18 +76,19 @@ jobs:
               "repos/$GITHUB_REPOSITORY/actions/workflows/update.yml" \
               --jq '.id'
           )
-          IFS=$'\t' read -r \
-            workflow_id event status conclusion head_branch head_sha <<FIELDS
-          $(gh api \
+          gh api \
             "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" \
-            --jq '[.workflow_id,.event,.status,.conclusion,.head_branch,.head_sha] | @tsv')
-          FIELDS
-          [ "$workflow_id" = "$expected_workflow_id" ]
-          [[ "$event" = "push" || "$event" = "workflow_dispatch" ]]
-          [ "$status" = "completed" ]
-          [ "$conclusion" = "success" ]
-          [ "$head_branch" = "main" ]
-          [ "$head_sha" = "$RELEASE_SHA" ]
+            > "$RUNNER_TEMP/source-run.json"
+          gh api \
+            "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID/jobs?filter=latest&per_page=100" \
+            > "$RUNNER_TEMP/source-jobs.json"
+          python verify_workflow_run.py \
+            --run-json "$RUNNER_TEMP/source-run.json" \
+            --jobs-json "$RUNNER_TEMP/source-jobs.json" \
+            --expected-workflow-id "$expected_workflow_id" \
+            --expected-event push \
+            --expected-event workflow_dispatch \
+            --expected-head-sha "$RELEASE_SHA"
 
       - name: Download exact retained artifact
         shell: bash

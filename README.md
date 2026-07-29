@@ -309,9 +309,11 @@ source JSON, tracked social image, release revision, all six fingerprints, and
 an exact path-to-hash manifest for every published file. The original
 successful `main` push or authenticated manual release proves the release
 contract before archival. The manual emergency workflow then uses only current
-trusted `main` tooling to authenticate that run, safely extract and verify the
-schema-neutral attestation, deploy the archived site without executing
-historical code, and fetch every live file over HTTPS for an exact
+trusted `main` tooling to authenticate that exact run and its latest-attempt
+jobs, requiring successful Pages deployment and exact-live-smoke steps rather
+than accepting a green quality-only run. It safely extracts and verifies the
+schema-neutral attestation, deploys the archived site without executing
+historical code, and fetches every live file over HTTPS for an exact
 revision-cache-busted byte comparison. A separate
 least-privilege watchdog is scheduled every four hours to rebuild the release
 fingerprints, verify the exact published revision and public-data bundle, and

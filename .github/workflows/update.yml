@@ -15,20 +15,18 @@ on:
 
 permissions: {}
 
-concurrency:
-  group: >-
-    pages-${{
-      github.event_name == 'pull_request'
-      && github.event.pull_request.number
-      || 'production'
-    }}
-  queue: max
-
 jobs:
   quality:
     name: Quality gate
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    concurrency:
+      group: >-
+        pages-quality-${{
+          github.event.pull_request.number
+          || github.run_id
+        }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     outputs:
       html_sha256: ${{ steps.release.outputs.html_sha256 }}
       brief_sha256: ${{ steps.release.outputs.brief_sha256 }}
@@ -256,6 +254,9 @@ jobs:
       - currency
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    concurrency:
+      group: pages-production
+      queue: max
     permissions:
       contents: read
       pages: write
@@ -271,11 +272,45 @@ jobs:
           fetch-depth: 2
           persist-credentials: false
 
+      - name: Reconfirm release still owns main
+        id: current
+        shell: bash
+        env:
+          REMOTE_URL: ${{ github.server_url }}/${{ github.repository }}.git
+        run: |
+          set -euo pipefail
+          remote_main=
+          for attempt in 1 2 3; do
+            remote_main=$(
+              git ls-remote --exit-code "$REMOTE_URL" refs/heads/main 2>/dev/null |
+                awk 'NR == 1 { print $1 }'
+            ) || remote_main=
+            if [[ "$remote_main" =~ ^[0-9a-f]{40}$ ]]; then
+              break
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "::warning title=Final remote main retry::Could not prove remote main on attempt $attempt."
+              sleep "$((attempt * 5))"
+            fi
+          done
+          if [[ ! "$remote_main" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error title=Final remote main unavailable::Deployment authority could not be proved after three attempts."
+            exit 1
+          fi
+          if [ "$remote_main" != "$GITHUB_SHA" ]; then
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Superseded release skipped at deploy::Newer main $remote_main took ownership before deployment of $GITHUB_SHA."
+            exit 0
+          fi
+          echo "current=true" >> "$GITHUB_OUTPUT"
+
       - name: Deploy GitHub Pages artifact
         id: deployment
+        if: steps.current.outputs.current == 'true'
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
 
       - name: Verify exact release is live
+        if: steps.current.outputs.current == 'true'
         env:
           DEPLOYED_URL: ${{ steps.deployment.outputs.page_url }}
           EXPECTED_REVISION: ${{ github.sha }}
