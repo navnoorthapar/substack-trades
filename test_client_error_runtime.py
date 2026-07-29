@@ -23,7 +23,10 @@ def run_node(script):
         cwd=ROOT,
         capture_output=True,
         text=True,
-        timeout=10,
+        # A cold Node process can briefly contend with the release suite's
+        # deterministic site builds on the scheduled Mac. Keep the subprocess
+        # bounded without turning normal launch-gate load into a false failure.
+        timeout=30,
         check=False,
     )
     if result.returncode:
