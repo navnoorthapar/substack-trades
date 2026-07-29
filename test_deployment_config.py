@@ -360,7 +360,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'workflow_dispatch:',
             'group: published-research-watchdog',
             'cancel-in-progress: true',
-            'timeout-minutes: 5',
+            'timeout-minutes: 12',
             'persist-credentials: false',
             'smoke_test_site.py',
             '--expected-revision "$GITHUB_SHA"',
@@ -386,7 +386,10 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--expected-support-sha256 "$EXPECTED_SUPPORT_SHA256"',
             '--expected-data-sha256 "$EXPECTED_DATA_SHA256"',
             '--expected-share-sha256 "$EXPECTED_SHARE_SHA256"',
-            '--retries 2',
+            'Verify exact live release with bounded propagation retries',
+            '--retries 20',
+            '--retry-delay 20',
+            '--timeout 10',
             'https://navnoorthapar.github.io/substack-trades/',
             "json.load(open('snapshot_manifest.json'",
             "snapshot['checked_at']",
@@ -406,6 +409,15 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertRegex(self.watchdog, r'(?m)^permissions:\n\s+contents: read$')
         self.assertNotIn('contents: write', self.watchdog)
         self.assertNotRegex(self.watchdog, r'(?m)^\s*run:\s*git (?:commit|push)')
+        retries = int(re.search(r'--retries (\d+)', self.watchdog).group(1))
+        backoff = int(re.search(r'--retry-delay (\d+)', self.watchdog).group(1))
+        request_timeout = int(re.search(r'--timeout (\d+)', self.watchdog).group(1))
+        job_minutes = int(re.search(r'timeout-minutes: (\d+)', self.watchdog).group(1))
+        self.assertGreaterEqual((retries - 1) * backoff, 6 * 60)
+        self.assertLessEqual(
+            retries * request_timeout + (retries - 1) * backoff,
+            job_minutes * 60,
+        )
         self.assertIn('MAX_AGE_SECONDS=${MAX_AGE_SECONDS:-57600}', self.automation_status)
         self.assertNotIn('129600', self.automation_status)
 

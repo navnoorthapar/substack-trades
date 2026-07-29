@@ -16,7 +16,7 @@ jobs:
   monitor:
     name: Verify live release and freshness
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 12
     steps:
       - name: Check out the expected release
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -46,7 +46,7 @@ jobs:
             --expected-revision "$SITE_REVISION" \
             --github-output "$GITHUB_OUTPUT"
 
-      - name: Verify exact live release
+      - name: Verify exact live release with bounded propagation retries
         env:
           EXPECTED_HTML_SHA256: ${{ steps.release.outputs.html_sha256 }}
           EXPECTED_BRIEF_SHA256: ${{ steps.release.outputs.brief_sha256 }}
@@ -65,8 +65,9 @@ jobs:
           --expected-support-sha256 "$EXPECTED_SUPPORT_SHA256"
           --expected-data-sha256 "$EXPECTED_DATA_SHA256"
           --expected-share-sha256 "$EXPECTED_SHARE_SHA256"
-          --retries 2
-          --retry-delay 5
+          --retries 20
+          --retry-delay 20
+          --timeout 10
           https://navnoorthapar.github.io/substack-trades/
 
       - name: Enforce scheduled-refresh freshness
