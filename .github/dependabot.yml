@@ -7,7 +7,10 @@ updates:
       day: monday
       time: '04:00'
       timezone: Asia/Kolkata
-    open-pull-requests-limit: 5
+    # Routine version PRs cannot satisfy the reviewed exact-SHA contract by
+    # themselves. Keep security updates enabled in repository settings; GitHub
+    # does not subject security-update PRs to this version-update limit.
+    open-pull-requests-limit: 0
     labels:
       - dependencies
       - github-actions

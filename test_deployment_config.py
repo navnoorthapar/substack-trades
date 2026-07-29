@@ -11,8 +11,8 @@ ROOT = Path(__file__).parent
 
 
 ACTION_PINS = {
-    'actions/checkout': ('df4cb1c069e1874edd31b4311f1884172cec0e10', 'v6.0.3'),
-    'actions/setup-python': ('ece7cb06caefa5fff74198d8649806c4678c61a1', 'v6.3.0'),
+    'actions/checkout': ('3d3c42e5aac5ba805825da76410c181273ba90b1', 'v7.0.1'),
+    'actions/setup-python': ('5fda3b95a4ea91299a34e894583c3862153e4b97', 'v7.0.0'),
     'actions/configure-pages': ('45bfe0192ca1faeb007ade9deae92b16b8254a0d', 'v6.0.0'),
     'actions/upload-pages-artifact': ('fc324d3547104276b827a68afc52ff2a11cc49c9', 'v5.0.0'),
     'actions/deploy-pages': ('cd2ce8fcbc39b97be8ca5fce6e763baed58fa128', 'v5.0.0'),
@@ -205,10 +205,15 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '- name: Prove build kept release inputs immutable',
             'test "$(git rev-parse --verify HEAD)" = "$GITHUB_SHA"',
             'git status --porcelain --untracked-files=normal',
-            '- name: Refuse a stale main revision',
-            'git ls-remote --exit-code origin refs/heads/main',
+            'currency:',
+            'name: Confirm current production revision',
+            'id: remote',
+            'git ls-remote --exit-code "$REMOTE_URL" refs/heads/main',
+            'for attempt in 1 2 3',
             'if [ "$remote_main" != "$GITHUB_SHA" ]',
-            'Stale deployment refused',
+            'echo "current=false" >> "$GITHUB_OUTPUT"',
+            'Superseded release skipped',
+            "needs.currency.outputs.current == 'true'",
         ):
             self.assertIn(required, self.workflow)
         self.assertEqual(
@@ -227,13 +232,15 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '- name: Prove build kept release inputs immutable'
         )
         upload_at = self.workflow.index('- name: Upload Pages artifact')
-        stale_at = self.workflow.index('- name: Refuse a stale main revision')
+        currency_at = self.workflow.index('currency:')
+        remote_at = self.workflow.index('- name: Compare release with remote main')
         deploy_at = self.workflow.index('- name: Deploy GitHub Pages artifact')
         self.assertLess(tests_at, prebuild_clean_at)
         self.assertLess(prebuild_clean_at, build_at)
         self.assertLess(release_at, postbuild_clean_at)
         self.assertLess(postbuild_clean_at, upload_at)
-        self.assertLess(stale_at, deploy_at)
+        self.assertLess(currency_at, remote_at)
+        self.assertLess(remote_at, deploy_at)
 
     def test_verified_rollback_archive_and_manual_restore_are_fail_closed(self):
         for required in (
@@ -265,7 +272,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'workflow_dispatch:',
             "if: github.ref == 'refs/heads/main'",
             'group: pages-production',
-            'cancel-in-progress: false',
+            'queue: max',
             'actions: read',
             'contents: read',
             'pages: write',
@@ -359,9 +366,12 @@ class DeploymentConfigurationTests(unittest.TestCase):
             "cron: '17 */4 * * *'",
             'workflow_dispatch:',
             'group: published-research-watchdog',
-            'cancel-in-progress: true',
+            'queue: max',
             'timeout-minutes: 12',
             'persist-credentials: false',
+            'Confirm the expected release still owns main',
+            'id: currency',
+            'Superseded watchdog skipped',
             'smoke_test_site.py',
             '--expected-revision "$GITHUB_SHA"',
             '--articles-file articles_index.json',
@@ -387,10 +397,17 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--expected-data-sha256 "$EXPECTED_DATA_SHA256"',
             '--expected-share-sha256 "$EXPECTED_SHARE_SHA256"',
             'Verify exact live release with bounded propagation retries',
+            'id: smoke',
+            'continue-on-error: true',
             '--retries 20',
             '--retry-delay 20',
             '--timeout 10',
             'https://navnoorthapar.github.io/substack-trades/',
+            'Reconcile a failed check with current main',
+            "steps.smoke.outcome == 'failure'",
+            'Superseded watchdog reconciled',
+            'Published release verification failed',
+            "steps.smoke.outcome == 'success'",
             "json.load(open('snapshot_manifest.json'",
             "snapshot['checked_at']",
             'datetime.now(timezone.utc)',
@@ -439,16 +456,27 @@ class DeploymentConfigurationTests(unittest.TestCase):
 
     def test_production_deployments_are_serialized_without_cancellation(self):
         self.assertIn("|| 'production'", self.workflow)
-        self.assertIn(
-            "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
-            self.workflow,
-        )
+        self.assertIn('queue: max', self.workflow)
+        self.assertNotIn('cancel-in-progress:', self.workflow)
+        self.assertIn('queue: max', self.rollback)
+        self.assertNotIn('cancel-in-progress:', self.rollback)
+        self.assertIn('name: Confirm current production revision', self.workflow)
+        self.assertIn('echo "current=false" >> "$GITHUB_OUTPUT"', self.workflow)
+        self.assertIn("needs.currency.outputs.current == 'true'", self.workflow)
 
     def test_dependabot_checks_github_actions_weekly(self):
         self.assertRegex(self.dependabot, r'(?m)^version: 2$')
         self.assertIn('package-ecosystem: github-actions', self.dependabot)
         self.assertIn('interval: weekly', self.dependabot)
         self.assertIn('timezone: Asia/Kolkata', self.dependabot)
+        self.assertIn('open-pull-requests-limit: 0', self.dependabot)
+
+    def test_quality_tool_install_retries_transient_registry_failures(self):
+        self.assertIn('- name: Install pinned quality tools', self.workflow)
+        self.assertIn('for attempt in 1 2 3', self.workflow)
+        self.assertIn('mypy==1.11.2 ruff==0.12.4', self.workflow)
+        self.assertIn('Quality tool download retry', self.workflow)
+        self.assertIn('Quality tool installation failed', self.workflow)
 
     def test_generated_site_is_untracked_and_refresh_commits_only_source_data(self):
         self.assertIn('/docs/', self.ignore)
