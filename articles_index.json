@@ -1,5 +1,35 @@
 [
   {
+    "source": "substack",
+    "source_id": "man-group-lost-a-7b-client-in-2024",
+    "slug": "man-group-lost-a-7b-client-in-2024",
+    "title": "Man Group Lost a $7B Client in 2024. Another Handed It $13.2B in 2025.",
+    "subtitle": "Three consecutive periods, three swings in the $6–13bn range, each traced to one client's decision. What the segment's headline net-flow number actually measures — and what it doesn't.",
+    "post_date": "2026-07-29T20:36:42.402Z",
+    "url": "https://navnoorbawa.substack.com/p/man-group-lost-a-7b-client-in-2024",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "dbcafeb92ef2ee72677154e143445a4f1912a4168f42dbac9f216f7c21067d93",
+      "lead": {
+        "text": "Man Group’s own framing of its first half of 2026 is a diversification story, and at the firm level the framing holds up on the numbers. Robyn Grew told shareholders that “the exceptional net inflows and record AUM we are reporting today are the direct result of deliberate, multi-year investments in the diversification of our business.”",
+        "start": 0,
+        "end": 338,
+        "sha256": "8579c3d17f41241f7390d69c384a7688bd08690214d44cc8e98a67c0ab2bdd27",
+        "truncated": true
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-07-29T20:38:17.348Z",
+    "observed_source_updated_at": "2026-07-29T20:38:17.348Z"
+  },
+  {
     "source": "medium",
     "source_id": "1bac74715346",
     "slug": "renaissance-and-goldman-sachs-ran-stat-arb-through-the-2007-quant-quake-1bac74715346",
@@ -58,6 +88,28 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-07-29T06:38:20.156Z",
     "observed_source_updated_at": "2026-07-29T06:38:20.156Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165191679",
+    "slug": "man-numerics-why-165191679",
+    "title": "Man Numeric's 21bps Problem: Why $6-7 Billion Mandates Keep Walking Out the Door",
+    "subtitle": "",
+    "post_date": "2026-07-29",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/man-numerics-why-165191679",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
