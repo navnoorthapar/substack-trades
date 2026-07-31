@@ -1,43 +1,43 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-07-31T07:47:21Z",
-  "latest_publication": "2026-07-29T20:36:42.402Z",
-  "catalog_latest_publication": "2026-07-29T20:36:42.402Z",
+  "checked_at": "2026-07-31T16:33:17Z",
+  "latest_publication": "2026-07-31T15:56:16.028Z",
+  "catalog_latest_publication": "2026-07-31T15:56:16.028Z",
   "article_count": 371,
-  "catalog_count": 467,
-  "registry_count": 96,
-  "observation_count": 1232,
-  "data_checksum": "93de72f9b45d35115831ab932649a492fd5385b70d833b2ae2e1066e4821f776",
+  "catalog_count": 468,
+  "registry_count": 97,
+  "observation_count": 1233,
+  "data_checksum": "6c17c16871f33b7a0e9ffbe52ba688e1e7dd94c7f7c93db2d010e0f74dd973c2",
   "sources": {
     "substack": {
-      "checked_at": "2026-07-31T07:30:24Z",
+      "checked_at": "2026-07-31T16:30:55Z",
       "status": "degraded",
       "mode": "complete_api_degraded_body_provenance",
-      "published_count": 233,
-      "fetched_count": 233,
-      "included_count": 233,
-      "newest": "2026-07-29T20:36:42.402Z"
+      "published_count": 234,
+      "fetched_count": 234,
+      "included_count": 234,
+      "newest": "2026-07-31T15:56:16.028Z"
     },
     "medium": {
-      "checked_at": "2026-07-31T07:46:51Z",
-      "status": "degraded",
-      "mode": "cached_archive_plus_rss",
+      "checked_at": "2026-07-31T16:32:13Z",
+      "status": "ok",
+      "mode": "complete_archive",
       "published_count": 366,
-      "fetched_count": 10,
-      "included_count": 138,
-      "newest": "2026-07-29T11:24:25Z"
+      "fetched_count": 366,
+      "included_count": 137,
+      "newest": "2026-07-29T11:24:25.898Z"
     },
     "patreon": {
-      "checked_at": "2026-07-31T07:46:55Z",
+      "checked_at": "2026-07-31T16:32:17Z",
       "status": "ok",
       "mode": "public_metadata_api",
-      "published_count": 106,
-      "fetched_count": 106,
-      "included_count": 85,
-      "newest": "2026-07-29"
+      "published_count": 107,
+      "fetched_count": 107,
+      "included_count": 86,
+      "newest": "2026-07-31"
     },
     "fxempire": {
-      "checked_at": "2026-07-31T07:47:21Z",
+      "checked_at": "2026-07-31T16:33:17Z",
       "status": "ok",
       "mode": "manual_registry",
       "published_count": 11,
