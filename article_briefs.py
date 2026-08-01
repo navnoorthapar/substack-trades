@@ -125,7 +125,7 @@ CHECKPOINT_HEADING_RE = re.compile(
 )
 
 NUMBER_RE = re.compile(
-    r'(?:[$€£¥]\s?\d|\d(?:[\d,.]*\d)?\s?(?:%|bp\b|bps\b|basis points?\b|'
+    r'(?:[$€£¥]\s?\d|\d[\d,.]{0,79}\s?(?:%|bp\b|bps\b|basis points?\b|'
     r'[x×]\b|million\b|billion\b|trillion\b))',
     re.IGNORECASE,
 )

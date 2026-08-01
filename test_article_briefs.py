@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from article_briefs import (
+    NUMBER_RE,
     build_article_brief,
     classify_heading,
     validate_brief_against_body,
@@ -12,6 +13,11 @@ from article_briefs import (
 
 
 class ArticleBriefTests(unittest.TestCase):
+    def test_numeric_evidence_pattern_is_bounded_and_precise(self):
+        self.assertIsNotNone(NUMBER_RE.search('The measured spread was 24.6%.'))
+        self.assertIsNotNone(NUMBER_RE.search('The spread widened by 2,500 bps.'))
+        self.assertIsNone(NUMBER_RE.search(('0,' * 1000) + 'not evidence'))
+
     def sample_post(self):
         body = """The paper's central claim uses 24.6% and $5.5B in context, but does not call either figure a recommendation.
 

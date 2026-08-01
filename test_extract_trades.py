@@ -96,6 +96,26 @@ class ExtractTradesHardeningTests(unittest.TestCase):
                 self.assertTrue(extract_trades.is_reference_only_block(text))
                 self.assertFalse(extract_trades.is_trade_block(text))
 
+    def test_reference_heading_and_percentage_parsing_reject_malformed_noise(self):
+        self.assertTrue(extract_trades.is_reference_only_block('Sources   :   '))
+        self.assertFalse(
+            extract_trades.is_reference_only_block('Sources' + (' ' * 8000) + 'x')
+        )
+        self.assertEqual(
+            extract_trades.classify_direction(
+                'The manager disclosed a 12.5% stake in the common stock.'
+            ),
+            'long',
+        )
+
+    def test_sentence_splitter_is_linear_and_preserves_exact_boundaries(self):
+        self.assertEqual(
+            extract_trades.split_into_sentences('First sentence.  Second one! Third?'),
+            ['First sentence.', 'Second one!', 'Third?'],
+        )
+        pathological = 'First.' + (' ' * 100_000) + 'lowercase continuation'
+        self.assertEqual(extract_trades.split_into_sentences(pathological), [pathological])
+
     def test_process_article_keeps_analysis_but_drops_reference_entry(self):
         analysis = (
             'The portfolio established a long position in Acme Capital common stock '

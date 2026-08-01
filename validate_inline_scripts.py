@@ -22,9 +22,8 @@ class InlineScriptParser(HTMLParser):
         if tag.casefold() != 'script':
             return
         attributes = {name.casefold(): value for name, value in attrs}
-        source = attributes.get('src')
-        if source:
-            self.external_sources.append(source)
+        if 'src' in attributes:
+            self.external_sources.append(attributes.get('src') or '<empty>')
             self._parts = None
             return
         self._script_type = str(attributes.get('type') or '').strip().casefold()
@@ -42,20 +41,27 @@ class InlineScriptParser(HTMLParser):
         self._script_type = ''
 
 
-def validate_inline_scripts(html_path, node='node'):
-    """Parse every executable inline script with Node's syntax checker."""
-    path = Path(html_path)
+def extract_inline_scripts(html_text):
+    """Return every inline script after fail-closed structural HTML parsing."""
     parser = InlineScriptParser()
-    parser.feed(path.read_text(encoding='utf-8'))
+    parser.feed(html_text)
     parser.close()
     if parser._parts is not None:
         raise ValueError('generated site contains an unterminated inline script')
     if parser.external_sources:
         raise ValueError('generated site must not depend on external scripts')
+    return parser.scripts
+
+
+def validate_inline_scripts(html_path, node='node'):
+    """Parse every executable inline script with Node's syntax checker."""
+    path = Path(html_path)
     executable_types = {'', 'text/javascript', 'application/javascript', 'module'}
     scripts = [
         (script_type, source)
-        for script_type, source in parser.scripts
+        for script_type, source in extract_inline_scripts(
+            path.read_text(encoding='utf-8')
+        )
         if script_type in executable_types
     ]
     if not scripts:

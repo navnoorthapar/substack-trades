@@ -17,6 +17,7 @@ from client_article_contract import (
     ARTICLE_WIRE_SCHEMA_VERSION,
     hydrate_client_article,
 )
+from validate_inline_scripts import extract_inline_scripts
 
 
 ROOT = Path(__file__).parent
@@ -1784,10 +1785,9 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.assertIn(directive, csp)
         self.assertNotIn("connect-src 'none'", csp)
         self.assertNotIn("script-src 'unsafe-inline'", csp)
-        script_bodies = re.findall(
-            r'<script(?:\s[^>]*)?>(.*?)</script>', self.html,
-            flags=re.IGNORECASE | re.DOTALL,
-        )
+        script_bodies = [
+            body for _script_type, body in extract_inline_scripts(self.html)
+        ]
         expected_script_hashes = {
             base64.b64encode(hashlib.sha256(body.encode('utf-8')).digest()).decode('ascii')
             for body in script_bodies

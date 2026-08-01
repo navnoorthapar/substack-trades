@@ -779,7 +779,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "Strategies",
+    "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "1.88%",
     "outcome_if_mentioned": null,
@@ -811,7 +811,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "Annual Old Kings Capital",
+    "underlying": "Old Kings Capital",
     "edge_or_thesis": "their primary risk infrastructure, without in-house quantitative risk build-out.",
     "any_quant_detail": "$500M, $5B, 3.5%, 15.3%, 40.1%",
     "outcome_if_mentioned": null,
@@ -4000,7 +4000,7 @@
       "volatility"
     ],
     "direction": "unspecified",
-    "underlying": "As The",
+    "underlying": null,
     "edge_or_thesis": "a property insurer absorbs storm risk in exchange for premium income.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -4186,7 +4186,7 @@
       "volatility"
     ],
     "direction": "short",
-    "underlying": "Ostrum Asset Management; The",
+    "underlying": "Ostrum Asset Management",
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -4555,7 +4555,7 @@
       "commodity"
     ],
     "direction": "long",
-    "underlying": "The Brent",
+    "underlying": "Brent",
     "edge_or_thesis": "the minimum threshold for entry, with drawdowns managed to preserve the asymmetric profile.",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -4748,7 +4748,7 @@
       "commodity"
     ],
     "direction": "long",
-    "underlying": "The natural gas",
+    "underlying": "natural gas",
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -5325,7 +5325,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "As The S&P 500",
+    "underlying": "S&P 500",
     "edge_or_thesis": "high on average after index entry as during the pre-announcement period.",
     "any_quant_detail": "8.08%",
     "outcome_if_mentioned": null,
@@ -5357,7 +5357,7 @@
       "equity"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": "The Nasdaq; QQQ",
+    "underlying": "Nasdaq; QQQ",
     "edge_or_thesis": null,
     "any_quant_detail": "$300 billion, $200 billion, 48%, 55%, 43%",
     "outcome_if_mentioned": null,
@@ -5405,7 +5405,7 @@
       "equity"
     ],
     "direction": "arbitrage/relative value",
-    "underlying": "The",
+    "underlying": null,
     "edge_or_thesis": "1992 is just 5% (Candriam/Bloomberg data) — meaning the arbitrage spread is, most of the time, a risk-adjusted return rather than a binary bet.",
     "any_quant_detail": "5%",
     "outcome_if_mentioned": null,
@@ -5517,7 +5517,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "The",
+    "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -6556,7 +6556,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "Resonanz Capital; The Kepos Capital; EUA",
+    "underlying": "Resonanz Capital; Kepos Capital; EUA",
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -12430,7 +12430,7 @@
       "weather_derivative"
     ],
     "direction": "unspecified",
-    "underlying": "The",
+    "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -14201,7 +14201,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "Flagship",
+    "underlying": null,
     "edge_or_thesis": "core components of their portfolios.",
     "any_quant_detail": "15.1%",
     "outcome_if_mentioned": "returned 15.1% for full year 2024, with all five strategies — commodities, equities, fixed income, credit, and quantitative — contributing positively, according to a person familiar with the returns cited by CNBC.",
@@ -14384,7 +14384,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "The",
+    "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -14417,7 +14417,7 @@
       "volatility"
     ],
     "direction": "long/short",
-    "underlying": "The",
+    "underlying": null,
     "edge_or_thesis": "correlations spike during equity selloffs (The Hedge Fund Journal, 2024).",
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -14433,7 +14433,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "The",
+    "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -15414,7 +15414,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "The",
+    "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -16632,7 +16632,7 @@
       "bond"
     ],
     "direction": "unspecified",
-    "underlying": "Bond Boom Delivers",
+    "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "30%",
     "outcome_if_mentioned": null,
@@ -16813,7 +16813,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "Global S&P 500",
+    "underlying": "S&P 500",
     "edge_or_thesis": null,
     "any_quant_detail": "34%, 6.90%, at 2,237",
     "outcome_if_mentioned": null,
@@ -17023,7 +17023,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "Stock",
+    "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": "8.7%",
     "outcome_if_mentioned": null,
@@ -18097,7 +18097,7 @@
       "volatility"
     ],
     "direction": "unspecified",
-    "underlying": "Inside VIX",
+    "underlying": "VIX",
     "edge_or_thesis": null,
     "any_quant_detail": "$1 Billion",
     "outcome_if_mentioned": null,
@@ -18130,7 +18130,7 @@
       "equity"
     ],
     "direction": "unspecified",
-    "underlying": "The S&P 500",
+    "underlying": "S&P 500",
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -18146,7 +18146,7 @@
       "bond"
     ],
     "direction": "unspecified",
-    "underlying": "The",
+    "underlying": null,
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,
@@ -19853,7 +19853,7 @@
       "volatility"
     ],
     "direction": "unspecified",
-    "underlying": "Inside VIX",
+    "underlying": "VIX",
     "edge_or_thesis": null,
     "any_quant_detail": "$1 Billion",
     "outcome_if_mentioned": null,
@@ -19934,7 +19934,7 @@
       "commodity"
     ],
     "direction": "unspecified",
-    "underlying": "Decoding Risk Management",
+    "underlying": "Risk Management",
     "edge_or_thesis": null,
     "any_quant_detail": null,
     "outcome_if_mentioned": null,

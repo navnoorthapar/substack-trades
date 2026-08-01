@@ -34,6 +34,45 @@ def run_node(script):
 
 
 class ClientErrorRuntimeTests(unittest.TestCase):
+    def test_original_links_accept_only_canonical_owned_article_urls(self):
+        function = javascript_between(
+            'function safeUrl(value) {',
+            '\nconst MONTHS =',
+        )
+        run_node(
+            function
+            + r'''
+const allowed = [
+  'https://navnoorbawa.substack.com/p/exact-research-note',
+  'https://medium.com/@navnoorbawa/exact-research-note-abcdef123456',
+  'https://medium.com/@navnoorbawa/r%C3%A9sum%C3%A9-abcdef123456'
+];
+for (const value of allowed) {
+  if (safeUrl(value) !== value) throw new Error('owned article URL was rejected');
+}
+const rejected = [
+  'http://medium.com/@navnoorbawa/note-abcdef123456',
+  'https://user:secret@medium.com/@navnoorbawa/note-abcdef123456',
+  'https://medium.com:443/@navnoorbawa/note-abcdef123456',
+  'https://medium.com:444/@navnoorbawa/note-abcdef123456',
+  'https://medium.com/@navnoorbawa/note-abcdef123456?source=feed',
+  'https://medium.com/@navnoorbawa/note-abcdef123456#fragment',
+  'https://medium.com/@another/note-abcdef123456',
+  'https://navnoorbawa.medium.com/note-abcdef123456',
+  'https://MEDIUM.com/@navnoorbawa/note-abcdef123456',
+  'https://navnoorbawa.substack.com/archive',
+  'https://navnoorbawa.substack.com/p/invalid.',
+  'https://medium.com/@navnoorbawa/not-an-id',
+  'https://medium.com/@navnoorbawa/r%c3%a9sum%c3%a9-abcdef123456',
+  'https://medium.com/@navnoorbawa/folder/note-abcdef123456',
+  'https://medium.com/@navnoorbawa/note%2fescape-abcdef123456'
+];
+for (const value of rejected) {
+  if (safeUrl(value) !== '#') throw new Error('unsafe article URL was accepted: ' + value);
+}
+'''
+        )
+
     def test_compact_article_payload_hydrates_exact_runtime_fields(self):
         function = javascript_between(
             'function hydrateEmbeddedArticle(article) {',

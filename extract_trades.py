@@ -44,8 +44,8 @@ DIRECTION_LONG = (
     r'|accumulated (?:a |an |the )?(?:(?:long|bullish) (?:positions?|exposure)|(?:(?!(?:short|bearish)\b)[\w.$%\-]+\s+){0,3}(?:positions?|shares?|stock|equit(?:y|ies)|stake|holdings?|bonds?|calls?|call options?))'
     r'|(?:added|increased) (?:to )?(?:the )?(?:long|position|stake|holdings?|exposure)'
     # activist / disclosed stakes — a clean long signal ("rebuilt a $2B stake in")
-    r'|(?:built|rebuilt|raised|amassed|disclosed|acquired|took|owns?|holds?|established) (?:a |an )?(?:[\$\d.,]+\+?\s*(?:billion|million|bn|mn)?\s*)?(?:minority |majority |new |large |sizable |controlling |[\d.]+%\s+)?(?:stake|equity stake|long position) in'
-    r'|[\d.]+%\s+stake|stake in'
+    r'|(?:built|rebuilt|raised|amassed|disclosed|acquired|took|owns?|holds?|established) (?:a |an )?(?:[\$\d.,]+\+?\s*(?:billion|million|bn|mn)?\s*)?(?:minority |majority |new |large |sizable |controlling |\d+(?:\.\d+)?%\s+)?(?:stake|equity stake|long position) in'
+    r'|\d+(?:\.\d+)?%\s+stake|stake in'
     r'|deployed (?:capital )?(?:into|to|in)|allocated (?:capital )?to)\b'
 )
 DIRECTION_SHORT = (
@@ -92,14 +92,14 @@ QUANT_PATTERNS = [
     r'[₹£€¥]\s*[\d,]+(?:\.\d+)?\s*(?:billion|million|trillion|crore|lakh|bn|mn|B|M)\b',
     r'[\d,]+(?:\.\d+)?\s*(?:crore|lakh)\b',
     r'[\d,]+(?:\.\d+)?\s*(?:billion|million|trillion|bn|mn|trn)\s+(?:dollars?|euros?|pounds?|yen)',
-    r'[\d.]+%',
+    r'\d+(?:\.\d+)?%',
     r'[\d,]+\s*basis points?',
     r'[\d,]+\s*bps?',
     r'\d+x\s+(?:leverage|return|multiple)',
     r'[\d.]+\s*(?:cents?|pence)\s+on\s+the\s+dollar',
     r'strike(?:\s+price)?\s+(?:of\s+)?[\d,.$]+',
     r'at\s+[\d,.$]+(?:\s+(?:per share|per barrel|per ton|per ounce))?',
-    r'yield\s+of\s+[\d.]+%',
+    r'yield\s+of\s+\d+(?:\.\d+)?%',
     r'spread\s+of\s+[\d,]+\s*(?:bps?|basis points?)?',
     r'[\d,]+\s*contracts?',
     r'[\d,]+\s*shares?',
@@ -224,7 +224,8 @@ _AFFIRMATIVE_AFTER_CONTRAST_RE = re.compile(
 
 _URL_RE = re.compile(r'(?:https?://|www\.)\S+', re.IGNORECASE)
 _REFERENCE_HEADING_RE = re.compile(
-    r'^(?:references?|bibliography|sources?|footnotes?|further reading)\s*[:&-]*\s*$',
+    r'^(?:references?|bibliography|sources?|footnotes?|further reading)'
+    r'(?:\s*[:&-]+\s*)?$',
     re.IGNORECASE,
 )
 _REFERENCE_MARKER_RE = re.compile(
@@ -443,8 +444,23 @@ def extract_quant_details(text):
     return ', '.join(unique[:20]) if unique else None
 
 def split_into_sentences(text):
-    # Simple sentence splitter
-    sentences = re.split(r'(?<=[.!?])\s+(?=[A-Z])', text)
+    """Split on punctuation/ASCII-title boundaries in one linear scan."""
+    sentences = []
+    start = 0
+    index = 0
+    while index < len(text):
+        if text[index] in '.!?':
+            next_index = index + 1
+            while next_index < len(text) and text[next_index].isspace():
+                next_index += 1
+            if (next_index > index + 1 and next_index < len(text)
+                    and 'A' <= text[next_index] <= 'Z'):
+                sentences.append(text[start:index + 1])
+                start = next_index
+                index = next_index
+                continue
+        index += 1
+    sentences.append(text[start:])
     return sentences
 
 def find_paragraph_blocks(text, window=5):
@@ -498,9 +514,9 @@ def extract_outcome(text):
     patterns = [
         r'(?:profit(?:ed)?|made|earned|gained?|returned?|generated)\s+(?:approximately\s+)?\$[\d,]+(?:\.\d+)?\s*(?:billion|million|B|M)\b[^.]*\.',
         r'(?:lost?|lost|loss)\s+(?:approximately\s+)?\$[\d,]+(?:\.\d+)?\s*(?:billion|million|B|M)\b[^.]*\.',
-        r'return(?:ed)?\s+[\d.]+%[^.]*\.',
+        r'return(?:ed)?\s+\d+(?:\.\d+)?%[^.]*\.',
         r'P[&/]?L\s+of\s+[\$\d,.]+[^.]*\.',
-        r'(?:up|down)\s+[\d.]+%\s+(?:on|from|in)[^.]*\.',
+        r'(?:up|down)\s+\d+(?:\.\d+)?%\s+(?:on|from|in)[^.]*\.',
         r'(?:gain|loss)\s+of\s+[\$\d,.]+[^.]*\.',
     ]
     outcomes = []

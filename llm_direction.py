@@ -42,7 +42,6 @@ refresh.sh sets it. Requires the Ollama daemon up and the model pulled:
 Tuning via env:
     DIRECTION_LLM_ENABLE  must be 1/true/yes to run at all (refresh.sh sets it)
     DIRECTION_LLM_MODEL   ollama model id   (default qwen2.5:14b)
-    OLLAMA_URL            base url          (default http://localhost:11434)
     DIRECTION_LLM_LIMIT   cap trades per run (for testing; default = all)
 """
 import hashlib
@@ -61,8 +60,22 @@ TRADES = Path(os.environ.get('TRADES_PATH', ROOT / 'trades_extracted.json'))
 CACHE  = Path(os.environ.get('DIRECTION_CACHE_PATH', ROOT / '.direction_cache.json'))
 
 MODEL      = os.environ.get('DIRECTION_LLM_MODEL', 'qwen2.5:14b')
-OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://localhost:11434').rstrip('/')
+OLLAMA_URL = 'http://127.0.0.1:11434'
 LIMIT      = int(os.environ.get('DIRECTION_LLM_LIMIT', '0') or 0)
+MAX_OLLAMA_RESPONSE_BYTES = 1_000_000
+
+
+class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Keep a loopback request from being redirected to another origin."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+OLLAMA_OPENER = urllib.request.build_opener(
+    urllib.request.ProxyHandler({}),
+    NoRedirectHandler(),
+)
 
 VALID = ('long', 'short', 'long/short', 'arbitrage/relative value', 'unspecified')
 
@@ -131,12 +144,19 @@ def _atomic_write(path, obj):
     os.replace(tmp, path)
 
 
+def _read_json_response(response):
+    payload = response.read(MAX_OLLAMA_RESPONSE_BYTES + 1)
+    if len(payload) > MAX_OLLAMA_RESPONSE_BYTES:
+        raise ValueError('Ollama response exceeded the local safety limit')
+    return json.loads(payload)
+
+
 def _ollama_models():
     """Return the set of installed model names, or None if the server is down."""
     try:
         req = urllib.request.Request(f'{OLLAMA_URL}/api/tags')
-        with urllib.request.urlopen(req, timeout=5) as r:
-            data = json.loads(r.read())
+        with OLLAMA_OPENER.open(req, timeout=5) as r:
+            data = _read_json_response(r)
         return {m.get('name', '') for m in data.get('models', [])}
     except Exception:
         return None
@@ -168,8 +188,8 @@ def _classify(trade):
             req = urllib.request.Request(
                 f'{OLLAMA_URL}/api/chat', data=body,
                 headers={'Content-Type': 'application/json'})
-            with urllib.request.urlopen(req, timeout=180) as r:
-                resp = json.loads(r.read())
+            with OLLAMA_OPENER.open(req, timeout=180) as r:
+                resp = _read_json_response(r)
             content = (resp.get('message') or {}).get('content', '')
             data = json.loads(content)
             # Precision-first: accept a direction only at HIGH confidence. medium/low

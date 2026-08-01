@@ -24,6 +24,7 @@ from research_graph import build_related_graph, build_search_index
 from research_taxonomy import build_families_index
 from research_threads import build_thread_index
 from share_cards import emit_share_assets
+from validate_inline_scripts import extract_inline_scripts
 
 
 ROOT = Path(__file__).parent
@@ -102,7 +103,11 @@ def clean_source(value, url=''):
     source = str(value or '').strip().casefold()
     if source in {'substack', 'medium'}:
         return source
-    return 'medium' if 'medium.com/' in str(url).casefold() else 'substack'
+    try:
+        host = (urlsplit(str(url)).hostname or '').casefold()
+    except ValueError:
+        host = ''
+    return 'medium' if host == 'medium.com' else 'substack'
 
 
 def stable_id(prefix, value):
@@ -415,7 +420,7 @@ for article_position, article in enumerate(articles):
         )
         directions.add(direction)
         instruments.update(idea_instruments)
-        for underlying_value in re.split(r'\s*;\s*', str(underlying or '')):
+        for underlying_value in str(underlying or '').split(';'):
             underlying_value = underlying_value.strip()
             if underlying_value and underlying_value not in {'—', '-'}:
                 underlying_key = normalize_identity_text(underlying_value)
@@ -2981,10 +2986,30 @@ function escapeHtml(value) {
 }
 function safeUrl(value) {
   try {
-    const url = new URL(value);
+    const original = String(value || '');
+    const url = new URL(original);
     const host = url.hostname.toLowerCase();
-    const validHost = host === 'navnoorbawa.substack.com' || host === 'medium.com' || host.endsWith('.medium.com');
-    return url.protocol === 'https:' && validHost ? url.href : '#';
+    if (url.href !== original || url.protocol !== 'https:' ||
+        url.username || url.password || url.port ||
+        url.search || url.hash || /%(?:2f|5c)/i.test(url.pathname)) return '#';
+    const substackSlug = host === 'navnoorbawa.substack.com' &&
+      url.pathname.startsWith('/p/') ? url.pathname.slice(3) : '';
+    const mediumPrefix = '/@navnoorbawa/';
+    const validSubstackPath = /^[A-Za-z0-9][A-Za-z0-9_-]*$/.test(substackSlug);
+    let validMediumPath = false;
+    if (host === 'medium.com' && url.pathname.startsWith(mediumPrefix)) {
+      const rawSlug = url.pathname.slice(mediumPrefix.length);
+      try {
+        const slug = decodeURIComponent(rawSlug);
+        validMediumPath = rawSlug === encodeURIComponent(slug) &&
+          slug.normalize('NFC') === slug && /^[\p{L}\p{N}_-]+$/u.test(slug) &&
+          /^(?:.+-)?[0-9a-f]{12}$/i.test(slug);
+      } catch (_error) {
+        validMediumPath = false;
+      }
+    }
+    const ownedPath = validSubstackPath || validMediumPath;
+    return ownedPath ? url.href : '#';
   } catch (_error) {
     return '#';
   }
@@ -6278,11 +6303,9 @@ HTML = (HTML_TEMPLATE
         .replace('__OBSERVATION_COUNT__', str(len(client_ideas)))
         .replace('__DATA_CHECKSUM__', checksum_meta))
 
-if re.search(r'<script\b[^>]*\bsrc\s*=', HTML, re.IGNORECASE):
-    raise ValueError('Generated terminal must not load executable scripts from the network')
-inline_scripts = re.findall(
-    r'<script(?:\s[^>]*)?>(.*?)</script>', HTML, flags=re.IGNORECASE | re.DOTALL,
-)
+inline_scripts = [
+    script_body for _script_type, script_body in extract_inline_scripts(HTML)
+]
 if not inline_scripts:
     raise ValueError('Generated terminal contains no inline application scripts')
 script_sources = []

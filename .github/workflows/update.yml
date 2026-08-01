@@ -16,8 +16,52 @@ on:
 permissions: {}
 
 jobs:
+  static_analysis:
+    name: Isolated static analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out source for static analysis
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python for static analysis
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      # Developer-only packages run in this isolated, read-only job. The release
+      # artifact is built later on a fresh runner without any PyPI installation.
+      - name: Install pinned quality tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if python -m pip install --disable-pip-version-check \
+              mypy==1.11.2 ruff==0.12.4; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "::warning title=Quality tool download retry::Attempt $attempt failed; retrying the pinned install."
+              sleep "$((attempt * 5))"
+            fi
+          done
+          echo "::error title=Quality tool installation failed::Pinned quality tools could not be installed after three attempts."
+          exit 1
+
+      - name: Lint Python
+        run: ruff check *.py
+
+      - name: Type-check production Python
+        run: mypy --cache-dir "$RUNNER_TEMP/mypy-cache"
+
   quality:
     name: Quality gate
+    needs: static_analysis
     runs-on: ubuntu-latest
     timeout-minutes: 15
     concurrency:
@@ -49,29 +93,6 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
-
-      - name: Install pinned quality tools
-        shell: bash
-        run: |
-          set -euo pipefail
-          for attempt in 1 2 3; do
-            if python -m pip install --disable-pip-version-check \
-              mypy==1.11.2 ruff==0.12.4; then
-              exit 0
-            fi
-            if [ "$attempt" -lt 3 ]; then
-              echo "::warning title=Quality tool download retry::Attempt $attempt failed; retrying the pinned install."
-              sleep "$((attempt * 5))"
-            fi
-          done
-          echo "::error title=Quality tool installation failed::Pinned quality tools could not be installed after three attempts."
-          exit 1
-
-      - name: Lint Python
-        run: ruff check *.py
-
-      - name: Type-check production Python
-        run: mypy --cache-dir "$RUNNER_TEMP/mypy-cache"
 
       - name: Run regression suite
         run: python -m unittest discover -s . -p 'test_*.py' -v

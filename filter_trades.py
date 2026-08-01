@@ -88,7 +88,7 @@ REAL_TRADE_INDICATORS = [
 # Patterns that indicate meaningful quant details
 HAS_MEANINGFUL_QUANT = [
     r'\$[\d,]+(?:\.\d+)?\s*(?:billion|million|B|M)\b',
-    r'[\d.]+%',
+    r'\d+(?:\.\d+)?%',
     r'[\d,]+\s*(?:basis points?|bps)',
     r'at [\d,.$]+\s*(?:per share|per barrel|per unit)?',
     r'strike\s+(?:of|at)?\s*[\d,.$]+',
@@ -137,20 +137,26 @@ def clean_underlying(underlying):
     """Clean up underlying field."""
     if not underlying:
         return None
-    # Remove fragments that are clearly not underlyings
+    # Drop the complete semicolon-delimited fragment when it describes the
+    # manager/fund rather than an underlying. Removing only matched words can
+    # manufacture labels such as ``US`` from ``US hedge fund exposure``.
     bad_patterns = [
         r'small fraction of the fund',
         r'billion dollar capital',
+        r'global hedge fund',
         r'hedge fund',
         r'covering every',
         r'crisis separated',
-        r'global hedge fund',
         r'return for one',
     ]
-    for p in bad_patterns:
-        if re.search(p, underlying, re.IGNORECASE):
-            underlying = re.sub(p + r'[^;]*;?\s*', '', underlying, flags=re.IGNORECASE).strip('; ')
-    return underlying.strip('; ') if underlying.strip('; ') else None
+    fragments = []
+    for fragment in str(underlying).split(';'):
+        fragment = fragment.strip()
+        if fragment and not any(
+                re.search(pattern, fragment, re.IGNORECASE)
+                for pattern in bad_patterns):
+            fragments.append(fragment)
+    return '; '.join(fragments) or None
 
 def main():
     print(f"Loading trades from {INPUT_PATH}...")

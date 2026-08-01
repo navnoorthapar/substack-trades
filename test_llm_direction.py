@@ -1,4 +1,5 @@
 import hashlib
+import io
 import json
 import os
 import tempfile
@@ -10,6 +11,27 @@ import llm_direction
 
 
 class DirectionResolverSafetyTests(unittest.TestCase):
+    def test_ollama_requests_are_fixed_to_proxy_free_loopback(self):
+        self.assertEqual(llm_direction.OLLAMA_URL, 'http://127.0.0.1:11434')
+        opener = mock.Mock()
+        response = mock.MagicMock()
+        response.__enter__.return_value.read.return_value = b'{"models": []}'
+        opener.open.return_value = response
+        with mock.patch.object(llm_direction, 'OLLAMA_OPENER', opener):
+            self.assertEqual(llm_direction._ollama_models(), set())
+        request = opener.open.call_args.args[0]
+        self.assertEqual(request.full_url, 'http://127.0.0.1:11434/api/tags')
+        self.assertNotIn('OLLAMA_URL', llm_direction.__doc__)
+        self.assertIsNone(
+            llm_direction.NoRedirectHandler().redirect_request(
+                None, None, 302, 'redirect', {}, 'https://example.com/',
+            )
+        )
+        with self.assertRaisesRegex(ValueError, 'safety limit'):
+            llm_direction._read_json_response(io.BytesIO(
+                b'x' * (llm_direction.MAX_OLLAMA_RESPONSE_BYTES + 1)
+            ))
+
     def test_cache_cannot_reverse_negation_or_promote_a_reference(self):
         negated = 'There is no verified, current spot-price arbitrage to chase in bitcoin.'
         reference = (

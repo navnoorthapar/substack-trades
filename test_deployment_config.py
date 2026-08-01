@@ -112,7 +112,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
 
     def test_every_third_party_action_is_immutable_and_version_annotated(self):
         for label, workflow, checkout_count in (
-            ('deployment', self.workflow, 2),
+            ('deployment', self.workflow, 3),
             ('watchdog', self.watchdog, 1),
             ('rollback', self.rollback, 1),
         ):
@@ -459,7 +459,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
 
     def test_permissions_are_least_privilege_and_checkout_cannot_push(self):
         self.assertRegex(self.workflow, r'(?m)^permissions: \{\}$')
-        self.assertEqual(self.workflow.count('persist-credentials: false'), 2)
+        self.assertEqual(self.workflow.count('persist-credentials: false'), 3)
         self.assertIn('contents: read', self.workflow)
         self.assertIn('pages: write', self.workflow)
         self.assertIn('id-token: write', self.workflow)
@@ -501,6 +501,25 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertIn('mypy==1.11.2 ruff==0.12.4', self.workflow)
         self.assertIn('Quality tool download retry', self.workflow)
         self.assertIn('Quality tool installation failed', self.workflow)
+
+    def test_release_artifact_is_built_on_a_fresh_dependency_free_runner(self):
+        static_job = self.workflow.split('\n  static_analysis:', 1)[1].split(
+            '\n  quality:', 1,
+        )[0]
+        quality_job = self.workflow.split('\n  quality:', 1)[1].split(
+            '\n  currency:', 1,
+        )[0]
+        self.assertIn('needs: static_analysis', quality_job)
+        self.assertIn('python -m pip install', static_job)
+        self.assertIn('ruff check *.py', static_job)
+        self.assertIn('mypy --cache-dir', static_job)
+        self.assertNotIn('python -m pip install', quality_job)
+        self.assertNotIn('ruff check *.py', quality_job)
+        self.assertNotIn('mypy --cache-dir', quality_job)
+        self.assertNotIn('python build_site.py', static_job)
+        self.assertNotIn('upload-pages-artifact', static_job)
+        self.assertIn('python build_site.py', quality_job)
+        self.assertIn('upload-pages-artifact', quality_job)
 
     def test_generated_site_is_untracked_and_refresh_commits_only_source_data(self):
         self.assertIn('/docs/', self.ignore)

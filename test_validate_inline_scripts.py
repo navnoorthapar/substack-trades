@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from validate_inline_scripts import validate_inline_scripts
+from validate_inline_scripts import extract_inline_scripts, validate_inline_scripts
 
 
 class InlineScriptValidationTests(unittest.TestCase):
@@ -34,8 +34,18 @@ class InlineScriptValidationTests(unittest.TestCase):
     def test_external_or_missing_scripts_fail_closed(self):
         with self.assertRaisesRegex(ValueError, 'external scripts'):
             self.validate('<script src="https://example.test/app.js"></script>')
+        with self.assertRaisesRegex(ValueError, 'external scripts'):
+            self.validate('<script src=""></script>')
         with self.assertRaisesRegex(ValueError, 'no executable inline scripts'):
             self.validate('<main>No script</main>')
+
+    def test_structural_parser_handles_whitespace_in_closing_tag(self):
+        scripts = extract_inline_scripts(
+            '<script type="application/ld+json">{"safe":true}</script >'
+            '<script>const exact = "</not-a-script>";</script >'
+        )
+        self.assertEqual(scripts[0], ('application/ld+json', '{"safe":true}'))
+        self.assertEqual(scripts[1], ('', 'const exact = "</not-a-script>";'))
 
 
 if __name__ == '__main__':

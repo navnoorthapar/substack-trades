@@ -219,7 +219,11 @@ def _clean_source(value: Any, url: str) -> str:
     source = str(value or '').strip().casefold()
     if source in {'substack', 'medium'}:
         return source
-    return 'medium' if 'medium.com/' in url.casefold() else 'substack'
+    try:
+        host = (urlsplit(url).hostname or '').casefold()
+    except ValueError:
+        host = ''
+    return 'medium' if host == 'medium.com' else 'substack'
 
 
 def _stable_article_id(url: Any) -> str:
