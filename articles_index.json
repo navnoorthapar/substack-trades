@@ -1,6 +1,88 @@
 [
   {
     "source": "substack",
+    "source_id": "citadel-bought-the-book-a-stock-that",
+    "slug": "citadel-bought-the-book-a-stock-that",
+    "title": "Citadel Bought the Book. A Stock That Wasn't In It Rose 28%.",
+    "subtitle": "A forced seller is an overhang, not a price. The discount lands on the whole cohort, including names the seller never owned.",
+    "post_date": "2026-08-01T14:45:05.059Z",
+    "url": "https://navnoorbawa.substack.com/p/citadel-bought-the-book-a-stock-that",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "7bece3b724d2240abd975e73da7d130022fb3d7c6415bfdf787c0a75bcd1f459",
+      "lead": {
+        "text": "When Citadel took Situational Awareness’s entire public book in a single block before the open on 30 July, four of the AI-infrastructure names at the centre of it rallied 21–28% in a session. The consensus read that as confidence: a credible buyer had stepped in, so the selloff must have been overdone. I don’t think that reading survives the cross-section. A stock the fund never owned rallied just as hard as the ones it did. That’s the whole story.",
+        "start": 0,
+        "end": 452,
+        "sha256": "7bece3b724d2240abd975e73da7d130022fb3d7c6415bfdf787c0a75bcd1f459",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-01T14:49:51.751Z",
+    "observed_source_updated_at": "2026-08-01T14:49:51.751Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "5c4a5873261d",
+    "slug": "granger-won-a-nobel-for-cointegration-his-test-answers-differently-by-column-order-5c4a5873261d",
+    "title": "Granger Won a Nobel for Cointegration. The Test Named After Him Gives a Different Answer Depending on Which Ticker You Type First",
+    "subtitle": "In October 2003 the Sveriges Riksbank Prize in Economic Sciences was divided equally between Robert F. Engle III and Clive W. J. Granger. Granger’s citation reads “for methods of analyzing economic time series with common trends (cointegration).” His discovery was that a combination of two or more nonstationary series can itself be stationary, and he invented the word for it.",
+    "post_date": "2026-08-01T10:56:28.570Z",
+    "url": "https://medium.com/@navnoorbawa/granger-won-a-nobel-for-cointegration-his-test-answers-differently-by-column-order-5c4a5873261d",
+    "audience": "locked",
+    "wordcount": 219,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "edb51f11fb610a850a96ce8f781d52e76ce67b242589701c5b3cf16f0eec4d8f",
+      "lead": {
+        "text": "In October 2003 the Sveriges Riksbank Prize in Economic Sciences was divided equally between Robert F. Engle III and Clive W. J. Granger. Granger’s citation reads “for methods of analyzing economic time series with common trends (cointegration).” His discovery was that a combination of two or more nonstationary series can itself be stationary, and he invented the word for it.",
+        "start": 131,
+        "end": 509,
+        "sha256": "c15d67dcf600432624c566d0de40458969bc29c14fe6bd1d3c98b993b488f3a6",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-01T10:56:28.570Z",
+    "observed_source_updated_at": "2026-08-01T10:56:28.570Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165463920",
+    "slug": "overhang-trade-165463920",
+    "title": "The Overhang Trade: What the Citadel Block Actually Repriced",
+    "subtitle": "",
+    "post_date": "2026-08-01",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/overhang-trade-165463920",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "substack",
     "source_id": "situational-awareness-returned-439",
     "slug": "situational-awareness-returned-439",
     "title": "Situational Awareness Returned 439% in Six Months. Citadel Just Bought Its Book at the Bottom.",
