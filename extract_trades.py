@@ -44,7 +44,10 @@ DIRECTION_LONG = (
     r'|accumulated (?:a |an |the )?(?:(?:long|bullish) (?:positions?|exposure)|(?:(?!(?:short|bearish)\b)[\w.$%\-]+\s+){0,3}(?:positions?|shares?|stock|equit(?:y|ies)|stake|holdings?|bonds?|calls?|call options?))'
     r'|(?:added|increased) (?:to )?(?:the )?(?:long|position|stake|holdings?|exposure)'
     # activist / disclosed stakes — a clean long signal ("rebuilt a $2B stake in")
-    r'|(?:built|rebuilt|raised|amassed|disclosed|acquired|took|owns?|holds?|established) (?:a |an )?(?:[\$\d.,]+\+?\s*(?:billion|million|bn|mn)?\s*)?(?:minority |majority |new |large |sizable |controlling |\d+(?:\.\d+)?%\s+)?(?:stake|equity stake|long position) in'
+    # Keep the amount and percentage branches separated by whitespace.  Without
+    # that delimiter, a failed percentage match can repartition one long digit
+    # run between both optional branches and trigger quadratic backtracking.
+    r'|(?:built|rebuilt|raised|amassed|disclosed|acquired|took|owns?|holds?|established) (?:a |an )?(?:[\$\d.,]+\+?(?:\s*(?:billion|million|bn|mn)\s+|\s+))?(?:minority |majority |new |large |sizable |controlling |\d+(?:\.\d+)?%\s+)?(?:stake|equity stake|long position) in'
     r'|\d+(?:\.\d+)?%\s+stake|stake in'
     r'|deployed (?:capital )?(?:into|to|in)|allocated (?:capital )?to)\b'
 )

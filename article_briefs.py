@@ -44,7 +44,9 @@ PROMOTIONAL_RE = re.compile(
     re.IGNORECASE,
 )
 BYLINE_RE = re.compile(
-    r'^(?:written\s+)?by\s*:?\s*navnoor\s+bawa(?:\s*[·|,—–-].*)?$',
+    # The colon/no-colon branches are explicit so two whitespace repetitions
+    # never compete when a long malformed byline fails after ``by``.
+    r'^(?:written\s+)?by(?:\s*:\s*|\s*)navnoor\s+bawa(?:\s*[·|,—–-].*)?$',
     re.IGNORECASE,
 )
 UPDATE_NOTICE_RE = re.compile(

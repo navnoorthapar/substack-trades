@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -107,6 +108,30 @@ class ExtractTradesHardeningTests(unittest.TestCase):
             ),
             'long',
         )
+
+    def test_stake_amount_pattern_is_linear_and_preserves_supported_forms(self):
+        examples = [
+            'The manager built a $2 billion stake in the company.',
+            'The manager rebuilt a $2 stake in the company.',
+            'The manager disclosed a 12.5% stake in the company.',
+            'The manager owns a minority equity stake in the company.',
+            'The manager established a long position in the company.',
+        ]
+        for text in examples:
+            with self.subTest(text=text):
+                self.assertIsNotNone(re.search(
+                    extract_trades.DIRECTION_LONG,
+                    text,
+                    re.IGNORECASE,
+                ))
+                self.assertEqual(extract_trades.classify_direction(text), 'long')
+
+        adversarial = 'The manager built a ' + ('00' * 50_000) + '%x'
+        self.assertIsNone(re.search(
+            extract_trades.DIRECTION_LONG,
+            adversarial,
+            re.IGNORECASE,
+        ))
 
     def test_sentence_splitter_is_linear_and_preserves_exact_boundaries(self):
         self.assertEqual(

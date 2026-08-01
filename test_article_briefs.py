@@ -4,9 +4,11 @@ import unittest
 from pathlib import Path
 
 from article_briefs import (
+    BYLINE_RE,
     NUMBER_RE,
     build_article_brief,
     classify_heading,
+    is_boilerplate_text,
     validate_brief_against_body,
     validate_brief_structure,
 )
@@ -114,6 +116,23 @@ The paper tests 2,500 observations and reports a 24.6% historical spread, while 
         self.assertIsNotNone(brief['lead'])
         self.assertTrue(brief['lead']['text'].startswith('The paper tests'))
         self.assertNotRegex(str(brief), r'(?i)patreon|youtube|supporting this work')
+
+    def test_byline_pattern_is_linear_and_preserves_supported_forms(self):
+        examples = [
+            'By Navnoor Bawa',
+            'By:Navnoor Bawa',
+            'By : Navnoor Bawa',
+            'Written by Navnoor Bawa — The Mathematical Trader',
+            'written\tby\t:\tNavnoor\tBawa | Research',
+        ]
+        for text in examples:
+            with self.subTest(text=text):
+                self.assertIsNotNone(BYLINE_RE.fullmatch(text))
+                self.assertTrue(is_boilerplate_text(text))
+
+        adversarial = 'by' + (' ' * 100_000) + 'not navnoor bawa'
+        self.assertIsNone(BYLINE_RE.fullmatch(adversarial))
+        self.assertFalse(is_boilerplate_text(adversarial))
 
     def test_promotional_playbook_and_article_title_are_not_sections(self):
         title = (
