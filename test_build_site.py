@@ -1678,6 +1678,65 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('updateHash(true);', self.html)
         self.assertIn('Shareable view copied with search phrase', self.html)
 
+    def test_command_palette_is_reachable_labelled_and_delegates_to_real_controls(self):
+        """The palette must be a real combobox that reuses existing controls."""
+        self.assertIn('<dialog id="command-palette"', self.html)
+        self.assertIn('aria-labelledby="command-palette-title"', self.html)
+        self.assertIn('id="command-palette-input"', self.html)
+        self.assertIn('role="combobox"', self.html)
+        self.assertIn('aria-controls="command-palette-list"', self.html)
+        self.assertIn('aria-autocomplete="list"', self.html)
+        self.assertIn('<ul class="palette-list" id="command-palette-list" role="listbox"', self.html)
+        # Header affordance so the shortcut is discoverable without the keyboard.
+        self.assertIn('id="palette-button"', self.html)
+        self.assertIn('aria-keyshortcuts="Control+K Meta+K"', self.html)
+        # Ctrl/Cmd+K must not collide with the Alt+Shift desk chords.
+        self.assertIn(
+            "(event.metaKey || event.ctrlKey) && !event.altKey && event.code === 'KeyK'",
+            self.html,
+        )
+        # Options are escaped and expose active-option state for screen readers.
+        self.assertIn("escapeHtml(command.label)", self.html)
+        self.assertIn("aria-activedescendant", self.html)
+        # Palette entries delegate to the controls that already own the behaviour
+        # rather than reimplementing them, so the two can never diverge.
+        for selector in (
+            '#theme-button', '[data-action="density"]', '[data-action="inspector"]',
+            '[data-action="copy-view"]', '[data-action="export"]', '#clear-filters',
+        ):
+            self.assertIn("'" + selector + "'", self.html)
+
+    def test_unmodified_desk_keys_work_without_swallowing_typed_input(self):
+        """Bare j/k//? are gated behind the editable and interactive guard."""
+        start = self.html.index("document.addEventListener('keydown'")
+        end = self.html.index("window.addEventListener('popstate'", start)
+        handler = self.html[start:end]
+        guard = "if (shortcutDialog.open || manualCopyDialog.open || editable || interactive"
+        self.assertIn(guard, handler)
+        for bare in (
+            "!event.altKey && !event.shiftKey && event.code === 'KeyJ'",
+            "!event.altKey && !event.shiftKey && event.code === 'KeyK'",
+            "!event.altKey && !event.shiftKey && event.code === 'Slash'",
+            "!event.altKey && event.shiftKey && event.code === 'Slash'",
+        ):
+            self.assertIn(bare, handler)
+            # Every bare binding must sit after the guard that proves focus is
+            # not inside an input, otherwise it would eat typed characters.
+            self.assertGreater(handler.index(bare), handler.index(guard))
+        # The legacy Alt+Shift chords remain bound for existing muscle memory.
+        self.assertIn('if (!event.altKey || !event.shiftKey) return;', handler)
+
+    def test_command_bar_holds_one_row_on_the_desk_and_wraps_only_when_narrow(self):
+        """Wrapping beats shrinking in flex, so the desk bar must not wrap."""
+        bar = re.search(r'\.command-bar\{[^}]*\}', self.html).group(0)
+        self.assertIn('flex-wrap:nowrap', bar)
+        narrow = self.html.index('@media(max-width:1020px)')
+        narrow_block = self.html[narrow:narrow + 400]
+        self.assertIn('.command-bar{flex-wrap:wrap}', narrow_block)
+        summary = re.search(r'\.result-summary\{[^}]*\}', self.html).group(0)
+        self.assertIn('text-overflow:ellipsis', summary)
+        self.assertIn('min-width:0', summary)
+
         search_start = self.html.find("document.getElementById('search').addEventListener('keydown'")
         search_end = self.html.find("document.getElementById('manager-search')", search_start)
         self.assertGreaterEqual(search_start, 0, 'search Enter handler is missing')

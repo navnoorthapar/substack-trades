@@ -883,6 +883,8 @@ a{color:var(--accent)}
   background:transparent;color:var(--text-secondary);cursor:pointer
 }
 .utility-button:hover{background:var(--surface-3);color:var(--text);border-color:var(--control-line-hover)}
+.utility-key{margin-left:6px;font:9.5px var(--mono);color:var(--text-muted);letter-spacing:.04em}
+.utility-button:hover .utility-key{color:var(--text-secondary)}
 #mobile-filter-button{display:none}
 
 /* Compact global metrics */
@@ -976,9 +978,12 @@ body[data-view="queue"] .queue-only-filter{display:block}
 .preset-button:hover{background:var(--surface-3);color:var(--text);border-color:var(--control-line-hover)}
 
 .main-panel{min-width:0;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+/* One row on the desk. Wrapping would win over shrinking, so the bar holds a
+   single line and the result summary yields width instead of pushing controls
+   onto a second row; narrow viewports restore wrapping below. */
 .command-bar{
   min-height:50px;display:flex;align-items:center;gap:10px;padding:7px 12px;
-  border-bottom:1px solid var(--line);background:var(--surface-1);flex-wrap:wrap
+  border-bottom:1px solid var(--line);background:var(--surface-1);flex-wrap:nowrap
 }
 .view-tabs{display:flex;align-items:center;background:var(--surface-2);border:1px solid var(--control-line);border-radius:4px;padding:2px}
 .view-tab{
@@ -986,8 +991,13 @@ body[data-view="queue"] .queue-only-filter{display:block}
   padding:0 11px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap
 }
 .view-tab.active{background:var(--surface-raised);color:var(--text);box-shadow:inset 0 -2px var(--selected-line)}
-.result-summary{font:10px var(--mono);color:var(--text-muted);white-space:nowrap}
-.command-spacer{flex:1}
+/* The summary yields width before the bar wraps, so the toolbar keeps one
+   row across themes even though the dark theme sets a wider mono face. */
+.result-summary{
+  font:10px var(--mono);color:var(--text-muted);white-space:nowrap;
+  min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis
+}
+.command-spacer{flex:1 1 0;min-width:0}
 .select-control{
   height:32px;border:1px solid var(--control-line);border-radius:3px;background:var(--surface-2);
   color:var(--text-secondary);padding:0 28px 0 8px;font-size:11px;cursor:pointer
@@ -1759,6 +1769,33 @@ dialog::backdrop{background:var(--backdrop)}
 .shortcut-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px;background:var(--surface-2);font-size:10.5px;color:var(--text-secondary)}
 kbd{font:10px var(--mono);border:1px solid var(--line-strong);background:var(--surface-1);border-radius:3px;padding:2px 6px;color:var(--text)}
 .dialog-foot{padding:0 15px 15px;color:var(--text-muted);font-size:10px}
+/* Command palette: one keystroke to any view, dossier, or terminal action. */
+#command-palette{width:min(640px,calc(100vw - 32px));margin-top:12vh}
+.palette-field{display:flex;align-items:center;gap:9px;padding:11px 13px;border-bottom:1px solid var(--line)}
+.palette-field svg{flex:none;color:var(--text-muted)}
+#command-palette-input{
+  flex:1;min-width:0;height:26px;border:0;background:transparent;color:var(--text);
+  font:13px var(--sans);outline:none
+}
+#command-palette-input::placeholder{color:var(--text-muted)}
+.palette-list{list-style:none;margin:0;padding:5px;max-height:min(52vh,420px);overflow-y:auto}
+.palette-option{
+  display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:3px;cursor:pointer;
+  color:var(--text-secondary);font-size:11.5px;border:1px solid transparent
+}
+.palette-option[aria-selected="true"]{background:var(--selected);border-color:var(--selected-line);color:var(--text)}
+.palette-kind{
+  flex:none;min-width:58px;font:9px var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-muted)
+}
+.palette-option[aria-selected="true"] .palette-kind{color:var(--accent)}
+.palette-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.palette-meta{flex:none;font:9.5px var(--mono);color:var(--text-muted)}
+.palette-empty{padding:18px 15px;color:var(--text-muted);font-size:11px}
+.palette-foot{
+  display:flex;flex-wrap:wrap;gap:11px;padding:9px 13px;border-top:1px solid var(--line);
+  color:var(--text-muted);font-size:9.5px
+}
 .manual-copy-body{display:grid;gap:10px;padding:15px}
 .manual-copy-body p{color:var(--text-secondary);font-size:11px;line-height:1.55}
 .manual-copy-text{
@@ -1792,6 +1829,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .inspector-hidden .inspector{display:block}
 }
 @media(max-width:1020px){
+  .command-bar{flex-wrap:wrap}
   .app-header{grid-template-columns:auto minmax(220px,1fr) auto;gap:10px}
   .brand{min-width:0}
   .brand-sub{display:none}
@@ -2166,6 +2204,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   <div class="header-right">
     <div class="freshness" id="freshness-summary"><span class="status-dot" id="freshness-dot" aria-hidden="true"></span><span id="freshness-state">Unknown</span><span class="freshness-separator" aria-hidden="true">·</span><span id="freshness-label">research status loading</span></div>
     <button class="utility-button header-library" type="button" data-view="research">Library</button>
+    <button class="utility-button" id="palette-button" type="button" aria-label="Open command palette" aria-keyshortcuts="Control+K Meta+K">Command <span class="utility-key" aria-hidden="true">⌘K</span></button>
     <button class="utility-button" id="method-button" type="button" aria-label="Show data methodology">Method</button>
     <button class="utility-button" id="theme-button" type="button" aria-label="Switch to dark theme">Dark</button>
     <button class="utility-button" id="shortcut-button" type="button" aria-label="Show keyboard shortcuts" aria-keyshortcuts="Alt+Shift+?">?</button>
@@ -2441,15 +2480,35 @@ __MANAGER_BUTTONS__
 </div>
 <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
 
+<dialog id="command-palette" aria-labelledby="command-palette-title">
+  <h2 id="command-palette-title" class="sr-only">Command palette</h2>
+  <div class="palette-field">
+    <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
+    <input id="command-palette-input" type="text" role="combobox" aria-expanded="true"
+      aria-controls="command-palette-list" aria-autocomplete="list" aria-describedby="command-palette-hint"
+      placeholder="Jump to a view, dossier, or action…" autocomplete="off" spellcheck="false">
+    <kbd>Esc</kbd>
+  </div>
+  <ul class="palette-list" id="command-palette-list" role="listbox" aria-label="Commands and dossiers"></ul>
+  <p class="palette-empty" id="command-palette-empty" hidden>No command or dossier in this release matches that text.</p>
+  <div class="palette-foot" id="command-palette-hint">
+    <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+    <span><kbd>Enter</kbd> run</span>
+    <span><kbd>Esc</kbd> close</span>
+    <span>Dossier results open the brief for that publication.</span>
+  </div>
+</dialog>
+
 <dialog id="shortcut-dialog" aria-labelledby="shortcut-title">
   <div class="dialog-header">
     <h2 id="shortcut-title">Keyboard workflow &amp; data method</h2>
     <button class="inspector-close" type="button" data-close-dialog aria-label="Close method and keyboard reference">×</button>
   </div>
   <div class="shortcut-grid">
-    <div class="shortcut-item"><span>Focus global search</span><span><kbd>Alt</kbd> <kbd>/</kbd></span></div>
+    <div class="shortcut-item"><span>Command palette — views, dossiers, actions</span><span><kbd>Ctrl</kbd>/<kbd>⌘</kbd> <kbd>K</kbd></span></div>
+    <div class="shortcut-item"><span>Focus global search</span><span><kbd>/</kbd> or <kbd>Alt</kbd> <kbd>/</kbd></span></div>
     <div class="shortcut-item"><span>Jump to result grid</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>G</kbd></span></div>
-    <div class="shortcut-item"><span>Move through rows</span><span><kbd>↑</kbd> <kbd>↓</kbd> or <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>J</kbd>/<kbd>K</kbd></span></div>
+    <div class="shortcut-item"><span>Move through rows</span><span><kbd>J</kbd>/<kbd>K</kbd> or <kbd>↑</kbd> <kbd>↓</kbd></span></div>
     <div class="shortcut-item"><span>First / last visible row</span><span><kbd>Home</kbd> <kbd>End</kbd></span></div>
     <div class="shortcut-item"><span>Open evidence inspector</span><kbd>Enter</kbd></div>
     <div class="shortcut-item"><span>Open original research</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>O</kbd></span></div>
@@ -2458,7 +2517,7 @@ __MANAGER_BUTTONS__
     <div class="shortcut-item"><span>Toggle filters</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>F</kbd></span></div>
     <div class="shortcut-item"><span>Brief / Monitor / Library / Queue</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1–4</kbd></span></div>
     <div class="shortcut-item"><span>Close panel</span><kbd>Esc</kbd></div>
-    <div class="shortcut-item"><span>Show this reference</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>?</kbd></span></div>
+    <div class="shortcut-item"><span>Show this reference</span><span><kbd>?</kbd> or <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>?</kbd></span></div>
   </div>
   <div class="method-grid">
     <section class="method-card">
@@ -6043,6 +6102,142 @@ document.getElementById('manual-copy-select').addEventListener('click',function 
 document.getElementById('manual-copy-close').addEventListener('click',function () { manualCopyDialog.close(); });
 document.getElementById('manual-copy-done').addEventListener('click',function () { manualCopyDialog.close(); });
 
+// Command palette. Every entry delegates to the control that already owns the
+// behaviour, so the palette can never drift from the visible terminal actions.
+const commandPalette = document.getElementById('command-palette');
+const paletteInput = document.getElementById('command-palette-input');
+const paletteList = document.getElementById('command-palette-list');
+const paletteEmpty = document.getElementById('command-palette-empty');
+const PALETTE_LIMIT = 40;
+let paletteCommands = null;
+let paletteMatches = [];
+let paletteActive = 0;
+
+function clickCommandTarget(selector) {
+  const target = document.querySelector(selector);
+  if (target) target.click();
+}
+function gotoView(view) {
+  markMeaningfulNavigation();
+  state.view = view;
+  state.sort = 'newest';
+  state.selected = '';
+  state.threadTopic = '';
+  state.limit = PAGE_SIZE[view];
+  renderObservationAwareNavigation('entry');
+}
+function buildPaletteCommands() {
+  const commands = [
+    ['briefing','Latest Brief'],['ideas','Evidence Monitor'],
+    ['research','Research Library'],['queue','Decision Queue']
+  ].map(function (row) {
+    return {kind:'View',label:'Go to ' + row[1],meta:'',run:function () { gotoView(row[0]); }};
+  });
+  [
+    ['Toggle light / dark theme','#theme-button'],
+    ['Toggle row density','[data-action="density"]'],
+    ['Toggle evidence inspector','[data-action="inspector"]'],
+    ['Copy current view','[data-action="copy-view"]'],
+    ['Export current view as CSV','[data-action="export"]'],
+    ['Clear all filters','#clear-filters']
+  ].forEach(function (row) {
+    commands.push({kind:'Action',label:row[0],meta:'',run:function () { clickCommandTarget(row[1]); }});
+  });
+  commands.push({kind:'Action',label:'Keyboard workflow & data method',meta:'',
+    run:function () { shortcutDialog.showModal(); }});
+  ARTICLES.forEach(function (article) {
+    commands.push({
+      kind:'Dossier',
+      label:article.title,
+      meta:shortDate(article.date),
+      run:function () {
+        markMeaningfulNavigation();
+        state.view = 'briefing';
+        state.selected = article.id;
+        state.threadTopic = '';
+        state.limit = PAGE_SIZE.briefing;
+        renderObservationAwareNavigation('entry');
+      }
+    });
+  });
+  return commands;
+}
+function paletteScore(label, query) {
+  const haystack = label.toLowerCase();
+  const direct = haystack.indexOf(query);
+  if (direct >= 0) return direct;
+  let cursor = 0;
+  for (let index = 0; index < query.length; index++) {
+    cursor = haystack.indexOf(query.charAt(index),cursor);
+    if (cursor < 0) return -1;
+    cursor++;
+  }
+  return 900;
+}
+function renderPalette() {
+  const query = paletteInput.value.trim().toLowerCase();
+  const scored = [];
+  paletteCommands.forEach(function (command,order) {
+    if (!query) { scored.push([order,order,command]); return; }
+    const score = paletteScore(command.label,query);
+    if (score >= 0) scored.push([score,order,command]);
+  });
+  scored.sort(function (left,right) { return left[0] - right[0] || left[1] - right[1]; });
+  paletteMatches = scored.slice(0,PALETTE_LIMIT).map(function (row) { return row[2]; });
+  if (paletteActive >= paletteMatches.length) paletteActive = 0;
+  paletteEmpty.hidden = paletteMatches.length > 0;
+  paletteList.innerHTML = paletteMatches.map(function (command,index) {
+    return '<li class="palette-option" role="option" id="palette-option-' + index + '"' +
+      ' aria-selected="' + (index === paletteActive) + '" data-palette-index="' + index + '">' +
+      '<span class="palette-kind">' + escapeHtml(command.kind) + '</span>' +
+      '<span class="palette-label">' + escapeHtml(command.label) + '</span>' +
+      (command.meta ? '<span class="palette-meta">' + escapeHtml(command.meta) + '</span>' : '') +
+      '</li>';
+  }).join('');
+  paletteInput.setAttribute('aria-activedescendant',
+    paletteMatches.length ? 'palette-option-' + paletteActive : '');
+}
+function movePalette(step) {
+  if (!paletteMatches.length) return;
+  paletteActive = (paletteActive + step + paletteMatches.length) % paletteMatches.length;
+  renderPalette();
+  const option = paletteList.querySelector('[aria-selected="true"]');
+  if (option) option.scrollIntoView({block:'nearest'});
+}
+function runPalette(index) {
+  const command = paletteMatches[index];
+  if (!command) return;
+  commandPalette.close();
+  command.run();
+}
+function openPalette() {
+  if (commandPalette.open) return;
+  if (!paletteCommands) paletteCommands = buildPaletteCommands();
+  paletteInput.value = '';
+  paletteActive = 0;
+  renderPalette();
+  commandPalette.showModal();
+  paletteInput.focus();
+}
+paletteInput.addEventListener('input',function () { paletteActive = 0; renderPalette(); });
+paletteInput.addEventListener('keydown',function (event) {
+  if (event.key === 'ArrowDown') { event.preventDefault(); movePalette(1); }
+  else if (event.key === 'ArrowUp') { event.preventDefault(); movePalette(-1); }
+  else if (event.key === 'Enter') { event.preventDefault(); runPalette(paletteActive); }
+});
+paletteList.addEventListener('click',function (event) {
+  const option = event.target.closest('[data-palette-index]');
+  if (option) runPalette(Number(option.dataset.paletteIndex));
+});
+document.getElementById('palette-button').addEventListener('click',openPalette);
+document.addEventListener('keydown',function (event) {
+  if ((event.metaKey || event.ctrlKey) && !event.altKey && event.code === 'KeyK') {
+    event.preventDefault();
+    if (commandPalette.open) commandPalette.close();
+    else openPalette();
+  }
+});
+
 document.addEventListener('keydown',function (event) {
   const target = event.target;
   const editable = target.matches('input,textarea,select,[contenteditable="true"]');
@@ -6096,6 +6291,28 @@ document.addEventListener('keydown',function (event) {
   if (event.altKey && !event.shiftKey && event.code === 'Slash') {
     event.preventDefault();
     document.getElementById('search').focus();
+    return;
+  }
+  // Unmodified desk keys. The guard above already proved focus is not in an
+  // editable or interactive control, so these cannot swallow typed input.
+  if (!event.altKey && !event.shiftKey && event.code === 'KeyJ') {
+    event.preventDefault();
+    moveSelection(1);
+    return;
+  }
+  if (!event.altKey && !event.shiftKey && event.code === 'KeyK') {
+    event.preventDefault();
+    moveSelection(-1);
+    return;
+  }
+  if (!event.altKey && !event.shiftKey && event.code === 'Slash') {
+    event.preventDefault();
+    document.getElementById('search').focus();
+    return;
+  }
+  if (!event.altKey && event.shiftKey && event.code === 'Slash') {
+    event.preventDefault();
+    shortcutDialog.showModal();
     return;
   }
   if (!event.altKey || !event.shiftKey) return;
