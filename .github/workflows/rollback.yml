@@ -112,10 +112,12 @@ jobs:
             --output "$RUNNER_TEMP/verified-rollback"
 
       - name: Verify schema-neutral artifact attestation
+        env:
+          EXPECTED_REVISION: ${{ inputs.release_sha }}
         run: >-
           python rollback_bundle.py verify-attestation
           --bundle "$RUNNER_TEMP/verified-rollback"
-          --expected-revision "${{ inputs.release_sha }}"
+          --expected-revision "$EXPECTED_REVISION"
 
       - name: Upload exact rollback Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0

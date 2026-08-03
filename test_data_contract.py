@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin
 
+import data_contract
 from data_contract import (
     DATA_ENDPOINT_NAMES,
     DATA_ENDPOINTS,
@@ -426,6 +427,25 @@ class DataContractTests(unittest.TestCase):
                 self.snapshot,
                 now=VALIDATION_NOW,
             )
+
+    def test_source_urls_must_percent_encode_markup_and_control_characters(self):
+        """A source URL is a location, never a carrier for markup or controls."""
+        accepted = (
+            'https://www.patreon.com/posts/some-title-123456',
+            'https://navnoorbawa.substack.com/p/color-%CE%B3-t',
+        )
+        for url in accepted:
+            self.assertEqual(data_contract._https_url(url, 'article url'), url)
+        rejected = (
+            'https://example.test/p/x</script><img src=x onerror=alert(1)>',
+            'https://example.test/a b',
+            'https://example.test/"onload="x',
+            'https://example.test/x y',
+            'https://example.test/x\x00y',
+        )
+        for url in rejected:
+            with self.assertRaisesRegex(ValueError, 'percent-encode'):
+                data_contract._https_url(url, 'article url')
 
     def test_medium_urls_are_bound_to_exact_author_item_identity(self):
         medium_index = next(

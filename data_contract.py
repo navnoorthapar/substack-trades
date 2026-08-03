@@ -77,6 +77,10 @@ BRIEF_REQUIRED_KEYS = frozenset((
     'checkpoints',
 ))
 
+# A canonical published URL percent-encodes these. Left raw they can only be a
+# transport for markup or a split request, never a real source location.
+UNSAFE_URL_CHARACTERS = frozenset('<>"\'`\\ {}|^')
+
 SHA256_RE = re.compile(r'^[0-9a-f]{64}$')
 EMPTY_BODY_SHA256 = hashlib.sha256(b'').hexdigest()
 NORMALIZED_TERM_RE = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
@@ -251,6 +255,11 @@ def _https_url(value: Any, label: str) -> str:
         f'{label} must be a canonical HTTPS URL without credentials or a port',
     )
     _require(not parsed.fragment, f'{label} must not contain a fragment')
+    _require(
+        not (UNSAFE_URL_CHARACTERS & set(value))
+        and all(character.isprintable() for character in value),
+        f'{label} must percent-encode spaces, quotes, and markup characters',
+    )
     return value
 
 

@@ -1,4 +1,8 @@
+import base64
 import binascii
+import hashlib
+import json
+import re
 import struct
 import tempfile
 import unittest
@@ -134,6 +138,34 @@ class ShareCardTests(unittest.TestCase):
         )
         self.assertIn('Open the original publication', stub)
         self.assertNotIn('#selected=', stub)
+
+    def test_registry_source_url_cannot_terminate_the_stub_script(self):
+        """A registry URL is data, never markup that closes the script element."""
+        payload = 'https://www.example.test/p/x</script><img src=x onerror=alert(1)>'
+        article = {
+            'slug': 'registry-escape',
+            'title': 'Registry article with a hostile source URL',
+            'content_status': 'registry',
+            'url': payload,
+        }
+        stub = share_cards.render_article_stub(
+            article, 'a_registry', 'https://example.test/research',
+        )
+        script = re.search(r'<script>(.*?)</script>', stub, re.S)
+        self.assertIsNotNone(script)
+        body = script.group(1)
+        # The element must close exactly once, at the generated boundary.
+        self.assertEqual(stub.count('</script>'), 1)
+        self.assertNotIn('<img', stub)
+        self.assertNotIn('</script>', body)
+        # The escaped literal must still redirect to the exact original URL.
+        literal = re.search(r'location\.replace\((.*)\);', body, re.S).group(1)
+        self.assertEqual(json.loads(literal), payload)
+        # The declared CSP hash must cover the exact emitted script text.
+        digest = base64.b64encode(
+            hashlib.sha256(body.encode('utf-8')).digest()
+        ).decode('ascii')
+        self.assertIn(f"script-src 'sha256-{digest}'", stub)
 
 
 if __name__ == '__main__':
