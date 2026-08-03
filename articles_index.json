@@ -1,5 +1,35 @@
 [
   {
+    "source": "medium",
+    "source_id": "fab8692107dd",
+    "slug": "aqrs-currency-factor-bets-prices-revert-shiller-proved-sampling-won-t-show-it-fab8692107dd",
+    "title": "AQR’s Currency Factor Bets Prices Revert. Shiller Proved Sampling Won’t Show It.",
+    "subtitle": "The Dickey-Fuller test found zero rejections in 31 years of real exchange rates. A fat-tailed likelihood found one at p below 1%.",
+    "post_date": "2026-08-03T14:48:46.494Z",
+    "url": "https://medium.com/@navnoorbawa/aqrs-currency-factor-bets-prices-revert-shiller-proved-sampling-won-t-show-it-fab8692107dd",
+    "audience": "locked",
+    "wordcount": 165,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "67599f0c2ea417a10da6e90e094de57a839e60068a917730b80f953056d371e9",
+      "lead": {
+        "text": "The Dickey-Fuller test found zero rejections in 31 years of real exchange rates. A fat-tailed likelihood found one at p below 1%.",
+        "start": 82,
+        "end": 211,
+        "sha256": "7706be00c9fc07b78b3e0cc80c8804a95e08e4e3bbf655276bfd6477c8e4a629",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-03T14:48:46.494Z",
+    "observed_source_updated_at": "2026-08-03T14:48:46.494Z"
+  },
+  {
     "source": "substack",
     "source_id": "cftc-data-caught-hedge-funds-biggest",
     "slug": "cftc-data-caught-hedge-funds-biggest",
