@@ -7,9 +7,25 @@ import struct
 import tempfile
 import unittest
 import zlib
+from html.parser import HTMLParser
 from pathlib import Path
 
 import share_cards
+
+
+class _StubMarkup(HTMLParser):
+    """Collect the element nodes and inline handlers a rendered stub produces."""
+
+    def __init__(self):
+        super().__init__()
+        self.tags = []
+        self.handlers = []
+
+    def handle_starttag(self, tag, attrs):
+        self.tags.append(tag)
+        self.handlers.extend(
+            (tag, name) for name, _value in attrs if name.startswith('on')
+        )
 
 
 def parse_png(payload):
@@ -166,6 +182,67 @@ class ShareCardTests(unittest.TestCase):
             hashlib.sha256(body.encode('utf-8')).digest()
         ).decode('ascii')
         self.assertIn(f"script-src 'sha256-{digest}'", stub)
+
+    def test_no_article_string_field_can_inject_markup_into_a_stub(self):
+        """Sweep hostile values through every stub-reaching string field.
+
+        A field either fails closed during validation or renders as inert
+        text. It may never become an element node, an inline handler, or an
+        early close of the single generated script element.
+        """
+        payloads = (
+            '</script><img src=x onerror=alert(1)>',
+            '"><script>alert(1)</script>',
+            "'; alert(1); //",
+            '</title><svg onload=alert(1)>',
+            '&<>"\'`',
+            '</SCRIPT ><b>',
+            '\\"; alert(1); //',
+            '<!--<script>',
+            ']]><script>alert(1)</script>',
+            'javascript:alert(1)',
+        )
+        base = {
+            'slug': 'ok-slug', 'title': 'Title', 'subtitle': 'Subtitle',
+            'content_status': 'registry', 'url': 'https://example.test/p/1',
+            'post_date': '2026-08-03',
+        }
+        # Every element the stub template itself is allowed to emit.
+        permitted = {
+            'html', 'head', 'meta', 'title', 'link', 'script', 'body', 'p', 'a',
+        }
+        rendered = 0
+        for field in ('title', 'subtitle', 'url', 'slug', 'post_date',
+                      'content_status'):
+            for payload in payloads:
+                article = dict(base)
+                article[field] = (
+                    f'https://example.test/p/{payload}' if field == 'url'
+                    else payload
+                )
+                with self.subTest(field=field, payload=payload):
+                    try:
+                        stub = share_cards.render_article_stub(
+                            article, 'a_0123456789abcd', 'https://host.test/r',
+                        )
+                    except ValueError:
+                        continue  # fail-closed is a correct outcome
+                    rendered += 1
+                    markup = _StubMarkup()
+                    markup.feed(stub)
+                    self.assertEqual(
+                        [tag for tag in markup.tags if tag not in permitted], [],
+                    )
+                    self.assertEqual(markup.handlers, [])
+                    self.assertEqual(stub.count('<script>'), 1)
+                    self.assertEqual(stub.count('</script>'), 1)
+                    body = re.search(r'<script>(.*?)</script>', stub, re.S).group(1)
+                    digest = base64.b64encode(
+                        hashlib.sha256(body.encode('utf-8')).digest()
+                    ).decode('ascii')
+                    self.assertIn(f"script-src 'sha256-{digest}'", stub)
+        # Guard the guard: the sweep must actually exercise the renderer.
+        self.assertGreater(rendered, 40)
 
 
 if __name__ == '__main__':
