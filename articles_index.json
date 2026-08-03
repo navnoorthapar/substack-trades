@@ -1,5 +1,35 @@
 [
   {
+    "source": "substack",
+    "source_id": "cftc-data-caught-hedge-funds-biggest",
+    "slug": "cftc-data-caught-hedge-funds-biggest",
+    "title": "CFTC Data Caught Hedge Funds' Biggest Long Book a Day Before Iran's Truce.",
+    "subtitle": "Managed money's 220,173-lot peak is dated 16 June, one day before the US-Iran MoU. What followed was covering, not conviction.",
+    "post_date": "2026-08-02T22:01:19.004Z",
+    "url": "https://navnoorbawa.substack.com/p/cftc-data-caught-hedge-funds-biggest",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "6e1eb5c20e8ac2b9017429b52650bf3ccbdbf3e8b4090588e145a3e3f90c5cad",
+      "lead": {
+        "text": "Managed money’s 2026 peak long book in WTI was set on June 16, the last CFTC snapshot before the United States and Iran signed a memorandum of understanding that reopened the Strait of Hormuz. Those funds were maximally long into a peace deal. The widely-reported July build that followed was 74% to 87% short covering, and gross longs are still 11.9% below that June peak.",
+        "start": 0,
+        "end": 373,
+        "sha256": "6e1eb5c20e8ac2b9017429b52650bf3ccbdbf3e8b4090588e145a3e3f90c5cad",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-02T22:05:21.129Z",
+    "observed_source_updated_at": "2026-08-02T22:05:21.129Z"
+  },
+  {
     "source": "medium",
     "source_id": "1da1a0061974",
     "slug": "citadel-and-d-e-shaw-run-stat-arb-baskets-the-test-that-counts-the-spreads-leans-one-way-1da1a0061974",
@@ -28,6 +58,28 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-08-02T15:16:41.922Z",
     "observed_source_updated_at": "2026-08-02T15:16:41.922Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165582435",
+    "slug": "cftc-data-hedge-165582435",
+    "title": "CFTC Data: Hedge Funds' 220,173-Lot Long Book Predates Iran's Truce by One Day",
+    "subtitle": "",
+    "post_date": "2026-08-02",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/cftc-data-hedge-165582435",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",

@@ -1,25 +1,25 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-08-02T16:33:43Z",
-  "latest_publication": "2026-08-02T15:16:41.922Z",
-  "catalog_latest_publication": "2026-08-02T15:16:41.922Z",
-  "article_count": 374,
-  "catalog_count": 472,
-  "registry_count": 98,
+  "checked_at": "2026-08-03T03:32:10Z",
+  "latest_publication": "2026-08-02T22:01:19.004Z",
+  "catalog_latest_publication": "2026-08-02T22:01:19.004Z",
+  "article_count": 375,
+  "catalog_count": 474,
+  "registry_count": 99,
   "observation_count": 1234,
-  "data_checksum": "e5f83588cdd1c9787b671bb2f785669459b07df4c2a19c285bc12e441b55310e",
+  "data_checksum": "32f2d8177e002621a25bf4e9f1f7f6e065e9ee33875dd37516552cd7f1a8f6a4",
   "sources": {
     "substack": {
-      "checked_at": "2026-08-02T16:30:35Z",
+      "checked_at": "2026-08-03T03:30:26Z",
       "status": "degraded",
       "mode": "complete_api_degraded_body_provenance",
-      "published_count": 235,
-      "fetched_count": 235,
-      "included_count": 235,
-      "newest": "2026-08-01T14:45:05.059Z"
+      "published_count": 236,
+      "fetched_count": 236,
+      "included_count": 236,
+      "newest": "2026-08-02T22:01:19.004Z"
     },
     "medium": {
-      "checked_at": "2026-08-02T16:32:45Z",
+      "checked_at": "2026-08-03T03:31:07Z",
       "status": "ok",
       "mode": "complete_archive",
       "published_count": 368,
@@ -28,16 +28,16 @@
       "newest": "2026-08-02T15:16:41.922Z"
     },
     "patreon": {
-      "checked_at": "2026-08-02T16:32:51Z",
+      "checked_at": "2026-08-03T03:31:11Z",
       "status": "ok",
       "mode": "public_metadata_api",
-      "published_count": 108,
-      "fetched_count": 108,
-      "included_count": 87,
-      "newest": "2026-08-01"
+      "published_count": 109,
+      "fetched_count": 109,
+      "included_count": 88,
+      "newest": "2026-08-02"
     },
     "fxempire": {
-      "checked_at": "2026-08-02T16:33:43Z",
+      "checked_at": "2026-08-03T03:32:10Z",
       "status": "ok",
       "mode": "manual_registry",
       "published_count": 11,
