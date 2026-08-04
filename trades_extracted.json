@@ -1,5 +1,53 @@
 [
   {
+    "article_title": "Blue Owl's Credit Fundraising Fell 69% in a Quarter. Then It Hired a Tokyo Banker.",
+    "article_url": "https://navnoorbawa.substack.com/p/blue-owls-credit-fundraising-fell",
+    "article_date": "2026-08-03",
+    "trade_description": "Japanese institutions are the most under allocated large pool of capital in the developed world. CJ Morrell of Fiera Capital puts Japanese institutional allocations to private markets at “five per cent to 15 per cent” against “around 40 per cent in Canada, the US and Western Europe,” and describes Japan Inc as “still very much stuck in that 60 per cent debt, 30 per cent equity, 10 per cent hedge fund/alternatives.” He calls it “the very early stages of what I think will be a multi-decade move to embrace private markets.”",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": "Fiera Capital; Japan Inc",
+    "edge_or_thesis": "“still very much stuck in that 60 per cent debt, 30 per cent equity, 10 per cent hedge fund/alternatives.",
+    "any_quant_detail": "at 60",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Blue Owl's Credit Fundraising Fell 69% in a Quarter. Then It Hired a Tokyo Banker.",
+    "article_url": "https://navnoorbawa.substack.com/p/blue-owls-credit-fundraising-fell",
+    "article_date": "2026-08-03",
+    "trade_description": "Credit equity fundraising fell 69% year over year, from $5.8 billion to $1.8 billion. Credit is the franchise. It houses the direct lending business, the non traded BDCs, and the brand.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$5.8 billion, $1.8 billion, 69%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Blue Owl's Credit Fundraising Fell 69% in a Quarter. Then It Hired a Tokyo Banker.",
+    "article_url": "https://navnoorbawa.substack.com/p/blue-owls-credit-fundraising-fell",
+    "article_date": "2026-08-03",
+    "trade_description": "Blue Owl Credit Income Corp, the non traded BDC known as OCIC, received $3.6 billion of repurchase requests in the June quarter, down from $4.2 billion in March. Those are 18.8% of shares outstanding, down from 21.9%, against a repurchase cap of 5%.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": "Blue Owl Credit Income Corp",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$3.6 billion, $4.2 billion, 18.8%, 21.9%, 5%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
     "article_title": "Citadel and D.E. Shaw Run Stat Arb Baskets. The Test That Counts the Spreads Leans One Way.",
     "article_url": "https://medium.com/@navnoorbawa/citadel-and-d-e-shaw-run-stat-arb-baskets-the-test-that-counts-the-spreads-leans-one-way-1da1a0061974",
     "article_date": "2026-08-02",

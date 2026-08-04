@@ -1,5 +1,82 @@
 [
   {
+    "source": "substack",
+    "source_id": "msci-named-the-won-again-retail-leverage",
+    "slug": "msci-named-the-won-again-retail-leverage",
+    "title": "MSCI Named the Won Again. Retail Leverage on Samsung and SK Hynix Broke Korea.",
+    "subtitle": "Foreigners sold a record 148.3 trillion won and their ownership share still hit an all time high. Taiwan carries the same currency barrier at double the multiple.",
+    "post_date": "2026-08-04T01:58:35.726Z",
+    "url": "https://navnoorbawa.substack.com/p/msci-named-the-won-again-retail-leverage",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-04T01:59:54.106Z",
+    "observed_source_updated_at": "2026-08-04T01:59:54.106Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "blue-owls-credit-fundraising-fell",
+    "slug": "blue-owls-credit-fundraising-fell",
+    "title": "Blue Owl's Credit Fundraising Fell 69% in a Quarter. Then It Hired a Tokyo Banker.",
+    "subtitle": "Credit intake fell from $5.8 billion to $1.8 billion while AUM grew 12%. The Tokyo institutional seat reads as a repair to the funding mix, and the late October print will say if it worked.",
+    "post_date": "2026-08-03T21:51:54.140Z",
+    "url": "https://navnoorbawa.substack.com/p/blue-owls-credit-fundraising-fell",
+    "audience": "everyone",
+    "wordcount": 3322,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "0b91e39dfe7388a8191f2f8ecc9dd16ac0ac1a9fb177b43c9612931daa2fa58c",
+      "lead": {
+        "text": "The claim: Blue Owl’s new Tokyo institutional seat is a funding mix repair, and the damage it answers is upstream of the redemption queue everyone is watching: Credit equity fundraising fell 69% year over year, from $5.8 billion to $1.8 billion.",
+        "start": 0,
+        "end": 245,
+        "sha256": "3ed8a26720f26dc4355825092facea8cd86a2da414f0c68becc87d851697b4ad",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "falsifier",
+          "source_order": 58,
+          "heading": "What would change this view: the late-October print",
+          "heading_start": 16081,
+          "heading_end": 16132,
+          "heading_sha256": "14efcd8f924a78c51e13d506d077c20d6b438b99b9740f08b775de2bc26569c9",
+          "text": "Blue Owl reports September quarter results in late October 2026, with OCIC’s tender result in the same window.",
+          "start": 16134,
+          "end": 16244,
+          "sha256": "140e390508900738b193e9830c68759cae25f41571766d582cdbdd44884d2c24",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "Roughly four fifths of what Blue Owl originates is replacing something that repaid. A lender doing $33 billion of gross origination to grow the book by $6 billion is running hard to stay near the same place. That is not a solvency observation and I don’t want it read as one, because repayments are the healthy way for a credit book to generate liquidity. It’s a growth observation, and it explains where the cash to fill the redemption queue comes from.",
+        "start": 4277,
+        "end": 4731,
+        "sha256": "5f9f5a15461579568b8b210df6de6ad8546cbf0cddafd12d353603dfdb39a29e",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-03T21:53:07.273Z",
+    "observed_source_updated_at": "2026-08-03T21:53:07.273Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/blue-owls-credit-fundraising-fell-69-in-a-quarter-then-it-hired-a-tokyo-banker-19b21ebcd860"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "fab8692107dd",
     "slug": "aqrs-currency-factor-bets-prices-revert-shiller-proved-sampling-won-t-show-it-fab8692107dd",
@@ -28,6 +105,50 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-08-03T14:48:46.494Z",
     "observed_source_updated_at": "2026-08-03T14:48:46.494Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165675886",
+    "slug": "mscis-korea-is-1-165675886",
+    "title": "MSCI's Korea Upgrade Is Worth Under 1% of Market Cap. Samsung and SK Hynix Took 44%.",
+    "subtitle": "",
+    "post_date": "2026-08-03",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/mscis-korea-is-1-165675886",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165677300",
+    "slug": "blue-owls-gate-165677300",
+    "title": "Blue Owl's Redemption Gate Costs $12 Million a Year. Its Credit Intake Fell 69%. The Market Is Pricing the Wrong One.",
+    "subtitle": "",
+    "post_date": "2026-08-03",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/blue-owls-gate-165677300",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
