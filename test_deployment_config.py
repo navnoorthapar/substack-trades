@@ -347,7 +347,12 @@ class DeploymentConfigurationTests(unittest.TestCase):
         deploy_job = self.workflow.split('\n  deploy:', 1)[1]
         for required in (
             'smoke_test_site.py',
-            '${{ steps.deployment.outputs.page_url }}',
+            '${{ steps.deployed.outputs.page_url }}',
+            'Retry Pages deploy after queue stall',
+            'Final Pages deploy attempt',
+            'Record deployed Pages URL',
+            'timeout-minutes: 40',
+            'timeout: 600000',
             '--expected-revision "$EXPECTED_REVISION"',
             '--articles-file articles_index.json',
             '--observations-file trades_extracted.json',
@@ -366,10 +371,11 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--retries 8',
             "if: steps.current.outputs.current == 'true'",
             '- name: Publish production incident guidance',
-            "if: failure() && steps.deployment.outcome == 'success'",
+            "if: failure() && steps.deployed.outcome == 'success'",
             'Follow LAUNCH_RUNBOOK.md',
         ):
             self.assertIn(required, deploy_job)
+        self.assertEqual(deploy_job.count('actions/deploy-pages@'), 3)
         self.assertIn('contents: read', deploy_job)
         self.assertIn('persist-credentials: false', deploy_job)
 
