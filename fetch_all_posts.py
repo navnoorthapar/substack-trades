@@ -34,7 +34,14 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Accept': 'application/json, text/html, */*',
 }
+# Stored article identity stays on the publication subdomain so existing
+# catalogue URLs and validators remain stable. Live API responses may land on
+# the owned custom domain after Substack's publication redirect.
 SUBSTACK_ORIGIN = 'https://navnoorbawa.substack.com'
+SUBSTACK_API_HOSTS = frozenset({
+    'navnoorbawa.substack.com',
+    'www.navnoorbawaresearch.com',
+})
 MAX_LIST_RESPONSE_BYTES = 16 * 1024 * 1024
 MAX_DETAIL_RESPONSE_BYTES = 4 * 1024 * 1024
 DETAIL_RESPONSE_TIMEOUT_SECONDS = 15
@@ -162,7 +169,7 @@ class DetailBudgetExhausted(RuntimeError):
 
 
 def fetch_json(url, max_bytes, timeout=30):
-    """Fetch one bounded, same-origin UTF-8 JSON response."""
+    """Fetch one bounded UTF-8 JSON response from a trusted Substack host."""
     req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(
         req,
@@ -170,11 +177,10 @@ def fetch_json(url, max_bytes, timeout=30):
         context=SSL_CONTEXT,
     ) as response:
         final_url = response.geturl()
-        expected = urllib.parse.urlsplit(SUBSTACK_ORIGIN)
         actual = urllib.parse.urlsplit(final_url)
         if (
             actual.scheme != 'https'
-            or actual.hostname != expected.hostname
+            or actual.hostname not in SUBSTACK_API_HOSTS
             or actual.port is not None
         ):
             raise ValueError('Substack redirected to an untrusted origin')

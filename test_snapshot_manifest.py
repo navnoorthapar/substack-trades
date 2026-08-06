@@ -278,8 +278,11 @@ class SnapshotManifestTests(unittest.TestCase):
             self.assertEqual(carried['observed_source_updated_at'], '')
             self.assertEqual(live['content_status'], 'excerpt')
             self.assertEqual(live['body_revision_status'], 'current')
-            self.assertEqual(live['source_updated_at'], '')
-            self.assertEqual(live['observed_source_updated_at'], '')
+            self.assertEqual(live['source_updated_at'], '2026-07-14T01:00:00Z')
+            self.assertEqual(
+                live['observed_source_updated_at'],
+                '2026-07-14T01:00:00Z',
+            )
 
     def test_fetch_status_outputs_have_required_provenance_fields(self):
         post = {'post_date': '2026-07-14T01:00:00Z'}

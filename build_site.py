@@ -3051,8 +3051,10 @@ function safeUrl(value) {
     if (url.href !== original || url.protocol !== 'https:' ||
         url.username || url.password || url.port ||
         url.search || url.hash || /%(?:2f|5c)/i.test(url.pathname)) return '#';
-    const substackSlug = host === 'navnoorbawa.substack.com' &&
-      url.pathname.startsWith('/p/') ? url.pathname.slice(3) : '';
+    const substackSlug = (
+      host === 'navnoorbawa.substack.com' ||
+      host === 'www.navnoorbawaresearch.com'
+    ) && url.pathname.startsWith('/p/') ? url.pathname.slice(3) : '';
     const mediumPrefix = '/@navnoorbawa/';
     const validSubstackPath = /^[A-Za-z0-9][A-Za-z0-9_-]*$/.test(substackSlug);
     let validMediumPath = false;

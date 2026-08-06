@@ -622,6 +622,11 @@ def fetch_rss_posts(attempts=3):
                 if parsed.tzinfo is None:
                     parsed = parsed.replace(tzinfo=timezone.utc)
                 description = strip_html(item.findtext('description') or '')
+                published = (
+                    parsed.astimezone(timezone.utc)
+                    .isoformat()
+                    .replace('+00:00', 'Z')
+                )
                 posts.append({
                     'source': 'medium',
                     'source_id': post_id,
@@ -630,8 +635,8 @@ def fetch_rss_posts(attempts=3):
                     'title': (item.findtext('title') or '').strip(),
                     'display_title': (item.findtext('title') or '').strip(),
                     'subtitle': description,
-                    'post_date': parsed.astimezone(timezone.utc).isoformat().replace('+00:00', 'Z'),
-                    'latest_published_at': '',
+                    'post_date': published,
+                    'latest_published_at': published,
                     'url': clean_url,
                     'canonical_url': '',
                     'audience': 'unknown',
@@ -640,11 +645,11 @@ def fetch_rss_posts(attempts=3):
                     'wordcount': body_word_count(description),
                     'body_text': description,
                     'content_status': 'excerpt',
-                    # RSS proves this exact live excerpt, but does not expose a
-                    # separate article-update timestamp.
+                    # RSS proves this exact live excerpt. Bind the publication
+                    # instant because RSS has no distinct update timestamp.
                     'body_revision_status': 'current',
-                    'source_updated_at': '',
-                    'observed_source_updated_at': '',
+                    'source_updated_at': published,
+                    'observed_source_updated_at': published,
                     'mirror_substack_slug': None,
                     'pinned': False,
                 })
@@ -686,8 +691,18 @@ def live_rss_record(post):
     item = dict(post)
     item['content_status'] = 'excerpt'
     item['body_revision_status'] = 'current'
-    item['source_updated_at'] = ''
-    item['observed_source_updated_at'] = ''
+    # RSS proves this exact live excerpt, but does not expose a distinct
+    # article-update timestamp. Bind the publication instant so a current
+    # excerpt remains timestamp-qualified for wire and client contracts.
+    published = (
+        item.get('post_date')
+        if isinstance(item.get('post_date'), str)
+        else ''
+    )
+    item['source_updated_at'] = published
+    item['observed_source_updated_at'] = published
+    if not item.get('latest_published_at'):
+        item['latest_published_at'] = published
     return item
 
 

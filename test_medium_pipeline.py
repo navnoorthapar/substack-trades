@@ -446,8 +446,11 @@ class MediumFetchTests(unittest.TestCase):
         self.assertEqual(posts[0]['medium_id'], 'abcdef123456')
         self.assertEqual(posts[0]['content_status'], 'excerpt')
         self.assertEqual(posts[0]['body_revision_status'], 'current')
-        self.assertEqual(posts[0]['source_updated_at'], '')
-        self.assertEqual(posts[0]['observed_source_updated_at'], '')
+        self.assertEqual(posts[0]['source_updated_at'], posts[0]['post_date'])
+        self.assertEqual(
+            posts[0]['observed_source_updated_at'], posts[0]['post_date'],
+        )
+        self.assertTrue(posts[0]['post_date'])
 
     def test_rss_accepts_only_its_tracking_query_and_canonicalizes_it(self):
         payload = self._rss_payload().replace(

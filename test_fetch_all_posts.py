@@ -934,6 +934,35 @@ class SubstackNullableBodyTests(unittest.TestCase):
             for post in self.read_json(self.posts_path)
         ))
 
+    def test_fetch_json_accepts_owned_custom_domain_redirect(self):
+        payload = [self.list_post()]
+        response = JsonResponse(
+            payload,
+            'https://www.navnoorbawaresearch.com/api/v1/posts?limit=1&offset=0',
+        )
+        with mock.patch.object(
+            fetch_all_posts.urllib.request, 'urlopen', return_value=response,
+        ):
+            data = fetch_all_posts.fetch_json(
+                'https://navnoorbawa.substack.com/api/v1/posts?limit=1&offset=0',
+                fetch_all_posts.MAX_LIST_RESPONSE_BYTES,
+            )
+        self.assertEqual(data, payload)
+
+    def test_fetch_json_rejects_foreign_redirect_host(self):
+        response = JsonResponse(
+            [self.list_post()],
+            'https://evil.example/api/v1/posts?limit=1&offset=0',
+        )
+        with mock.patch.object(
+            fetch_all_posts.urllib.request, 'urlopen', return_value=response,
+        ):
+            with self.assertRaisesRegex(ValueError, 'untrusted origin'):
+                fetch_all_posts.fetch_json(
+                    'https://navnoorbawa.substack.com/api/v1/posts?limit=1&offset=0',
+                    fetch_all_posts.MAX_LIST_RESPONSE_BYTES,
+                )
+
 
 if __name__ == '__main__':
     unittest.main()

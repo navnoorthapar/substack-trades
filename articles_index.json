@@ -1,5 +1,185 @@
 [
   {
+    "source": "medium",
+    "source_id": "9be7915d9ad2",
+    "slug": "the-new-york-fed-cleared-a-granger-lead-the-sec-metals-screen-cleared-nothing-9be7915d9ad2",
+    "title": "The New York Fed Cleared a Granger Lead. The SEC Metals Screen Cleared Nothing.",
+    "subtitle": "NY Fed Staff Report 303 printed χ² = 39.728 and 6.08% gross, then warned impact and commissions could nullify the trade.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-06T06:56:38Z",
+    "url": "https://medium.com/@navnoorbawa/the-new-york-fed-cleared-a-granger-lead-the-sec-metals-screen-cleared-nothing-9be7915d9ad2",
+    "audience": "unknown",
+    "wordcount": 26,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "5daafb0c97e5738307f7ec70667686ad9c1a8a7182b4dff4945d086d8ea2385f",
+      "lead": {
+        "text": "NY Fed Staff Report 303 printed χ² = 39.728 and 6.08% gross, then warned impact and commissions could nullify the trade.",
+        "start": 0,
+        "end": 120,
+        "sha256": "1e461067d3f2bef6b2ae8c7c696b3eebc0f0e9fc7ab5ef78b548ca3c257d8eb0",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-06T06:56:38Z",
+    "observed_source_updated_at": "2026-08-06T06:56:38Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "66471c06cbb6",
+    "slug": "man-group-named-the-leverage-effect-riskmetrics-still-prices-it-with-squared-returns-66471c06cbb6",
+    "title": "Man Group Named the Leverage Effect. RiskMetrics Still Prices It With Squared Returns.",
+    "subtitle": "Man Group’s own paper attributes the equity Sharpe gain from volatility targeting to the leverage effect, then scales positions with…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-06T03:59:18Z",
+    "url": "https://medium.com/@navnoorbawa/man-group-named-the-leverage-effect-riskmetrics-still-prices-it-with-squared-returns-66471c06cbb6",
+    "audience": "unknown",
+    "wordcount": 24,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "367c536d9c43e10746b0c6a9845d8becebd69481c150eb300e595bb9fdc14442",
+      "lead": {
+        "text": "Man Group’s own paper attributes the equity Sharpe gain from volatility targeting to the leverage effect, then scales positions with…",
+        "start": 0,
+        "end": 133,
+        "sha256": "cd3fa35101ae0e782cfb19fb8a9339a8c6cf6551adc938a0f233923358bbb999",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-06T03:59:18Z",
+    "observed_source_updated_at": "2026-08-06T03:59:18Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "elliotts-reset-forced-bps-capital",
+    "slug": "elliotts-reset-forced-bps-capital",
+    "title": "Elliott's Reset Forced BP's Capital Cuts. Its Filings Blame Them for Archaea.",
+    "subtitle": "BP discounts a 25-year methane contract at its oil-exploration rate, and its own filings blame the $2.3bn capital cut, not the RNG market, for the $970m impairment.",
+    "post_date": "2026-08-05T16:59:12.671Z",
+    "url": "https://navnoorbawa.substack.com/p/elliotts-reset-forced-bps-capital",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "1187d06c935715fe93463d8719280349166922aab771748ca421a40857c25b5b",
+      "lead": {
+        "text": "BP’s Archaea impairment is being read as a verdict on renewable natural gas. Read BP’s own filings and it is mostly a verdict on BP’s capital budget: the company impaired an asset it had decided to stop funding, and is now selling it.",
+        "start": 0,
+        "end": 234,
+        "sha256": "1187d06c935715fe93463d8719280349166922aab771748ca421a40857c25b5b",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-05T17:01:04.268Z",
+    "observed_source_updated_at": "2026-08-05T17:01:04.268Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "russias-lng-trade-just-saved-dynagas",
+    "slug": "russias-lng-trade-just-saved-dynagas",
+    "title": "Russia's LNG Trade Just Saved Dynagas. TotalEnergies Faces the Real Problem.",
+    "subtitle": "A one year EU exemption protects Dynagas and Seapeak's legacy contracts. What survives untouched is CHNL's own fleet math: voyage capacity cut by half once the short European route closes.",
+    "post_date": "2026-08-04T20:13:25.992Z",
+    "url": "https://navnoorbawa.substack.com/p/russias-lng-trade-just-saved-dynagas",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "3a7a4de17907d0a4faff23ce41b1125b5219a2021751385ba2226eb6c453010f",
+      "lead": {
+        "text": "Twelve days before this went to print, Greece traded its veto on the EU’s 21st sanctions package for a renewable exemption that keeps European shipowners carrying Russian LNG to third countries. What survives untouched is the harder problem: Yamal’s own published shipping math, which cuts capacity by up to half once Europe stops buying.",
+        "start": 0,
+        "end": 338,
+        "sha256": "3a7a4de17907d0a4faff23ce41b1125b5219a2021751385ba2226eb6c453010f",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-04T21:05:55.258Z",
+    "observed_source_updated_at": "2026-08-04T21:05:55.258Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "google-books-its-ai-guarantee-at",
+    "slug": "google-books-its-ai-guarantee-at",
+    "title": "Google Books Its AI Guarantee at 0.4%. TeraWulf and Cipher Paid Up to 39%.",
+    "subtitle": "TeraWulf and Cipher's own 10-Ks price the same Google guarantee at 39 to 96 times Alphabet's own liability mark, both backing the identical tenant at two different sites.",
+    "post_date": "2026-08-04T20:00:48.347Z",
+    "url": "https://navnoorbawa.substack.com/p/google-books-its-ai-guarantee-at",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "a9ed360d1f68a75be6c6eeb0aa53be1d20fecdf84b5eeb4cfcb6c816a0ae64f8",
+      "lead": {
+        "text": "Two companies that took Google’s guarantee on AI data-centre leases valued what they paid for it, in their own audited books, at between 16% and 39% of the amount guaranteed, while Alphabet’s own balance sheet marks the liability for guaranteeing its entire book of these contracts, at the same date, at four-tenths of one percent.",
+        "start": 0,
+        "end": 331,
+        "sha256": "a9ed360d1f68a75be6c6eeb0aa53be1d20fecdf84b5eeb4cfcb6c816a0ae64f8",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-04T20:03:03.536Z",
+    "observed_source_updated_at": "2026-08-04T20:03:03.536Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "b1bf06e3b608",
+    "slug": "j-p-morgan-printed-78-volatility-numbers-no-memory-beat-garch-by-74-b1bf06e3b608",
+    "title": "J.P. Morgan Printed 78 Volatility Numbers. No Memory Beat GARCH by 74%.",
+    "subtitle": "The industry has three different half-life estimates, and even the firm that built the shortest one cannot agree on which is right.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-04T18:23:30Z",
+    "url": "https://medium.com/@navnoorbawa/j-p-morgan-printed-78-volatility-numbers-no-memory-beat-garch-by-74-b1bf06e3b608",
+    "audience": "unknown",
+    "wordcount": 26,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "2e8ef67e8a41faf8a514f99e6818f0b06b96e32fbce21d0a245e5ceb3fc9baca",
+      "lead": {
+        "text": "The industry has three different half-life estimates, and even the firm that built the shortest one cannot agree on which is right.",
+        "start": 0,
+        "end": 131,
+        "sha256": "863cb4c2f7da224dea5804b3da50f62390dd2be7e5c962d2ebe3055a23ed344c",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-04T18:23:30Z",
+    "observed_source_updated_at": "2026-08-04T18:23:30Z"
+  },
+  {
     "source": "substack",
     "source_id": "msci-named-the-won-again-retail-leverage",
     "slug": "msci-named-the-won-again-retail-leverage",
@@ -22,6 +202,72 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-08-04T01:59:54.106Z",
     "observed_source_updated_at": "2026-08-04T01:59:54.106Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165762266",
+    "slug": "totalenergies-is-165762266",
+    "title": "TotalEnergies' $400M Russian LNG Income Survives the 2027 Cliff Consensus Is Pricing",
+    "subtitle": "",
+    "post_date": "2026-08-04",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/totalenergies-is-165762266",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165762015",
+    "slug": "googles-ai-book-165762015",
+    "title": "Google's AI Guarantee Book: A 39x-96x Gap Between the Disclosed Mark and the Disclosed Price",
+    "subtitle": "",
+    "post_date": "2026-08-04",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/googles-ai-book-165762015",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165766155",
+    "slug": "bp-marks-archaea-165766155",
+    "title": "BP Marks Archaea at an 8% Oil Rate. Elliott's Reset Is Why.",
+    "subtitle": "",
+    "post_date": "2026-08-04",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/bp-marks-archaea-165766155",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -568,6 +814,36 @@
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/hedge-funds-just-posted-their-fastest-growth-in-history-6f76e15b48b4"
     }
+  },
+  {
+    "source": "medium",
+    "source_id": "6f76e15b48b4",
+    "slug": "hedge-funds-just-posted-their-fastest-growth-in-history-6f76e15b48b4",
+    "title": "Hedge Funds Just Posted Their Fastest Growth in History.",
+    "subtitle": "Global hedge fund capital hit a record $5.6 trillion in Q2 2026 on the largest quarterly increase HFR has ever recorded — built in part on…\n\nContinue reading on Medium »",
+    "post_date": "2026-07-27T17:39:22Z",
+    "url": "https://medium.com/@navnoorbawa/hedge-funds-just-posted-their-fastest-growth-in-history-6f76e15b48b4",
+    "audience": "unknown",
+    "wordcount": 30,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "7b947d89612b9c3c38780067ce6b7287f3f8ab66011a80097b3a906fb8b1aa13",
+      "lead": {
+        "text": "Global hedge fund capital hit a record $5.6 trillion in Q2 2026 on the largest quarterly increase HFR has ever recorded — built in part on…",
+        "start": 0,
+        "end": 139,
+        "sha256": "6b512848235b67c45cf5c52f452420e0da339aa82316ecd84d9148a4d087ec4b",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-07-27T17:39:22Z",
+    "observed_source_updated_at": "2026-07-27T17:39:22Z"
   },
   {
     "source": "patreon",
