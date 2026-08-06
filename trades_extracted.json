@@ -48,38 +48,6 @@
     "description_truncated": false
   },
   {
-    "article_title": "Citadel and D.E. Shaw Run Stat Arb Baskets. The Test That Counts the Spreads Leans One Way.",
-    "article_url": "https://medium.com/@navnoorbawa/citadel-and-d-e-shaw-run-stat-arb-baskets-the-test-that-counts-the-spreads-leans-one-way-1da1a0061974",
-    "article_date": "2026-08-02",
-    "trade_description": "The trade this sizes is institutional. D.E. Shaw was built on market neutral strategies including statistical arbitrage, and Citadel took its tactical trading into statistical arbitrage and market neutral equity in 2009. Nothing published says which estimator either firm uses and I will not guess. What I can say is what the standard one does pointed at a basket.",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "D.E. Shaw",
-    "description_truncated": false
-  },
-  {
-    "article_title": "Renaissance and Goldman Sachs Ran Stat Arb Through the 2007 Quant Quake. Its Standard Entry Signal Scores Two Identical Trades 47% Apart.",
-    "article_url": "https://medium.com/@navnoorbawa/renaissance-and-goldman-sachs-ran-stat-arb-through-the-2007-quant-quake-1bac74715346",
-    "article_date": "2026-07-29",
-    "trade_description": "In the standard formulation of equity statistical arbitrage, the Ornstein-Uhlenbeck equilibrium variance Var(X∞) = σ²/2κ is not a statistic reported beside the strategy: its square root is the denominator of the trade trigger, and because the bias in that denominator varies from name to name, the s-score stops being comparable across the book it is used to rank.",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "arbitrage/relative value",
-    "underlying": null,
-    "edge_or_thesis": "the bias in that denominator varies from name to name, the s-score stops being comparable across the book it is used to rank.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null,
-    "description_truncated": false
-  },
-  {
     "article_title": "Susquehanna, Citadel's $137M Insider-Trading Suit Won't Make Them Whole",
     "article_url": "https://navnoorbawa.substack.com/p/susquehanna-citadels-137m-insider",
     "article_date": "2026-07-21",

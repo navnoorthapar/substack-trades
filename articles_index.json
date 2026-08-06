@@ -1,5 +1,29 @@
 [
   {
+    "source": "substack",
+    "source_id": "mercuria-and-vitol-paid-up-to-469000",
+    "slug": "mercuria-and-vitol-paid-up-to-469000",
+    "title": "Mercuria and Vitol Paid Up to $469,000 a Day to Cross Hormuz. The Run That Skips the Strait Pays $120,750.",
+    "subtitle": "The same cargo to the same buyers, two routes, and a $261,647 daily gap between them. What that spread actually prices, and the dated checkpoint that would kill the thesis.",
+    "post_date": "2026-08-06T13:54:15.460Z",
+    "url": "https://navnoorbawa.substack.com/p/mercuria-and-vitol-paid-up-to-469000",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-06T13:56:02.552Z",
+    "observed_source_updated_at": "2026-08-06T13:56:02.552Z"
+  },
+  {
     "source": "medium",
     "source_id": "9be7915d9ad2",
     "slug": "the-new-york-fed-cleared-a-granger-lead-the-sec-metals-screen-cleared-nothing-9be7915d9ad2",
@@ -58,6 +82,28 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-08-06T03:59:18Z",
     "observed_source_updated_at": "2026-08-06T03:59:18Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165927130",
+    "slug": "hormuz-spread-165927130",
+    "title": "The Hormuz Permission Spread: Long TD3C Against TD34",
+    "subtitle": "",
+    "post_date": "2026-08-06",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/hormuz-spread-165927130",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
@@ -278,7 +324,7 @@
     "post_date": "2026-08-03T21:51:54.140Z",
     "url": "https://navnoorbawa.substack.com/p/blue-owls-credit-fundraising-fell",
     "audience": "everyone",
-    "wordcount": 3322,
+    "wordcount": 3332,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -327,19 +373,19 @@
     "source_id": "fab8692107dd",
     "slug": "aqrs-currency-factor-bets-prices-revert-shiller-proved-sampling-won-t-show-it-fab8692107dd",
     "title": "AQR’s Currency Factor Bets Prices Revert. Shiller Proved Sampling Won’t Show It.",
-    "subtitle": "The Dickey-Fuller test found zero rejections in 31 years of real exchange rates. A fat-tailed likelihood found one at p below 1%.",
-    "post_date": "2026-08-03T14:48:46.494Z",
+    "subtitle": "The Dickey-Fuller test found zero rejections in 31 years of real exchange rates. A fat-tailed likelihood found one at p below 1%.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-03T14:48:46Z",
     "url": "https://medium.com/@navnoorbawa/aqrs-currency-factor-bets-prices-revert-shiller-proved-sampling-won-t-show-it-fab8692107dd",
-    "audience": "locked",
-    "wordcount": 165,
+    "audience": "unknown",
+    "wordcount": 26,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "67599f0c2ea417a10da6e90e094de57a839e60068a917730b80f953056d371e9",
+      "body_sha256": "41c5403cf3a08cb1e8e37f1d5fa5c535b3c86fc5d35a5d1fc14a9cc25bac206c",
       "lead": {
         "text": "The Dickey-Fuller test found zero rejections in 31 years of real exchange rates. A fat-tailed likelihood found one at p below 1%.",
-        "start": 82,
-        "end": 211,
+        "start": 0,
+        "end": 129,
         "sha256": "7706be00c9fc07b78b3e0cc80c8804a95e08e4e3bbf655276bfd6477c8e4a629",
         "truncated": false
       },
@@ -349,8 +395,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-03T14:48:46.494Z",
-    "observed_source_updated_at": "2026-08-03T14:48:46.494Z"
+    "source_updated_at": "2026-08-03T14:48:46Z",
+    "observed_source_updated_at": "2026-08-03T14:48:46Z"
   },
   {
     "source": "patreon",
@@ -431,19 +477,19 @@
     "source_id": "1da1a0061974",
     "slug": "citadel-and-d-e-shaw-run-stat-arb-baskets-the-test-that-counts-the-spreads-leans-one-way-1da1a0061974",
     "title": "Citadel and D.E. Shaw Run Stat Arb Baskets. The Test That Counts the Spreads Leans One Way.",
-    "subtitle": "Johansen’s rank test has two documented failure modes and both push the count up. Widening the basket or the window walks toward it.",
-    "post_date": "2026-08-02T15:16:41.922Z",
+    "subtitle": "Johansen’s rank test has two documented failure modes and both push the count up. Widening the basket or the window walks toward it.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-02T15:16:41Z",
     "url": "https://medium.com/@navnoorbawa/citadel-and-d-e-shaw-run-stat-arb-baskets-the-test-that-counts-the-spreads-leans-one-way-1da1a0061974",
-    "audience": "locked",
-    "wordcount": 156,
+    "audience": "unknown",
+    "wordcount": 27,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "fab40580bd481911dd78a52baead8b9f24eca328256b1a581efe2d789f2356d1",
+      "body_sha256": "242ebd5140dcdcd2dcb9a0f2bc78480a4c16bc01f8a36183f533d6a120d1a771",
       "lead": {
         "text": "Johansen’s rank test has two documented failure modes and both push the count up. Widening the basket or the window walks toward it.",
-        "start": 93,
-        "end": 225,
+        "start": 0,
+        "end": 132,
         "sha256": "e68089bb2c6f76de28837c809e6135d8119a5a6782783a20604e0ac810180846",
         "truncated": false
       },
@@ -453,8 +499,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-02T15:16:41.922Z",
-    "observed_source_updated_at": "2026-08-02T15:16:41.922Z"
+    "source_updated_at": "2026-08-02T15:16:41Z",
+    "observed_source_updated_at": "2026-08-02T15:16:41Z"
   },
   {
     "source": "patreon",
@@ -512,21 +558,21 @@
     "source": "medium",
     "source_id": "5c4a5873261d",
     "slug": "granger-won-a-nobel-for-cointegration-his-test-answers-differently-by-column-order-5c4a5873261d",
-    "title": "Granger Won a Nobel for Cointegration. The Test Named After Him Gives a Different Answer Depending on Which Ticker You Type First",
-    "subtitle": "In October 2003 the Sveriges Riksbank Prize in Economic Sciences was divided equally between Robert F. Engle III and Clive W. J. Granger. Granger’s citation reads “for methods of analyzing economic time series with common trends (cointegration).” His discovery was that a combination of two or more nonstationary series can itself be stationary, and he invented the word for it.",
-    "post_date": "2026-08-01T10:56:28.570Z",
+    "title": "Granger Won a Nobel for Cointegration. His Test Answers Differently by Column Order.",
+    "subtitle": "The correct 5% threshold for a pair is −3.3605, not −2.8731 — and the gap between them does not close with more data.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-01T10:56:28Z",
     "url": "https://medium.com/@navnoorbawa/granger-won-a-nobel-for-cointegration-his-test-answers-differently-by-column-order-5c4a5873261d",
-    "audience": "locked",
-    "wordcount": 219,
+    "audience": "unknown",
+    "wordcount": 28,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "edb51f11fb610a850a96ce8f781d52e76ce67b242589701c5b3cf16f0eec4d8f",
+      "body_sha256": "a73d542c03c2b28fe931f96a02b254f73ebf443b90e9e3030f2b6b05aabeb9d7",
       "lead": {
-        "text": "In October 2003 the Sveriges Riksbank Prize in Economic Sciences was divided equally between Robert F. Engle III and Clive W. J. Granger. Granger’s citation reads “for methods of analyzing economic time series with common trends (cointegration).” His discovery was that a combination of two or more nonstationary series can itself be stationary, and he invented the word for it.",
-        "start": 131,
-        "end": 509,
-        "sha256": "c15d67dcf600432624c566d0de40458969bc29c14fe6bd1d3c98b993b488f3a6",
+        "text": "The correct 5% threshold for a pair is −3.3605, not −2.8731 — and the gap between them does not close with more data.",
+        "start": 0,
+        "end": 117,
+        "sha256": "937ea0b9e42b0aa9a8543fa19dcc903b65a98e519930c48360553fe0cc7e233d",
         "truncated": false
       },
       "sections": [],
@@ -535,8 +581,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-01T10:56:28.570Z",
-    "observed_source_updated_at": "2026-08-01T10:56:28.570Z"
+    "source_updated_at": "2026-08-01T10:56:28Z",
+    "observed_source_updated_at": "2026-08-01T10:56:28Z"
   },
   {
     "source": "patreon",
@@ -646,21 +692,21 @@
     "source": "medium",
     "source_id": "1bac74715346",
     "slug": "renaissance-and-goldman-sachs-ran-stat-arb-through-the-2007-quant-quake-1bac74715346",
-    "title": "Renaissance and Goldman Sachs Ran Stat Arb Through the 2007 Quant Quake. Its Standard Entry Signal Scores Two Identical Trades 47% Apart.",
-    "subtitle": "In the standard formulation of equity statistical arbitrage, the Ornstein-Uhlenbeck equilibrium variance Var(X∞) = σ²/2κ is not a statistic reported beside the strategy: its square root is the denominator of the trade trigger, and because the bias in that denominator varies from name to name, the s-score stops being comparable across the book it is used to rank.",
-    "post_date": "2026-07-29T11:24:25.898Z",
+    "title": "Renaissance and Goldman Sachs Ran Stat Arb Through the 2007 Quant Quake.",
+    "subtitle": "In the standard formulation of equity statistical arbitrage, the Ornstein-Uhlenbeck equilibrium variance Var(X∞) = σ²/2κ is not a…\n\nContinue reading on Medium »",
+    "post_date": "2026-07-29T11:24:25Z",
     "url": "https://medium.com/@navnoorbawa/renaissance-and-goldman-sachs-ran-stat-arb-through-the-2007-quant-quake-1bac74715346",
-    "audience": "locked",
-    "wordcount": 156,
+    "audience": "unknown",
+    "wordcount": 23,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "1636c324ebe7f2f48db5f3a78a64cd0f84fa19879c1a775cf4788ca5d2f1029b",
+      "body_sha256": "98b8402cb89c2448361dfff996e8301996ba375096bd1f46675e2b1ab3116924",
       "lead": {
-        "text": "In the standard formulation of equity statistical arbitrage, the Ornstein-Uhlenbeck equilibrium variance Var(X∞) = σ²/2κ is not a statistic reported beside the strategy: its square root is the denominator of the trade trigger, and because the bias in that denominator varies from name to name, the s-score stops being comparable across the book it is used to rank.",
-        "start": 139,
-        "end": 503,
-        "sha256": "f526c8322311f2ea76936951a64b73b4da8ceb2ef89214e87fdd85b3c7dc3d22",
+        "text": "In the standard formulation of equity statistical arbitrage, the Ornstein-Uhlenbeck equilibrium variance Var(X∞) = σ²/2κ is not a…",
+        "start": 0,
+        "end": 130,
+        "sha256": "c415b77f5c52640a0b17da9c910da8c927a6a391f449d3d772d27e5c5e82bf91",
         "truncated": false
       },
       "sections": [],
@@ -669,8 +715,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-29T11:24:25.898Z",
-    "observed_source_updated_at": "2026-07-29T11:24:25.898Z"
+    "source_updated_at": "2026-07-29T11:24:25Z",
+    "observed_source_updated_at": "2026-07-29T11:24:25Z"
   },
   {
     "source": "substack",
@@ -728,37 +774,31 @@
     "source": "medium",
     "source_id": "37e0791f6be3",
     "slug": "half-life-says-half-done-its-own-variance-says-the-risk-band-is-75-full-37e0791f6be3",
-    "title": "Morgan Stanley Invented Pairs Trading. Its Exit Clock Says Half Done When the Risk Band Is 75% Full.",
-    "subtitle": "By the textbook half-life, a mean-reverting position’s variance has already reached three-quarters of its full equilibrium spread, even though the model’s expected path, defined by t½ = ln(2)/κ, has only closed half the gap.",
-    "post_date": "2026-07-28T10:48:41.062Z",
+    "title": "Morgan Stanley Invented Pairs Trading.",
+    "subtitle": "By the textbook half-life, a mean-reverting position’s variance has already reached three-quarters of its full equilibrium spread, even…\n\nContinue reading on Medium »",
+    "post_date": "2026-07-28T10:48:41Z",
     "url": "https://medium.com/@navnoorbawa/half-life-says-half-done-its-own-variance-says-the-risk-band-is-75-full-37e0791f6be3",
-    "audience": "locked",
-    "wordcount": 170,
+    "audience": "unknown",
+    "wordcount": 22,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "8d2c29bbe32a6188fb17e3af1319da48b866c0d434648a05fa62124137de497c",
+      "body_sha256": "8921623042e252999fb9c8e1b0310e42ac45b774a96e748051db815c3af54900",
       "lead": {
-        "text": "By the textbook half-life, a mean-reverting position’s variance has already reached three-quarters of its full equilibrium spread, even though the model’s expected path, defined by t½ = ln(2)/κ, has only closed half the gap.",
-        "start": 102,
-        "end": 326,
-        "sha256": "2962438d014f455645097c8169b8365c36a0a1dfacc96ff2bcc6428a9f0c36c9",
+        "text": "By the textbook half-life, a mean-reverting position’s variance has already reached three-quarters of its full equilibrium spread, even…",
+        "start": 0,
+        "end": 136,
+        "sha256": "fa16e5f71d422390f74b02b6147f21dbe693b4ec91685140414e14100a560816",
         "truncated": false
       },
       "sections": [],
-      "fallback_evidence": {
-        "text": "Pairs trading, the strategy this formula grew up inside, was born on Nunzio Tartaglia’s quant group at Morgan Stanley in the mid-1980s, a group that reportedly made a $50 million profit for the firm in 1987 alone, and whose alumni include D.E. Shaw’s founder, “himself an early Tartaglia’s protégé” (Pairs Trading: Performance of a Relative Value Arbitrage Rule, Gatev, Goetzmann, and Rouwenhorst).A desk that trades a mean-reverting spread routinely computes the same number: fit an Ornstein-Uhlenbeck process to the spread, back out the mean-reversion speed κ, and take t½ = ln(2)/κ as “the half-life.”",
-        "start": 328,
-        "end": 932,
-        "sha256": "8c2778c963e38401e63e5b98e6fba35487df3bd255767823b1e7a21fc0c7e3e9",
-        "truncated": true
-      },
+      "fallback_evidence": null,
       "checkpoints": []
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-28T12:36:34.731Z",
-    "observed_source_updated_at": "2026-07-28T12:36:34.731Z"
+    "source_updated_at": "2026-07-28T10:48:41Z",
+    "observed_source_updated_at": "2026-07-28T10:48:41Z"
   },
   {
     "source": "patreon",
@@ -810,10 +850,7 @@
     "family": "other",
     "body_revision_status": "current",
     "source_updated_at": "2026-07-27T17:50:30.867Z",
-    "observed_source_updated_at": "2026-07-27T17:50:30.867Z",
-    "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/hedge-funds-just-posted-their-fastest-growth-in-history-6f76e15b48b4"
-    }
+    "observed_source_updated_at": "2026-07-27T17:50:30.867Z"
   },
   {
     "source": "medium",
@@ -899,9 +936,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-07-23T07:28:58.833Z",
-    "observed_source_updated_at": "2026-07-23T07:28:58.833Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -912,7 +949,7 @@
     "post_date": "2026-07-21T19:54:06.683Z",
     "url": "https://navnoorbawa.substack.com/p/susquehanna-citadels-137m-insider",
     "audience": "everyone",
-    "wordcount": 5363,
+    "wordcount": 5398,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -1050,7 +1087,7 @@
     "post_date": "2026-07-11T15:00:05.870Z",
     "url": "https://navnoorbawa.substack.com/p/optiver-wrote-the-neutral-fix-for",
     "audience": "everyone",
-    "wordcount": 4622,
+    "wordcount": 4705,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -1186,8 +1223,8 @@
     "post_date": "2026-07-08T07:56:39.312Z",
     "url": "https://navnoorbawa.substack.com/p/hull-whites-mean-reversion-problem",
     "audience": "everyone",
-    "wordcount": 1502,
-    "content_status": "full",
+    "wordcount": 0,
+    "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
       "body_sha256": "18349cb9f3a762dbb0743e372ecf03312e6e18974113241b998d0fdcff25a4c4",
@@ -1280,7 +1317,7 @@
     "post_date": "2026-07-04T19:40:35.596Z",
     "url": "https://navnoorbawa.substack.com/p/avellaneda-stoikov-charges-up-to",
     "audience": "everyone",
-    "wordcount": 1570,
+    "wordcount": 1589,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -1366,7 +1403,7 @@
     "post_date": "2026-07-04T13:04:21.096Z",
     "url": "https://navnoorbawa.substack.com/p/mica-locked-tethers-184-billion-stablecoin",
     "audience": "everyone",
-    "wordcount": 3109,
+    "wordcount": 3215,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -1480,7 +1517,7 @@
     "post_date": "2026-07-01T22:15:31.998Z",
     "url": "https://navnoorbawa.substack.com/p/the-895x-gap-behind-volmageddon-credit",
     "audience": "everyone",
-    "wordcount": 3829,
+    "wordcount": 3944,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -1566,7 +1603,7 @@
     "post_date": "2026-06-30T02:37:14.905Z",
     "url": "https://navnoorbawa.substack.com/p/black-scholes-delta-is-wrong-hull",
     "audience": "everyone",
-    "wordcount": 2895,
+    "wordcount": 2988,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -1673,7 +1710,7 @@
     "post_date": "2026-06-28T17:41:04.678Z",
     "url": "https://navnoorbawa.substack.com/p/de-shaw-citadel-and-renaissance-run",
     "audience": "everyone",
-    "wordcount": 2608,
+    "wordcount": 2719,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -1739,7 +1776,7 @@
     "post_date": "2026-06-26T12:39:46.240Z",
     "url": "https://navnoorbawa.substack.com/p/alphabet-baillie-gifford-and-founders",
     "audience": "everyone",
-    "wordcount": 3521,
+    "wordcount": 3642,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -1840,7 +1877,7 @@
     "post_date": "2026-06-25T11:08:09.877Z",
     "url": "https://navnoorbawa.substack.com/p/universa-built-20b-calling-stochastic",
     "audience": "everyone",
-    "wordcount": 2666,
+    "wordcount": 2750,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -1927,8 +1964,8 @@
     "post_date": "2026-06-23T08:11:43.623Z",
     "url": "https://navnoorbawa.substack.com/p/oils-40-sharpe-variance-trade-sat",
     "audience": "everyone",
-    "wordcount": 3488,
-    "content_status": "full",
+    "wordcount": 0,
+    "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
       "body_sha256": "dde453a38f6e06d962cea75c8db223ce0f13c3d93a368a264aa680174e100d8c",
@@ -2029,9 +2066,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-23T06:07:24.197Z",
-    "observed_source_updated_at": "2026-06-23T06:07:24.197Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -2108,9 +2145,9 @@
       "checkpoints": []
     },
     "family": "scandal-enforcement",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-22T06:19:05.651Z",
-    "observed_source_updated_at": "2026-06-22T06:19:05.651Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -2138,9 +2175,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-21T01:22:25.342Z",
-    "observed_source_updated_at": "2026-06-21T01:22:25.342Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -2174,9 +2211,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-20T06:56:19.298Z",
-    "observed_source_updated_at": "2026-06-20T06:56:19.298Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -2204,9 +2241,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-19T13:49:26.607Z",
-    "observed_source_updated_at": "2026-06-19T13:49:26.607Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "fxempire",
@@ -2238,7 +2275,7 @@
     "post_date": "2026-06-18T08:47:33.497Z",
     "url": "https://navnoorbawa.substack.com/p/12-private-equity-funds-are-chasing",
     "audience": "everyone",
-    "wordcount": 3047,
+    "wordcount": 3128,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -2317,7 +2354,7 @@
     "post_date": "2026-06-17T22:58:21.255Z",
     "url": "https://navnoorbawa.substack.com/p/ai-hedge-funds-now-run-099-beta-to",
     "audience": "everyone",
-    "wordcount": 2793,
+    "wordcount": 2861,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -2413,9 +2450,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-17T07:57:45.052Z",
-    "observed_source_updated_at": "2026-06-17T07:57:45.052Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -2470,8 +2507,8 @@
     "post_date": "2026-06-16T08:51:38.270Z",
     "url": "https://navnoorbawa.substack.com/p/how-barra-axioma-and-commercial-risk",
     "audience": "everyone",
-    "wordcount": 4292,
-    "content_status": "full",
+    "wordcount": 0,
+    "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
       "body_sha256": "cf46346832f5f2010606a60bf97657512fd03148c8c0d9025886beb68c043dd3",
@@ -2579,9 +2616,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-15T12:09:33.941Z",
-    "observed_source_updated_at": "2026-06-15T12:09:33.941Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -2637,9 +2674,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-14T15:44:18.629Z",
-    "observed_source_updated_at": "2026-06-14T15:44:18.629Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "fxempire",
@@ -2694,9 +2731,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-12T21:57:31.569Z",
-    "observed_source_updated_at": "2026-06-12T21:57:31.569Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -2724,9 +2761,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-12T21:24:48.163Z",
-    "observed_source_updated_at": "2026-06-12T21:24:48.163Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -2760,9 +2797,9 @@
       "checkpoints": []
     },
     "family": "model-critique",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-10T17:58:46.163Z",
-    "observed_source_updated_at": "2026-06-10T17:58:46.163Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -2847,9 +2884,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-10T18:10:20.837Z",
-    "observed_source_updated_at": "2026-06-10T18:10:20.837Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -2860,7 +2897,7 @@
     "post_date": "2026-06-06T10:49:07.280Z",
     "url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
     "audience": "everyone",
-    "wordcount": 2716,
+    "wordcount": 2795,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -2922,9 +2959,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-05T06:13:12.104Z",
-    "observed_source_updated_at": "2026-06-05T06:13:12.104Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -2988,9 +3025,9 @@
       "checkpoints": []
     },
     "family": "model-critique",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-06-01T08:55:24.636Z",
-    "observed_source_updated_at": "2026-06-01T08:55:24.636Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3018,9 +3055,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-31T16:03:31.138Z",
-    "observed_source_updated_at": "2026-05-31T16:03:31.138Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3054,9 +3091,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-31T05:31:58.562Z",
-    "observed_source_updated_at": "2026-05-31T05:31:58.562Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3084,9 +3121,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-30T10:43:00.713Z",
-    "observed_source_updated_at": "2026-05-30T10:43:00.713Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3114,9 +3151,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-30T04:40:44.365Z",
-    "observed_source_updated_at": "2026-05-30T04:40:44.365Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -3127,7 +3164,7 @@
     "post_date": "2026-05-29T06:50:15.910Z",
     "url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
     "audience": "everyone",
-    "wordcount": 4436,
+    "wordcount": 4533,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -3183,9 +3220,9 @@
       "checkpoints": []
     },
     "family": "model-critique",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-28T19:07:10.607Z",
-    "observed_source_updated_at": "2026-05-28T19:07:10.607Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -3241,9 +3278,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-27T15:03:55.994Z",
-    "observed_source_updated_at": "2026-05-27T15:03:55.994Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3277,9 +3314,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-27T12:33:55.965Z",
-    "observed_source_updated_at": "2026-05-27T12:33:55.965Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3313,9 +3350,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-26T14:35:34.120Z",
-    "observed_source_updated_at": "2026-05-26T14:35:34.120Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3343,9 +3380,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-26T04:23:02.655Z",
-    "observed_source_updated_at": "2026-05-26T04:23:02.655Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3373,9 +3410,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-25T07:12:49.184Z",
-    "observed_source_updated_at": "2026-05-25T07:12:49.184Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -3386,7 +3423,7 @@
     "post_date": "2026-05-23T04:19:05.514Z",
     "url": "https://navnoorbawa.substack.com/p/a-nomura-trader-made-10284-spoofing",
     "audience": "everyone",
-    "wordcount": 2967,
+    "wordcount": 2987,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -3447,8 +3484,8 @@
     "post_date": "2026-05-16T18:45:17.698Z",
     "url": "https://navnoorbawa.substack.com/p/the-cramer-rao-bound-killed-ltcm",
     "audience": "everyone",
-    "wordcount": 2948,
-    "content_status": "full",
+    "wordcount": 0,
+    "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
       "body_sha256": "bf4ff63f13343c300136ec4aafb176ed67eb2793437093d34b612c557e1ef26d",
@@ -3508,7 +3545,7 @@
     "post_date": "2026-05-08T13:48:25.572Z",
     "url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
     "audience": "everyone",
-    "wordcount": 5494,
+    "wordcount": 5499,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
@@ -3598,9 +3635,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-05-07T18:11:55.918Z",
-    "observed_source_updated_at": "2026-05-07T18:11:55.918Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -3650,9 +3687,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-30T17:58:03.269Z",
-    "observed_source_updated_at": "2026-04-30T17:58:03.269Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3680,9 +3717,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-28T16:12:35.736Z",
-    "observed_source_updated_at": "2026-04-28T16:12:35.736Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3716,9 +3753,9 @@
       "checkpoints": []
     },
     "family": "scandal-enforcement",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-27T18:04:42.375Z",
-    "observed_source_updated_at": "2026-04-27T18:04:42.375Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3746,9 +3783,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-26T08:55:20.403Z",
-    "observed_source_updated_at": "2026-04-26T08:55:20.403Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3776,9 +3813,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-25T11:13:29.473Z",
-    "observed_source_updated_at": "2026-04-25T11:13:29.473Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3806,9 +3843,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-24T08:44:55.468Z",
-    "observed_source_updated_at": "2026-04-24T08:44:55.468Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -3878,9 +3915,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-21T04:23:34.753Z",
-    "observed_source_updated_at": "2026-04-21T04:23:34.753Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -3914,9 +3951,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-20T04:52:48.999Z",
-    "observed_source_updated_at": "2026-04-20T04:52:48.999Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -3972,9 +4009,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-16T05:36:54.602Z",
-    "observed_source_updated_at": "2026-04-16T05:36:54.602Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -4008,9 +4045,9 @@
       "checkpoints": []
     },
     "family": "market-structure",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-14T14:17:28.912Z",
-    "observed_source_updated_at": "2026-04-14T14:17:28.912Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -4093,9 +4130,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-10T17:41:43.772Z",
-    "observed_source_updated_at": "2026-04-10T17:41:43.772Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -4129,9 +4166,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-09T04:14:14.926Z",
-    "observed_source_updated_at": "2026-04-09T04:14:14.926Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -4247,9 +4284,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-05T05:23:22.577Z",
-    "observed_source_updated_at": "2026-04-05T05:23:22.577Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -4358,9 +4395,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-04-01T06:40:39.708Z",
-    "observed_source_updated_at": "2026-04-01T06:40:39.708Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -4555,9 +4592,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-03-25T15:09:57.972Z",
-    "observed_source_updated_at": "2026-03-25T15:09:57.972Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -4682,9 +4719,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-03-23T03:38:29.673Z",
-    "observed_source_updated_at": "2026-03-23T03:38:29.673Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -4757,9 +4794,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-03-21T11:08:04.734Z",
-    "observed_source_updated_at": "2026-03-21T11:08:04.734Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -5338,9 +5375,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-03-05T07:01:41.510Z",
-    "observed_source_updated_at": "2026-03-05T07:01:41.510Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -5504,9 +5541,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-03-03T04:28:26.429Z",
-    "observed_source_updated_at": "2026-03-03T04:28:26.429Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -5827,9 +5864,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-27T05:29:16.479Z",
-    "observed_source_updated_at": "2026-02-27T05:29:16.479Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -6223,9 +6260,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-21T05:04:47.170Z",
-    "observed_source_updated_at": "2026-02-21T05:04:47.170Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -6536,9 +6573,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-03-23T11:22:16.726Z",
-    "observed_source_updated_at": "2026-03-23T11:22:16.726Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -6708,9 +6745,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-15T05:43:18.309Z",
-    "observed_source_updated_at": "2026-02-15T05:43:18.309Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -6835,9 +6872,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-14T05:41:09.245Z",
-    "observed_source_updated_at": "2026-02-14T05:41:09.245Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -7162,9 +7199,9 @@
       "checkpoints": []
     },
     "family": "scandal-enforcement",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-10T09:09:54.912Z",
-    "observed_source_updated_at": "2026-02-10T09:09:54.912Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -7397,9 +7434,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-08T05:38:23.730Z",
-    "observed_source_updated_at": "2026-02-08T05:38:23.730Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -7673,9 +7710,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-06T07:42:57.717Z",
-    "observed_source_updated_at": "2026-02-06T07:42:57.717Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -7778,9 +7815,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-05T06:05:23.669Z",
-    "observed_source_updated_at": "2026-02-05T06:05:23.669Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -7861,9 +7898,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-04T05:47:49.357Z",
-    "observed_source_updated_at": "2026-02-04T05:47:49.357Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -7997,9 +8034,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-02-02T03:31:07.182Z",
-    "observed_source_updated_at": "2026-02-02T03:31:07.182Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -8066,9 +8103,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-01-31T18:42:43.083Z",
-    "observed_source_updated_at": "2026-01-31T18:42:43.083Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -8141,9 +8178,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-01-30T18:42:25.770Z",
-    "observed_source_updated_at": "2026-01-30T18:42:25.770Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -8237,9 +8274,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-01-29T18:18:32.183Z",
-    "observed_source_updated_at": "2026-01-29T18:18:32.183Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -15631,9 +15668,9 @@
       "checkpoints": []
     },
     "family": "scandal-enforcement",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-09-06T02:40:01.262Z",
-    "observed_source_updated_at": "2025-09-06T02:40:01.262Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15661,9 +15698,9 @@
       "checkpoints": []
     },
     "family": "scandal-enforcement",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-09-05T04:59:45.500Z",
-    "observed_source_updated_at": "2025-09-05T04:59:45.500Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15711,9 +15748,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-09-04T04:56:06.736Z",
-    "observed_source_updated_at": "2025-09-04T04:56:06.736Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15747,9 +15784,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-09-03T04:04:21.523Z",
-    "observed_source_updated_at": "2025-09-03T04:04:21.523Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15783,9 +15820,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-09-02T11:33:09.513Z",
-    "observed_source_updated_at": "2025-09-02T11:33:09.513Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15819,9 +15856,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-31T08:32:09.048Z",
-    "observed_source_updated_at": "2025-08-31T08:32:09.048Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15849,9 +15886,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-30T04:24:54.500Z",
-    "observed_source_updated_at": "2025-08-30T04:24:54.500Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15885,9 +15922,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-29T09:55:07.338Z",
-    "observed_source_updated_at": "2025-08-29T09:55:07.338Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15921,9 +15958,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-28T04:29:38.142Z",
-    "observed_source_updated_at": "2025-08-28T04:29:38.142Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15957,9 +15994,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-28T02:12:24.779Z",
-    "observed_source_updated_at": "2025-08-28T02:12:24.779Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -15987,9 +16024,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-26T03:39:45.969Z",
-    "observed_source_updated_at": "2025-08-26T03:39:45.969Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16023,9 +16060,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-25T04:34:48.378Z",
-    "observed_source_updated_at": "2025-08-25T04:34:48.378Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16059,9 +16096,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-24T04:33:33.850Z",
-    "observed_source_updated_at": "2025-08-24T04:33:33.850Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16089,9 +16126,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-23T03:06:52.117Z",
-    "observed_source_updated_at": "2025-08-23T03:06:52.117Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16119,9 +16156,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-22T01:32:07.085Z",
-    "observed_source_updated_at": "2025-08-22T01:32:07.085Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16149,9 +16186,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-09-13T10:19:25.165Z",
-    "observed_source_updated_at": "2025-09-13T10:19:25.165Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16199,9 +16236,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-20T04:18:39.411Z",
-    "observed_source_updated_at": "2025-08-20T04:18:39.411Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16235,9 +16272,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-19T03:17:10.071Z",
-    "observed_source_updated_at": "2025-08-19T03:17:10.071Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16271,9 +16308,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-18T05:11:00.805Z",
-    "observed_source_updated_at": "2025-08-18T05:11:00.805Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16307,9 +16344,9 @@
       "checkpoints": []
     },
     "family": "scandal-enforcement",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-17T09:55:44.078Z",
-    "observed_source_updated_at": "2025-08-17T09:55:44.078Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16337,9 +16374,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-16T05:05:47.859Z",
-    "observed_source_updated_at": "2025-08-16T05:05:47.859Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16367,9 +16404,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-15T05:44:24.285Z",
-    "observed_source_updated_at": "2025-08-15T05:44:24.285Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16403,9 +16440,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-14T06:01:17.164Z",
-    "observed_source_updated_at": "2025-08-14T06:01:17.164Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16439,9 +16476,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-13T03:49:36.848Z",
-    "observed_source_updated_at": "2025-08-13T03:49:36.848Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16475,9 +16512,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-12T03:21:41.961Z",
-    "observed_source_updated_at": "2025-08-12T03:21:41.961Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16511,9 +16548,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-11T04:03:34.297Z",
-    "observed_source_updated_at": "2025-08-11T04:03:34.297Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16547,9 +16584,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-10T08:35:38.910Z",
-    "observed_source_updated_at": "2025-08-10T08:35:38.910Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16583,9 +16620,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-09T03:30:25.490Z",
-    "observed_source_updated_at": "2025-08-09T03:30:25.490Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16619,9 +16656,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-08T05:56:31.511Z",
-    "observed_source_updated_at": "2025-08-08T05:56:31.511Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16649,9 +16686,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-07T03:01:26.128Z",
-    "observed_source_updated_at": "2025-08-07T03:01:26.128Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16679,9 +16716,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-06T03:37:00.971Z",
-    "observed_source_updated_at": "2025-08-06T03:37:00.971Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16715,9 +16752,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-05T06:39:38.356Z",
-    "observed_source_updated_at": "2025-08-05T06:39:38.356Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16745,9 +16782,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-04T01:53:22.306Z",
-    "observed_source_updated_at": "2025-08-04T01:53:22.306Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16789,9 +16826,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-04T17:21:01.630Z",
-    "observed_source_updated_at": "2025-08-04T17:21:01.630Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16819,9 +16856,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-02T01:53:05.266Z",
-    "observed_source_updated_at": "2025-08-02T01:53:05.266Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16855,9 +16892,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-08-01T01:40:40.830Z",
-    "observed_source_updated_at": "2025-08-01T01:40:40.830Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16891,9 +16928,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-31T01:26:30.881Z",
-    "observed_source_updated_at": "2025-07-31T01:26:30.881Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16921,9 +16958,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-31T01:03:02.807Z",
-    "observed_source_updated_at": "2025-07-31T01:03:02.807Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16951,9 +16988,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-29T05:31:16.510Z",
-    "observed_source_updated_at": "2025-07-29T05:31:16.510Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -16987,9 +17024,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-28T06:00:39.111Z",
-    "observed_source_updated_at": "2025-07-28T06:00:39.111Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17023,9 +17060,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-28T05:10:18.103Z",
-    "observed_source_updated_at": "2025-07-28T05:10:18.103Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17053,9 +17090,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-27T10:53:52.582Z",
-    "observed_source_updated_at": "2025-07-27T10:53:52.582Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17089,9 +17126,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-26T02:58:44.071Z",
-    "observed_source_updated_at": "2025-07-26T02:58:44.071Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17119,9 +17156,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-25T16:12:29.755Z",
-    "observed_source_updated_at": "2025-07-25T16:12:29.755Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17149,9 +17186,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-24T12:44:24.569Z",
-    "observed_source_updated_at": "2025-07-24T12:44:24.569Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17179,9 +17216,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-23T08:20:15.150Z",
-    "observed_source_updated_at": "2025-07-23T08:20:15.150Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17209,9 +17246,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-22T09:26:24.976Z",
-    "observed_source_updated_at": "2025-07-22T09:26:24.976Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17245,9 +17282,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-21T14:52:32.817Z",
-    "observed_source_updated_at": "2025-07-21T14:52:32.817Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17275,9 +17312,9 @@
       "checkpoints": []
     },
     "family": "scandal-enforcement",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-11T07:27:49.969Z",
-    "observed_source_updated_at": "2025-07-11T07:27:49.969Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17319,9 +17356,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-07-04T05:03:42.864Z",
-    "observed_source_updated_at": "2025-07-04T05:03:42.864Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17355,9 +17392,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-06-23T06:36:26.422Z",
-    "observed_source_updated_at": "2025-06-23T06:36:26.422Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17385,9 +17422,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-06-18T11:44:05.565Z",
-    "observed_source_updated_at": "2025-06-18T11:44:05.565Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17421,9 +17458,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-06-12T16:03:44.081Z",
-    "observed_source_updated_at": "2025-06-12T16:03:44.081Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17457,9 +17494,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-06-10T11:41:09.535Z",
-    "observed_source_updated_at": "2025-06-10T11:41:09.535Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17501,9 +17538,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-06-09T08:58:32.683Z",
-    "observed_source_updated_at": "2025-06-09T08:58:32.683Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17545,9 +17582,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-06-07T17:50:51.328Z",
-    "observed_source_updated_at": "2025-06-07T17:50:51.328Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17581,9 +17618,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-06-06T13:46:41.334Z",
-    "observed_source_updated_at": "2025-06-06T13:46:41.334Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17611,9 +17648,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-05-16T14:37:07.462Z",
-    "observed_source_updated_at": "2025-05-16T14:37:07.462Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17655,9 +17692,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-04-10T09:55:53.382Z",
-    "observed_source_updated_at": "2025-04-10T09:55:53.382Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17691,9 +17728,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-04-08T14:37:07.939Z",
-    "observed_source_updated_at": "2025-04-08T14:37:07.939Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17727,9 +17764,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-04-02T16:27:12.092Z",
-    "observed_source_updated_at": "2025-04-02T16:27:12.092Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17757,9 +17794,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-29T14:27:58.467Z",
-    "observed_source_updated_at": "2025-03-29T14:27:58.467Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17793,9 +17830,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-27T18:01:06.266Z",
-    "observed_source_updated_at": "2025-03-27T18:01:06.266Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17850,9 +17887,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-26T04:01:25.276Z",
-    "observed_source_updated_at": "2025-03-26T04:01:25.276Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17880,9 +17917,9 @@
       "checkpoints": []
     },
     "family": "scandal-enforcement",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-25T07:01:06.551Z",
-    "observed_source_updated_at": "2025-03-25T07:01:06.551Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17910,9 +17947,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-23T05:31:27.173Z",
-    "observed_source_updated_at": "2025-03-23T05:31:27.173Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17960,9 +17997,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-20T08:48:46.609Z",
-    "observed_source_updated_at": "2025-03-20T08:48:46.609Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -17990,9 +18027,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-20T07:14:18.644Z",
-    "observed_source_updated_at": "2025-03-20T07:14:18.644Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -18026,9 +18063,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-19T18:58:47.154Z",
-    "observed_source_updated_at": "2025-03-19T18:58:47.154Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -18056,9 +18093,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-19T04:46:36.525Z",
-    "observed_source_updated_at": "2025-03-19T04:46:36.525Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -18086,9 +18123,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-18T06:58:32.687Z",
-    "observed_source_updated_at": "2025-03-18T06:58:32.687Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -18136,9 +18173,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-17T16:17:59.341Z",
-    "observed_source_updated_at": "2025-03-17T16:17:59.341Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -18166,9 +18203,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-03-08T06:52:29.233Z",
-    "observed_source_updated_at": "2025-03-08T06:52:29.233Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -18196,9 +18233,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-02-04T02:55:21.242Z",
-    "observed_source_updated_at": "2025-02-04T02:55:21.242Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -18226,9 +18263,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-01-28T16:45:58.205Z",
-    "observed_source_updated_at": "2025-01-28T16:45:58.205Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -18256,8 +18293,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2025-01-23T18:50:18.459Z",
-    "observed_source_updated_at": "2025-01-23T18:50:18.459Z"
+    "observed_source_updated_at": ""
   }
 ]

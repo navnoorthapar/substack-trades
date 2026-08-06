@@ -1,25 +1,25 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-08-06T12:16:36Z",
-  "latest_publication": "2026-08-06T06:56:38Z",
-  "catalog_latest_publication": "2026-08-06T06:56:38Z",
-  "article_count": 385,
-  "catalog_count": 489,
-  "registry_count": 104,
-  "observation_count": 1237,
-  "data_checksum": "89f89da653233e811ca6b88e13306af2d46c16909f0f584595e007b8c07d7183",
+  "checked_at": "2026-08-06T16:32:07Z",
+  "latest_publication": "2026-08-06T13:54:15.460Z",
+  "catalog_latest_publication": "2026-08-06T13:54:15.460Z",
+  "article_count": 386,
+  "catalog_count": 491,
+  "registry_count": 105,
+  "observation_count": 1235,
+  "data_checksum": "8cb083ea9e0928f799b89564c0264ac280d51c0f4f0fa4226bc949215811e400",
   "sources": {
     "substack": {
-      "checked_at": "2026-08-06T12:07:45Z",
+      "checked_at": "2026-08-06T16:30:53Z",
       "status": "degraded",
       "mode": "complete_api_degraded_body_provenance",
-      "published_count": 241,
-      "fetched_count": 241,
-      "included_count": 241,
-      "newest": "2026-08-05T16:59:12.671Z"
+      "published_count": 242,
+      "fetched_count": 242,
+      "included_count": 242,
+      "newest": "2026-08-06T13:54:15.460Z"
     },
     "medium": {
-      "checked_at": "2026-08-06T12:16:34Z",
+      "checked_at": "2026-08-06T16:31:01Z",
       "status": "degraded",
       "mode": "cached_archive_plus_rss",
       "published_count": 373,
@@ -28,16 +28,16 @@
       "newest": "2026-08-06T06:56:38Z"
     },
     "patreon": {
-      "checked_at": "2026-08-06T12:08:17Z",
+      "checked_at": "2026-08-06T16:31:08Z",
       "status": "ok",
       "mode": "public_metadata_api",
-      "published_count": 114,
-      "fetched_count": 114,
-      "included_count": 93,
-      "newest": "2026-08-04"
+      "published_count": 115,
+      "fetched_count": 115,
+      "included_count": 94,
+      "newest": "2026-08-06"
     },
     "fxempire": {
-      "checked_at": "2026-08-06T12:16:36Z",
+      "checked_at": "2026-08-06T16:32:07Z",
       "status": "ok",
       "mode": "manual_registry",
       "published_count": 11,
