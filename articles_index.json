@@ -1,5 +1,57 @@
 [
   {
+    "source": "medium",
+    "source_id": "1e12b0ce0a6c",
+    "slug": "aqrs-markov-event-state-averaged-14-22-cvar-tutorials-still-hand-you-a-viterbi-label-1e12b0ce0a6c",
+    "title": "AQR’s Markov Event State Averaged −14.22% CVaR. Tutorials Still Hand You a Viterbi Label.",
+    "subtitle": "AQR and Ang–Bekaert sized regime risk on filtered probability thresholds. Most tutorials decode a Viterbi path and trade 0/1 on the label.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-07T06:08:35Z",
+    "url": "https://medium.com/@navnoorbawa/aqrs-markov-event-state-averaged-14-22-cvar-tutorials-still-hand-you-a-viterbi-label-1e12b0ce0a6c",
+    "audience": "unknown",
+    "wordcount": 28,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "884f460bdc596dc7fb211bea114d769b740cdc0dc511c0d6072a6f135e19c09b",
+      "lead": {
+        "text": "AQR and Ang–Bekaert sized regime risk on filtered probability thresholds. Most tutorials decode a Viterbi path and trade 0/1 on the label.",
+        "start": 0,
+        "end": 138,
+        "sha256": "cf45986e86851fc390f52ced0a8eeeea3b21049987a92ff7525ad2b75cc214a7",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-07T06:08:35Z",
+    "observed_source_updated_at": "2026-08-07T06:08:35Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "165995905",
+    "slug": "spacexs-first-ai-165995905",
+    "title": "SpaceX's First AI Profit Is $1,146m. Its Own Depreciation Add-Back Is $1,885m.",
+    "subtitle": "",
+    "post_date": "2026-08-07",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/spacexs-first-ai-165995905",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "substack",
     "source_id": "mercuria-and-vitol-paid-up-to-469000",
     "slug": "mercuria-and-vitol-paid-up-to-469000",
@@ -878,9 +930,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-07-27T17:39:22Z",
-    "observed_source_updated_at": "2026-07-27T17:39:22Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
