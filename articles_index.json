@@ -3596,67 +3596,27 @@
     "subtitle": "",
     "post_date": "2026-05-08T13:48:25.572Z",
     "url": "https://navnoorbawa.substack.com/p/market-making-alpha-how-virtu-won",
-    "audience": "everyone",
-    "wordcount": 5499,
-    "content_status": "full",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "e1ace4d104700f5368912fa2a2912f7ccd095138db948714065a1f80d2fdc000",
+      "body_sha256": "1d55af79a6c9d6a0fff53878e0b4885c2ece9d2f237f804ac58fab4435792172",
       "lead": {
-        "text": "Court filings, SEC administrative orders, peer-reviewed papers, and on-record executive interviews reveal something most finance professionals never piece together: the bid-ask spread is not a fee. It is the residual of an information war, and the firms that win it do so through three separable, documented mechanisms — fair-value forecasting accuracy, real-time adverse selection filtering, and inventory velocity. The firms that have built these three levers into systematic processes at scale have produced the most reliably profitable trading businesses in modern financial history.",
+        "text": "Court filings, SEC administrative orders, peer-reviewed papers, and on-record executive interviews reveal something most finance professionals never piece together: the bid-ask spread is not a fee. It is the residual of an information war, and the firms that win it do so through three separable, documented mechanisms — fair-value forecasting accuracy, r…",
         "start": 0,
-        "end": 587,
-        "sha256": "1ab9c732d65628e0412e40c0b40a96dffcfa7f3306ef5cf86160d61db715d32d",
+        "end": 356,
+        "sha256": "1d55af79a6c9d6a0fff53878e0b4885c2ece9d2f237f804ac58fab4435792172",
         "truncated": false
       },
-      "sections": [
-        {
-          "kind": "mechanism",
-          "source_order": 2,
-          "heading": "Why the Spread Exists: The Glosten-Milgrom Proof",
-          "heading_start": 790,
-          "heading_end": 838,
-          "heading_sha256": "597d7e3e731c697ed552f2fb87e64a08c4f30c1431553d6d8c994c24483128f3",
-          "text": "The foundational misconception in most market making analysis is that the bid-ask spread compensates the market maker for bearing inventory risk or processing costs. The 1985 proof by Lawrence Glosten and Paul Milgrom demolished that assumption four decades ago, and almost every subsequent advance in market making practice rests on what they showed.",
-          "start": 840,
-          "end": 1191,
-          "sha256": "594ccc146fe11b4b16ce792a6417ee50f51480c3288c45076291f78d8466393b",
-          "truncated": false
-        },
-        {
-          "kind": "evidence",
-          "source_order": 24,
-          "heading": "XTX Markets: A Decade of On-Record Evidence",
-          "heading_start": 8571,
-          "heading_end": 8614,
-          "heading_sha256": "796ebba15c9a4491f42682353930b415a1791e70a5f9900f8b0d04809a29f7f8",
-          "text": "XTX Markets provides the most extensively documented case of what prediction-quality-over-latency market making looks like at scale. The firm was founded in January 2015 by Alexander Gerko, a PhD mathematician from Moscow State University who served as Head of FX Trading at GSA Capital before spinning XTX out. In 2022, XTX reported profits of £1.1 billion, a 64% increase on the prior year, on revenues of £2.5 billion, making Gerko the UK’s largest individual taxpayer in 2023 — paying approximately £664 million in personal tax that year — and culminating in a record £682 million personal distribution from XTX profits in 2024.",
-          "start": 8616,
-          "end": 9248,
-          "sha256": "8d0c552b41dc1859d59e5b000870bd6c49ce302319feb391f421db5294237da1",
-          "truncated": false
-        },
-        {
-          "kind": "implementation",
-          "source_order": 66,
-          "heading": "The Capacity Ceiling: Primary Evidence That Edges Erode",
-          "heading_start": 27239,
-          "heading_end": 27294,
-          "heading_sha256": "a4b08b47f19403604e59aea3cc8526c76edd4e88ee690e1aa628720d6061ca44",
-          "text": "Market making alpha compresses structurally as competition intensifies, and the public record provides specific evidence of this compression.",
-          "start": 27296,
-          "end": 27437,
-          "sha256": "7f29816699353da73cad8819235a5bdbdfe653482864016cdf96b57439950644",
-          "truncated": false
-        }
-      ],
+      "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-05-08T13:51:53.984Z",
-    "observed_source_updated_at": "2026-05-08T13:51:53.984Z",
+    "source_updated_at": "2026-08-08T06:52:34.098Z",
+    "observed_source_updated_at": "2026-08-08T06:52:34.098Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-making-alpha-how-virtu-won-1-237-days-and-why-jane-street-keeps-ending-up-in-court-6894a05cd980"
     }
