@@ -72,6 +72,7 @@ jobs:
         }}
       cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     outputs:
+      base_url: ${{ steps.pages.outputs.base_url }}
       html_sha256: ${{ steps.release.outputs.html_sha256 }}
       brief_sha256: ${{ steps.release.outputs.brief_sha256 }}
       observation_sha256: ${{ steps.release.outputs.observation_sha256 }}
@@ -145,6 +146,7 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=normal)"
 
       - name: Configure GitHub Pages
+        id: pages
         if: >-
           github.ref == 'refs/heads/main'
           && github.event_name != 'pull_request'
@@ -274,9 +276,10 @@ jobs:
       - quality
       - currency
     runs-on: ubuntu-latest
-    # Allow up to three deploy-pages attempts when GitHub keeps the
-    # deployment in deployment_queued until the action timeout.
-    timeout-minutes: 40
+    # One Pages attempt can consume ten minutes; the remaining bounded window
+    # proves the exact live bytes and reconciles authority without creating a
+    # second deployment for the same immutable revision.
+    timeout-minutes: 25
     concurrency:
       group: pages-production
       queue: max
@@ -286,7 +289,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployed.outputs.page_url }}
+      url: ${{ needs.quality.outputs.base_url }}
 
     steps:
       - name: Check out smoke test and expected snapshot
@@ -335,62 +338,12 @@ jobs:
         with:
           timeout: 600000
 
-      - name: Retry Pages deploy after queue stall
-        id: deployment_retry
-        if: >-
-          steps.current.outputs.current == 'true'
-          && steps.deployment.outcome == 'failure'
-        continue-on-error: true
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
-        with:
-          timeout: 600000
-
-      - name: Final Pages deploy attempt
-        id: deployment_final
-        if: >-
-          steps.current.outputs.current == 'true'
-          && steps.deployment.outcome == 'failure'
-          && steps.deployment_retry.outcome == 'failure'
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
-        with:
-          timeout: 600000
-
-      - name: Record deployed Pages URL
-        id: deployed
-        if: steps.current.outputs.current == 'true'
-        shell: bash
-        env:
-          FIRST_OUTCOME: ${{ steps.deployment.outcome }}
-          FIRST_URL: ${{ steps.deployment.outputs.page_url }}
-          RETRY_OUTCOME: ${{ steps.deployment_retry.outcome }}
-          RETRY_URL: ${{ steps.deployment_retry.outputs.page_url }}
-          FINAL_OUTCOME: ${{ steps.deployment_final.outcome }}
-          FINAL_URL: ${{ steps.deployment_final.outputs.page_url }}
-        run: |
-          set -euo pipefail
-          page_url=
-          if [ "$FIRST_OUTCOME" = "success" ]; then
-            page_url=$FIRST_URL
-          elif [ "$RETRY_OUTCOME" = "success" ]; then
-            page_url=$RETRY_URL
-            echo "::notice title=Pages deploy recovered::First deploy-pages attempt stalled; retry succeeded."
-          elif [ "$FINAL_OUTCOME" = "success" ]; then
-            page_url=$FINAL_URL
-            echo "::notice title=Pages deploy recovered::Earlier deploy-pages attempts stalled; final attempt succeeded."
-          else
-            echo "::error title=Pages deploy failed::GitHub Pages stayed queued through three deploy attempts."
-            exit 1
-          fi
-          if [ -z "$page_url" ]; then
-            echo "::error title=Pages URL missing::deploy-pages succeeded without a page_url output."
-            exit 1
-          fi
-          echo "page_url=$page_url" >> "$GITHUB_OUTPUT"
-
       - name: Verify exact release is live
+        id: smoke
         if: steps.current.outputs.current == 'true'
+        continue-on-error: true
         env:
-          DEPLOYED_URL: ${{ steps.deployed.outputs.page_url }}
+          DEPLOYED_URL: ${{ needs.quality.outputs.base_url }}
           EXPECTED_REVISION: ${{ github.sha }}
           EXPECTED_HTML_SHA256: ${{ needs.quality.outputs.html_sha256 }}
           EXPECTED_BRIEF_SHA256: ${{ needs.quality.outputs.brief_sha256 }}
@@ -409,13 +362,92 @@ jobs:
           --expected-support-sha256 "$EXPECTED_SUPPORT_SHA256"
           --expected-data-sha256 "$EXPECTED_DATA_SHA256"
           --expected-share-sha256 "$EXPECTED_SHARE_SHA256"
-          --retries 8
-          --retry-delay 10
-          --timeout 20
+          --retries 20
+          --retry-delay 15
+          --timeout 10
+
+      - name: Prove post-deploy authority
+        id: authority
+        if: >-
+          always()
+          && steps.current.outputs.current == 'true'
+        shell: bash
+        env:
+          REMOTE_URL: ${{ github.server_url }}/${{ github.repository }}.git
+        run: |
+          set -euo pipefail
+          remote_main=
+          for attempt in 1 2 3; do
+            remote_main=$(
+              git ls-remote --exit-code "$REMOTE_URL" refs/heads/main 2>/dev/null |
+                awk 'NR == 1 { print $1 }'
+            ) || remote_main=
+            if [[ "$remote_main" =~ ^[0-9a-f]{40}$ ]]; then
+              break
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "::warning title=Post-deploy authority retry::Could not prove remote main on attempt $attempt."
+              sleep "$((attempt * 5))"
+            fi
+          done
+          if [[ ! "$remote_main" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error title=Post-deploy authority unavailable::Exact live verification cannot be certified without current main."
+            exit 1
+          fi
+          if [ "$remote_main" != "$GITHUB_SHA" ]; then
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Superseded deployment reconciled::This run targets $GITHUB_SHA; newer main $remote_main owns production certification."
+            exit 0
+          fi
+          echo "current=true" >> "$GITHUB_OUTPUT"
+
+      - name: Reconcile Pages deployment outcome
+        id: reconcile
+        if: >-
+          always()
+          && steps.current.outputs.current == 'true'
+          && steps.authority.outcome == 'success'
+          && steps.authority.outputs.current == 'true'
+        shell: bash
+        env:
+          DEPLOYMENT_OUTCOME: ${{ steps.deployment.outcome }}
+          SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
+        run: |
+          set -euo pipefail
+          case "$DEPLOYMENT_OUTCOME" in
+            success|failure) ;;
+            *)
+              echo "::error title=Pages deploy outcome unavailable::The deploy action did not report a completed outcome."
+              exit 1
+              ;;
+          esac
+          case "$SMOKE_OUTCOME" in
+            success|failure) ;;
+            *)
+              echo "::error title=Production smoke outcome unavailable::Exact live verification did not report a completed outcome."
+              exit 1
+              ;;
+          esac
+          if [ "$SMOKE_OUTCOME" != "success" ]; then
+            if [ "$DEPLOYMENT_OUTCOME" = "failure" ]; then
+              echo "::error title=Pages deployment failed::The single deploy attempt failed and the exact release is not live. deploy-pages already attempted to cancel its exact revision on timeout."
+            else
+              echo "::error title=Production verification failed::Pages reported success but exact live release verification failed."
+            fi
+            exit 1
+          fi
+          if [ "$DEPLOYMENT_OUTCOME" = "failure" ]; then
+            echo "::notice title=Late Pages completion verified::deploy-pages reported failure, but exact revision and fingerprints are live and current main still matches."
+          fi
 
       - name: Publish production incident guidance
-        if: failure() && steps.deployed.outcome == 'success'
+        if: >-
+          always()
+          && steps.current.outputs.current == 'true'
+          && (steps.authority.outcome == 'failure'
+          || steps.reconcile.outcome == 'failure')
         run: >-
-          echo "::error title=Production verification failed::The Pages upload
-          completed but exact live verification failed. Follow LAUNCH_RUNBOOK.md
-          section 6; do not certify this release."
+          echo "::error title=Production release not certified::The single Pages
+          attempt and exact-live reconciliation did not certify this release.
+          Follow LAUNCH_RUNBOOK.md section 6; do not start a blind same-SHA
+          redeploy while a Pages deployment may still be active."

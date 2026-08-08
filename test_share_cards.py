@@ -11,6 +11,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 import share_cards
+from validate_inline_scripts import extract_inline_scripts
 
 
 class _StubMarkup(HTMLParser):
@@ -167,9 +168,10 @@ class ShareCardTests(unittest.TestCase):
         stub = share_cards.render_article_stub(
             article, 'a_registry', 'https://example.test/research',
         )
-        script = re.search(r'<script>(.*?)</script>', stub, re.S)
-        self.assertIsNotNone(script)
-        body = script.group(1)
+        scripts = extract_inline_scripts(stub)
+        self.assertEqual(len(scripts), 1)
+        script_type, body = scripts[0]
+        self.assertEqual(script_type, '')
         # The element must close exactly once, at the generated boundary.
         self.assertEqual(stub.count('</script>'), 1)
         self.assertNotIn('<img', stub)
@@ -236,7 +238,10 @@ class ShareCardTests(unittest.TestCase):
                     self.assertEqual(markup.handlers, [])
                     self.assertEqual(stub.count('<script>'), 1)
                     self.assertEqual(stub.count('</script>'), 1)
-                    body = re.search(r'<script>(.*?)</script>', stub, re.S).group(1)
+                    scripts = extract_inline_scripts(stub)
+                    self.assertEqual(len(scripts), 1)
+                    script_type, body = scripts[0]
+                    self.assertEqual(script_type, '')
                     digest = base64.b64encode(
                         hashlib.sha256(body.encode('utf-8')).digest()
                     ).decode('ascii')

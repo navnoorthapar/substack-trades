@@ -8,6 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).parent
+_UNSET = object()
 
 
 ACTION_PINS = {
@@ -30,7 +31,17 @@ class DeploymentConfigurationTests(unittest.TestCase):
         cls.automation_status = (ROOT / 'automation_status.sh').read_text(encoding='utf-8')
         cls.ignore = (ROOT / '.gitignore').read_text(encoding='utf-8').splitlines()
 
-    def run_automation_status(self, launchctl_output):
+    def run_automation_status(
+            self,
+            launchctl_output,
+            *,
+            run_record=_UNSET,
+            remote_main=_UNSET,
+    ):
+        if remote_main is _UNSET:
+            remote_main = 'a' * 40
+        if run_record is _UNSET:
+            run_record = f'completed|success|4242|{remote_main}'
         with tempfile.TemporaryDirectory() as directory:
             test_root = Path(directory)
             home = test_root / 'home'
@@ -56,11 +67,18 @@ class DeploymentConfigurationTests(unittest.TestCase):
             gh = fake_bin / 'gh'
             gh.write_text(
                 '#!/bin/sh\n'
-                'case "$1" in\n'
-                '    api) printf \'workflow\\n\' ;;\n'
-                '    run) printf \'completed|success|4242\\n\' ;;\n'
-                '    *) exit 2 ;;\n'
-                'esac\n',
+                'if [ "$1" = "api" ]; then\n'
+                '    case "$2" in\n'
+                '        */pages) printf \'workflow\\n\' ;;\n'
+                '        */git/ref/heads/main) '
+                'printf \'%s\\n\' "$FAKE_REMOTE_MAIN" ;;\n'
+                '        *) exit 2 ;;\n'
+                '    esac\n'
+                'elif [ "$1" = "run" ] && [ "$2" = "list" ]; then\n'
+                '    printf \'%s\\n\' "$FAKE_RUN_RECORD"\n'
+                'else\n'
+                '    exit 2\n'
+                'fi\n',
                 encoding='utf-8',
             )
             gh.chmod(0o755)
@@ -68,6 +86,8 @@ class DeploymentConfigurationTests(unittest.TestCase):
             environment = os.environ.copy()
             environment.update({
                 'FAKE_LAUNCHCTL_OUTPUT': launchctl_output,
+                'FAKE_REMOTE_MAIN': remote_main,
+                'FAKE_RUN_RECORD': run_record,
                 'HOME': str(home),
                 'MAX_AGE_SECONDS': '57600',
                 'PATH': f'{fake_bin}:{environment.get("PATH", "")}',
@@ -88,8 +108,87 @@ class DeploymentConfigurationTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn('Updater: loaded', result.stdout)
+        self.assertIn('Updater activity: idle (not running)', result.stdout)
         self.assertIn('Updater last exit: successful', result.stdout)
-        self.assertIn('Latest deployment: successful (run 4242)', result.stdout)
+        self.assertIn(
+            'Latest deployment: successful for current main (run 4242)',
+            result.stdout,
+        )
+
+    def test_automation_status_reports_an_active_refresh(self):
+        result = self.run_automation_status(
+            'state = running\nruns = 4\nlast exit code = 0',
+        )
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn('Updater activity: refresh in progress', result.stdout)
+        self.assertIn('Updater last exit: deferred', result.stdout)
+        self.assertIn('Wait for the active refresh to finish', result.stdout)
+        self.assertNotIn('Inspect updater errors:', result.stdout)
+        self.assertNotIn('launchctl kickstart', result.stdout)
+
+    def test_automation_status_rejects_a_pending_deployment(self):
+        revision = 'a' * 40
+        for status in ('queued', 'in_progress'):
+            with self.subTest(status=status):
+                result = self.run_automation_status(
+                    'state = not running\nruns = 4\nlast exit code = 0',
+                    run_record=f'{status}||4243|{revision}',
+                    remote_main=revision,
+                )
+                self.assertEqual(
+                    result.returncode, 1, result.stdout + result.stderr,
+                )
+                self.assertIn(
+                    f'Latest deployment: pending ({status}, run 4243)',
+                    result.stdout,
+                )
+                self.assertIn(
+                    'Wait for the pending deployment to finish', result.stdout,
+                )
+                self.assertNotIn('Inspect deployment with:', result.stdout)
+
+    def test_automation_status_rejects_success_for_an_old_revision(self):
+        result = self.run_automation_status(
+            'state = not running\nruns = 4\nlast exit code = 0',
+            run_record=f'completed|success|4244|{"b" * 40}',
+            remote_main='a' * 40,
+        )
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn('Latest deployment: successful but stale', result.stdout)
+        self.assertIn('run 4244 at bbbbbbbbbbbb', result.stdout)
+        self.assertIn('main aaaaaaaaaaaa', result.stdout)
+
+    def test_automation_status_rejects_unavailable_remote_main(self):
+        result = self.run_automation_status(
+            'state = not running\nruns = 4\nlast exit code = 0',
+            remote_main='',
+            run_record=f'completed|success|4245|{"a" * 40}',
+        )
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn('Remote main: unavailable', result.stdout)
+        self.assertIn(
+            'successful but current main is unavailable', result.stdout,
+        )
+
+    def test_automation_status_rejects_missing_or_malformed_run_evidence(self):
+        for run_record in ('', 'completed|success|4246|not-a-sha'):
+            with self.subTest(run_record=run_record):
+                result = self.run_automation_status(
+                    'state = not running\nruns = 4\nlast exit code = 0',
+                    run_record=run_record,
+                )
+                self.assertEqual(
+                    result.returncode, 1, result.stdout + result.stderr,
+                )
+                if run_record:
+                    self.assertIn(
+                        'successful but revision evidence is invalid',
+                        result.stdout,
+                    )
+                else:
+                    self.assertIn(
+                        'Latest deployment: unavailable', result.stdout,
+                    )
 
     def test_automation_status_rejects_a_failed_latest_updater_exit(self):
         result = self.run_automation_status(
@@ -153,6 +252,9 @@ class DeploymentConfigurationTests(unittest.TestCase):
         for required in (
             'SITE_OUTPUT_DIR:',
             'SITE_REVISION: ${{ github.sha }}',
+            '- name: Configure GitHub Pages',
+            'id: pages',
+            'base_url: ${{ steps.pages.outputs.base_url }}',
             'python build_site.py',
             'python validate_inline_scripts.py _site/index.html',
             '- name: Validate and fingerprint exact release artifact',
@@ -343,16 +445,45 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertLess(upload_at, deploy_at)
         self.assertLess(deploy_at, smoke_at)
 
+        deploy_timeout = int(re.search(
+            r'(?s)- name: Deploy verified rollback.*?timeout: (\d+)',
+            self.rollback,
+        ).group(1))
+        retries = int(re.search(
+            r'(?s)- name: Verify exact rollback is live.*?--retries (\d+)',
+            self.rollback,
+        ).group(1))
+        retry_delay = int(re.search(
+            r'(?s)- name: Verify exact rollback is live.*?--retry-delay (\d+)',
+            self.rollback,
+        ).group(1))
+        request_timeout = int(re.search(
+            r'(?s)- name: Verify exact rollback is live.*?--timeout (\d+)',
+            self.rollback,
+        ).group(1))
+        job_minutes = int(re.search(
+            r'(?s)jobs:\s+rollback:.*?timeout-minutes: (\d+)',
+            self.rollback,
+        ).group(1))
+        self.assertEqual(deploy_timeout, 600000)
+        self.assertEqual(job_minutes, 25)
+        self.assertLessEqual(
+            deploy_timeout // 1000
+            + retries * request_timeout
+            + (retries - 1) * retry_delay
+            + 300,
+            job_minutes * 60,
+        )
+
     def test_post_deploy_smoke_verifies_exact_live_release(self):
         deploy_job = self.workflow.split('\n  deploy:', 1)[1]
         for required in (
             'smoke_test_site.py',
-            '${{ steps.deployed.outputs.page_url }}',
-            'Retry Pages deploy after queue stall',
-            'Final Pages deploy attempt',
-            'Record deployed Pages URL',
-            'timeout-minutes: 40',
+            '${{ needs.quality.outputs.base_url }}',
+            'timeout-minutes: 25',
             'timeout: 600000',
+            'id: deployment',
+            'continue-on-error: true',
             '--expected-revision "$EXPECTED_REVISION"',
             '--articles-file articles_index.json',
             '--observations-file trades_extracted.json',
@@ -368,16 +499,77 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--expected-support-sha256 "$EXPECTED_SUPPORT_SHA256"',
             '--expected-data-sha256 "$EXPECTED_DATA_SHA256"',
             '--expected-share-sha256 "$EXPECTED_SHARE_SHA256"',
-            '--retries 8',
+            '--retries 20',
+            '--retry-delay 15',
+            '--timeout 10',
             "if: steps.current.outputs.current == 'true'",
+            '- name: Prove post-deploy authority',
+            'id: authority',
+            'echo "current=false" >> "$GITHUB_OUTPUT"',
+            '- name: Reconcile Pages deployment outcome',
+            'id: reconcile',
+            "steps.authority.outcome == 'success'",
+            "steps.authority.outputs.current == 'true'",
+            'DEPLOYMENT_OUTCOME: ${{ steps.deployment.outcome }}',
+            'SMOKE_OUTCOME: ${{ steps.smoke.outcome }}',
+            'git ls-remote --exit-code "$REMOTE_URL" refs/heads/main',
+            'Post-deploy authority unavailable',
+            'Superseded deployment reconciled',
+            'Late Pages completion verified',
             '- name: Publish production incident guidance',
-            "if: failure() && steps.deployed.outcome == 'success'",
+            "steps.authority.outcome == 'failure'",
+            "steps.reconcile.outcome == 'failure'",
             'Follow LAUNCH_RUNBOOK.md',
+            'do not start a blind same-SHA',
         ):
             self.assertIn(required, deploy_job)
-        self.assertEqual(deploy_job.count('actions/deploy-pages@'), 3)
+        for forbidden in (
+            'Retry Pages deploy after queue stall',
+            'Final Pages deploy attempt',
+            'Record deployed Pages URL',
+            'steps.deployed.outputs.page_url',
+        ):
+            self.assertNotIn(forbidden, deploy_job)
+        self.assertEqual(deploy_job.count('actions/deploy-pages@'), 1)
         self.assertIn('contents: read', deploy_job)
         self.assertIn('persist-credentials: false', deploy_job)
+        deploy_at = deploy_job.index('- name: Deploy GitHub Pages artifact')
+        smoke_at = deploy_job.index('- name: Verify exact release is live')
+        authority_at = deploy_job.index('- name: Prove post-deploy authority')
+        reconcile_at = deploy_job.index(
+            '- name: Reconcile Pages deployment outcome'
+        )
+        incident_at = deploy_job.index(
+            '- name: Publish production incident guidance'
+        )
+        self.assertLess(deploy_at, smoke_at)
+        self.assertLess(smoke_at, authority_at)
+        self.assertLess(authority_at, reconcile_at)
+        self.assertLess(reconcile_at, incident_at)
+
+        deploy_timeout = int(re.search(
+            r'(?s)- name: Deploy GitHub Pages artifact.*?timeout: (\d+)',
+            deploy_job,
+        ).group(1))
+        retries = int(re.search(r'--retries (\d+)', deploy_job).group(1))
+        retry_delay = int(re.search(
+            r'--retry-delay (\d+)', deploy_job,
+        ).group(1))
+        request_timeout = int(re.search(
+            r'--timeout (\d+)', deploy_job,
+        ).group(1))
+        job_minutes = int(re.search(
+            r'timeout-minutes: (\d+)', deploy_job,
+        ).group(1))
+        self.assertEqual(deploy_timeout, 600000)
+        self.assertEqual(job_minutes, 25)
+        self.assertLessEqual(
+            deploy_timeout // 1000
+            + retries * request_timeout
+            + (retries - 1) * retry_delay
+            + 300,
+            job_minutes * 60,
+        )
 
     def test_watchdog_verifies_exact_release_and_enforces_sixteen_hour_freshness(self):
         for required in (
