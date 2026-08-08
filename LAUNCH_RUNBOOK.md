@@ -67,11 +67,15 @@ the scheduled refresh, pre-push gate, CI, and independent watchdog.
 
 1. Push the reviewed commit to `main`.
 2. Watch **Validate and Deploy Pages**. The quality job must pass before the
-   immutable Pages artifact can deploy.
+   immutable Pages artifact can deploy. Production makes one bounded Pages
+   attempt; it never starts a blind same-SHA retry after a platform timeout.
 3. Require the post-deploy smoke step to confirm HTTPS, exact Git revision,
    snapshot checksum/counts, exact HTML, both deferred JSON files, every file in
    the six-endpoint public-data bundle, and the combined discovery/social
-   support bundle. Complete card/stub coverage is proved against the built
+   support bundle. A fresh post-smoke authority step must still prove that the
+   release SHA owns remote `main`, and the reconciliation step must succeed. A
+   late Pages completion is healthy only when these exact-byte and authority
+   proofs both pass. Complete card/stub coverage is proved against the built
    artifact in Section 2; representative live pairs are checked in Step 5.
 4. Dispatch **Monitor Published Research** against the same `main` commit with
    `gh workflow run watchdog.yml --ref main`; require its exact-release and
@@ -185,9 +189,11 @@ For Critical or High incidents:
    expired/missing artifact, unsafe archive paths, attestation or payload drift,
    superseded rollback tooling, or any exact live-byte mismatch. Run metadata
    must also prove that the latest attempt contained exactly one successful
-   production job whose Pages deployment and exact-live-smoke steps both
-   completed successfully; a quality-only or superseded run is not rollback
-   authority even if its overall conclusion is green. Rollback uses current
+   production job with one completed Pages attempt plus successful exact-live
+   smoke, post-deploy-authority, and reconciliation steps in that order. A
+   quality-only or superseded run is not rollback authority even if its overall
+   conclusion is green; this is important because GitHub's Jobs API can report
+   a failed `continue-on-error` step as successful. Rollback uses current
    `main` tooling only; it never checks out or executes historical code. It
    redeploys retained bytes, then fetches every archived path over HTTPS with a
    revision-bound cache key and requires the same origin, path, length, hash,

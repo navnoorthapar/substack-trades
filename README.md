@@ -269,6 +269,10 @@ Check the local updater, freshness marker, Pages mode, and latest deployment:
 launchctl print "gui/$(id -u)/com.navnoor.substacktrades"
 ```
 
+The status command certifies only a settled current release. It exits nonzero
+with wait-and-rerun guidance while ingestion or deployment is still active, and
+it rejects a green workflow whose head SHA does not equal remote `main`.
+
 Inspect scheduled-run logs:
 
 ```bash
@@ -284,8 +288,11 @@ Pages artifact—including the terminal, deferred archives, six-endpoint public
 data bundle, and per-article share assets—and deploys it. Pull requests run the
 same quality gate without production credentials or deployment. Production runs are
 serialized and never cancelled midway; stale pull-request runs are cancelled.
-The release is then fetched over HTTPS and checked against the exact commit,
-record counts, and data checksum. Actions are restricted to GitHub-owned,
+Production performs one bounded Pages attempt, then checks the exact live bytes
+for late completion and freshly proves that the SHA still owns remote `main`;
+it does not issue a blind same-SHA retry after a platform timeout. The release
+is fetched over HTTPS and checked against the exact commit, record counts, and
+data checksum. Actions are restricted to GitHub-owned,
 full-SHA-pinned dependencies, and `main` rejects force pushes, deletion, and
 non-linear history while preserving the scheduled updater's normal direct push.
 
@@ -310,8 +317,9 @@ an exact path-to-hash manifest for every published file. The original
 successful `main` push or authenticated manual release proves the release
 contract before archival. The manual emergency workflow then uses only current
 trusted `main` tooling to authenticate that exact run and its latest-attempt
-jobs, requiring successful Pages deployment and exact-live-smoke steps rather
-than accepting a green quality-only run. It safely extracts and verifies the
+jobs, requiring ordered Pages-attempt, exact-live-smoke, post-deploy-authority,
+and reconciliation evidence rather than accepting a green quality-only or
+superseded run. It safely extracts and verifies the
 schema-neutral attestation, deploys the archived site without executing
 historical code, and fetches every live file over HTTPS for an exact
 revision-cache-busted byte comparison. A separate

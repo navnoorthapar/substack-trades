@@ -17,6 +17,8 @@ EXPECTED_BRANCH = 'main'
 DEPLOY_JOB_NAME = 'Deploy production'
 DEPLOY_STEP_NAME = 'Deploy GitHub Pages artifact'
 SMOKE_STEP_NAME = 'Verify exact release is live'
+AUTHORITY_STEP_NAME = 'Prove post-deploy authority'
+RECONCILE_STEP_NAME = 'Reconcile Pages deployment outcome'
 MAX_RUN_JSON_BYTES = 1_000_000
 MAX_JOBS_JSON_BYTES = 10_000_000
 MAX_LATEST_JOBS = 100
@@ -105,7 +107,7 @@ def _array(value: Any, label: str) -> List[Any]:
 def _validate_required_step(
         steps: Sequence[Any],
         required_name: str,
-) -> None:
+) -> Mapping[str, Any]:
     matching = []
     seen_numbers: Set[int] = set()
     for index, raw_step in enumerate(steps):
@@ -141,6 +143,7 @@ def _validate_required_step(
         EXPECTED_CONCLUSION,
         f'{required_name} step conclusion',
     )
+    return step
 
 
 def verify_workflow_run(
@@ -268,8 +271,20 @@ def verify_workflow_run(
         'deploy job conclusion',
     )
     steps = _array(deploy_job.get('steps'), 'deploy job steps')
-    _validate_required_step(steps, DEPLOY_STEP_NAME)
-    _validate_required_step(steps, SMOKE_STEP_NAME)
+    deploy_step = _validate_required_step(steps, DEPLOY_STEP_NAME)
+    smoke_step = _validate_required_step(steps, SMOKE_STEP_NAME)
+    authority_step = _validate_required_step(steps, AUTHORITY_STEP_NAME)
+    reconcile_step = _validate_required_step(steps, RECONCILE_STEP_NAME)
+    required_step_numbers = (
+        deploy_step['number'],
+        smoke_step['number'],
+        authority_step['number'],
+        reconcile_step['number'],
+    )
+    _require(
+        tuple(sorted(required_step_numbers)) == required_step_numbers,
+        'required deployment verification steps are out of order',
+    )
     return deploy_job
 
 

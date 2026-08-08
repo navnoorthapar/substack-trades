@@ -48,13 +48,37 @@ def deploy_job_fixture():
             },
             {
                 'number': 2,
-                'name': 'Deploy GitHub Pages artifact',
+                'name': 'Check out smoke test and expected snapshot',
                 'status': 'completed',
                 'conclusion': 'success',
             },
             {
                 'number': 3,
+                'name': 'Reconfirm release still owns main',
+                'status': 'completed',
+                'conclusion': 'success',
+            },
+            {
+                'number': 4,
+                'name': 'Deploy GitHub Pages artifact',
+                'status': 'completed',
+                'conclusion': 'success',
+            },
+            {
+                'number': 5,
                 'name': 'Verify exact release is live',
+                'status': 'completed',
+                'conclusion': 'success',
+            },
+            {
+                'number': 6,
+                'name': 'Prove post-deploy authority',
+                'status': 'completed',
+                'conclusion': 'success',
+            },
+            {
+                'number': 7,
+                'name': 'Reconcile Pages deployment outcome',
                 'status': 'completed',
                 'conclusion': 'success',
             },
@@ -91,6 +115,26 @@ class VerifyWorkflowRunTests(unittest.TestCase):
         alternate['event'] = 'workflow_dispatch'
         self.assertEqual(self.verify(run=alternate)['id'], 900_001)
 
+    def test_accepts_the_hosted_phase_one_jobs_api_certificate(self):
+        # GitHub's Jobs API reports continued step conclusions as success. The
+        # ordered smoke, authority, and reconciliation steps are the separate
+        # evidence that exact live bytes still belonged to this release.
+        required = [
+            step for step in jobs_fixture()['jobs'][0]['steps']
+            if step['name'] in {
+                'Deploy GitHub Pages artifact',
+                'Verify exact release is live',
+                'Prove post-deploy authority',
+                'Reconcile Pages deployment outcome',
+            }
+        ]
+        self.assertEqual([step['number'] for step in required], [4, 5, 6, 7])
+        self.assertEqual(
+            [step['conclusion'] for step in required],
+            ['success', 'success', 'success', 'success'],
+        )
+        self.assertEqual(self.verify()['id'], 900_001)
+
     def test_rejects_every_run_authority_mismatch(self):
         cases = (
             ('workflow_id', WORKFLOW_ID + 1, 'workflow ID'),
@@ -110,11 +154,19 @@ class VerifyWorkflowRunTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'workflow event'):
             self.verify(expected_events=('workflow_dispatch',))
 
-    def test_rejects_skipped_deploy_and_failed_or_incomplete_smoke(self):
+    def test_rejects_unauthorized_deploy_smoke_or_reconciliation(self):
         cases = (
+            ('Deploy GitHub Pages artifact', 'completed', 'failure', 'conclusion'),
             ('Deploy GitHub Pages artifact', 'completed', 'skipped', 'conclusion'),
+            ('Deploy GitHub Pages artifact', 'completed', 'cancelled', 'conclusion'),
             ('Verify exact release is live', 'completed', 'failure', 'conclusion'),
             ('Verify exact release is live', 'in_progress', None, 'status'),
+            ('Prove post-deploy authority', 'completed', 'failure', 'conclusion'),
+            ('Prove post-deploy authority', 'completed', 'skipped', 'conclusion'),
+            ('Prove post-deploy authority', 'in_progress', None, 'status'),
+            ('Reconcile Pages deployment outcome', 'completed', 'failure', 'conclusion'),
+            ('Reconcile Pages deployment outcome', 'completed', 'skipped', 'conclusion'),
+            ('Reconcile Pages deployment outcome', 'in_progress', None, 'status'),
         )
         for name, status, conclusion, message in cases:
             with self.subTest(name=name, conclusion=conclusion):
@@ -129,20 +181,31 @@ class VerifyWorkflowRunTests(unittest.TestCase):
                     self.verify(jobs=jobs)
 
     def test_rejects_missing_or_duplicate_required_steps_and_jobs(self):
-        jobs = jobs_fixture()
-        jobs['jobs'][0]['steps'] = [
-            step for step in jobs['jobs'][0]['steps']
-            if step['name'] != 'Verify exact release is live'
-        ]
-        with self.assertRaisesRegex(ValueError, 'exactly one'):
-            self.verify(jobs=jobs)
+        for required_name in (
+            'Deploy GitHub Pages artifact',
+            'Verify exact release is live',
+            'Prove post-deploy authority',
+            'Reconcile Pages deployment outcome',
+        ):
+            with self.subTest(required_name=required_name, case='missing'):
+                jobs = jobs_fixture()
+                jobs['jobs'][0]['steps'] = [
+                    step for step in jobs['jobs'][0]['steps']
+                    if step['name'] != required_name
+                ]
+                with self.assertRaisesRegex(ValueError, 'exactly one'):
+                    self.verify(jobs=jobs)
 
-        jobs = jobs_fixture()
-        duplicate_step = copy.deepcopy(jobs['jobs'][0]['steps'][-1])
-        duplicate_step['number'] = 4
-        jobs['jobs'][0]['steps'].append(duplicate_step)
-        with self.assertRaisesRegex(ValueError, 'exactly one'):
-            self.verify(jobs=jobs)
+            with self.subTest(required_name=required_name, case='duplicate'):
+                jobs = jobs_fixture()
+                duplicate_step = copy.deepcopy(next(
+                    step for step in jobs['jobs'][0]['steps']
+                    if step['name'] == required_name
+                ))
+                duplicate_step['number'] = 10
+                jobs['jobs'][0]['steps'].append(duplicate_step)
+                with self.assertRaisesRegex(ValueError, 'exactly one'):
+                    self.verify(jobs=jobs)
 
         jobs = jobs_fixture()
         duplicate_job = copy.deepcopy(jobs['jobs'][0])
@@ -150,6 +213,22 @@ class VerifyWorkflowRunTests(unittest.TestCase):
         jobs['jobs'].append(duplicate_job)
         jobs['total_count'] = 2
         with self.assertRaisesRegex(ValueError, 'exactly one'):
+            self.verify(jobs=jobs)
+
+    def test_rejects_required_verification_steps_out_of_order(self):
+        jobs = jobs_fixture()
+        smoke = next(
+            step for step in jobs['jobs'][0]['steps']
+            if step['name'] == 'Verify exact release is live'
+        )
+        authority = next(
+            step for step in jobs['jobs'][0]['steps']
+            if step['name'] == 'Prove post-deploy authority'
+        )
+        smoke['number'], authority['number'] = (
+            authority['number'], smoke['number']
+        )
+        with self.assertRaisesRegex(ValueError, 'out of order'):
             self.verify(jobs=jobs)
 
     def test_rejects_incomplete_or_paginated_latest_jobs(self):
