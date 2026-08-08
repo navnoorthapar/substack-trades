@@ -1,6 +1,5 @@
 import copy
 import hashlib
-import json
 import subprocess
 import sys
 import tempfile
@@ -657,11 +656,8 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             {'source': 'medium'}, {'source': 'medium'},
         ]
         current = [{'source': 'substack'}, {'source': 'substack'}]
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / 'articles.json'
-            path.write_text(json.dumps(previous), encoding='utf-8')
-            with self.assertRaisesRegex(ValueError, 'medium article count collapsed'):
-                validate_article_regression(current, path, 0.5)
+        with self.assertRaisesRegex(ValueError, 'medium article count collapsed'):
+            validate_article_regression(current, previous, 0.5)
 
     def test_trade_regression_guards_public_rows_not_removed_member_cache(self):
         public_url = 'https://navnoorbawa.substack.com/p/public'
@@ -689,34 +685,52 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             public_url: {'member_access': False},
             member_url: {'member_access': True},
         }
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            article_path = root / 'articles.json'
-            trade_path = root / 'trades.json'
-            article_path.write_text(
-                json.dumps(previous_articles), encoding='utf-8'
-            )
-            trade_path.write_text(json.dumps(previous_trades), encoding='utf-8')
-
+        validate_trade_regression(
+            [current_trade],
+            {public_url},
+            previous_trades,
+            0.5,
+            current_articles,
+            previous_articles,
+        )
+        with self.assertRaisesRegex(
+            ValueError, 'public observation count collapsed'
+        ):
             validate_trade_regression(
-                [current_trade],
-                {public_url},
-                trade_path,
+                [],
+                set(),
+                previous_trades,
                 0.5,
                 current_articles,
-                article_path,
+                previous_articles,
             )
-            with self.assertRaisesRegex(
-                ValueError, 'public observation count collapsed'
-            ):
-                validate_trade_regression(
-                    [],
-                    set(),
-                    trade_path,
-                    0.5,
-                    current_articles,
-                    article_path,
+
+    def test_explicit_missing_previous_snapshots_fail_closed(self):
+        for option, label in (
+            ('--previous-articles', 'previous article index'),
+            ('--previous-trades', 'previous trade output'),
+        ):
+            with self.subTest(option=option), tempfile.TemporaryDirectory() as directory:
+                missing = Path(directory) / 'missing-baseline.json'
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        str(ROOT / 'validate_pipeline.py'),
+                        '--articles',
+                        str(ROOT / 'articles_index.json'),
+                        '--trades',
+                        str(ROOT / 'trades_extracted.json'),
+                        option,
+                        str(missing),
+                    ],
+                    cwd=ROOT,
+                    capture_output=True,
+                    text=True,
                 )
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn(f'{label} is not valid JSON', result.stderr)
+            self.assertIn(str(missing), result.stderr)
 
 
 if __name__ == '__main__':

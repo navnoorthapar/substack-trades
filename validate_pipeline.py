@@ -810,11 +810,14 @@ def _raw_member_access(article):
 
 
 def validate_trade_regression(
-        trades, represented_articles, previous_path, minimum_ratio,
-        article_by_url=None, previous_articles_path=None):
-    if not previous_path or not previous_path.exists():
-        return
-    previous = load_list(previous_path, 'previous trade output')
+        trades, represented_articles, previous, minimum_ratio,
+        article_by_url=None, previous_articles=None):
+    """Compare current observations with already-loaded prior snapshots.
+
+    Snapshot paths are read once by ``main``.  Keeping this
+    validator filesystem-free avoids a second path-controlled read and a
+    time-of-check/time-of-use gap between ``exists`` and ``open``.
+    """
     if not previous:
         return
     current_trades = trades
@@ -822,12 +825,8 @@ def validate_trade_regression(
     previous_trades = previous
     if (
         article_by_url is not None
-        and previous_articles_path is not None
-        and previous_articles_path.exists()
+        and previous_articles is not None
     ):
-        previous_articles = load_list(
-            previous_articles_path, 'previous article index'
-        )
         previous_by_url = {
             article.get('url'): article
             for article in previous_articles
@@ -878,11 +877,12 @@ def validate_trade_regression(
 validate_regression = validate_trade_regression
 
 
-def validate_article_regression(articles, previous_path, minimum_ratio):
+def validate_article_regression(articles, previous, minimum_ratio):
     """Guard each source independently so one healthy source cannot hide an outage."""
-    if not previous_path or not previous_path.exists():
+    # ``main`` owns the sole filesystem read; this validator accepts only the
+    # parsed prior snapshot and therefore cannot dereference a caller path.
+    if not previous:
         return
-    previous = load_list(previous_path, 'previous article index')
     current_counts = Counter(
         article.get('source') for article in articles if isinstance(article, dict)
     )
@@ -1080,6 +1080,14 @@ def main():
                 'minimum article ratio must be in (0, 1]')
         articles = load_list(args.articles, 'article index')
         trades = load_list(args.trades, 'trade output')
+        previous_articles = (
+            load_list(args.previous_articles, 'previous article index')
+            if args.previous_articles is not None else None
+        )
+        previous_trades = (
+            load_list(args.previous_trades, 'previous trade output')
+            if args.previous_trades is not None else None
+        )
         if args.posts:
             posts = load_list(args.posts, 'post snapshot')
             post_by_url = validate_posts(posts)
@@ -1087,16 +1095,16 @@ def main():
         else:
             article_by_url = validate_deployable_articles(articles)
         validate_article_regression(
-            articles, args.previous_articles, args.minimum_article_ratio
+            articles, previous_articles, args.minimum_article_ratio
         )
         represented_articles = validate_trades(trades, article_by_url)
         validate_trade_regression(
             trades,
             represented_articles,
-            args.previous_trades,
+            previous_trades,
             args.minimum_ratio,
             article_by_url,
-            args.previous_articles,
+            previous_articles,
         )
 
         manifest_path = args.manifest
