@@ -3,6 +3,7 @@
 Extract trades from all Substack posts saved in all_posts.json.
 Uses pattern matching + contextual extraction to identify investment positions.
 """
+import hashlib
 import json
 import os
 import re
@@ -585,6 +586,12 @@ def process_article(post):
     title = post.get('title', '')
     url = post.get('url', '')
     date = post.get('post_date', '')[:10]
+    member_preview = post.get('member_preview')
+    member_body_digest = (
+        hashlib.sha256(text.encode('utf-8')).hexdigest()
+        if isinstance(member_preview, dict)
+        else ''
+    )
 
     if not text or len(text) < 200:
         return []
@@ -622,6 +629,8 @@ def process_article(post):
                 'fund_name_if_mentioned': extract_fund_name(description) or extract_fund_name(title),
                 'description_truncated': len(description) < len(para.strip()),
             }
+            if member_body_digest:
+                trade['source_body_sha256'] = member_body_digest
             trades.append(trade)
 
     # If no trades found through paragraph analysis, do full-text scan
@@ -646,6 +655,8 @@ def process_article(post):
                     'fund_name_if_mentioned': extract_fund_name(description) or extract_fund_name(title),
                     'description_truncated': len(description) < len(block.strip()),
                 }
+                if member_body_digest:
+                    trade['source_body_sha256'] = member_body_digest
                 trades.append(trade)
 
     if not trades:

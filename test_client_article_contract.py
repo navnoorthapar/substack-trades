@@ -24,6 +24,8 @@ def full_article(**updates):
         'publication_precision': 'instant',
         'url': 'https://example.test/article',
         'source': 'substack',
+        'publication_access': 'public',
+        'member_preview_chars': 0,
         'alternate_urls': {},
         'wordcount': 550,
         'read_minutes': 2,
@@ -56,7 +58,7 @@ def full_article(**updates):
 
 class ClientArticleContractTests(unittest.TestCase):
     def test_schema_version_and_full_round_trip(self):
-        self.assertEqual(ARTICLE_WIRE_SCHEMA_VERSION, 2)
+        self.assertEqual(ARTICLE_WIRE_SCHEMA_VERSION, 3)
         original = full_article()
         compact = compact_client_article(original)
 
@@ -75,6 +77,37 @@ class ClientArticleContractTests(unittest.TestCase):
         self.assertEqual(hydrate_client_article(compact), original)
         self.assertNotIn('date', compact)
         self.assertNotIn('_b', original)
+
+    def test_publication_access_is_required_and_closed_to_known_values(self):
+        for value in ('public', 'member', 'unknown'):
+            with self.subTest(valid=value):
+                original = full_article(
+                    publication_access=value,
+                    member_preview_chars=(320 if value == 'member' else 0),
+                    content_status=(
+                        'excerpt' if value == 'member' else 'full'
+                    ),
+                )
+                self.assertEqual(
+                    hydrate_client_article(compact_client_article(original)),
+                    original,
+                )
+        for value in ('paid', 'subscriber', '', None, True, 1):
+            with self.subTest(invalid=value):
+                with self.assertRaisesRegex(ValueError, 'publication_access'):
+                    compact_client_article(full_article(publication_access=value))
+        with self.assertRaisesRegex(ValueError, 'member access'):
+            compact_client_article(full_article(publication_access='member'))
+        for value in (-1, 1_201, 1.5, True, '320', None):
+            with self.subTest(member_preview_chars=value):
+                with self.assertRaisesRegex(ValueError, 'member_preview_chars'):
+                    compact_client_article(full_article(
+                        publication_access='member',
+                        member_preview_chars=value,
+                        content_status='excerpt',
+                    ))
+        with self.assertRaisesRegex(ValueError, 'non-member'):
+            compact_client_article(full_article(member_preview_chars=1))
 
     def test_absent_defaults_restore_fresh_runtime_containers(self):
         original = full_article(
@@ -127,6 +160,8 @@ class ClientArticleContractTests(unittest.TestCase):
                         'published_at': '2026-01-03',
                         'url': 'https://example.test/article',
                         'source': 'substack',
+                        'publication_access': 'public',
+                        'member_preview_chars': 0,
                         'wordcount': 0,
                         'content_status': 'full',
                         **CURRENT_BODY_PROVENANCE,
@@ -153,6 +188,8 @@ class ClientArticleContractTests(unittest.TestCase):
                         'published_at': '2026-01-03',
                         'url': 'https://example.test/article',
                         'source': 'substack',
+                        'publication_access': 'public',
+                        'member_preview_chars': 0,
                         'wordcount': 0,
                         'content_status': 'full',
                         **CURRENT_BODY_PROVENANCE,
@@ -182,6 +219,8 @@ class ClientArticleContractTests(unittest.TestCase):
                         'published_at': '2026-01-03',
                         'url': 'https://example.test/article',
                         'source': 'substack',
+                        'publication_access': 'public',
+                        'member_preview_chars': 0,
                         'wordcount': 0,
                         'content_status': 'full',
                         **CURRENT_BODY_PROVENANCE,
@@ -199,6 +238,8 @@ class ClientArticleContractTests(unittest.TestCase):
                         'published_at': '2026-01-03',
                         'url': 'https://example.test/article',
                         'source': 'substack',
+                        'publication_access': 'public',
+                        'member_preview_chars': 0,
                         'wordcount': 0,
                         'content_status': 'full',
                         **CURRENT_BODY_PROVENANCE,
@@ -223,6 +264,8 @@ class ClientArticleContractTests(unittest.TestCase):
                         'published_at': '2026-01-03',
                         'url': 'https://example.test/article',
                         'source': 'substack',
+                        'publication_access': 'public',
+                        'member_preview_chars': 0,
                         'wordcount': 0,
                         'content_status': 'full',
                         **CURRENT_BODY_PROVENANCE,
@@ -260,6 +303,8 @@ class ClientArticleContractTests(unittest.TestCase):
                     'published_at': '2026-01-03',
                     'url': 'https://example.test/article',
                     'source': 'substack',
+                    'publication_access': 'public',
+                    'member_preview_chars': 0,
                     'wordcount': wordcount,
                     'content_status': 'full',
                     **CURRENT_BODY_PROVENANCE,

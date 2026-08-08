@@ -73,6 +73,79 @@ for (const value of rejected) {
 '''
         )
 
+    def test_subscriber_conversion_is_source_exact_and_state_honest(self):
+        functions = javascript_between(
+            'function hasIndexedMemberPreview(article) {',
+            '\nfunction articleEvidence(article)',
+        )
+        run_node(
+            r'''
+const SUBSCRIPTION_URL = 'https://www.navnoorbawaresearch.com/subscribe';
+const escapeHtml = (value) => String(value);
+const safeUrl = (value) => String(value);
+const articleClaim = (article) => String(
+  article && article.brief && article.brief.lead && article.brief.lead.text ||
+  article && article.subtitle || article && article.title || ''
+);
+const bodyRevisionLabel = (article) => article.body_revision_status === 'prior'
+  ? 'Prior revision capture' : article.body_revision_status === 'unverified'
+    ? 'Revision unverified' : 'Current source body';
+'''
+            + functions
+            + r'''
+const exactUrl = 'https://navnoorbawa.substack.com/p/member-note';
+const current = {
+  id:'a_current',source:'substack',publication_access:'member',
+  member_preview_chars:240,body_revision_status:'current',
+  url:exactUrl,title:'Current member note',subtitle:'A bounded public framing.',
+  brief:{lead:{text:'A bounded public framing.'}}
+};
+const currentMarkup = premiumAccessMarkup(current,'article');
+if ((currentMarkup.match(/href=/g) || []).length !== 2) {
+  throw new Error('conversion panel must expose exactly one note and one plans link');
+}
+if ((currentMarkup.match(new RegExp(exactUrl,'g')) || []).length !== 1 ||
+    (currentMarkup.match(new RegExp(SUBSCRIPTION_URL,'g')) || []).length !== 1) {
+  throw new Error('conversion destinations are duplicated or missing');
+}
+if (!currentMarkup.includes('public preview indexed') ||
+    !currentMarkup.includes('Indexed public preview') ||
+    !currentMarkup.includes('noopener noreferrer') ||
+    !currentMarkup.includes('opens in a new tab')) {
+  throw new Error('current-preview trust or accessibility copy is missing');
+}
+
+const prior = {...current,id:'a_prior',body_revision_status:'prior'};
+const priorMarkup = premiumAccessMarkup(prior,'brief');
+if (!priorMarkup.includes('stored public preview') ||
+    !priorMarkup.includes('prior revision capture') ||
+    priorMarkup.includes('premium-access-evidence')) {
+  throw new Error('stored preview was presented as current');
+}
+
+const metadataOnly = {
+  ...current,id:'a_metadata',member_preview_chars:0,subtitle:'',
+  brief:{lead:null,sections:[],fallback_evidence:null,checkpoints:[]}
+};
+const metadataMarkup = premiumAccessMarkup(metadataOnly,'article');
+if (!metadataMarkup.includes('metadata only') ||
+    !metadataMarkup.includes('no anonymous body preview') ||
+    !metadataMarkup.includes('Published metadata') ||
+    metadataMarkup.includes('Indexed public preview')) {
+  throw new Error('metadata-only member source was mislabeled as a captured preview');
+}
+
+const mediumLocked = {...current,id:'m_locked',source:'medium'};
+const publicSubstack = {...current,id:'s_public',publication_access:'public'};
+const unknownSubstack = {...current,id:'s_unknown',publication_access:'unknown'};
+for (const article of [mediumLocked,publicSubstack,unknownSubstack]) {
+  if (premiumAccessMarkup(article,'article') !== '') {
+    throw new Error('Substack conversion panel escaped its exact paid-source boundary');
+  }
+}
+'''
+        )
+
     def test_compact_article_payload_hydrates_exact_runtime_fields(self):
         function = javascript_between(
             'function hydrateEmbeddedArticle(article) {',
@@ -132,6 +205,7 @@ const VALID_BODY_REVISIONS = new Set(['current','prior','unverified']);
 const VALID_DIRECTIONS = new Set();
 const VALID_INSTRUMENTS = new Set();
 const VALID_QUALITY = new Set();
+const VALID_PUBLICATION_ACCESS = new Set(['public','member','unknown']);
 const VALID_CONTENT = new Set();
 const VALID_QUEUE_STATUSES = new Set();
 const VALID_DOCUMENTATION = new Set(['all']);
@@ -140,7 +214,7 @@ const storedDensity = 'compact';
 const setFromParam = () => new Set();
 const state = {
   view:'briefing',query:'',sources:new Set(),revisions:new Set(),directions:new Set(),
-  instruments:new Set(),managers:new Set(),quality:new Set(),content:new Set(),
+  instruments:new Set(),managers:new Set(),quality:new Set(),publicationAccess:new Set(),content:new Set(),
   queueStatuses:new Set(),documentation:'all',newOnly:false,range:'all',
   coverage:'all',briefLens:'all',threadTopic:'',sort:'newest',
   density:'compact',selected:'',limit:24

@@ -158,10 +158,61 @@ def bounded_excerpt(value):
     text = value.strip()
     if len(text) <= MAX_EXCERPT_CHARS:
         return text
-    boundary = text.rfind(' ', 0, MAX_EXCERPT_CHARS + 1)
+    # The ellipsis is part of the published preview and therefore part of the
+    # hard character budget.
+    cutoff = MAX_EXCERPT_CHARS - 1
+    boundary = text.rfind(' ', 0, cutoff + 1)
     if boundary < 1:
         return ''
     return text[:boundary].rstrip() + '…'
+
+
+def public_source_post(post):
+    """Return the body view that may enter tracked or published artifacts.
+
+    The ignored local cache may retain an author's older full body after a
+    post becomes subscriber-only.  That private continuity must never be
+    confused with the anonymous source surface used by the public pipeline.
+    """
+    item = dict(post)
+    audience = str(item.get('audience') or '').strip().casefold()
+    if audience == 'everyone':
+        item.pop('public_preview_text', None)
+        item.pop('public_preview_updated_at', None)
+        item.pop('member_preview', None)
+        return item
+    if audience != 'only_paid':
+        raise ValueError('Substack post has an unsupported publication audience')
+    preview = bounded_excerpt(item.get('public_preview_text'))
+    digest = hashlib.sha256(preview.encode('utf-8')).hexdigest()
+    item['body_text'] = preview
+    item['body_html_length'] = 0
+    item['body_source'] = (
+        'anonymous-list-preview' if preview else 'metadata-only'
+    )
+    item['wordcount'] = 0
+    item['content_status'] = 'excerpt'
+    item['body_revision_status'] = 'current'
+    observed = item.get('observed_source_updated_at')
+    if not isinstance(observed, str):
+        observed = ''
+    current_revision = item.get('public_preview_updated_at')
+    if not isinstance(current_revision, str):
+        current_revision = observed
+    item['source_updated_at'] = current_revision
+    item['observed_source_updated_at'] = current_revision
+    item['member_preview'] = {
+        'schema_version': 1,
+        'surface': (
+            'anonymous-substack-list' if preview else 'metadata-only'
+        ),
+        'text': preview,
+        'character_count': len(preview),
+        'body_sha256': digest,
+    }
+    item.pop('public_preview_text', None)
+    item.pop('public_preview_updated_at', None)
+    return item
 
 
 class DetailBudgetExhausted(RuntimeError):
@@ -210,6 +261,10 @@ def fetch_posts(limit=50, offset=0, attempts=3):
                 if not post.get('slug') or not post.get('post_date') or not post.get('title'):
                     raise ValueError(
                         'Substack returned a post without a slug, title, or publication date'
+                    )
+                if post.get('audience') not in {'everyone', 'only_paid'}:
+                    raise ValueError(
+                        'Substack returned an unsupported publication audience'
                     )
                 if post.get('body_html') is not None and not isinstance(
                     post.get('body_html'), str
@@ -606,6 +661,7 @@ def resolve_post_body(post, previous=None, detail_fetcher=None):
 
 def article_metadata(post):
     """Keep the small, deployable subset needed to render every article."""
+    post = public_source_post(post)
     value = {
         'source': 'substack',
         'source_id': post.get('slug', ''),
@@ -631,6 +687,8 @@ def article_metadata(post):
             else ''
         ),
     }
+    if isinstance(post.get('member_preview'), dict):
+        value['member_preview'] = post['member_preview']
     value['brief'] = build_article_brief(post)
     return value
 
@@ -896,6 +954,18 @@ def main():
             previous,
             fetch_detail_with_budget,
         )
+        if not is_public_body(post):
+            # Retain the exact anonymous list preview separately from any
+            # author-owned cached body. Public derivation consumes only this
+            # bounded field through public_source_post().
+            resolved['public_preview_text'] = bounded_excerpt(
+                post.get('truncated_body_text')
+            )
+            resolved['public_preview_updated_at'] = (
+                post.get('updated_at')
+                if isinstance(post.get('updated_at'), str)
+                else ''
+            )
         if slug in detail_attempted_slugs:
             resolved['detail_attempted_at'] = detail_attempted_at
         elif (

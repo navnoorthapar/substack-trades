@@ -23,6 +23,18 @@ MAX_SECTION_CHARS = 760
 MAX_EVIDENCE_CHARS = 620
 MAX_SECTIONS = 5
 MAX_CHECKPOINTS = 3
+BRIEF_KEYS = frozenset((
+    'schema_version', 'body_sha256', 'lead', 'sections',
+    'fallback_evidence', 'checkpoints',
+))
+SPAN_KEYS = frozenset(('start', 'end', 'text', 'sha256', 'truncated'))
+SECTION_KEYS = SPAN_KEYS | frozenset((
+    'kind', 'source_order', 'heading', 'heading_start', 'heading_end',
+    'heading_sha256',
+))
+CHECKPOINT_KEYS = SPAN_KEYS | frozenset((
+    'date', 'date_label', 'source_order', 'context_kind',
+))
 
 PROMOTIONAL_RE = re.compile(
     r'(?:\bpatreon\b|\byoutube\b|\blinkedin\b|\bnotebooklm\b|'
@@ -473,13 +485,19 @@ def validate_brief_structure(brief: dict) -> None:
     """Validate the deployable brief schema without requiring the body cache."""
     if not isinstance(brief, dict) or brief.get('schema_version') != SCHEMA_VERSION:
         raise ValueError('article brief has an unsupported schema version')
+    if set(brief) != BRIEF_KEYS:
+        raise ValueError('article brief has fields outside its public contract')
     body_hash = brief.get('body_sha256')
     if not isinstance(body_hash, str) or not re.fullmatch(r'[0-9a-f]{64}', body_hash):
         raise ValueError('article brief has an invalid body hash')
 
-    def validate_span(label: str, span: dict) -> None:
+    def validate_span(label: str, span: dict, expected_keys=SPAN_KEYS) -> None:
         if not isinstance(span, dict):
             raise ValueError(f'article brief {label} is not an object')
+        if set(span) != expected_keys:
+            raise ValueError(
+                f'article brief {label} has fields outside its public contract'
+            )
         start, end, text = span.get('start'), span.get('end'), span.get('text')
         if (not isinstance(start, int) or isinstance(start, bool)
                 or not isinstance(end, int) or isinstance(end, bool)
@@ -504,7 +522,7 @@ def validate_brief_structure(brief: dict) -> None:
     kinds = []
     orders = []
     for index, section in enumerate(sections):
-        validate_span(f'section {index}', section)
+        validate_span(f'section {index}', section, SECTION_KEYS)
         kind = section.get('kind')
         if kind not in VALID_SECTION_KINDS:
             raise ValueError(f'article brief section {index} has an invalid kind')
@@ -533,7 +551,7 @@ def validate_brief_structure(brief: dict) -> None:
         raise ValueError('article brief has an invalid checkpoint list')
     dates = []
     for index, checkpoint in enumerate(checkpoints):
-        validate_span(f'checkpoint {index}', checkpoint)
+        validate_span(f'checkpoint {index}', checkpoint, CHECKPOINT_KEYS)
         checkpoint_date = checkpoint.get('date')
         try:
             date.fromisoformat(checkpoint_date)

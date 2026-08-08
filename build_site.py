@@ -33,6 +33,7 @@ DOCS_DIR.mkdir(parents=True, exist_ok=True)
 SITE_URL = 'https://navnoorthapar.github.io/substack-trades/'
 SOCIAL_IMAGE_URL = f'{SITE_URL}og.jpg'
 SOCIAL_IMAGE_SOURCE = ROOT / 'assets' / 'og.jpg'
+SUBSCRIPTION_URL = 'https://www.navnoorbawaresearch.com/subscribe'
 THEME_REVISION = 'editorial-terminal-2026-07'
 LIGHT_THEME_BG = '#f2e8dd'
 DARK_THEME_BG = '#050607'
@@ -108,6 +109,22 @@ def clean_source(value, url=''):
     except ValueError:
         host = ''
     return 'medium' if host == 'medium.com' else 'substack'
+
+
+def clean_publication_access(source, audience):
+    """Map public source metadata to a conservative reader-access label."""
+    normalized = str(audience or '').strip().casefold()
+    if source == 'substack':
+        if normalized == 'only_paid':
+            return 'member'
+        if normalized == 'everyone':
+            return 'public'
+    elif source == 'medium':
+        if normalized == 'locked':
+            return 'member'
+        if normalized == 'public':
+            return 'public'
+    return 'unknown'
 
 
 def stable_id(prefix, value):
@@ -294,6 +311,7 @@ for metadata in article_index:
     content_status = metadata.get('content_status') or 'excerpt'
     if body_revision_status != 'current':
         content_status = 'excerpt'
+    source = clean_source(metadata.get('source'), url)
     articles.append({
         'title': metadata.get('title') or first.get('article_title') or url,
         'subtitle': subtitle,
@@ -301,7 +319,15 @@ for metadata in article_index:
         'published_at': published_at,
         'publication_precision': publication_precision,
         'url': url,
-        'source': clean_source(metadata.get('source'), url),
+        'source': source,
+        'publication_access': clean_publication_access(
+            source, metadata.get('audience')
+        ),
+        'member_preview_chars': (
+            metadata.get('member_preview', {}).get('character_count', 0)
+            if isinstance(metadata.get('member_preview'), dict)
+            else 0
+        ),
         'alternate_urls': metadata.get('alternate_urls') or {},
         'wordcount': wordcount,
         'content_status': content_status,
@@ -336,6 +362,8 @@ for url, article_trades in trades_by_url.items():
         'publication_precision': publication_precision,
         'url': url,
         'source': clean_source(None, url),
+        'publication_access': 'unknown',
+        'member_preview_chars': 0,
         'alternate_urls': {},
         'wordcount': 0,
         'content_status': 'excerpt',
@@ -467,6 +495,8 @@ for article_position, article in enumerate(articles):
         'publication_precision': article['publication_precision'],
         'url': article['url'],
         'source': article['source'],
+        'publication_access': article['publication_access'],
+        'member_preview_chars': article['member_preview_chars'],
         'alternate_urls': article['alternate_urls'],
         'wordcount': article['wordcount'],
         'read_minutes': read_minutes,
@@ -1210,6 +1240,28 @@ button.research-map-step:hover{border-color:var(--control-line-hover);background
 .article-dossier-section h4{font-size:11.5px;line-height:1.4;color:var(--text);margin-bottom:6px}
 .article-dossier-section p{font-size:12px;line-height:1.62;color:var(--text-secondary)}
 .article-dossier-section mark{background:var(--number-soft);color:var(--number);border-bottom:1px solid var(--number-line);border-radius:2px;padding:0 1px}
+.premium-access{
+  margin:16px 0;padding:16px;border:1px solid var(--brick-line);border-top:3px solid var(--brick);
+  background:var(--brick-soft);color:var(--text)
+}
+.premium-access-brief{margin:0;padding:22px clamp(24px,3vw,48px);border-right:0;border-left:0}
+.premium-access-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.premium-access-kicker{font:700 9px var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--brick)}
+.premium-access h2,.premium-access h3{margin-top:5px;font:600 20px/1.2 var(--serif);letter-spacing:-.01em;color:var(--text)}
+.premium-access-inspector h3{font-size:17px}
+.premium-access-state{
+  display:inline-flex;align-items:center;min-height:24px;padding:0 7px;border:1px solid var(--brick-line);
+  color:var(--brick);font:700 8.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap
+}
+.premium-access-copy{max-width:78ch;margin-top:8px;font-size:11.5px;line-height:1.58;color:var(--text-secondary)}
+.premium-access-evidence{margin-top:14px;padding:11px 12px;border:1px solid var(--brick-line);background:var(--surface-1)}
+.premium-access-evidence span{display:block;font:700 8.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--brick)}
+.premium-access-evidence p{margin-top:5px;font:600 13px/1.45 var(--serif);color:var(--text)}
+.premium-access-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:14px}
+.premium-primary{border-color:var(--brick);background:var(--brick);color:var(--on-accent)}
+.premium-primary:hover{border-color:var(--text);background:var(--text);color:var(--surface-1)}
+.premium-access-note{flex:1 0 100%;font-size:9.5px;line-height:1.5;color:var(--text-muted)}
+.premium-badge{border-color:var(--brick-line);background:var(--brick-soft);color:var(--brick)}
 .checkpoint-mini{display:grid;grid-template-columns:92px 1fr;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:10.5px;color:var(--text-secondary)}
 .checkpoint-mini time{font:650 10px var(--mono);color:var(--checkpoint)}
 
@@ -1452,6 +1504,10 @@ body[data-view="briefing"] .briefing-shell{
 .intel-article-card .intel-card-title{font:600 15px/1.32 var(--serif)}
 .ic-archive-grid{grid-column:2/-1;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line)}
 .ic-archive-grid>.intel-side-card{border:0;border-radius:0}
+.premium-archive-card{grid-column:1/-1;border-top:2px solid var(--brick)!important;background:var(--brick-soft)!important}
+.premium-archive-intro{padding:12px 14px 0;font-size:10px;line-height:1.5;color:var(--text-secondary)}
+.premium-archive-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid var(--brick-line)}
+.premium-archive-actions p{font-size:9px;line-height:1.45;color:var(--text-muted)}
 
 /* Dense master tables */
 .command-bar,.active-filters,.context-bar{flex:0 0 auto}
@@ -1992,6 +2048,12 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .brief-record{grid-template-columns:68px 80px minmax(0,1fr)}
   .brief-record .documentation-badge{display:none}
   .diligence-grid{grid-template-columns:1fr}
+  .premium-access{padding:15px 14px}
+  .premium-access-head{display:block}
+  .premium-access-state{margin-top:9px}
+  .premium-access-actions .primary-action,.premium-access-actions .secondary-action{width:100%}
+  .premium-archive-actions{display:block}
+  .premium-archive-actions .secondary-action{width:100%;margin-top:10px}
   .workflow-grid,.operating-boundary{grid-template-columns:1fr}
   .workflow-gate{min-height:44px;align-items:center}
   .orphaned-item{grid-template-columns:1fr}
@@ -2113,7 +2175,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   }
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#111!important}
   .skip-link,.app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar,.active-filters,.context-bar,.inspector,
-  .drawer-backdrop,.intel-head,.ic-compact-nav,.ic-archive-grid,.intel-stream,.intel-actions,.ic-sheet-local,.ic-sheet-actions,.thread-topic-list,.thread-load-boundary .secondary-action,.toast,.persistent-notice,.storage-alert{display:none!important}
+  .drawer-backdrop,.intel-head,.ic-compact-nav,.ic-archive-grid,.intel-stream,.intel-actions,.ic-sheet-local,.ic-sheet-actions,.thread-topic-list,.thread-load-boundary .secondary-action,.premium-access,.toast,.persistent-notice,.storage-alert{display:none!important}
   .workspace,.main-panel,.briefing-shell{display:block!important;height:auto!important;overflow:visible!important;background:#fff!important}
   .briefing-shell{padding:0!important}
   .intel-wrap{display:flex!important;flex-direction:column!important;width:100%;min-height:0;padding:0}
@@ -2354,12 +2416,23 @@ __MANAGER_BUTTONS__
       <p class="filter-note">Five fields: market, parsed directional language, underlying, thesis, and numeric context. Coverage is not investment quality or evidence of a position.</p>
     </section>
 
+    <section class="filter-group" aria-labelledby="access-filter-label">
+      <div class="filter-heading"><h2 id="access-filter-label">Publication access</h2></div>
+      <div class="facet-list">
+        <button class="facet-clear active" type="button" data-clear-facet="access"><span>Any source access</span><span class="facet-count" data-count-clear="access"></span></button>
+        <button class="facet-option" type="button" data-filter="access" data-value="public"><span>Public at source</span><span class="facet-count" data-count-access="public"></span></button>
+        <button class="facet-option" type="button" data-filter="access" data-value="member"><span>Member at source</span><span class="facet-count" data-count-access="member"></span></button>
+        <button class="facet-option" type="button" data-filter="access" data-value="unknown"><span>Access unverified</span><span class="facet-count" data-count-access="unknown"></span></button>
+      </div>
+      <p class="filter-note">Source access is distinct from how much text this public index captured.</p>
+    </section>
+
     <section class="filter-group" aria-labelledby="content-filter-label">
-      <div class="filter-heading"><h2 id="content-filter-label">Content access</h2></div>
+      <div class="filter-heading"><h2 id="content-filter-label">Indexed coverage</h2></div>
       <div class="facet-list">
         <button class="facet-clear active" type="button" data-clear-facet="content"><span>Full + excerpt</span><span class="facet-count" data-count-clear="content"></span></button>
         <button class="facet-option" type="button" data-filter="content" data-value="full"><span>Full text indexed</span><span class="facet-count" data-count-content="full"></span></button>
-        <button class="facet-option" type="button" data-filter="content" data-value="excerpt"><span>Excerpt indexed</span><span class="facet-count" data-count-content="excerpt"></span></button>
+        <button class="facet-option" type="button" data-filter="content" data-value="excerpt"><span>Excerpt / metadata</span><span class="facet-count" data-count-content="excerpt"></span></button>
       </div>
     </section>
 
@@ -2531,7 +2604,7 @@ __MANAGER_BUTTONS__
         <li>Classified evidence, mechanism, countercase, falsifier, and implementation passages retain their authored headings; a numerical-context fallback is used only when no evidence heading was captured.</li>
         <li>Directional fields classify passage language only; they do not establish the actor, a position, exposure, or a current view.</li>
         <li>Every dossier span is validated against the article body with offsets and a SHA-256 hash before publication.</li>
-        <li>Full and Excerpt describe indexed access, never research quality.</li>
+        <li>Full and Excerpt / metadata describe indexed coverage, never research quality. Publication access separately reports whether the canonical source marked the article public, member-access, or unverified.</li>
       </ul>
     </section>
     <section class="method-card">
@@ -2548,7 +2621,7 @@ __MANAGER_BUTTONS__
     </section>
     <section class="method-card">
       <h3>Privacy &amp; measurement</h3>
-      <p>The terminal has no advertising, cookies, third-party analytics, session replay, or background data submission. Theme and review state use functional device storage; decision packets use only tab-session storage. The browser requests only release-bound files from this site; an external publication opens only when you choose it.</p>
+      <p>The terminal has no advertising, cookies, third-party analytics, session replay, or background data submission. Theme and review state use functional device storage; decision packets use only tab-session storage. The browser requests only release-bound files from this site; an external publication or subscription page opens only when you choose it. Subscription links contain no search, filter, article, or decision-queue context.</p>
     </section>
     <section class="method-card">
       <h3>Institutional basis</h3>
@@ -2581,6 +2654,7 @@ __MANAGER_BUTTONS__
 
 <script>
 const ARTICLE_WIRE_SCHEMA_VERSION = __ARTICLE_WIRE_SCHEMA_VERSION__;
+const SUBSCRIPTION_URL = __SUBSCRIPTION_URL_JSON__;
 const ARTICLES = __ARTICLES_JSON__;
 function hydrateEmbeddedArticle(article) {
   const publishedAt = String(article.published_at || '');
@@ -2598,11 +2672,18 @@ function hydrateEmbeddedArticle(article) {
   article.read_minutes = wordcount ? Math.max(1,roundedMinutes) : 0;
   article.alternate_urls = article.alternate_urls || {};
   article.brief = article.brief || null;
+  const publicationAccess = String(article.publication_access || '');
+  article.publication_access = ['public','member','unknown'].includes(publicationAccess)
+    ? publicationAccess : 'unknown';
+  const memberPreviewChars = Number(article.member_preview_chars || 0);
+  article.member_preview_chars = Number.isSafeInteger(memberPreviewChars) && memberPreviewChars >= 0 && memberPreviewChars <= 1200
+    ? memberPreviewChars : 0;
   const revisionStatus = String(article.body_revision_status || '');
   article.body_revision_status = ['current','prior','unverified'].includes(revisionStatus)
     ? revisionStatus : 'unverified';
   article.source_updated_at = String(article.source_updated_at || '');
   article.observed_source_updated_at = String(article.observed_source_updated_at || '');
+  if (article.publication_access === 'member') article.content_status = 'excerpt';
   if (article.body_revision_status !== 'current') article.content_status = 'excerpt';
   article.idea_ids = article.idea_ids || [];
   article.trade_count = article.idea_ids.length;
@@ -2907,6 +2988,7 @@ const VALID_DIRECTIONS = new Set(['long','short','arbitrage/relative value','lon
 const VALID_INSTRUMENTS = new Set(['equity','option','volatility','bond','futures','commodity','FX','swap','CDS','repo','prediction_market','weather_derivative','unspecified']);
 const VALID_QUALITY = new Set(['quant','thesis','outcome','manager']);
 const VALID_CONTENT = new Set(['full','excerpt']);
+const VALID_PUBLICATION_ACCESS = new Set(['public','member','unknown']);
 const VALID_DOCUMENTATION = new Set(['triage','documented','strong','needs-context','review']);
 const VALID_QUEUE_STATUSES = new Set(['review','diligence','monitor','archived']);
 const VALID_PRIORITIES = new Set(['low','normal','high']);
@@ -3101,8 +3183,69 @@ function briefSection(article,kind) {
   }) || null;
 }
 function articleClaim(article) {
+  if (article && article.publication_access === 'member' && !hasIndexedMemberPreview(article)) {
+    return String(article.subtitle || article.title || 'No anonymous body preview is available in this release.');
+  }
   const lead = article && article.brief && article.brief.lead;
   return String((lead && lead.text) || (article && article.subtitle) || 'No opening authored passage is available in this index.');
+}
+function hasIndexedMemberPreview(article) {
+  return Boolean(article && article.publication_access === 'member' && Number(article.member_preview_chars || 0) > 0);
+}
+function isPaidSubstackArticle(article) {
+  return Boolean(article && article.source === 'substack' && article.publication_access === 'member');
+}
+function publicationAccessLabel(article) {
+  if (!article || article.publication_access === 'unknown') return 'Access unverified';
+  return article.publication_access === 'member' ? 'Member at source' : 'Public at source';
+}
+function sourceAccessLabel(article) {
+  if (isPaidSubstackArticle(article)) return hasIndexedMemberPreview(article) ? 'Subscriber preview' : 'Subscriber source · metadata only';
+  if (article && article.source === 'medium' && article.publication_access === 'member') return hasIndexedMemberPreview(article) ? 'Member preview' : 'Medium member source · metadata only';
+  return article && article.content_status === 'full' ? 'Full text indexed' : 'Excerpt indexed';
+}
+function sourceActionLabel(article) {
+  if (isPaidSubstackArticle(article)) return 'Read full note on Substack ↗';
+  if (article && article.source === 'medium' && article.publication_access === 'member') return 'Open member article ↗';
+  return 'Open original ↗';
+}
+function accessBadgeMarkup(article) {
+  if (isPaidSubstackArticle(article)) {
+    return '<span class="coverage-badge premium-badge">' + (hasIndexedMemberPreview(article) ? 'Subscriber preview' : 'Subscriber metadata') + '</span>';
+  }
+  if (article && article.source === 'medium' && article.publication_access === 'member') {
+    return '<span class="coverage-badge">' + (hasIndexedMemberPreview(article) ? 'Medium member preview' : 'Medium member metadata') + '</span>';
+  }
+  return '';
+}
+function boundedPromotionText(value,limit) {
+  const text = String(value || '').replace(/\s+/g,' ').trim();
+  if (text.length <= limit) return text;
+  const head = text.slice(0,limit + 1);
+  const boundary = head.lastIndexOf(' ');
+  return (boundary > Math.floor(limit * 0.7) ? head.slice(0,boundary) : text.slice(0,limit)).trimEnd() + '…';
+}
+function premiumAccessMarkup(article,context) {
+  if (!isPaidSubstackArticle(article)) return '';
+  const labelId = 'premium-access-' + String(context || 'record') + '-' + article.id;
+  const headingTag = context === 'brief' ? 'h2' : 'h3';
+  const modeClass = context === 'brief' ? ' premium-access-brief' : ' premium-access-inspector';
+  const hasCapturedPreview = hasIndexedMemberPreview(article);
+  const kicker = hasCapturedPreview
+    ? article.body_revision_status === 'current' ? 'Subscriber source · public preview indexed' : 'Subscriber source · stored public preview · ' + bodyRevisionLabel(article).toLowerCase()
+    : 'Subscriber source · metadata only · no anonymous body preview';
+  const framing = boundedPromotionText(hasCapturedPreview ? articleClaim(article) : (article.subtitle || article.title),320);
+  const framingLabel = hasCapturedPreview ? 'Indexed public preview' : 'Published metadata';
+  const framingMarkup = context === 'brief' ? '' :
+    '<div class="premium-access-evidence"><span>' + escapeHtml(framingLabel) + '</span><p>' + escapeHtml(framing) + '</p></div>';
+  const boundaryCopy = hasCapturedPreview
+    ? 'This release contains only the anonymous source preview proven by its snapshot. The complete subscriber article—and any argument, evidence, countercase, or implementation context not captured here—remains on Navnoor Research.'
+    : 'This release contains the published title, date, source, and available subtitle, but no anonymous article-body preview. The complete subscriber article remains on Navnoor Research.';
+  return '<section class="premium-access' + modeClass + '" aria-labelledby="' + labelId + '">' +
+    '<div class="premium-access-head"><div><div class="premium-access-kicker">' + escapeHtml(kicker) + '</div><' + headingTag + ' id="' + labelId + '">Continue the complete research note</' + headingTag + '></div><span class="premium-access-state">Full note on Substack</span></div>' +
+    '<p class="premium-access-copy">' + escapeHtml(boundaryCopy) + '</p>' +
+    framingMarkup +
+    '<div class="premium-access-actions"><a class="primary-action premium-primary" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Read the full note on Substack (opens in a new tab)">Read full note on Substack ↗</a><a class="secondary-action" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="See Navnoor Research subscription plans (opens in a new tab)">See subscription plans ↗</a><p class="premium-access-note">Review current price, trial eligibility, renewal, and cancellation terms on Substack before purchasing. This terminal sends no search, filter, or decision-queue data.</p></div></section>';
 }
 function articleEvidence(article) {
   return briefSection(article,'evidence') || (article && article.brief && article.brief.fallback_evidence) || null;
@@ -3165,6 +3308,7 @@ function sourceSnapshotForIdea(id) {
     url:String(article.url || '').slice(0,1200),
     date:String(article.date || '').slice(0,10),
     source:String(article.source || '').slice(0,20),
+    publication_access:VALID_PUBLICATION_ACCESS.has(article.publication_access) ? article.publication_access : 'unknown',
     passage:String(passageText(idea) || '').slice(0,1200),
     direction:String(idea.direction || 'unspecified').slice(0,40),
     instruments:(idea.instruments || []).slice(0,20).map(function (value) { return String(value).slice(0,80); }),
@@ -3186,6 +3330,7 @@ function normalizeSourceSnapshot(value,id) {
     url:url.slice(0,1200),
     date:validDateInput(value.date),
     source:VALID_SOURCES.has(value.source) ? value.source : (url.includes('medium.com') ? 'medium' : 'substack'),
+    publication_access:VALID_PUBLICATION_ACCESS.has(value.publication_access) ? value.publication_access : 'unknown',
     passage:String(value.passage || '').slice(0,1200),
     direction:VALID_DIRECTIONS.has(value.direction) ? value.direction : 'unspecified',
     instruments:Array.isArray(value.instruments) ? value.instruments.slice(0,20).map(function (item) { return String(item).slice(0,80); }) : [],
@@ -3478,6 +3623,7 @@ const state = {
   instruments:new Set(),
   managers:new Set(),
   quality:new Set(),
+  publicationAccess:new Set(),
   content:new Set(),
   queueStatuses:new Set(),
   documentation:'all',
@@ -3504,6 +3650,7 @@ function hydrateFromHash() {
   state.instruments = setFromParam(params,'inst',VALID_INSTRUMENTS);
   state.managers = setFromParam(params,'mgr',new Set(MANAGERS));
   state.quality = setFromParam(params,'evidence',VALID_QUALITY);
+  state.publicationAccess = setFromParam(params,'access',VALID_PUBLICATION_ACCESS);
   state.content = setFromParam(params,'content',VALID_CONTENT);
   state.queueStatuses = setFromParam(params,'queue',VALID_QUEUE_STATUSES);
   state.documentation = VALID_DOCUMENTATION.has(params.get('doc')) ? params.get('doc') : 'all';
@@ -3536,6 +3683,7 @@ function updateHash(includeQuery) {
   if (state.instruments.size) params.set('inst',Array.from(state.instruments).join('|'));
   if (state.managers.size) params.set('mgr',Array.from(state.managers).join('|'));
   if (state.quality.size) params.set('evidence',Array.from(state.quality).join('|'));
+  if (state.publicationAccess.size) params.set('access',Array.from(state.publicationAccess).join('|'));
   if (state.content.size) params.set('content',Array.from(state.content).join('|'));
   if (state.queueStatuses.size) params.set('queue',Array.from(state.queueStatuses).join('|'));
   if (state.documentation !== 'all') params.set('doc',state.documentation);
@@ -3608,6 +3756,7 @@ function ideaMatches(idea, skip) {
   if (skip !== 'instrument' && !setMatches(state.instruments,idea.instruments)) return false;
   if (skip !== 'manager' && state.managers.size && !state.managers.has(idea.manager_key)) return false;
   if (skip !== 'quality' && !qualityMatches(idea,false)) return false;
+  if (skip !== 'access' && state.publicationAccess.size && !state.publicationAccess.has(article.publication_access)) return false;
   if (skip !== 'content' && state.content.size && !state.content.has(article.content_status)) return false;
   if (skip !== 'documentation' && !documentationMatches(idea)) return false;
   return matchesSearch(idea._search);
@@ -3623,6 +3772,7 @@ function ideaMatchesResearchFacets(idea,skip) {
 function articleMatches(article, skip) {
   if (skip !== 'source' && state.sources.size && !state.sources.has(article.source)) return false;
   if (skip !== 'revision' && state.revisions.size && !state.revisions.has(article.body_revision_status)) return false;
+  if (skip !== 'access' && state.publicationAccess.size && !state.publicationAccess.has(article.publication_access)) return false;
   if (!inDateRange(article.date)) return false;
   if (state.newOnly && !isNewArticle(article)) return false;
   const hasTradeFilters =
@@ -3793,6 +3943,7 @@ function ideaRow(idea) {
     '<span class="workflow-badge coverage" title="Decision packet coverage; not approval">' + coverage.completed + '/' + coverage.total + '</span>' +
     (reviewIsOverdue(workflow) ? '<span class="review-flag">Overdue</span>' : '') : '';
   const review = reviewFlagged(idea) ? '<span class="review-flag" title="Source or extraction review recommended">Review</span>' : '';
+  const sourceDetail = sourceAccessLabel(article) + (article.body_revision_status === 'current' ? '' : ' · ' + bodyRevisionLabel(article));
   return '<div class="data-row idea-grid" role="row" data-record-id="' + idea.id + '" tabindex="' + (selected ? '0' : '-1') + '" aria-selected="' + selected + '" aria-keyshortcuts="Enter Space ArrowUp ArrowDown Home End Alt+Shift+O Alt+Shift+S Alt+Shift+C" aria-label="' + escapeHtml(rowLabel) + '">' +
     '<div class="data-cell cell-date" role="gridcell"><time datetime="' + article.date + '">' + shortDate(article.date) + '</time>' + newBadge + '</div>' +
     '<div class="data-cell cell-bias" role="gridcell"><span class="direction-badge ' + directionClass(idea.direction) + '" title="' + escapeHtml(directionLabel(idea.direction) + ' in this source passage; not a verified position') + '">' + compactDirectionLabel(idea.direction) + '</span></div>' +
@@ -3802,34 +3953,41 @@ function ideaRow(idea) {
     '<div class="data-cell cell-idea" role="gridcell"><div class="idea-title">' + escapeHtml(passageText(idea)) + '</div>' +
       '<div class="idea-context">' + escapeHtml(idea.underlying || article.title) + (review ? ' · ' + review : '') + '</div></div>' +
     '<div class="data-cell cell-evidence" role="gridcell">' + evidenceMarkup(idea) + '</div>' +
-    '<div class="data-cell cell-source" role="gridcell"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span><div class="instrument-secondary">' + escapeHtml(article.body_revision_status === 'current' ? (article.content_status === 'full' ? 'Full · current' : 'Excerpt · current') : bodyRevisionLabel(article)) + '</div></div>' +
-    '<div class="data-cell cell-open" role="gridcell"><a class="row-open" tabindex="-1" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Open ' + escapeHtml(article.title) + ' in a new tab">↗</a></div>' +
+    '<div class="data-cell cell-source" role="gridcell"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span><div class="instrument-secondary">' + escapeHtml(sourceDetail) + '</div></div>' +
+    '<div class="data-cell cell-open" role="gridcell"><a class="row-open" tabindex="-1" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="' + escapeHtml(sourceActionLabel(article).replace(' ↗','') + ': ' + article.title + ' in a new tab') + '">↗</a></div>' +
     '</div>';
 }
 function researchRow(article) {
   const selected = state.selected === article.id;
-  const coverage = article.body_revision_status !== 'current'
+  const metadataOnlyMember = article.publication_access === 'member' && !hasIndexedMemberPreview(article);
+  const coverage = metadataOnlyMember
+    ? '<span class="coverage-badge coverage-excerpt">Metadata only</span>'
+    : article.body_revision_status !== 'current'
     ? '<span class="coverage-badge coverage-revision">' + escapeHtml(bodyRevisionLabel(article)) + '</span>'
     : article.trade_count === 0
     ? '<span class="coverage-badge coverage-research">Research-only</span>'
     : article.content_status === 'full'
       ? '<span class="coverage-badge coverage-full">Full text</span>'
       : '<span class="coverage-badge coverage-excerpt">Excerpt</span>';
-  const read = article.content_status === 'excerpt'
+  const read = metadataOnlyMember
+    ? 'Metadata'
+    : isPaidSubstackArticle(article)
+    ? 'Member'
+    : article.content_status === 'excerpt'
     ? 'Preview'
     : article.read_minutes ? article.read_minutes + ' min' : '—';
   const rowLabel = formatDate(article.date) + ', ' + sourceLabel(article.source) + ', ' + article.title + ', ' +
     number(article.trade_count) + ' research observations, ' +
-    (article.content_status === 'full' ? 'full text indexed' : 'excerpt indexed') +
+    sourceAccessLabel(article).toLowerCase() +
     ', ' + bodyRevisionLabel(article);
   return '<div class="data-row research-grid" role="row" data-record-id="' + article.id + '" tabindex="' + (selected ? '0' : '-1') + '" aria-selected="' + selected + '" aria-keyshortcuts="Enter Space ArrowUp ArrowDown Home End Alt+Shift+O Alt+Shift+C" aria-label="' + escapeHtml(rowLabel) + '">' +
     '<div class="data-cell cell-date" role="gridcell"><time datetime="' + article.date + '">' + shortDate(article.date) + '</time>' + (isNewArticle(article) ? '<span class="new-badge">New</span>' : '') + '</div>' +
-    '<div class="data-cell cell-source" role="gridcell"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span></div>' +
+    '<div class="data-cell cell-source" role="gridcell"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span><div class="instrument-secondary">' + escapeHtml(publicationAccessLabel(article)) + '</div></div>' +
     '<div class="data-cell cell-article" role="gridcell"><div class="article-title">' + escapeHtml(article.title) + '</div><div class="article-subtitle">' + escapeHtml(article.subtitle || 'No abstract available') + '</div></div>' +
     '<div class="data-cell cell-count number-cell" role="gridcell">' + number(article.trade_count) + '</div>' +
     '<div class="data-cell cell-coverage" role="gridcell">' + coverage + '</div>' +
     '<div class="data-cell cell-read number-cell" role="gridcell">' + read + '</div>' +
-    '<div class="data-cell cell-open" role="gridcell"><a class="row-open" tabindex="-1" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Open ' + escapeHtml(article.title) + ' in a new tab">↗</a></div>' +
+    '<div class="data-cell cell-open" role="gridcell"><a class="row-open" tabindex="-1" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="' + escapeHtml(sourceActionLabel(article).replace(' ↗','') + ': ' + article.title + ' in a new tab') + '">↗</a></div>' +
     '</div>';
 }
 function renderRows(records) {
@@ -4111,10 +4269,42 @@ function relatedResearchMarkup(selected) {
   }).join('');
   return '<section class="intel-side-card"><div class="intel-card-head"><h3>' + (result.related ? 'Related archive context' : 'Recent research') + '</h3><span>' + (result.related ? 'Exact entity or underlying overlap' : 'No direct overlap found') + '</span></div><div class="next-list">' + items + '</div></section>';
 }
+function relatedPremiumRows(selected) {
+  if (!selected || isPaidSubstackArticle(selected)) return [];
+  const selectedManagers = new Set(selected.manager_keys || []);
+  const selectedUnderlyings = new Map((selected.underlyings || []).map(function (value) { return [normalize(value),value]; }));
+  const selectedTopics = new Set((THREAD_ARTICLES[selected.id] && THREAD_ARTICLES[selected.id].topics) || []);
+  const selectedInstruments = new Set((selected.instruments || []).filter(function (value) { return value !== 'unspecified'; }));
+  return ARTICLES.filter(function (article) {
+    return article.id !== selected.id && isPaidSubstackArticle(article);
+  }).map(function (article) {
+    const managers = (article.manager_keys || []).filter(function (value) { return selectedManagers.has(value); });
+    const underlyings = (article.underlyings || []).filter(function (value) { return selectedUnderlyings.has(normalize(value)); });
+    const topics = (((THREAD_ARTICLES[article.id] && THREAD_ARTICLES[article.id].topics) || []).filter(function (value) { return selectedTopics.has(value); }));
+    const instruments = (article.instruments || []).filter(function (value) { return selectedInstruments.has(value); });
+    const reasons = topics.slice(0,1).map(function (value) {
+      const topic = THREADS.topics && THREADS.topics[value];
+      return 'Same research topic: ' + (topic && topic.label || value);
+    }).concat(managers.slice(0,1).map(function (value) { return 'Same mentioned entity: ' + (MANAGER_LABELS.get(value) || value); }))
+      .concat(underlyings.slice(0,2).map(function (value) { return 'Same extracted underlying: ' + value; }));
+    if (instruments.length) reasons.push('Same market: ' + instrumentLabel(instruments[0]));
+    return {article:article,reasons:reasons,score:topics.length * 14 + managers.length * 10 + underlyings.length * 8 + instruments.length * 3};
+  }).filter(function (row) { return row.score > 0; }).sort(function (left,right) {
+    return right.score - left.score || right.article.date.localeCompare(left.article.date);
+  }).slice(0,3);
+}
+function premiumArchiveMarkup(selected) {
+  const rows = relatedPremiumRows(selected);
+  if (!rows.length) return '';
+  const items = rows.map(function (row) {
+    return '<button class="next-item" type="button" data-brief-article="' + row.article.id + '"><time datetime="' + row.article.date + '">' + escapeHtml(shortDate(row.article.date)) + ' · Subscriber research</time><span class="next-title">' + escapeHtml(row.article.title) + '</span><span class="next-summary">' + escapeHtml(articleClaim(row.article)) + '</span><span class="related-context">' + row.reasons.map(function (reason) { return '<span>' + escapeHtml(reason) + '</span>'; }).join('') + '</span></button>';
+  }).join('');
+  return '<section class="intel-side-card premium-archive-card"><div class="intel-card-head"><h3>Related subscriber research</h3><span>' + number(rows.length) + ' shown · exact-context overlap</span></div><p class="premium-archive-intro">These subscriber notes share an indexed research topic, normalized entity, extracted underlying, or market with the active dossier. The match organizes the archive; it does not imply a recommendation, position, or similar conclusion.</p><div class="next-list">' + items + '</div><div class="premium-archive-actions"><p>Open a dossier to inspect the bounded source material in this release, or review current subscription terms directly on Substack.</p><a class="secondary-action" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="See Navnoor Research subscription plans (opens in a new tab)">See subscription plans ↗</a></div></section>';
+}
 function articleReasons(article) {
   const reasons = [];
   if (isNewArticle(article)) reasons.push(['New','accent']);
-  reasons.push([article.content_status === 'full' ? 'Full text indexed' : 'Excerpt indexed',article.content_status === 'full' ? '' : 'evidence-gap']);
+  reasons.push([sourceAccessLabel(article),article.content_status === 'full' ? '' : isPaidSubstackArticle(article) ? 'premium-badge' : 'evidence-gap']);
   if (article.body_revision_status !== 'current') {
     reasons.push([bodyRevisionLabel(article),'evidence-gap']);
   }
@@ -4149,6 +4339,7 @@ function articleBriefText(article) {
   const lines = [
     article.title,
     sourceLabel(article.source) + ' · published ' + formatDate(article.date) + ' · ' + (article.content_status === 'full' ? 'full text indexed' : 'excerpt indexed'),
+    'Publication access: ' + publicationAccessLabel(article),
     'Source: ' + article.url,
     'Body revision: ' + bodyRevisionSummary(article),
     'Dataset: ' + String(SNAPSHOT.data_checksum || ''),
@@ -4166,7 +4357,7 @@ function articleBriefText(article) {
 }
 function intelligenceCard(article) {
   return '<button class="intel-article-card" type="button" data-brief-article="' + article.id + '">' +
-    '<span class="intel-meta"><time datetime="' + article.date + '">' + escapeHtml(shortDate(article.date)) + '</time><span>·</span><span>' + sourceLabel(article.source) + '</span><span>·</span><span>' + (article.content_status === 'full' ? (article.read_minutes ? article.read_minutes + ' min' : 'Full text') : 'Excerpt') + '</span></span>' +
+    '<span class="intel-meta"><time datetime="' + article.date + '">' + escapeHtml(shortDate(article.date)) + '</time><span>·</span><span>' + sourceLabel(article.source) + '</span><span>·</span><span>' + escapeHtml(sourceAccessLabel(article)) + '</span></span>' +
     '<span class="intel-card-title">' + escapeHtml(article.title) + '</span><span class="intel-card-claim">' + escapeHtml(articleClaim(article)) + '</span>' +
     '<span class="intel-reasons">' + reasonChips(article,3) + '</span></button>';
 }
@@ -4481,7 +4672,7 @@ function renderIntelligenceBrief(records) {
     return '<div class="ic-sheet-checkpoint"><time datetime="' + checkpoint.date + '">' + escapeHtml(formatDate(checkpoint.date)) + ' · ' + escapeHtml(stateLabel) + '</time><p>' + escapeHtml(checkpoint.text) + '</p><span class="source-tail" title="' + escapeHtml(String(checkpoint.sha256 || '')) + '">' + escapeHtml(spanProvenance(checkpoint)) + '</span></div>';
   }).join('');
   const stream = records.filter(function (article) { return article.id !== selected.id; }).slice(0,6).map(intelligenceCard).join('');
-  const readLabel = selected.content_status === 'excerpt' ? 'Excerpt indexed' : selected.read_minutes ? selected.read_minutes + ' min read' : 'Full text indexed';
+  const readLabel = selected.content_status === 'excerpt' ? sourceAccessLabel(selected) : selected.read_minutes ? selected.read_minutes + ' min read' : 'Full text indexed';
   const exactSpanCount = sourceSpans.length + checkpoints.length;
   const articlePosition = Math.max(1,ARTICLES.findIndex(function (article) { return article.id === selected.id; }) + 1);
   const sourceRelease = SNAPSHOT.sources && SNAPSHOT.sources[selected.source] || {};
@@ -4492,17 +4683,18 @@ function renderIntelligenceBrief(records) {
   });
   const activePackets = localPackets.filter(function (item) { return item.status !== 'archived'; }).length;
   const subtitleMarkup = selected.subtitle ? '<p class="ic-dek">' + escapeHtml(selected.subtitle) + '</p>' : '';
+  const metadataOnlyMember = selected.publication_access === 'member' && !hasIndexedMemberPreview(selected);
   const openingText = leadRow && leadRow.span && leadRow.span.text || articleClaim(selected);
-  const openingLabel = leadRow ? 'Author’s opening thesis' : 'Published article framing';
-  const openingTail = leadRow ? exactPassageTail(leadRow.span) : '<span class="source-tail">Captured article framing · open the original for full context</span>';
+  const openingLabel = leadRow ? 'Author’s opening thesis' : metadataOnlyMember ? 'Published metadata' : 'Published article framing';
+  const openingTail = leadRow ? exactPassageTail(leadRow.span) : metadataOnlyMember ? '<span class="source-tail">No anonymous article-body preview was available in this release</span>' : '<span class="source-tail">Captured article framing · open the original for full context</span>';
   const checkpointSection = '<section class="ic-sheet-section" id="brief-checkpoints"><div class="ic-sheet-label"><span>Public checkpoints</span><span class="ic-authored">Authored</span></div>' +
     (checkpointMarkup || '<p class="missing">No dated public checkpoint was identified by the high-precision rules.</p>') +
     '<p class="ic-boundary-note">Status is measured against the dataset check date. A passed cited date means verification is due; it does not assert that the event occurred.</p></section>';
   shell.innerHTML = '<div class="intel-wrap">' + briefRailMarkup(lenses,selected) + briefCompactNavMarkup(lenses) +
     '<article class="intel-lead" aria-labelledby="lead-article-title"><div class="intel-lead-inner">' +
-      '<div class="ic-document-meta"><div class="ic-document-meta-left"><span class="source-badge source-' + selected.source + '">' + sourceLabel(selected.source) + '</span><time datetime="' + selected.date + '">' + escapeHtml(formatDate(selected.date)) + '</time><span>·</span><span>' + escapeHtml(readLabel) + '</span><span>·</span><span class="coverage-badge ' + (selected.body_revision_status === 'current' ? 'coverage-full' : 'coverage-revision') + '">' + escapeHtml(bodyRevisionLabel(selected)) + '</span><span>·</span><span>Dossier ' + number(articlePosition) + ' of ' + number(ARTICLES.length) + '</span><span>·</span><span class="ic-checked-at">Dataset assembled <time datetime="' + escapeHtml(String(SNAPSHOT.checked_at || '')) + '">' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '</time></span><span>·</span><span class="ic-source-health' + sourceHealthClass + '">' + escapeHtml(sourceCollectionSummary(selected.source)) + '</span></div><a class="ic-open-source" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a></div>' +
+      '<div class="ic-document-meta"><div class="ic-document-meta-left"><span class="source-badge source-' + selected.source + '">' + sourceLabel(selected.source) + '</span>' + accessBadgeMarkup(selected) + '<time datetime="' + selected.date + '">' + escapeHtml(formatDate(selected.date)) + '</time><span>·</span><span>' + escapeHtml(readLabel) + '</span><span>·</span><span class="coverage-badge ' + (selected.body_revision_status === 'current' ? 'coverage-full' : 'coverage-revision') + '">' + escapeHtml(bodyRevisionLabel(selected)) + '</span><span>·</span><span>Dossier ' + number(articlePosition) + ' of ' + number(ARTICLES.length) + '</span><span>·</span><span class="ic-checked-at">Dataset assembled <time datetime="' + escapeHtml(String(SNAPSHOT.checked_at || '')) + '">' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '</time></span><span>·</span><span class="ic-source-health' + sourceHealthClass + '">' + escapeHtml(sourceCollectionSummary(selected.source)) + '</span></div>' + (isPaidSubstackArticle(selected) ? '' : '<a class="ic-open-source" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '</div>' +
       '<div class="ic-topic">Investment committee brief · published information</div><h1 class="intel-title" id="lead-article-title">' + escapeHtml(selected.title) + '</h1>' + subtitleMarkup + bodyRevisionWarningMarkup(selected) +
-      '<section class="ic-opening-claim" id="brief-thesis"><div class="ic-claim-label">' + openingLabel + '</div><p>' + highlightArticleNumbers(openingText) + '</p>' + openingTail + '</section></div>' +
+      '<section class="ic-opening-claim" id="brief-thesis"><div class="ic-claim-label">' + openingLabel + '</div><p>' + highlightArticleNumbers(openingText) + '</p>' + openingTail + '</section>' + premiumAccessMarkup(selected,'brief') + '</div>' +
       evidenceSpotlightMarkup(selected) +
       '<section class="ic-analysis" id="brief-analysis" aria-labelledby="analysis-title"><div class="ic-section-header"><h2 id="analysis-title">How the argument works</h2><p>Exact authored passages, organized by research role. No analyst conclusion, score, or portfolio recommendation is inferred.</p></div><div class="ic-analysis-grid">' +
         analysisPanelMarkup(mechanismRow,'Mechanism','') + analysisPanelMarkup(evidenceRow,'Evidence','evidence') +
@@ -4510,12 +4702,12 @@ function renderIntelligenceBrief(records) {
       '<section class="ic-dossier" id="brief-dossier"><div class="ic-dossier-head"><div class="ic-topic">Audit trail</div><h2>Source dossier and decision boundaries</h2><p>The evidence ledger retains detected values with their original context. Section coverage records what the rules captured; it is not a judgment of research quality.</p></div>' +
         researchMapMarkup(selected) + evidenceLedgerMarkup(selected) +
         '<div class="intel-section-grid">' + (sectionMarkup || '<div class="intel-empty">No additional countercase, falsifier, or implementation passage was identified. Open the original article for full context.</div>') + '</div>' +
-      '</section>' + researchThreadMarkup(selected) + '<div class="intel-actions"><a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a><button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open source dossier</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy IC brief</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
+      '</section>' + researchThreadMarkup(selected) + '<div class="intel-actions">' + (isPaidSubstackArticle(selected) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '<button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open source dossier</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy IC brief</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
     '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">IC decision sheet · source + local</span><span class="print-only">IC decision sheet · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">What changes our mind</h2><p class="ic-sheet-intro"><span class="screen-only">The source-defined thesis, contrary case, falsifier, and public watch items remain separate from tab-session workflow.</span><span class="print-only">Source-defined thesis, contrary case, falsifier, and public watch items. Independent diligence remains required.</span></p>' +
       decisionSheetSectionMarkup(leadRow,'Author’s thesis') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase') + decisionSheetSectionMarkup(falsifierRow,'What would change the view') + decisionSheetSectionMarkup(implementationRow,'What to watch') + checkpointSection +
       '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Tab-session IC overlay</span><span class="ic-authored">Local · this tab</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active source-passage packet' + (activePackets === 1 ? '' : 's') + ' for this article. Packets attach to individual observations; this brief never silently assigns an article-level recommendation.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open decision queue</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy brief</button></div></section>' +
       '<p class="ic-boundary-note">Evidence boundary: exact published-source passages; not independently verified, not a live market as-of, and not a portfolio recommendation. Full source context remains controlling.</p></div></aside>' +
-    '<section class="ic-archive-grid" id="brief-archive">' + archiveCoverageMarkup(records) + relatedResearchMarkup(selected) + '</section>' +
+    '<section class="ic-archive-grid" id="brief-archive">' + archiveCoverageMarkup(records) + relatedResearchMarkup(selected) + premiumArchiveMarkup(selected) + '</section>' +
     '<section class="intel-stream"><div class="intel-card-head"><h3>Recent article dossiers</h3><span>' + number(records.length) + ' in this lens</span></div><div class="intel-stream-list">' + (stream || '<div class="intel-empty">No additional articles in this lens.</div>') + '</div></section></div>';
   restorePendingBriefFocus();
 }
@@ -4531,6 +4723,7 @@ function recordValues(record, facet) {
   if (isArticleView()) {
     if (facet === 'source') return [record.source];
     if (facet === 'revision') return [record.body_revision_status];
+    if (facet === 'access') return [record.publication_access];
     if (facet === 'content') return [record.content_status];
     const matchingIdeas = record._ideas.filter(function (idea) { return ideaMatchesResearchFacets(idea,facet); });
     if (facet === 'direction') return matchingIdeas.map(function (idea) { return idea.direction; });
@@ -4544,6 +4737,7 @@ function recordValues(record, facet) {
   } else {
     if (facet === 'source') return [record._article.source];
     if (facet === 'revision') return [record._article.body_revision_status];
+    if (facet === 'access') return [record._article.publication_access];
     if (facet === 'direction') return [record.direction];
     if (facet === 'instrument') return record.instruments;
     if (facet === 'manager') return record.manager_key ? [record.manager_key] : [];
@@ -4555,7 +4749,7 @@ function recordValues(record, facet) {
   return [];
 }
 function updateFacetCounts() {
-  ['source','revision','direction','instrument','manager','quality','content'].forEach(function (facet) {
+  ['source','revision','access','direction','instrument','manager','quality','content'].forEach(function (facet) {
     const records = contextualRecords(facet);
     const counts = new Map();
     records.forEach(function (record) {
@@ -4582,7 +4776,8 @@ function filterLabel(facet,value) {
   if (facet === 'direction') return directionLabel(value);
   if (facet === 'instrument') return instrumentLabel(value);
   if (facet === 'quality') return {quant:'Numeric context',thesis:'Has thesis',outcome:'Reported outcome',manager:'Mentioned entity'}[value];
-  if (facet === 'content') return value === 'full' ? 'Full text' : 'Excerpt';
+  if (facet === 'access') return {public:'Public at source',member:'Member at source',unknown:'Access unverified'}[value];
+  if (facet === 'content') return value === 'full' ? 'Full text' : 'Excerpt / metadata';
   if (facet === 'manager') return MANAGER_LABELS.get(value) || value;
   if (facet === 'range') return value.toUpperCase();
   if (facet === 'coverage') return value === 'ideas' ? 'With observations' : value === 'research' ? 'Research-only' : 'All research';
@@ -4597,7 +4792,7 @@ function renderActiveFilters() {
   const container = document.getElementById('active-filters');
   const chips = [];
   [
-    ['source',state.sources],['revision',state.revisions],['direction',state.directions],['instrument',state.instruments],
+    ['source',state.sources],['revision',state.revisions],['access',state.publicationAccess],['direction',state.directions],['instrument',state.instruments],
     ['manager',state.managers],['quality',state.quality],['content',state.content]
   ].forEach(function (entry) {
     entry[1].forEach(function (value) {
@@ -4637,7 +4832,7 @@ function setPressedStates() {
   });
   const facetSets = {
     source:state.sources,revision:state.revisions,direction:state.directions,instrument:state.instruments,
-    manager:state.managers,quality:state.quality,content:state.content,'queue-status':state.queueStatuses
+    manager:state.managers,quality:state.quality,access:state.publicationAccess,content:state.content,'queue-status':state.queueStatuses
   };
   document.querySelectorAll('[data-filter]').forEach(function (button) {
     const facet = button.dataset.filter;
@@ -4691,7 +4886,7 @@ function renderIdeaInspector(idea) {
   });
   if (idea.manager) badges.push('<span class="coverage-badge">' + escapeHtml(idea.manager) + '</span>');
   badges.push('<span class="documentation-badge ' + (idea.documentation_score === 5 ? 'complete' : '') + '">' + idea.documentation_score + '/5 fields</span>');
-  badges.push('<span class="coverage-badge">' + (article.content_status === 'full' ? 'Full text indexed' : 'Excerpt indexed') + '</span>');
+  badges.push('<span class="coverage-badge' + (isPaidSubstackArticle(article) ? ' premium-badge' : '') + '">' + escapeHtml(sourceAccessLabel(article)) + '</span>');
   badges.push('<span class="coverage-badge ' + (article.body_revision_status === 'current' ? '' : 'coverage-revision') + '">' + escapeHtml(bodyRevisionLabel(article)) + '</span>');
   const reviewReasons = [];
   if (idea.negation_risk) reviewReasons.push('directional language appears near a negation');
@@ -4741,7 +4936,7 @@ function renderIdeaInspector(idea) {
     '<h2 class="record-title">' + escapeHtml(article.title) + '</h2>' +
     (article.subtitle ? '<p class="record-subtitle">' + escapeHtml(article.subtitle) + '</p>' : '') +
     '<div class="record-actions">' +
-      '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a>' +
+      (isPaidSubstackArticle(article) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(article)) + '</a>') +
       (alternate ? '<a class="secondary-action" href="' + escapeHtml(safeUrl(alternate)) + '" target="_blank" rel="noopener noreferrer">Medium copy ↗</a>' : '') +
       (workflow ? '' : '<button class="secondary-action" type="button" data-save-idea="' + idea.id + '">☆ Add to review</button>') +
       '<button class="secondary-action" type="button" data-copy-citation="' + idea.id + '">Copy citation</button>' +
@@ -4750,6 +4945,7 @@ function renderIdeaInspector(idea) {
     bodyRevisionWarningMarkup(article) +
     (reviewReasons.length ? '<div class="review-notice"><strong>Extraction review recommended:</strong> ' + escapeHtml(reviewReasons.join('; ')) + '. Verify the surrounding source context before interpreting stance.</div>' : '') +
     detailSection('Source passage',passageText(idea),'primary-text') +
+    premiumAccessMarkup(article,'idea') +
     detailSection('Underlying',idea.underlying) +
     (idea.manager_raw && idea.manager_raw !== idea.manager ? detailSection('Original entity mention',idea.manager_raw) : '') +
     detailSection('Edge / thesis',idea.thesis) +
@@ -4780,7 +4976,10 @@ function renderArticleInspector(article) {
   }).join('');
   const structures = new Set(article.directions.filter(function (value) { return value !== 'unspecified'; }));
   const gaps = [];
-  if (article.content_status === 'excerpt') {
+  const metadataOnlyMember = article.publication_access === 'member' && !hasIndexedMemberPreview(article);
+  if (metadataOnlyMember) {
+    gaps.push('No anonymous article-body preview was available to this release; body passages, evidence roles, and uncaptured sections are not assessable here.');
+  } else if (article.content_status === 'excerpt') {
     gaps.push('Only an excerpt was available to the index; uncaptured sections are not assessable.');
     if (!articleEvidence(article)) gaps.push('Contextual-evidence coverage beyond the captured excerpt is not assessable; absence cannot be inferred.');
     if (!articleHasBriefKind(article,'countercase') && !articleHasBriefKind(article,'falsifier')) gaps.push('Countercase and falsifier coverage beyond the captured excerpt is not assessable; absence cannot be inferred.');
@@ -4789,25 +4988,33 @@ function renderArticleInspector(article) {
     if (!articleHasBriefKind(article,'countercase') && !articleHasBriefKind(article,'falsifier')) gaps.push('No explicit countercase or falsifier section was identified by the high-precision rules; this is not proof of absence.');
   }
   if (structures.size > 1) gaps.push('Extracted passages describe mixed structures; no single article-level stance is assigned.');
-  if (!brief.lead) gaps.push(article.content_status === 'excerpt' ? 'An authored lead passage is not assessable from the captured excerpt.' : 'No authored lead passage was identified in the compact index; review the original for full context.');
+  if (!brief.lead && !metadataOnlyMember) gaps.push(article.content_status === 'excerpt' ? 'An authored lead passage is not assessable from the captured excerpt.' : 'No authored lead passage was identified in the compact index; review the original for full context.');
+  const openingInspectorLabel = metadataOnlyMember ? 'Published metadata' : 'Opening authored passage';
+  const observationBoundary = metadataOnlyMember
+    ? '<section class="article-dossier-section"><h3>Parser-derived observations</h3><p class="missing">None captured because this release contains no anonymous article-body preview. Metadata is not treated as an investment observation.</p></section>'
+    : '<section class="article-dossier-section"><h3>Parser-derived observations</h3><p class="missing">None captured. The article dossier remains available because it is built from exact authored sections, not observation count.</p></section>';
+  const provenanceBoundary = metadataOnlyMember
+    ? 'This record contains published metadata only; it has no article-body span, inferred stance, holding, return, or recommendation.'
+    : 'Every dossier passage is stored with source offsets and a SHA-256 hash and was validated against the captured article body before publication.';
   return '<div class="inspector-content">' +
-    '<div class="record-eyebrow"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span><time datetime="' + article.date + '">' + formatDate(article.date) + '</time><span class="record-id">' + article.id.toUpperCase() + '</span></div>' +
+    '<div class="record-eyebrow"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span>' + accessBadgeMarkup(article) + '<time datetime="' + article.date + '">' + formatDate(article.date) + '</time><span class="record-id">' + article.id.toUpperCase() + '</span></div>' +
     '<h2 class="record-title">' + escapeHtml(article.title) + '</h2>' +
-    '<div class="intel-label" style="margin-top:10px">Opening authored passage</div><p class="record-subtitle primary-text">' + escapeHtml(articleClaim(article)) + '</p>' +
+    '<div class="intel-label" style="margin-top:10px">' + escapeHtml(openingInspectorLabel) + '</div><p class="record-subtitle primary-text">' + escapeHtml(articleClaim(article)) + '</p>' +
     '<div class="record-actions">' +
-      '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer">Open original ↗</a>' +
+      (state.view === 'briefing' || isPaidSubstackArticle(article) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(article)) + '</a>') +
       (alternate ? '<a class="secondary-action" href="' + escapeHtml(safeUrl(alternate)) + '" target="_blank" rel="noopener noreferrer">Medium copy ↗</a>' : '') +
       '<button class="secondary-action" type="button" data-copy-brief="' + article.id + '">Copy institutional brief</button>' +
       '<button class="secondary-action" type="button" data-copy-article="' + article.id + '">Copy citation</button>' +
     '</div>' +
     '<div class="intel-reasons">' + reasonChips(article,8) + '</div>' +
     bodyRevisionWarningMarkup(article) +
+    (state.view === 'briefing' ? '' : premiumAccessMarkup(article,'article')) +
     dossierSections +
     (checkpoints ? '<section class="article-dossier-section"><h3>Public checkpoints cited</h3>' + checkpoints + '</section>' : '') +
     (gaps.length ? '<section class="article-dossier-section"><h3>Evidence boundaries</h3><div class="review-notice">' + gaps.map(function (gap) { return '<div>• ' + escapeHtml(gap) + '</div>'; }).join('') + '</div></section>' : '') +
     articleExtractionMap(article) +
-    (related ? '<details class="article-dossier-section"><summary>Parser-derived observations (' + number(article.trade_count) + ')</summary><div class="related-ideas" style="margin-top:9px">' + related + '</div></details>' : (observationsReady ? '<section class="article-dossier-section"><h3>Parser-derived observations</h3><p class="missing">None captured. The article dossier remains available because it is built from exact authored sections, not observation count.</p></section>' : '')) +
-    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; dataset assembled ' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '; ' + escapeHtml(sourceCollectionSummary(article.source)) + '; ' + escapeHtml(bodyRevisionSummary(article)) + ' Every dossier passage is stored with source offsets and a SHA-256 hash and was validated against the captured article body before publication. Structured direction fields classify passage language only; they do not identify the actor, a verified position, or a current view. The brief does not infer holdings, conviction, expected return, portfolio fit, or a live market view.</div>' +
+    (related ? '<details class="article-dossier-section"><summary>Parser-derived observations (' + number(article.trade_count) + ')</summary><div class="related-ideas" style="margin-top:9px">' + related + '</div></details>' : (observationsReady ? observationBoundary : '')) +
+    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; dataset assembled ' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '; ' + escapeHtml(sourceCollectionSummary(article.source)) + '; ' + escapeHtml(bodyRevisionSummary(article)) + ' ' + escapeHtml(provenanceBoundary) + ' Structured direction fields classify passage language only; they do not identify the actor, a verified position, or a current view. The brief does not infer holdings, conviction, expected return, portfolio fit, or a live market view.</div>' +
     '</div>';
 }
 let renderedInspectorKey = '';
@@ -4990,6 +5197,7 @@ function resetFilters() {
   state.instruments.clear();
   state.managers.clear();
   state.quality.clear();
+  state.publicationAccess.clear();
   state.content.clear();
   state.queueStatuses.clear();
   state.documentation = 'all';
@@ -5194,7 +5402,8 @@ function decisionPacketText(idea,item) {
     'SOURCE',
     ideaCitation(idea),
     'Published passage: ' + passageText(idea),
-    'Content access: ' + (article.content_status === 'full' ? 'Full text indexed' : 'Excerpt indexed'),
+    'Publication access: ' + publicationAccessLabel(article),
+    'Indexed coverage: ' + (article.content_status === 'full' ? 'Full text indexed' : 'Excerpt indexed'),
     'Body revision: ' + bodyRevisionSummary(article),
     '',
     'INVESTMENT CASE (analyst-entered)',
@@ -5280,17 +5489,17 @@ function exportCsv() {
   const records = filteredRecords();
   let rows;
   if (state.view === 'research') {
-    rows = [['Date','Publication channel','Article','Subtitle','Research observations','Content access','Body revision','Body source revision','Observed source revision','URL']].concat(records.map(function (article) {
-      return [article.date,sourceLabel(article.source),article.title,article.subtitle,article.trade_count,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,article.url];
+    rows = [['Date','Publication channel','Article','Subtitle','Research observations','Publication access','Indexed coverage','Body revision','Body source revision','Observed source revision','URL']].concat(records.map(function (article) {
+      return [article.date,sourceLabel(article.source),article.title,article.subtitle,article.trade_count,article.publication_access,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,article.url];
     }));
   } else {
-    rows = [['Date','Parsed stance','Instruments','Underlying','Mentioned entity','Original entity mention','Source passage','Extracted edge / thesis','Numeric context','Reported outcome','Documentation coverage','Review flags','Content access','Body revision','Body source revision','Observed source revision','Queue status','Priority','Decision owner','Next review','Analyst confidence','Next action','Variant thesis','Contrary evidence','Catalyst','Horizon','Valuation / payoff','Falsifier / downside / exit','Implementation / liquidity / funding','Mandate / portfolio fit','Source reviewed','Independent evidence','Live market / valuation checked','Liquidity / funding checked','Portfolio risk checked','Compliance checked','Packet coverage','Local tags','Local memo','Packet updated','Article','Publication channel','URL']].concat(records.map(function (idea) {
+    rows = [['Date','Parsed stance','Instruments','Underlying','Mentioned entity','Original entity mention','Source passage','Extracted edge / thesis','Numeric context','Reported outcome','Documentation coverage','Review flags','Publication access','Indexed coverage','Body revision','Body source revision','Observed source revision','Queue status','Priority','Decision owner','Next review','Analyst confidence','Next action','Variant thesis','Contrary evidence','Catalyst','Horizon','Valuation / payoff','Falsifier / downside / exit','Implementation / liquidity / funding','Mandate / portfolio fit','Source reviewed','Independent evidence','Live market / valuation checked','Liquidity / funding checked','Portfolio risk checked','Compliance checked','Packet coverage','Local tags','Local memo','Packet updated','Article','Publication channel','URL']].concat(records.map(function (idea) {
       const article = idea._article;
       const workflow = workflowItems.get(idea.id) || {};
       const packet = packetCoverage(workflowItems.get(idea.id));
       const flags = [idea.negation_risk ? 'negation-risk' : '',idea.reference_line ? 'reference-line' : '',idea.description_truncated ? 'truncated' : '',article.body_revision_status === 'prior' ? 'prior-revision' : '',article.body_revision_status === 'unverified' ? 'unverified-revision' : ''].filter(Boolean).join('; ');
       const checks = workflow.checks || {};
-      return [article.date,directionLabel(idea.direction),idea.instruments.map(instrumentLabel).join('; '),idea.underlying,idea.manager,idea.manager_raw,passageText(idea),idea.thesis,idea.quant,idea.outcome,idea.documentation_score + '/5',flags,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,workflow.status || '',workflow.priority || '',workflow.owner || '',workflow.review_date || '',workflow.confidence || '',workflow.next_action || '',workflow.thesis || '',workflow.contrary || '',workflow.catalyst || '',workflow.horizon || '',workflow.payoff || '',workflow.risk || '',workflow.implementation || '',workflow.portfolio || '',checks.source ? 'yes' : '',checks.independent ? 'yes' : '',checks.market ? 'yes' : '',checks.liquidity ? 'yes' : '',checks.portfolio ? 'yes' : '',checks.compliance ? 'yes' : '',workflow.id ? packet.completed + '/' + packet.total : '',workflow.tags || '',workflow.note || '',workflow.updated_at || '',article.title,sourceLabel(article.source),article.url];
+      return [article.date,directionLabel(idea.direction),idea.instruments.map(instrumentLabel).join('; '),idea.underlying,idea.manager,idea.manager_raw,passageText(idea),idea.thesis,idea.quant,idea.outcome,idea.documentation_score + '/5',flags,article.publication_access,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,workflow.status || '',workflow.priority || '',workflow.owner || '',workflow.review_date || '',workflow.confidence || '',workflow.next_action || '',workflow.thesis || '',workflow.contrary || '',workflow.catalyst || '',workflow.horizon || '',workflow.payoff || '',workflow.risk || '',workflow.implementation || '',workflow.portfolio || '',checks.source ? 'yes' : '',checks.independent ? 'yes' : '',checks.market ? 'yes' : '',checks.liquidity ? 'yes' : '',checks.portfolio ? 'yes' : '',checks.compliance ? 'yes' : '',workflow.id ? packet.completed + '/' + packet.total : '',workflow.tags || '',workflow.note || '',workflow.updated_at || '',article.title,sourceLabel(article.source),article.url];
     }));
   }
   const csv = '\uFEFF' + rows.map(function (row) { return row.map(csvCell).join(','); }).join('\r\n');
@@ -5314,6 +5523,7 @@ function applyPreset(name) {
   state.instruments.clear();
   state.managers.clear();
   state.quality.clear();
+  state.publicationAccess.clear();
   state.content.clear();
   state.queueStatuses.clear();
   state.query = '';
@@ -5768,7 +5978,7 @@ document.addEventListener('click',function (event) {
     else {
       const map = {
         source:state.sources,revision:state.revisions,direction:state.directions,instrument:state.instruments,
-        manager:state.managers,quality:state.quality,content:state.content,'queue-status':state.queueStatuses
+        manager:state.managers,quality:state.quality,access:state.publicationAccess,content:state.content,'queue-status':state.queueStatuses
       };
       if (map[name]) toggleSet(map[name],value);
     }
@@ -5780,7 +5990,7 @@ document.addEventListener('click',function (event) {
   if (clearFacet) {
     const map = {
       source:state.sources,revision:state.revisions,direction:state.directions,instrument:state.instruments,
-      manager:state.managers,quality:state.quality,content:state.content
+      manager:state.managers,quality:state.quality,access:state.publicationAccess,content:state.content
     };
     if (map[clearFacet.dataset.clearFacet]) map[clearFacet.dataset.clearFacet].clear();
     state.limit = PAGE_SIZE[state.view];
@@ -5805,7 +6015,7 @@ document.addEventListener('click',function (event) {
     const name = remove.dataset.removeFilter;
     const map = {
       source:state.sources,revision:state.revisions,direction:state.directions,instrument:state.instruments,
-      manager:state.managers,quality:state.quality,content:state.content,'queue-status':state.queueStatuses
+      manager:state.managers,quality:state.quality,access:state.publicationAccess,content:state.content,'queue-status':state.queueStatuses
     };
     if (map[name]) map[name].delete(remove.dataset.value);
     if (name === 'range') state.range = 'all';
@@ -5827,6 +6037,7 @@ document.addEventListener('click',function (event) {
     state.instruments.clear();
     state.managers.clear();
     state.quality.clear();
+    state.publicationAccess.clear();
     state.documentation = 'all';
     state.selected = related.dataset.relatedIdea;
     state.sort = 'newest';
@@ -6507,6 +6718,7 @@ else render();
 
 HTML = (HTML_TEMPLATE
         .replace('__ARTICLE_WIRE_SCHEMA_VERSION__', str(ARTICLE_WIRE_SCHEMA_VERSION))
+        .replace('__SUBSCRIPTION_URL_JSON__', json_for_script(SUBSCRIPTION_URL))
         .replace('__ARTICLES_JSON__', articles_json)
         .replace('__THREADS_JSON__', threads_json)
         .replace('__MANAGER_LABELS_JSON__', manager_labels_json)

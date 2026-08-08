@@ -26,6 +26,7 @@ from fetch_all_posts import (
     SSL_CONTEXT,
     atomic_write_json,
     body_word_count,
+    bounded_excerpt,
     iso_instant,
     strip_html,
 )
@@ -43,6 +44,10 @@ RSS_URL = f'https://medium.com/feed/@{USERNAME}'
 PAGE_LIMIT = 25
 MAX_RSS_BYTES = 2_000_000
 MAX_GRAPHQL_BYTES = 12_000_000
+MEMBER_PREVIEW_MAX_CHARS = 1_200
+MEMBER_PREVIEW_KEYS = frozenset((
+    'schema_version', 'surface', 'text', 'character_count', 'body_sha256',
+))
 
 HEADERS = {
     'User-Agent': 'substack-trades/1.0 (+https://github.com/navnoorthapar/substack-trades)',
@@ -479,6 +484,58 @@ def _iso_timestamp(milliseconds):
         return ''
 
 
+def _member_preview(text, surface='anonymous-medium-profile'):
+    """Return an exact proof for one bounded anonymous Medium surface."""
+    preview = bounded_excerpt(text)
+    return {
+        'schema_version': 1,
+        'surface': surface if preview else 'metadata-only',
+        'text': preview,
+        'character_count': len(preview),
+        'body_sha256': hashlib.sha256(preview.encode('utf-8')).hexdigest(),
+    }
+
+
+def _trusted_member_preview(value):
+    """Return the proven preview text, or None for legacy/untrusted caches."""
+    if not isinstance(value, dict) or set(value) != MEMBER_PREVIEW_KEYS:
+        return None
+    text = value.get('text')
+    if not isinstance(text, str) or len(text) > MEMBER_PREVIEW_MAX_CHARS:
+        return None
+    surface = value.get('surface')
+    if surface not in {'anonymous-medium-profile', 'metadata-only'}:
+        return None
+    if value.get('character_count') != len(text):
+        return None
+    digest = hashlib.sha256(text.encode('utf-8')).hexdigest()
+    if value.get('body_sha256') != digest:
+        return None
+    if (not text) != (surface == 'metadata-only'):
+        return None
+    return text
+
+
+def public_medium_post(post):
+    """Strip a locked Medium record to its proven anonymous preview."""
+    item = dict(post)
+    audience = str(item.get('audience') or '').strip().casefold()
+    if audience != 'locked':
+        item.pop('member_preview', None)
+        return item
+    preview = _trusted_member_preview(item.get('member_preview'))
+    if preview is None:
+        preview = ''
+    proof = _member_preview(preview)
+    item['body_text'] = preview
+    subtitle = str(item.get('subtitle') or '').strip()
+    item['subtitle'] = subtitle if subtitle and subtitle in preview else ''
+    item['wordcount'] = 0
+    item['content_status'] = 'excerpt'
+    item['member_preview'] = proof
+    return item
+
+
 def convert_post(post):
     """Convert Medium's GraphQL shape into the project's post schema."""
     paragraphs = _paragraphs(post)
@@ -489,6 +546,10 @@ def convert_post(post):
     display_title = str(post.get('title') or '').strip()
     post_id = str(post.get('id') or '')
     visibility = str(post.get('visibility') or '').upper()
+    if visibility not in {'PUBLIC', 'LOCKED'}:
+        raise ValueError('Medium post has an unsupported visibility')
+    if visibility == 'LOCKED':
+        body_text = bounded_excerpt(body_text)
     url = post.get('mediumUrl')
     url, unique_slug, url_post_id = canonical_medium_item_identity(url)
     if url_post_id != post_id.casefold():
@@ -502,7 +563,7 @@ def convert_post(post):
         raise ValueError('Medium post has invalid publication timestamps')
     source_updated_at = _iso_timestamp(post.get('latestPublishedAt'))
 
-    return {
+    item = {
         'source': 'medium',
         'source_id': post_id,
         'medium_id': post_id,
@@ -529,6 +590,10 @@ def convert_post(post):
         'mirror_substack_slug': _mirror_slug(paragraphs),
         'pinned': bool(post.get('pinnedByCreatorAt')),
     }
+    if visibility == 'LOCKED':
+        item['member_preview'] = _member_preview(body_text)
+        item['wordcount'] = 0
+    return item
 
 
 def load_previous(path=PREVIOUS_PATH):
@@ -683,7 +748,7 @@ def carried_cached_record(post):
     # observation timestamp here would falsely imply the cached body was
     # verified against the source version on this run.
     item['observed_source_updated_at'] = ''
-    return item
+    return public_medium_post(item)
 
 
 def live_rss_record(post):

@@ -1,9 +1,15 @@
+import json
 import unittest
+import hashlib
+from pathlib import Path
 from unittest import mock
 
 import fetch_medium_posts
 import merge_article_sources
 import validate_pipeline
+
+
+ROOT = Path(__file__).parent
 
 
 class MediumFetchTests(unittest.TestCase):
@@ -140,6 +146,12 @@ class MediumFetchTests(unittest.TestCase):
         self.assertEqual(converted['content_status'], 'excerpt')
         self.assertEqual(converted['body_revision_status'], 'current')
 
+    def test_graphql_conversion_rejects_unknown_visibility(self):
+        post = self._post([])
+        post['visibility'] = 'NEW_MEMBER_ENUM'
+        with self.assertRaisesRegex(ValueError, 'unsupported visibility'):
+            fetch_medium_posts.convert_post(post)
+
     def test_nonempty_public_graphql_body_is_still_only_a_proven_excerpt(self):
         post = self._post([
             {'type': 'P', 'text': 'Visible paragraph text.', 'markups': []},
@@ -148,6 +160,63 @@ class MediumFetchTests(unittest.TestCase):
         converted = fetch_medium_posts.convert_post(post)
         self.assertEqual(converted['body_text'], 'Visible paragraph text.')
         self.assertEqual(converted['content_status'], 'excerpt')
+
+    def test_locked_graphql_body_is_bounded_before_it_reaches_the_merge(self):
+        post = self._post([
+            {
+                'type': 'P',
+                'text': ('anonymous preview evidence ' * 100) + 'private-tail',
+                'markups': [],
+            },
+        ])
+        converted = fetch_medium_posts.convert_post(post)
+        self.assertLessEqual(len(converted['body_text']), 1_200)
+        self.assertNotIn('private-tail', converted['body_text'])
+        self.assertTrue(converted['body_text'].endswith('…'))
+        self.assertEqual(converted['content_status'], 'excerpt')
+        self.assertEqual(converted['wordcount'], 0)
+        self.assertEqual(
+            converted['member_preview']['text'], converted['body_text']
+        )
+        self.assertEqual(
+            converted['member_preview']['body_sha256'],
+            hashlib.sha256(converted['body_text'].encode('utf-8')).hexdigest(),
+        )
+
+    def test_legacy_locked_cache_without_proof_becomes_metadata_only(self):
+        legacy = {
+            'audience': 'locked',
+            'visibility': 'LOCKED',
+            'subtitle': 'Subscriber-only subtitle from a legacy body.',
+            'body_text': 'subscriber-only body ' * 500,
+            'wordcount': 500,
+            'content_status': 'excerpt',
+        }
+        carried = fetch_medium_posts.carried_cached_record(legacy)
+        self.assertEqual(carried['body_text'], '')
+        self.assertEqual(carried['subtitle'], '')
+        self.assertEqual(carried['wordcount'], 0)
+        self.assertEqual(carried['member_preview']['surface'], 'metadata-only')
+        self.assertEqual(carried['member_preview']['text'], '')
+
+    def test_tracked_locked_rows_are_bound_to_exact_anonymous_previews(self):
+        rows = json.loads((ROOT / 'medium_posts.json').read_text(encoding='utf-8'))
+        locked = [
+            row for row in rows
+            if str(row.get('audience') or '').strip().casefold() == 'locked'
+        ]
+        self.assertTrue(locked)
+        for row in locked:
+            preview = row.get('member_preview')
+            self.assertIsInstance(preview, dict)
+            self.assertEqual(
+                fetch_medium_posts._trusted_member_preview(preview),
+                row['body_text'],
+            )
+            self.assertLessEqual(len(row['body_text']), 1_200)
+            self.assertTrue(
+                not row.get('subtitle') or row['subtitle'] in row['body_text']
+            )
 
     def test_medium_wordcount_uses_the_shared_full_body_token_rule(self):
         post = self._post([
@@ -337,6 +406,8 @@ class MediumFetchTests(unittest.TestCase):
             self._archive_post(),
             firstPublishedAt=first,
             latestPublishedAt=first - 1,
+            visibility='PUBLIC',
+            content={'bodyModel': {'paragraphs': []}},
         )
         with mock.patch.object(
                 fetch_medium_posts,
@@ -544,6 +615,7 @@ class SourceMergeTests(unittest.TestCase):
             'subtitle': 'A sufficiently descriptive subtitle for matching and rendering.',
             'post_date': date,
             'url': f'https://navnoorbawa.substack.com/p/{slug}',
+            'audience': 'everyone',
             'body_text': 'Substack body',
             'wordcount': 2,
             'content_status': 'full',
@@ -605,6 +677,67 @@ class SourceMergeTests(unittest.TestCase):
             next(article for article in articles if article['source'] == 'substack')
             ['alternate_urls']['medium'],
             medium[0]['url'],
+        )
+
+    def test_member_sources_publish_only_the_bounded_anonymous_preview(self):
+        paid = self.substack('paid-note', 'Paid note')
+        paid.update({
+            'audience': 'only_paid',
+            'body_text': 'private subscriber body ' * 500,
+            'public_preview_text': 'Exact anonymous Substack preview.',
+            'public_preview_updated_at': '2026-01-01T00:00:00Z',
+        })
+        locked = self.medium(
+            'aaa111aaa111',
+            'Locked Medium note',
+            audience='locked',
+            body_text=('Exact anonymous Medium preview ' * 80) + 'private-tail',
+            content_status='excerpt',
+        )
+        locked['member_preview'] = fetch_medium_posts._member_preview(
+            locked['body_text']
+        )
+
+        posts, articles, _ = merge_article_sources.merge_sources(
+            [paid], [locked], overrides=[]
+        )
+
+        by_source = {row['source']: row for row in posts}
+        self.assertEqual(
+            by_source['substack']['body_text'],
+            'Exact anonymous Substack preview.',
+        )
+        self.assertLessEqual(len(by_source['medium']['body_text']), 1_200)
+        self.assertNotIn('private-tail', by_source['medium']['body_text'])
+        for row in posts:
+            preview = row['member_preview']
+            self.assertEqual(preview['text'], row['body_text'])
+            self.assertEqual(preview['character_count'], len(row['body_text']))
+            self.assertEqual(
+                preview['body_sha256'],
+                hashlib.sha256(row['body_text'].encode('utf-8')).hexdigest(),
+            )
+            article = next(
+                candidate for candidate in articles
+                if candidate['source'] == row['source']
+            )
+            self.assertEqual(article['member_preview'], preview)
+            self.assertEqual(article['brief']['body_sha256'], preview['body_sha256'])
+
+        legacy_locked = self.medium(
+            'bbb222bbb222',
+            'Legacy locked cache',
+            audience='locked',
+            body_text='legacy subscriber body ' * 500,
+            content_status='excerpt',
+        )
+        legacy_posts, legacy_articles, _ = merge_article_sources.merge_sources(
+            [], [legacy_locked], overrides=[]
+        )
+        self.assertEqual(legacy_posts[0]['body_text'], '')
+        self.assertEqual(
+            legacy_articles[0]['member_preview']['surface'],
+            'metadata-only',
         )
 
     def test_similar_topic_with_different_date_remains_distinct(self):

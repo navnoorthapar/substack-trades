@@ -15,7 +15,7 @@ from typing import Any, Dict, Mapping, Tuple
 from urllib.parse import urlsplit
 
 
-ARTICLE_WIRE_SCHEMA_VERSION = 2
+ARTICLE_WIRE_SCHEMA_VERSION = 3
 MAX_CHECKPOINT_COUNT = 3
 
 BRIEF_FEATURE_BITS: Tuple[Tuple[str, int], ...] = (
@@ -70,6 +70,8 @@ _WIRE_REQUIRED_KEYS = frozenset((
     'published_at',
     'url',
     'source',
+    'publication_access',
+    'member_preview_chars',
     'wordcount',
     'content_status',
     'body_revision_status',
@@ -159,10 +161,29 @@ def _validate_base_fields(article: Mapping[str, Any], *, compact: bool) -> None:
         source in {'substack', 'medium'},
         'client article source must be substack or medium',
     )
+    publication_access = article.get('publication_access')
+    _require(
+        publication_access in {'public', 'member', 'unknown'},
+        'client article publication_access must be public, member, or unknown',
+    )
+    member_preview_chars = article.get('member_preview_chars')
+    _require(
+        type(member_preview_chars) is int
+        and 0 <= member_preview_chars <= 1_200,
+        'client article member_preview_chars must be an integer in 0..1200',
+    )
+    _require(
+        publication_access == 'member' or member_preview_chars == 0,
+        'client article non-member source cannot carry member preview text',
+    )
     content_status = article.get('content_status')
     _require(
         content_status in {'full', 'excerpt'},
         'client article content_status must be full or excerpt',
+    )
+    _require(
+        publication_access != 'member' or content_status == 'excerpt',
+        'client article member access must remain excerpt-only',
     )
     revision_status = article.get('body_revision_status')
     _require(

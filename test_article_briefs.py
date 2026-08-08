@@ -1,3 +1,4 @@
+import copy
 import json
 import re
 import unittest
@@ -84,6 +85,37 @@ https://example.com/reference
         brief['sections'][1] = dict(brief['sections'][0])
         with self.assertRaisesRegex(ValueError, 'duplicated'):
             validate_brief_structure(brief)
+
+    def test_schema_rejects_unpublished_fields_at_every_nesting_level(self):
+        clean = build_article_brief(self.sample_post())
+        cases = []
+
+        top_level = copy.deepcopy(clean)
+        top_level['private_body'] = 'subscriber-only text'
+        cases.append(('top level', top_level))
+
+        lead = copy.deepcopy(clean)
+        lead['lead']['private_body'] = 'subscriber-only text'
+        cases.append(('lead', lead))
+
+        fallback = copy.deepcopy(clean)
+        fallback['fallback_evidence'] = dict(
+            fallback['lead'], private_body='subscriber-only text'
+        )
+        cases.append(('fallback', fallback))
+
+        section = copy.deepcopy(clean)
+        section['sections'][0]['private_body'] = 'subscriber-only text'
+        cases.append(('section', section))
+
+        checkpoint = copy.deepcopy(clean)
+        checkpoint['checkpoints'][0]['private_body'] = 'subscriber-only text'
+        cases.append(('checkpoint', checkpoint))
+
+        for label, brief in cases:
+            with self.subTest(label=label):
+                with self.assertRaisesRegex(ValueError, 'outside its public contract'):
+                    validate_brief_structure(brief)
 
     def test_heading_classifier_abstains_on_promotion_and_references(self):
         self.assertEqual(classify_heading('What Would Change This View'), 'falsifier')

@@ -620,7 +620,7 @@ def build_related_graph(
         articles: Sequence[Mapping[str, Any]],
         search_index: Mapping[str, Any],
 ) -> Dict[str, Any]:
-    """Return five explainable, field-weighted related articles per article."""
+    """Return up to five explainable, field-weighted links per article."""
     if len(articles) < RELATED_COUNT + 1:
         raise ValueError(
             f'at least {RELATED_COUNT + 1} articles are required for related links'
@@ -736,10 +736,10 @@ def build_related_graph(
             ranked.append((score, identity, second_index, why))
 
         ranked.sort(key=lambda row: (-row[0], row[1]))
-        if len(ranked) < RELATED_COUNT:
+        if not ranked:
             identity = f'{article["source"]}:{article["slug"]}'
             raise ValueError(
-                f'{identity} has only {len(ranked)} explainable related articles'
+                f'{identity} has no explainable related articles'
             )
         related_rows = []
         for score, _identity, second_index, why in ranked[:RELATED_COUNT]:

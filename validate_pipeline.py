@@ -2,6 +2,7 @@
 """Fail closed when a refresh would publish stale, corrupt, or mismatched data."""
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -37,6 +38,10 @@ VALID_INSTRUMENTS = {
 }
 VALID_SOURCES = {'substack', 'medium', 'patreon', 'fxempire'}
 CONTENT_SOURCES = {'substack', 'medium'}
+CONTENT_SOURCE_AUDIENCES = {
+    'substack': {'everyone', 'only_paid'},
+    'medium': {'public', 'locked', 'unknown'},
+}
 REGISTRY_SOURCES = {'patreon', 'fxempire'}
 VALID_CONTENT_STATUSES = {'full', 'excerpt', 'registry'}
 VALID_FAMILIES = {
@@ -50,6 +55,10 @@ VALID_FAMILIES = {
 }
 VALID_FETCH_STATUSES = {'ok', 'degraded'}
 VALID_BODY_REVISION_STATUSES = {'current', 'prior', 'unverified'}
+MEMBER_PREVIEW_MAX_CHARS = 1_200
+MEMBER_PREVIEW_KEYS = {
+    'schema_version', 'surface', 'text', 'character_count', 'body_sha256',
+}
 DATE_ONLY_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 TIMESTAMP_RE = re.compile(
     r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}'
@@ -72,6 +81,18 @@ REGISTRY_BRIEF_KEYS = {
 REGISTRY_ARTICLE_KEYS = {
     'source', 'source_id', 'slug', 'title', 'subtitle', 'post_date', 'url',
     'audience', 'wordcount', 'content_status', 'brief', 'family',
+}
+CONTENT_ARTICLE_KEYS = {
+    'source', 'source_id', 'slug', 'title', 'subtitle', 'post_date', 'url',
+    'audience', 'wordcount', 'content_status', 'brief', 'family',
+    'body_revision_status', 'source_updated_at',
+    'observed_source_updated_at',
+}
+TRADE_PUBLIC_KEYS = {
+    'article_title', 'article_url', 'article_date', 'trade_description',
+    'description_truncated', 'instruments', 'direction', 'underlying',
+    'edge_or_thesis', 'any_quant_detail', 'outcome_if_mentioned',
+    'fund_name_if_mentioned',
 }
 
 
@@ -131,6 +152,62 @@ def validate_registry_brief(brief, label):
             f'{label} registry brief does not match the exact empty-body contract')
     require(brief.get('sections') == [] and brief.get('checkpoints') == [],
             f'{label} registry brief does not match the exact empty-body contract')
+
+
+def validate_member_preview(value, source, label, brief=None):
+    """Validate one bounded anonymous preview proof for a member source."""
+    require(isinstance(value, dict), f'{label} is not an object')
+    require(set(value) == MEMBER_PREVIEW_KEYS,
+            f'{label} has the wrong field set')
+    require(value.get('schema_version') == 1,
+            f'{label} has an unsupported schema version')
+    allowed = {
+        'substack': {'anonymous-substack-list', 'metadata-only'},
+        'medium': {'anonymous-medium-profile', 'metadata-only'},
+    }
+    surface = value.get('surface')
+    require(surface in allowed[source],
+            f'{label} has an invalid anonymous source surface')
+    text = value.get('text')
+    require(isinstance(text, str), f'{label} text is not a string')
+    character_count = value.get('character_count')
+    require(
+        type(character_count) is int
+        and 0 <= character_count <= MEMBER_PREVIEW_MAX_CHARS,
+        f'{label} character_count is outside the public preview bound',
+    )
+    require(character_count == len(text),
+            f'{label} character_count does not match its text')
+    digest = value.get('body_sha256')
+    require(isinstance(digest, str) and SHA256_RE.fullmatch(digest),
+            f'{label} body_sha256 is invalid')
+    require(
+        digest == hashlib.sha256(text.encode('utf-8')).hexdigest(),
+        f'{label} body_sha256 does not match its text',
+    )
+    if character_count == 0:
+        require(surface == 'metadata-only' and digest == EMPTY_BODY_SHA256,
+                f'{label} empty preview is inconsistent')
+    else:
+        require(surface != 'metadata-only' and digest != EMPTY_BODY_SHA256,
+                f'{label} non-empty preview is inconsistent')
+    if brief is not None:
+        require(isinstance(brief, dict) and brief.get('body_sha256') == digest,
+                f'{label} digest does not match the published brief')
+        if character_count == 0:
+            require(
+                brief.get('lead') is None
+                and brief.get('fallback_evidence') is None
+                and brief.get('sections') == []
+                and brief.get('checkpoints') == [],
+                f'{label} metadata-only preview contains derived body spans',
+            )
+        try:
+            validate_brief_against_body(brief, text)
+        except ValueError as exc:
+            raise ValueError(
+                f'{label} brief is not derived from its text: {exc}'
+            ) from None
 
 
 def parse_iso_date(value, label, date_only=False):
@@ -260,9 +337,30 @@ def validate_article_record(record, index, label):
     content_status = record.get('content_status')
     require(type(content_status) is str and content_status in VALID_CONTENT_STATUSES,
             f'{label} {index} has an invalid content status')
+    member_access = False
     if source in CONTENT_SOURCES:
+        normalized_audience = str(record.get('audience') or '').strip().casefold()
+        require(
+            normalized_audience in CONTENT_SOURCE_AUDIENCES[source],
+            f'{label} {index} has an unsupported {source} audience',
+        )
+        member_access = (
+            source == 'substack' and normalized_audience == 'only_paid'
+        ) or (
+            source == 'medium' and normalized_audience == 'locked'
+        )
         require(content_status in {'full', 'excerpt'},
                 f'{label} {index} content source cannot be registry-only')
+        require(
+            not (
+                source == 'medium'
+                and normalized_audience == 'unknown'
+                and content_status != 'excerpt'
+            ),
+            f'{label} {index} unverified Medium audience must remain excerpt-only',
+        )
+        require(not member_access or content_status == 'excerpt',
+                f'{label} {index} member-access source must remain excerpt-only')
         for field in (
             'body_revision_status',
             'source_updated_at',
@@ -351,6 +449,34 @@ def validate_article_record(record, index, label):
             require('brief' in record,
                     f'{label} {index} has no metadata-only brief boundary')
             validate_registry_brief(record['brief'], f'{label} {index}')
+        else:
+            allowed_keys = CONTENT_ARTICLE_KEYS | {
+                'alternate_urls', 'member_preview',
+            }
+            require(
+                set(record) <= allowed_keys,
+                f'{label} {index} has fields outside the public content '
+                'article contract',
+            )
+    if source in CONTENT_SOURCES:
+        if member_access:
+            validate_member_preview(
+                record.get('member_preview'),
+                source,
+                f'{label} {index} member_preview',
+                record.get('brief') if label == 'article' else None,
+            )
+            if source == 'medium':
+                subtitle = record.get('subtitle')
+                preview_text = record['member_preview']['text']
+                require(
+                    not subtitle or subtitle in preview_text,
+                    f'{label} {index} Medium member subtitle is outside its '
+                    'anonymous preview',
+                )
+        else:
+            require('member_preview' not in record,
+                    f'{label} {index} non-member source carries member_preview')
     timestamp = record.get('post_date')
     _, calendar_date = parse_iso_date(timestamp, f'{label} {index} publication date')
     if 'wordcount' in record:
@@ -404,6 +530,15 @@ def validate_article_record(record, index, label):
             if source in CONTENT_SOURCES
             else None
         ),
+        'member_preview': (
+            record.get('member_preview') if member_access else None
+        ),
+        'member_access': member_access,
+        'brief_body_sha256': (
+            record.get('brief', {}).get('body_sha256')
+            if label == 'article' and isinstance(record.get('brief'), dict)
+            else None
+        ),
     }
 
 
@@ -428,6 +563,21 @@ def validate_posts(posts):
                 'declared word count',
             )
         metadata['body_text'] = body_text
+        member_preview = metadata.get('member_preview')
+        if member_preview is not None:
+            require(
+                member_preview['text'] == body_text,
+                f'post {index} member preview text does not match body',
+            )
+            require(
+                member_preview['character_count'] == len(body_text),
+                f'post {index} member preview character count does not match body',
+            )
+            require(
+                member_preview['body_sha256']
+                == hashlib.sha256(body_text.encode('utf-8')).hexdigest(),
+                f'post {index} member preview digest does not match body',
+            )
         require(post.get('is_published') is True,
                 f'post {index} is not explicitly published')
         require(metadata['url'] not in post_by_url,
@@ -469,6 +619,10 @@ def validate_article_index(articles, post_by_url):
                     metadata[field] == post[field],
                     f'article {index} {field} does not match its fetched post',
                 )
+            require(
+                metadata.get('member_preview') == post.get('member_preview'),
+                f'article {index} member preview does not match its fetched post',
+            )
             require('brief' in article, f'article {index} has no source-backed brief')
             try:
                 validate_brief_against_body(article['brief'], post['body_text'])
@@ -476,6 +630,7 @@ def validate_article_index(articles, post_by_url):
                 raise ValueError(
                     f'article {index} brief validation failed: {exc}'
                 ) from None
+            metadata['body_text'] = post['body_text']
         else:
             require('brief' in article,
                     f'article {index} has no metadata-only brief boundary')
@@ -509,6 +664,9 @@ def validate_deployable_articles(articles):
                      for article in articles)
     for index, article in enumerate(articles):
         metadata = validate_article_record(article, index, 'article')
+        member_preview = metadata.get('member_preview')
+        if member_preview is not None:
+            metadata['body_text'] = member_preview['text']
         if has_briefs:
             require('brief' in article, f'article {index} has no source-backed brief')
             try:
@@ -548,12 +706,35 @@ def validate_trades(trades, article_by_url):
         direction = trade.get('direction')
         require(url in article_by_url, f'trade {index} points to an unknown article')
         article = article_by_url[url]
+        allowed_keys = set(TRADE_PUBLIC_KEYS)
+        if article.get('member_preview') is not None:
+            allowed_keys.add('source_body_sha256')
+        require(
+            set(trade) <= allowed_keys,
+            f'trade {index} has fields outside the public observation contract',
+        )
         require(title == article['title'],
                 f'trade {index} title does not match its article')
         require(calendar_date == article['calendar_date'],
                 f'trade {index} date does not match its article')
         require(len(desc.strip()) >= 20,
                 f'trade {index} has an empty/short description')
+        if 'body_text' in article:
+            require(desc in article['body_text'],
+                    f'trade {index} passage is not present in its public source body')
+        member_preview = article.get('member_preview')
+        if member_preview is not None:
+            require(
+                trade.get('source_body_sha256')
+                == member_preview['body_sha256'],
+                f'trade {index} is not bound to its member preview body',
+            )
+        else:
+            require(
+                'source_body_sha256' not in trade,
+                f'trade {index} non-member observation carries a member '
+                'preview hash',
+            )
         require(type(description_truncated) is bool,
                 f'trade {index} description_truncated is not a boolean')
         require(isinstance(instruments, list) and instruments,
@@ -617,22 +798,80 @@ def validate_trades(trades, article_by_url):
     return represented_articles
 
 
-def validate_trade_regression(trades, represented_articles, previous_path, minimum_ratio):
+def _raw_member_access(article):
+    if not isinstance(article, dict):
+        return False
+    source = str(article.get('source') or '').strip().casefold()
+    audience = str(article.get('audience') or '').strip().casefold()
+    return (
+        (source == 'substack' and audience == 'only_paid')
+        or (source == 'medium' and audience == 'locked')
+    )
+
+
+def validate_trade_regression(
+        trades, represented_articles, previous_path, minimum_ratio,
+        article_by_url=None, previous_articles_path=None):
     if not previous_path or not previous_path.exists():
         return
     previous = load_list(previous_path, 'previous trade output')
     if not previous:
         return
-    previous_articles = {trade.get('article_url') for trade in previous
-                         if isinstance(trade, dict) and trade.get('article_url')}
-    minimum_trades = max(1, int(len(previous) * minimum_ratio))
-    minimum_articles = max(1, int(len(previous_articles) * minimum_ratio))
-    require(len(trades) >= minimum_trades,
-            f'trade count collapsed from {len(previous)} to {len(trades)} '
+    current_trades = trades
+    current_represented = represented_articles
+    previous_trades = previous
+    if (
+        article_by_url is not None
+        and previous_articles_path is not None
+        and previous_articles_path.exists()
+    ):
+        previous_articles = load_list(
+            previous_articles_path, 'previous article index'
+        )
+        previous_by_url = {
+            article.get('url'): article
+            for article in previous_articles
+            if isinstance(article, dict) and article.get('url')
+        }
+        previous_trade_urls = {
+            trade.get('article_url')
+            for trade in previous
+            if isinstance(trade, dict) and trade.get('article_url')
+        }
+        require(
+            previous_trade_urls <= set(previous_by_url),
+            'previous trade output references an article absent from the '
+            'previous article index',
+        )
+        previous_trades = [
+            trade for trade in previous
+            if not _raw_member_access(previous_by_url.get(trade.get('article_url')))
+        ]
+        current_trades = [
+            trade for trade in trades
+            if not article_by_url[trade.get('article_url')]['member_access']
+        ]
+        current_represented = {
+            trade.get('article_url') for trade in current_trades
+        }
+    if not previous_trades:
+        return
+    previous_trade_articles = {
+        trade.get('article_url') for trade in previous_trades
+        if isinstance(trade, dict) and trade.get('article_url')
+    }
+    minimum_trades = max(1, int(len(previous_trades) * minimum_ratio))
+    minimum_articles = max(
+        1, int(len(previous_trade_articles) * minimum_ratio)
+    )
+    require(len(current_trades) >= minimum_trades,
+            f'public observation count collapsed from {len(previous_trades)} '
+            f'to {len(current_trades)} '
             f'(minimum allowed: {minimum_trades})')
-    require(len(represented_articles) >= minimum_articles,
-            f'trade-bearing article count collapsed from {len(previous_articles)} to '
-            f'{len(represented_articles)} (minimum allowed: {minimum_articles})')
+    require(len(current_represented) >= minimum_articles,
+            f'public observation-bearing article count collapsed from '
+            f'{len(previous_trade_articles)} to {len(current_represented)} '
+            f'(minimum allowed: {minimum_articles})')
 
 
 # Backwards-compatible name used by older callers.
@@ -851,8 +1090,14 @@ def main():
             articles, args.previous_articles, args.minimum_article_ratio
         )
         represented_articles = validate_trades(trades, article_by_url)
-        validate_trade_regression(trades, represented_articles, args.previous_trades,
-                                  args.minimum_ratio)
+        validate_trade_regression(
+            trades,
+            represented_articles,
+            args.previous_trades,
+            args.minimum_ratio,
+            article_by_url,
+            args.previous_articles,
+        )
 
         manifest_path = args.manifest
         default_manifest = args.articles.parent / 'snapshot_manifest.json'

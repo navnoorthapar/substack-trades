@@ -1,6 +1,7 @@
 """Regression tests for nullable Substack list-response bodies."""
 
 import json
+import hashlib
 import tempfile
 import unittest
 import urllib.error
@@ -159,6 +160,15 @@ class SubstackNullableBodyTests(unittest.TestCase):
                 request.full_url,
             )
 
+    def test_list_fetch_rejects_unknown_audience_before_body_resolution(self):
+        post = self.list_post()
+        post['audience'] = 'new-paid-enum'
+        with mock.patch.object(
+            fetch_all_posts, 'fetch_json', return_value=[post]
+        ), mock.patch.object(fetch_all_posts.time, 'sleep'):
+            with self.assertRaisesRegex(ValueError, 'unsupported publication audience'):
+                fetch_all_posts.fetch_posts(attempts=1)
+
     def test_null_list_body_is_hydrated_from_exact_slug_detail(self):
         listed = self.list_post()
         detail_html = '<p>' + ' '.join(
@@ -270,6 +280,18 @@ class SubstackNullableBodyTests(unittest.TestCase):
             self.read_json(self.articles_path)[0]['content_status'],
             'excerpt',
         )
+        article = self.read_json(self.articles_path)[0]
+        preview = article['member_preview']
+        self.assertEqual(preview, {
+            'schema_version': 1,
+            'surface': 'anonymous-substack-list',
+            'text': listed['truncated_body_text'],
+            'character_count': len(listed['truncated_body_text']),
+            'body_sha256': hashlib.sha256(
+                listed['truncated_body_text'].encode('utf-8')
+            ).hexdigest(),
+        })
+        self.assertEqual(article['brief']['body_sha256'], preview['body_sha256'])
         self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
 
     def test_paid_row_without_list_excerpt_never_requests_detail(self):
@@ -291,6 +313,14 @@ class SubstackNullableBodyTests(unittest.TestCase):
         self.assertEqual(stored['wordcount'], 0)
         self.assertEqual(stored['body_html_length'], 0)
         self.assertEqual(stored['body_source'], 'metadata-only')
+        article = self.read_json(self.articles_path)[0]
+        self.assertEqual(article['member_preview']['surface'], 'metadata-only')
+        self.assertEqual(article['member_preview']['text'], '')
+        self.assertEqual(article['member_preview']['character_count'], 0)
+        self.assertEqual(
+            article['member_preview']['body_sha256'],
+            hashlib.sha256(b'').hexdigest(),
+        )
         self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
 
     def test_matching_source_update_reuses_cached_body_without_detail_fetch(self):
@@ -379,6 +409,16 @@ class SubstackNullableBodyTests(unittest.TestCase):
         self.assertEqual(stored['body_revision_status'], 'unverified')
         self.assertEqual(stored['content_status'], 'excerpt')
         self.assertEqual(stored['wordcount'], 0)
+        article = self.read_json(self.articles_path)[0]
+        self.assertNotIn(previous['body_text'], json.dumps(article))
+        self.assertEqual(
+            article['member_preview']['text'],
+            listed['truncated_body_text'],
+        )
+        self.assertEqual(
+            article['brief']['body_sha256'],
+            article['member_preview']['body_sha256'],
+        )
         self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
 
     def test_public_excerpt_cache_retries_detail_and_upgrades_after_recovery(self):
@@ -489,6 +529,36 @@ class SubstackNullableBodyTests(unittest.TestCase):
         self.assertEqual(stored['wordcount'], 0)
         self.assertEqual(stored['body_source'], 'cached-access-limited')
         self.assertEqual(stored['body_revision_status'], 'current')
+        article = self.read_json(self.articles_path)[0]
+        self.assertEqual(
+            article['member_preview']['text'],
+            listed['truncated_body_text'],
+        )
+        self.assertNotIn(previous['body_text'], json.dumps(article))
+
+    def test_member_preview_is_bounded_without_cutting_a_partial_word(self):
+        prefix = 'evidence ' * 200
+        listed = self.list_post(
+            slug='bounded-paid-preview',
+            truncated_body_text=prefix + 'private-tail',
+        )
+        listed['audience'] = 'only_paid'
+
+        self.run_fetch(
+            [listed],
+            AssertionError('access-limited row requested detail HTML'),
+        )
+
+        article = self.read_json(self.articles_path)[0]
+        preview = article['member_preview']
+        self.assertLessEqual(preview['character_count'], 1_200)
+        self.assertEqual(preview['character_count'], len(preview['text']))
+        self.assertNotIn('private-tail', preview['text'])
+        self.assertTrue(preview['text'].endswith('…'))
+        self.assertEqual(
+            preview['body_sha256'],
+            hashlib.sha256(preview['text'].encode('utf-8')).hexdigest(),
+        )
 
     def test_detail_failure_preserves_existing_exact_record_and_degrades(self):
         previous = self.cached_record(

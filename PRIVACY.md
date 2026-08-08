@@ -1,6 +1,6 @@
 # Privacy
 
-Last updated: 2026-07-21
+Last updated: 2026-08-08
 
 Navnoor Research Terminal is a static, public research-intake website. It is
 designed to work without an account and without collecting reader data for the
@@ -12,6 +12,13 @@ The published application includes no analytics SDK, advertising pixel,
 tracking cookie, session replay, account system, form submission, or background
 telemetry. Search text, filters, reading activity, and decision-workflow entries
 are not transmitted to this project.
+
+The terminal may show a contextual link to an article on its original
+publication and, for Substack member-access previews, a separate link to the
+publication's subscription page. Those links contain no reader query, filter,
+selected entity, article-state, referral, or decision-workflow value. The
+external site receives a request only after the reader chooses the link and
+applies its own terms and privacy practices.
 
 GitHub Pages necessarily serves the static files and may process ordinary web
 request metadata under GitHub's own terms and privacy practices. Maintainers may
@@ -25,9 +32,21 @@ The site publishes a six-file, machine-readable `/data/` bundle containing the
 same public research catalogue used by the terminal. It includes public source
 metadata, bounded captured Substack/Medium research, deterministic topic and
 related-article indexes, and integrity/freshness counts. Article-specific social
-cards and crawler stubs contain only bounded public title, source, publication
-date, and route metadata. All of these files are public and may be cached by
-browsers, search engines, GitHub Pages, and downstream consumers.
+cards and crawler stubs contain bounded public title, source, publication date,
+route metadata, and (in the stub description) the retained public subtitle or a
+generic fallback. All of these files are public and may be cached by browsers,
+search engines, GitHub Pages, and downstream consumers.
+
+A member-access Substack or Medium row publishes a `member_preview` proof. It
+contains either a deterministic bounded excerpt derived only from text visible
+on a validated anonymous source surface, capped at 1,200 characters, or an empty
+`metadata-only` state. Its recorded length and SHA-256 digest must match the
+published excerpt, and its brief and any derived observation are bound to the
+same digest. The current pipeline does not publish authenticated, legacy cached,
+or otherwise private member-body text. A locked Medium row without a trusted
+anonymous proof becomes metadata-only. Collectors reject unrecognized source
+enumerations; a validated surface without an access flag remains `unknown`
+instead of being guessed.
 
 Patreon and FX Empire are metadata-only registry sources. Patreon records may
 state whether an anonymous visitor sees the item as `public` or `paid`; the
@@ -41,6 +60,18 @@ The public data validator rejects forbidden private-analytics keys recursively.
 The data bundle does not contain reader identities, search history, decision
 packets, cookies, or behavioral events. The endpoint contract is documented in
 [SCHEMA.md](SCHEMA.md).
+
+## Historical publication boundary
+
+The 2026-08-08 candidate snapshot has been sanitized to the exact anonymous
+preview/metadata boundary described above. Earlier public Git commits and
+retained Pages or rollback artifacts included member-source brief text and
+derived observations under the older capture policy. Replacing the current
+snapshot does not erase immutable Git history, copies, caches, or retained
+artifacts. A coordinated purge would be destructive, conflicts with the current
+no-history-rewrite repository rule, cannot recall third-party copies, and
+therefore requires explicit owner authorization. This unresolved boundary is
+recorded as `LAUNCH-058` in [ISSUES.md](ISSUES.md).
 
 ## Data stored on the reader's device
 

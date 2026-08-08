@@ -8,6 +8,7 @@ from pathlib import Path
 from urllib.parse import urljoin
 
 import data_contract
+from article_briefs import build_article_brief
 from data_contract import (
     DATA_ENDPOINT_NAMES,
     DATA_ENDPOINTS,
@@ -48,7 +49,9 @@ def article_fixture(index):
             if source == 'medium'
             else f'https://example.test/{source}/{slug}'
         ),
-        'audience': 'public',
+        'audience': (
+            'everyone' if source == 'substack' else 'public'
+        ),
         'wordcount': 0 if source in {'patreon', 'fxempire'} else 1_000 + index,
         'content_status': (
             'registry' if source in {'patreon', 'fxempire'} else 'full'
@@ -320,6 +323,262 @@ class DataContractTests(unittest.TestCase):
         with self.assertRaisesRegex(
             ValueError, 'metadata-only registry contract',
         ):
+            validate_data_layer(
+                self.site, self.source, self.snapshot, now=VALIDATION_NOW,
+            )
+
+    def test_member_access_publications_must_remain_excerpt_only(self):
+        original_articles = copy.deepcopy(self.articles)
+        cases = (
+            ('substack', 'only_paid'),
+            ('substack', '  ONLY_PAID  '),
+            ('medium', 'locked'),
+            ('medium', '  LOCKED  '),
+        )
+        for source, audience in cases:
+            with self.subTest(source=source):
+                self.articles = copy.deepcopy(original_articles)
+                article = next(
+                    row for row in self.articles if row['source'] == source
+                )
+                article['audience'] = audience
+                article['content_status'] = 'full'
+                self._write_source()
+                write_data_layer(
+                    self.site,
+                    self.source,
+                    self.snapshot,
+                    self.search,
+                    self.related,
+                    self.families,
+                )
+                with self.assertRaisesRegex(
+                    ValueError,
+                    'member-access source must remain excerpt-only',
+                ):
+                    validate_data_layer(
+                        self.site, self.source, self.snapshot, now=VALIDATION_NOW,
+                    )
+
+    def test_content_source_audiences_fail_closed(self):
+        original_articles = copy.deepcopy(self.articles)
+        cases = (
+            ('substack', 'unknown', 'unsupported substack audience'),
+            ('substack', 'new-member-enum', 'unsupported substack audience'),
+            ('medium', 'new-member-enum', 'unsupported medium audience'),
+        )
+        for source, audience, message in cases:
+            with self.subTest(source=source, audience=audience):
+                self.articles = copy.deepcopy(original_articles)
+                article = next(
+                    row for row in self.articles if row['source'] == source
+                )
+                article['audience'] = audience
+                self._write_source()
+                write_data_layer(
+                    self.site,
+                    self.source,
+                    self.snapshot,
+                    self.search,
+                    self.related,
+                    self.families,
+                )
+                with self.assertRaisesRegex(ValueError, message):
+                    validate_data_layer(
+                        self.site,
+                        self.source,
+                        self.snapshot,
+                        now=VALIDATION_NOW,
+                    )
+
+        self.articles = copy.deepcopy(original_articles)
+        medium = next(
+            row for row in self.articles if row['source'] == 'medium'
+        )
+        medium['audience'] = 'unknown'
+        medium['content_status'] = 'excerpt'
+        self._write_source()
+        write_data_layer(
+            self.site,
+            self.source,
+            self.snapshot,
+            self.search,
+            self.related,
+            self.families,
+        )
+        validate_data_layer(
+            self.site, self.source, self.snapshot, now=VALIDATION_NOW,
+        )
+
+        medium['content_status'] = 'full'
+        self._write_source()
+        write_data_layer(
+            self.site,
+            self.source,
+            self.snapshot,
+            self.search,
+            self.related,
+            self.families,
+        )
+        with self.assertRaisesRegex(
+            ValueError, 'unverified Medium audience must remain excerpt-only'
+        ):
+            validate_data_layer(
+                self.site, self.source, self.snapshot, now=VALIDATION_NOW,
+            )
+
+    def test_member_preview_is_exact_bounded_and_brief_bound(self):
+        for source, audience, surface in (
+            ('substack', 'only_paid', 'anonymous-substack-list'),
+            ('medium', 'locked', 'anonymous-medium-profile'),
+        ):
+            with self.subTest(source=source):
+                self.articles = [article_fixture(index) for index in range(24)]
+                article = next(
+                    row for row in self.articles if row['source'] == source
+                )
+                text = (
+                    'The public source preview documents a market-structure '
+                    'mechanism and leaves the complete argument at the source.'
+                )
+                digest = hashlib.sha256(text.encode('utf-8')).hexdigest()
+                article.update({
+                    'audience': audience,
+                    'subtitle': 'market-structure mechanism',
+                    'wordcount': 0,
+                    'content_status': 'excerpt',
+                    'brief': build_article_brief({
+                        'body_text': text,
+                        'title': article['title'],
+                        'post_date': article['post_date'],
+                    }),
+                    'member_preview': {
+                        'schema_version': 1,
+                        'surface': surface,
+                        'text': text,
+                        'character_count': len(text),
+                        'body_sha256': digest,
+                    },
+                })
+                self._write_source()
+                write_data_layer(
+                    self.site,
+                    self.source,
+                    self.snapshot,
+                    self.search,
+                    self.related,
+                    self.families,
+                )
+                validate_data_layer(
+                    self.site, self.source, self.snapshot, now=VALIDATION_NOW,
+                )
+
+                corruptions = (
+                    (
+                        'missing proof',
+                        lambda row: row.pop('member_preview'),
+                        'member_preview must be an object',
+                    ),
+                    (
+                        'count mismatch',
+                        lambda row: row['member_preview'].__setitem__(
+                            'character_count', len(text) - 1
+                        ),
+                        'character_count does not match',
+                    ),
+                    (
+                        'digest mismatch',
+                        lambda row: row['member_preview'].__setitem__(
+                            'body_sha256', '0' * 64
+                        ),
+                        'body_sha256 does not match',
+                    ),
+                    (
+                        'oversized',
+                        lambda row: row['member_preview'].update({
+                            'text': 'x' * 1_201,
+                            'character_count': 1_201,
+                            'body_sha256': hashlib.sha256(
+                                ('x' * 1_201).encode('utf-8')
+                            ).hexdigest(),
+                        }),
+                        'outside the public preview bound',
+                    ),
+                )
+                clean = copy.deepcopy(article)
+                for label, mutate, message in corruptions:
+                    with self.subTest(source=source, corruption=label):
+                        self.articles = [article_fixture(index) for index in range(24)]
+                        target = next(
+                            row for row in self.articles if row['source'] == source
+                        )
+                        target.clear()
+                        target.update(copy.deepcopy(clean))
+                        mutate(target)
+                        self._write_source()
+                        write_data_layer(
+                            self.site,
+                            self.source,
+                            self.snapshot,
+                            self.search,
+                            self.related,
+                            self.families,
+                        )
+                        with self.assertRaisesRegex(ValueError, message):
+                            validate_data_layer(
+                                self.site,
+                                self.source,
+                                self.snapshot,
+                                now=VALIDATION_NOW,
+                            )
+
+    def test_metadata_only_member_preview_cannot_carry_derived_spans(self):
+        article = next(
+            row for row in self.articles if row['source'] == 'substack'
+        )
+        article.update({
+            'audience': 'only_paid',
+            'wordcount': 0,
+            'content_status': 'excerpt',
+            'brief': build_article_brief({'body_text': ''}),
+            'member_preview': {
+                'schema_version': 1,
+                'surface': 'metadata-only',
+                'text': '',
+                'character_count': 0,
+                'body_sha256': hashlib.sha256(b'').hexdigest(),
+            },
+        })
+        self._write_source()
+        write_data_layer(
+            self.site,
+            self.source,
+            self.snapshot,
+            self.search,
+            self.related,
+            self.families,
+        )
+        validate_data_layer(
+            self.site, self.source, self.snapshot, now=VALIDATION_NOW,
+        )
+
+        article['brief']['lead'] = {
+            'start': 0,
+            'end': 4,
+            'text': 'leak',
+            'sha256': hashlib.sha256(b'leak').hexdigest(),
+            'truncated': False,
+        }
+        self._write_source()
+        write_data_layer(
+            self.site,
+            self.source,
+            self.snapshot,
+            self.search,
+            self.related,
+            self.families,
+        )
+        with self.assertRaisesRegex(ValueError, 'metadata-only preview'):
             validate_data_layer(
                 self.site, self.source, self.snapshot, now=VALIDATION_NOW,
             )

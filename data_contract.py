@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple, Union
 from urllib.parse import quote, unquote_to_bytes, urlsplit, urlunsplit
 
+from article_briefs import validate_brief_against_body, validate_brief_structure
 from research_graph import article_feature_terms
 
 
@@ -49,6 +50,14 @@ BODY_REVISION_STATUSES: Tuple[str, ...] = (
     'prior',
     'unverified',
 )
+MEMBER_PREVIEW_MAX_CHARS = 1_200
+MEMBER_PREVIEW_KEYS = frozenset((
+    'schema_version', 'surface', 'text', 'character_count', 'body_sha256',
+))
+CONTENT_SOURCE_AUDIENCES = {
+    'substack': frozenset(('everyone', 'only_paid')),
+    'medium': frozenset(('public', 'locked', 'unknown')),
+}
 
 ARTICLE_REQUIRED_KEYS = frozenset((
     'source', 'source_id', 'slug', 'title', 'subtitle', 'post_date', 'url',
@@ -59,6 +68,11 @@ ARTICLE_BODY_PROVENANCE_KEYS = frozenset((
     'source_updated_at',
     'observed_source_updated_at',
 ))
+CONTENT_ARTICLE_ALLOWED_KEYS = (
+    ARTICLE_REQUIRED_KEYS
+    | ARTICLE_BODY_PROVENANCE_KEYS
+    | frozenset(('alternate_urls', 'member_preview'))
+)
 LATEST_KEYS = (
     'source', 'slug', 'title', 'subtitle', 'post_date', 'url', 'alternate_urls',
 )
@@ -317,20 +331,10 @@ def _medium_url_identity(value: str, label: str) -> str:
 
 
 def _validate_brief(value: Any, label: str) -> None:
-    _require(isinstance(value, dict), f'{label} must be an object')
-    missing = sorted(BRIEF_REQUIRED_KEYS - value.keys())
-    _require(not missing, f'{label} is missing fields: {", ".join(missing)}')
-    _require(type(value.get('schema_version')) is int and value['schema_version'] >= 1,
-             f'{label} schema_version must be a positive integer')
-    checksum = value.get('body_sha256')
-    _require(isinstance(checksum, str) and SHA256_RE.fullmatch(checksum) is not None,
-             f'{label} body_sha256 must be a lowercase SHA-256 digest')
-    for field in ('lead', 'fallback_evidence'):
-        _require(value.get(field) is None or isinstance(value[field], dict),
-                 f'{label} {field} must be an object or null')
-    for field in ('sections', 'checkpoints'):
-        _require(isinstance(value.get(field), list),
-                 f'{label} {field} must be an array')
+    try:
+        validate_brief_structure(value)
+    except ValueError as exc:
+        raise ValueError(f'{label} is invalid: {exc}') from None
 
 
 def _validate_registry_brief(value: Any, label: str) -> None:
@@ -347,6 +351,65 @@ def _validate_registry_brief(value: Any, label: str) -> None:
              f'{label} does not match the exact empty-body registry contract')
     _require(value.get('sections') == [] and value.get('checkpoints') == [],
              f'{label} does not match the exact empty-body registry contract')
+
+
+def _validate_member_preview(
+    value: Any,
+    brief: Any,
+    source: str,
+    label: str,
+) -> None:
+    """Bind a member article to one bounded anonymous source surface."""
+    _require(isinstance(value, dict), f'{label} must be an object')
+    _require(set(value) == MEMBER_PREVIEW_KEYS,
+             f'{label} has the wrong field set')
+    _require(value.get('schema_version') == 1,
+             f'{label} has an unsupported schema version')
+    allowed_surfaces = {
+        'substack': {'anonymous-substack-list', 'metadata-only'},
+        'medium': {'anonymous-medium-profile', 'metadata-only'},
+    }
+    surface = value.get('surface')
+    _require(surface in allowed_surfaces[source],
+             f'{label} has an invalid anonymous source surface')
+    text = value.get('text')
+    _require(isinstance(text, str), f'{label} text must be a string')
+    character_count = value.get('character_count')
+    _require(
+        type(character_count) is int
+        and 0 <= character_count <= MEMBER_PREVIEW_MAX_CHARS,
+        f'{label} character_count is outside the public preview bound',
+    )
+    _require(character_count == len(text),
+             f'{label} character_count does not match its text')
+    digest = value.get('body_sha256')
+    _require(
+        isinstance(digest, str) and SHA256_RE.fullmatch(digest) is not None,
+             f'{label} body_sha256 is invalid')
+    _require(
+        digest == hashlib.sha256(text.encode('utf-8')).hexdigest(),
+        f'{label} body_sha256 does not match its text',
+    )
+    _require(isinstance(brief, dict) and brief.get('body_sha256') == digest,
+             f'{label} digest does not match the published brief')
+    if character_count == 0:
+        _require(
+            brief.get('lead') is None
+            and brief.get('fallback_evidence') is None
+            and brief.get('sections') == []
+            and brief.get('checkpoints') == [],
+            f'{label} metadata-only preview contains derived body spans',
+        )
+    try:
+        validate_brief_against_body(brief, text)
+    except ValueError as exc:
+        raise ValueError(f'{label} brief is not derived from its text: {exc}') from None
+    if character_count == 0:
+        _require(surface == 'metadata-only' and digest == EMPTY_BODY_SHA256,
+                 f'{label} empty preview is inconsistent')
+    else:
+        _require(surface != 'metadata-only' and digest != EMPTY_BODY_SHA256,
+                 f'{label} non-empty preview is inconsistent')
 
 
 def _validate_body_provenance(
@@ -456,6 +519,7 @@ def _validate_articles(value: Any) -> Tuple[List[Dict[str, Any]], Dict[str, int]
                 f'{label} source_id does not match its canonical Medium URL',
             )
         content_status = article.get('content_status')
+        member_access = False
         if source in {'patreon', 'fxempire'}:
             _require(content_status == 'registry',
                      f'{label} registry source must have content_status registry')
@@ -476,6 +540,35 @@ def _validate_articles(value: Any) -> Tuple[List[Dict[str, Any]], Dict[str, int]
         else:
             _require(content_status in {'full', 'excerpt'},
                      f'{label} publication source has an invalid content_status')
+            _require(
+                set(article) <= CONTENT_ARTICLE_ALLOWED_KEYS,
+                f'{label} has fields outside the public content article contract',
+            )
+            normalized_audience = str(
+                article.get('audience') or ''
+            ).strip().casefold()
+            _require(
+                normalized_audience in CONTENT_SOURCE_AUDIENCES[source],
+                f'{label} has an unsupported {source} audience',
+            )
+            member_access = (
+                source == 'substack' and normalized_audience == 'only_paid'
+            ) or (
+                source == 'medium' and normalized_audience == 'locked'
+            )
+            _require(
+                not (
+                    source == 'medium'
+                    and normalized_audience == 'unknown'
+                    and content_status != 'excerpt'
+                ),
+                f'{label} unverified Medium audience must remain excerpt-only',
+            )
+            _require(
+                not member_access or content_status == 'excerpt',
+                f'{label} member-access source must remain excerpt-only '
+                'in the public data contract',
+            )
             _validate_body_provenance(article, label, content_status)
             if content_status == 'full':
                 _require(
@@ -492,6 +585,25 @@ def _validate_articles(value: Any) -> Tuple[List[Dict[str, Any]], Dict[str, int]
             _validate_registry_brief(article.get('brief'), f'{label} brief')
         else:
             _validate_brief(article.get('brief'), f'{label} brief')
+            if member_access:
+                _validate_member_preview(
+                    article.get('member_preview'),
+                    article.get('brief'),
+                    source,
+                    f'{label} member_preview',
+                )
+                if source == 'medium':
+                    _require(
+                        not article.get('subtitle')
+                        or article['subtitle'] in article['member_preview']['text'],
+                        f'{label} Medium member subtitle is outside its '
+                        'anonymous preview',
+                    )
+            else:
+                _require(
+                    'member_preview' not in article,
+                    f'{label} non-member source must not carry member_preview',
+                )
         family = article.get('family')
         _require(family in FAMILIES, f'{label} has an invalid family')
         alternate_urls = article.get('alternate_urls')
@@ -679,8 +791,8 @@ def _validate_related(
     words = [_article_words(article) for article in articles]
     feature_sets = [article_feature_terms(article) for article in articles]
     for source_index, (source_key, rows) in enumerate(value.items()):
-        _require(isinstance(rows, list) and len(rows) == 5,
-                 f'related list {source_key!r} must contain exactly five rows')
+        _require(isinstance(rows, list) and 1 <= len(rows) <= 5,
+                 f'related list {source_key!r} must contain one to five rows')
         seen = set()
         for row_index, row in enumerate(rows):
             label = f'related {source_key!r} row {row_index}'
@@ -872,6 +984,7 @@ def validate_data_layer(
     source_value = _decode_json(source_bytes, 'source article index')
     _require(payloads['articles_index.json'] == source_value,
              'public article index does not equal its parsed source')
+    _validate_privacy_keys(source_value, 'source article index')
     articles, source_counts, family_counts = _validate_articles(source_value)
 
     snapshot = _load_snapshot(snapshot_manifest_path_or_dict)

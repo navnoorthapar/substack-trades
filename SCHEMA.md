@@ -24,8 +24,10 @@ snapshot identity, and then fetch the other files from the same release.
 - `manifest.schema_version` versions the public data-layer contract.
   `brief.schema_version` independently versions the bounded article-brief
   structure. The terminal's embedded compact article payload has a separate
-  `ARTICLE_WIRE_SCHEMA_VERSION`; version 2 requires the three body-revision
-  provenance fields and hydrates them unchanged into every runtime article.
+  `ARTICLE_WIRE_SCHEMA_VERSION`; version 3 requires the three body-revision
+  provenance fields plus `publication_access` (`public`, `member`, or
+  `unknown`) and the bounded `member_preview_chars` count, and hydrates them
+  unchanged into every runtime article.
 - `manifest.dataset_version` is the lowercase SHA-256 snapshot checksum from
   `snapshot_manifest.json`. It identifies the exact tracked article and
   observation snapshot, not an individual article and not a durable database
@@ -55,7 +57,7 @@ snapshot identity, and then fetch the other files from the same release.
 | `data/latest.json` | 20-row article projection | Small newest-publication feed |
 | `data/manifest.json` | object | Version, freshness, counts, and endpoint discovery |
 | `data/search_index.json` | inverted index plus article rows | Fast entity/topic lookup and deduplication |
-| `data/related.json` | article-keyed adjacency lists | Five explainable self-link candidates per article |
+| `data/related.json` | article-keyed adjacency lists | One to five explainable self-link candidates per article |
 | `data/families.json` | family-to-slug object | Deterministic topic-family partition |
 
 The endpoint list in `manifest.json` is authoritative. Every entry is relative
@@ -79,7 +81,7 @@ JSON array in deterministic catalogue order. Every object has these fields:
 | `post_date` | ISO string | Public publication date/timestamp |
 | `url` | HTTPS URL string | Canonical public source URL |
 | `audience` | string | Public access/audience label supplied by the source pipeline |
-| `wordcount` | non-negative integer | Captured body word count; `0` for registry-only records |
+| `wordcount` | non-negative integer | Source/pipeline body count used for public full-body coverage; `0` for registry and member-access rows, so it is not a member-preview length |
 | `content_status` | string enum | `full`, `excerpt`, or `registry` |
 | `family` | string enum | Exactly one topic family described below |
 | `brief` | object | Bounded, source-verifiable brief described below |
@@ -109,11 +111,48 @@ The following other additive fields may be present:
 |---|---|---|
 | `alternate_urls` | object | Other source name to canonical HTTPS twin URL; never repeats the row's own source |
 | `access` | `"public"` or `"paid"` | Patreon catalogue accessibility for an anonymous viewer; not a price, pledge, or subscriber field |
+| `member_preview` | object | Required only for member-access Substack/Medium rows; exact anonymous preview proof described below |
 
 Substack and Medium entries have `content_status` `full` or `excerpt`. Patreon
 and FX Empire entries are metadata-only and always have `content_status`
 `registry`, `wordcount` `0`, no republished body, and no body-revision
 provenance fields.
+
+### Member-preview object
+
+A Substack `audience: only_paid` or Medium `audience: locked` row must be
+`content_status: excerpt` and carry exactly:
+
+| Field | Type | Guarantee |
+|---|---|---|
+| `schema_version` | integer | Exactly `1` |
+| `surface` | string enum | Substack: `anonymous-substack-list` or `metadata-only`; Medium: `anonymous-medium-profile` or `metadata-only` |
+| `text` | string | Deterministic bounded excerpt derived only from anonymous preview text, with a maximum length of 1,200 characters including any truncation ellipsis, or `""` for metadata-only |
+| `character_count` | integer | Exactly the length of `text`, in `0..1200` |
+| `body_sha256` | SHA-256 string | Digest of the exact UTF-8 `text` bytes |
+
+A zero count requires the `metadata-only` surface, the empty-body digest, and a
+brief with no lead, fallback evidence, sections, or checkpoints. A non-zero
+count requires a non-metadata surface and a non-empty digest. The brief's
+`body_sha256`, every brief span, and any member-derived observation must bind to
+that exact preview. Locked Medium subtitles are empty unless the subtitle is an
+exact substring of the proven preview. Non-member rows must not carry
+`member_preview`; source collectors reject unsupported Substack audience or
+Medium visibility enumeration values rather than assigning access by guesswork.
+
+The embedded terminal derives `publication_access` conservatively from the raw
+source label: Substack `everyone` is `public` and `only_paid` is `member`;
+Medium `public` is `public` and `locked` is `member`. A validated source surface
+without an access flag, such as a Medium RSS fallback, is `unknown`; collectors
+reject unrecognized enumeration values rather than guessing. The runtime
+`member_preview_chars` is the exact `member_preview.character_count`. Therefore
+`content_status: excerpt` alone does not prove that preview text exists;
+consumers must inspect the proof/count.
+
+An observation derived from a member preview must carry
+`source_body_sha256` equal to that preview's digest; a non-member observation
+must not carry the field. This binds the tracked observation and the deferred
+public observation asset to the same bounded source bytes.
 
 ### Brief object
 
@@ -220,7 +259,9 @@ term.
 ## `data/related.json`
 
 This endpoint is an object whose keys are every `source:slug` identity in master
-catalogue order. Every value contains exactly five distinct, non-self rows:
+catalogue order. Every value contains one to five distinct, non-self rows. A
+sparse article remains below five rather than receiving an ungrounded filler
+link:
 
 | Field | Type | Guarantee |
 |---|---|---|
@@ -244,12 +285,12 @@ Shared D2 entities are preferred as explanations, followed by the
 highest-contributing normalized terms that actually occur in both TF-IDF
 vectors. For a sparse record with no same-field vector or entity overlap, an
 exact normalized term found across different authored fields may provide a
-low-weight coverage floor capped at `0.01`. This completes five deterministic
-candidates without treating a publication channel or a broad taxonomy family
-as article evidence. Validation independently proves every reason against the
-actual entity or textual features of both rows. The score is a relative
-editorial-ranking signal; it is not expected return, confidence, conviction,
-quality, suitability, or a recommendation.
+low-weight coverage floor capped at `0.01`. It may complete up to five
+deterministic candidates without treating a publication channel or a broad
+taxonomy family as article evidence. Validation independently proves every
+reason against the actual entity or textual features of both rows. The score is
+a relative editorial-ranking signal; it is not expected return, confidence,
+conviction, quality, suitability, or a recommendation.
 
 ## `data/families.json`
 
@@ -321,9 +362,14 @@ the wrong title, image, or article route.
 
 The build validator recursively rejects forbidden private-analytics keys from
 every `data/` file. The data layer contains no reader identifier, search log,
-decision packet, cookie, tracking pixel, or behavioral event. Downloading a
-static endpoint does not authorize downstream systems to enrich it with private
-creator-dashboard or reader-level data.
+decision packet, cookie, tracking pixel, or behavioral event. Member-source
+body text is limited to the bounded anonymous preview proof above; no
+authenticated or legacy cached member body belongs in a current release.
+Downloading a static endpoint does not authorize downstream systems to enrich
+it with private
+creator-dashboard or reader-level data. Earlier Git commits and retained release
+artifacts are outside this mutable endpoint contract and are tracked separately
+as unresolved `LAUNCH-058` in [ISSUES.md](ISSUES.md).
 
 ## Consumer workflow
 

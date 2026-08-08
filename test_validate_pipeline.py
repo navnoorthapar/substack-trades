@@ -7,11 +7,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from article_briefs import build_article_brief
 from validate_pipeline import (
     validate_article_index,
     validate_article_regression,
     validate_deployable_articles,
     validate_posts,
+    validate_trade_regression,
     validate_trades,
 )
 from extract_trades import (
@@ -28,6 +30,10 @@ ROOT = Path(__file__).parent
 
 
 def current_body(article):
+    if article.get('source') == 'substack':
+        article.setdefault('audience', 'everyone')
+    elif article.get('source') == 'medium':
+        article.setdefault('audience', 'public')
     article.update({
         'body_revision_status': 'current',
         'source_updated_at': '2026-07-14T00:00:00Z',
@@ -143,6 +149,78 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
         ):
             with self.assertRaisesRegex(ValueError, message):
                 validate_deployable_articles([missing_timestamp])
+
+    def test_content_articles_reject_unpublished_cache_fields(self):
+        article = current_body({
+            'url': 'https://navnoorbawa.substack.com/p/exact-schema',
+            'source': 'substack',
+            'source_id': 'exact-schema',
+            'slug': 'exact-schema',
+            'title': 'Exact schema',
+            'subtitle': '',
+            'post_date': '2026-07-14',
+            'audience': 'everyone',
+            'content_status': 'full',
+            'family': 'other',
+        })
+        for field in ('body_text', 'body_html', 'private_cache'):
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(
+                    ValueError, 'outside the public content article contract'
+                ):
+                    validate_deployable_articles([
+                        dict(article, **{field: 'subscriber-only text'})
+                    ])
+
+    def test_content_source_audiences_fail_closed(self):
+        substack = current_body({
+            'url': 'https://navnoorbawa.substack.com/p/audience-boundary',
+            'source': 'substack',
+            'source_id': 'audience-boundary',
+            'slug': 'audience-boundary',
+            'title': 'Audience boundary',
+            'subtitle': '',
+            'post_date': '2026-07-14',
+            'content_status': 'full',
+            'family': 'other',
+        })
+        with self.assertRaisesRegex(
+            ValueError, 'unsupported substack audience'
+        ):
+            validate_deployable_articles([
+                dict(substack, audience='new-member-enum')
+            ])
+
+        medium = current_body({
+            'url': (
+                'https://medium.com/@navnoorbawa/'
+                'audience-boundary-abcdef123456'
+            ),
+            'source': 'medium',
+            'source_id': 'abcdef123456',
+            'slug': 'audience-boundary-abcdef123456',
+            'title': 'Audience boundary',
+            'subtitle': '',
+            'post_date': '2026-07-14',
+            'content_status': 'excerpt',
+            'family': 'other',
+        })
+        self.assertIn(
+            medium['url'],
+            validate_deployable_articles([dict(medium, audience='unknown')]),
+        )
+        with self.assertRaisesRegex(
+            ValueError, 'unsupported medium audience'
+        ):
+            validate_deployable_articles([
+                dict(medium, audience='new-member-enum')
+            ])
+        with self.assertRaisesRegex(
+            ValueError, 'unverified Medium audience must remain excerpt-only'
+        ):
+            validate_deployable_articles([
+                dict(medium, audience='unknown', content_status='full')
+            ])
 
     def test_full_content_requires_a_real_body_wordcount_and_brief(self):
         body_text = ('captured research ' * 50).strip()
@@ -279,6 +357,76 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
         invalid = dict(trade, direction='buy')
         with self.assertRaisesRegex(ValueError, 'invalid direction'):
             validate_trades([invalid], urls)
+        with self.assertRaisesRegex(ValueError, 'public observation contract'):
+            validate_trades([
+                dict(trade, private_body='subscriber-only text')
+            ], urls)
+
+    def test_member_observations_are_bound_to_the_exact_public_preview(self):
+        body = (
+            'The fund established a long position in Acme shares after a '
+            'documented catalyst improved the expected payoff.'
+        )
+        digest = hashlib.sha256(body.encode('utf-8')).hexdigest()
+        preview = {
+            'schema_version': 1,
+            'surface': 'anonymous-substack-list',
+            'text': body,
+            'character_count': len(body),
+            'body_sha256': digest,
+        }
+        post = current_body({
+            'url': 'https://navnoorbawa.substack.com/p/member-example',
+            'source': 'substack',
+            'source_id': 'member-example',
+            'slug': 'member-example',
+            'title': 'Member example',
+            'post_date': '2026-07-14',
+            'audience': 'only_paid',
+            'content_status': 'excerpt',
+            'wordcount': 0,
+            'body_text': body,
+            'is_published': True,
+            'member_preview': preview,
+        })
+        article = {
+            key: value for key, value in post.items()
+            if key not in {'body_text', 'is_published'}
+        }
+        article['family'] = 'other'
+        article['brief'] = build_article_brief({
+            'body_text': body,
+            'title': article['title'],
+            'post_date': article['post_date'],
+        })
+        posts = validate_posts([post])
+        articles = validate_article_index([article], posts)
+        trade = {
+            'article_title': article['title'],
+            'article_url': article['url'],
+            'article_date': '2026-07-14',
+            'trade_description': body,
+            'description_truncated': False,
+            'instruments': ['equity'],
+            'direction': 'long',
+            'source_body_sha256': digest,
+        }
+        self.assertEqual(validate_trades([trade], articles), {article['url']})
+
+        with self.assertRaisesRegex(ValueError, 'member preview body'):
+            validate_trades([
+                dict(trade, source_body_sha256='0' * 64)
+            ], articles)
+        with self.assertRaisesRegex(ValueError, 'public source body'):
+            validate_trades([
+                dict(
+                    trade,
+                    trade_description=(
+                        'A hidden subscriber-only paragraph must not validate '
+                        'as a public observation.'
+                    ),
+                )
+            ], articles)
 
     def test_medium_url_identity_is_exact_and_unicode_safe(self):
         valid_urls = (
@@ -514,6 +662,61 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
             path.write_text(json.dumps(previous), encoding='utf-8')
             with self.assertRaisesRegex(ValueError, 'medium article count collapsed'):
                 validate_article_regression(current, path, 0.5)
+
+    def test_trade_regression_guards_public_rows_not_removed_member_cache(self):
+        public_url = 'https://navnoorbawa.substack.com/p/public'
+        member_url = 'https://navnoorbawa.substack.com/p/member'
+        previous_articles = [
+            {'source': 'substack', 'audience': 'everyone', 'url': public_url},
+            {'source': 'substack', 'audience': 'only_paid', 'url': member_url},
+        ]
+        previous_trades = [
+            {'article_url': public_url, 'trade_description': 'public one'},
+            {'article_url': public_url, 'trade_description': 'public two'},
+            *[
+                {
+                    'article_url': member_url,
+                    'trade_description': f'legacy member cache {index}',
+                }
+                for index in range(20)
+            ],
+        ]
+        current_trade = {
+            'article_url': public_url,
+            'trade_description': 'current public one',
+        }
+        current_articles = {
+            public_url: {'member_access': False},
+            member_url: {'member_access': True},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            article_path = root / 'articles.json'
+            trade_path = root / 'trades.json'
+            article_path.write_text(
+                json.dumps(previous_articles), encoding='utf-8'
+            )
+            trade_path.write_text(json.dumps(previous_trades), encoding='utf-8')
+
+            validate_trade_regression(
+                [current_trade],
+                {public_url},
+                trade_path,
+                0.5,
+                current_articles,
+                article_path,
+            )
+            with self.assertRaisesRegex(
+                ValueError, 'public observation count collapsed'
+            ):
+                validate_trade_regression(
+                    [],
+                    set(),
+                    trade_path,
+                    0.5,
+                    current_articles,
+                    article_path,
+                )
 
 
 if __name__ == '__main__':

@@ -54,16 +54,19 @@ pages or a catalogue that changes between passes fail closed. A current body is
 labeled `full` only when the source explicitly marks it public, the detail
 revision exactly matches the list row, and the captured text covers at least
 97% of the list endpoint's declared word count.
-Paid rows never trigger a detail-body request and remain exact bounded list
-excerpts or metadata only. Public detail recovery has a hard per-refresh request
-budget. A private retry timestamp rotates that budget across refreshes: new
+Paid rows never trigger a detail-body request. Their tracked body is either a
+deterministically bounded, hash-bound anonymous list preview of at most 1,200
+characters or empty metadata-only state; authenticated and legacy cached member
+bodies are excluded. Public detail recovery has a hard per-refresh request
+budget. A private retry
+timestamp rotates that budget across refreshes: new
 rows run first, followed by never-attempted and then oldest-attempted rows, so a
 fixed newest-first catalogue cannot permanently starve an older unresolved
 article. Previously captured exact bodies may be retained for research
-continuity, but the tracked catalogue and terminal distinguish current, prior,
-and revision-unverified captures. Historical passages and their derived
-observations are visibly flagged, excluded from high-context eligibility, and
-never labeled as current full text.
+continuity only for source-public rows, but the tracked catalogue and terminal
+distinguish current, prior, and revision-unverified captures. Historical public
+passages and their derived observations are visibly flagged, excluded from
+high-context eligibility, and never labeled as current full text.
 
 `all_posts.json` and `all_sources_posts.json` stay local. The tracked pipeline
 state includes `medium_posts.json`, `patreon_registry.json`,
@@ -99,7 +102,7 @@ validated four-source snapshot as the terminal:
 - [`data/latest.json`](https://navnoorthapar.github.io/substack-trades/data/latest.json) — the deterministic newest-20 projection.
 - [`data/manifest.json`](https://navnoorthapar.github.io/substack-trades/data/manifest.json) — schema version, dataset identity, freshness, counts, and endpoint discovery.
 - [`data/search_index.json`](https://navnoorthapar.github.io/substack-trades/data/search_index.json) — a compact deterministic entity/topic index.
-- [`data/related.json`](https://navnoorthapar.github.io/substack-trades/data/related.json) — five explainable related-research candidates per article.
+- [`data/related.json`](https://navnoorthapar.github.io/substack-trades/data/related.json) — one to five explainable related-research candidates per article when exact overlap exists.
 - [`data/families.json`](https://navnoorthapar.github.io/substack-trades/data/families.json) — the deterministic seven-family catalogue partition.
 
 There is no API server or write method. Fetch the manifest first, reject schema
@@ -128,6 +131,29 @@ social preview and crawler-readable entry point. Content-bearing stubs enter the
 matching terminal dossier; registry-only stubs open the original public source.
 The exact field, ranking, versioning, registry, privacy, and share-asset
 contracts are in [SCHEMA.md](SCHEMA.md).
+
+## Subscriber conversion
+
+Member-access research is promoted as source completeness, never as a simulated
+browser paywall. The terminal keeps public research usable, distinguishes what
+the source permits from how much this release captured, and presents a
+contextual continuation panel only for a canonical paid Substack record. A
+non-empty panel passage is the exact anonymous source preview proven by the
+snapshot; a row without such a preview is labeled metadata-only. The panel links
+to the exact article page and offers a separate no-tracking path to current
+subscription terms. Locked Medium and paid Patreon records retain their own
+source identity and never imply that a Substack subscription unlocks them.
+
+The public data validator fails closed if a member-access Substack or Medium
+record is marked as a full capture, if a member preview exceeds 1,200 characters,
+if its length or digest is false, or if a brief/observation is not bound to that
+exact preview. Prices, trials, subscriber counts, performance claims, artificial
+urgency, and behavioral telemetry are not embedded. The complete editorial,
+privacy, testing, current-snapshot, historical-exposure, and off-site
+publication workflow is in
+[SUBSCRIPTION_PLAYBOOK.md](SUBSCRIPTION_PLAYBOOK.md). Historical Git and retained
+release-artifact handling remains the explicit launch blocker documented as
+`LAUNCH-058` in [ISSUES.md](ISSUES.md).
 
 ## Product scope: institutional research intake
 

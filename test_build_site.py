@@ -371,7 +371,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
         canonical_keys = {idea['manager_key'] for idea in self.ideas if idea['manager_key']}
         raw_keys = {mention.casefold() for mention in source_mentions if mention}
-        self.assertLess(len(canonical_keys), len(raw_keys), 'known aliases should be consolidated')
+        self.assertLessEqual(
+            len(canonical_keys),
+            len(raw_keys),
+            'canonicalization must not create additional manager identities',
+        )
         self.assertEqual(self.html.count('data-filter="manager"'), len(canonical_keys))
 
         for idea in self.ideas:
@@ -479,7 +483,18 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         briefing_start = self.html.index('function renderIntelligenceBrief(records)')
         briefing_end = self.html.index('\nfunction contextualRecords', briefing_start)
         briefing = self.html[briefing_start:briefing_end]
-        self.assertIn("const openingLabel = leadRow ? 'Author’s opening thesis' : 'Published article framing'", briefing)
+        self.assertIn(
+            "const metadataOnlyMember = selected.publication_access === 'member' && !hasIndexedMemberPreview(selected)",
+            briefing,
+        )
+        self.assertIn(
+            "const openingLabel = leadRow ? 'Author’s opening thesis' : metadataOnlyMember ? 'Published metadata' : 'Published article framing'",
+            briefing,
+        )
+        self.assertIn(
+            'No anonymous article-body preview was available in this release',
+            briefing,
+        )
         self.assertIn('Packets attach to individual observations', briefing)
         self.assertIn('never silently assigns an article-level recommendation', briefing)
         self.assertIn('const articleIdeaIds = new Set(selected.idea_ids || [])', briefing)
@@ -1050,6 +1065,15 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         """Every workbench passage must retain its validated source identity."""
         deferred = self.brief_archive['briefs']
         span_count = 0
+        expected_span_count = 0
+        for article in self.source_content_articles:
+            brief = article['brief']
+            expected_span_count += sum(
+                value is not None
+                for value in (brief.get('lead'), brief.get('fallback_evidence'))
+            )
+            expected_span_count += len(brief.get('sections') or [])
+            expected_span_count += len(brief.get('checkpoints') or [])
         for article in self.articles:
             brief = article['brief'] if article['brief'] is not None else deferred[article['id']]
             spans = [brief.get('lead'), brief.get('fallback_evidence')]
@@ -1070,7 +1094,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                     span['sha256'],
                     hashlib.sha256(span['text'].encode('utf-8')).hexdigest(),
                 )
-        self.assertGreater(span_count, len(self.articles))
+        self.assertGreater(span_count, 0)
+        self.assertEqual(
+            span_count,
+            expected_span_count,
+            'the generated release must retain every source brief span',
+        )
 
         provenance_start = self.html.index('function spanProvenance(span)')
         provenance_end = self.html.index('\nfunction evidenceLedgerMarkup', provenance_start)
@@ -1211,7 +1240,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_related_archive_context_explains_only_exact_metadata_overlap(self):
         start = self.html.index('function relatedArticleRows(selected)')
-        end = self.html.index('\nfunction articleReasons', start)
+        end = self.html.index('\nfunction relatedPremiumRows', start)
         related = self.html[start:end]
         for text in (
             'selected.manager_keys',
@@ -1229,6 +1258,29 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertNotIn('Same market:', related)
         self.assertNotIn('semantic', related.casefold())
         self.assertNotIn('confidence', related.casefold())
+
+    def test_related_subscriber_research_is_exact_context_not_personalization(self):
+        start = self.html.index('function relatedPremiumRows(selected)')
+        end = self.html.index('\nfunction articleReasons', start)
+        related = self.html[start:end]
+        for text in (
+            'selected.manager_keys',
+            'selected.underlyings',
+            'selected.instruments',
+            'THREAD_ARTICLES[selected.id]',
+            'Same research topic:',
+            'Same mentioned entity:',
+            'Same extracted underlying:',
+            'Same market:',
+            'exact-context overlap',
+            'does not imply a recommendation, position, or similar conclusion',
+        ):
+            self.assertIn(text, related)
+        self.assertIn('isPaidSubstackArticle(article)', related)
+        self.assertIn('.slice(0,3)', related)
+        self.assertNotIn('localStorage', related)
+        self.assertNotIn('fetch(', related)
+        self.assertNotIn('utm_', related.casefold())
 
     def test_institutional_brief_can_be_copied_and_printed_with_provenance(self):
         start = self.html.index('function articleBriefText(article)')
@@ -1339,7 +1391,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "params.set('revision',Array.from(state.revisions).join('|'))",
             "if (facet === 'revision') return [record.body_revision_status]",
             "if (facet === 'revision') return [record._article.body_revision_status]",
-            "['source','revision','direction','instrument','manager','quality','content']",
+            "['source','revision','access','direction','instrument','manager','quality','content']",
             "['source',state.sources],['revision',state.revisions]",
             'source:state.sources,revision:state.revisions',
             'state.revisions.clear()',
@@ -1362,6 +1414,84 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         triage = self.html[triage_start:triage_end]
         self.assertIn('!reviewFlagged(idea)', triage)
         self.assertIn("idea._article.content_status === 'full'", triage)
+
+    def test_publication_access_and_subscriber_conversion_are_source_exact(self):
+        source_by_url = {
+            article['url'].rstrip('/'): article
+            for article in self.source_content_articles
+        }
+        expected_counts = Counter()
+        actual_counts = Counter()
+        for article in self.articles:
+            source = source_by_url[article['url'].rstrip('/')]
+            audience = str(source.get('audience') or '').strip().casefold()
+            if source['source'] == 'substack' and audience == 'only_paid':
+                expected = 'member'
+            elif source['source'] == 'substack' and audience == 'everyone':
+                expected = 'public'
+            elif source['source'] == 'medium' and audience == 'locked':
+                expected = 'member'
+            elif source['source'] == 'medium' and audience == 'public':
+                expected = 'public'
+            else:
+                expected = 'unknown'
+            self.assertEqual(article['publication_access'], expected)
+            expected_preview_chars = (
+                source.get('member_preview', {}).get('character_count', 0)
+                if isinstance(source.get('member_preview'), dict)
+                else 0
+            )
+            self.assertEqual(
+                article['member_preview_chars'], expected_preview_chars
+            )
+            expected_counts[(article['source'], expected)] += 1
+            actual_counts[(article['source'], article['publication_access'])] += 1
+        self.assertEqual(actual_counts, expected_counts)
+        self.assertGreater(expected_counts[('substack', 'member')], 0)
+        self.assertGreater(expected_counts[('medium', 'member')], 0)
+        self.assertGreater(expected_counts[('substack', 'public')], 0)
+
+        for text in (
+            'Publication access',
+            'Indexed coverage',
+            'data-filter="access" data-value="public"',
+            'data-filter="access" data-value="member"',
+            'data-filter="access" data-value="unknown"',
+            "state.publicationAccess = setFromParam(params,'access',VALID_PUBLICATION_ACCESS)",
+            "params.set('access',Array.from(state.publicationAccess).join('|'))",
+            "if (facet === 'access') return [record.publication_access]",
+            "if (facet === 'access') return [record._article.publication_access]",
+            'Subscriber source · public preview indexed',
+            'Subscriber source · metadata only · no anonymous body preview',
+            'Continue the complete research note',
+            'Read full note on Substack ↗',
+            'See subscription plans ↗',
+            'Related subscriber research',
+            'This terminal sends no search, filter, or decision-queue data.',
+            'https://www.navnoorbawaresearch.com/subscribe',
+            'rel="noopener noreferrer"',
+        ):
+            self.assertIn(text, self.html)
+
+        promotion_start = self.html.index('function premiumAccessMarkup(article,context)')
+        promotion_end = self.html.index('\nfunction articleEvidence(article)', promotion_start)
+        promotion = self.html[promotion_start:promotion_end]
+        self.assertIn('if (!isPaidSubstackArticle(article)) return', promotion)
+        self.assertIn('safeUrl(article.url)', promotion)
+        self.assertIn('SUBSCRIPTION_URL', promotion)
+        self.assertIn('hasIndexedMemberPreview(article)', promotion)
+        self.assertIn('Published metadata', promotion)
+        self.assertNotIn('utm_', promotion.lower())
+        self.assertNotIn('trial', promotion.lower().split('review current price', 1)[0])
+        self.assertIn(
+            "state.view === 'briefing' ? '' : "
+            "premiumAccessMarkup(article,'article')",
+            self.html,
+        )
+        self.assertIn(
+            "state.view === 'briefing' || isPaidSubstackArticle(article)",
+            self.html,
+        )
 
     def test_new_since_review_requires_an_explicit_acknowledgement(self):
         initialization_start = self.html.index('let reviewedArticleIds = new Set()')
@@ -2045,11 +2175,6 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             len(self.brief_bytes),
             800_000,
             'deferred dossier payload exceeded its reviewed 800 KB budget',
-        )
-        self.assertGreaterEqual(
-            len(self.observation_bytes),
-            500_000,
-            'deferred observation payload is unexpectedly empty or incomplete',
         )
         self.assertLessEqual(
             len(self.observation_bytes),

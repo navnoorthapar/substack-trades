@@ -11,7 +11,8 @@ from datetime import datetime
 from pathlib import Path
 
 from article_briefs import build_article_brief
-from fetch_all_posts import atomic_write_json
+from fetch_all_posts import atomic_write_json, public_source_post
+from fetch_medium_posts import public_medium_post
 from registry_sources import (
     crosslink_registry,
     load_overrides as load_registry_overrides,
@@ -170,7 +171,7 @@ def _validate_normalized_body_provenance(item, label):
 
 
 def _canonical_substack_post(post):
-    item = copy.deepcopy(post)
+    item = public_source_post(copy.deepcopy(post))
     item['source'] = 'substack'
     item['source_id'] = str(item.get('source_id') or item.get('slug') or '')
     item['content_status'] = item.get('content_status') or 'full'
@@ -206,7 +207,7 @@ def _canonical_substack_post(post):
 
 
 def _canonical_medium_post(post):
-    item = copy.deepcopy(post)
+    item = public_medium_post(copy.deepcopy(post))
     item['source'] = 'medium'
     item['source_id'] = str(item.get('source_id') or item.get('medium_id') or '')
     item['medium_id'] = str(item.get('medium_id') or item['source_id'])
@@ -408,6 +409,8 @@ def article_metadata(post):
                 else ''
             ),
         })
+        if isinstance(post.get('member_preview'), dict):
+            value['member_preview'] = copy.deepcopy(post['member_preview'])
     if post.get('alternate_urls'):
         value['alternate_urls'] = post['alternate_urls']
     return value

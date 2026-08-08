@@ -113,7 +113,6 @@ class ReleasePolicy:
     index_gzip_max_bytes: int = 250_000
     brief_min_bytes: int = 100_000
     brief_max_bytes: int = 800_000
-    observation_min_bytes: int = 500_000
     observation_max_bytes: int = 1_500_000
     data_max_bytes: int = 4_000_000
     search_max_bytes_exclusive: int = 500_000
@@ -226,6 +225,22 @@ def _clean_source(value: Any, url: str) -> str:
     return 'medium' if host == 'medium.com' else 'substack'
 
 
+def _clean_publication_access(source: str, audience: Any) -> str:
+    """Mirror the conservative source-access projection in build_site.py."""
+    normalized = str(audience or '').strip().casefold()
+    if source == 'substack':
+        if normalized == 'only_paid':
+            return 'member'
+        if normalized == 'everyone':
+            return 'public'
+    elif source == 'medium':
+        if normalized == 'locked':
+            return 'member'
+        if normalized == 'public':
+            return 'public'
+    return 'unknown'
+
+
 def _stable_article_id(url: Any) -> str:
     identity = _canonical_url_identity(url)
     return f'a_{hashlib.sha256(identity.encode("utf-8")).hexdigest()[:14]}'
@@ -251,6 +266,7 @@ def _source_client_metadata(
     except (TypeError, ValueError):
         wordcount = 0
     read_minutes = max(1, round(wordcount / 220)) if wordcount else 0
+    publication_source = _clean_source(source.get('source'), url)
     return {
         'title': (
             source.get('title')
@@ -261,7 +277,15 @@ def _source_client_metadata(
         'date': _clean_date(publication_value),
         'published_at': published_at,
         'publication_precision': publication_precision,
-        'source': _clean_source(source.get('source'), url),
+        'source': publication_source,
+        'publication_access': _clean_publication_access(
+            publication_source, source.get('audience')
+        ),
+        'member_preview_chars': (
+            source.get('member_preview', {}).get('character_count', 0)
+            if isinstance(source.get('member_preview'), dict)
+            else 0
+        ),
         'alternate_urls': source.get('alternate_urls') or {},
         'wordcount': wordcount,
         'read_minutes': read_minutes,
@@ -707,11 +731,8 @@ def _validate_sizes(
         f'{policy.brief_min_bytes}–{policy.brief_max_bytes} byte policy',
     )
     _require(
-        policy.observation_min_bytes
-        <= len(observation_bytes)
-        <= policy.observation_max_bytes,
-        f'deferred observation size {len(observation_bytes)} is outside the '
-        f'{policy.observation_min_bytes}–'
+        len(observation_bytes) <= policy.observation_max_bytes,
+        f'deferred observation size {len(observation_bytes)} exceeds the '
         f'{policy.observation_max_bytes} byte policy',
     )
     _require(

@@ -434,12 +434,30 @@ class ReleaseValidatorTests(unittest.TestCase):
             row['source_updated_at'] = '2001-01-01T00:00:00Z'
             row['observed_source_updated_at'] = '2001-01-01T00:00:00Z'
 
+        def mutate_publication_access(rows):
+            row = next(candidate for candidate in rows
+                       if candidate['publication_access'] != 'unknown')
+            row['publication_access'] = (
+                'member' if row['publication_access'] == 'public' else 'public'
+            )
+
+        def mutate_member_preview_chars(rows):
+            row = next(
+                candidate for candidate in rows
+                if candidate['publication_access'] == 'member'
+            )
+            row['member_preview_chars'] = (
+                1 if row['member_preview_chars'] == 0 else 0
+            )
+
         for field, transform in (
             ('title', mutate_title),
             ('content_status', mutate_content_status),
             ('wordcount', mutate_wordcount),
             ('body_revision_status', mutate_body_revision),
             ('source_updated_at', mutate_body_revision_timestamps),
+            ('publication_access', mutate_publication_access),
+            ('member_preview_chars', mutate_member_preview_chars),
         ):
             with self.subTest(field=field):
                 with self.cloned_site() as site:
@@ -561,6 +579,11 @@ class ReleaseValidatorTests(unittest.TestCase):
                 self.validate(site)
 
     def test_observation_ownership_and_content_are_lossless(self):
+        with self.cloned_site() as site:
+            self.replace_observations(site, lambda rows: rows.pop())
+            with self.assertRaisesRegex(ValueError, 'observation count'):
+                self.validate(site)
+
         with self.cloned_site() as site:
             path = site / 'observations.json'
             payload = json.loads(path.read_text(encoding='utf-8'))
