@@ -2654,11 +2654,11 @@ __MANAGER_BUTTONS__
   <main class="main-panel" id="main-panel" tabindex="-1">
     <div class="command-bar">
       <nav class="view-tabs" aria-label="Terminal views">
-        <button class="view-tab" type="button" data-view="briefing" aria-keyshortcuts="Alt+Shift+1">Latest Brief</button>
-        <button class="view-tab" type="button" data-view="ideas" aria-keyshortcuts="Alt+Shift+2">Evidence Monitor</button>
-        <button class="view-tab" type="button" data-view="research" aria-keyshortcuts="Alt+Shift+3">Research Library</button>
-        <button class="view-tab" type="button" data-view="queue" aria-keyshortcuts="Alt+Shift+4">Decision Queue <span id="saved-count"></span></button>
-        <button class="view-tab active" type="button" data-view="structure" aria-keyshortcuts="Alt+Shift+5">Structure Desk</button>
+        <button class="view-tab active" type="button" data-view="structure" aria-keyshortcuts="Alt+Shift+1">Structure Desk</button>
+        <button class="view-tab" type="button" data-view="briefing" aria-keyshortcuts="Alt+Shift+2">Latest Brief</button>
+        <button class="view-tab" type="button" data-view="ideas" aria-keyshortcuts="Alt+Shift+3">Evidence Monitor</button>
+        <button class="view-tab" type="button" data-view="research" aria-keyshortcuts="Alt+Shift+4">Research Library</button>
+        <button class="view-tab" type="button" data-view="queue" aria-keyshortcuts="Alt+Shift+5">Decision Queue <span id="saved-count"></span></button>
       </nav>
       <span class="result-summary" id="result-summary"></span>
       <span class="command-spacer"></span>
@@ -2783,7 +2783,7 @@ __MANAGER_BUTTONS__
     <div class="shortcut-item"><span>Add or archive selected decision packet</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>S</kbd></span></div>
     <div class="shortcut-item"><span>Copy selected citation</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>C</kbd></span></div>
     <div class="shortcut-item"><span>Toggle filters</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>F</kbd></span></div>
-    <div class="shortcut-item"><span>Brief / Monitor / Library / Queue / Structure</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1–5</kbd></span></div>
+    <div class="shortcut-item"><span>Structure / Brief / Monitor / Library / Queue</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1–5</kbd></span></div>
     <div class="shortcut-item"><span>Close panel</span><kbd>Esc</kbd></div>
     <div class="shortcut-item"><span>Show this reference</span><span><kbd>?</kbd> or <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>?</kbd></span></div>
   </div>
@@ -4751,9 +4751,9 @@ function briefRailMarkup(lenses,article) {
     [number(substackCount),'Substack'],[number(mediumCount),'Unique Medium']
   ];
   const views = [
-    ['01','briefing','Latest Brief'],['02','ideas','Evidence Monitor'],
-    ['03','research','Research Library'],['04','queue','Decision Queue'],
-    ['05','structure','Structure Desk']
+    ['01','structure','Structure Desk'],['02','briefing','Latest Brief'],
+    ['03','ideas','Evidence Monitor'],['04','research','Research Library'],
+    ['05','queue','Decision Queue']
   ];
   let jumpMarkup = '';
   if (article) {
@@ -4786,9 +4786,9 @@ function briefRailMarkup(lenses,article) {
 }
 function briefCompactNavMarkup(lenses) {
   const views = [
-    ['briefing','Latest Brief'],['ideas','Evidence Monitor'],
-    ['research','Research Library'],['queue','Decision Queue'],
-    ['structure','Structure Desk']
+    ['structure','Structure Desk'],['briefing','Latest Brief'],
+    ['ideas','Evidence Monitor'],['research','Research Library'],
+    ['queue','Decision Queue']
   ];
   return '<nav class="ic-compact-nav" aria-label="Briefing navigation"><div class="ic-compact-group" role="group" aria-label="Research views"><span class="ic-compact-label" aria-hidden="true">Views</span><div class="ic-compact-scroll">' +
     views.map(function (row) {
@@ -6018,7 +6018,7 @@ function renderStructureDesk(rows, gate) {
     : '';
   shell.innerHTML = '<div class="structure-wrap">' +
     '<header class="structure-head"><h2>Structure desk</h2>' +
-    '<p class="structure-lede">Describe what you want to trade, then read how the extracted record structured and argued comparable positions.</p>' +
+    '<p class="structure-lede">Name what you want to trade. The desk builds a reference class from the published record &mdash; how comparable positions were structured, the curve when they were argued, and what the record went on to say &mdash; and writes it up as a memo you can take to committee.</p>' +
     '<div class="structure-search"><label class="sr-only" for="structure-focus-input">What do you want to trade?</label>' +
     '<input id="structure-focus-input" type="search" placeholder="What do you want to trade? e.g. VIX, JGB, Nasdaq" value="' +
     escapeHtml(state.structureFocus) + '" autocomplete="off"></div>' +
@@ -7332,9 +7332,9 @@ function gotoView(view) {
 }
 function buildPaletteCommands() {
   const commands = [
-    ['briefing','Latest Brief'],['ideas','Evidence Monitor'],
-    ['research','Research Library'],['queue','Decision Queue'],
-    ['structure','Structure Desk']
+    ['structure','Structure Desk'],['briefing','Latest Brief'],
+    ['ideas','Evidence Monitor'],['research','Research Library'],
+    ['queue','Decision Queue']
   ].map(function (row) {
     return {kind:'View',label:'Go to ' + row[1],meta:'',run:function () { gotoView(row[0]); }};
   });
@@ -7569,8 +7569,8 @@ document.addEventListener('keydown',function (event) {
     event.preventDefault();
     const viewNumber = event.code.slice(-1);
     markMeaningfulNavigation();
-    state.view = viewNumber === '1' ? 'briefing' : viewNumber === '2' ? 'ideas'
-      : viewNumber === '3' ? 'research' : viewNumber === '4' ? 'queue' : 'structure';
+    state.view = viewNumber === '1' ? 'structure' : viewNumber === '2' ? 'briefing'
+      : viewNumber === '3' ? 'ideas' : viewNumber === '4' ? 'research' : 'queue';
     state.sort = 'newest';
     state.selected = '';
     state.threadTopic = '';

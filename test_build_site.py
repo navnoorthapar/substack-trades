@@ -1669,6 +1669,25 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "<button class=\"view-tab active\" type=\"button\" data-view=\"structure\"",
             self.html,
         )
+
+        # It leads every place a view is offered, not just the default state:
+        # a reader who sees it fifth reads it as an afterthought.
+        order = re.findall(
+            r'data-view="([a-z]+)" aria-keyshortcuts="Alt\+Shift\+(\d)"', self.html)
+        self.assertEqual(
+            order,
+            [('structure', '1'), ('briefing', '2'), ('ideas', '3'),
+             ('research', '4'), ('queue', '5')],
+        )
+        self.assertIn(
+            "state.view = viewNumber === '1' ? 'structure'", self.html)
+        for leading in (
+            "['structure','Structure Desk'],['briefing','Latest Brief']",
+            "['01','structure','Structure Desk'],['02','briefing','Latest Brief']",
+        ):
+            self.assertIn(leading, self.html)
+        self.assertIn(
+            'Structure / Brief / Monitor / Library / Queue', self.html)
         self.assertIn(
             "].includes(hashView) ? hashView : 'structure';", self.html)
         self.assertIn(
