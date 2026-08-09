@@ -489,5 +489,150 @@ if (recoverFromStaleReleaseShell()) throw new Error('recovery would reload the s
         )
 
 
+class StructureDeskRuntimeTests(unittest.TestCase):
+    """The structure desk ranks comparable observations for a trading decision.
+
+    Its ranking has to stay honest under thin data: a hard input must exclude
+    rather than pad the comparison, and a passage that names an underlying
+    twice must not look like two independent precedents.
+    """
+
+    def desk_runtime(self, assertions):
+        run_node(
+            javascript_between(
+                'function normalize(value) {',
+                'function articleBriefSearch',
+            )
+            + javascript_between(
+                'function instrumentLabel(value) {',
+                'function directionLabel(value) {',
+            )
+            + javascript_between(
+                'function underlyingParts(idea) {',
+                'function structureChipRow(',
+            )
+            + r'''
+function observation(overrides) {
+  const idea = Object.assign({
+    id:'i_0', description:'', direction:'unspecified', instruments:['equity'],
+    underlying:'', thesis:'', quant:'', outcome:'', manager:'',
+    _article:{title:'',date:'2026-01-01',url:'https://example.test/a',source:'substack'}
+  }, overrides);
+  idea._search = normalize([
+    idea._article.title, idea.description, idea.direction,
+    idea.instruments.join(' '), idea.underlying, idea.thesis, idea.quant,
+    idea.outcome, idea.manager
+  ].join(' '));
+  return idea;
+}
+function desk(patch) {
+  Object.assign(state, {
+    structureFocus:'', structureInstrument:'', structureDirection:'any',
+    structurePeriod:'all'
+  }, patch || {});
+  return structureMatches();
+}
+const state = {};
+'''
+            + assertions,
+        )
+
+    def test_hard_desk_inputs_exclude_rather_than_pad_the_comparison(self):
+        self.desk_runtime(r'''
+const IDEAS = [
+  observation({id:'a', instruments:['option'], direction:'short'}),
+  observation({id:'b', instruments:['equity'], direction:'short'}),
+  observation({id:'c', instruments:['option'], direction:'long'})
+];
+const byInstrument = desk({structureInstrument:'option'}).map(function (row) { return row.idea.id; });
+if (byInstrument.length !== 2 || byInstrument.indexOf('b') !== -1) {
+  throw new Error('instrument input did not exclude the other instrument: ' + byInstrument);
+}
+const byStance = desk({structureInstrument:'option', structureDirection:'short'});
+if (byStance.length !== 1 || byStance[0].idea.id !== 'a') {
+  throw new Error('stance input did not narrow to the matching passage');
+}
+if (byStance[0].reasons.length !== 2) {
+  throw new Error('every applied input must be reported as a match reason');
+}
+const unmatched = desk({structureFocus:'nothingmatchesthisword'});
+if (unmatched.length !== 0) throw new Error('an unmatched focus must return nothing');
+''')
+
+    def test_named_underlying_outranks_a_passing_text_mention(self):
+        self.desk_runtime(r'''
+const IDEAS = [
+  observation({id:'named', underlying:'VIX', quant:'19 handle'}),
+  observation({id:'mention', description:'A note that mentions VIX only in passing.'})
+];
+const ranked = desk({structureFocus:'VIX'});
+if (ranked.length !== 2) throw new Error('both passages should be comparable');
+if (ranked[0].idea.id !== 'named') {
+  throw new Error('a named underlying must outrank an incidental mention');
+}
+if (ranked[0].score <= ranked[1].score) throw new Error('ranking scores did not separate');
+if (!ranked[0].reasons.join(' ').includes('Same underlying')) {
+  throw new Error('the named-underlying match must say so');
+}
+''')
+
+    def test_period_restricts_comparables_to_the_selected_record(self):
+        self.desk_runtime(r'''
+const IDEAS = [
+  observation({id:'old', _article:{title:'',date:'2025-04-02',url:'https://example.test/a',source:'substack'}}),
+  observation({id:'new', _article:{title:'',date:'2026-04-02',url:'https://example.test/b',source:'substack'}})
+];
+const periods = structurePeriodOptions().map(function (row) { return row[0]; });
+if (periods.join(',') !== 'all,2026,2025') throw new Error('period options: ' + periods);
+const only2025 = desk({structurePeriod:'2025'});
+if (only2025.length !== 1 || only2025[0].idea.id !== 'old') {
+  throw new Error('the period input did not restrict the comparison');
+}
+const spread = structurePattern(desk({})).periods;
+if (JSON.stringify(spread) !== '[["2026",1],["2025",1]]') {
+  throw new Error('period distribution must run newest first: ' + JSON.stringify(spread));
+}
+''')
+
+    def test_one_passage_naming_an_underlying_twice_counts_once(self):
+        self.desk_runtime(r'''
+const IDEAS = [
+  observation({id:'repeat', underlying:'Crypto; crypto'}),
+  observation({id:'single', underlying:'Crypto'})
+];
+const options = structureUnderlyingOptions();
+const crypto = options.filter(function (row) { return normalize(row.label) === 'crypto'; })[0];
+if (!crypto) throw new Error('the recurring underlying was not offered');
+if (crypto.count !== 2) {
+  throw new Error('a repeated mention inflated the precedent count to ' + crypto.count);
+}
+if (desk({structureFocus:'Crypto'}).length !== crypto.count) {
+  throw new Error('the offered count disagrees with the comparables it returns');
+}
+''')
+
+    def test_structure_pattern_reports_what_the_record_actually_carries(self):
+        self.desk_runtime(r'''
+const IDEAS = [
+  observation({id:'a', instruments:['option','equity'], direction:'short', quant:'2x', outcome:'closed flat'}),
+  observation({id:'b', instruments:['option'], direction:'short', thesis:'carry'}),
+  observation({id:'c', instruments:['equity'], direction:'unspecified'})
+];
+const pattern = structurePattern(desk({}));
+if (pattern.total !== 3) throw new Error('pattern total: ' + pattern.total);
+if (pattern.withOutcome !== 1) throw new Error('outcome count must not be inflated');
+if (pattern.withQuant !== 1 || pattern.withThesis !== 1) throw new Error('evidence counts are wrong');
+const instruments = new Map(pattern.instruments);
+if (instruments.get('option') !== 2 || instruments.get('equity') !== 2) {
+  throw new Error('instrument tally is wrong: ' + JSON.stringify(pattern.instruments));
+}
+if (pattern.combinations[0][0] !== 'Equity + Options' || pattern.combinations[0][1] !== 1) {
+  throw new Error('combination tally is wrong: ' + JSON.stringify(pattern.combinations));
+}
+const directions = new Map(pattern.directions);
+if (directions.get('short') !== 2) throw new Error('stance tally is wrong');
+''')
+
+
 if __name__ == '__main__':
     unittest.main()

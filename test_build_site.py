@@ -822,7 +822,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertNotIn('Copy failed—select and copy manually', self.html)
 
     def test_mobile_monitor_is_bounded_and_lighthouse_a11y_defects_are_closed(self):
-        self.assertIn('const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100};', self.html)
+        self.assertIn(
+            'const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100,structure:24};',
+            self.html,
+        )
         self.assertIn(
             'aria-label="Restore decision queue from a JSON file" tabindex="-1"',
             self.html,
@@ -1656,6 +1659,58 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'It is not a confidence score, approval, recommendation, or evidence that a control was performed.',
         ):
             self.assertIn(text, self.html)
+
+    def test_structure_desk_is_wired_as_a_first_class_view(self):
+        for text in (
+            '<button class="view-tab" type="button" data-view="structure"',
+            'Structure Desk',
+            '<section class="structure-shell" id="structure-shell"',
+            "'briefing','ideas','research','queue','structure'",
+            'structure:24',
+            "state.view === 'structure'",
+            'renderStructureDesk(structureMatches())',
+            'id="structure-focus-input"',
+            "structureChipRow('Instrument','structure-instrument'",
+            "structureChipRow('Stance','structure-direction'",
+            "structureChipRow('Period','structure-period'",
+            "structureChipRow('Recurring underlyings','structure-focus'",
+            "'[data-structure-instrument],[data-structure-direction],"
+            "[data-structure-period],[data-structure-focus]'",
+            'data-structure-more="1"',
+            'How comparable trades were structured',
+            'Comparable observations',
+            'How the line developed',
+            'When these were written',
+        ):
+            self.assertIn(text, self.html)
+
+        # The desk must keep the terminal's table chrome out of the way and
+        # bring its own layout, exactly as the briefing view does.
+        for rule in (
+            r'body\[data-view="structure"\] \.structure-shell\{display:block\}',
+            r'body\[data-view="structure"\] \.main-panel\{grid-column:1/-1\}',
+        ):
+            self.assertRegex(self.html, rule)
+
+    def test_structure_desk_states_the_limits_of_the_extracted_record(self):
+        """The desk must not let a reader infer outcomes the record lacks."""
+        outcomes = [idea for idea in self.ideas if idea['outcome']]
+        self.assertLess(
+            len(outcomes), len(self.ideas),
+            'this test assumes outcomes are not universally recorded',
+        )
+        for text in (
+            'This desk reports how comparable positions were <b>described and structured</b>',
+            'is not a backtest, not realised profit and loss, and not a recommendation',
+            "number(outcomeTotal()) + ' of ' + number(IDEAS.length)",
+            'No outcome recorded at source.',
+            'Outcomes appear only where the source stated one.',
+        ):
+            self.assertIn(text, self.html)
+        self.assertIn(
+            "return IDEAS.filter(function (idea) { return Boolean(idea.outcome); }).length;",
+            self.html,
+        )
 
     def test_institutional_views_and_workflows_are_present(self):
         for text in (

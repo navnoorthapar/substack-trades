@@ -1081,6 +1081,91 @@ body[data-view="queue"] .queue-command{display:inline-flex}
 .mix-unspecified{background:var(--text-muted);background-image:repeating-linear-gradient(90deg,transparent 0 1px,var(--surface-3) 1px 4px)}
 .mix-legend{font:10px var(--mono);color:var(--text-muted);white-space:nowrap}
 
+/* Comparable trade structuring desk */
+.structure-shell{display:none;flex:1 1 auto;min-height:0;overflow:auto;padding:16px;background:var(--bg)}
+body[data-view="structure"] .structure-shell{display:block}
+body[data-view="structure"] .table-shell,
+body[data-view="structure"] .context-bar,
+body[data-view="structure"] .active-filters,
+body[data-view="structure"] .orphaned-queue,
+body[data-view="structure"] .table-command,
+body[data-view="structure"] .command-button[data-action="inspector"]{display:none}
+body[data-view="structure"] .workspace{grid-template-columns:minmax(0,1fr)}
+body[data-view="structure"] .filter-rail,body[data-view="structure"] .inspector{display:none}
+body[data-view="structure"] .main-panel{grid-column:1/-1}
+.structure-wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.structure-head h2{font-size:20px;line-height:1.25;letter-spacing:-.015em}
+.structure-lede{color:var(--text-secondary);font-size:13px;margin:4px 0 12px;max-width:74ch}
+.structure-search input{width:100%;max-width:520px;padding:9px 12px;border-radius:8px;
+  border:1px solid var(--control-line);background:var(--surface-1);color:var(--text);font-size:13px}
+.structure-search input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.structure-controls{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.structure-control{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.structure-control-label{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;
+  color:var(--text-muted);min-width:150px}
+.structure-chips{display:flex;flex-wrap:wrap;gap:6px}
+.structure-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;
+  border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-secondary);
+  font-size:12px;cursor:pointer}
+.structure-chip:hover{border-color:var(--control-line-hover);color:var(--text)}
+.structure-chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--text)}
+.structure-chip-count{font:600 10px var(--mono);color:var(--text-muted)}
+.structure-chip.active .structure-chip-count{color:var(--accent)}
+.structure-disclosure{border:1px solid var(--line);border-left:3px solid var(--warning);
+  background:var(--surface-1);border-radius:6px;padding:10px 12px;font-size:12px;
+  color:var(--text-secondary);line-height:1.5}
+.structure-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,9fr);gap:14px;align-items:start}
+.structure-panel{border:1px solid var(--line);border-radius:8px;background:var(--surface-1);padding:14px}
+.structure-panel h3{font-size:14px;letter-spacing:-.01em;margin-bottom:8px}
+.structure-panel h4{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;
+  color:var(--text-muted);margin:12px 0 6px}
+.structure-summary{font-size:13px;color:var(--text-secondary);line-height:1.55}
+.structure-none,.structure-note{font-size:12px;color:var(--text-muted);line-height:1.5}
+.structure-bars{display:flex;flex-direction:column;gap:5px}
+.structure-bars li{display:grid;grid-template-columns:minmax(88px,1.1fr) minmax(0,2fr) 34px;
+  align-items:center;gap:8px;font-size:12px}
+.structure-bar-label{color:var(--text-secondary);overflow-wrap:anywhere}
+.structure-bar{height:7px;border-radius:4px;background:var(--surface-3);overflow:hidden}
+.structure-bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.structure-bar-value{font:600 11px var(--mono);color:var(--text-muted);text-align:right}
+.structure-managers{font-size:12px;color:var(--text-secondary);line-height:1.6}
+.structure-comparables{display:flex;flex-direction:column;gap:10px}
+.structure-card{border:1px solid var(--line);border-radius:7px;background:var(--surface-2);padding:12px}
+.structure-card-head{display:flex;gap:10px;align-items:flex-start}
+.structure-rank{font:700 11px var(--mono);color:var(--on-accent);background:var(--accent);
+  border-radius:4px;padding:2px 6px;flex:none}
+.structure-card-head h4{font-size:13px;line-height:1.35;margin:0;color:var(--text);
+  text-transform:none;letter-spacing:normal;font-family:inherit;font-weight:600}
+.structure-card-meta{font:500 11px var(--mono);color:var(--text-muted);margin-top:2px}
+.structure-passage{font-size:12px;line-height:1.55;color:var(--text-secondary);margin:9px 0}
+.structure-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 12px;margin:8px 0}
+.structure-fact dt{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+.structure-fact dd{font-size:12px;color:var(--text);overflow-wrap:anywhere}
+.structure-thesis,.structure-outcome{font-size:12px;line-height:1.5;margin-top:8px;
+  padding:7px 9px;border-radius:5px;background:var(--surface-3);color:var(--text-secondary)}
+.structure-thesis span,.structure-outcome span{display:block;font:600 10px var(--mono);
+  text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:3px}
+.structure-outcome{background:var(--positive-soft);border:1px solid var(--positive-line)}
+.structure-outcome.none{background:var(--surface-3);border:1px dashed var(--line-strong);color:var(--text-muted)}
+.structure-card-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:10px}
+.structure-reasons{display:flex;flex-wrap:wrap;gap:5px;list-style:none;margin:0;padding:0}
+.structure-reasons li{font:500 10px var(--mono);padding:2px 7px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent)}
+.structure-reasons-empty{font-size:11px;color:var(--text-muted);margin:0}
+.structure-source{font-size:12px;color:var(--accent);white-space:nowrap}
+.structure-more{align-self:flex-start}
+.structure-steps{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.structure-step{display:flex;gap:10px;font-size:12px;padding:6px 8px;border-radius:5px;
+  background:var(--surface-2);border-left:2px solid var(--line-strong)}
+.structure-step.has-outcome{border-left-color:var(--positive)}
+.structure-step-date{font:600 11px var(--mono);color:var(--text-muted);flex:none;min-width:66px}
+.structure-step-body{color:var(--text-secondary);line-height:1.5}
+.structure-step-outcome{display:block;margin-top:3px;color:var(--positive);font-style:normal}
+@media (max-width:1080px){
+  .structure-grid{grid-template-columns:minmax(0,1fr)}
+  .structure-control-label{min-width:100%}
+}
+
 /* Executive research brief */
 .briefing-shell{display:none;flex:1 1 auto;min-height:0;overflow:auto;padding:16px;background:var(--bg)}
 body[data-view="briefing"] .briefing-shell{display:block}
@@ -2466,6 +2551,7 @@ __MANAGER_BUTTONS__
         <button class="view-tab" type="button" data-view="ideas" aria-keyshortcuts="Alt+Shift+2">Evidence Monitor</button>
         <button class="view-tab" type="button" data-view="research" aria-keyshortcuts="Alt+Shift+3">Research Library</button>
         <button class="view-tab" type="button" data-view="queue" aria-keyshortcuts="Alt+Shift+4">Decision Queue <span id="saved-count"></span></button>
+        <button class="view-tab" type="button" data-view="structure" aria-keyshortcuts="Alt+Shift+5">Structure Desk</button>
       </nav>
       <span class="result-summary" id="result-summary"></span>
       <span class="command-spacer"></span>
@@ -2507,6 +2593,8 @@ __MANAGER_BUTTONS__
     </section>
 
     <section class="briefing-shell" id="briefing-shell" aria-label="Article intelligence brief"></section>
+
+    <section class="structure-shell" id="structure-shell" aria-label="Comparable trade structuring"></section>
 
     <section class="table-shell" id="table-shell" aria-label="Research results">
       <div class="data-table" id="data-table" role="grid" aria-label="Research results" aria-rowcount="0" aria-multiselectable="false">
@@ -2588,7 +2676,7 @@ __MANAGER_BUTTONS__
     <div class="shortcut-item"><span>Add or archive selected decision packet</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>S</kbd></span></div>
     <div class="shortcut-item"><span>Copy selected citation</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>C</kbd></span></div>
     <div class="shortcut-item"><span>Toggle filters</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>F</kbd></span></div>
-    <div class="shortcut-item"><span>Brief / Monitor / Library / Queue</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1–4</kbd></span></div>
+    <div class="shortcut-item"><span>Brief / Monitor / Library / Queue / Structure</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1–5</kbd></span></div>
     <div class="shortcut-item"><span>Close panel</span><kbd>Esc</kbd></div>
     <div class="shortcut-item"><span>Show this reference</span><span><kbd>?</kbd> or <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>?</kbd></span></div>
   </div>
@@ -3013,7 +3101,7 @@ const WORKFLOW_TEXT_LIMITS = {
   next_action:700
 };
 const MAX_QUEUE_ITEMS = 250;
-const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100};
+const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100,structure:24};
 const WORKFLOW_KEY = 'nrt-decision-queue-session-v3';
 const RESTORE_ROLLBACK_KEY = 'nrt-decision-queue-restore-rollback-v1';
 const LEGACY_LOCAL_WORKFLOW_KEYS = ['nrt-decision-queue-v2','nrt-decision-queue-v1','nrt-saved-ideas'];
@@ -3632,6 +3720,10 @@ const state = {
   coverage:'all',
   briefLens:'all',
   threadTopic:'',
+  structureFocus:'',
+  structureInstrument:'',
+  structureDirection:'any',
+  structurePeriod:'all',
   sort:'newest',
   density:storedDensity,
   selected:'',
@@ -3642,7 +3734,7 @@ const state = {
 function hydrateFromHash() {
   const params = new URLSearchParams(location.hash.slice(1));
   const hashView = params.get('view') === 'saved' ? 'queue' : params.get('view');
-  state.view = ['briefing','ideas','research','queue'].includes(hashView) ? hashView : 'briefing';
+  state.view = ['briefing','ideas','research','queue','structure'].includes(hashView) ? hashView : 'briefing';
   state.query = String(params.get('q') || '').slice(0,300);
   state.sources = setFromParam(params,'src',VALID_SOURCES);
   state.revisions = setFromParam(params,'revision',VALID_BODY_REVISIONS);
@@ -4526,7 +4618,8 @@ function briefRailMarkup(lenses,article) {
   ];
   const views = [
     ['01','briefing','Latest Brief'],['02','ideas','Evidence Monitor'],
-    ['03','research','Research Library'],['04','queue','Decision Queue']
+    ['03','research','Research Library'],['04','queue','Decision Queue'],
+    ['05','structure','Structure Desk']
   ];
   let jumpMarkup = '';
   if (article) {
@@ -4560,7 +4653,8 @@ function briefRailMarkup(lenses,article) {
 function briefCompactNavMarkup(lenses) {
   const views = [
     ['briefing','Latest Brief'],['ideas','Evidence Monitor'],
-    ['research','Research Library'],['queue','Decision Queue']
+    ['research','Research Library'],['queue','Decision Queue'],
+    ['structure','Structure Desk']
   ];
   return '<nav class="ic-compact-nav" aria-label="Briefing navigation"><div class="ic-compact-group" role="group" aria-label="Research views"><span class="ic-compact-label" aria-hidden="true">Views</span><div class="ic-compact-scroll">' +
     views.map(function (row) {
@@ -5154,6 +5248,332 @@ function syncExportAvailability() {
     ? 'Available after the release-bound evidence archive is verified'
     : '';
 }
+function underlyingParts(idea) {
+  return String((idea && idea.underlying) || '').split(';').map(function (part) {
+    return part.trim();
+  }).filter(function (part) { return part && part !== '—' && part !== '-'; });
+}
+function outcomeTotal() {
+  return IDEAS.filter(function (idea) { return Boolean(idea.outcome); }).length;
+}
+function structureFocusTokens() {
+  return normalize(state.structureFocus).split(' ').filter(function (word) {
+    return word.length > 2;
+  });
+}
+function structureInstrumentOptions() {
+  const counts = new Map();
+  IDEAS.forEach(function (idea) {
+    const seen = new Set();
+    idea.instruments.forEach(function (instrument) {
+      if (!instrument || instrument === 'unspecified' || seen.has(instrument)) return;
+      seen.add(instrument);
+      counts.set(instrument,(counts.get(instrument) || 0) + 1);
+    });
+  });
+  return Array.from(counts.entries()).sort(function (first,second) {
+    return second[1] - first[1] || first[0].localeCompare(second[0]);
+  });
+}
+function structureUnderlyingOptions() {
+  const counts = new Map();
+  IDEAS.forEach(function (idea) {
+    const seen = new Set();
+    underlyingParts(idea).forEach(function (part) {
+      const key = normalize(part);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      const row = counts.get(key) || {label:part,count:0};
+      row.count += 1;
+      counts.set(key,row);
+    });
+  });
+  return Array.from(counts.values()).filter(function (row) {
+    return row.count >= 2;
+  }).sort(function (first,second) {
+    return second.count - first.count || first.label.localeCompare(second.label);
+  });
+}
+function structurePeriodOptions() {
+  const years = new Set();
+  IDEAS.forEach(function (idea) {
+    const date = (idea._article && idea._article.date) || '';
+    if (date.length >= 4) years.add(date.slice(0,4));
+  });
+  return [['all','Whole record']].concat(Array.from(years).sort().reverse().map(function (year) {
+    return [year,year + ' record'];
+  }));
+}
+// Rank one observation against the desk inputs. Returns null when a hard
+// filter excludes it, so an empty result set stays honestly empty instead of
+// padding the comparison with unrelated passages.
+function structureMatch(idea) {
+  const reasons = [];
+  let score = 0;
+  if (state.structureInstrument) {
+    if (!idea.instruments.includes(state.structureInstrument)) return null;
+    score += 40;
+    reasons.push('Same instrument: ' + instrumentLabel(state.structureInstrument));
+  }
+  if (state.structureDirection !== 'any') {
+    if (idea.direction !== state.structureDirection) return null;
+    score += 20;
+    reasons.push('Same parsed stance: ' + state.structureDirection);
+  }
+  const date = (idea._article && idea._article.date) || '';
+  if (state.structurePeriod !== 'all' && date.slice(0,4) !== state.structurePeriod) return null;
+  const tokens = structureFocusTokens();
+  if (tokens.length) {
+    const parts = underlyingParts(idea);
+    const normalizedParts = parts.map(normalize);
+    const focus = tokens.join(' ');
+    const exact = normalizedParts.indexOf(focus) !== -1;
+    const partial = !exact && normalizedParts.some(function (part) {
+      return tokens.some(function (token) { return part.indexOf(token) !== -1; });
+    });
+    const hits = tokens.filter(function (token) { return idea._search.indexOf(token) !== -1; });
+    if (exact) {
+      score += 60;
+      reasons.push('Same underlying: ' + parts[normalizedParts.indexOf(focus)]);
+    } else if (partial) {
+      score += 35;
+      reasons.push('Related underlying: ' + parts.join(', '));
+    } else if (!hits.length) {
+      return null;
+    }
+    if (hits.length) {
+      score += Math.min(30,hits.length * 10);
+      if (!exact && !partial) reasons.push('Shared language: ' + hits.slice(0,3).join(', '));
+    }
+  }
+  if (idea.outcome) score += 12;
+  if (idea.quant) score += 6;
+  if (idea.thesis) score += 6;
+  if (idea.direction !== 'unspecified') score += 4;
+  return {score:score,reasons:reasons};
+}
+function structureMatches() {
+  const rows = [];
+  IDEAS.forEach(function (idea) {
+    const match = structureMatch(idea);
+    if (!match) return;
+    rows.push({idea:idea,score:match.score,reasons:match.reasons});
+  });
+  rows.sort(function (first,second) {
+    if (second.score !== first.score) return second.score - first.score;
+    const firstDate = (first.idea._article && first.idea._article.date) || '';
+    const secondDate = (second.idea._article && second.idea._article.date) || '';
+    if (firstDate !== secondDate) return secondDate.localeCompare(firstDate);
+    return first.idea.id.localeCompare(second.idea.id);
+  });
+  return rows;
+}
+function structurePattern(rows) {
+  const instruments = new Map();
+  const combinations = new Map();
+  const directions = new Map();
+  const managers = new Map();
+  const periods = new Map();
+  let withQuant = 0;
+  let withThesis = 0;
+  let withOutcome = 0;
+  rows.forEach(function (row) {
+    const idea = row.idea;
+    const list = idea.instruments.filter(function (value) {
+      return value && value !== 'unspecified';
+    }).slice().sort();
+    list.forEach(function (value) {
+      instruments.set(value,(instruments.get(value) || 0) + 1);
+    });
+    if (list.length > 1) {
+      const key = list.map(instrumentLabel).join(' + ');
+      combinations.set(key,(combinations.get(key) || 0) + 1);
+    }
+    directions.set(idea.direction,(directions.get(idea.direction) || 0) + 1);
+    const year = ((idea._article && idea._article.date) || '').slice(0,4);
+    if (year) periods.set(year,(periods.get(year) || 0) + 1);
+    if (idea.manager) managers.set(idea.manager,(managers.get(idea.manager) || 0) + 1);
+    if (idea.quant) withQuant += 1;
+    if (idea.thesis) withThesis += 1;
+    if (idea.outcome) withOutcome += 1;
+  });
+  function ranked(map) {
+    return Array.from(map.entries()).sort(function (first,second) {
+      return second[1] - first[1] || first[0].localeCompare(second[0]);
+    });
+  }
+  return {
+    total:rows.length,
+    instruments:ranked(instruments),
+    combinations:ranked(combinations),
+    directions:ranked(directions),
+    periods:Array.from(periods.entries()).sort(function (first,second) {
+      return second[0].localeCompare(first[0]);
+    }),
+    managers:ranked(managers),
+    withQuant:withQuant,
+    withThesis:withThesis,
+    withOutcome:withOutcome
+  };
+}
+function structureChipRow(label,attribute,options,active,allOption) {
+  const buttons = (allOption ? [allOption] : []).concat(options).map(function (option) {
+    const value = option[0];
+    const text = option[1];
+    const count = option.length > 2 ? option[2] : null;
+    const pressed = String(value) === String(active);
+    return '<button class="structure-chip' + (pressed ? ' active' : '') + '" type="button" data-' +
+      attribute + '="' + escapeHtml(value) + '" aria-pressed="' + (pressed ? 'true' : 'false') + '">' +
+      escapeHtml(text) + (count === null ? '' : '<span class="structure-chip-count">' + number(count) + '</span>') +
+      '</button>';
+  }).join('');
+  return '<div class="structure-control"><span class="structure-control-label">' + escapeHtml(label) +
+    '</span><div class="structure-chips">' + buttons + '</div></div>';
+}
+function structureComparableCard(row,rank) {
+  const idea = row.idea;
+  const article = idea._article || {};
+  const instruments = idea.instruments.filter(function (value) {
+    return value && value !== 'unspecified';
+  }).map(instrumentLabel).join(', ') || 'unspecified';
+  const reasons = row.reasons.length
+    ? '<ul class="structure-reasons">' + row.reasons.map(function (reason) {
+        return '<li>' + escapeHtml(reason) + '</li>';
+      }).join('') + '</ul>'
+    : '<p class="structure-reasons-empty">Included as part of the whole record; narrow the desk above to rank by likeness.</p>';
+  const facts = [
+    ['Structure',instruments],
+    ['Parsed stance',idea.direction],
+    ['Named underlying',underlyingParts(idea).join('; ') || 'not stated in source'],
+    ['Numeric anchor',idea.quant || 'none recorded'],
+    ['Attributed to',idea.manager || 'no manager named']
+  ].map(function (pair) {
+    return '<div class="structure-fact"><dt>' + escapeHtml(pair[0]) + '</dt><dd>' +
+      escapeHtml(pair[1]) + '</dd></div>';
+  }).join('');
+  const thesis = idea.thesis
+    ? '<p class="structure-thesis"><span>Stated edge</span>' + escapeHtml(idea.thesis) + '</p>'
+    : '';
+  const outcome = idea.outcome
+    ? '<p class="structure-outcome"><span>Outcome recorded at source</span>' + escapeHtml(idea.outcome) + '</p>'
+    : '<p class="structure-outcome none">No outcome recorded at source.</p>';
+  return '<article class="structure-card" data-structure-card="' + escapeHtml(idea.id) + '">' +
+    '<header class="structure-card-head"><span class="structure-rank">' + number(rank) + '</span>' +
+    '<div><h4>' + escapeHtml(article.title || 'Untitled note') + '</h4>' +
+    '<p class="structure-card-meta">' + escapeHtml(formatDate(article.date)) + ' · ' +
+    escapeHtml(article.source || '') + '</p></div></header>' +
+    '<p class="structure-passage">' + escapeHtml(idea.description) + '</p>' +
+    '<dl class="structure-facts">' + facts + '</dl>' + thesis + outcome +
+    '<div class="structure-card-foot">' + reasons +
+    '<a class="structure-source" href="' + escapeHtml(safeUrl(article.url)) +
+    '" target="_blank" rel="noopener noreferrer">Open source note</a></div></article>';
+}
+function structureTimeline(rows) {
+  const ordered = rows.slice().sort(function (first,second) {
+    const firstDate = (first.idea._article && first.idea._article.date) || '';
+    const secondDate = (second.idea._article && second.idea._article.date) || '';
+    if (firstDate !== secondDate) return firstDate.localeCompare(secondDate);
+    return first.idea.id.localeCompare(second.idea.id);
+  });
+  return ordered.map(function (row) {
+    const idea = row.idea;
+    const article = idea._article || {};
+    const instruments = idea.instruments.filter(function (value) {
+      return value && value !== 'unspecified';
+    }).map(instrumentLabel).join(', ') || 'unspecified';
+    return '<li class="structure-step' + (idea.outcome ? ' has-outcome' : '') + '">' +
+      '<span class="structure-step-date">' + escapeHtml(shortDate(article.date)) + '</span>' +
+      '<span class="structure-step-body"><b>' + escapeHtml(instruments) + '</b> · ' +
+      escapeHtml(idea.direction) + ' — ' + escapeHtml(article.title || '') +
+      (idea.outcome ? '<em class="structure-step-outcome">' + escapeHtml(idea.outcome) + '</em>' : '') +
+      '</span></li>';
+  }).join('');
+}
+function renderStructureDesk(rows) {
+  const shell = document.getElementById('structure-shell');
+  const pattern = structurePattern(rows);
+  const instrumentOptions = structureInstrumentOptions().map(function (entry) {
+    return [entry[0],instrumentLabel(entry[0]),entry[1]];
+  });
+  const underlyingOptions = structureUnderlyingOptions().map(function (row) {
+    return [row.label,row.label,row.count];
+  });
+  const controls =
+    structureChipRow('Instrument','structure-instrument',instrumentOptions,state.structureInstrument,['','Any instrument']) +
+    structureChipRow('Stance','structure-direction',[
+      ['long','Long'],['short','Short'],['long/short','Long / short'],
+      ['arbitrage/relative value','Arbitrage / RV'],['unspecified','Not stated']
+    ],state.structureDirection,['any','Any stance']) +
+    structureChipRow('Period','structure-period',structurePeriodOptions().slice(1),state.structurePeriod,['all','Whole record']) +
+    (underlyingOptions.length
+      ? structureChipRow('Recurring underlyings','structure-focus',underlyingOptions,state.structureFocus,['','Clear'])
+      : '');
+  const summary = pattern.total
+    ? '<p class="structure-summary"><b>' + number(pattern.total) + '</b> comparable ' +
+      (pattern.total === 1 ? 'observation' : 'observations') + ' in the record. ' +
+      number(pattern.withQuant) + ' carry a numeric anchor, ' + number(pattern.withThesis) +
+      ' state an edge, and <b>' + number(pattern.withOutcome) + '</b> record an outcome.</p>'
+    : '<p class="structure-summary">No observation in the record matches these inputs.</p>';
+  function bars(entries,total,label) {
+    if (!entries.length) return '<p class="structure-none">Nothing recorded.</p>';
+    const name = label || function (value) { return value; };
+    return '<ul class="structure-bars">' + entries.map(function (entry) {
+      const share = total ? Math.round((entry[1] / total) * 100) : 0;
+      return '<li><span class="structure-bar-label">' + escapeHtml(name(entry[0])) +
+        '</span><span class="structure-bar"><i style="width:' + share + '%"></i></span>' +
+        '<span class="structure-bar-value">' + number(entry[1]) + '</span></li>';
+    }).join('') + '</ul>';
+  }
+  const patternPanel = '<section class="structure-panel"><h3>How comparable trades were structured</h3>' +
+    summary +
+    '<h4>Instruments used</h4>' + bars(pattern.instruments,pattern.total,instrumentLabel) +
+    (pattern.combinations.length
+      ? '<h4>Most common combinations</h4>' + bars(pattern.combinations,pattern.total)
+      : '') +
+    '<h4>Parsed stance</h4>' + bars(pattern.directions,pattern.total,directionLabel) +
+    (pattern.periods.length > 1
+      ? '<h4>When these were written</h4>' + bars(pattern.periods,pattern.total) +
+        '<p class="structure-note">Use the period control to read one stretch of the record on its own.</p>'
+      : '') +
+    (pattern.managers.length
+      ? '<h4>Managers named in these passages</h4><p class="structure-managers">' +
+        pattern.managers.slice(0,8).map(function (entry) {
+          return escapeHtml(entry[0]) + ' (' + number(entry[1]) + ')';
+        }).join(' · ') + '</p>'
+      : '') +
+    '</section>';
+  const shown = rows.slice(0,state.limit);
+  const comparablePanel = '<section class="structure-panel structure-comparables">' +
+    '<h3>Comparable observations</h3>' +
+    (rows.length
+      ? shown.map(function (row,index) { return structureComparableCard(row,index + 1); }).join('') +
+        (rows.length > shown.length
+          ? '<button class="secondary-action structure-more" type="button" data-structure-more="1">Show ' +
+            number(Math.min(PAGE_SIZE.structure,rows.length - shown.length)) + ' more of ' +
+            number(rows.length) + '</button>'
+          : '')
+      : '<p class="structure-none">Nothing in the extracted record matches. Widen the instrument, stance, or period.</p>') +
+    '</section>';
+  const timelinePanel = rows.length
+    ? '<section class="structure-panel structure-development"><h3>How the line developed</h3>' +
+      '<p class="structure-note">The same comparables in publication order. Outcomes appear only where the source stated one.</p>' +
+      '<ol class="structure-steps">' + structureTimeline(shown) + '</ol></section>'
+    : '';
+  shell.innerHTML = '<div class="structure-wrap">' +
+    '<header class="structure-head"><h2>Structure desk</h2>' +
+    '<p class="structure-lede">Describe what you want to trade, then read how the extracted record structured and argued comparable positions.</p>' +
+    '<div class="structure-search"><label class="sr-only" for="structure-focus-input">What do you want to trade?</label>' +
+    '<input id="structure-focus-input" type="search" placeholder="What do you want to trade? e.g. VIX, JGB, Nasdaq" value="' +
+    escapeHtml(state.structureFocus) + '" autocomplete="off"></div>' +
+    '<div class="structure-controls">' + controls + '</div></header>' +
+    '<p class="structure-disclosure">This desk reports how comparable positions were <b>described and structured</b> in the published record. Outcomes are stated for only ' +
+    number(outcomeTotal()) + ' of ' + number(IDEAS.length) +
+    ' extracted observations, so this is not a backtest, not realised profit and loss, and not a recommendation.</p>' +
+    '<div class="structure-grid">' + patternPanel + comparablePanel + '</div>' + timelinePanel + '</div>';
+  shell.dataset.statusAnnouncement = pattern.total
+    ? number(pattern.total) + ' comparable observations on the structure desk'
+    : 'No comparable observations for these desk inputs';
+}
 function render() {
   if (state.view !== 'briefing') pendingBriefFocus = null;
   document.querySelectorAll('.observation-retry').forEach(function (element) { element.remove(); });
@@ -5171,6 +5591,8 @@ function render() {
   setPressedStates();
   if (state.view === 'briefing') {
     renderIntelligenceBrief(records);
+  } else if (state.view === 'structure') {
+    renderStructureDesk(structureMatches());
   } else {
     renderTableHead();
     renderRows(records);
@@ -5181,12 +5603,16 @@ function render() {
   renderOrphanedQueue();
   renderInspector();
   const orphanedCount = state.view === 'queue' ? Array.from(workflowItems.keys()).filter(function (id) { return !IDEA_BY_ID.has(id); }).length : 0;
-  const briefStatusAnnouncement = state.view === 'briefing' ? document.getElementById('briefing-shell').dataset.statusAnnouncement || '' : '';
+  const briefStatusAnnouncement = state.view === 'briefing'
+    ? document.getElementById('briefing-shell').dataset.statusAnnouncement || ''
+    : state.view === 'structure'
+      ? document.getElementById('structure-shell').dataset.statusAnnouncement || ''
+      : '';
   document.getElementById('result-summary').textContent = briefStatusAnnouncement ||
     number(records.length) + ' ' + (isArticleView() ? 'article dossiers' : state.view === 'queue' ? 'current queued observations' : 'research observations') + (orphanedCount ? ' + ' + number(orphanedCount) + ' retained source snapshots' : '');
   updateHash();
   document.getElementById('announcer').textContent = briefStatusAnnouncement ||
-    number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Latest Brief' : state.view === 'research' ? 'Research Library' : state.view === 'queue' ? 'Decision Queue' : 'Evidence Monitor');
+    number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Latest Brief' : state.view === 'research' ? 'Research Library' : state.view === 'queue' ? 'Decision Queue' : state.view === 'structure' ? 'Structure Desk' : 'Evidence Monitor');
 }
 
 function resetFilters() {
@@ -5206,6 +5632,10 @@ function resetFilters() {
   state.coverage = 'all';
   state.briefLens = 'all';
   state.threadTopic = '';
+  state.structureFocus = '';
+  state.structureInstrument = '';
+  state.structureDirection = 'any';
+  state.structurePeriod = 'all';
   state.limit = PAGE_SIZE[state.view];
   document.getElementById('search').value = '';
   document.getElementById('manager-search').value = '';
@@ -5924,6 +6354,34 @@ document.addEventListener('click',function (event) {
     renderObservationAwareNavigation('inspector');
     return;
   }
+  const structureChip = event.target.closest(
+    '[data-structure-instrument],[data-structure-direction],[data-structure-period],[data-structure-focus]'
+  );
+  if (structureChip) {
+    markMeaningfulNavigation();
+    state.view = 'structure';
+    if (structureChip.hasAttribute('data-structure-instrument')) {
+      state.structureInstrument = structureChip.dataset.structureInstrument;
+    }
+    if (structureChip.hasAttribute('data-structure-direction')) {
+      state.structureDirection = structureChip.dataset.structureDirection || 'any';
+    }
+    if (structureChip.hasAttribute('data-structure-period')) {
+      state.structurePeriod = structureChip.dataset.structurePeriod || 'all';
+    }
+    if (structureChip.hasAttribute('data-structure-focus')) {
+      state.structureFocus = structureChip.dataset.structureFocus;
+    }
+    state.limit = PAGE_SIZE.structure;
+    renderObservationAwareNavigation('entry');
+    return;
+  }
+  const structureMore = event.target.closest('[data-structure-more]');
+  if (structureMore) {
+    state.limit += PAGE_SIZE.structure;
+    render();
+    return;
+  }
   const view = event.target.closest('button[data-view]');
   if (view) {
     markMeaningfulNavigation();
@@ -6229,6 +6687,24 @@ function renderArticleAwareSearch(focusResult) {
   }
   finish();
 }
+let structureFocusTimer = null;
+document.addEventListener('input',function (event) {
+  const input = event.target.closest && event.target.closest('#structure-focus-input');
+  if (!input) return;
+  clearTimeout(structureFocusTimer);
+  const value = input.value;
+  const caret = input.selectionStart;
+  structureFocusTimer = setTimeout(function () {
+    state.structureFocus = value;
+    state.limit = PAGE_SIZE.structure;
+    render();
+    const restored = document.getElementById('structure-focus-input');
+    if (!restored) return;
+    restored.focus();
+    const position = Math.min(caret === null ? value.length : caret,restored.value.length);
+    restored.setSelectionRange(position,position);
+  },200);
+});
 document.getElementById('search').addEventListener('input',function (event) {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(function () {
@@ -6342,7 +6818,8 @@ function gotoView(view) {
 function buildPaletteCommands() {
   const commands = [
     ['briefing','Latest Brief'],['ideas','Evidence Monitor'],
-    ['research','Research Library'],['queue','Decision Queue']
+    ['research','Research Library'],['queue','Decision Queue'],
+    ['structure','Structure Desk']
   ].map(function (row) {
     return {kind:'View',label:'Go to ' + row[1],meta:'',run:function () { gotoView(row[0]); }};
   });
@@ -6573,11 +7050,12 @@ document.addEventListener('keydown',function (event) {
       if (open) document.getElementById('filter-close').focus();
       else button.focus();
     }
-  } else if (['Digit1','Digit2','Digit3','Digit4'].includes(event.code)) {
+  } else if (['Digit1','Digit2','Digit3','Digit4','Digit5'].includes(event.code)) {
     event.preventDefault();
     const viewNumber = event.code.slice(-1);
     markMeaningfulNavigation();
-    state.view = viewNumber === '1' ? 'briefing' : viewNumber === '2' ? 'ideas' : viewNumber === '3' ? 'research' : 'queue';
+    state.view = viewNumber === '1' ? 'briefing' : viewNumber === '2' ? 'ideas'
+      : viewNumber === '3' ? 'research' : viewNumber === '4' ? 'queue' : 'structure';
     state.sort = 'newest';
     state.selected = '';
     state.threadTopic = '';
