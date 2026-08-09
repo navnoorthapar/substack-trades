@@ -1,5 +1,35 @@
 [
   {
+    "source": "medium",
+    "source_id": "495d508ab797",
+    "slug": "the-federal-reserve-publishes-two-term-premium-estimates-495d508ab797",
+    "title": "The Federal Reserve Publishes Two Term Premium Estimates.",
+    "subtitle": "The 10-year term premium is not a measurement. It is a latent state pulled out of the yield curve by a statistical filter, and across…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-09T15:59:03Z",
+    "url": "https://medium.com/@navnoorbawa/the-federal-reserve-publishes-two-term-premium-estimates-495d508ab797",
+    "audience": "unknown",
+    "wordcount": 29,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "f021848575d7683b4c632a017d1520a52fffc981a7bda772d23bffb1910fb51a",
+      "lead": {
+        "text": "The 10-year term premium is not a measurement. It is a latent state pulled out of the yield curve by a statistical filter, and across…",
+        "start": 0,
+        "end": 134,
+        "sha256": "ee018615041eceb8b57b9d85dc5458661282636f1a616d38df42b019c6117e87",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-09T15:59:03Z",
+    "observed_source_updated_at": "2026-08-09T15:59:03Z"
+  },
+  {
     "source": "substack",
     "source_id": "chainlink-gave-polymarket-30-seconds",
     "slug": "chainlink-gave-polymarket-30-seconds",
@@ -837,9 +867,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-01T10:56:28Z",
-    "observed_source_updated_at": "2026-08-01T10:56:28Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
