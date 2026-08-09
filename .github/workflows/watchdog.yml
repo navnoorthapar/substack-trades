@@ -66,6 +66,11 @@ jobs:
         env:
           SITE_OUTPUT_DIR: ${{ runner.temp }}/expected-site
           SITE_REVISION: ${{ github.sha }}
+          # Verify the release that is actually published, whatever its age.
+          # Recency is a publishing precondition and is reported separately
+          # below; enforcing it here would stop the rebuild before the live
+          # site is compared, letting staleness hide real drift.
+          NRT_VERIFY_PUBLISHED_RELEASE: '1'
         run: |
           set -euo pipefail
           test ! -e "$SITE_OUTPUT_DIR"
@@ -89,6 +94,7 @@ jobs:
           EXPECTED_SUPPORT_SHA256: ${{ steps.release.outputs.support_sha256 }}
           EXPECTED_DATA_SHA256: ${{ steps.release.outputs.data_sha256 }}
           EXPECTED_SHARE_SHA256: ${{ steps.release.outputs.share_sha256 }}
+          NRT_VERIFY_PUBLISHED_RELEASE: '1'
         run: >-
           python3 smoke_test_site.py
           --expected-revision "$GITHUB_SHA"
@@ -137,42 +143,72 @@ jobs:
           echo "::error title=Published release verification failed::Main still equals $GITHUB_SHA and the bounded exact-release check failed."
           exit 1
 
-      - name: Enforce scheduled-refresh freshness
+      - name: Report scheduled-refresh freshness
+        # Freshness is reported even when the exact-release check failed, so a
+        # stale snapshot and a drifting site are never confused for each other.
         if: >-
-          steps.currency.outputs.current == 'true'
-          && steps.smoke.outcome == 'success'
+          !cancelled()
+          && steps.currency.outputs.current == 'true'
+        shell: bash
         run: |
           python3 - <<'PY'
           import json
           from datetime import datetime, timedelta, timezone
 
           snapshot = json.load(open('snapshot_manifest.json', encoding='utf-8'))
-          checked_at = datetime.fromisoformat(str(snapshot['checked_at']).replace('Z', '+00:00'))
+
+
+          def instant(value):
+              parsed = datetime.fromisoformat(str(value).replace('Z', '+00:00'))
+              return parsed.astimezone(timezone.utc)
+
+
+          def fail(message):
+              print(f'::error title=Published research freshness::{message}')
+              raise SystemExit(1)
+
+
+          checked_at = instant(snapshot['checked_at'])
           now = datetime.now(timezone.utc)
           future_cutoff = now + timedelta(minutes=10)
-          maximum_age = timedelta(hours=16)
           maximum_source_lag = timedelta(hours=1)
-          if checked_at.astimezone(timezone.utc) > future_cutoff:
-              raise SystemExit('Published research snapshot check time is implausibly far in the future')
+          # A snapshot goes stale whenever the Mac that owns the scheduled
+          # refresh is asleep, which is an operational condition rather than a
+          # broken release. Report it until it has lasted long enough to mean
+          # the publisher itself has stopped.
+          warn_age = timedelta(hours=16)
+          fail_age = timedelta(hours=36)
+
+          if checked_at > future_cutoff:
+              fail('Snapshot check time is implausibly far in the future')
           for source, status in snapshot.get('sources', {}).items():
-              source_checked = datetime.fromisoformat(str(status['checked_at']).replace('Z', '+00:00'))
-              source_checked = source_checked.astimezone(timezone.utc)
+              source_checked = instant(status['checked_at'])
               if source_checked > future_cutoff:
-                  raise SystemExit(f'{source} check time is implausibly far in the future')
-              if source_checked > checked_at.astimezone(timezone.utc):
-                  raise SystemExit(f'{source} check time is later than the snapshot manifest')
-              if checked_at.astimezone(timezone.utc) - source_checked > maximum_source_lag:
-                  raise SystemExit(f'{source} check time is too far behind the snapshot manifest')
-              source_age = now - source_checked
-              if source_age > maximum_age:
-                  raise SystemExit(
-                      f'{source} source check is stale: '
-                      f'{source_age.total_seconds() / 3600:.1f} hours old'
-                  )
-          age = now - checked_at.astimezone(timezone.utc)
-          if age > maximum_age:
-              raise SystemExit(
-                  f"Published research snapshot is stale: {age.total_seconds() / 3600:.1f} hours old"
+                  fail(f'{source} check time is implausibly far in the future')
+              if source_checked > checked_at:
+                  fail(f'{source} check time is later than the snapshot manifest')
+              if checked_at - source_checked > maximum_source_lag:
+                  fail(f'{source} check time is too far behind the snapshot manifest')
+
+          age = now - checked_at
+          hours = age.total_seconds() / 3600
+          stamp = checked_at.isoformat(timespec='seconds').replace('+00:00', 'Z')
+          if age > fail_age:
+              fail(
+                  f'The research snapshot is {hours:.1f} hours old, past the '
+                  f'{fail_age.total_seconds() / 3600:.0f}-hour limit. The local '
+                  f'publisher last completed at {stamp}; run refresh.sh on the '
+                  'Mac that owns the scheduled refresh.'
               )
-          print(f"Published research snapshot is current: {age.total_seconds() / 3600:.1f} hours old")
+          if age > warn_age:
+              print(
+                  '::warning title=Published research is stale::The snapshot is '
+                  f'{hours:.1f} hours old (last refresh {stamp}). The live '
+                  'release is still verified; the local publisher has not run.'
+              )
+          else:
+              print(
+                  '::notice title=Published research is current::The snapshot is '
+                  f'{hours:.1f} hours old (last refresh {stamp}).'
+              )
           PY

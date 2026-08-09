@@ -7,6 +7,9 @@ import unittest
 from pathlib import Path
 
 
+from data_contract import VERIFICATION_MODE_ENV
+
+
 ROOT = Path(__file__).parent
 _UNSET = object()
 
@@ -571,7 +574,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
             job_minutes * 60,
         )
 
-    def test_watchdog_verifies_exact_release_and_enforces_sixteen_hour_freshness(self):
+    def test_watchdog_verifies_exact_release_and_reports_refresh_freshness(self):
         for required in (
             "cron: '17 */4 * * *'",
             'workflow_dispatch:',
@@ -617,20 +620,19 @@ class DeploymentConfigurationTests(unittest.TestCase):
             "steps.smoke.outcome == 'failure'",
             'Superseded watchdog reconciled',
             'Published release verification failed',
-            "steps.smoke.outcome == 'success'",
             "json.load(open('snapshot_manifest.json'",
             "snapshot['checked_at']",
             'datetime.now(timezone.utc)',
             'timedelta(minutes=10)',
             'implausibly far in the future',
             "snapshot.get('sources', {}).items()",
-            'maximum_age = timedelta(hours=16)',
+            'warn_age = timedelta(hours=16)',
+            'fail_age = timedelta(hours=36)',
             'maximum_source_lag = timedelta(hours=1)',
             'later than the snapshot manifest',
             'too far behind the snapshot manifest',
-            'source check is stale',
-            'source_age > maximum_age',
-            'age > maximum_age',
+            'age > fail_age',
+            'age > warn_age',
         ):
             self.assertIn(required, self.watchdog)
         self.assertRegex(self.watchdog, r'(?m)^permissions:\n\s+contents: read$')
@@ -685,6 +687,41 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertIn('name: Reconfirm release still owns main', deploy_job)
         self.assertIn('echo "current=false" >> "$GITHUB_OUTPUT"', self.workflow)
         self.assertIn("needs.currency.outputs.current == 'true'", self.workflow)
+
+    def test_recency_bypass_is_confined_to_the_watchdog(self):
+        """Only the watchdog may suspend the snapshot recency bound.
+
+        The bypass exists so an already-published release can be verified
+        whatever its age. A publishing path that set it could ship a snapshot
+        that the recency bound is there to stop, so no publishing path may
+        mention it at all.
+        """
+        for label, content in (
+            ('update.yml', self.workflow),
+            ('rollback.yml', self.rollback),
+            ('refresh.sh', self.refresh),
+        ):
+            self.assertNotIn(
+                VERIFICATION_MODE_ENV,
+                content,
+                f'{label} must never suspend the snapshot recency bound',
+            )
+
+        assignments = re.findall(
+            rf'(?m)^\s*{re.escape(VERIFICATION_MODE_ENV)}:\s*(\S+)\s*$',
+            self.watchdog,
+        )
+        self.assertTrue(
+            assignments,
+            'the watchdog must verify the published release at any age',
+        )
+        self.assertEqual(set(assignments), {"'1'"})
+
+        # Freshness must still be reported, and reported even when the
+        # exact-release check failed, so a stale snapshot and a drifting site
+        # stay separately visible instead of one hiding the other.
+        self.assertIn('name: Report scheduled-refresh freshness', self.watchdog)
+        self.assertIn('!cancelled()', self.watchdog)
 
     def test_dependabot_checks_github_actions_weekly(self):
         self.assertRegex(self.dependabot, r'(?m)^version: 2$')

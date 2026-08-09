@@ -24,6 +24,22 @@ MAX_FUTURE_CLOCK_SKEW = timedelta(minutes=10)
 MAX_GENERATED_AGE = timedelta(hours=16)
 MAX_SEARCH_INDEX_BYTES = 500_000
 
+# Recency is a publishing precondition, not a property of an already-published
+# release. A watchdog that rebuilds a past revision to compare it against the
+# live site must therefore be able to suspend the recency bound alone: with it
+# enforced, a snapshot that merely aged out stops the rebuild before the live
+# site is ever checked, so staleness masks real drift instead of exposing it.
+# Nothing else relaxes -- coherence, ordering, checksums, and the future-clock
+# bound stay enforced, so a corrupt or forged snapshot still fails closed. The
+# publishing paths never set this; test_deployment_config holds them to that.
+VERIFICATION_MODE_ENV = 'NRT_VERIFY_PUBLISHED_RELEASE'
+
+
+def generated_age_is_enforced() -> bool:
+    """Report whether the snapshot recency bound applies to this process."""
+    return os.environ.get(VERIFICATION_MODE_ENV) != '1'
+
+
 DATA_ENDPOINT_NAMES: Tuple[str, ...] = tuple(sorted((
     'articles_index.json',
     'latest.json',
@@ -948,6 +964,7 @@ def validate_data_layer(
     source_articles_path: PathInput,
     snapshot_manifest_path_or_dict: SnapshotInput,
     now: Optional[datetime] = None,
+    enforce_generated_age: Optional[bool] = None,
 ) -> Summary:
     """Fail closed unless all public endpoints form one current, coherent release."""
     root = Path(site_dir)
@@ -1010,7 +1027,10 @@ def validate_data_layer(
     validation_now = validation_now.astimezone(timezone.utc)
     _require(generated <= validation_now + MAX_FUTURE_CLOCK_SKEW,
              'data manifest generated_at is implausibly far in the future')
-    _require(validation_now - generated <= MAX_GENERATED_AGE,
+    if enforce_generated_age is None:
+        enforce_generated_age = generated_age_is_enforced()
+    _require(not enforce_generated_age
+             or validation_now - generated <= MAX_GENERATED_AGE,
              'data manifest generated_at is older than 16 hours')
     _require(type(manifest.get('article_count')) is int
              and manifest['article_count'] == len(articles),

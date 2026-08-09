@@ -1,6 +1,7 @@
 import copy
 import hashlib
 import json
+import os
 import tempfile
 import unittest
 from datetime import datetime, timezone
@@ -15,7 +16,9 @@ from data_contract import (
     FAMILIES,
     LATEST_KEYS,
     SOURCES,
+    VERIFICATION_MODE_ENV,
     data_bundle_checksum,
+    generated_age_is_enforced,
     validate_data_layer,
     write_data_layer,
 )
@@ -799,6 +802,57 @@ class DataContractTests(unittest.TestCase):
                 self.snapshot,
                 now=datetime(2026, 7, 20, 23, 49, 59, tzinfo=timezone.utc),
             )
+
+    def test_verification_mode_suspends_recency_and_nothing_else(self):
+        """A watchdog may verify an aged release, but not a forged one."""
+        stale = datetime(2026, 7, 21, 17, 0, 1, tzinfo=timezone.utc)
+        with self.assertRaisesRegex(ValueError, 'older than 16 hours'):
+            validate_data_layer(self.site, self.source, self.snapshot, now=stale)
+        validate_data_layer(
+            self.site,
+            self.source,
+            self.snapshot,
+            now=stale,
+            enforce_generated_age=False,
+        )
+
+        # Every other guard keeps failing closed while recency is suspended.
+        with self.assertRaisesRegex(ValueError, 'far in the future'):
+            validate_data_layer(
+                self.site,
+                self.source,
+                self.snapshot,
+                now=datetime(2026, 7, 20, 23, 49, 59, tzinfo=timezone.utc),
+                enforce_generated_age=False,
+            )
+        self.snapshot['data_checksum'] = '0' * 64
+        with self.assertRaisesRegex(ValueError, 'dataset_version'):
+            validate_data_layer(
+                self.site,
+                self.source,
+                self.snapshot,
+                now=stale,
+                enforce_generated_age=False,
+            )
+
+    def test_verification_mode_is_opt_in_through_one_named_variable(self):
+        self.assertEqual(VERIFICATION_MODE_ENV, 'NRT_VERIFY_PUBLISHED_RELEASE')
+        for value, enforced in (
+            (None, True), ('', True), ('0', True), ('true', True), ('1', False),
+        ):
+            with self.subTest(value=value):
+                previous = os.environ.get(VERIFICATION_MODE_ENV)
+                if value is None:
+                    os.environ.pop(VERIFICATION_MODE_ENV, None)
+                else:
+                    os.environ[VERIFICATION_MODE_ENV] = value
+                try:
+                    self.assertEqual(generated_age_is_enforced(), enforced)
+                finally:
+                    if previous is None:
+                        os.environ.pop(VERIFICATION_MODE_ENV, None)
+                    else:
+                        os.environ[VERIFICATION_MODE_ENV] = previous
 
     def test_all_four_sources_must_be_present(self):
         self.articles = [
