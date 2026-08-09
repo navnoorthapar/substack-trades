@@ -507,6 +507,11 @@ class StructureDeskRuntimeTests(unittest.TestCase):
                 'function instrumentLabel(value) {',
                 'function directionLabel(value) {',
             )
+            + r'''
+const THREADS = {article_count:0,defaults:{},topics:{}};
+const THREAD_ARTICLES = Object.create(null);
+const ARTICLE_BY_ID = new Map();
+'''
             + javascript_between(
                 'function underlyingParts(idea) {',
                 'function structureChipRow(',
@@ -608,6 +613,81 @@ if (crypto.count !== 2) {
 }
 if (desk({structureFocus:'Crypto'}).length !== crypto.count) {
   throw new Error('the offered count disagrees with the comparables it returns');
+}
+''')
+
+    def follow_up_runtime(self, threads, articles, assertions):
+        run_node(
+            javascript_between(
+                'function normalize(value) {',
+                'function articleBriefSearch',
+            )
+            + javascript_between(
+                'function instrumentLabel(value) {',
+                'function directionLabel(value) {',
+            )
+            + f'const THREADS = {threads};\n'
+            + f'const ARTICLES = {articles};\n'
+            + 'const ARTICLE_BY_ID = new Map(ARTICLES.map(function (a) '
+              '{ return [a.id, a]; }));\n'
+            + javascript_between(
+                'const THREAD_ARTICLES = (function () {',
+                '\nlet IDEAS = [];',
+            )
+            + javascript_between(
+                'function underlyingParts(idea) {',
+                'function structureChipRow(',
+            )
+            + assertions,
+        )
+
+    def test_follow_through_only_reports_later_notes_on_narrow_subjects(self):
+        """Resolution must come from the record, not from loose association.
+
+        A subject broad enough to span the archive would thread unrelated
+        notes together and assert a continuity the record does not contain.
+        """
+        threads = """{
+          article_count:100,
+          defaults:{},
+          topics:{
+            narrow:{label:'Expected Shortfall',article_count:2,article_ids:['a0','a1','a3']},
+            mid:{label:'S&P 500',article_count:5,article_ids:['a1','a2','a3']},
+            wide:{label:'Options',article_count:40,article_ids:['a1','a4']}
+          }
+        }"""
+        articles = """[
+          {id:'a0',date:'2025-01-01',url:'https://example.test/0',title:'Earlier note'},
+          {id:'a1',date:'2026-01-01',url:'https://example.test/1',title:'The observation'},
+          {id:'a2',date:'2026-02-01',url:'https://example.test/2',title:'Mid follow-up'},
+          {id:'a3',date:'2026-03-01',url:'https://example.test/3',title:'Narrow follow-up'},
+          {id:'a4',date:'2026-04-01',url:'https://example.test/4',title:'Broad-subject note'}
+        ]"""
+        self.follow_up_runtime(threads, articles, r'''
+if (FOLLOW_UP_MAX_TOPIC_ARTICLES !== 7) {
+  throw new Error('subject breadth bound should scale with the archive: ' + FOLLOW_UP_MAX_TOPIC_ARTICLES);
+}
+const idea = {id:'i', _article:ARTICLE_BY_ID.get('a1')};
+const followUps = observationFollowUps(idea);
+const ids = followUps.map(function (row) { return row.article.id; });
+
+if (ids.indexOf('a4') !== -1) {
+  throw new Error('a subject spanning the archive must not imply continuity');
+}
+if (ids.indexOf('a0') !== -1) throw new Error('an earlier note is not a follow-up');
+if (ids.indexOf('a1') !== -1) throw new Error('the observation followed itself');
+if (ids.join(',') !== 'a3,a2') {
+  throw new Error('the narrowest shared subject must rank first: ' + ids.join(','));
+}
+const narrow = followUps[0];
+if (narrow.breadth !== 2) throw new Error('breadth should track the narrowest subject');
+if (narrow.topics.indexOf('Expected Shortfall') === -1 ||
+    narrow.topics.indexOf('S&P 500') === -1) {
+  throw new Error('a note shared by two subjects must report both: ' + narrow.topics);
+}
+if (observationFollowUps(idea) !== followUps) throw new Error('resolution was not cached');
+if (observationFollowUps({id:'x'}).length !== 0) {
+  throw new Error('an observation with no article must resolve to nothing');
 }
 ''')
 

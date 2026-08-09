@@ -1681,6 +1681,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Comparable observations',
             'How the line developed',
             'When these were written',
+            'What the record returned to afterwards',
         ):
             self.assertIn(text, self.html)
 
@@ -1702,11 +1703,21 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         for text in (
             'This desk reports how comparable positions were <b>described and structured</b>',
             'is not a backtest, not realised profit and loss, and not a recommendation',
+            'resolution is shown as later coverage rather than as a result',
             "number(outcomeTotal()) + ' of ' + number(IDEAS.length)",
             'No outcome recorded at source.',
             'Outcomes appear only where the source stated one.',
+            'No later note in the record revisits these subjects.',
         ):
             self.assertIn(text, self.html)
+
+        # Follow-through must stay bounded to subjects narrow enough to mean
+        # something, or the desk would assert continuity the record lacks.
+        self.assertIn('const FOLLOW_UP_MAX_TOPIC_SHARE = 0.07;', self.html)
+        self.assertIn(
+            'if (!topic || topic.article_count > FOLLOW_UP_MAX_TOPIC_ARTICLES) return;',
+            self.html,
+        )
         self.assertIn(
             "return IDEAS.filter(function (idea) { return Boolean(idea.outcome); }).length;",
             self.html,

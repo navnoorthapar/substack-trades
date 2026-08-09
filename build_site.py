@@ -1147,6 +1147,18 @@ body[data-view="structure"] .main-panel{grid-column:1/-1}
   text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:3px}
 .structure-outcome{background:var(--positive-soft);border:1px solid var(--positive-line)}
 .structure-outcome.none{background:var(--surface-3);border:1px dashed var(--line-strong);color:var(--text-muted)}
+.structure-followup{margin-top:8px;padding:8px 10px;border-radius:5px;background:var(--surface-3);
+  border-left:2px solid var(--accent)}
+.structure-followup > span{display:block;font:600 10px var(--mono);text-transform:uppercase;
+  letter-spacing:.06em;color:var(--text-muted);margin-bottom:5px}
+.structure-followup ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.structure-followup li{display:flex;gap:8px;align-items:baseline;font-size:12px;line-height:1.45}
+.structure-followup time{font:600 11px var(--mono);color:var(--text-muted);flex:none;min-width:66px}
+.structure-followup a{color:var(--accent);overflow-wrap:anywhere}
+.structure-followup em{font-style:normal;font:500 10px var(--mono);color:var(--text-muted);flex:none}
+.structure-followup-more{font-size:11px;color:var(--text-muted);margin-top:5px}
+.structure-followup.none{font-size:12px;color:var(--text-muted);margin-top:8px;padding:7px 9px;
+  border-radius:5px;background:var(--surface-3);border:1px dashed var(--line-strong);border-left:1px dashed var(--line-strong)}
 .structure-card-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:10px}
 .structure-reasons{display:flex;flex-wrap:wrap;gap:5px;list-style:none;margin:0;padding:0}
 .structure-reasons li{font:500 10px var(--mono);padding:2px 7px;border-radius:999px;
@@ -5256,6 +5268,55 @@ function underlyingParts(idea) {
 function outcomeTotal() {
   return IDEAS.filter(function (idea) { return Boolean(idea.outcome); }).length;
 }
+// Most passages never state how a position resolved, but the record often
+// returns to the same subject later. Those later notes are the only
+// source-grounded answer to "what happened next" this archive can give, so
+// resolve them from the published thread chronology rather than inferring one.
+const followUpCache = new Map();
+// A subject broad enough to cover much of the archive links everything to
+// everything: threading a VIX passage to an unrelated note because both touch
+// "Options" would assert a continuity the record does not contain. Only
+// subjects narrow enough to mean something are followed, narrowest first.
+const FOLLOW_UP_MAX_TOPIC_SHARE = 0.07;
+const FOLLOW_UP_MAX_TOPIC_ARTICLES = Math.max(
+  2,Math.round(Number(THREADS.article_count || 0) * FOLLOW_UP_MAX_TOPIC_SHARE)
+);
+function observationFollowUps(idea) {
+  const article = idea && idea._article;
+  if (!article) return [];
+  if (followUpCache.has(article.id)) return followUpCache.get(article.id);
+  const row = THREAD_ARTICLES[article.id];
+  const collected = new Map();
+  if (row) {
+    row.topics.forEach(function (topicKey) {
+      const topic = THREADS.topics[topicKey];
+      if (!topic || topic.article_count > FOLLOW_UP_MAX_TOPIC_ARTICLES) return;
+      (topic.article_ids || []).forEach(function (otherId) {
+        if (otherId === article.id) return;
+        const other = ARTICLE_BY_ID.get(otherId);
+        if (!other || !(other.date > article.date)) return;
+        const existing = collected.get(otherId);
+        if (existing) {
+          if (existing.topics.indexOf(topic.label) === -1) existing.topics.push(topic.label);
+          existing.breadth = Math.min(existing.breadth,topic.article_count);
+          return;
+        }
+        collected.set(otherId,{
+          article:other,topics:[topic.label],breadth:topic.article_count
+        });
+      });
+    });
+  }
+  const ordered = Array.from(collected.values()).sort(function (first,second) {
+    if (first.breadth !== second.breadth) return first.breadth - second.breadth;
+    if (first.article.date !== second.article.date) {
+      return second.article.date.localeCompare(first.article.date);
+    }
+    return first.article.id.localeCompare(second.article.id);
+  });
+  followUpCache.set(article.id,ordered);
+  return ordered;
+}
 function structureFocusTokens() {
   return normalize(state.structureFocus).split(' ').filter(function (word) {
     return word.length > 2;
@@ -5377,6 +5438,7 @@ function structurePattern(rows) {
   let withQuant = 0;
   let withThesis = 0;
   let withOutcome = 0;
+  let withFollowUp = 0;
   rows.forEach(function (row) {
     const idea = row.idea;
     const list = idea.instruments.filter(function (value) {
@@ -5396,6 +5458,7 @@ function structurePattern(rows) {
     if (idea.quant) withQuant += 1;
     if (idea.thesis) withThesis += 1;
     if (idea.outcome) withOutcome += 1;
+    if (observationFollowUps(idea).length) withFollowUp += 1;
   });
   function ranked(map) {
     return Array.from(map.entries()).sort(function (first,second) {
@@ -5413,7 +5476,8 @@ function structurePattern(rows) {
     managers:ranked(managers),
     withQuant:withQuant,
     withThesis:withThesis,
-    withOutcome:withOutcome
+    withOutcome:withOutcome,
+    withFollowUp:withFollowUp
   };
 }
 function structureChipRow(label,attribute,options,active,allOption) {
@@ -5457,13 +5521,31 @@ function structureComparableCard(row,rank) {
   const outcome = idea.outcome
     ? '<p class="structure-outcome"><span>Outcome recorded at source</span>' + escapeHtml(idea.outcome) + '</p>'
     : '<p class="structure-outcome none">No outcome recorded at source.</p>';
+  const followUps = observationFollowUps(idea);
+  const shownFollowUps = followUps.slice(0,3);
+  const followUp = followUps.length
+    ? '<div class="structure-followup"><span>What the record returned to afterwards</span><ul>' +
+      shownFollowUps.map(function (row) {
+        return '<li><time datetime="' + escapeHtml(row.article.date) + '">' +
+          escapeHtml(shortDate(row.article.date)) + '</time>' +
+          '<a href="' + escapeHtml(safeUrl(row.article.url)) +
+          '" target="_blank" rel="noopener noreferrer">' + escapeHtml(row.article.title) +
+          '</a><em>via ' + escapeHtml(row.topics.slice(0,2).join(', ')) + '</em></li>';
+      }).join('') + '</ul>' +
+      (followUps.length > shownFollowUps.length
+        ? '<p class="structure-followup-more">' +
+          number(followUps.length - shownFollowUps.length) + ' further note' +
+          (followUps.length - shownFollowUps.length === 1 ? '' : 's') +
+          ' on these subjects.</p>'
+        : '') + '</div>'
+    : '<p class="structure-followup none">No later note in the record revisits these subjects.</p>';
   return '<article class="structure-card" data-structure-card="' + escapeHtml(idea.id) + '">' +
     '<header class="structure-card-head"><span class="structure-rank">' + number(rank) + '</span>' +
     '<div><h4>' + escapeHtml(article.title || 'Untitled note') + '</h4>' +
     '<p class="structure-card-meta">' + escapeHtml(formatDate(article.date)) + ' · ' +
     escapeHtml(article.source || '') + '</p></div></header>' +
     '<p class="structure-passage">' + escapeHtml(idea.description) + '</p>' +
-    '<dl class="structure-facts">' + facts + '</dl>' + thesis + outcome +
+    '<dl class="structure-facts">' + facts + '</dl>' + thesis + outcome + followUp +
     '<div class="structure-card-foot">' + reasons +
     '<a class="structure-source" href="' + escapeHtml(safeUrl(article.url)) +
     '" target="_blank" rel="noopener noreferrer">Open source note</a></div></article>';
@@ -5512,7 +5594,9 @@ function renderStructureDesk(rows) {
     ? '<p class="structure-summary"><b>' + number(pattern.total) + '</b> comparable ' +
       (pattern.total === 1 ? 'observation' : 'observations') + ' in the record. ' +
       number(pattern.withQuant) + ' carry a numeric anchor, ' + number(pattern.withThesis) +
-      ' state an edge, and <b>' + number(pattern.withOutcome) + '</b> record an outcome.</p>'
+      ' state an edge, <b>' + number(pattern.withOutcome) +
+      '</b> record an outcome at source, and <b>' + number(pattern.withFollowUp) +
+      '</b> are revisited by a later note.</p>'
     : '<p class="structure-summary">No observation in the record matches these inputs.</p>';
   function bars(entries,total,label) {
     if (!entries.length) return '<p class="structure-none">Nothing recorded.</p>';
@@ -5566,9 +5650,9 @@ function renderStructureDesk(rows) {
     '<input id="structure-focus-input" type="search" placeholder="What do you want to trade? e.g. VIX, JGB, Nasdaq" value="' +
     escapeHtml(state.structureFocus) + '" autocomplete="off"></div>' +
     '<div class="structure-controls">' + controls + '</div></header>' +
-    '<p class="structure-disclosure">This desk reports how comparable positions were <b>described and structured</b> in the published record. Outcomes are stated for only ' +
+    '<p class="structure-disclosure">This desk reports how comparable positions were <b>described and structured</b> in the published record, and what that record went on to say about the same subjects. A stated outcome exists for only ' +
     number(outcomeTotal()) + ' of ' + number(IDEAS.length) +
-    ' extracted observations, so this is not a backtest, not realised profit and loss, and not a recommendation.</p>' +
+    ' extracted observations, so resolution is shown as later coverage rather than as a result: this is not a backtest, not realised profit and loss, and not a recommendation.</p>' +
     '<div class="structure-grid">' + patternPanel + comparablePanel + '</div>' + timelinePanel + '</div>';
   shell.dataset.statusAnnouncement = pattern.total
     ? number(pattern.total) + ' comparable observations on the structure desk'
