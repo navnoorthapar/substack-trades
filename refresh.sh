@@ -219,6 +219,29 @@ DIRECTION_CACHE_PATH="$DIRECTION_CACHE_CANDIDATE" \
     "$PYTHON" llm_direction.py || echo "(direction resolver skipped/failed; regex output kept)"
 
 echo
+echo "=== Refreshing the official Treasury par yield curve ==="
+# The curve is a published series, not something this pipeline produces, so a
+# feed outage must not stop a research refresh. Merging keeps every earlier
+# trading day, and falling back to the tracked series keeps the rate context
+# that already shipped rather than dropping it.
+TREASURY_CANDIDATE="$WORK_DIR/treasury_curve.candidate.json"
+TREASURY_CURRENT_YEAR=$(date -u '+%Y')
+TREASURY_PREVIOUS_YEAR=$((TREASURY_CURRENT_YEAR - 1))
+if ! "$PYTHON" fetch_treasury_curve.py \
+        --years "$TREASURY_PREVIOUS_YEAR" "$TREASURY_CURRENT_YEAR" \
+        --current-year "$TREASURY_CURRENT_YEAR" \
+        --merge "$ROOT/treasury_curve.json" \
+        --output "$TREASURY_CANDIDATE"; then
+    if [ -f "$ROOT/treasury_curve.json" ]; then
+        echo "Treasury curve refresh failed; keeping the tracked curve." >&2
+        cp -p "$ROOT/treasury_curve.json" "$TREASURY_CANDIDATE"
+    else
+        echo "Treasury curve refresh failed and no tracked curve exists to fall back to." >&2
+        exit 1
+    fi
+fi
+
+echo
 echo "=== Creating verifiable snapshot manifest ==="
 "$PYTHON" write_snapshot_manifest.py \
     --articles "$WORK_DIR/articles.candidate.json" \
@@ -260,6 +283,7 @@ PROMOTED_OUTPUTS=(
     trades_extracted.json
     snapshot_manifest.json
     .direction_cache.json
+    treasury_curve.json
 )
 PROMOTION_CANDIDATES=(
     "$WORK_DIR/substack.candidate.json"
@@ -270,6 +294,7 @@ PROMOTION_CANDIDATES=(
     "$WORK_DIR/trades.candidate.json"
     "$WORK_DIR/snapshot_manifest.candidate.json"
     "$DIRECTION_CACHE_CANDIDATE"
+    "$TREASURY_CANDIDATE"
 )
 for index in "${!PROMOTED_OUTPUTS[@]}"; do
     output=${PROMOTED_OUTPUTS[$index]}
@@ -315,6 +340,7 @@ TRACKED_OUTPUTS=(
     patreon_registry.json
     trades_extracted.json
     snapshot_manifest.json
+    treasury_curve.json
 )
 if [ -f .direction_cache.json ]; then
     TRACKED_OUTPUTS+=(.direction_cache.json)

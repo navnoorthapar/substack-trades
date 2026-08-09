@@ -18,6 +18,7 @@ PROMOTED_OUTPUTS = (
     'trades_extracted.json',
     'snapshot_manifest.json',
     '.direction_cache.json',
+    'treasury_curve.json',
 )
 
 
@@ -77,6 +78,14 @@ elif script == 'llm_direction.py':
         raise SystemExit(88)
     write_json(cache, {'candidate': 'direction-cache'})
     cache.with_name(cache.name + '.tmp').write_text('incomplete cache write', encoding='utf-8')
+elif script == 'fetch_treasury_curve.py':
+    if os.environ.get('FAKE_FAILURE') == 'treasury':
+        raise SystemExit(44)
+    write_json(option('--output'), {
+        'schema_version': 1,
+        'source': {'name': 'candidate'},
+        'observations': {'2026-01-02': {'candidate': 'curve'}},
+    })
 elif script == 'write_snapshot_manifest.py':
     write_json(option('--output'), {'candidate': 'manifest'})
 elif script == 'validate_pipeline.py':
@@ -253,6 +262,30 @@ class RefreshTransactionTests(unittest.TestCase):
         )
         self.assertEqual(list(self.tmp.glob('substack-trades-refresh.*')), [])
         self.assertFalse((self.tmp / 'com.navnoor.substacktrades.lock').exists())
+
+    def test_a_treasury_outage_keeps_the_tracked_curve_and_still_publishes(self):
+        """A published rate series is not this pipeline's to produce.
+
+        The curve is fetched from Treasury, so a feed outage must not stop a
+        research refresh; the run keeps the curve that already shipped and
+        publishes the rest of the snapshot.
+        """
+        result = self.run_refresh('treasury')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('keeping the tracked curve', result.stderr)
+        self.assertEqual(
+            (self.repo / 'treasury_curve.json').read_bytes(),
+            self.before['treasury_curve.json'],
+            'a feed outage must leave the tracked curve exactly as it was',
+        )
+        self.assertIn('\npush origin main', '\n' + self.git_log())
+        self.assertTrue(
+            any(
+                (self.repo / name).read_bytes() != self.before[name]
+                for name in PROMOTED_OUTPUTS if name != 'treasury_curve.json'
+            ),
+            'the refresh should still have promoted its research snapshot',
+        )
 
     def test_validation_failure_never_promotes_candidate_cache_or_snapshot(self):
         result = self.run_refresh('validation')

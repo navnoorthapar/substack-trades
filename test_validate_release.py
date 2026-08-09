@@ -89,6 +89,7 @@ class ReleaseValidatorTests(unittest.TestCase):
         for name in (
             'articles_index.json',
             'trades_extracted.json',
+            'treasury_curve.json',
             'snapshot_manifest.json',
         ):
             shutil.copy2(ROOT / name, source_root / name)

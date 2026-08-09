@@ -19,6 +19,8 @@ from client_article_contract import (
     compact_client_article,
 )
 from data_contract import validate_data_layer, write_data_layer
+from treasury_curve import DATASET_NAME as TREASURY_DATASET_NAME
+from treasury_curve import build_rate_context, load_curve_dataset
 from extract_trades import has_negated_trade_signal
 from research_graph import build_related_graph, build_search_index
 from research_taxonomy import build_families_index
@@ -580,6 +582,24 @@ embedded_articles = [
 
 articles_json = json_for_script(embedded_articles)
 threads_json = json_for_script(thread_index)
+
+# Rate conditions are read from the tracked official curve rather than fetched
+# while rendering, so the release stays byte-reproducible. The bands are
+# quantiles of the observation dates themselves: cut against the whole article
+# record they would drop nine in ten observations into one bucket and describe
+# nothing.
+article_date_by_id = {
+    article['id']: article['date'] for article in client_articles
+}
+observation_days = [
+    article_date_by_id[idea['article_id']]
+    for idea in client_ideas
+    if idea['article_id'] in article_date_by_id
+]
+rate_context = build_rate_context(
+    load_curve_dataset(ROOT / TREASURY_DATASET_NAME), observation_days,
+)
+rate_context_json = json_for_script(rate_context)
 manager_labels_json = json_for_script(manager_labels)
 manager_html = '\n'.join(manager_buttons)
 
@@ -1147,6 +1167,12 @@ body[data-view="structure"] .main-panel{grid-column:1/-1}
   text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:3px}
 .structure-outcome{background:var(--positive-soft);border:1px solid var(--positive-line)}
 .structure-outcome.none{background:var(--surface-3);border:1px dashed var(--line-strong);color:var(--text-muted)}
+.structure-rates{margin-top:8px;padding:7px 9px;border-radius:5px;background:var(--surface-3);
+  border-left:2px solid var(--accent-strong);font:500 12px var(--mono);color:var(--text)}
+.structure-rates > span{display:block;font:600 10px var(--mono);text-transform:uppercase;
+  letter-spacing:.06em;color:var(--text-muted);margin-bottom:3px}
+.structure-rates em{display:block;font-style:normal;font:500 10px var(--mono);
+  color:var(--text-muted);margin-top:3px}
 .structure-followup{margin-top:8px;padding:8px 10px;border-radius:5px;background:var(--surface-3);
   border-left:2px solid var(--accent)}
 .structure-followup > span{display:block;font:600 10px var(--mono);text-transform:uppercase;
@@ -2810,6 +2836,7 @@ function hydrateEmbeddedArticle(article) {
 }
 ARTICLES.forEach(hydrateEmbeddedArticle);
 const THREADS = __THREADS_JSON__;
+const RATE_CONTEXT = __RATE_CONTEXT_JSON__;
 const THREAD_ARTICLES = (function () {
   const rows = Object.create(null);
   Object.keys(THREADS.topics || {}).forEach(function (topicKey) {
@@ -3736,6 +3763,8 @@ const state = {
   structureInstrument:'',
   structureDirection:'any',
   structurePeriod:'all',
+  structureSlope:'any',
+  structureLevel:'any',
   sort:'newest',
   density:storedDensity,
   selected:'',
@@ -5317,6 +5346,43 @@ function observationFollowUps(idea) {
   followUpCache.set(article.id,ordered);
   return ordered;
 }
+// Rate conditions come from the tracked official curve. A publication date on
+// a weekend or holiday resolves to the last trading day at or before it, and
+// that as-of date is shown rather than hidden.
+const RATE_BANDS = Object.freeze({
+  slope:[['low','Flattest third'],['mid','Middle third'],['high','Steepest third']],
+  level:[['low','Lowest 10Y third'],['mid','Middle 10Y third'],['high','Highest 10Y third']]
+});
+function rateReading(idea) {
+  const article = idea && idea._article;
+  const row = article && RATE_CONTEXT.days ? RATE_CONTEXT.days[article.date] : null;
+  if (!row) return null;
+  return {
+    asOf:row[0], y2:row[1], y10:row[2], y30:row[3],
+    slope:Math.round((row[2] - row[1]) * 100) / 100,
+    slopeBand:row[4], levelBand:row[5]
+  };
+}
+function rateBandLabel(kind,value) {
+  const row = (RATE_BANDS[kind] || []).filter(function (entry) { return entry[0] === value; })[0];
+  return row ? row[1] : value;
+}
+// The citation is rendered as text: safeUrl deliberately admits only owned
+// article URLs, and widening it for an outbound link would weaken the control
+// that keeps every other link in the terminal pointing at this research.
+function rateSourceNote() {
+  const thresholds = RATE_CONTEXT.thresholds || {};
+  const slope = thresholds.slope || [];
+  const level = thresholds.level || [];
+  const cuts = slope.length === 2 && level.length === 2
+    ? ' Thirds are cut at a 10Y&minus;2Y of ' + Number(slope[0]).toFixed(2) + ' and ' +
+      Number(slope[1]).toFixed(2) + ', and at a 10Y of ' + Number(level[0]).toFixed(2) +
+      '% and ' + Number(level[1]).toFixed(2) + '%.'
+    : '';
+  return 'Bands are thirds of the observations compared here, not absolute regimes: ' +
+    'this record never saw an inverted curve.' + cuts + ' Source: ' +
+    escapeHtml(String((RATE_CONTEXT.source || {}).name || '')) + '.';
+}
 function structureFocusTokens() {
   return normalize(state.structureFocus).split(' ').filter(function (word) {
     return word.length > 2;
@@ -5383,6 +5449,20 @@ function structureMatch(idea) {
   }
   const date = (idea._article && idea._article.date) || '';
   if (state.structurePeriod !== 'all' && date.slice(0,4) !== state.structurePeriod) return null;
+  if (state.structureSlope !== 'any' || state.structureLevel !== 'any') {
+    const rates = rateReading(idea);
+    if (!rates) return null;
+    if (state.structureSlope !== 'any') {
+      if (rates.slopeBand !== state.structureSlope) return null;
+      score += 15;
+      reasons.push('Curve shape: ' + rateBandLabel('slope',rates.slopeBand).toLowerCase());
+    }
+    if (state.structureLevel !== 'any') {
+      if (rates.levelBand !== state.structureLevel) return null;
+      score += 15;
+      reasons.push('10Y level: ' + rateBandLabel('level',rates.levelBand).toLowerCase());
+    }
+  }
   const tokens = structureFocusTokens();
   if (tokens.length) {
     const parts = underlyingParts(idea);
@@ -5435,6 +5515,8 @@ function structurePattern(rows) {
   const directions = new Map();
   const managers = new Map();
   const periods = new Map();
+  const slopeBands = new Map();
+  const levelBands = new Map();
   let withQuant = 0;
   let withThesis = 0;
   let withOutcome = 0;
@@ -5454,6 +5536,11 @@ function structurePattern(rows) {
     directions.set(idea.direction,(directions.get(idea.direction) || 0) + 1);
     const year = ((idea._article && idea._article.date) || '').slice(0,4);
     if (year) periods.set(year,(periods.get(year) || 0) + 1);
+    const rates = rateReading(idea);
+    if (rates) {
+      slopeBands.set(rates.slopeBand,(slopeBands.get(rates.slopeBand) || 0) + 1);
+      levelBands.set(rates.levelBand,(levelBands.get(rates.levelBand) || 0) + 1);
+    }
     if (idea.manager) managers.set(idea.manager,(managers.get(idea.manager) || 0) + 1);
     if (idea.quant) withQuant += 1;
     if (idea.thesis) withThesis += 1;
@@ -5473,6 +5560,12 @@ function structurePattern(rows) {
     periods:Array.from(periods.entries()).sort(function (first,second) {
       return second[0].localeCompare(first[0]);
     }),
+    slopeBands:RATE_BANDS.slope.filter(function (entry) {
+      return slopeBands.has(entry[0]);
+    }).map(function (entry) { return [entry[1],slopeBands.get(entry[0])]; }),
+    levelBands:RATE_BANDS.level.filter(function (entry) {
+      return levelBands.has(entry[0]);
+    }).map(function (entry) { return [entry[1],levelBands.get(entry[0])]; }),
     managers:ranked(managers),
     withQuant:withQuant,
     withThesis:withThesis,
@@ -5521,6 +5614,16 @@ function structureComparableCard(row,rank) {
   const outcome = idea.outcome
     ? '<p class="structure-outcome"><span>Outcome recorded at source</span>' + escapeHtml(idea.outcome) + '</p>'
     : '<p class="structure-outcome none">No outcome recorded at source.</p>';
+  const rates = rateReading(idea);
+  const rateLine = rates
+    ? '<p class="structure-rates"><span>Curve when this was published</span>' +
+      '2Y ' + rates.y2.toFixed(2) + '% · 10Y ' + rates.y10.toFixed(2) +
+      '% · 30Y ' + rates.y30.toFixed(2) + '% · 10Y&minus;2Y ' +
+      (rates.slope >= 0 ? '+' : '') + rates.slope.toFixed(2) +
+      '<em>' + escapeHtml(rateBandLabel('slope',rates.slopeBand)) + ' · ' +
+      escapeHtml(rateBandLabel('level',rates.levelBand)) +
+      ' · official close ' + escapeHtml(formatDate(rates.asOf)) + '</em></p>'
+    : '';
   const followUps = observationFollowUps(idea);
   const shownFollowUps = followUps.slice(0,3);
   const followUp = followUps.length
@@ -5545,7 +5648,7 @@ function structureComparableCard(row,rank) {
     '<p class="structure-card-meta">' + escapeHtml(formatDate(article.date)) + ' · ' +
     escapeHtml(article.source || '') + '</p></div></header>' +
     '<p class="structure-passage">' + escapeHtml(idea.description) + '</p>' +
-    '<dl class="structure-facts">' + facts + '</dl>' + thesis + outcome + followUp +
+    '<dl class="structure-facts">' + facts + '</dl>' + rateLine + thesis + outcome + followUp +
     '<div class="structure-card-foot">' + reasons +
     '<a class="structure-source" href="' + escapeHtml(safeUrl(article.url)) +
     '" target="_blank" rel="noopener noreferrer">Open source note</a></div></article>';
@@ -5587,6 +5690,8 @@ function renderStructureDesk(rows) {
       ['arbitrage/relative value','Arbitrage / RV'],['unspecified','Not stated']
     ],state.structureDirection,['any','Any stance']) +
     structureChipRow('Period','structure-period',structurePeriodOptions().slice(1),state.structurePeriod,['all','Whole record']) +
+    structureChipRow('Curve shape at publication','structure-slope',RATE_BANDS.slope,state.structureSlope,['any','Any curve']) +
+    structureChipRow('10Y level at publication','structure-level',RATE_BANDS.level,state.structureLevel,['any','Any level']) +
     (underlyingOptions.length
       ? structureChipRow('Recurring underlyings','structure-focus',underlyingOptions,state.structureFocus,['','Clear'])
       : '');
@@ -5616,8 +5721,14 @@ function renderStructureDesk(rows) {
       : '') +
     '<h4>Parsed stance</h4>' + bars(pattern.directions,pattern.total,directionLabel) +
     (pattern.periods.length > 1
-      ? '<h4>When these were written</h4>' + bars(pattern.periods,pattern.total) +
-        '<p class="structure-note">Use the period control to read one stretch of the record on its own.</p>'
+      ? '<h4>When these were written</h4>' + bars(pattern.periods,pattern.total)
+      : '') +
+    (pattern.slopeBands.length
+      ? '<h4>Curve shape at publication</h4>' + bars(pattern.slopeBands,pattern.total)
+      : '') +
+    (pattern.levelBands.length
+      ? '<h4>10Y level at publication</h4>' + bars(pattern.levelBands,pattern.total) +
+        '<p class="structure-note">' + rateSourceNote() + '</p>'
       : '') +
     (pattern.managers.length
       ? '<h4>Managers named in these passages</h4><p class="structure-managers">' +
@@ -5720,6 +5831,8 @@ function resetFilters() {
   state.structureInstrument = '';
   state.structureDirection = 'any';
   state.structurePeriod = 'all';
+  state.structureSlope = 'any';
+  state.structureLevel = 'any';
   state.limit = PAGE_SIZE[state.view];
   document.getElementById('search').value = '';
   document.getElementById('manager-search').value = '';
@@ -6439,7 +6552,8 @@ document.addEventListener('click',function (event) {
     return;
   }
   const structureChip = event.target.closest(
-    '[data-structure-instrument],[data-structure-direction],[data-structure-period],[data-structure-focus]'
+    '[data-structure-instrument],[data-structure-direction],[data-structure-period],'
+    + '[data-structure-focus],[data-structure-slope],[data-structure-level]'
   );
   if (structureChip) {
     markMeaningfulNavigation();
@@ -6455,6 +6569,12 @@ document.addEventListener('click',function (event) {
     }
     if (structureChip.hasAttribute('data-structure-focus')) {
       state.structureFocus = structureChip.dataset.structureFocus;
+    }
+    if (structureChip.hasAttribute('data-structure-slope')) {
+      state.structureSlope = structureChip.dataset.structureSlope || 'any';
+    }
+    if (structureChip.hasAttribute('data-structure-level')) {
+      state.structureLevel = structureChip.dataset.structureLevel || 'any';
     }
     state.limit = PAGE_SIZE.structure;
     renderObservationAwareNavigation('entry');
@@ -7283,6 +7403,7 @@ HTML = (HTML_TEMPLATE
         .replace('__SUBSCRIPTION_URL_JSON__', json_for_script(SUBSCRIPTION_URL))
         .replace('__ARTICLES_JSON__', articles_json)
         .replace('__THREADS_JSON__', threads_json)
+        .replace('__RATE_CONTEXT_JSON__', rate_context_json)
         .replace('__MANAGER_LABELS_JSON__', manager_labels_json)
         .replace('__SNAPSHOT_JSON__', snapshot_json)
         .replace('__MANAGER_BUTTONS__', manager_html)

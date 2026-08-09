@@ -21,7 +21,11 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-TRACKED_DATA_FILES = ('articles_index.json', 'trades_extracted.json')
+TRACKED_DATA_FILES = (
+    'articles_index.json',
+    'trades_extracted.json',
+    'treasury_curve.json',
+)
 SNAPSHOT_MANIFEST = 'snapshot_manifest.json'
 
 

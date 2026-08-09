@@ -1675,13 +1675,18 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "structureChipRow('Period','structure-period'",
             "structureChipRow('Recurring underlyings','structure-focus'",
             "'[data-structure-instrument],[data-structure-direction],"
-            "[data-structure-period],[data-structure-focus]'",
+            "[data-structure-period],'",
+            "'[data-structure-focus],[data-structure-slope],[data-structure-level]'",
             'data-structure-more="1"',
             'How comparable trades were structured',
             'Comparable observations',
             'How the line developed',
             'When these were written',
             'What the record returned to afterwards',
+            'Curve when this was published',
+            "structureChipRow('Curve shape at publication','structure-slope'",
+            "structureChipRow('10Y level at publication','structure-level'",
+            'const RATE_CONTEXT = ',
         ):
             self.assertIn(text, self.html)
 
@@ -1708,8 +1713,31 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'No outcome recorded at source.',
             'Outcomes appear only where the source stated one.',
             'No later note in the record revisits these subjects.',
+            'Bands are thirds of the observations compared here, not absolute regimes',
+            'this record never saw an inverted curve.',
+            'U.S. Treasury Daily Treasury Par Yield Curve Rates',
         ):
             self.assertIn(text, self.html)
+
+        # Rate conditions must be a published reading for every observation the
+        # desk ranks, and must carry the close that produced them.
+        rate_context = json.loads(
+            re.search(r'const RATE_CONTEXT = (\{.*?\});\n', self.html, re.S).group(1)
+        )
+        self.assertEqual(rate_context['schema_version'], 1)
+        article_by_id = {article['id']: article for article in self.articles}
+        observation_days = {
+            article_by_id[idea['article_id']]['date'] for idea in self.ideas
+        }
+        self.assertEqual(
+            sorted(set(rate_context['days']) & observation_days),
+            sorted(observation_days),
+            'every observation date must carry a published curve reading',
+        )
+        for day, row in rate_context['days'].items():
+            self.assertLessEqual(row[0], day, 'a reading must not come from the future')
+            self.assertIn(row[4], {'low', 'mid', 'high'})
+            self.assertIn(row[5], {'low', 'mid', 'high'})
 
         # Follow-through must stay bounded to subjects narrow enough to mean
         # something, or the desk would assert continuity the record lacks.

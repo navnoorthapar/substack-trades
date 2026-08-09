@@ -507,10 +507,23 @@ class StructureDeskRuntimeTests(unittest.TestCase):
                 'function instrumentLabel(value) {',
                 'function directionLabel(value) {',
             )
+            + javascript_between(
+                'function escapeHtml(value) {',
+                'function safeUrl(value) {',
+            )
             + r'''
 const THREADS = {article_count:0,defaults:{},topics:{}};
 const THREAD_ARTICLES = Object.create(null);
 const ARTICLE_BY_ID = new Map();
+const RATE_CONTEXT = {
+  schema_version:1,
+  source:{name:'U.S. Treasury Daily Treasury Par Yield Curve Rates'},
+  thresholds:{slope:[0.35,0.47],level:[4.36,4.49]},
+  days:{
+    '2026-01-05':['2026-01-05',4.10,4.40,4.90,'low','mid'],
+    '2026-02-05':['2026-02-02',4.00,4.60,5.00,'high','high']
+  }
+};
 '''
             + javascript_between(
                 'function underlyingParts(idea) {',
@@ -533,7 +546,7 @@ function observation(overrides) {
 function desk(patch) {
   Object.assign(state, {
     structureFocus:'', structureInstrument:'', structureDirection:'any',
-    structurePeriod:'all'
+    structurePeriod:'all', structureSlope:'any', structureLevel:'any'
   }, patch || {});
   return structureMatches();
 }
@@ -688,6 +701,71 @@ if (narrow.topics.indexOf('Expected Shortfall') === -1 ||
 if (observationFollowUps(idea) !== followUps) throw new Error('resolution was not cached');
 if (observationFollowUps({id:'x'}).length !== 0) {
   throw new Error('an observation with no article must resolve to nothing');
+}
+''')
+
+    def test_rate_conditions_come_from_the_published_curve(self):
+        """Comparables can be conditioned on the curve at publication.
+
+        The reading must be a published close: a date that is not a trading
+        day carries the as-of day that produced it, never an interpolation.
+        """
+        self.desk_runtime(r'''
+const dated = function (id, date) {
+  return {title:'', date:date, url:'https://example.test/' + id, source:'substack', id:id};
+};
+const IDEAS = [
+  observation({id:'flat', _article:dated('a1','2026-01-05')}),
+  observation({id:'steep', _article:dated('a2','2026-02-05')}),
+  observation({id:'unpriced', _article:dated('a3','2030-01-01')})
+];
+
+const flat = rateReading(IDEAS[0]);
+if (flat.y2 !== 4.10 || flat.y10 !== 4.40 || flat.slope !== 0.30) {
+  throw new Error('curve reading was not read from the published series');
+}
+if (flat.asOf !== '2026-01-05') throw new Error('as-of date was lost');
+const weekend = rateReading(IDEAS[1]);
+if (weekend.asOf !== '2026-02-02') {
+  throw new Error('a non-trading day must carry the close that produced it');
+}
+if (rateReading(IDEAS[2]) !== null) {
+  throw new Error('a date the series does not cover must have no reading');
+}
+
+const flattest = desk({structureSlope:'low'}).map(function (r) { return r.idea.id; });
+if (flattest.join(',') !== 'flat') {
+  throw new Error('curve-shape input did not select its band: ' + flattest);
+}
+const steepest = desk({structureSlope:'high'});
+if (steepest.length !== 1 || steepest[0].idea.id !== 'steep') {
+  throw new Error('curve-shape input did not select the steeper band');
+}
+if (!steepest[0].reasons.join(' ').toLowerCase().includes('curve shape')) {
+  throw new Error('a rate-conditioned match must say the curve was matched');
+}
+const level = desk({structureLevel:'high'}).map(function (r) { return r.idea.id; });
+if (level.join(',') !== 'steep') throw new Error('10Y level input did not select: ' + level);
+
+// An observation the curve cannot price is excluded rather than guessed at.
+const all = desk({});
+if (all.length !== 3) throw new Error('an unconditioned desk should keep every passage');
+const conditioned = desk({structureSlope:'low'}).concat(desk({structureSlope:'mid'}))
+  .concat(desk({structureSlope:'high'})).map(function (r) { return r.idea.id; });
+if (conditioned.indexOf('unpriced') !== -1) {
+  throw new Error('an observation with no curve reading was given a band');
+}
+
+const pattern = structurePattern(desk({}));
+const slopeTotal = pattern.slopeBands.reduce(function (sum, row) { return sum + row[1]; }, 0);
+if (slopeTotal !== 2) {
+  throw new Error('rate bands must tally only the passages the curve prices');
+}
+if (!rateSourceNote().includes('U.S. Treasury')) {
+  throw new Error('the desk must cite the official series it conditions on');
+}
+if (!rateSourceNote().includes('not absolute regimes')) {
+  throw new Error('relative bands must not read as regime claims');
 }
 ''')
 
