@@ -1,6 +1,125 @@
 [
   {
     "source": "medium",
+    "source_id": "f20275fc4f34",
+    "slug": "qualcomm-never-refits-its-trellis-a-260-day-window-rewrites-20-of-your-labels-f20275fc4f34",
+    "title": "Qualcomm Never Refits Its Trellis. A 260-Day Window Rewrites 20% of Your Labels.",
+    "subtitle": "The claim: Hold the parameters fixed and a Viterbi regime decode is remarkably clean.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-08T19:10:01Z",
+    "url": "https://medium.com/@navnoorbawa/qualcomm-never-refits-its-trellis-a-260-day-window-rewrites-20-of-your-labels-f20275fc4f34",
+    "audience": "unknown",
+    "wordcount": 18,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "f39415ef44fd18aa6eaf30940ba8fa489fde2c4617a72c78e0de886812bea746",
+      "lead": {
+        "text": "The claim: Hold the parameters fixed and a Viterbi regime decode is remarkably clean.",
+        "start": 0,
+        "end": 85,
+        "sha256": "315a481c4eac3147687bd38cfad15aa5f22c614fc985782c5557595e5dfad4f9",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-08T19:10:01Z",
+    "observed_source_updated_at": "2026-08-08T19:10:01Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "9e4b79cb8fe7",
+    "slug": "jim-simons-hired-baum-welchs-co-author-man-group-skips-its-core-assumption-9e4b79cb8fe7",
+    "title": "Jim Simons Hired Baum-Welch’s Co-Author. Man Group Skips Its Core Assumption.",
+    "subtitle": "Everything a regime model tells you about a regime, it learned from a two-digit number of events.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-08T15:41:59Z",
+    "url": "https://medium.com/@navnoorbawa/jim-simons-hired-baum-welchs-co-author-man-group-skips-its-core-assumption-9e4b79cb8fe7",
+    "audience": "unknown",
+    "wordcount": 21,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "d13b641cc2ec97844129ab568edf8471cfcc62a400bea60a07600de479f04ada",
+      "lead": {
+        "text": "Everything a regime model tells you about a regime, it learned from a two-digit number of events.",
+        "start": 0,
+        "end": 97,
+        "sha256": "48dd1347bace1d26b2d181fe4ff423dd1e69e681b573f9f6768f2040032ea718",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-08T15:41:59Z",
+    "observed_source_updated_at": "2026-08-08T15:41:59Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "spacexs-1146m-ai-profit-rests-on",
+    "slug": "spacexs-1146m-ai-profit-rests-on",
+    "title": "SpaceX's $1,146m AI Profit Rests on $1,885m of Depreciation. Its Cursor Option Now Costs 78m More Shares.",
+    "subtitle": "The market sold an $18bn capex number. The filings show the quarter's headline milestone is an accounting identity, and the only price-contingent clause in the capital structure had already expired.",
+    "post_date": "2026-08-08T13:18:05.190Z",
+    "url": "https://navnoorbawa.substack.com/p/spacexs-1146m-ai-profit-rests-on",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "f0341267d07d36da37a7126b75afb7b0417ccff0994a5cc90dd03c64243d03d3",
+      "lead": {
+        "text": "The market sold an $18bn capex number. The filings show the quarter’s headline milestone is an accounting identity, and the only price-contingent clause in the capital structure had already expired.",
+        "start": 0,
+        "end": 198,
+        "sha256": "f0341267d07d36da37a7126b75afb7b0417ccff0994a5cc90dd03c64243d03d3",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-08T13:19:34.353Z",
+    "observed_source_updated_at": "2026-08-08T13:19:34.353Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "The market sold an $18bn capex number. The filings show the quarter’s headline milestone is an accounting identity, and the only price-contingent clause in the capital structure had already expired.",
+      "character_count": 198,
+      "body_sha256": "f0341267d07d36da37a7126b75afb7b0417ccff0994a5cc90dd03c64243d03d3"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "166119026",
+    "slug": "binance-and-30-166119026",
+    "title": "Binance, Polymarket, and the 30 Basis Points a Settlement Push Has to Beat",
+    "subtitle": "",
+    "post_date": "2026-08-08",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/binance-and-30-166119026",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "medium",
     "source_id": "1e12b0ce0a6c",
     "slug": "aqrs-markov-event-state-averaged-14-22-cvar-tutorials-still-hand-you-a-viterbi-label-1e12b0ce0a6c",
     "title": "AQR’s Markov Event State Averaged −14.22% CVaR. Tutorials Still Hand You a Viterbi Label.",
@@ -829,9 +948,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-07-29T11:24:25Z",
-    "observed_source_updated_at": "2026-07-29T11:24:25Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -918,9 +1037,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-07-28T10:48:41Z",
-    "observed_source_updated_at": "2026-07-28T10:48:41Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
