@@ -1698,6 +1698,67 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         ):
             self.assertRegex(self.html, rule)
 
+    def test_a_structure_desk_view_can_be_shared_and_restored(self):
+        """A desk view is something a reader sends to a colleague.
+
+        Every desk input therefore travels in the address, and each one is
+        bounded to a vocabulary the record contains rather than trusted.
+        """
+        hash_start = self.html.index('function updateHash(includeQuery)')
+        hash_end = self.html.index('\nfunction ', hash_start + 10)
+        writer = self.html[hash_start:hash_end]
+        for pair in (
+            "params.set('focus',state.structureFocus.slice(0,120))",
+            "params.set('sinst',state.structureInstrument)",
+            "params.set('sdir',state.structureDirection)",
+            "params.set('speriod',state.structurePeriod)",
+            "params.set('sslope',state.structureSlope)",
+            "params.set('slevel',state.structureLevel)",
+        ):
+            self.assertIn(pair, writer)
+        self.assertIn("if (state.view === 'structure') {", writer)
+
+        for guard in (
+            "state.structureFocus = String(params.get('focus') || '').slice(0,120)",
+            "VALID_INSTRUMENTS.has(params.get('sinst'))",
+            "VALID_DIRECTIONS.has(params.get('sdir'))",
+            "/^[0-9]{4}$/.test(String(params.get('speriod') || ''))",
+            "VALID_RATE_BANDS.has(params.get('sslope'))",
+            "VALID_RATE_BANDS.has(params.get('slevel'))",
+        ):
+            self.assertIn(guard, self.html)
+        self.assertIn("const VALID_RATE_BANDS = new Set(['low','mid','high']);", self.html)
+
+    def test_structure_desk_export_matches_what_the_desk_shows(self):
+        """Exporting the rail's universe while showing ranked comparables
+        would hand back a different set than the one on screen."""
+        export_start = self.html.index('function exportCsv()')
+        export_end = self.html.index('\nfunction applyPreset', export_start)
+        export = self.html[export_start:export_end]
+        self.assertIn(
+            "state.view === 'structure'\n    ? structureMatches().map(", export)
+        self.assertIn("if (state.view === 'structure') {", export)
+        for column in (
+            "'Why it matched'", "'10Y-2Y'", "'Curve as of'",
+            "'Later notes on the subject'", "'Outcome recorded at source'",
+        ):
+            self.assertIn(column, export)
+        self.assertIn('row.reasons.join', export)
+        self.assertIn('observationFollowUps(idea).length', export)
+
+    def test_structure_desk_shows_the_evidence_gate_in_its_own_shell(self):
+        """The desk hides the table, so the shared gate would leave it blank
+        while the release-bound evidence archive is still verifying."""
+        gate_start = self.html.index('function renderObservationGate()')
+        gate_end = self.html.index('\nfunction ', gate_start + 10)
+        gate = self.html[gate_start:gate_end]
+        self.assertIn("} else if (state.view === 'structure') {", gate)
+        self.assertIn("document.getElementById('structure-shell')", gate)
+        self.assertIn('data-retry-observations', gate)
+        self.assertIn('id="structure-gate-title"', gate)
+        self.assertIn(
+            'the desk shows nothing rather than an incomplete comparison', gate)
+
     def test_structure_desk_states_the_limits_of_the_extracted_record(self):
         """The desk must not let a reader infer outcomes the record lacks."""
         outcomes = [idea for idea in self.ideas if idea['outcome']]

@@ -219,7 +219,11 @@ class RefreshTransactionTests(unittest.TestCase):
             env=environment,
             capture_output=True,
             text=True,
-            timeout=20,
+            # A fake-tool refresh runs in about three seconds, but this suite
+            # also runs inside the pre-push release gate while the machine is
+            # building the site. Keep the bound generous enough to survive that
+            # contention and still fail fast on a genuine hang.
+            timeout=60,
             check=False,
         )
 

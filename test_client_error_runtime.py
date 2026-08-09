@@ -210,6 +210,7 @@ const VALID_CONTENT = new Set();
 const VALID_QUEUE_STATUSES = new Set();
 const VALID_DOCUMENTATION = new Set(['all']);
 const VALID_BRIEF_LENSES = new Set(['all']);
+const VALID_RATE_BANDS = new Set(['low','mid','high']);
 const storedDensity = 'compact';
 const setFromParam = () => new Set();
 const state = {
@@ -217,6 +218,8 @@ const state = {
   instruments:new Set(),managers:new Set(),quality:new Set(),publicationAccess:new Set(),content:new Set(),
   queueStatuses:new Set(),documentation:'all',newOnly:false,range:'all',
   coverage:'all',briefLens:'all',threadTopic:'',sort:'newest',
+  structureFocus:'',structureInstrument:'',structureDirection:'any',
+  structurePeriod:'all',structureSlope:'any',structureLevel:'any',
   density:'compact',selected:'',limit:24
 };
 const historyCalls = [];

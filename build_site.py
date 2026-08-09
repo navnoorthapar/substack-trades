@@ -3114,6 +3114,7 @@ const VALID_BODY_REVISIONS = new Set(['current','prior','unverified']);
 const VALID_DIRECTIONS = new Set(['long','short','arbitrage/relative value','long/short','unspecified']);
 const VALID_INSTRUMENTS = new Set(['equity','option','volatility','bond','futures','commodity','FX','swap','CDS','repo','prediction_market','weather_derivative','unspecified']);
 const VALID_QUALITY = new Set(['quant','thesis','outcome','manager']);
+const VALID_RATE_BANDS = new Set(['low','mid','high']);
 const VALID_CONTENT = new Set(['full','excerpt']);
 const VALID_PUBLICATION_ACCESS = new Set(['public','member','unknown']);
 const VALID_DOCUMENTATION = new Set(['triage','documented','strong','needs-context','review']);
@@ -3791,6 +3792,20 @@ function hydrateFromHash() {
   state.range = ['30d','90d','1y','all'].includes(params.get('range')) ? params.get('range') : 'all';
   state.coverage = ['all','ideas','research'].includes(params.get('coverage')) ? params.get('coverage') : 'all';
   state.briefLens = VALID_BRIEF_LENSES.has(params.get('lens')) ? params.get('lens') : 'all';
+  // A desk view is something a reader sends to a colleague, so its inputs
+  // travel in the address. Each one is bounded to a vocabulary the record
+  // actually contains rather than trusted from the URL.
+  state.structureFocus = String(params.get('focus') || '').slice(0,120);
+  state.structureInstrument = VALID_INSTRUMENTS.has(params.get('sinst'))
+    ? params.get('sinst') : '';
+  state.structureDirection = VALID_DIRECTIONS.has(params.get('sdir'))
+    ? params.get('sdir') : 'any';
+  state.structurePeriod = /^[0-9]{4}$/.test(String(params.get('speriod') || ''))
+    ? params.get('speriod') : 'all';
+  state.structureSlope = VALID_RATE_BANDS.has(params.get('sslope'))
+    ? params.get('sslope') : 'any';
+  state.structureLevel = VALID_RATE_BANDS.has(params.get('slevel'))
+    ? params.get('slevel') : 'any';
   state.sort = params.get('sort') || 'newest';
   state.density = ['compact','comfortable'].includes(params.get('density')) ? params.get('density') : storedDensity;
   state.selected = params.get('selected') || '';
@@ -3824,6 +3839,14 @@ function updateHash(includeQuery) {
   if (state.range !== 'all') params.set('range',state.range);
   if (state.coverage !== 'all' && state.view === 'research') params.set('coverage',state.coverage);
   if (state.briefLens !== 'all' && state.view === 'briefing') params.set('lens',state.briefLens);
+  if (state.view === 'structure') {
+    if (state.structureFocus) params.set('focus',state.structureFocus.slice(0,120));
+    if (state.structureInstrument) params.set('sinst',state.structureInstrument);
+    if (state.structureDirection !== 'any') params.set('sdir',state.structureDirection);
+    if (state.structurePeriod !== 'all') params.set('speriod',state.structurePeriod);
+    if (state.structureSlope !== 'any') params.set('sslope',state.structureSlope);
+    if (state.structureLevel !== 'any') params.set('slevel',state.structureLevel);
+  }
   const threadRow = THREAD_ARTICLES[state.selected];
   if (state.view === 'briefing' && threadRow && threadRow.topics.includes(state.threadTopic)) params.set('topic',state.threadTopic);
   if (state.sort !== 'newest') params.set('sort',state.sort);
@@ -5194,14 +5217,20 @@ function queueObservationResultFocus(kind) {
 function focusViewEntry() {
   const target = state.view === 'briefing'
     ? document.getElementById('lead-article-title') || document.getElementById('brief-status-title') || document.getElementById('observation-gate-title')
-    : document.querySelector('[data-record-id][tabindex="0"]') || document.getElementById('empty-title');
+    : state.view === 'structure'
+      ? document.getElementById('structure-focus-input') || document.getElementById('structure-gate-title')
+      : document.querySelector('[data-record-id][tabindex="0"]') || document.getElementById('empty-title');
   if (!target) return;
   if (!target.matches('button,a,input,select,textarea,[tabindex]')) target.tabIndex = -1;
   target.focus();
 }
 function focusObservationGate(consumePending) {
   const retry = observationsFailed ? document.querySelector('[data-retry-observations]') : null;
-  const target = retry || (state.view === 'briefing' ? document.getElementById('observation-gate-title') : document.getElementById('empty-title'));
+  const target = retry || (
+    state.view === 'briefing' ? document.getElementById('observation-gate-title')
+      : state.view === 'structure' ? document.getElementById('structure-gate-title')
+        : document.getElementById('empty-title')
+  );
   if (target) {
     if (!target.matches('button,a,input,select,textarea,[tabindex]')) target.tabIndex = -1;
     target.focus();
@@ -5263,6 +5292,17 @@ function renderObservationGate() {
     document.getElementById('briefing-shell').innerHTML = '<div class="intel-wrap">' + briefRailMarkup(BRIEF_LENSES) + briefCompactNavMarkup(BRIEF_LENSES) +
       '<article class="intel-lead"><div class="intel-lead-inner"><div class="ic-topic">Release integrity check</div><h1 class="intel-title" id="observation-gate-title">' + escapeHtml(title) + '</h1><p class="ic-dek">' + escapeHtml(copy) + '</p>' + (action ? '<div class="intel-actions">' + action + '</div>' : '') + '</div></article>' +
       '<aside class="intel-side ic-sheet"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">Evidence boundary</div><h2 class="ic-sheet-title">Fail closed</h2><p class="ic-sheet-intro">Article dossiers remain separate from the deferred parser archive. An unavailable asset is never presented as missing evidence.</p></div></aside></div>';
+  } else if (state.view === 'structure') {
+    // The desk hides the table, so the shared gate would leave it blank while
+    // the evidence archive is still being verified.
+    const shell = document.getElementById('structure-shell');
+    shell.innerHTML = '<div class="structure-wrap"><header class="structure-head">' +
+      '<h2 id="structure-gate-title">' + escapeHtml(title) + '</h2>' +
+      '<p class="structure-lede">' + escapeHtml(copy) + '</p></header>' +
+      '<p class="structure-disclosure">Comparable positions are read from the release-bound evidence archive. Until it verifies, the desk shows nothing rather than an incomplete comparison.</p>' +
+      (action ? '<div class="empty-actions observation-retry">' + action + '</div>' : '') +
+      '</div>';
+    shell.dataset.statusAnnouncement = title;
   } else {
     renderTableHead();
     document.getElementById('table-body').replaceChildren();
@@ -6113,9 +6153,49 @@ function exportCsv() {
     requestObservationsForCurrentState(false);
     return;
   }
-  const records = filteredRecords();
+  const records = state.view === 'structure'
+    ? structureMatches().map(function (row) { return row.idea; })
+    : filteredRecords();
   let rows;
-  if (state.view === 'research') {
+  if (state.view === 'structure') {
+    // The desk ranks its own comparables, so exporting the rail's unfiltered
+    // universe would hand back a different set than the one on screen.
+    const ranked = structureMatches();
+    rows = [[
+      'Rank','Why it matched','Date','Instruments','Parsed stance','Underlying',
+      'Numeric anchor','Stated edge','Outcome recorded at source','Later notes on the subject',
+      '2Y','10Y','30Y','10Y-2Y','Curve as of','Curve shape band','10Y level band',
+      'Mentioned entity','Source passage','Article','Publication channel','URL'
+    ]].concat(ranked.map(function (row, index) {
+      const idea = row.idea;
+      const article = idea._article;
+      const rates = rateReading(idea);
+      return [
+        index + 1,
+        row.reasons.join('; '),
+        article.date,
+        idea.instruments.map(instrumentLabel).join('; '),
+        directionLabel(idea.direction),
+        underlyingParts(idea).join('; '),
+        idea.quant,
+        idea.thesis,
+        idea.outcome,
+        observationFollowUps(idea).length,
+        rates ? rates.y2 : '',
+        rates ? rates.y10 : '',
+        rates ? rates.y30 : '',
+        rates ? rates.slope : '',
+        rates ? rates.asOf : '',
+        rates ? rateBandLabel('slope',rates.slopeBand) : '',
+        rates ? rateBandLabel('level',rates.levelBand) : '',
+        idea.manager,
+        passageText(idea),
+        article.title,
+        sourceLabel(article.source),
+        article.url
+      ];
+    }));
+  } else if (state.view === 'research') {
     rows = [['Date','Publication channel','Article','Subtitle','Research observations','Publication access','Indexed coverage','Body revision','Body source revision','Observed source revision','URL']].concat(records.map(function (article) {
       return [article.date,sourceLabel(article.source),article.title,article.subtitle,article.trade_count,article.publication_access,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,article.url];
     }));
