@@ -33,6 +33,54 @@ def run_node(script):
         raise AssertionError(result.stdout + result.stderr)
 
 
+HARNESS_GLOBALS = r"""
+const THREADS = {article_count:0,defaults:{},topics:{}};
+const THREAD_ARTICLES = Object.create(null);
+const ARTICLE_BY_ID = new Map();
+const DESK_FACETS = {observation_count:0,outcome_count:0,instruments:[],underlyings:[],periods:[]};
+const location = {href:'https://example.test/#view=structure'};
+const RATE_CONTEXT = {
+  schema_version:1, source:{name:'U.S. Treasury'},
+  thresholds:{slope:[0.35,0.47],level:[4.36,4.49]},
+  days:{'2026-01-05':['2026-01-05',4.10,4.40,4.90,'low','mid']}
+};
+const WORKFLOW_TEXT_LIMITS = {tags:500,note:4000,risk:1800};
+const MAX_QUEUE_ITEMS = 250;
+const PAGE_SIZE = {queue:100,structure:24};
+"""
+
+HARNESS_QUEUE = r"""
+const workflowItems = new Map();
+let savedIdeas = new Set();
+let persisted = true;
+let toast = '';
+const state = {structureFocus:'',structureInstrument:'',structureDirection:'any',
+  structurePeriod:'all',structureSlope:'any',structureLevel:'any',limit:24,
+  view:'structure',selected:''};
+function showToast(value) { toast = value; }
+function persistWorkflow() { return persisted; }
+function confirmQueueStorageBoundary() { return true; }
+function markMeaningfulNavigation() {}
+function render() {}
+function newWorkflowItem(id) {
+  return {id:id,status:'review',note:'',risk:'',tags:'',thesis:'',updated_at:''};
+}
+function observation(id, overrides) {
+  const idea = Object.assign({
+    id:id, description:'passage ' + id, direction:'short', instruments:['option'],
+    underlying:'VIX', thesis:'', quant:'2x', outcome:'', manager:'',
+    _article:{id:'a_' + id, title:'Note ' + id, date:'2026-01-05',
+      url:'https://navnoorbawa.substack.com/p/note-' + id, source:'substack'}
+  }, overrides || {});
+  idea._search = normalize([idea._article.title,idea.description,idea.direction,
+    idea.instruments.join(' '),idea.underlying,idea.thesis,idea.quant,
+    idea.outcome,idea.manager].join(' '));
+  return idea;
+}
+const IDEAS = [observation('i1'), observation('i2', {direction:'unspecified'})];
+"""
+
+
 class ClientErrorRuntimeTests(unittest.TestCase):
     def test_original_links_accept_only_canonical_owned_article_urls(self):
         function = javascript_between(
@@ -875,6 +923,122 @@ if (pattern.combinations[0][0] !== 'Equity + Options' || pattern.combinations[0]
 const directions = new Map(pattern.directions);
 if (directions.get('short') !== 2) throw new Error('stance tally is wrong');
 ''')
+
+
+class DeskToDecisionRuntimeTests(unittest.TestCase):
+    """The desk computes an outside view; the packet is where it must land.
+
+    A base rate recalled after a position is opened is worth little. These
+    tests hold the bridge to the two rules that make it safe to use: it never
+    writes the analyst's own view, and it never leaves a half-written packet.
+    """
+
+    def bridge_runtime(self, assertions):
+        run_node(
+            javascript_between(
+                'function normalize(value) {',
+                'function articleBriefSearch',
+            )
+            + javascript_between(
+                'function instrumentLabel(value) {',
+                'function isArticleView()',
+            )
+            + HARNESS_GLOBALS
+            + javascript_between(
+                'function underlyingParts(idea) {',
+                'function structureChipRow(',
+            )
+            + javascript_between(
+                'function deskShare(',
+                'function renderStructureDesk(',
+            )
+            + javascript_between(
+                'function clampWorkflowText(field,value) {',
+                'function csvCell(value) {',
+            )
+            + HARNESS_QUEUE
+            + assertions,
+        )
+
+    def test_the_reference_class_lands_in_the_packet_with_a_pre_mortem(self):
+        self.bridge_runtime(r"""
+openDecisionPacketFromDesk();
+const item = workflowItems.get('i1');
+if (!item) throw new Error('no packet was opened against the closest comparable');
+if (!item.note.includes('REFERENCE CLASS')) {
+  throw new Error('the packet did not record the class it came from');
+}
+if (!item.note.includes('https://navnoorbawa.substack.com/p/note-i1')) {
+  throw new Error('the packet lost its citations');
+}
+if (!item.risk.startsWith('BASE-RATE PRE-MORTEM')) {
+  throw new Error('the falsifier field did not receive a pre-mortem');
+}
+if (!/\d+ of \d+ \(\d+%\)/.test(item.risk)) {
+  throw new Error('the pre-mortem carries no base rate: ' + item.risk);
+}
+if (!item.risk.includes('Assume this position has already failed')) {
+  throw new Error('the pre-mortem does not ask the question that de-biases');
+}
+if (!item.tags.includes('reference class:')) throw new Error('packet was not tagged');
+if (state.view !== 'queue' || state.selected !== 'i1') {
+  throw new Error('the reader was not taken to the packet');
+}
+""")
+
+    def test_the_desk_never_writes_the_analysts_own_view(self):
+        self.bridge_runtime(r"""
+openDecisionPacketFromDesk();
+const item = workflowItems.get('i1');
+// The desk supplies evidence and a prompt. The thesis is the analyst's.
+if (item.thesis !== '') throw new Error('the desk wrote a thesis');
+
+item.note = 'MY OWN NOTE';
+item.risk = 'MY OWN FALSIFIER';
+item.tags = 'my tag';
+toast = '';
+openDecisionPacketFromDesk();
+if (item.note !== 'MY OWN NOTE' || item.risk !== 'MY OWN FALSIFIER' ||
+    item.tags !== 'my tag') {
+  throw new Error('re-opening overwrote entries the analyst had made');
+}
+if (!toast.includes('left untouched')) {
+  throw new Error('the reader was not told nothing was changed');
+}
+""")
+
+    def test_a_failed_save_leaves_no_half_written_packet(self):
+        self.bridge_runtime(r"""
+openDecisionPacketFromDesk();
+const item = workflowItems.get('i1');
+item.note = 'MY OWN NOTE';
+
+// Storage refuses: the packet must return to exactly its prior state.
+persisted = false;
+openDecisionPacketFromDesk();
+if (workflowItems.get('i1').note !== 'MY OWN NOTE') {
+  throw new Error('a refused save left the packet mutated');
+}
+
+// And a brand-new packet must not survive a refused save at all.
+workflowItems.clear();
+openDecisionPacketFromDesk();
+if (workflowItems.size !== 0) {
+  throw new Error('a refused save left a new packet behind');
+}
+""")
+
+    def test_an_empty_reference_class_opens_nothing(self):
+        self.bridge_runtime(r"""
+state.structureFocus = 'nothingmatchesthisword';
+openDecisionPacketFromDesk();
+if (workflowItems.size !== 0) {
+  throw new Error('a packet was opened with no comparable to anchor it');
+}
+if (!toast.includes('No comparable observation')) {
+  throw new Error('the reader was not told why nothing opened');
+}
+""")
 
 
 if __name__ == '__main__':

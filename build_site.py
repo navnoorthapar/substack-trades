@@ -1163,8 +1163,9 @@ body[data-view="queue"] .queue-command{display:inline-flex}
 .mix-legend{font:10px var(--mono);color:var(--text-muted);white-space:nowrap}
 
 /* Comparable trade structuring desk */
-.structure-shell{display:none;flex:1 1 auto;min-height:0;overflow:auto;padding:16px;background:var(--bg)}
+.structure-shell{display:none;flex:1 1 auto;min-height:0;overflow:auto;padding:32px 24px 48px;background:var(--bg)}
 body[data-view="structure"] .structure-shell{display:block}
+body[data-view="structure"] .kpi-strip,
 body[data-view="structure"] .table-shell,
 body[data-view="structure"] .context-bar,
 body[data-view="structure"] .active-filters,
@@ -1174,8 +1175,8 @@ body[data-view="structure"] .command-button[data-action="inspector"]{display:non
 body[data-view="structure"] .workspace{grid-template-columns:minmax(0,1fr)}
 body[data-view="structure"] .filter-rail,body[data-view="structure"] .inspector{display:none}
 body[data-view="structure"] .main-panel{grid-column:1/-1}
-.structure-wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-.structure-head{padding:4px 0 0}
+.structure-wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.structure-head{padding:0}
 .structure-head h2{font-size:26px;line-height:1.15;letter-spacing:-.025em}
 .structure-lede{color:var(--text-secondary);font-size:14px;line-height:1.55;margin:6px 0 16px;max-width:70ch}
 .structure-search input{width:100%;max-width:640px;padding:14px 18px;border-radius:10px;
@@ -1225,16 +1226,28 @@ body[data-view="structure"] .main-panel{grid-column:1/-1}
 .structure-chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--text)}
 .structure-chip-count{font:600 10px var(--mono);color:var(--text-muted)}
 .structure-chip.active .structure-chip-count{color:var(--accent)}
-.desk-note{border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-1);
-  padding:18px 20px 16px;box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.desk-note{border:1px solid var(--line);border-radius:14px;background:var(--surface-1);
+  padding:24px 26px 22px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.desk-anchors{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:4px 20px;padding:2px 0 20px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+.desk-anchor{display:flex;flex-direction:column;gap:3px}
+.desk-anchor b{font-size:30px;line-height:1.05;letter-spacing:-.03em;font-weight:600;
+  color:var(--text);font-variant-numeric:tabular-nums}
+.desk-anchor span{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.07em;
+  color:var(--text-muted)}
 .desk-note-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid var(--line)}
 .desk-note-head h3{font-size:15px;letter-spacing:-.01em}
+.desk-note-actions{display:flex;gap:8px;flex-wrap:wrap}
+.desk-note-actions .secondary-action:first-child{background:var(--accent);
+  border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.desk-note-actions .secondary-action:first-child:hover{background:var(--accent-hover);
+  border-color:var(--accent-hover)}
 .desk-note dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:12px 26px;margin:0}
+  gap:20px 34px;margin:0}
 .desk-note dt{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;
   color:var(--accent);margin-bottom:3px}
-.desk-note dd{font-size:13.5px;line-height:1.6;color:var(--text);margin:0}
+.desk-note dd{font-size:13.5px;line-height:1.65;color:var(--text-secondary);margin:0}
 .desk-note > dl > div:first-child dd{font-size:15px;line-height:1.5}
 @media (max-width:720px){
   .desk-note dl{grid-template-columns:minmax(0,1fr)}
@@ -1242,10 +1255,10 @@ body[data-view="structure"] .main-panel{grid-column:1/-1}
   .structure-search input{font-size:15px;padding:12px 14px}
 }
 .structure-disclosure{border:1px solid var(--line);border-left:3px solid var(--warning);
-  background:var(--surface-1);border-radius:6px;padding:10px 12px;font-size:12px;
-  color:var(--text-secondary);line-height:1.5}
-.structure-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,9fr);gap:14px;align-items:start}
-.structure-panel{border:1px solid var(--line);border-radius:8px;background:var(--surface-1);padding:14px}
+  background:var(--surface-1);border-radius:10px;padding:14px 16px;font-size:12px;
+  color:var(--text-muted);line-height:1.6}
+.structure-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,9fr);gap:20px;align-items:start}
+.structure-panel{border:1px solid var(--line);border-radius:12px;background:var(--surface-1);padding:18px 20px}
 .structure-panel h3{font-size:14px;letter-spacing:-.01em;margin-bottom:8px}
 .structure-panel h4{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;
   color:var(--text-muted);margin:12px 0 6px}
@@ -1260,7 +1273,7 @@ body[data-view="structure"] .main-panel{grid-column:1/-1}
 .structure-bar-value{font:600 11px var(--mono);color:var(--text-muted);text-align:right}
 .structure-managers{font-size:12px;color:var(--text-secondary);line-height:1.6}
 .structure-comparables{display:flex;flex-direction:column;gap:10px}
-.structure-card{border:1px solid var(--line);border-radius:7px;background:var(--surface-2);padding:12px}
+.structure-card{border:1px solid var(--line);border-radius:10px;background:var(--surface-2);padding:16px 18px}
 .structure-card-head{display:flex;gap:10px;align-items:flex-start}
 .structure-rank{font:700 11px var(--mono);color:var(--on-accent);background:var(--accent);
   border-radius:4px;padding:2px 6px;flex:none}
@@ -6034,11 +6047,29 @@ function renderStructureDesk(rows, gate) {
     '</div>' +
     '<div class="structure-controls" id="desk-refinements"' +
     (state.structureControlsOpen ? '' : ' hidden') + '>' + controls + '</div>';
+  const anchorStats = pattern.total ? [
+    [number(pattern.total),'comparable ' + (pattern.total === 1 ? 'observation' : 'observations')],
+    [deskShare([pattern.withFollowUp,pattern.total]) + '%','revisited later'],
+    [deskShare([pattern.withQuant,pattern.total]) + '%','carry a number'],
+    [pattern.withOutcome
+      ? deskShare([pattern.withOutcome,pattern.total]) + '%'
+      : 'None','outcome at source']
+  ] : [];
+  const anchorRow = anchorStats.length
+    ? '<div class="desk-anchors">' + anchorStats.map(function (row) {
+        return '<div class="desk-anchor"><b>' + escapeHtml(row[0]) + '</b><span>' +
+          escapeHtml(row[1]) + '</span></div>';
+      }).join('') + '</div>'
+    : '';
   const noteLines = deskNoteLines(pattern);
   const notePanel = noteLines.length
     ? '<section class="desk-note"><header class="desk-note-head">' +
-      '<h3>Desk note</h3><button class="secondary-action" type="button" ' +
-      'data-structure-copy-note="1">Copy as memo</button></header><dl>' +
+      '<h3>Desk note</h3><div class="desk-note-actions">' +
+      '<button class="secondary-action" type="button" ' +
+      'data-structure-open-packet="1">Take to decision</button>' +
+      '<button class="secondary-action" type="button" ' +
+      'data-structure-copy-note="1">Copy as memo</button></div></header>' +
+      anchorRow + '<dl>' +
       noteLines.map(function (row) {
         return '<div><dt>' + escapeHtml(row[0]) + '</dt><dd>' + escapeHtml(row[1]) + '</dd></div>';
       }).join('') + '</dl></section>'
@@ -6454,6 +6485,98 @@ function toggleSaved(id) {
   } else if (restoreRow) {
     focusSelectedRow();
   }
+}
+function clampWorkflowText(field,value) {
+  const limit = WORKFLOW_TEXT_LIMITS[field] || 1000;
+  const text = String(value || '');
+  return text.length <= limit ? text : text.slice(0,limit - 1).trimEnd() + '…';
+}
+// The outside view is computed on the desk and then, at the moment it matters
+// most, normally thrown away. Carrying the reference class into the decision
+// record is the whole point: the base rate should be on the record when the
+// position is opened, not recalled afterwards.
+function deskPreMortem(pattern) {
+  const total = pattern.total;
+  function share(count) {
+    return number(count) + ' of ' + number(total) +
+      ' (' + deskShare([count,total]) + '%)';
+  }
+  const rates = [
+    'stance was not stated in ' + share(
+      (pattern.directions.filter(function (row) { return row[0] === 'unspecified'; })[0] || ['',0])[1]
+    ),
+    share(pattern.withOutcome) + ' record an outcome at source',
+    share(pattern.withFollowUp) + ' were revisited by a later note',
+    share(pattern.withQuant) + ' carry a numeric anchor'
+  ];
+  return 'BASE-RATE PRE-MORTEM — outside view from ' + number(total) +
+    ' comparable observations (' + deskReferenceClass() + '):\n' +
+    rates.map(function (line) { return '- ' + line; }).join('\n') +
+    '\n\nAssume this position has already failed. Which of these base rates ' +
+    'best explains it, and what would you have needed to observe first? ' +
+    'Answer here before sizing.';
+}
+function openDecisionPacketFromDesk() {
+  const ranked = structureMatches();
+  if (!ranked.length) {
+    showToast('No comparable observation to open a packet against');
+    return;
+  }
+  const pattern = structurePattern(ranked);
+  const anchor = ranked[0].idea;
+  const previous = workflowItems.get(anchor.id);
+  if (!previous && workflowItems.size >= MAX_QUEUE_ITEMS) {
+    showToast('Decision queue limit reached; back up and archive older packets');
+    return;
+  }
+  if (!previous && !confirmQueueStorageBoundary()) return;
+  const item = previous || newWorkflowItem(anchor.id);
+  if (!item) return;
+  const restore = previous
+    ? {note:item.note,risk:item.risk,tags:item.tags,updated_at:item.updated_at}
+    : null;
+  // Seed only what is still empty, and never the analyst's own thesis: the
+  // desk supplies evidence and a prompt, not a view.
+  let seeded = 0;
+  if (!hasValue(item.note)) {
+    item.note = clampWorkflowText('note',
+      'REFERENCE CLASS opened from the structure desk — ' + deskReferenceClass() +
+      '\n\n' + deskNoteLines(pattern).map(function (row) {
+        return row[0].toUpperCase() + '\n' + row[1];
+      }).join('\n\n') + '\n\nCLOSEST COMPARABLES\n' +
+      ranked.slice(0,5).map(function (row, index) {
+        const article = row.idea._article || {};
+        return (index + 1) + '. ' + article.title + ' — ' + formatDate(article.date) +
+          ' — ' + safeUrl(article.url);
+      }).join('\n'));
+    seeded += 1;
+  }
+  if (!hasValue(item.risk)) {
+    item.risk = clampWorkflowText('risk',deskPreMortem(pattern));
+    seeded += 1;
+  }
+  if (!hasValue(item.tags)) {
+    item.tags = clampWorkflowText('tags','reference class: ' + deskReferenceClass());
+    seeded += 1;
+  }
+  item.updated_at = new Date().toISOString();
+  workflowItems.set(anchor.id,item);
+  if (!persistWorkflow()) {
+    if (restore) Object.assign(item,restore);
+    else workflowItems.delete(anchor.id);
+    savedIdeas = new Set(workflowItems.keys());
+    render();
+    return;
+  }
+  savedIdeas = new Set(workflowItems.keys());
+  markMeaningfulNavigation();
+  state.view = 'queue';
+  state.selected = anchor.id;
+  state.limit = PAGE_SIZE.queue;
+  render();
+  showToast(seeded
+    ? 'Decision packet opened with the reference class and a base-rate pre-mortem'
+    : 'Decision packet already open; existing entries were left untouched');
 }
 function csvCell(value) {
   let text = String(value ?? '');
@@ -6971,6 +7094,11 @@ document.addEventListener('click',function (event) {
     }
     state.limit = PAGE_SIZE.structure;
     renderObservationAwareNavigation('entry');
+    return;
+  }
+  const openPacket = event.target.closest('[data-structure-open-packet]');
+  if (openPacket) {
+    openDecisionPacketFromDesk();
     return;
   }
   const copyNote = event.target.closest('[data-structure-copy-note]');

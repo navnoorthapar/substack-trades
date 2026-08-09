@@ -1842,6 +1842,22 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         # see what produced the view they were sent.
         self.assertIn('state.structureControlsOpen = Boolean(', self.html)
 
+        # A reader arriving worried and in a hurry gets four figures before a
+        # sentence: how much is here, and how much of it is actually evidenced.
+        self.assertIn('desk-anchors', render)
+        self.assertIn("'comparable ' + (pattern.total === 1 ?", render)
+        self.assertIn("'revisited later'", render)
+        self.assertIn("'outcome at source'", render)
+        self.assertLess(
+            render.index('anchorRow'), render.index('noteLines.map'),
+            'the orienting figures must precede the prose',
+        )
+
+        # Corpus telemetry is engineering assurance, not decision information,
+        # so the desk does not spend a reader's attention on it.
+        self.assertRegex(
+            self.html, r'body\[data-view="structure"\] \.kpi-strip')
+
         # The recurring underlyings are how most readers begin, so they sit
         # with the question rather than inside the refinements.
         self.assertIn('desk-starts', render)
