@@ -1174,13 +1174,46 @@ body[data-view="structure"] .command-button[data-action="inspector"]{display:non
 body[data-view="structure"] .workspace{grid-template-columns:minmax(0,1fr)}
 body[data-view="structure"] .filter-rail,body[data-view="structure"] .inspector{display:none}
 body[data-view="structure"] .main-panel{grid-column:1/-1}
-.structure-wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-.structure-head h2{font-size:20px;line-height:1.25;letter-spacing:-.015em}
-.structure-lede{color:var(--text-secondary);font-size:13px;margin:4px 0 12px;max-width:74ch}
-.structure-search input{width:100%;max-width:520px;padding:9px 12px;border-radius:8px;
-  border:1px solid var(--control-line);background:var(--surface-1);color:var(--text);font-size:13px}
-.structure-search input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.structure-controls{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.structure-wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.structure-head{padding:4px 0 0}
+.structure-head h2{font-size:26px;line-height:1.15;letter-spacing:-.025em}
+.structure-lede{color:var(--text-secondary);font-size:14px;line-height:1.55;margin:6px 0 16px;max-width:70ch}
+.structure-search input{width:100%;max-width:640px;padding:14px 18px;border-radius:10px;
+  border:1px solid var(--control-line);background:var(--surface-1);color:var(--text);
+  font-size:16px;line-height:1.3;box-shadow:0 1px 2px rgba(0,0,0,.16)}
+.structure-search input::placeholder{color:var(--text-muted)}
+.structure-search input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;
+  border-color:var(--accent)}
+.desk-starts{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:12px}
+.desk-starts-label{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;
+  color:var(--text-muted);margin-right:2px}
+.desk-start{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;
+  border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);
+  font-size:13px;cursor:pointer}
+.desk-start:hover{border-color:var(--accent);color:var(--text)}
+.desk-start.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.desk-start-count{font:600 10px var(--mono);color:var(--text-muted)}
+.desk-start.active .desk-start-count{color:var(--on-accent)}
+.desk-start.clear{background:transparent;color:var(--text-muted)}
+.desk-refine{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.desk-refine-toggle{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
+  border-radius:6px;border:1px solid var(--control-line);background:var(--surface-2);
+  color:var(--text);font-size:12px;cursor:pointer}
+.desk-refine-toggle:hover{border-color:var(--control-line-hover)}
+.desk-refine-toggle[aria-expanded="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.desk-refine-count{font:700 10px var(--mono);background:var(--accent);color:var(--on-accent);
+  border-radius:999px;padding:1px 6px}
+.desk-refine-hint{font-size:12px;color:var(--text-muted)}
+.desk-active-filters{display:flex;flex-wrap:wrap;gap:6px}
+.desk-active-filter{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;
+  border-radius:999px;border:1px solid var(--accent);background:var(--accent-soft);
+  color:var(--text);font-size:12px;cursor:pointer}
+.desk-active-filter span{color:var(--text-muted);font-size:13px;line-height:1}
+.desk-active-filter:hover{border-color:var(--negative);color:var(--negative)}
+.desk-active-filter:hover span{color:var(--negative)}
+.structure-controls{display:flex;flex-direction:column;gap:8px;padding:12px 14px;
+  border:1px solid var(--line);border-radius:8px;background:var(--surface-1)}
+.structure-controls[hidden]{display:none}
 .structure-control{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .structure-control-label{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;
   color:var(--text-muted);min-width:150px}
@@ -1192,14 +1225,22 @@ body[data-view="structure"] .main-panel{grid-column:1/-1}
 .structure-chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--text)}
 .structure-chip-count{font:600 10px var(--mono);color:var(--text-muted)}
 .structure-chip.active .structure-chip-count{color:var(--accent)}
-.desk-note{border:1px solid var(--line-strong);border-radius:8px;background:var(--surface-1);
-  padding:14px 16px;border-left:3px solid var(--accent)}
-.desk-note-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-.desk-note-head h3{font-size:14px;letter-spacing:-.01em}
-.desk-note dl{display:flex;flex-direction:column;gap:8px;margin:0}
-.desk-note dt{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.07em;
-  color:var(--text-muted);margin-bottom:2px}
-.desk-note dd{font-size:13px;line-height:1.55;color:var(--text-secondary);margin:0}
+.desk-note{border:1px solid var(--line-strong);border-radius:10px;background:var(--surface-1);
+  padding:18px 20px 16px;box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.desk-note-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.desk-note-head h3{font-size:15px;letter-spacing:-.01em}
+.desk-note dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:12px 26px;margin:0}
+.desk-note dt{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;
+  color:var(--accent);margin-bottom:3px}
+.desk-note dd{font-size:13.5px;line-height:1.6;color:var(--text);margin:0}
+.desk-note > dl > div:first-child dd{font-size:15px;line-height:1.5}
+@media (max-width:720px){
+  .desk-note dl{grid-template-columns:minmax(0,1fr)}
+  .structure-head h2{font-size:22px}
+  .structure-search input{font-size:15px;padding:12px 14px}
+}
 .structure-disclosure{border:1px solid var(--line);border-left:3px solid var(--warning);
   background:var(--surface-1);border-radius:6px;padding:10px 12px;font-size:12px;
   color:var(--text-secondary);line-height:1.5}
@@ -3836,6 +3877,7 @@ const state = {
   structurePeriod:'all',
   structureSlope:'any',
   structureLevel:'any',
+  structureControlsOpen:false,
   sort:'newest',
   density:storedDensity,
   selected:'',
@@ -3876,6 +3918,11 @@ function hydrateFromHash() {
     ? params.get('sslope') : 'any';
   state.structureLevel = VALID_RATE_BANDS.has(params.get('slevel'))
     ? params.get('slevel') : 'any';
+  state.structureControlsOpen = Boolean(
+    state.structureInstrument || state.structureDirection !== 'any' ||
+    state.structurePeriod !== 'all' || state.structureSlope !== 'any' ||
+    state.structureLevel !== 'any'
+  );
   state.sort = params.get('sort') || 'newest';
   state.density = ['compact','comfortable'].includes(params.get('density')) ? params.get('density') : storedDensity;
   state.selected = params.get('selected') || '';
@@ -5933,6 +5980,8 @@ function renderStructureDesk(rows, gate) {
   const underlyingOptions = structureUnderlyingOptions().map(function (row) {
     return [row.label,row.label,row.count];
   });
+  // Answer first, controls on demand. A reader who opens this wants the
+  // synthesis, not six rows of filters standing between them and it.
   const controls =
     structureChipRow('Instrument','structure-instrument',instrumentOptions,state.structureInstrument,['','Any instrument']) +
     structureChipRow('Stance','structure-direction',[
@@ -5941,10 +5990,50 @@ function renderStructureDesk(rows, gate) {
     ],state.structureDirection,['any','Any stance']) +
     structureChipRow('Period','structure-period',structurePeriodOptions().slice(1),state.structurePeriod,['all','Whole record']) +
     structureChipRow('Curve shape at publication','structure-slope',RATE_BANDS.slope,state.structureSlope,['any','Any curve']) +
-    structureChipRow('10Y level at publication','structure-level',RATE_BANDS.level,state.structureLevel,['any','Any level']) +
-    (underlyingOptions.length
-      ? structureChipRow('Recurring underlyings','structure-focus',underlyingOptions,state.structureFocus,['','Clear'])
-      : '');
+    structureChipRow('10Y level at publication','structure-level',RATE_BANDS.level,state.structureLevel,['any','Any level']);
+  // The recurring underlyings are how most readers begin, so they sit with
+  // the question rather than inside the refinements.
+  const startChips = underlyingOptions.length
+    ? '<div class="desk-starts"><span class="desk-starts-label">Start with</span>' +
+      underlyingOptions.slice(0,8).map(function (row) {
+        const active = normalize(row[0]) === normalize(state.structureFocus);
+        return '<button class="desk-start' + (active ? ' active' : '') + '" type="button" ' +
+          'data-structure-focus="' + escapeHtml(row[0]) + '" aria-pressed="' +
+          (active ? 'true' : 'false') + '">' + escapeHtml(row[0]) +
+          '<span class="desk-start-count">' + number(row[2]) + '</span></button>';
+      }).join('') +
+      (state.structureFocus
+        ? '<button class="desk-start clear" type="button" data-structure-focus="">Clear</button>'
+        : '') + '</div>'
+    : '';
+  const activeFilters = [
+    state.structureInstrument
+      ? ['structure-instrument','',instrumentLabel(state.structureInstrument)] : null,
+    state.structureDirection !== 'any'
+      ? ['structure-direction','any',directionLabel(state.structureDirection)] : null,
+    state.structurePeriod !== 'all'
+      ? ['structure-period','all',state.structurePeriod + ' record'] : null,
+    state.structureSlope !== 'any'
+      ? ['structure-slope','any',rateBandLabel('slope',state.structureSlope)] : null,
+    state.structureLevel !== 'any'
+      ? ['structure-level','any',rateBandLabel('level',state.structureLevel)] : null
+  ].filter(Boolean);
+  const refineBar = '<div class="desk-refine">' +
+    '<button class="desk-refine-toggle" type="button" data-structure-refine="1" ' +
+    'aria-expanded="' + (state.structureControlsOpen ? 'true' : 'false') +
+    '" aria-controls="desk-refinements">Refine' +
+    (activeFilters.length ? '<span class="desk-refine-count">' + number(activeFilters.length) + '</span>' : '') +
+    '</button>' +
+    (activeFilters.length
+      ? '<div class="desk-active-filters">' + activeFilters.map(function (row) {
+          return '<button class="desk-active-filter" type="button" data-' + row[0] +
+            '="' + escapeHtml(row[1]) + '" aria-label="Remove ' + escapeHtml(row[2]) +
+            '">' + escapeHtml(row[2]) + '<span aria-hidden="true">&times;</span></button>';
+        }).join('') + '</div>'
+      : '<span class="desk-refine-hint">Reading the whole record</span>') +
+    '</div>' +
+    '<div class="structure-controls" id="desk-refinements"' +
+    (state.structureControlsOpen ? '' : ' hidden') + '>' + controls + '</div>';
   const noteLines = deskNoteLines(pattern);
   const notePanel = noteLines.length
     ? '<section class="desk-note"><header class="desk-note-head">' +
@@ -6022,7 +6111,7 @@ function renderStructureDesk(rows, gate) {
     '<div class="structure-search"><label class="sr-only" for="structure-focus-input">What do you want to trade?</label>' +
     '<input id="structure-focus-input" type="search" placeholder="What do you want to trade? e.g. VIX, JGB, Nasdaq" value="' +
     escapeHtml(state.structureFocus) + '" autocomplete="off"></div>' +
-    '<div class="structure-controls">' + controls + '</div></header>' + notePanel +
+    startChips + '</header>' + notePanel + refineBar +
     '<p class="structure-disclosure">This desk reports how comparable positions were <b>described and structured</b> in the published record, and what that record went on to say about the same subjects. A stated outcome exists for only ' +
     number(outcomeTotal()) + ' of ' + number(deskUniverseTotal()) +
     ' extracted observations, so resolution is shown as later coverage rather than as a result: this is not a backtest, not realised profit and loss, and not a recommendation.</p>' +
@@ -6889,6 +6978,14 @@ document.addEventListener('click',function (event) {
     const ranked = structureMatches();
     const markdown = deskNoteMarkdown(structurePattern(ranked),ranked);
     if (markdown) copyText(markdown,'Desk note copied as a memo');
+    return;
+  }
+  const refine = event.target.closest('[data-structure-refine]');
+  if (refine) {
+    state.structureControlsOpen = !state.structureControlsOpen;
+    render();
+    const reopened = document.querySelector('[data-structure-refine]');
+    if (reopened) reopened.focus();
     return;
   }
   const structureMore = event.target.closest('[data-structure-more]');

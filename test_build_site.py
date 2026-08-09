@@ -1720,7 +1720,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "structureChipRow('Instrument','structure-instrument'",
             "structureChipRow('Stance','structure-direction'",
             "structureChipRow('Period','structure-period'",
-            "structureChipRow('Recurring underlyings','structure-focus'",
+            'data-structure-focus="',
             "'[data-structure-instrument],[data-structure-direction],"
             "[data-structure-period],'",
             "'[data-structure-focus],[data-structure-slope],[data-structure-level]'",
@@ -1806,6 +1806,51 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         # landing view is never an empty frame.
         self.assertIn('renderStructureDesk([], {title:title', gate)
         self.assertIn('structure-none', self.html)
+
+    def test_the_desk_leads_with_the_answer_not_the_filters(self):
+        """A reader opening this wants the synthesis, not a wall of controls.
+
+        Research platforms lose portfolio managers when inputs arrive faster
+        than they can be turned into a view, so the note sits above the
+        refinements and the refinements start closed.
+        """
+        render_start = self.html.index('function renderStructureDesk(rows, gate)')
+        render_end = self.html.index('\nfunction render()', render_start)
+        render = self.html[render_start:render_end]
+
+        # Order in the emitted shell: question, starting points, note, then
+        # refinements. The note must be assembled before the controls are.
+        layout = render.index("startChips + '</header>' + notePanel + refineBar +")
+        self.assertGreater(layout, 0)
+
+        # Refinements are closed until asked for, and say so to assistive tech.
+        self.assertIn(
+            "(state.structureControlsOpen ? '' : ' hidden')", render)
+        self.assertIn(
+            "'aria-expanded=\"' + (state.structureControlsOpen ? 'true' : 'false')",
+            render,
+        )
+        self.assertIn('structureControlsOpen:false,', self.html)
+
+        # An active refinement is visible without opening the panel, and is
+        # removable from where it is shown.
+        self.assertIn('desk-active-filter', render)
+        self.assertIn('desk-refine-count', render)
+        self.assertIn("aria-label=\"Remove ' + escapeHtml(row[2])", render)
+
+        # A shared link that carries refinements opens them, so a reader can
+        # see what produced the view they were sent.
+        self.assertIn('state.structureControlsOpen = Boolean(', self.html)
+
+        # The recurring underlyings are how most readers begin, so they sit
+        # with the question rather than inside the refinements.
+        self.assertIn('desk-starts', render)
+        self.assertIn('class="desk-start', render)
+        for rule in (
+            r'\.desk-refine-toggle\[aria-expanded="true"\]',
+            r'\.structure-controls\[hidden\]\{display:none\}',
+        ):
+            self.assertRegex(self.html, rule)
 
     def test_structure_desk_states_the_limits_of_the_extracted_record(self):
         """The desk must not let a reader infer outcomes the record lacks."""
