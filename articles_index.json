@@ -1,5 +1,42 @@
 [
   {
+    "source": "substack",
+    "source_id": "chainlink-gave-polymarket-30-seconds",
+    "slug": "chainlink-gave-polymarket-30-seconds",
+    "title": "Chainlink Gave Polymarket 30 Seconds. The Evidence Wanted 15 Minutes.",
+    "subtitle": "Polymarket adopted the lever the research modelled but never measured, and applied it at half strength to the only contract where the harm was found.",
+    "post_date": "2026-08-09T07:53:53.495Z",
+    "url": "https://navnoorbawa.substack.com/p/chainlink-gave-polymarket-30-seconds",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "11ecd5ebffcb116365b57853b209472c559e4b2d67556ef9daa304e30c98f6fb",
+      "lead": {
+        "text": "The claim: Polymarket’s August 7 switch to time-weighted settlement adopts the lever that the research indicting its five-minute Bitcoin contract modelled but never measured, and it applies that lever at half strength to the one contract carrying all of the documented harm.",
+        "start": 0,
+        "end": 274,
+        "sha256": "11ecd5ebffcb116365b57853b209472c559e4b2d67556ef9daa304e30c98f6fb",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-09T07:55:33.406Z",
+    "observed_source_updated_at": "2026-08-09T07:55:33.406Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "The claim: Polymarket’s August 7 switch to time-weighted settlement adopts the lever that the research indicting its five-minute Bitcoin contract modelled but never measured, and it applies that lever at half strength to the one contract carrying all of the documented harm.",
+      "character_count": 274,
+      "body_sha256": "11ecd5ebffcb116365b57853b209472c559e4b2d67556ef9daa304e30c98f6fb"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "f20275fc4f34",
     "slug": "qualcomm-never-refits-its-trellis-a-260-day-window-rewrites-20-of-your-labels-f20275fc4f34",
