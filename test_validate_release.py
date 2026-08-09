@@ -1,3 +1,4 @@
+import copy
 import dataclasses
 import hashlib
 import json
@@ -28,6 +29,45 @@ def json_for_script(value):
         .replace('\u2028', r'\u2028')
         .replace('\u2029', r'\u2029')
     )
+
+
+def can_flip_publication_access(article):
+    """Report whether flipping publication_access keeps the row wire-valid.
+
+    A member row may only become public when it carries no preview text, and
+    a public row may only become member while it stays excerpt-only.
+    """
+    if article['publication_access'] == 'public':
+        return article['content_status'] == 'excerpt'
+    if article['publication_access'] == 'member':
+        return article['member_preview_chars'] == 0
+    return False
+
+
+def can_promote_to_full(article):
+    """Report whether promoting content_status to full keeps the row valid.
+
+    Full content requires non-member access and a timestamp-bound current
+    body revision.
+    """
+    return (
+        article['content_status'] == 'excerpt'
+        and article['publication_access'] != 'member'
+        and article['body_revision_status'] == 'current'
+        and bool(article['source_updated_at'])
+        and article['source_updated_at']
+        == article['observed_source_updated_at']
+    )
+
+
+def flip_publication_access(article):
+    article['publication_access'] = (
+        'member' if article['publication_access'] == 'public' else 'public'
+    )
+
+
+def promote_to_full(article):
+    article['content_status'] = 'full'
 
 
 class ReleaseValidatorTests(unittest.TestCase):
@@ -405,46 +445,75 @@ class ReleaseValidatorTests(unittest.TestCase):
                 self.validate(site)
 
     def test_embedded_article_metadata_requires_exact_source_projection(self):
+        # Every mutation below must leave its row valid against the client
+        # wire contract. A row that violates the contract is rejected during
+        # hydration, before the source/build projection is ever compared, so
+        # the assertion would pass on the wrong error. Selecting a row by
+        # position is not safe either: the payload is ordered by publication
+        # date, so one new post can change which row a bare next() picks.
+        def select(rows, predicate, requirement):
+            row = next(
+                (candidate for candidate in rows if predicate(candidate)),
+                None,
+            )
+            self.assertIsNotNone(
+                row,
+                f'the built payload has no article that is {requirement}, '
+                'so this projection check cannot be exercised',
+            )
+            return row
+
         def mutate_title(rows):
             rows[0]['title'] += ' [tampered]'
 
         def mutate_content_status(rows):
-            row = next(
-                candidate for candidate in rows
-                if candidate['content_status'] == 'excerpt'
+            row = select(
+                rows,
+                can_promote_to_full,
+                'a non-member excerpt with a current body revision',
             )
-            row['content_status'] = 'full'
+            promote_to_full(row)
 
         def mutate_wordcount(rows):
             rows[0]['wordcount'] += 220
 
         def mutate_body_revision(rows):
-            row = next(
-                candidate for candidate in rows
-                if candidate['body_revision_status'] == 'current'
+            row = select(
+                rows,
+                lambda candidate: (
+                    candidate['body_revision_status'] == 'current'
+                ),
+                'a current body revision',
             )
             row['body_revision_status'] = 'unverified'
             row['content_status'] = 'excerpt'
 
         def mutate_body_revision_timestamps(rows):
-            row = next(
-                candidate for candidate in rows
-                if candidate['body_revision_status'] == 'current'
+            row = select(
+                rows,
+                lambda candidate: (
+                    candidate['body_revision_status'] == 'current'
+                ),
+                'a current body revision',
             )
             row['source_updated_at'] = '2001-01-01T00:00:00Z'
             row['observed_source_updated_at'] = '2001-01-01T00:00:00Z'
 
         def mutate_publication_access(rows):
-            row = next(candidate for candidate in rows
-                       if candidate['publication_access'] != 'unknown')
-            row['publication_access'] = (
-                'member' if row['publication_access'] == 'public' else 'public'
+            row = select(
+                rows,
+                can_flip_publication_access,
+                'able to flip publication_access and stay wire-valid',
             )
+            flip_publication_access(row)
 
         def mutate_member_preview_chars(rows):
-            row = next(
-                candidate for candidate in rows
-                if candidate['publication_access'] == 'member'
+            row = select(
+                rows,
+                lambda candidate: (
+                    candidate['publication_access'] == 'member'
+                ),
+                'a member-access article',
             )
             row['member_preview_chars'] = (
                 1 if row['member_preview_chars'] == 0 else 0
@@ -466,6 +535,48 @@ class ReleaseValidatorTests(unittest.TestCase):
                             ValueError,
                             rf'source/build projection.*{field}'):
                         self.validate(site)
+
+    def test_projection_mutations_survive_any_payload_order(self):
+        """Keep the projection checks independent of publication order.
+
+        The embedded payload is ordered by publication date, so a single new
+        post can change which row the projection mutations select. If a
+        selected row violates the client wire contract once mutated, hydration
+        rejects the payload before the source/build projection is ever
+        compared, and the assertion passes for the wrong reason. That failure
+        mode is invisible to CI until fresh data reorders the payload, at
+        which point it blocks the publisher instead.
+        """
+        html = (self.site / 'index.html').read_text(encoding='utf-8')
+        rows = json.loads(validate_release.ARTICLES_RE.search(html).group(1))
+        self.assertGreater(len(rows), 1)
+
+        for field, is_eligible, mutate in (
+            (
+                'publication_access',
+                can_flip_publication_access,
+                flip_publication_access,
+            ),
+            ('content_status', can_promote_to_full, promote_to_full),
+        ):
+            with self.subTest(field=field):
+                eligible = [row for row in rows if is_eligible(row)]
+                self.assertTrue(
+                    eligible,
+                    f'no embedded article can exercise the {field} '
+                    'projection check',
+                )
+                for row in eligible:
+                    candidate = copy.deepcopy(row)
+                    mutate(candidate)
+                    try:
+                        validate_release.hydrate_client_article(candidate)
+                    except ValueError as exc:
+                        self.fail(
+                            f'mutating {field} on article {row["id"]} breaks '
+                            'the client wire contract, so the projection '
+                            f'check cannot run: {exc}',
+                        )
 
     def test_article_order_aggregates_and_masks_require_exact_projection(self):
         def reverse_order(rows):
