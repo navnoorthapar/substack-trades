@@ -410,9 +410,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                 self.assertEqual(observed.get(raw), {canonical})
         self.assertIn('Original entity mention', self.html)
 
-    def test_article_intelligence_brief_is_default_and_source_led(self):
-        self.assertRegex(self.html, r'<body[^>]*data-view="briefing"')
-        self.assertRegex(self.html, r"const state\s*=\s*\{\s*view:['\"]briefing['\"]")
+    def test_article_intelligence_brief_is_source_led(self):
         self.assertIn('function renderIntelligenceBrief(records)', self.html)
         for text in (
             'Latest Brief',
@@ -1660,9 +1658,39 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         ):
             self.assertIn(text, self.html)
 
+    def test_structure_desk_is_the_landing_view(self):
+        """The desk is what a reader lands on, so it must be the default
+        everywhere the view is decided, and it must paint before the deferred
+        evidence archive verifies."""
+        self.assertRegex(self.html, r'<body[^>]*data-view="structure"')
+        self.assertRegex(
+            self.html, r"const state\s*=\s*\{\s*view:['\"]structure['\"]")
+        self.assertIn(
+            "<button class=\"view-tab active\" type=\"button\" data-view=\"structure\"",
+            self.html,
+        )
+        self.assertIn(
+            "].includes(hashView) ? hashView : 'structure';", self.html)
+        self.assertIn(
+            "if (state.view !== 'structure') params.set('view',state.view);",
+            self.html,
+        )
+
+        # Controls come from build-time counts so the landing view is never an
+        # empty frame while the archive is still verifying.
+        facets = json.loads(
+            re.search(r'const DESK_FACETS = (\{.*?\});\n', self.html, re.S).group(1)
+        )
+        self.assertEqual(facets['observation_count'], len(self.ideas))
+        self.assertEqual(
+            facets['outcome_count'],
+            sum(1 for idea in self.ideas if idea['outcome']),
+        )
+        self.assertTrue(facets['instruments'])
+        self.assertIn('if (!IDEAS.length) return (DESK_FACETS.instruments || [])', self.html)
+
     def test_structure_desk_is_wired_as_a_first_class_view(self):
         for text in (
-            '<button class="view-tab" type="button" data-view="structure"',
             'Structure Desk',
             '<section class="structure-shell" id="structure-shell"',
             "'briefing','ideas','research','queue','structure'",
@@ -1753,11 +1781,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         gate_end = self.html.index('\nfunction ', gate_start + 10)
         gate = self.html[gate_start:gate_end]
         self.assertIn("} else if (state.view === 'structure') {", gate)
-        self.assertIn("document.getElementById('structure-shell')", gate)
         self.assertIn('data-retry-observations', gate)
-        self.assertIn('id="structure-gate-title"', gate)
-        self.assertIn(
-            'the desk shows nothing rather than an incomplete comparison', gate)
+        self.assertIn('renderStructureDesk([], {title:title, copy:copy, action:action})', gate)
+        # The desk keeps its controls while the archive verifies, so the
+        # landing view is never an empty frame.
+        self.assertIn('renderStructureDesk([], {title:title', gate)
+        self.assertIn('structure-none', self.html)
 
     def test_structure_desk_states_the_limits_of_the_extracted_record(self):
         """The desk must not let a reader infer outcomes the record lacks."""
@@ -1770,7 +1799,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'This desk reports how comparable positions were <b>described and structured</b>',
             'is not a backtest, not realised profit and loss, and not a recommendation',
             'resolution is shown as later coverage rather than as a result',
-            "number(outcomeTotal()) + ' of ' + number(IDEAS.length)",
+            "number(outcomeTotal()) + ' of ' + number(deskUniverseTotal())",
             'No outcome recorded at source.',
             'Outcomes appear only where the source stated one.',
             'No later note in the record revisits these subjects.',

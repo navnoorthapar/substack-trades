@@ -228,7 +228,7 @@ globalThis.history = {
   replaceState(_state,_title,target) { historyCalls.push(['replace',target]); }
 };
 globalThis.location = {
-  hash:'#selected=a_current&topic=vix',pathname:'/terminal/',search:''
+  hash:'#view=briefing&selected=a_current&topic=vix',pathname:'/terminal/',search:''
 };
 '''
             + functions
@@ -236,12 +236,12 @@ globalThis.location = {
 hydrateFromHash();
 if (state.threadTopic !== 'vix') throw new Error('owned thread topic was rejected');
 
-location.hash = '#selected=a_current&topic=unowned';
+location.hash = '#view=briefing&selected=a_current&topic=unowned';
 hydrateFromHash();
 if (state.threadTopic !== '') throw new Error('unowned thread topic was accepted');
 updateHash();
 if (historyCalls.length !== 1 || historyCalls[0][0] !== 'replace' ||
-    historyCalls[0][1] !== '#selected=a_current' ||
+    historyCalls[0][1] !== '#view=briefing&selected=a_current' ||
     historyCalls[0][1].includes('topic=')) {
   throw new Error('invalid topic hash was not canonicalized safely');
 }
@@ -508,16 +508,14 @@ class StructureDeskRuntimeTests(unittest.TestCase):
             )
             + javascript_between(
                 'function instrumentLabel(value) {',
-                'function directionLabel(value) {',
-            )
-            + javascript_between(
-                'function escapeHtml(value) {',
-                'function safeUrl(value) {',
+                'function isArticleView()',
             )
             + r'''
 const THREADS = {article_count:0,defaults:{},topics:{}};
 const THREAD_ARTICLES = Object.create(null);
 const ARTICLE_BY_ID = new Map();
+const DESK_FACETS = {observation_count:0,outcome_count:0,instruments:[],underlyings:[],periods:[]};
+const location = {href:'https://example.test/#view=structure'};
 const RATE_CONTEXT = {
   schema_version:1,
   source:{name:'U.S. Treasury Daily Treasury Par Yield Curve Rates'},
@@ -531,6 +529,10 @@ const RATE_CONTEXT = {
             + javascript_between(
                 'function underlyingParts(idea) {',
                 'function structureChipRow(',
+            )
+            + javascript_between(
+                'function deskShare(',
+                'function renderStructureDesk(',
             )
             + r'''
 function observation(overrides) {
@@ -770,6 +772,86 @@ if (!rateSourceNote().includes('U.S. Treasury')) {
 if (!rateSourceNote().includes('not absolute regimes')) {
   throw new Error('relative bands must not read as regime claims');
 }
+''')
+
+    def test_desk_note_states_base_rates_and_refuses_to_overclaim(self):
+        """The note is the document a reader takes away, so it must read as a
+        reference class: shares of a named population, with the gaps stated."""
+        self.desk_runtime(r'''
+// Owned URLs: the memo runs every citation through safeUrl, so an unowned
+// host is rewritten to '#' rather than published as a link.
+const dated = function (id, date) {
+  return {title:'Note ' + id, date:date,
+    url:'https://navnoorbawa.substack.com/p/note-' + id, source:'substack', id:id};
+};
+const IDEAS = [
+  observation({id:'a', instruments:['option','equity'], direction:'short',
+    quant:'2x', _article:dated('a','2026-01-05')}),
+  observation({id:'b', instruments:['option'], direction:'unspecified',
+    _article:dated('b','2026-01-05')}),
+  observation({id:'c', instruments:['option'], direction:'unspecified',
+    _article:dated('c','2026-02-05')})
+];
+const ranked = desk({structureInstrument:'option'});
+const pattern = structurePattern(ranked);
+const lines = deskNoteLines(pattern);
+const byLabel = new Map(lines.map(function (row) { return [row[0], row[1]]; }));
+
+if (!byLabel.get('Reference class').includes('3 comparable observations')) {
+  throw new Error('the note must size the class it drew from');
+}
+if (!byLabel.get('Reference class').includes('Options')) {
+  throw new Error('the note must name the class it drew from');
+}
+// The filtered instrument is in every row by construction; reporting it as
+// 100% would say nothing, so the co-instrument is what gets reported.
+const structured = byLabel.get('How they were structured');
+if (structured.includes('Options appears in 3 of 3')) {
+  throw new Error('the note restated the filter as a finding');
+}
+if (!structured.includes('Equity appears in 1 of 3 (33%)')) {
+  throw new Error('the note should report what the class was combined with');
+}
+// Two of three state no stance, so the gap leads rather than a 33% stance.
+if (!structured.includes('stance is not stated in 2 of 3 (67%)')) {
+  throw new Error('the dominant fact must lead: ' + structured);
+}
+if (structured.indexOf('not stated') > structured.indexOf('most common stance')
+    && structured.includes('most common stance')) {
+  throw new Error('a minority stance was presented ahead of the majority gap');
+}
+if (!byLabel.get('Evidence they carry').includes('1 of 3 (33%) carry a numeric anchor')) {
+  throw new Error('evidence shares are wrong: ' + byLabel.get('Evidence they carry'));
+}
+const limits = byLabel.get('What the record does not say');
+if (!limits.includes('No outcome is recorded at source')) {
+  throw new Error('the note must state the outcome gap');
+}
+if (!limits.includes('not a backtest')) {
+  throw new Error('the note must refuse the backtest reading');
+}
+
+const markdown = deskNoteMarkdown(pattern, ranked);
+if (!markdown.startsWith('# Structure desk note')) throw new Error('memo has no title');
+if (!markdown.includes('**Reference class.**')) throw new Error('memo lost its sections');
+if (!markdown.includes('## Closest comparables')) throw new Error('memo cites nothing');
+if (!markdown.includes('https://navnoorbawa.substack.com/p/note-a')) {
+  throw new Error('memo lost its source links');
+}
+// An unowned citation must never reach the memo as a link.
+const foreign = ranked.map(function (row) { return row; });
+foreign[0].idea._article = {title:'Foreign', date:'2026-01-05',
+  url:'https://evil.test/post', source:'substack', id:'x'};
+if (deskNoteMarkdown(pattern, foreign).includes('evil.test')) {
+  throw new Error('the memo published an unowned link');
+}
+foreign[0].idea._article = dated('a','2026-01-05');
+if (!markdown.includes(location.href)) throw new Error('memo must carry the view it came from');
+
+// An empty class produces no note at all rather than a note about nothing.
+const none = structurePattern(desk({structureFocus:'nothingmatches'}));
+if (deskNoteLines(none).length !== 0) throw new Error('an empty class produced a note');
+if (deskNoteMarkdown(none, []) !== '') throw new Error('an empty class produced a memo');
 ''')
 
     def test_structure_pattern_reports_what_the_record_actually_carries(self):

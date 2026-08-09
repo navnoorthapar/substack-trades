@@ -583,14 +583,75 @@ embedded_articles = [
 articles_json = json_for_script(embedded_articles)
 threads_json = json_for_script(thread_index)
 
+# The desk is the landing view, so its controls are rendered from counts fixed
+# at build time. Waiting for the deferred observation archive before drawing
+# anything would hand a first-time reader an empty screen.
+article_date_by_id = {
+    article['id']: article['date'] for article in client_articles
+}
+
+
+def _desk_facet_counts(select):
+    counts: dict[str, int] = {}
+    for idea in client_ideas:
+        for value in dict.fromkeys(select(idea)):
+            counts[value] = counts.get(value, 0) + 1
+    return counts
+
+
+_instrument_counts = _desk_facet_counts(
+    lambda idea: [
+        value for value in idea['instruments']
+        if value and value != 'unspecified'
+    ]
+)
+_underlying_counts = _desk_facet_counts(
+    lambda idea: [
+        part.strip() for part in str(idea['underlying'] or '').split(';')
+        if part.strip() and part.strip() not in {'—', '-'}
+    ]
+)
+_underlying_labels: dict[str, str] = {}
+for _idea in client_ideas:
+    for _part in str(_idea['underlying'] or '').split(';'):
+        _part = _part.strip()
+        if _part and _part not in {'—', '-'}:
+            _underlying_labels.setdefault(normalize_identity_text(_part), _part)
+_underlying_totals: dict[str, int] = {}
+for _label, _count in _underlying_counts.items():
+    _key = normalize_identity_text(_label)
+    _underlying_totals[_key] = _underlying_totals.get(_key, 0) + _count
+_instrument_facets = sorted(
+    _instrument_counts.items(), key=lambda row: (-row[1], row[0]),
+)
+_underlying_facets = sorted(
+    (
+        (_underlying_labels[key], count)
+        for key, count in _underlying_totals.items() if count >= 2
+    ),
+    key=lambda row: (-row[1], row[0].casefold()),
+)
+desk_facets = {
+    'observation_count': len(client_ideas),
+    'outcome_count': sum(1 for idea in client_ideas if idea['outcome']),
+    'instruments': [[key, count] for key, count in _instrument_facets],
+    'underlyings': [[label, count] for label, count in _underlying_facets],
+    'periods': sorted(
+        {
+            article_date_by_id[idea['article_id']][:4]
+            for idea in client_ideas
+            if idea['article_id'] in article_date_by_id
+        },
+        reverse=True,
+    ),
+}
+desk_facets_json = json_for_script(desk_facets)
+
 # Rate conditions are read from the tracked official curve rather than fetched
 # while rendering, so the release stays byte-reproducible. The bands are
 # quantiles of the observation dates themselves: cut against the whole article
 # record they would drop nine in ten observations into one bucket and describe
 # nothing.
-article_date_by_id = {
-    article['id']: article['date'] for article in client_articles
-}
 observation_days = [
     article_date_by_id[idea['article_id']]
     for idea in client_ideas
@@ -1131,6 +1192,14 @@ body[data-view="structure"] .main-panel{grid-column:1/-1}
 .structure-chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--text)}
 .structure-chip-count{font:600 10px var(--mono);color:var(--text-muted)}
 .structure-chip.active .structure-chip-count{color:var(--accent)}
+.desk-note{border:1px solid var(--line-strong);border-radius:8px;background:var(--surface-1);
+  padding:14px 16px;border-left:3px solid var(--accent)}
+.desk-note-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.desk-note-head h3{font-size:14px;letter-spacing:-.01em}
+.desk-note dl{display:flex;flex-direction:column;gap:8px;margin:0}
+.desk-note dt{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.07em;
+  color:var(--text-muted);margin-bottom:2px}
+.desk-note dd{font-size:13px;line-height:1.55;color:var(--text-secondary);margin:0}
 .structure-disclosure{border:1px solid var(--line);border-left:3px solid var(--warning);
   background:var(--surface-1);border-radius:6px;padding:10px 12px;font-size:12px;
   color:var(--text-secondary);line-height:1.5}
@@ -2367,7 +2436,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
 }
 </style>
 </head>
-<body class="density-compact" data-view="briefing">
+<body class="density-compact" data-view="structure">
 <a class="skip-link" href="#main-panel">Skip to research results</a>
 <p class="sr-only">Navnoor Research Terminal</p>
 
@@ -2585,11 +2654,11 @@ __MANAGER_BUTTONS__
   <main class="main-panel" id="main-panel" tabindex="-1">
     <div class="command-bar">
       <nav class="view-tabs" aria-label="Terminal views">
-        <button class="view-tab active" type="button" data-view="briefing" aria-keyshortcuts="Alt+Shift+1">Latest Brief</button>
+        <button class="view-tab" type="button" data-view="briefing" aria-keyshortcuts="Alt+Shift+1">Latest Brief</button>
         <button class="view-tab" type="button" data-view="ideas" aria-keyshortcuts="Alt+Shift+2">Evidence Monitor</button>
         <button class="view-tab" type="button" data-view="research" aria-keyshortcuts="Alt+Shift+3">Research Library</button>
         <button class="view-tab" type="button" data-view="queue" aria-keyshortcuts="Alt+Shift+4">Decision Queue <span id="saved-count"></span></button>
-        <button class="view-tab" type="button" data-view="structure" aria-keyshortcuts="Alt+Shift+5">Structure Desk</button>
+        <button class="view-tab active" type="button" data-view="structure" aria-keyshortcuts="Alt+Shift+5">Structure Desk</button>
       </nav>
       <span class="result-summary" id="result-summary"></span>
       <span class="command-spacer"></span>
@@ -2837,6 +2906,7 @@ function hydrateEmbeddedArticle(article) {
 ARTICLES.forEach(hydrateEmbeddedArticle);
 const THREADS = __THREADS_JSON__;
 const RATE_CONTEXT = __RATE_CONTEXT_JSON__;
+const DESK_FACETS = __DESK_FACETS_JSON__;
 const THREAD_ARTICLES = (function () {
   const rows = Object.create(null);
   Object.keys(THREADS.topics || {}).forEach(function (topicKey) {
@@ -3743,7 +3813,7 @@ try {
 } catch (_error) {}
 
 const state = {
-  view:'briefing',
+  view:'structure',
   query:'',
   sources:new Set(),
   revisions:new Set(),
@@ -3776,7 +3846,7 @@ const state = {
 function hydrateFromHash() {
   const params = new URLSearchParams(location.hash.slice(1));
   const hashView = params.get('view') === 'saved' ? 'queue' : params.get('view');
-  state.view = ['briefing','ideas','research','queue','structure'].includes(hashView) ? hashView : 'briefing';
+  state.view = ['briefing','ideas','research','queue','structure'].includes(hashView) ? hashView : 'structure';
   state.query = String(params.get('q') || '').slice(0,300);
   state.sources = setFromParam(params,'src',VALID_SOURCES);
   state.revisions = setFromParam(params,'revision',VALID_BODY_REVISIONS);
@@ -3823,7 +3893,7 @@ function markMeaningfulNavigation() {
 }
 function updateHash(includeQuery) {
   const params = new URLSearchParams();
-  if (state.view !== 'briefing') params.set('view',state.view);
+  if (state.view !== 'structure') params.set('view',state.view);
   if (includeQuery && state.query) params.set('q',state.query.slice(0,300));
   if (state.sources.size) params.set('src',Array.from(state.sources).join('|'));
   if (state.revisions.size) params.set('revision',Array.from(state.revisions).join('|'));
@@ -5218,7 +5288,7 @@ function focusViewEntry() {
   const target = state.view === 'briefing'
     ? document.getElementById('lead-article-title') || document.getElementById('brief-status-title') || document.getElementById('observation-gate-title')
     : state.view === 'structure'
-      ? document.getElementById('structure-focus-input') || document.getElementById('structure-gate-title')
+      ? document.getElementById('structure-focus-input')
       : document.querySelector('[data-record-id][tabindex="0"]') || document.getElementById('empty-title');
   if (!target) return;
   if (!target.matches('button,a,input,select,textarea,[tabindex]')) target.tabIndex = -1;
@@ -5228,7 +5298,7 @@ function focusObservationGate(consumePending) {
   const retry = observationsFailed ? document.querySelector('[data-retry-observations]') : null;
   const target = retry || (
     state.view === 'briefing' ? document.getElementById('observation-gate-title')
-      : state.view === 'structure' ? document.getElementById('structure-gate-title')
+      : state.view === 'structure' ? document.getElementById('structure-focus-input')
         : document.getElementById('empty-title')
   );
   if (target) {
@@ -5293,16 +5363,10 @@ function renderObservationGate() {
       '<article class="intel-lead"><div class="intel-lead-inner"><div class="ic-topic">Release integrity check</div><h1 class="intel-title" id="observation-gate-title">' + escapeHtml(title) + '</h1><p class="ic-dek">' + escapeHtml(copy) + '</p>' + (action ? '<div class="intel-actions">' + action + '</div>' : '') + '</div></article>' +
       '<aside class="intel-side ic-sheet"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">Evidence boundary</div><h2 class="ic-sheet-title">Fail closed</h2><p class="ic-sheet-intro">Article dossiers remain separate from the deferred parser archive. An unavailable asset is never presented as missing evidence.</p></div></aside></div>';
   } else if (state.view === 'structure') {
-    // The desk hides the table, so the shared gate would leave it blank while
-    // the evidence archive is still being verified.
-    const shell = document.getElementById('structure-shell');
-    shell.innerHTML = '<div class="structure-wrap"><header class="structure-head">' +
-      '<h2 id="structure-gate-title">' + escapeHtml(title) + '</h2>' +
-      '<p class="structure-lede">' + escapeHtml(copy) + '</p></header>' +
-      '<p class="structure-disclosure">Comparable positions are read from the release-bound evidence archive. Until it verifies, the desk shows nothing rather than an incomplete comparison.</p>' +
-      (action ? '<div class="empty-actions observation-retry">' + action + '</div>' : '') +
-      '</div>';
-    shell.dataset.statusAnnouncement = title;
+    // The desk is the landing view, so it draws its full chrome from
+    // build-time counts and reports the archive state inside the panels
+    // instead of replacing the page with a notice.
+    renderStructureDesk([], {title:title, copy:copy, action:action});
   } else {
     renderTableHead();
     document.getElementById('table-body').replaceChildren();
@@ -5335,7 +5399,11 @@ function underlyingParts(idea) {
   }).filter(function (part) { return part && part !== '—' && part !== '-'; });
 }
 function outcomeTotal() {
+  if (!IDEAS.length) return Number(DESK_FACETS.outcome_count || 0);
   return IDEAS.filter(function (idea) { return Boolean(idea.outcome); }).length;
+}
+function deskUniverseTotal() {
+  return IDEAS.length || Number(DESK_FACETS.observation_count || 0);
 }
 // Most passages never state how a position resolved, but the record often
 // returns to the same subject later. Those later notes are the only
@@ -5429,6 +5497,11 @@ function structureFocusTokens() {
   });
 }
 function structureInstrumentOptions() {
+  // Before the deferred archive verifies, the controls are drawn from counts
+  // fixed at build time so the landing view is never an empty frame.
+  if (!IDEAS.length) return (DESK_FACETS.instruments || []).map(function (row) {
+    return [row[0],row[1]];
+  });
   const counts = new Map();
   IDEAS.forEach(function (idea) {
     const seen = new Set();
@@ -5443,6 +5516,9 @@ function structureInstrumentOptions() {
   });
 }
 function structureUnderlyingOptions() {
+  if (!IDEAS.length) return (DESK_FACETS.underlyings || []).map(function (row) {
+    return {label:row[0],count:row[1]};
+  });
   const counts = new Map();
   IDEAS.forEach(function (idea) {
     const seen = new Set();
@@ -5463,6 +5539,9 @@ function structureUnderlyingOptions() {
 }
 function structurePeriodOptions() {
   const years = new Set();
+  if (!IDEAS.length) (DESK_FACETS.periods || []).forEach(function (year) {
+    years.add(String(year));
+  });
   IDEAS.forEach(function (idea) {
     const date = (idea._article && idea._article.date) || '';
     if (date.length >= 4) years.add(date.slice(0,4));
@@ -5557,6 +5636,11 @@ function structurePattern(rows) {
   const periods = new Map();
   const slopeBands = new Map();
   const levelBands = new Map();
+  let priced = 0;
+  let levelLow = null;
+  let levelHigh = null;
+  let slopeLow = null;
+  let slopeHigh = null;
   let withQuant = 0;
   let withThesis = 0;
   let withOutcome = 0;
@@ -5580,6 +5664,11 @@ function structurePattern(rows) {
     if (rates) {
       slopeBands.set(rates.slopeBand,(slopeBands.get(rates.slopeBand) || 0) + 1);
       levelBands.set(rates.levelBand,(levelBands.get(rates.levelBand) || 0) + 1);
+      priced += 1;
+      levelLow = levelLow === null ? rates.y10 : Math.min(levelLow,rates.y10);
+      levelHigh = levelHigh === null ? rates.y10 : Math.max(levelHigh,rates.y10);
+      slopeLow = slopeLow === null ? rates.slope : Math.min(slopeLow,rates.slope);
+      slopeHigh = slopeHigh === null ? rates.slope : Math.max(slopeHigh,rates.slope);
     }
     if (idea.manager) managers.set(idea.manager,(managers.get(idea.manager) || 0) + 1);
     if (idea.quant) withQuant += 1;
@@ -5610,7 +5699,16 @@ function structurePattern(rows) {
     withQuant:withQuant,
     withThesis:withThesis,
     withOutcome:withOutcome,
-    withFollowUp:withFollowUp
+    withFollowUp:withFollowUp,
+    priced:priced,
+    levelRange:levelLow === null ? null : [levelLow,levelHigh],
+    slopeRange:slopeLow === null ? null : [slopeLow,slopeHigh],
+    firstDate:rows.length ? rows.map(function (row) {
+      return (row.idea._article && row.idea._article.date) || '';
+    }).filter(Boolean).sort()[0] : '',
+    lastDate:rows.length ? rows.map(function (row) {
+      return (row.idea._article && row.idea._article.date) || '';
+    }).filter(Boolean).sort().slice(-1)[0] : ''
   };
 }
 function structureChipRow(label,attribute,options,active,allOption) {
@@ -5714,7 +5812,119 @@ function structureTimeline(rows) {
       '</span></li>';
   }).join('');
 }
-function renderStructureDesk(rows) {
+function deskShare(total) {
+  return total ? Math.round((total[0] / total[1]) * 100) : 0;
+}
+function deskReferenceClass() {
+  // Name the query in the reader's terms. Reference-class reasoning is only
+  // useful when the class it drew from is stated plainly.
+  const parts = [];
+  if (state.structureFocus) parts.push('"' + state.structureFocus + '"');
+  if (state.structureInstrument) parts.push(instrumentLabel(state.structureInstrument));
+  if (state.structureDirection !== 'any') parts.push(directionLabel(state.structureDirection));
+  if (state.structurePeriod !== 'all') parts.push(state.structurePeriod);
+  if (state.structureSlope !== 'any') {
+    parts.push(rateBandLabel('slope',state.structureSlope).toLowerCase() + ' curve');
+  }
+  if (state.structureLevel !== 'any') {
+    parts.push(rateBandLabel('level',state.structureLevel).toLowerCase());
+  }
+  return parts.length ? parts.join(' · ') : 'the whole published record';
+}
+// Build the note as data first so the panel and the copied memo cannot drift.
+function deskNoteLines(pattern) {
+  const total = pattern.total;
+  if (!total) return [];
+  function share(count) {
+    return number(count) + ' of ' + number(total) +
+      ' (' + deskShare([count,total]) + '%)';
+  }
+  const lines = [];
+  lines.push(['Reference class',
+    number(total) + ' comparable ' + (total === 1 ? 'observation' : 'observations') +
+    ' in the published record match ' + deskReferenceClass() +
+    (pattern.firstDate && pattern.lastDate
+      ? ', published between ' + formatDate(pattern.firstDate) + ' and ' + formatDate(pattern.lastDate)
+      : '') + '.']);
+
+  const structureBits = [];
+  // Reporting the instrument the reader filtered on as "100%" says nothing;
+  // what it was combined with does.
+  const top = pattern.instruments.filter(function (row) {
+    return row[0] !== state.structureInstrument;
+  })[0];
+  if (top) {
+    structureBits.push(instrumentLabel(top[0]) + ' appears in ' + share(top[1]));
+  }
+  if (pattern.combinations.length) {
+    structureBits.push('the most common pairing is ' + pattern.combinations[0][0] +
+      ' (' + number(pattern.combinations[0][1]) + ')');
+  }
+  const stated = pattern.directions.filter(function (row) { return row[0] !== 'unspecified'; });
+  const unstated = pattern.directions.filter(function (row) { return row[0] === 'unspecified'; })[0];
+  // Lead with the dominant fact. Naming a stance held by a twelfth of the
+  // class as "the clearest" while most passages state none reads as a finding
+  // where the record has a gap.
+  if (unstated && unstated[1] >= total / 2) {
+    structureBits.push('stance is not stated in ' + share(unstated[1]) +
+      (stated.length
+        ? ', and where it is stated the most common is ' +
+          directionLabel(stated[0][0]).toLowerCase() + ' (' + number(stated[0][1]) + ')'
+        : ''));
+  } else if (stated.length) {
+    structureBits.push('the most common stance is ' +
+      directionLabel(stated[0][0]).toLowerCase() + ' at ' + share(stated[0][1]));
+    if (unstated) structureBits.push('stance is not stated in ' + share(unstated[1]));
+  } else {
+    structureBits.push('no passage states a directional stance');
+  }
+  lines.push(['How they were structured',
+    (structureBits.length ? structureBits.join('; ') : 'No structural pattern is recorded') + '.']);
+
+  lines.push(['Evidence they carry',
+    share(pattern.withQuant) + ' carry a numeric anchor and ' +
+    share(pattern.withThesis) + ' state an edge.']);
+
+  if (pattern.priced && pattern.levelRange && pattern.slopeRange) {
+    lines.push(['Conditions when argued',
+      'Argued with the 10Y between ' + pattern.levelRange[0].toFixed(2) + '% and ' +
+      pattern.levelRange[1].toFixed(2) + '%, and 10Y minus 2Y between ' +
+      pattern.slopeRange[0].toFixed(2) + ' and ' + pattern.slopeRange[1].toFixed(2) +
+      ', per ' + String((RATE_CONTEXT.source || {}).name || 'the official curve') + '.']);
+  }
+
+  lines.push(['What the record did next',
+    pattern.withFollowUp
+      ? share(pattern.withFollowUp) + ' are revisited by a later note on the same subject.'
+      : 'No later note in the record revisits these subjects.']);
+
+  lines.push(['What the record does not say',
+    (pattern.withOutcome
+      ? share(pattern.withOutcome) + ' record an outcome at source; the rest do not.'
+      : 'No outcome is recorded at source for any of these passages.') +
+    ' This is a reference class drawn from published research, not a backtest, ' +
+    'realised profit and loss, or a recommendation.']);
+  return lines;
+}
+function deskNoteMarkdown(pattern, rows) {
+  const lines = deskNoteLines(pattern);
+  if (!lines.length) return '';
+  const body = lines.map(function (row) {
+    return '**' + row[0] + '.** ' + row[1];
+  }).join('\n\n');
+  const cited = rows.slice(0,5).map(function (row, index) {
+    const article = row.idea._article || {};
+    const rates = rateReading(row.idea);
+    return (index + 1) + '. [' + article.title + '](' + safeUrl(article.url) + ') — ' +
+      formatDate(article.date) +
+      (rates ? ' · 10Y ' + rates.y10.toFixed(2) + '%, 10Y−2Y ' + rates.slope.toFixed(2) : '') +
+      (row.reasons.length ? ' · ' + row.reasons.join('; ') : '');
+  }).join('\n');
+  return '# Structure desk note — ' + deskReferenceClass() + '\n\n' + body +
+    '\n\n## Closest comparables\n\n' + cited +
+    '\n\n---\n\nGenerated from the published research record at ' + location.href + '\n';
+}
+function renderStructureDesk(rows, gate) {
   const shell = document.getElementById('structure-shell');
   const pattern = structurePattern(rows);
   const instrumentOptions = structureInstrumentOptions().map(function (entry) {
@@ -5735,6 +5945,15 @@ function renderStructureDesk(rows) {
     (underlyingOptions.length
       ? structureChipRow('Recurring underlyings','structure-focus',underlyingOptions,state.structureFocus,['','Clear'])
       : '');
+  const noteLines = deskNoteLines(pattern);
+  const notePanel = noteLines.length
+    ? '<section class="desk-note"><header class="desk-note-head">' +
+      '<h3>Desk note</h3><button class="secondary-action" type="button" ' +
+      'data-structure-copy-note="1">Copy as memo</button></header><dl>' +
+      noteLines.map(function (row) {
+        return '<div><dt>' + escapeHtml(row[0]) + '</dt><dd>' + escapeHtml(row[1]) + '</dd></div>';
+      }).join('') + '</dl></section>'
+    : '';
   const summary = pattern.total
     ? '<p class="structure-summary"><b>' + number(pattern.total) + '</b> comparable ' +
       (pattern.total === 1 ? 'observation' : 'observations') + ' in the record. ' +
@@ -5754,7 +5973,7 @@ function renderStructureDesk(rows) {
     }).join('') + '</ul>';
   }
   const patternPanel = '<section class="structure-panel"><h3>How comparable trades were structured</h3>' +
-    summary +
+    (gate ? '<p class="structure-none">' + escapeHtml(gate.title) + '</p>' : summary) +
     '<h4>Instruments used</h4>' + bars(pattern.instruments,pattern.total,instrumentLabel) +
     (pattern.combinations.length
       ? '<h4>Most common combinations</h4>' + bars(pattern.combinations,pattern.total)
@@ -5780,7 +5999,10 @@ function renderStructureDesk(rows) {
   const shown = rows.slice(0,state.limit);
   const comparablePanel = '<section class="structure-panel structure-comparables">' +
     '<h3>Comparable observations</h3>' +
-    (rows.length
+    (gate
+      ? '<p class="structure-none">' + escapeHtml(gate.copy) + '</p>' +
+        (gate.action ? '<div class="empty-actions observation-retry">' + gate.action + '</div>' : '')
+      : rows.length
       ? shown.map(function (row,index) { return structureComparableCard(row,index + 1); }).join('') +
         (rows.length > shown.length
           ? '<button class="secondary-action structure-more" type="button" data-structure-more="1">Show ' +
@@ -5789,7 +6011,7 @@ function renderStructureDesk(rows) {
           : '')
       : '<p class="structure-none">Nothing in the extracted record matches. Widen the instrument, stance, or period.</p>') +
     '</section>';
-  const timelinePanel = rows.length
+  const timelinePanel = !gate && rows.length
     ? '<section class="structure-panel structure-development"><h3>How the line developed</h3>' +
       '<p class="structure-note">The same comparables in publication order. Outcomes appear only where the source stated one.</p>' +
       '<ol class="structure-steps">' + structureTimeline(shown) + '</ol></section>'
@@ -5800,14 +6022,16 @@ function renderStructureDesk(rows) {
     '<div class="structure-search"><label class="sr-only" for="structure-focus-input">What do you want to trade?</label>' +
     '<input id="structure-focus-input" type="search" placeholder="What do you want to trade? e.g. VIX, JGB, Nasdaq" value="' +
     escapeHtml(state.structureFocus) + '" autocomplete="off"></div>' +
-    '<div class="structure-controls">' + controls + '</div></header>' +
+    '<div class="structure-controls">' + controls + '</div></header>' + notePanel +
     '<p class="structure-disclosure">This desk reports how comparable positions were <b>described and structured</b> in the published record, and what that record went on to say about the same subjects. A stated outcome exists for only ' +
-    number(outcomeTotal()) + ' of ' + number(IDEAS.length) +
+    number(outcomeTotal()) + ' of ' + number(deskUniverseTotal()) +
     ' extracted observations, so resolution is shown as later coverage rather than as a result: this is not a backtest, not realised profit and loss, and not a recommendation.</p>' +
     '<div class="structure-grid">' + patternPanel + comparablePanel + '</div>' + timelinePanel + '</div>';
-  shell.dataset.statusAnnouncement = pattern.total
-    ? number(pattern.total) + ' comparable observations on the structure desk'
-    : 'No comparable observations for these desk inputs';
+  shell.dataset.statusAnnouncement = gate
+    ? gate.title
+    : pattern.total
+      ? number(pattern.total) + ' comparable observations on the structure desk'
+      : 'No comparable observations for these desk inputs';
 }
 function render() {
   if (state.view !== 'briefing') pendingBriefFocus = null;
@@ -6660,6 +6884,13 @@ document.addEventListener('click',function (event) {
     renderObservationAwareNavigation('entry');
     return;
   }
+  const copyNote = event.target.closest('[data-structure-copy-note]');
+  if (copyNote) {
+    const ranked = structureMatches();
+    const markdown = deskNoteMarkdown(structurePattern(ranked),ranked);
+    if (markdown) copyText(markdown,'Desk note copied as a memo');
+    return;
+  }
   const structureMore = event.target.closest('[data-structure-more]');
   if (structureMore) {
     state.limit += PAGE_SIZE.structure;
@@ -7484,6 +7715,7 @@ HTML = (HTML_TEMPLATE
         .replace('__ARTICLES_JSON__', articles_json)
         .replace('__THREADS_JSON__', threads_json)
         .replace('__RATE_CONTEXT_JSON__', rate_context_json)
+        .replace('__DESK_FACETS_JSON__', desk_facets_json)
         .replace('__MANAGER_LABELS_JSON__', manager_labels_json)
         .replace('__SNAPSHOT_JSON__', snapshot_json)
         .replace('__MANAGER_BUTTONS__', manager_html)
