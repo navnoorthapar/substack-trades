@@ -17,6 +17,7 @@ from client_article_contract import (
     ARTICLE_WIRE_SCHEMA_VERSION,
     hydrate_client_article,
 )
+from snapshot_fixtures import materialize_source_tree
 from validate_inline_scripts import extract_inline_scripts
 
 
@@ -28,12 +29,18 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
     def setUpClass(cls):
         cls._site_temp = tempfile.TemporaryDirectory(prefix='nrt-site-test-')
         cls.site_dir = Path(cls._site_temp.name)
+        # Build from a rebased copy of the tracked sources. Building in place
+        # would make every test in this class fail once the tracked snapshot
+        # passes the sixteen-hour freshness contract, which has nothing to do
+        # with the build behaviour under test.
+        cls._source_temp = tempfile.TemporaryDirectory(prefix='nrt-site-source-')
+        cls.source_root = materialize_source_tree(ROOT, cls._source_temp.name)
         environment = os.environ.copy()
         environment['SITE_OUTPUT_DIR'] = str(cls.site_dir)
         environment['SITE_REVISION'] = 'test-revision'
         subprocess.run(
-            [sys.executable, str(ROOT / 'build_site.py')],
-            cwd=ROOT,
+            [sys.executable, str(cls.source_root / 'build_site.py')],
+            cwd=cls.source_root,
             env=environment,
             check=True,
             capture_output=True,
@@ -76,6 +83,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls._site_temp.cleanup()
+        cls._source_temp.cleanup()
 
     def test_complete_multi_source_dataset_is_deferred_once(self):
         self.assertIn(
@@ -1002,8 +1010,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                 environment['SITE_OUTPUT_DIR'] = directory
                 environment['SITE_REVISION'] = 'reproducible-release'
                 subprocess.run(
-                    [sys.executable, str(ROOT / 'build_site.py')],
-                    cwd=ROOT,
+                    [sys.executable, str(self.source_root / 'build_site.py')],
+                    cwd=self.source_root,
                     env=environment,
                     check=True,
                     capture_output=True,
@@ -1922,7 +1930,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertFalse(missing, f'JavaScript references missing literal IDs: {sorted(missing)}')
 
     def test_snapshot_manifest_security_policy_and_freshness_are_embedded(self):
-        manifest = json.loads((ROOT / 'snapshot_manifest.json').read_text(encoding='utf-8'))
+        # Compare against the manifest the site was actually built from, which
+        # is the tracked one with its check times rebased onto the test clock.
+        manifest = json.loads(
+            (self.source_root / 'snapshot_manifest.json').read_text(encoding='utf-8')
+        )
         self.assertEqual(self.snapshot, manifest)
         self.assertEqual(self.snapshot['article_count'], len(self.articles))
         self.assertEqual(self.snapshot['catalog_count'], len(self.source_articles))

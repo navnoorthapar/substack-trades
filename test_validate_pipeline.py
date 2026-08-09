@@ -7,6 +7,7 @@ import unittest
 from pathlib import Path
 
 from article_briefs import build_article_brief
+from snapshot_fixtures import write_rebased_manifest
 from validate_pipeline import (
     validate_article_index,
     validate_article_regression,
@@ -53,19 +54,30 @@ def current_body(article):
 
 class DeployableSnapshotValidationTests(unittest.TestCase):
     def test_tracked_snapshot_validates_without_local_post_cache(self):
-        result = subprocess.run(
-            [
-                sys.executable,
-                str(ROOT / 'validate_pipeline.py'),
-                '--articles',
-                str(ROOT / 'articles_index.json'),
-                '--trades',
-                str(ROOT / 'trades_extracted.json'),
-            ],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-        )
+        # Validate against a rebased copy of the manifest: the tracked one
+        # ages past the sixteen-hour source-check contract between scheduled
+        # refreshes, which would fail this test for elapsed time rather than
+        # for anything wrong with the tracked snapshot.
+        with tempfile.TemporaryDirectory(prefix='nrt-pipeline-manifest-') as work:
+            manifest = write_rebased_manifest(
+                ROOT / 'snapshot_manifest.json',
+                Path(work) / 'snapshot_manifest.json',
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / 'validate_pipeline.py'),
+                    '--articles',
+                    str(ROOT / 'articles_index.json'),
+                    '--trades',
+                    str(ROOT / 'trades_extracted.json'),
+                    '--manifest',
+                    str(manifest),
+                ],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+            )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('Validation passed:', result.stdout)
 
