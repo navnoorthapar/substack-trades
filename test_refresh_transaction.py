@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import subprocess
@@ -81,11 +82,11 @@ elif script == 'llm_direction.py':
 elif script == 'fetch_treasury_curve.py':
     if os.environ.get('FAKE_FAILURE') == 'treasury':
         raise SystemExit(44)
-    write_json(option('--output'), {
+    print(json.dumps({
         'schema_version': 1,
         'source': {'name': 'candidate'},
         'observations': {'2026-01-02': {'candidate': 'curve'}},
-    })
+    }))
 elif script == 'write_snapshot_manifest.py':
     write_json(option('--output'), {'candidate': 'manifest'})
 elif script == 'validate_pipeline.py':
@@ -289,6 +290,23 @@ class RefreshTransactionTests(unittest.TestCase):
                 for name in PROMOTED_OUTPUTS if name != 'treasury_curve.json'
             ),
             'the refresh should still have promoted its research snapshot',
+        )
+
+    def test_treasury_fetch_has_no_network_or_path_arguments(self):
+        result = self.run_refresh('')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        calls = self.invocation_log().splitlines()
+        treasury_calls = [
+            call for call in calls if call.startswith('fetch_treasury_curve.py')
+        ]
+        self.assertEqual(treasury_calls, ['fetch_treasury_curve.py'])
+        self.assertEqual(
+            json.loads((self.repo / 'treasury_curve.json').read_text(encoding='utf-8')),
+            {
+                'schema_version': 1,
+                'source': {'name': 'candidate'},
+                'observations': {'2026-01-02': {'candidate': 'curve'}},
+            },
         )
 
     def test_validation_failure_never_promotes_candidate_cache_or_snapshot(self):

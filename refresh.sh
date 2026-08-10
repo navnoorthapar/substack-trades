@@ -225,13 +225,7 @@ echo "=== Refreshing the official Treasury par yield curve ==="
 # trading day, and falling back to the tracked series keeps the rate context
 # that already shipped rather than dropping it.
 TREASURY_CANDIDATE="$WORK_DIR/treasury_curve.candidate.json"
-TREASURY_CURRENT_YEAR=$(date -u '+%Y')
-TREASURY_PREVIOUS_YEAR=$((TREASURY_CURRENT_YEAR - 1))
-if ! "$PYTHON" fetch_treasury_curve.py \
-        --years "$TREASURY_PREVIOUS_YEAR" "$TREASURY_CURRENT_YEAR" \
-        --current-year "$TREASURY_CURRENT_YEAR" \
-        --merge "$ROOT/treasury_curve.json" \
-        --output "$TREASURY_CANDIDATE"; then
+if ! "$PYTHON" fetch_treasury_curve.py > "$TREASURY_CANDIDATE"; then
     if [ -f "$ROOT/treasury_curve.json" ]; then
         echo "Treasury curve refresh failed; keeping the tracked curve." >&2
         cp -p "$ROOT/treasury_curve.json" "$TREASURY_CANDIDATE"

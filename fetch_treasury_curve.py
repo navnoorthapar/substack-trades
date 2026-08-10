@@ -12,14 +12,14 @@ truncating it, because a silently shortened rate history would mislabel the
 research record rather than fail.
 """
 
-import argparse
+from datetime import datetime, timezone
 import json
 import sys
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ElementTree
 from pathlib import Path
-from typing import Dict, List, Mapping, Sequence, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 from treasury_curve import (
     DATASET_NAME,
@@ -44,17 +44,61 @@ TENOR_FIELDS: Tuple[Tuple[str, str], ...] = (
 )
 REQUEST_TIMEOUT = 60
 USER_AGENT = 'navnoor-research-terminal/1.0 (+treasury par yield curve)'
+TRACKED_DATASET_PATH = Path(__file__).resolve().parent / DATASET_NAME
+OFFICIAL_FEED_URL = (
+    'https://home.treasury.gov/resource-center/data-chart-center/'
+    'interest-rates/pages/xml?data=daily_treasury_yield_curve'
+)
 # A published trading year is never this short; a shorter document means the
 # feed answered with an error page or a partial response.
 MIN_ENTRIES_PER_YEAR = 200
 
 
+if SOURCE['feed_url'] != OFFICIAL_FEED_URL:
+    raise RuntimeError('Treasury source contract does not match the fetch allowlist')
+
+
+class _RejectRedirects(urllib.request.HTTPRedirectHandler):
+    """Refuse redirects before urllib can issue a second network request."""
+
+    def redirect_request(
+            self,
+            req: urllib.request.Request,
+            fp: Any,
+            code: int,
+            msg: str,
+            headers: Any,
+            newurl: str) -> Optional[urllib.request.Request]:
+        del req, fp, msg, headers, newurl
+        raise ValueError(
+            f'Treasury feed refused HTTP {code} redirect; expected the exact official URL'
+        )
+
+
+TREASURY_OPENER = urllib.request.build_opener(
+    urllib.request.ProxyHandler({}),
+    _RejectRedirects(),
+)
+
+
+def _feed_url_for_year(year: int) -> str:
+    """Return the one allowlisted official URL for an internally chosen year."""
+    if type(year) is not int or not 1000 <= year <= 9999:
+        raise ValueError('Treasury feed year must be a four-digit integer')
+    year_text = str(year)
+    if len(year_text) != 4 or not year_text.isdecimal():
+        raise ValueError('Treasury feed year must contain exactly four decimal digits')
+    return f'{OFFICIAL_FEED_URL}&field_tdr_date_value={year_text}'
+
+
 def _fetch_year(year: int) -> bytes:
-    url = (
-        f'{SOURCE["feed_url"]}&field_tdr_date_value={year}'
-    )
+    url = _feed_url_for_year(year)
     request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT})
-    with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT) as response:
+    with TREASURY_OPENER.open(request, timeout=REQUEST_TIMEOUT) as response:
+        if response.geturl() != url:
+            raise ValueError(
+                f'treasury feed response URL did not match the official URL for {year}'
+            )
         if response.status != 200:
             raise ValueError(f'treasury feed returned HTTP {response.status} for {year}')
         return bytes(response.read())
@@ -127,42 +171,41 @@ def fetch_years(years: Sequence[int], current_year: int) -> Dict[str, Dict[str, 
     return observations
 
 
-def main(argv: Sequence[str]) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--years', nargs='+', type=int, required=True,
-                        help='calendar years to fetch, e.g. --years 2025 2026')
-    parser.add_argument('--output', type=Path, default=Path(DATASET_NAME))
-    parser.add_argument('--current-year', type=int, required=True,
-                        help='the in-progress year, which may be short')
-    parser.add_argument('--merge', type=Path,
-                        help='existing dataset to merge into, so refreshing '
-                             'recent years never drops earlier history')
-    args = parser.parse_args(argv)
-
+def main() -> int:
     try:
-        observations: Dict[str, Dict[str, float]] = {}
-        if args.merge is not None and args.merge.exists():
-            existing = load_curve_dataset(args.merge)
-            observations.update({
-                day: {tenor: float(row[tenor]) for tenor in TENORS}
-                for day, row in existing['observations'].items()
-            })
-        observations.update(fetch_years(sorted(set(args.years)), args.current_year))
+        current_year = datetime.now(timezone.utc).year
+        existing = load_curve_dataset(TRACKED_DATASET_PATH)
+        observations: Dict[str, Dict[str, float]] = {
+            day: {tenor: float(row[tenor]) for tenor in TENORS}
+            for day, row in existing['observations'].items()
+        }
+        observations.update(fetch_years(
+            (current_year - 1, current_year),
+            current_year,
+        ))
         dataset = build_dataset(observations)
     except (urllib.error.URLError, TimeoutError, ValueError, OSError) as error:
         print(f'Treasury curve refresh failed: {error}', file=sys.stderr)
         return 1
 
-    args.output.write_text(
-        json.dumps(dataset, ensure_ascii=False, separators=(',', ':')) + '\n',
-        encoding='utf-8',
+    sys.stdout.write(
+        json.dumps(dataset, ensure_ascii=False, separators=(',', ':')) + '\n'
     )
     print(
         f'Treasury curve: {dataset["observation_count"]} trading days '
-        f'{dataset["first_date"]} to {dataset["last_date"]}'
+        f'{dataset["first_date"]} to {dataset["last_date"]}',
+        file=sys.stderr,
     )
     return 0
 
 
+def cli(argv: Sequence[str]) -> int:
+    """Expose no data, path, or network controls to the command line."""
+    if argv:
+        print('fetch_treasury_curve.py accepts no arguments', file=sys.stderr)
+        return 2
+    return main()
+
+
 if __name__ == '__main__':
-    raise SystemExit(main(sys.argv[1:]))
+    raise SystemExit(cli(sys.argv[1:]))
