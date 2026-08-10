@@ -1,6 +1,36 @@
 [
   {
     "source": "medium",
+    "source_id": "5a135482c38d",
+    "slug": "norges-bank-flagged-this-t-statistic-in-2012-on-the-same-data-it-runs-from-0-92-to-13-67-5a135482c38d",
+    "title": "Norges Bank Flagged This t-Statistic in 2012. On the Same Data It Runs From 0.92 to 13.67.",
+    "subtitle": "Every number below comes from one regression run on one public dataset: the log dividend price ratio against the next ten years of US…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-09T20:00:06Z",
+    "url": "https://medium.com/@navnoorbawa/norges-bank-flagged-this-t-statistic-in-2012-on-the-same-data-it-runs-from-0-92-to-13-67-5a135482c38d",
+    "audience": "unknown",
+    "wordcount": 28,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "973c64a4cc701fbd1e44aa78959788d1233a52bd43eb33bcfde594527bd0f2a2",
+      "lead": {
+        "text": "Every number below comes from one regression run on one public dataset: the log dividend price ratio against the next ten years of US…",
+        "start": 0,
+        "end": 134,
+        "sha256": "f26a125c71f8f5092b36f66452c657ef34d3fefe8da3385a1808a16ddfd2a2e8",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-09T20:00:06Z",
+    "observed_source_updated_at": "2026-08-09T20:00:06Z"
+  },
+  {
+    "source": "medium",
     "source_id": "495d508ab797",
     "slug": "the-federal-reserve-publishes-two-term-premium-estimates-495d508ab797",
     "title": "The Federal Reserve Publishes Two Term Premium Estimates.",
@@ -778,9 +808,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-02T15:16:41Z",
-    "observed_source_updated_at": "2026-08-02T15:16:41Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
