@@ -281,7 +281,7 @@ def _description(article: Mapping[str, object]) -> str:
     return value
 
 
-def _script_literal(value: str) -> str:
+def script_literal(value: str) -> str:
     """Serialize a string without allowing it to terminate the script element."""
     return (json.dumps(value, ensure_ascii=True)
             .replace('&', '\\u0026')
@@ -308,9 +308,12 @@ def render_article_stub(
             raise ValueError('registry stub requires a canonical HTTPS source URL')
         action_label = 'Open the original publication'
     else:
-        route = f'../#selected={quote(article_id, safe="_- ").replace(" ", "%20")}'
+        route = (
+            '../#view=briefing&selected='
+            f'{quote(article_id, safe="_- ").replace(" ", "%20")}'
+        )
         action_label = 'Open this research dossier'
-    script = f'location.replace({_script_literal(route)});'
+    script = f'location.replace({script_literal(route)});'
     digest = base64.b64encode(hashlib.sha256(script.encode()).digest()).decode()
     def escape(value: object) -> str:
         return html.escape(str(value), quote=True)

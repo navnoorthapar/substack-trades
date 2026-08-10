@@ -177,6 +177,40 @@ does not manufacture NAV/P&L, attribution, exposure, leverage, VaR, stress,
 liquidity, funding, counterparty, capacity, execution, compliance, or investor
 metrics without the connected books and records required to calculate them.
 
+### Research Structuring Desk
+
+The Research Structuring Desk starts empty and requires the analyst to state a
+research question or choose an explicit scope before it retrieves evidence. It
+organizes the existing authored corpus for diligence; it does not infer a house
+view or turn an article passage into a trade. Results are clustered by source
+note so repeated passages from one article are not counted as independent
+evidence. Every result reports both source-note and captured-passage counts.
+
+Retrieval provenance remains visible and separate: an exact structured
+underlying match is not blended with an authored-title subject match or a match
+from another structured field. Loose article-text mentions appear only as
+related context, outside the primary evidence set. Multi-token questions require
+all material tokens rather than treating the words as alternative matches. The
+analyst must expand a source note and explicitly anchor one exact displayed
+passage before creating a decision packet; no highest-ranked passage is selected
+on the analyst's behalf.
+
+Optional macro context is provenance, not a portfolio signal. When enabled, it
+uses an official observation dated on or before the article's publication
+calendar date and labels that observation date. Daily observations are not
+aligned to article timestamps and may post-date a same-day publication. The
+reading is not an event, entry, position, or valuation date and does not
+establish causality. The Desk supplies no holdings, live or position prices,
+P&L, sizing, exposure, liquidity assessment, compliance determination, or
+recommendation. Those require the firm's own books, market data, controls, and
+accountable human judgment.
+
+Structure questions and ordinary Desk refinements stay only in page memory and
+are not silently written to the address bar. **Copy view** is the explicit
+sharing action: it may serialize the current question, filters, and exact source
+anchor into the copied URL. Shared views must therefore contain only
+non-confidential research context.
+
 The default Institutional Article Workbench is built around the article data:
 the first eligible authored passage, contextual evidence, mechanism,
 limitations, falsifiers, implementation, cited checkpoints, and exact source

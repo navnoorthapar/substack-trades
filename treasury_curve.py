@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """Validate and read the tracked U.S. Treasury par yield curve dataset.
 
-The research record spans a stretch of rate history, and a reader deciding how
-to express a view wants to know what the curve looked like when a comparable
-position was argued. That question is only answerable from an official series,
-so this module owns the contract for one: the Daily Treasury Par Yield Curve
-Rates published by the U.S. Department of the Treasury.
+The research record spans a stretch of rate history, and a reader comparing
+published passages may choose to place them beside a dated official curve
+observation. That provenance question is only answerable from an official
+series, so this module owns the contract for one: the Daily Treasury Par Yield
+Curve Rates published by the U.S. Department of the Treasury.
 
 Two rules keep the resulting labels honest. Every reported value is a published
-observation, never an interpolation: a publication date that falls on a weekend
-or holiday resolves to the most recent trading day at or before it, and that
-as-of date travels with the value. And the bands are quantiles of the record
-being shown rather than absolute regime claims, because this corpus never saw
-an inverted curve -- calling any part of it "steep" in the abstract would
-assert a distinction the data does not contain.
+observation, never an interpolation: a publication calendar date that falls on
+a weekend or holiday resolves to the most recent available dated observation
+at or before it, and that as-of date travels with the value. Daily observation
+times are not aligned to article timestamps and may post-date a same-day
+article. The bands are quantiles of the record being shown rather than absolute
+regime claims, because this corpus never saw an inverted curve -- calling any
+part of it "steep" in the abstract would assert a distinction the data does not
+contain.
 """
 
 import json

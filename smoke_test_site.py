@@ -23,7 +23,7 @@ from data_contract import (
     data_bundle_checksum,
     validate_data_layer,
 )
-from share_cards import render_article_stub
+from share_cards import render_article_stub, script_literal
 
 
 MAX_RESPONSE_BYTES = 12 * 1024 * 1024
@@ -569,7 +569,10 @@ def _validate_share_stub(payload, article, page_url, asset_name):
         if urlsplit(route).scheme != 'https':
             raise ValueError('registry-only share stub route is not HTTPS')
     else:
-        route = f'../#selected={quote(article_id, safe="_- ").replace(" ", "%20")}'
+        route = (
+            '../#view=briefing&selected='
+            f'{quote(article_id, safe="_- ").replace(" ", "%20")}'
+        )
     def escaped(value):
         return html_lib.escape(str(value), quote=True)
 
@@ -581,7 +584,7 @@ def _validate_share_stub(payload, article, page_url, asset_name):
         '<meta property="og:image:width" content="1200">',
         '<meta property="og:image:height" content="630">',
         f'<meta http-equiv="refresh" content="0;url={escaped(route)}">',
-        f'<script>location.replace({json.dumps(route, ensure_ascii=True)});</script>',
+        f'<script>location.replace({script_literal(route)});</script>',
         f'<body><p><a href="{escaped(route)}">',
     )
     text = payload.decode('utf-8')

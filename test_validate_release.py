@@ -18,6 +18,7 @@ import validate_release
 
 ROOT = Path(__file__).parent
 REVISION = 'release-validator-test'
+RELEASE_CLI_TIMEOUT_SECONDS = 180
 
 
 def json_for_script(value):
@@ -244,7 +245,11 @@ class ReleaseValidatorTests(unittest.TestCase):
             cwd=ROOT,
             capture_output=True,
             text=True,
-            timeout=60,
+            # The scheduled refresh runs the complete launch suite on the
+            # publication Mac. Keep the CLI proof bounded while allowing for
+            # cold filesystem caches and transient CPU contention from that
+            # surrounding release gate.
+            timeout=RELEASE_CLI_TIMEOUT_SECONDS,
             check=False,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

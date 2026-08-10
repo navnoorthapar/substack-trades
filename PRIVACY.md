@@ -1,6 +1,6 @@
 # Privacy
 
-Last updated: 2026-08-08
+Last updated: 2026-08-11
 
 Navnoor Research Terminal is a static, public research-intake website. It is
 designed to work without an account and without collecting reader data for the
@@ -91,10 +91,14 @@ and accessible legacy queue keys; clearing browser site data also removes them.
 
 ## Explicit sharing
 
-The normal address bar does not persist search text. When a reader explicitly
-selects **Copy view**, the copied URL may include the current query and filters
-so that view can be shared. Exported workflow backups and copied citations leave
-the browser only when the reader chooses where to send or save them.
+The normal address bar does not persist global search text, Research Structuring
+Desk questions, Desk filters, or source-passage anchors. Ordinary Desk edits
+remain in page memory. When a reader explicitly selects **Copy view**, the
+copied URL may include the current question, filters, and exact source anchor so
+that view can be shared. Treat that URL as public and use the feature only for
+non-confidential research context. Exported workflow backups and copied
+citations leave the browser only when the reader chooses where to send or save
+them.
 
 ## Contact
 

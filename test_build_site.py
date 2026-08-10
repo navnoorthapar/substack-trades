@@ -821,7 +821,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_mobile_monitor_is_bounded_and_lighthouse_a11y_defects_are_closed(self):
         self.assertIn(
-            'const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100,structure:24};',
+            'const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100,structure:8};',
             self.html,
         )
         self.assertIn(
@@ -1705,15 +1705,21 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             facets['outcome_count'],
             sum(1 for idea in self.ideas if idea['outcome']),
         )
+        self.assertEqual(
+            facets['source_note_count'],
+            len({idea['article_id'] for idea in self.ideas}),
+        )
         self.assertTrue(facets['instruments'])
+        self.assertTrue(all(len(row) == 3 for row in facets['instruments']))
+        self.assertTrue(all(row[2] <= row[1] for row in facets['instruments']))
         self.assertIn('if (!IDEAS.length) return (DESK_FACETS.instruments || [])', self.html)
 
     def test_structure_desk_is_wired_as_a_first_class_view(self):
         for text in (
-            'Structure Desk',
+            'Research Structuring Desk',
             '<section class="structure-shell" id="structure-shell"',
             "'briefing','ideas','research','queue','structure'",
-            'structure:24',
+            'structure:8',
             "state.view === 'structure'",
             'renderStructureDesk(structureMatches())',
             'id="structure-focus-input"',
@@ -1723,16 +1729,20 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'data-structure-focus="',
             "'[data-structure-instrument],[data-structure-direction],"
             "[data-structure-period],'",
-            "'[data-structure-focus],[data-structure-slope],[data-structure-level]'",
+            "[data-structure-focus],[data-structure-slope],[data-structure-level],"
+            "[data-structure-macro]'",
+            'data-structure-passage="',
             'data-structure-more="1"',
-            'How comparable trades were structured',
-            'Comparable observations',
-            'How the line developed',
-            'When these were written',
-            'What the record returned to afterwards',
-            'Curve when this was published',
-            "structureChipRow('Curve shape at publication','structure-slope'",
-            "structureChipRow('10Y level at publication','structure-level'",
+            'No setup defined',
+            'Primary retrieved source notes',
+            'Coverage audit',
+            'Related mentions — excluded from the evidence set',
+            'Create diligence packet',
+            'Instrument mentions by source note',
+            'Optional macro provenance',
+            "structureChipRow('U.S. curve band','structure-slope'",
+            "structureChipRow('U.S. 10Y band','structure-level'",
+            'not timestamp-aligned and may post-date a same-day article',
             'const RATE_CONTEXT = ',
         ):
             self.assertIn(text, self.html)
@@ -1746,11 +1756,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.assertRegex(self.html, rule)
 
     def test_a_structure_desk_view_can_be_shared_and_restored(self):
-        """A desk view is something a reader sends to a colleague.
-
-        Every desk input therefore travels in the address, and each one is
-        bounded to a vocabulary the record contains rather than trusted.
-        """
+        """Desk questions stay local unless Copy view explicitly shares one."""
         hash_start = self.html.index('function updateHash(includeQuery)')
         hash_end = self.html.index('\nfunction ', hash_start + 10)
         writer = self.html[hash_start:hash_end]
@@ -1761,9 +1767,18 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "params.set('speriod',state.structurePeriod)",
             "params.set('sslope',state.structureSlope)",
             "params.set('slevel',state.structureLevel)",
+            "params.set('smacro','1')",
+            "params.set('sanchor',state.structureAnchor)",
+            "params.set('spassage',state.structurePassage)",
         ):
             self.assertIn(pair, writer)
-        self.assertIn("if (state.view === 'structure') {", writer)
+        self.assertIn(
+            "state.view === 'structure' && (includeQuery || state.structureShareable)",
+            writer,
+        )
+        self.assertIn("if (state.structureMacro) {", writer)
+        self.assertIn("const current = location.hash || location.pathname", writer)
+        self.assertNotIn("if (state.view === 'structure') {", writer)
 
         for guard in (
             "state.structureFocus = String(params.get('focus') || '').slice(0,120)",
@@ -1772,26 +1787,40 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "/^[0-9]{4}$/.test(String(params.get('speriod') || ''))",
             "VALID_RATE_BANDS.has(params.get('sslope'))",
             "VALID_RATE_BANDS.has(params.get('slevel'))",
+            "state.structureMacro = params.get('smacro') === '1'",
+            "ARTICLE_BY_ID.has(params.get('sanchor'))",
+            "/^[A-Za-z0-9_-]{1,96}$/.test(String(params.get('spassage') || ''))",
+            "if (!state.structureAnchor) state.structurePassage = ''",
         ):
             self.assertIn(guard, self.html)
         self.assertIn("const VALID_RATE_BANDS = new Set(['low','mid','high']);", self.html)
+        self.assertIn("if (state.view === 'structure') state.structureShareable = true;", self.html)
+        self.assertIn("state.structureShareable = false;", self.html)
+        self.assertIn('maxlength="120" spellcheck="false"', self.html)
+        self.assertIn("const value = input.value.slice(0,120);", self.html)
 
     def test_structure_desk_export_matches_what_the_desk_shows(self):
-        """Exporting the rail's universe while showing ranked comparables
-        would hand back a different set than the one on screen."""
+        """The export preserves the source-note unit used by the desk."""
         export_start = self.html.index('function exportCsv()')
         export_end = self.html.index('\nfunction applyPreset', export_start)
         export = self.html[export_start:export_end]
         self.assertIn(
-            "state.view === 'structure'\n    ? structureMatches().map(", export)
+            "state.view === 'structure'\n    ? structureArticleGroups(structureMatches())",
+            export,
+        )
         self.assertIn("if (state.view === 'structure') {", export)
         for column in (
-            "'Why it matched'", "'10Y-2Y'", "'Curve as of'",
-            "'Later notes on the subject'", "'Outcome recorded at source'",
+            "'Retrieval order (same tier then publication date)'",
+            "'Retrieval tier'", "'Included passage count'",
+            "'U.S. 10Y-2Y observation by publication date'", "'Curve as of'",
+            "'Related later notes via article topic (not outcome)'",
+            "'Outcomes recorded at source'",
         ):
             self.assertIn(column, export)
-        self.assertIn('row.reasons.join', export)
-        self.assertIn('observationFollowUps(idea).length', export)
+        self.assertIn('Array.from(group.reasons).join', export)
+        self.assertIn('structureGroupFacts(group)', export)
+        self.assertIn('observationFollowUps(firstIdea).length', export)
+        self.assertIn('state.structureMacro ? rateReading(firstIdea) : null', export)
 
     def test_structure_desk_shows_the_evidence_gate_in_its_own_shell(self):
         """The desk hides the table, so the shared gate would leave it blank
@@ -1807,21 +1836,19 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('renderStructureDesk([], {title:title', gate)
         self.assertIn('structure-none', self.html)
 
-    def test_the_desk_leads_with_the_answer_not_the_filters(self):
-        """A reader opening this wants the synthesis, not a wall of controls.
-
-        Research platforms lose portfolio managers when inputs arrive faster
-        than they can be turned into a view, so the note sits above the
-        refinements and the refinements start closed.
-        """
+    def test_the_desk_starts_empty_then_leads_with_a_clustered_answer(self):
+        """No setup means no synthetic class; a defined setup leads with gaps."""
         render_start = self.html.index('function renderStructureDesk(rows, gate)')
         render_end = self.html.index('\nfunction render()', render_start)
         render = self.html[render_start:render_end]
 
-        # Order in the emitted shell: question, starting points, note, then
-        # refinements. The note must be assembled before the controls are.
+        # A defined setup puts the source-note snapshot before refinements and
+        # the evidence matrix; an undefined setup gets an explicit start state.
         layout = render.index("startChips + '</header>' + notePanel + refineBar +")
         self.assertGreater(layout, 0)
+        self.assertIn("const startState = !gate && !defined", render)
+        self.assertIn('No setup defined', render)
+        self.assertIn('Build an evidence-bound research set', render)
 
         # Refinements are closed until asked for, and say so to assistive tech.
         self.assertIn(
@@ -1842,12 +1869,14 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         # see what produced the view they were sent.
         self.assertIn('state.structureControlsOpen = Boolean(', self.html)
 
-        # A reader arriving worried and in a hurry gets four figures before a
-        # sentence: how much is here, and how much of it is actually evidenced.
+        # The four figures use source notes as the independent unit and state
+        # passage/evidence coverage without turning later coverage into return.
         self.assertIn('desk-anchors', render)
-        self.assertIn("'comparable ' + (pattern.total === 1 ?", render)
-        self.assertIn("'revisited later'", render)
-        self.assertIn("'outcome at source'", render)
+        self.assertIn("'source ' + (pattern.noteTotal === 1 ? 'note' : 'notes')", render)
+        self.assertIn("'matching source passages'", render)
+        self.assertIn("'notes with numeric context'", render)
+        self.assertIn("'notes with source outcome'", render)
+        self.assertNotIn("'revisited later'", render)
         self.assertLess(
             render.index('anchorRow'), render.index('noteLines.map'),
             'the orienting figures must precede the prose',
@@ -1862,6 +1891,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         # with the question rather than inside the refinements.
         self.assertIn('desk-starts', render)
         self.assertIn('class="desk-start', render)
+        self.assertIn("countLabel(row.notes,'source note')", render)
+        self.assertIn("countLabel(row.count,'passage')", render)
         for rule in (
             r'\.desk-refine-toggle\[aria-expanded="true"\]',
             r'\.structure-controls\[hidden\]\{display:none\}',
@@ -1876,15 +1907,16 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'this test assumes outcomes are not universally recorded',
         )
         for text in (
-            'This desk reports how comparable positions were <b>described and structured</b>',
-            'is not a backtest, not realised profit and loss, and not a recommendation',
-            'resolution is shown as later coverage rather than as a result',
-            "number(outcomeTotal()) + ' of ' + number(deskUniverseTotal())",
-            'No outcome recorded at source.',
-            'Outcomes appear only where the source stated one.',
-            'No later note in the record revisits these subjects.',
-            'Bands are thirds of the observations compared here, not absolute regimes',
-            'this record never saw an inverted curve.',
+            'Published-research evidence only · no live holdings, prices, P&amp;L, sizing, exposure, liquidity, compliance approval, or recommendation',
+            'Instrument fields are lexical source mentions, not validated legs.',
+            'Related subsequent notes are article-topic links, not outcomes.',
+            'passages contain a source-stated outcome.',
+            'No selected source note contains a source-stated outcome.',
+            'Passage frequency is descriptive archive coverage, not a performance base rate.',
+            'Optional publication-date provenance only.',
+            'fixed cut points from the complete',
+            'official observation dated on or before the publication calendar date.',
+            'not timestamp-aligned and may post-date a same-day article',
             'U.S. Treasury Daily Treasury Par Yield Curve Rates',
         ):
             self.assertIn(text, self.html)

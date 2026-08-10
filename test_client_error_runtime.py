@@ -37,16 +37,18 @@ HARNESS_GLOBALS = r"""
 const THREADS = {article_count:0,defaults:{},topics:{}};
 const THREAD_ARTICLES = Object.create(null);
 const ARTICLE_BY_ID = new Map();
-const DESK_FACETS = {observation_count:0,outcome_count:0,instruments:[],underlyings:[],periods:[]};
+const DESK_FACETS = {observation_count:0,source_note_count:0,outcome_count:0,
+  instruments:[],underlyings:[],periods:[]};
 const location = {href:'https://example.test/#view=structure'};
 const RATE_CONTEXT = {
   schema_version:1, source:{name:'U.S. Treasury'},
   thresholds:{slope:[0.35,0.47],level:[4.36,4.49]},
   days:{'2026-01-05':['2026-01-05',4.10,4.40,4.90,'low','mid']}
 };
+const SNAPSHOT = {data_checksum:'runtime-test-checksum'};
 const WORKFLOW_TEXT_LIMITS = {tags:500,note:4000,risk:1800};
 const MAX_QUEUE_ITEMS = 250;
-const PAGE_SIZE = {queue:100,structure:24};
+const PAGE_SIZE = {queue:100,structure:8};
 """
 
 HARNESS_QUEUE = r"""
@@ -54,8 +56,9 @@ const workflowItems = new Map();
 let savedIdeas = new Set();
 let persisted = true;
 let toast = '';
-const state = {structureFocus:'',structureInstrument:'',structureDirection:'any',
-  structurePeriod:'all',structureSlope:'any',structureLevel:'any',limit:24,
+const state = {structureFocus:'VIX',structureInstrument:'',structureDirection:'any',
+  structurePeriod:'all',structureSlope:'any',structureLevel:'any',structureMacro:false,
+  structureAnchor:'a_i1',structurePassage:'i1',structureShareable:false,limit:8,
   view:'structure',selected:''};
 function showToast(value) { toast = value; }
 function persistWorkflow() { return persisted; }
@@ -68,13 +71,15 @@ function newWorkflowItem(id) {
 function observation(id, overrides) {
   const idea = Object.assign({
     id:id, description:'passage ' + id, direction:'short', instruments:['option'],
-    underlying:'VIX', thesis:'', quant:'2x', outcome:'', manager:'',
+    underlying:'VIX', thesis:'', quant:'2x', outcome:'', manager_raw:'',
+    documentation_score:4,
     _article:{id:'a_' + id, title:'Note ' + id, date:'2026-01-05',
-      url:'https://navnoorbawa.substack.com/p/note-' + id, source:'substack'}
+      url:'https://navnoorbawa.substack.com/p/note-' + id, source:'substack',
+      body_revision_status:'current',content_status:'full'}
   }, overrides || {});
   idea._search = normalize([idea._article.title,idea.description,idea.direction,
     idea.instruments.join(' '),idea.underlying,idea.thesis,idea.quant,
-    idea.outcome,idea.manager].join(' '));
+    idea.outcome,idea.manager_raw].join(' '));
   return idea;
 }
 const IDEAS = [observation('i1'), observation('i2', {direction:'unspecified'})];
@@ -243,15 +248,16 @@ if (day.date !== '2026-01-03' || day.publication_precision !== 'day' ||
         )
         run_node(
             r'''
-const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100};
+const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100,structure:8};
 const THREAD_ARTICLES = {
   a_current:{topics:['vix','options'],default_topic:'vix'}
 };
+const ARTICLE_BY_ID = new Map([['a_current',{id:'a_current'}]]);
 const MANAGERS = [];
 const VALID_SOURCES = new Set();
 const VALID_BODY_REVISIONS = new Set(['current','prior','unverified']);
-const VALID_DIRECTIONS = new Set();
-const VALID_INSTRUMENTS = new Set();
+const VALID_DIRECTIONS = new Set(['long','short']);
+const VALID_INSTRUMENTS = new Set(['option','equity']);
 const VALID_QUALITY = new Set();
 const VALID_PUBLICATION_ACCESS = new Set(['public','member','unknown']);
 const VALID_CONTENT = new Set();
@@ -268,6 +274,8 @@ const state = {
   coverage:'all',briefLens:'all',threadTopic:'',sort:'newest',
   structureFocus:'',structureInstrument:'',structureDirection:'any',
   structurePeriod:'all',structureSlope:'any',structureLevel:'any',
+  structureMacro:false,structureAnchor:'',structurePassage:'',
+  structureShareable:false,structureControlsOpen:false,
   density:'compact',selected:'',limit:24
 };
 const historyCalls = [];
@@ -297,6 +305,91 @@ if (historyCalls.length !== 1 || historyCalls[0][0] !== 'replace' ||
 location.hash = '#view=ideas&selected=a_current&topic=vix';
 hydrateFromHash();
 if (state.threadTopic !== '') throw new Error('topic escaped the briefing view');
+
+// Article links created before Structure Desk became the default still open
+// the exact dossier and are canonicalized to the explicit briefing route.
+historyCalls.length = 0;
+location.hash = '#selected=a_current';
+hydrateFromHash();
+if (state.view !== 'briefing' || state.selected !== 'a_current') {
+  throw new Error('legacy article deep link was diverted to Structure Desk');
+}
+updateHash();
+if (historyCalls.length !== 1 ||
+    historyCalls[0][1] !== '#view=briefing&selected=a_current') {
+  throw new Error('legacy article deep link was not canonicalized');
+}
+
+// A deliberately shared Structure URL restores only bounded values. The
+// selected passage is meaningful only together with a real source note.
+historyCalls.length = 0;
+location.hash = '#focus=VIX&sinst=option&sdir=long&speriod=2026&smacro=1' +
+  '&sslope=high&slevel=low&sanchor=a_current&spassage=i_passage';
+hydrateFromHash();
+if (state.view !== 'structure' || state.structureFocus !== 'VIX' ||
+    state.structureInstrument !== 'option' || state.structureDirection !== 'long' ||
+    state.structurePeriod !== '2026' || !state.structureMacro ||
+    state.structureSlope !== 'high' || state.structureLevel !== 'low' ||
+    state.structureAnchor !== 'a_current' || state.structurePassage !== 'i_passage' ||
+    !state.structureShareable || !state.structureControlsOpen) {
+  throw new Error('a bounded shared Structure view was not restored');
+}
+
+// Macro bands never become active merely because a crafted URL names them,
+// and an unowned note can never authorize a passage anchor.
+location.hash = '#focus=FX&sslope=high&slevel=low&sanchor=unknown&spassage=i_bad';
+hydrateFromHash();
+if (state.structureMacro || state.structureSlope !== 'any' ||
+    state.structureLevel !== 'any') {
+  throw new Error('macro bands escaped their explicit opt-in');
+}
+if (state.structureAnchor || state.structurePassage) {
+  throw new Error('an unowned source passage anchor was accepted');
+}
+historyCalls.length = 0;
+updateHash();
+if (historyCalls.length !== 1 || historyCalls[0][1] !== '#focus=FX') {
+  throw new Error('invalid Structure values were not canonicalized');
+}
+
+// Ordinary edits are private to memory. Canonicalizing an unshared Structure
+// setup clears a stale hash all the way back to the path—never a dangling #.
+state.structureFocus = 'private setup';
+state.structureInstrument = '';
+state.structureDirection = 'any';
+state.structurePeriod = 'all';
+state.structureMacro = false;
+state.structureSlope = 'any';
+state.structureLevel = 'any';
+state.structureAnchor = '';
+state.structurePassage = '';
+state.structureShareable = false;
+location.hash = '#focus=old';
+historyCalls.length = 0;
+updateHash();
+if (historyCalls.length !== 1 || historyCalls[0][0] !== 'replace' ||
+    historyCalls[0][1] !== '/terminal/') {
+  throw new Error('an ordinary Structure edit leaked into the address');
+}
+
+// Copy view is the only action that asks updateHash to expose the local setup.
+location.hash = '';
+historyCalls.length = 0;
+updateHash(true);
+if (historyCalls.length !== 1 ||
+    historyCalls[0][1] !== '#focus=private+setup') {
+  throw new Error('an explicitly shared Structure setup was not serialized');
+}
+
+// An already-empty canonical address is stable and causes no history churn.
+state.structureFocus = '';
+state.structureShareable = false;
+location.hash = '';
+historyCalls.length = 0;
+updateHash();
+if (historyCalls.length !== 0) {
+  throw new Error('the empty Structure address was rewritten unnecessarily');
+}
 '''
         )
 
@@ -541,11 +634,10 @@ if (recoverFromStaleReleaseShell()) throw new Error('recovery would reload the s
 
 
 class StructureDeskRuntimeTests(unittest.TestCase):
-    """The structure desk ranks comparable observations for a trading decision.
+    """The desk retrieves bounded research analogues without inventing trades.
 
-    Its ranking has to stay honest under thin data: a hard input must exclude
-    rather than pad the comparison, and a passage that names an underlying
-    twice must not look like two independent precedents.
+    A hard input excludes rather than pads; source notes—not repeated passages—
+    are the unit of coverage; loose text mentions never enter the direct set.
     """
 
     def desk_runtime(self, assertions):
@@ -558,12 +650,22 @@ class StructureDeskRuntimeTests(unittest.TestCase):
                 'function instrumentLabel(value) {',
                 'function isArticleView()',
             )
+            + javascript_between(
+                'function publicationAccessLabel(article) {',
+                'function sourceAccessLabel(article) {',
+            )
+            + javascript_between(
+                'function reviewFlagged(idea) {',
+                'function validDateInput',
+            )
             + r'''
 const THREADS = {article_count:0,defaults:{},topics:{}};
 const THREAD_ARTICLES = Object.create(null);
 const ARTICLE_BY_ID = new Map();
-const DESK_FACETS = {observation_count:0,outcome_count:0,instruments:[],underlyings:[],periods:[]};
+const DESK_FACETS = {observation_count:0,source_note_count:0,outcome_count:0,
+  instruments:[],underlyings:[],periods:[]};
 const location = {href:'https://example.test/#view=structure'};
+const SNAPSHOT = {data_checksum:'runtime-test-checksum'};
 const RATE_CONTEXT = {
   schema_version:1,
   source:{name:'U.S. Treasury Daily Treasury Par Yield Curve Rates'},
@@ -579,6 +681,14 @@ const RATE_CONTEXT = {
                 'function structureChipRow(',
             )
             + javascript_between(
+                'function structurePassageWarnings(idea) {',
+                'function structurePassageMarkup(',
+            )
+            + javascript_between(
+                'function countLabel(value,singular,plural) {',
+                'function structureRelatedPanel(rows) {',
+            )
+            + javascript_between(
                 'function deskShare(',
                 'function renderStructureDesk(',
             )
@@ -586,24 +696,34 @@ const RATE_CONTEXT = {
 function observation(overrides) {
   const idea = Object.assign({
     id:'i_0', description:'', direction:'unspecified', instruments:['equity'],
-    underlying:'', thesis:'', quant:'', outcome:'', manager:'',
-    _article:{title:'',date:'2026-01-01',url:'https://example.test/a',source:'substack'}
-  }, overrides);
+    underlying:'', thesis:'', quant:'', outcome:'', manager_raw:'',
+    documentation_score:0,description_truncated:false,reference_line:false,
+    negation_risk:false,_article:null
+  }, overrides || {});
+  idea._article = Object.assign({
+    id:'a_' + idea.id,title:'Note ' + idea.id,date:'2026-01-01',
+    url:'https://navnoorbawa.substack.com/p/note-' + idea.id,source:'substack',
+    body_revision_status:'current',content_status:'full'
+  }, idea._article || {});
   idea._search = normalize([
     idea._article.title, idea.description, idea.direction,
     idea.instruments.join(' '), idea.underlying, idea.thesis, idea.quant,
-    idea.outcome, idea.manager
+    idea.outcome, idea.manager_raw
   ].join(' '));
   return idea;
 }
-function desk(patch) {
+function deskSets(patch) {
   Object.assign(state, {
     structureFocus:'', structureInstrument:'', structureDirection:'any',
-    structurePeriod:'all', structureSlope:'any', structureLevel:'any'
+    structurePeriod:'all', structureSlope:'any', structureLevel:'any',
+    structureMacro:false, structureAnchor:'', structurePassage:''
   }, patch || {});
-  return structureMatches();
+  return structureMatchSets();
 }
-const state = {};
+function desk(patch) { return deskSets(patch).primary; }
+const state = {structureFocus:'',structureInstrument:'',structureDirection:'any',
+  structurePeriod:'all',structureSlope:'any',structureLevel:'any',
+  structureMacro:false,structureAnchor:'',structurePassage:''};
 '''
             + assertions,
         )
@@ -615,6 +735,9 @@ const IDEAS = [
   observation({id:'b', instruments:['equity'], direction:'short'}),
   observation({id:'c', instruments:['option'], direction:'long'})
 ];
+if (desk({}).length !== 0) {
+  throw new Error('an undefined setup silently expanded to the whole archive');
+}
 const byInstrument = desk({structureInstrument:'option'}).map(function (row) { return row.idea.id; });
 if (byInstrument.length !== 2 || byInstrument.indexOf('b') !== -1) {
   throw new Error('instrument input did not exclude the other instrument: ' + byInstrument);
@@ -630,20 +753,90 @@ const unmatched = desk({structureFocus:'nothingmatchesthisword'});
 if (unmatched.length !== 0) throw new Error('an unmatched focus must return nothing');
 ''')
 
-    def test_named_underlying_outranks_a_passing_text_mention(self):
+    def test_retrieval_tiers_never_promote_loose_mentions(self):
         self.desk_runtime(r'''
 const IDEAS = [
-  observation({id:'named', underlying:'VIX', quant:'19 handle'}),
-  observation({id:'mention', description:'A note that mentions VIX only in passing.'})
+  observation({id:'exact', underlying:'VIX', quant:'19 handle'}),
+  observation({id:'subject', _article:{title:'VIX Alpha outlook'}}),
+  observation({id:'structured', manager_raw:'VIX Alpha Optiver'}),
+  observation({id:'mention', description:'VIX Alpha Optiver Volga appear only in prose.'}),
+  observation({id:'unrelated', description:'Completely separate research.'})
 ];
-const ranked = desk({structureFocus:'VIX'});
-if (ranked.length !== 2) throw new Error('both passages should be comparable');
-if (ranked[0].idea.id !== 'named') {
-  throw new Error('a named underlying must outrank an incidental mention');
+
+const exact = deskSets({structureFocus:'VIX'});
+if (exact.tier !== 'exact' || exact.primary.map(function (row) {
+  return row.idea.id;
+}).join(',') !== 'exact') {
+  throw new Error('direct underlying evidence did not remain the primary tier');
 }
-if (ranked[0].score <= ranked[1].score) throw new Error('ranking scores did not separate');
-if (!ranked[0].reasons.join(' ').includes('Same underlying')) {
-  throw new Error('the named-underlying match must say so');
+if (exact.related.map(function (row) { return row.idea.id; }).join(',') !==
+    'subject,structured,mention') {
+  throw new Error('lower tiers were not separated beneath exact evidence');
+}
+if (!exact.primary[0].reasons.join(' ').includes('Same underlying')) {
+  throw new Error('the direct-underlying reason was lost');
+}
+
+const subject = deskSets({structureFocus:'Alpha'});
+if (subject.tier !== 'subject' || subject.primary.length !== 1 ||
+    subject.primary[0].idea.id !== 'subject') {
+  throw new Error('an authored headline subject was not isolated');
+}
+if (!subject.primary[0].reasons.join(' ').includes('Authored headline subject')) {
+  throw new Error('the headline-subject reason was lost');
+}
+
+const structured = deskSets({structureFocus:'Optiver'});
+if (structured.tier !== 'related' || structured.primary.length !== 1 ||
+    structured.primary[0].idea.id !== 'structured') {
+  throw new Error('a structured-field match was not isolated');
+}
+if (structured.related.length !== 1 || structured.related[0].idea.id !== 'mention') {
+  throw new Error('a prose mention entered the structured-field set');
+}
+
+const mention = deskSets({structureFocus:'Volga'});
+if (mention.tier !== 'none' || mention.primary.length !== 0 ||
+    mention.related.length !== 1 || mention.related[0].idea.id !== 'mention') {
+  throw new Error('text-only evidence was promoted into an analogue set');
+}
+''')
+
+    def test_short_tokens_and_multiword_questions_use_exact_and_semantics(self):
+        self.desk_runtime(r'''
+const IDEAS = [
+  observation({id:'fx', description:'FX carry was discussed.',
+    _article:{title:'Currency carry note'}}),
+  observation({id:'ai', description:'AI infrastructure was discussed.',
+    _article:{title:'Technology infrastructure note'}}),
+  observation({id:'vix', underlying:'VIX'}),
+  observation({id:'jgb', underlying:'JGB'}),
+  observation({id:'both', underlying:'VIX; JGB'}),
+  observation({id:'noise', description:'Unrelated equity passage.'})
+];
+
+const fx = deskSets({structureFocus:'FX'});
+if (fx.primary.length !== 0 || fx.related.map(function (row) {
+  return row.idea.id;
+}).join(',') !== 'fx') {
+  throw new Error('FX was dropped or broadened to unrelated passages');
+}
+const ai = deskSets({structureFocus:'AI'});
+if (ai.primary.length !== 0 || ai.related.map(function (row) {
+  return row.idea.id;
+}).join(',') !== 'ai') {
+  throw new Error('AI was dropped or broadened to unrelated passages');
+}
+
+const both = deskSets({structureFocus:'VIX JGB'});
+if (both.primary.length !== 1 || both.primary[0].idea.id !== 'both') {
+  throw new Error('multiword focus used OR semantics: ' +
+    both.primary.map(function (row) { return row.idea.id; }).join(','));
+}
+if (both.all.some(function (row) {
+  return row.idea.id === 'vix' || row.idea.id === 'jgb';
+})) {
+  throw new Error('a partial token match entered an AND-constrained result');
 }
 ''')
 
@@ -659,7 +852,7 @@ const only2025 = desk({structurePeriod:'2025'});
 if (only2025.length !== 1 || only2025[0].idea.id !== 'old') {
   throw new Error('the period input did not restrict the comparison');
 }
-const spread = structurePattern(desk({})).periods;
+const spread = structurePattern(desk({structureInstrument:'equity'})).periods;
 if (JSON.stringify(spread) !== '[["2026",1],["2025",1]]') {
   throw new Error('period distribution must run newest first: ' + JSON.stringify(spread));
 }
@@ -676,6 +869,9 @@ const crypto = options.filter(function (row) { return normalize(row.label) === '
 if (!crypto) throw new Error('the recurring underlying was not offered');
 if (crypto.count !== 2) {
   throw new Error('a repeated mention inflated the precedent count to ' + crypto.count);
+}
+if (crypto.notes !== 2) {
+  throw new Error('the recurring underlying lost its source-note breadth');
 }
 if (desk({structureFocus:'Crypto'}).length !== crypto.count) {
   throw new Error('the offered count disagrees with the comparables it returns');
@@ -758,10 +954,10 @@ if (observationFollowUps({id:'x'}).length !== 0) {
 ''')
 
     def test_rate_conditions_come_from_the_published_curve(self):
-        """Comparables can be conditioned on the curve at publication.
+        """Evidence can be filtered by publication-calendar-date provenance.
 
-        The reading must be a published close: a date that is not a trading
-        day carries the as-of day that produced it, never an interpolation.
+        A date with no official observation carries the prior published as-of
+        day, never an interpolation or an intraday timing claim.
         """
         self.desk_runtime(r'''
 const dated = function (id, date) {
@@ -786,30 +982,39 @@ if (rateReading(IDEAS[2]) !== null) {
   throw new Error('a date the series does not cover must have no reading');
 }
 
-const flattest = desk({structureSlope:'low'}).map(function (r) { return r.idea.id; });
+const flattest = desk({structureInstrument:'equity',structureMacro:true,
+  structureSlope:'low'}).map(function (r) { return r.idea.id; });
 if (flattest.join(',') !== 'flat') {
   throw new Error('curve-shape input did not select its band: ' + flattest);
 }
-const steepest = desk({structureSlope:'high'});
+const steepest = desk({structureInstrument:'equity',structureMacro:true,
+  structureSlope:'high'});
 if (steepest.length !== 1 || steepest[0].idea.id !== 'steep') {
   throw new Error('curve-shape input did not select the steeper band');
 }
 if (!steepest[0].reasons.join(' ').toLowerCase().includes('curve shape')) {
   throw new Error('a rate-conditioned match must say the curve was matched');
 }
-const level = desk({structureLevel:'high'}).map(function (r) { return r.idea.id; });
+const level = desk({structureInstrument:'equity',structureMacro:true,
+  structureLevel:'high'}).map(function (r) { return r.idea.id; });
 if (level.join(',') !== 'steep') throw new Error('10Y level input did not select: ' + level);
 
 // An observation the curve cannot price is excluded rather than guessed at.
-const all = desk({});
-if (all.length !== 3) throw new Error('an unconditioned desk should keep every passage');
-const conditioned = desk({structureSlope:'low'}).concat(desk({structureSlope:'mid'}))
-  .concat(desk({structureSlope:'high'})).map(function (r) { return r.idea.id; });
+const all = desk({structureInstrument:'equity'});
+if (all.length !== 3) throw new Error('an unconditioned setup should keep every passage');
+const ignoredBand = desk({structureInstrument:'equity',structureSlope:'low'});
+if (ignoredBand.length !== 3) {
+  throw new Error('a macro band filtered evidence without explicit macro opt-in');
+}
+const conditioned = desk({structureInstrument:'equity',structureMacro:true,
+  structureSlope:'low'}).concat(desk({structureInstrument:'equity',structureMacro:true,
+  structureSlope:'mid'})).concat(desk({structureInstrument:'equity',structureMacro:true,
+  structureSlope:'high'})).map(function (r) { return r.idea.id; });
 if (conditioned.indexOf('unpriced') !== -1) {
   throw new Error('an observation with no curve reading was given a band');
 }
 
-const pattern = structurePattern(desk({}));
+const pattern = structurePattern(desk({structureInstrument:'equity',structureMacro:true}));
 const slopeTotal = pattern.slopeBands.reduce(function (sum, row) { return sum + row[1]; }, 0);
 if (slopeTotal !== 2) {
   throw new Error('rate bands must tally only the passages the curve prices');
@@ -822,9 +1027,8 @@ if (!rateSourceNote().includes('not absolute regimes')) {
 }
 ''')
 
-    def test_desk_note_states_base_rates_and_refuses_to_overclaim(self):
-        """The note is the document a reader takes away, so it must read as a
-        reference class: shares of a named population, with the gaps stated."""
+    def test_desk_note_clusters_sources_and_refuses_performance_claims(self):
+        """The memo reports source-note coverage, not passage-level votes."""
         self.desk_runtime(r'''
 // Owned URLs: the memo runs every citation through safeUrl, so an unowned
 // host is rewritten to '#' rather than published as a link.
@@ -833,8 +1037,10 @@ const dated = function (id, date) {
     url:'https://navnoorbawa.substack.com/p/note-' + id, source:'substack', id:id};
 };
 const IDEAS = [
-  observation({id:'a', instruments:['option','equity'], direction:'short',
+  observation({id:'a1', instruments:['option','equity'], direction:'short',
     quant:'2x', _article:dated('a','2026-01-05')}),
+  observation({id:'a2', instruments:['option'], direction:'short',
+    _article:dated('a','2026-01-05')}),
   observation({id:'b', instruments:['option'], direction:'unspecified',
     _article:dated('b','2026-01-05')}),
   observation({id:'c', instruments:['option'], direction:'unspecified',
@@ -845,44 +1051,43 @@ const pattern = structurePattern(ranked);
 const lines = deskNoteLines(pattern);
 const byLabel = new Map(lines.map(function (row) { return [row[0], row[1]]; }));
 
-if (!byLabel.get('Reference class').includes('3 comparable observations')) {
-  throw new Error('the note must size the class it drew from');
+if (pattern.total !== 4 || pattern.noteTotal !== 3) {
+  throw new Error('passages were mistaken for independent source notes');
 }
-if (!byLabel.get('Reference class').includes('Options')) {
-  throw new Error('the note must name the class it drew from');
+if (!byLabel.get('Evidence set').includes('3 source notes containing 4 matching extracted passages')) {
+  throw new Error('the note did not state both source-note and passage breadth');
+}
+if (!byLabel.get('Evidence set').includes('Options')) {
+  throw new Error('the note did not name its explicit retrieval constraint');
 }
 // The filtered instrument is in every row by construction; reporting it as
 // 100% would say nothing, so the co-instrument is what gets reported.
-const structured = byLabel.get('How they were structured');
-if (structured.includes('Options appears in 3 of 3')) {
+const structured = byLabel.get('Parsed instrument context');
+if (structured.includes('Options')) {
   throw new Error('the note restated the filter as a finding');
 }
-if (!structured.includes('Equity appears in 1 of 3 (33%)')) {
-  throw new Error('the note should report what the class was combined with');
+if (!structured.includes('Equity is mentioned in 1 of 3 source notes (33%)') ||
+    !structured.includes('not validated position legs')) {
+  throw new Error('co-occurrence context was not bounded honestly: ' + structured);
 }
-// Two of three state no stance, so the gap leads rather than a 33% stance.
-if (!structured.includes('stance is not stated in 2 of 3 (67%)')) {
-  throw new Error('the dominant fact must lead: ' + structured);
+if (!byLabel.get('Captured evidence').includes(
+    '1 of 3 source notes (33%) contain numeric context')) {
+  throw new Error('note-clustered evidence coverage is wrong: ' +
+    byLabel.get('Captured evidence'));
 }
-if (structured.indexOf('not stated') > structured.indexOf('most common stance')
-    && structured.includes('most common stance')) {
-  throw new Error('a minority stance was presented ahead of the majority gap');
-}
-if (!byLabel.get('Evidence they carry').includes('1 of 3 (33%) carry a numeric anchor')) {
-  throw new Error('evidence shares are wrong: ' + byLabel.get('Evidence they carry'));
-}
-const limits = byLabel.get('What the record does not say');
-if (!limits.includes('No outcome is recorded at source')) {
+const limits = byLabel.get('Primary diligence gap');
+if (!limits.includes('No selected source note contains a source-stated outcome')) {
   throw new Error('the note must state the outcome gap');
 }
-if (!limits.includes('not a backtest')) {
-  throw new Error('the note must refuse the backtest reading');
+if (!limits.includes('not a performance base rate')) {
+  throw new Error('passage frequency was allowed to read as performance evidence');
 }
 
 const markdown = deskNoteMarkdown(pattern, ranked);
-if (!markdown.startsWith('# Structure desk note')) throw new Error('memo has no title');
-if (!markdown.includes('**Reference class.**')) throw new Error('memo lost its sections');
-if (!markdown.includes('## Closest comparables')) throw new Error('memo cites nothing');
+if (!markdown.startsWith('# Research evidence memo')) throw new Error('memo has no title');
+if (!markdown.includes('**Evidence set.**')) throw new Error('memo lost its sections');
+if (!markdown.includes('## Primary retrieved source notes')) throw new Error('memo cites nothing');
+if (!markdown.includes('runtime-test-checksum')) throw new Error('memo lost snapshot provenance');
 if (!markdown.includes('https://navnoorbawa.substack.com/p/note-a')) {
   throw new Error('memo lost its source links');
 }
@@ -894,7 +1099,21 @@ if (deskNoteMarkdown(pattern, foreign).includes('evil.test')) {
   throw new Error('the memo published an unowned link');
 }
 foreign[0].idea._article = dated('a','2026-01-05');
-if (!markdown.includes(location.href)) throw new Error('memo must carry the view it came from');
+if (markdown.includes(location.href)) {
+  throw new Error('the memo leaked the local Structure URL');
+}
+
+// A two-note set is explicitly too thin for percentages. Repeated passages
+// from note a still count once.
+const thinRows = ranked.filter(function (row) {
+  return row.idea._article.id === 'a' || row.idea._article.id === 'b';
+});
+const thin = structurePattern(thinRows);
+const thinText = deskNoteLines(thin).map(function (row) { return row[1]; }).join(' ');
+if (thin.noteTotal !== 2 || thinText.includes('%') ||
+    !thinText.includes('too thin for distributional interpretation')) {
+  throw new Error('a thin source-note set was presented as a distribution');
+}
 
 // An empty class produces no note at all rather than a note about nothing.
 const none = structurePattern(desk({structureFocus:'nothingmatches'}));
@@ -905,32 +1124,39 @@ if (deskNoteMarkdown(none, []) !== '') throw new Error('an empty class produced 
     def test_structure_pattern_reports_what_the_record_actually_carries(self):
         self.desk_runtime(r'''
 const IDEAS = [
-  observation({id:'a', instruments:['option','equity'], direction:'short', quant:'2x', outcome:'closed flat'}),
+  observation({id:'a1', instruments:['option','equity'], direction:'short',
+    quant:'2x', outcome:'closed flat',_article:{id:'a'}}),
+  observation({id:'a2', instruments:['option'], direction:'short',_article:{id:'a'}}),
   observation({id:'b', instruments:['option'], direction:'short', thesis:'carry'}),
   observation({id:'c', instruments:['equity'], direction:'unspecified'})
 ];
-const pattern = structurePattern(desk({}));
-if (pattern.total !== 3) throw new Error('pattern total: ' + pattern.total);
+const pattern = structurePattern(desk({structurePeriod:'2026'}));
+if (pattern.total !== 4 || pattern.noteTotal !== 3) {
+  throw new Error('source-note clustering failed: ' + pattern.total + '/' + pattern.noteTotal);
+}
 if (pattern.withOutcome !== 1) throw new Error('outcome count must not be inflated');
 if (pattern.withQuant !== 1 || pattern.withThesis !== 1) throw new Error('evidence counts are wrong');
 const instruments = new Map(pattern.instruments);
 if (instruments.get('option') !== 2 || instruments.get('equity') !== 2) {
   throw new Error('instrument tally is wrong: ' + JSON.stringify(pattern.instruments));
 }
-if (pattern.combinations[0][0] !== 'Equity + Options' || pattern.combinations[0][1] !== 1) {
-  throw new Error('combination tally is wrong: ' + JSON.stringify(pattern.combinations));
+if ('combinations' in pattern) {
+  throw new Error('lexical co-mentions were mislabeled as validated position legs');
 }
 const directions = new Map(pattern.directions);
 if (directions.get('short') !== 2) throw new Error('stance tally is wrong');
+if (directions.get('unspecified') !== 1) throw new Error('missing stance was hidden');
+if (pattern.withCurrent !== 3 || pattern.withFull !== 3 || pattern.withReview !== 0) {
+  throw new Error('source capture quality was not clustered by note');
+}
 ''')
 
 
 class DeskToDecisionRuntimeTests(unittest.TestCase):
-    """The desk computes an outside view; the packet is where it must land.
+    """An explicitly anchored source passage can seed only evidence fields.
 
-    A base rate recalled after a position is opened is worth little. These
-    tests hold the bridge to the two rules that make it safe to use: it never
-    writes the analyst's own view, and it never leaves a half-written packet.
+    The bridge never chooses a passage for the analyst, never writes thesis or
+    risk, and never leaves a half-written packet after persistence failure.
     """
 
     def bridge_runtime(self, assertions):
@@ -943,10 +1169,30 @@ class DeskToDecisionRuntimeTests(unittest.TestCase):
                 'function instrumentLabel(value) {',
                 'function isArticleView()',
             )
+            + javascript_between(
+                'function publicationAccessLabel(article) {',
+                'function sourceAccessLabel(article) {',
+            )
+            + javascript_between(
+                'function reviewFlagged(idea) {',
+                'function validDateInput',
+            )
+            + javascript_between(
+                'function passageText(idea) {',
+                'function ideaRow(idea) {',
+            )
             + HARNESS_GLOBALS
             + javascript_between(
                 'function underlyingParts(idea) {',
                 'function structureChipRow(',
+            )
+            + javascript_between(
+                'function structurePassageWarnings(idea) {',
+                'function structurePassageMarkup(',
+            )
+            + javascript_between(
+                'function countLabel(value,singular,plural) {',
+                'function structureRelatedPanel(rows) {',
             )
             + javascript_between(
                 'function deskShare(',
@@ -960,29 +1206,88 @@ class DeskToDecisionRuntimeTests(unittest.TestCase):
             + assertions,
         )
 
-    def test_the_reference_class_lands_in_the_packet_with_a_pre_mortem(self):
+    def test_the_selected_exact_passage_lands_in_an_evidence_only_packet(self):
         self.bridge_runtime(r"""
 openDecisionPacketFromDesk();
 const item = workflowItems.get('i1');
-if (!item) throw new Error('no packet was opened against the closest comparable');
-if (!item.note.includes('REFERENCE CLASS')) {
-  throw new Error('the packet did not record the class it came from');
+if (!item) throw new Error('the explicitly anchored passage opened no packet');
+if (!item.note.includes('RESEARCH EVIDENCE SET') ||
+    !item.note.includes('Selected exact passage: passage i1') ||
+    !item.note.includes('EVIDENCE CHALLENGE')) {
+  throw new Error('the packet did not retain its evidence boundary');
 }
 if (!item.note.includes('https://navnoorbawa.substack.com/p/note-i1')) {
   throw new Error('the packet lost its citations');
 }
-if (!item.risk.startsWith('BASE-RATE PRE-MORTEM')) {
-  throw new Error('the falsifier field did not receive a pre-mortem');
+if (!item.note.includes('[ANCHOR] Note i1') ||
+    !item.note.includes('runtime-test-checksum')) {
+  throw new Error('the packet lost its selected source provenance');
 }
-if (!/\d+ of \d+ \(\d+%\)/.test(item.risk)) {
-  throw new Error('the pre-mortem carries no base rate: ' + item.risk);
+if (item.thesis !== '' || item.risk !== '') {
+  throw new Error('the desk wrote the analyst thesis or risk field');
 }
-if (!item.risk.includes('Assume this position has already failed')) {
-  throw new Error('the pre-mortem does not ask the question that de-biases');
-}
-if (!item.tags.includes('reference class:')) throw new Error('packet was not tagged');
+if (!item.tags.includes('research evidence:')) throw new Error('packet was not tagged');
+if (workflowItems.has('i2')) throw new Error('the desk silently chose another passage');
 if (state.view !== 'queue' || state.selected !== 'i1') {
   throw new Error('the reader was not taken to the packet');
+}
+""")
+
+    def test_a_long_packet_preserves_the_anchor_scope_and_final_challenge(self):
+        """Bounded local storage must truncate optional detail, not safeguards."""
+        self.bridge_runtime(r"""
+IDEAS[0].description = 'anchor evidence '.repeat(55).slice(0,800);
+IDEAS[0]._search = normalize([IDEAS[0]._article.title,IDEAS[0].description,
+  IDEAS[0].direction,IDEAS[0].instruments.join(' '),IDEAS[0].underlying].join(' '));
+for (let index = 3; index <= 7; index += 1) {
+  const row = observation('i' + index);
+  row._article.title = 'Long retrieved source note ' + index + ' ' + 'title '.repeat(32);
+  row._article.url = 'https://navnoorbawa.substack.com/p/' +
+    ('long-source-' + index + '-').repeat(8) + 'note';
+  row._search = normalize([row._article.title,row.description,row.direction,
+    row.instruments.join(' '),row.underlying].join(' '));
+  IDEAS.push(row);
+}
+openDecisionPacketFromDesk();
+const item = workflowItems.get('i1');
+if (!item) throw new Error('long evidence set opened no packet');
+if (item.note.length > WORKFLOW_TEXT_LIMITS.note) {
+  throw new Error('bounded packet exceeded its storage contract');
+}
+if (!item.note.includes('Selected exact passage: ') ||
+    !item.note.includes('PACKET EVIDENCE SCOPE') ||
+    !item.note.includes('This packet cites 5 of 7 retrieved source notes')) {
+  throw new Error('long packet lost its anchor or explicit source-count scope');
+}
+if (!item.note.includes('What evidence would distinguish a real analogue from a narrative resemblance?')) {
+  throw new Error('long packet truncation removed the final de-biasing question');
+}
+if (!item.note.includes('[Additional retrieved-source detail omitted')) {
+  throw new Error('long packet silently truncated optional evidence detail');
+}
+""")
+
+    def test_a_packet_requires_an_exact_passage_inside_the_selected_note(self):
+        self.bridge_runtime(r"""
+state.structurePassage = '';
+openDecisionPacketFromDesk();
+if (workflowItems.size !== 0 ||
+    !toast.includes('Anchor the exact source passage')) {
+  throw new Error('a note-level selection opened a packet without a passage');
+}
+
+toast = '';
+state.structurePassage = 'i2';
+openDecisionPacketFromDesk();
+if (workflowItems.size !== 0 ||
+    !toast.includes('Anchor the exact source passage')) {
+  throw new Error('a passage from another source note was accepted');
+}
+
+state.structurePassage = 'i1';
+openDecisionPacketFromDesk();
+if (!workflowItems.has('i1')) {
+  throw new Error('a valid explicit passage anchor was rejected');
 }
 """)
 
@@ -991,7 +1296,9 @@ if (state.view !== 'queue' || state.selected !== 'i1') {
 openDecisionPacketFromDesk();
 const item = workflowItems.get('i1');
 // The desk supplies evidence and a prompt. The thesis is the analyst's.
-if (item.thesis !== '') throw new Error('the desk wrote a thesis');
+if (item.thesis !== '' || item.risk !== '') {
+  throw new Error('the desk wrote a thesis or risk view');
+}
 
 item.note = 'MY OWN NOTE';
 item.risk = 'MY OWN FALSIFIER';
@@ -1028,14 +1335,14 @@ if (workflowItems.size !== 0) {
 }
 """)
 
-    def test_an_empty_reference_class_opens_nothing(self):
+    def test_an_empty_analogue_set_opens_nothing(self):
         self.bridge_runtime(r"""
 state.structureFocus = 'nothingmatchesthisword';
 openDecisionPacketFromDesk();
 if (workflowItems.size !== 0) {
   throw new Error('a packet was opened with no comparable to anchor it');
 }
-if (!toast.includes('No comparable observation')) {
+if (!toast.includes('Define a setup with primary retrieved evidence')) {
   throw new Error('the reader was not told why nothing opened');
 }
 """)

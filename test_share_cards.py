@@ -101,7 +101,7 @@ class ShareCardTests(unittest.TestCase):
         )
         self.assertIn('/cards/color-%CE%B3-t.png', stub)
         self.assertIn('/a/color-%CE%B3-t.html', stub)
-        self.assertIn('#selected=a_52e608d0ef5392', stub)
+        self.assertIn('#view=briefing&amp;selected=a_52e608d0ef5392', stub)
         self.assertIn('og:image:width" content="1200', stub)
         self.assertIn("script-src 'sha256-", stub)
 
