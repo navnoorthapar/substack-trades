@@ -137,10 +137,12 @@ contracts are in [SCHEMA.md](SCHEMA.md).
 Member-access research is promoted as source completeness, never as a simulated
 browser paywall. The terminal keeps public research usable, distinguishes what
 the source permits from how much this release captured, and presents a
-contextual continuation panel only for a canonical paid Substack record. A
-non-empty panel passage is the exact anonymous source preview proven by the
-snapshot; a row without such a preview is labeled metadata-only. The panel links
-to the exact article page and offers a separate no-tracking path to current
+contextual continuation panel only for a canonical paid Substack record. In the
+Research Evidence Desk, the same boundary appears once inside an expanded paid
+source note, at the point where the analyst has inspected its captured passage.
+A non-empty panel passage is the exact anonymous source preview proven by the
+snapshot; a row without such a preview is labeled metadata-only. Each panel
+links to the exact article page and offers a separate no-tracking path to current
 subscription terms. Locked Medium and paid Patreon records retain their own
 source identity and never imply that a Substack subscription unlocks them.
 
@@ -160,8 +162,8 @@ release-artifact handling remains the explicit launch blocker documented as
 This is an institutional research-intake and human-diligence terminal. It helps
 an owner, CIO, portfolio manager, trader, or quantitative researcher discover
 published ideas, inspect the exact supporting passage, triage uncertainty, and
-turn a candidate into a reviewable decision packet. It is deliberately not a
-portfolio-management, order-management, risk, accounting, compliance, or
+turn a candidate into a source-bound human research task. It is deliberately
+not a portfolio-management, order-management, risk, accounting, compliance, or
 investor-reporting system.
 
 That boundary and diligence structure are informed by
@@ -177,39 +179,50 @@ does not manufacture NAV/P&L, attribution, exposure, leverage, VaR, stress,
 liquidity, funding, counterparty, capacity, execution, compliance, or investor
 metrics without the connected books and records required to calculate them.
 
-### Research Structuring Desk
+### Research Evidence Desk
 
-The Research Structuring Desk starts empty and requires the analyst to state a
-research question or choose an explicit scope before it retrieves evidence. It
-organizes the existing authored corpus for diligence; it does not infer a house
-view or turn an article passage into a trade. Results are clustered by source
-note so repeated passages from one article are not counted as independent
-evidence. Every result reports both source-note and captured-passage counts.
+The Research Evidence Desk starts empty and does not fetch the deferred
+observation archive until the analyst defines an evidence subject or an explicit
+retrieval refinement. It separates two inputs with different responsibilities:
+**Decision to test** is analyst-authored framing that stays in page memory during
+ordinary use and never changes retrieval; **Evidence subject** is a deterministic
+literal all-material-term search over the published corpus. The Desk organizes
+that corpus for diligence; it does not infer a house view or turn a passage into
+a trade.
 
-Retrieval provenance remains visible and separate: an exact structured
-underlying match is not blended with an authored-title subject match or a match
-from another structured field. Loose article-text mentions appear only as
-related context, outside the primary evidence set. Multi-token questions require
-all material tokens rather than treating the words as alternative matches. The
-analyst must expand a source note and explicitly anchor one exact displayed
-passage before creating a decision packet; no highest-ranked passage is selected
-on the analyst's behalf.
+Primary evidence is clustered by source note, so repeated captured passages
+from one article are not counted as independent sources. Every result reports
+raw source-note and passage counts. A direct passage-level underlying or
+all-term match can enter the primary ledger. Authored-headline matches,
+structured-field context, and text-only mentions are shown in separate labeled
+context sections and cannot become an evidence anchor merely because the
+article title matched. The analyst must expand a source note and explicitly
+anchor one exact displayed passage before opening a local Research Task; no
+highest-ranked passage is selected on the analyst's behalf.
+
+Automated extraction remains visibly provisional. Numeric and outcome/P&L
+phrases are labeled as detected phrases; thesis language is a parser candidate.
+Missing labels mean only that the bounded captured passage did not produce that
+candidate, not that the complete source lacks the information. Truncation,
+excerpt-only coverage, stale revisions, and review flags remain attached to the
+source note and exact passage.
 
 Optional macro context is provenance, not a portfolio signal. When enabled, it
 uses an official observation dated on or before the article's publication
 calendar date and labels that observation date. Daily observations are not
 aligned to article timestamps and may post-date a same-day publication. The
-reading is not an event, entry, position, or valuation date and does not
-establish causality. The Desk supplies no holdings, live or position prices,
-P&L, sizing, exposure, liquidity assessment, compliance determination, or
-recommendation. Those require the firm's own books, market data, controls, and
-accountable human judgment.
+reading is not an event, entry, position, or valuation date, does not establish
+causality, and cannot change evidence membership or ordering. The Desk supplies
+no holdings, live or position prices, P&L, sizing, exposure, liquidity
+assessment, compliance determination, or recommendation. Those require the
+firm's own books, market data, controls, and accountable human judgment.
 
-Structure questions and ordinary Desk refinements stay only in page memory and
-are not silently written to the address bar. **Copy view** is the explicit
-sharing action: it may serialize the current question, filters, and exact source
-anchor into the copied URL. Shared views must therefore contain only
-non-confidential research context.
+The decision question, evidence subject, refinements, and source anchor remain
+in page memory during ordinary use and are not silently written to the address
+bar. **Copy view** is the explicit sharing action: it generates a share URL from
+the current Desk state without mutating normal browser history or the active
+address. The copied URL may contain the non-confidential decision question,
+evidence subject, refinements, optional context toggle, and exact source anchor.
 
 The default Institutional Article Workbench is built around the article data:
 the first eligible authored passage, contextual evidence, mechanism,
@@ -242,8 +255,8 @@ larger observation archive loads only when a selected view or filter needs it,
 avoiding a late rerender of the active brief.
 
 The briefing navigation remains complete when the desktop rail collapses, and
-the print/PDF layout preserves the authored IC decision sheet and public
-checkpoints while removing tab-session workflow fields.
+the print/PDF layout preserves the authored research brief and public
+checkpoints while removing tab-session Research Task fields.
 
 The default Light theme uses a Financial Times-inspired editorial grammar:
 warm paper surfaces, dark ink, serif research headlines, claret hierarchy, and
@@ -256,19 +269,28 @@ contrast gates.
 
 The Evidence Monitor and Research Library provide fast passage-level review.
 Directional labels describe parsed language, not an actor, verified position,
-exposure, conviction, or current view. Decision Workflow stores an 18-part
-analyst packet: eight investment-case fields, six self-attested control gates,
-and four workflow controls. Coverage means only that fields were populated; it
-is not approval, conviction, investability, or proof that a control was
-completed.
+exposure, conviction, or current view. **Research Tasks** is a local,
+non-confidential scratchpad for human diligence, not a scored approval queue. A
+task retains the bounded source snapshot and dataset checksum, plus
+analyst-authored hypothesis, contrary evidence, an independent public-source
+citation, a key numeric claim with cited context, a public catalyst or
+checkpoint, horizon, falsifier, owner, next action, review date, tags, memo, and
+timestamped research attestations. It deliberately omits analyst-confidence scoring,
+position or entry terms, payoff, execution/borrow/funding, portfolio-fit, and
+live risk fields.
 
-Each workflow packet retains a bounded source snapshot and dataset checksum.
-If a later extraction changes or removes the observation ID, the packet remains
-visible as an orphaned source snapshot instead of silently disappearing. Backup
-imports merge with existing work, and removal archives a packet rather than
-destroying its history. "New since last review" advances only when the user
-explicitly marks the review baseline; simply opening or reloading the site does
-not acknowledge new research.
+If a later extraction changes or removes the observation ID, the Research Task
+remains visible with its retained source snapshot instead of silently
+disappearing. Task rows, filters, date ranges, sorting, keyboard/open actions,
+citations, copies, and CSV exports remain bound to that retained snapshot; any
+current-release difference is labeled separately. A missing or unsafe snapshot
+fails closed rather than being replaced by current article text. Backup imports
+merge with existing work, require separate approval before a newer same-ID task
+can replace a different retained source anchor, and keep current-missing tasks
+first-class in the same table/editor/export workflow. Removal archives a task
+rather than destroying its history. "New since last review" advances only when the user explicitly
+marks the review baseline; simply opening or reloading the site does not
+acknowledge new research.
 
 All passage-scored evidence fields are derived from the exact passage shown in
 the inspector—never from hidden adjacent paragraphs. Mentioned-entity labels may
@@ -279,16 +301,26 @@ states an explicit affirmative position. These controls reduce false precision;
 they do not replace reading the original article or obtaining independent
 evidence.
 
-Workflow packets use plaintext `sessionStorage`, which is isolated to the
+Research Tasks use plaintext `sessionStorage`, which is isolated to the
 current top-level browser tab and survives reloads only until that tab session
 closes. Explicit exports are plaintext backups. On first use, the terminal
 states these boundaries and prohibits confidential or regulated entries. A
 valid legacy origin-wide queue is transactionally moved into the tab session
 and removed from persistent storage; malformed legacy records fail closed and
-can be preserved before cleanup. Restore keeps a tab-scoped rollback across
-reloads. These packets are not an authenticated, shared, encrypted, or immutable
-enterprise audit record. See [PRIVACY.md](PRIVACY.md) and
-[SECURITY.md](SECURITY.md).
+can be preserved before cleanup. Valid saves, imports, and rollback payloads are
+rewritten into the current bounded schema: retired position-like text,
+confidence fields, and old attestation booleans are discarded rather than
+silently reinterpreted. A checked attestation survives only with its matching
+valid timestamp. Restore keeps a tab-scoped rollback across reloads. These
+tasks are not an authenticated, shared, encrypted, or immutable enterprise
+audit record. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
+
+Each new task snapshot stores the capture-time negation, reference-line, and
+truncation flags with an explicit verification marker. Older or malformed
+imports without complete boolean proof show `review flags unavailable` instead
+of being treated as clean. Legacy ID-only bookmarks can be migrated, but the
+interface labels their snapshot as captured from the active release during
+migration—not as historical evidence from the bookmark date.
 
 ## Install the scheduled updater
 
@@ -402,9 +434,10 @@ run rebuilds and redeploys the already tracked snapshot.
 
 The site intentionally ships no analytics SDK, tracking pixel, advertising
 cookie, session replay, or background telemetry. Search text and tab-session
-decision packets are not sent to this project. Explicit **Copy view** actions
-may place the active research query in the copied URL so the user can choose to
-share it. Maintainers can use GitHub's aggregate repository traffic window and
+Research Tasks are not sent to this project. Explicit **Copy view** actions may
+place the active non-confidential Desk framing in the copied URL so the user can
+choose to share it; generating that URL does not change the normal address-bar
+history. Maintainers can use GitHub's aggregate repository traffic window and
 Google Search Console for discovery health without embedding reader tracking in
 the terminal. Search Console ownership and sitemap submission are manual owner
 steps documented in [LAUNCH_RUNBOOK.md](LAUNCH_RUNBOOK.md).

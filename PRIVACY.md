@@ -10,15 +10,18 @@ project owner.
 
 The published application includes no analytics SDK, advertising pixel,
 tracking cookie, session replay, account system, form submission, or background
-telemetry. Search text, filters, reading activity, and decision-workflow entries
-are not transmitted to this project.
+telemetry. Search text, the analyst-authored decision question, the deterministic
+evidence subject, filters, reading activity, and Research Task entries are not
+transmitted to this project.
 
 The terminal may show a contextual link to an article on its original
 publication and, for Substack member-access previews, a separate link to the
-publication's subscription page. Those links contain no reader query, filter,
-selected entity, article-state, referral, or decision-workflow value. The
-external site receives a request only after the reader chooses the link and
-applies its own terms and privacy practices.
+publication's subscription page. The Research Evidence Desk repeats those two
+choices once inside an expanded paid source note so the public evidence remains
+useful before any off-site continuation. Those links contain no reader question,
+evidence subject, filter, selected entity, article state, referral, or Research
+Task value. The external site receives a request only after the reader chooses
+the link and applies its own terms and privacy practices.
 
 GitHub Pages necessarily serves the static files and may process ordinary web
 request metadata under GitHub's own terms and privacy practices. Maintainers may
@@ -57,8 +60,8 @@ manually reviewed public byline metadata and do not include article bodies.
 > C3. PRIVACY RULE (absolute): this is a PUBLIC repo and PUBLIC site. NEVER add private analytics — no email open rates, subscriber counts, revenue, pledges, or dashboard-derived numbers. Only content metadata and already-public information (public reaction/comment counts are acceptable ONLY if already collected; do not build new private-data collection).
 
 The public data validator rejects forbidden private-analytics keys recursively.
-The data bundle does not contain reader identities, search history, decision
-packets, cookies, or behavioral events. The endpoint contract is documented in
+The data bundle does not contain reader identities, search history, Research
+Tasks, cookies, or behavioral events. The endpoint contract is documented in
 [SCHEMA.md](SCHEMA.md).
 
 ## Historical publication boundary
@@ -75,30 +78,60 @@ recorded as `LAUNCH-058` in [ISSUES.md](ISSUES.md).
 
 ## Data stored on the reader's device
 
-Decision Workflow packets use plaintext `sessionStorage`, partitioned by origin
-and the current top-level browser tab. They survive reloads but end when that tab
-session closes; other ordinary tabs do not receive the queue. Review baselines
-and display preferences use persistent functional browser storage. Exported
-queue backups are plaintext. Do not enter confidential, personal, client,
-position, material non-public, or regulated information.
+Research Tasks use plaintext `sessionStorage`, partitioned by origin and the
+current top-level browser tab. They survive reloads but end when that tab session
+closes; other ordinary tabs do not receive the scratchpad. Review baselines and
+display preferences use persistent functional browser storage. Exported task
+backups are plaintext. The task editor is limited to human research framing,
+public-source citations, and timestamped attestations; it does not solicit
+confidence, position/entry, payoff,
+execution/borrow/funding, portfolio-fit, or live-risk fields. Free-text fields
+still must not contain confidential, personal, client, position, material
+non-public, or regulated information.
 
-The application asks for an acknowledgement before workflow storage is first
-used. A valid queue left by the prior origin-wide implementation is moved into
-the tab session and removed from persistent storage. Unreadable records fail
-closed and can be preserved before destructive cleanup. Imports retain a
-tab-session rollback across reloads. The interface can clear both the tab queue
-and accessible legacy queue keys; clearing browser site data also removes them.
+The application asks for an acknowledgement before task storage is first used.
+A valid queue left by the prior origin-wide implementation is moved into the tab
+session and removed from persistent storage. Unreadable records fail closed and
+can be preserved before destructive cleanup. Imports retain a tab-session
+rollback across reloads. Valid session data, imports, normal backups, and
+rollback payloads are canonicalized to the current bounded task schema. Retired
+confidence, position/entry, payoff, implementation, portfolio, live-risk, and
+legacy attestation fields are discarded; old booleans are never reinterpreted
+as new attestations, and an attestation is checked only when its matching
+timestamp is valid. A task without a safe retained source snapshot is rejected
+rather than rebound to current article content. The interface can clear both
+the current tab tasks and accessible legacy queue keys; clearing browser site
+data also removes them.
+
+Task display, filtering, sorting, date windows, source opening, keyboard
+shortcuts, copied citations, task text, and CSV exports use the retained source
+snapshot. Current-release changes are shown only as an explicit comparison.
+This prevents an updated extraction from silently changing the evidence behind
+an existing task. Tasks whose current observation disappears remain fully
+searchable, editable, archivable, copyable, and exportable. A newer same-ID
+import with a different retained source anchor requires its own explicit
+conflict approval before the ordinary import preview.
+
+New task snapshots retain the capture-time negation, reference-line, and
+truncation flags. Older or malformed payloads without a complete three-boolean
+proof are labeled `review flags unavailable`; absence is never silently
+interpreted as a clean capture. A migrated legacy ID-only bookmark is labeled
+as an active-release snapshot created during migration, not evidence retained
+from the historical bookmark date.
 
 ## Explicit sharing
 
-The normal address bar does not persist global search text, Research Structuring
-Desk questions, Desk filters, or source-passage anchors. Ordinary Desk edits
-remain in page memory. When a reader explicitly selects **Copy view**, the
-copied URL may include the current question, filters, and exact source anchor so
-that view can be shared. Treat that URL as public and use the feature only for
-non-confidential research context. Exported workflow backups and copied
-citations leave the browser only when the reader chooses where to send or save
-them.
+The normal address bar does not persist global search text, the Research
+Evidence Desk's analyst decision question, its literal all-term evidence
+subject, Desk refinements, or source-passage anchors. Ordinary Desk edits remain
+in page memory. When a reader explicitly selects **Copy view**, the application
+generates a share URL without mutating normal browser history or the active
+address. That copied URL may include the decision question, evidence subject,
+refinements, optional Treasury-context toggle, and exact source anchor. Treasury
+context is post-retrieval provenance and cannot alter evidence membership or
+ordering. Treat the URL as public and use the feature only for non-confidential
+research context. Exported task backups and copied citations leave the browser
+only when the reader chooses where to send or save them.
 
 ## Contact
 

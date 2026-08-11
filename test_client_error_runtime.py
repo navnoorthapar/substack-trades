@@ -46,7 +46,7 @@ const RATE_CONTEXT = {
   days:{'2026-01-05':['2026-01-05',4.10,4.40,4.90,'low','mid']}
 };
 const SNAPSHOT = {data_checksum:'runtime-test-checksum'};
-const WORKFLOW_TEXT_LIMITS = {tags:500,note:4000,risk:1800};
+const WORKFLOW_TEXT_LIMITS = {tags:500,note:4000,falsifier:1800};
 const MAX_QUEUE_ITEMS = 250;
 const PAGE_SIZE = {queue:100,structure:8};
 """
@@ -56,7 +56,8 @@ const workflowItems = new Map();
 let savedIdeas = new Set();
 let persisted = true;
 let toast = '';
-const state = {structureFocus:'VIX',structureInstrument:'',structureDirection:'any',
+const state = {structureQuestion:'What published evidence should we verify?',
+  structureFocus:'VIX',structureInstrument:'',structureDirection:'any',
   structurePeriod:'all',structureSlope:'any',structureLevel:'any',structureMacro:false,
   structureAnchor:'a_i1',structurePassage:'i1',structureShareable:false,limit:8,
   view:'structure',selected:''};
@@ -66,7 +67,7 @@ function confirmQueueStorageBoundary() { return true; }
 function markMeaningfulNavigation() {}
 function render() {}
 function newWorkflowItem(id) {
-  return {id:id,status:'review',note:'',risk:'',tags:'',thesis:'',updated_at:''};
+  return {id:id,status:'review',note:'',falsifier:'',tags:'',thesis:'',updated_at:''};
 }
 function observation(id, overrides) {
   const idea = Object.assign({
@@ -131,6 +132,7 @@ for (const value of rejected) {
             'function hasIndexedMemberPreview(article) {',
             '\nfunction articleEvidence(article)',
         )
+
         run_node(
             r'''
 const SUBSCRIPTION_URL = 'https://www.navnoorbawaresearch.com/subscribe';
@@ -195,6 +197,385 @@ for (const article of [mediumLocked,publicSubstack,unknownSubstack]) {
   if (premiumAccessMarkup(article,'article') !== '') {
     throw new Error('Substack conversion panel escaped its exact paid-source boundary');
   }
+}
+'''
+        )
+
+    def test_copied_research_task_uses_its_retained_source_snapshot(self):
+        function = javascript_between(
+            'function decisionPacketText(idea,item) {',
+            '\nfunction confirmQueueStorageBoundary()',
+        )
+        run_node(
+            r'''
+const DILIGENCE_GATES = [
+  ['context_reviewed','Surrounding publication context reviewed'],
+  ['public_source_recorded','Independent public source recorded']
+];
+const sourceLabel = (value) => value === 'medium' ? 'Medium' : 'Substack';
+const workflowStatusLabel = () => 'Verifying';
+const retainedReviewFlagSummary = () => 'Review flags unavailable at capture';
+const sourceSnapshotForIdea = () => ({
+  title:'CURRENT MUTATED TITLE',url:'https://navnoorbawa.substack.com/p/current',
+  passage:'CURRENT MUTATED PASSAGE',source:'substack'
+});
+'''
+            + function
+            + r'''
+const idea = {id:'i1'};
+const item = {
+  status:'diligence',priority:'high',owner:'Research',review_date:'2026-02-01',
+  next_action:'Verify independently',thesis:'',contrary:'',catalyst:'',horizon:'',
+  falsifier:'',independent_source:'BIS working paper, https://bis.org/example',
+  numeric_source:'64.0%, cited table 2, annualized volatility',
+  checks:{context_reviewed:true,public_source_recorded:false},
+  check_times:{context_reviewed:'2026-01-01T01:02:03Z',public_source_recorded:''},
+  tags:'',note:'',updated_at:'2026-01-01T00:00:00Z',
+  source_snapshot:{
+    title:'RETAINED TITLE',url:'https://medium.com/@navnoorbawa/retained-abcdef123456',
+    passage:'RETAINED EXACT PASSAGE',source:'medium',date:'2025-12-01',
+    data_checksum:'abcdef1234567890',publication_access:'public',
+    body_revision_status:'prior',source_updated_at:'2025-12-02'
+  }
+};
+const copied = decisionPacketText(idea,item);
+for (const retained of ('RETAINED TITLE RETAINED EXACT PASSAGE ' +
+    'https://medium.com/@navnoorbawa/retained-abcdef123456').split(' ')) {
+  if (!copied.includes(retained)) throw new Error('retained provenance was lost: ' + retained);
+}
+if (copied.includes('CURRENT MUTATED')) {
+  throw new Error('copied task silently rebound to mutable current-source data');
+}
+if (!copied.includes('LOCAL RESEARCH TASK') || copied.includes('Analyst confidence')) {
+  throw new Error('copied artifact regressed to a scored decision packet');
+}
+for (const required of ['BIS working paper','64.0%','attested 2026-01-01T01:02:03Z','Review flags unavailable at capture']) {
+  if (!copied.includes(required)) throw new Error('research-task evidence was lost: ' + required);
+}
+if (decisionPacketText(idea,{...item,source_snapshot:null}) !== '') {
+  throw new Error('missing retained evidence silently fell back to current source data');
+}
+'''
+        )
+
+    def test_legacy_research_task_fields_are_removed_at_the_storage_boundary(self):
+        function = javascript_between(
+            'function normalizeWorkflowItem(value) {',
+            '\nfunction newWorkflowItem',
+        )
+        run_node(
+            r'''
+const VALID_QUEUE_STATUSES = new Set(['review','diligence','monitor','archived']);
+const VALID_PRIORITIES = new Set(['low','normal','high']);
+const WORKFLOW_TEXT_LIMITS = {
+  tags:500,note:4000,owner:120,horizon:160,thesis:1800,contrary:1600,
+  catalyst:1400,independent_source:1200,numeric_source:1200,falsifier:1800,
+  next_action:700
+};
+const DILIGENCE_GATES = [['context_reviewed','Source'],['public_source_recorded','Independent']];
+const blankChecks = () => ({context_reviewed:false,public_source_recorded:false});
+const blankCheckTimes = () => ({context_reviewed:'',public_source_recorded:''});
+const normalizeSourceSnapshot = (_value,id) => ({article_id:id,url:'https://example.com/source'});
+const validDateInput = (value) => String(value || '');
+const validTimestamp = (value) => value === '2026-01-01T00:00:00Z' ? value : '';
+'''
+            + function
+            + r'''
+const item = normalizeWorkflowItem({
+  id:'i_legacy',status:'diligence',priority:'high',confidence:'high',
+  payoff:'PRIVATE ENTRY AND PAYOFF',implementation:'PRIVATE BORROW DETAIL',
+  portfolio:'PRIVATE EXPOSURE DETAIL',risk:'PRIVATE EXIT DETAIL',
+  thesis:'Public-source hypothesis',source_snapshot:{url:'https://example.com/source'},
+  checks:{source:true,independent:true,market:true,liquidity:true,portfolio:true,compliance:true,
+    context_reviewed:true,public_source_recorded:true,numeric_traced:true},
+  check_times:{context_reviewed:'2026-01-01T00:00:00Z',numeric_traced:'not-a-timestamp'}
+});
+for (const forbidden of ['confidence','payoff','implementation','portfolio','risk']) {
+  if (Object.prototype.hasOwnProperty.call(item,forbidden) ||
+      JSON.stringify(item).includes('PRIVATE')) {
+    throw new Error('legacy forbidden field survived normalization: ' + forbidden);
+  }
+}
+for (const retiredGate of ['source','independent','market','liquidity','portfolio','compliance']) {
+  if (Object.prototype.hasOwnProperty.call(item.checks,retiredGate)) {
+    throw new Error('legacy gate silently became a new attestation: ' + retiredGate);
+  }
+}
+if (item.thesis !== 'Public-source hypothesis' || !item.checks.context_reviewed) {
+  throw new Error('supported research-task fields were lost during migration');
+}
+if (item.checks.public_source_recorded || item.checks.numeric_traced ||
+    item.check_times.public_source_recorded || item.check_times.numeric_traced) {
+  throw new Error('an un-timestamped or invalid attestation survived normalization');
+}
+if (normalizeWorkflowItem({
+  id:'x" onmouseover="alert(1)',source_snapshot:{url:'https://example.com/source'}
+}) !== null) {
+  throw new Error('unsafe imported task ID survived normalization into markup attributes');
+}
+'''
+        )
+
+    def test_visible_task_provenance_uses_the_retained_snapshot_and_warns_on_drift(self):
+        functions = javascript_between(
+            'function retainedSourceSnapshotComparison(item,idea) {',
+            '\nfunction blankChecks()',
+        )
+        run_node(
+            r'''
+const escapeHtml = (value) => String(value || '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+const sourceLabel = (value) => value === 'medium' ? 'Medium' : 'Substack';
+const safeUrl = (value) => String(value || '#');
+const formatDate = (value) => value;
+const retainedReviewFlagSummary = (snapshot) => snapshot.review_flags_verified ? 'No automated review flag captured' : 'Review flags unavailable at capture';
+const observationsReady = true;
+let current = {
+  article_id:'a1',title:'CURRENT TITLE',url:'https://example.com/current',date:'2026-01-02',
+  source:'substack',publication_access:'public',passage:'CURRENT MUTATED PASSAGE',
+  direction:'long',instruments:['equity'],underlying:'Example',body_revision_status:'current',
+  source_updated_at:'2026-01-02T00:00:00Z',observed_source_updated_at:'2026-01-02T00:00:00Z',
+  data_checksum:'currentchecksum'
+};
+const sourceSnapshotForIdea = () => current;
+'''
+            + functions
+            + r'''
+const idea = {id:'i1'};
+const item = {source_snapshot:{
+  article_id:'a1',title:'RETAINED TITLE',url:'https://example.com/retained',date:'2025-12-01',
+  source:'medium',publication_access:'public',passage:'RETAINED EXACT PASSAGE',
+  direction:'short',instruments:['option'],underlying:'Retained',body_revision_status:'prior',
+  source_updated_at:'2025-12-02T00:00:00Z',observed_source_updated_at:'2025-12-02T00:00:00Z',
+  data_checksum:'retainedchecksum'
+}};
+const comparison = retainedSourceSnapshotComparison(item,idea);
+if (!comparison.differences.includes('captured passage') ||
+    !comparison.differences.includes('dataset revision')) {
+  throw new Error('material retained-source drift was not detected');
+}
+const markup = retainedSourceSnapshotMarkup(item,idea);
+for (const required of ['Retained task source snapshot','RETAINED TITLE','RETAINED EXACT PASSAGE',
+    'The current release differs in','copied and exported tasks preserve it','noopener noreferrer']) {
+  if (!markup.includes(required)) throw new Error('retained-source disclosure missing: ' + required);
+}
+if (markup.includes('CURRENT MUTATED PASSAGE')) {
+  throw new Error('visible task provenance silently rebound to current source text');
+}
+current = {...item.source_snapshot};
+const matching = retainedSourceSnapshotMarkup(item,idea);
+if (!matching.includes('Retained evidence matches the current release record.')) {
+  throw new Error('matching retained source was mislabeled as stale');
+}
+current = null;
+const missingCurrent = retainedSourceSnapshotMarkup(item,idea);
+if (!missingCurrent.includes('absent from the current release') ||
+    !missingCurrent.includes('RETAINED EXACT PASSAGE')) {
+  throw new Error('missing current observation hid or rebound the retained task');
+}
+'''
+        )
+
+    def test_missing_or_unsafe_task_snapshot_never_rebinds_to_current_source(self):
+        function = javascript_between(
+            'function normalizeSourceSnapshot(value,id) {',
+            '\nfunction retainedSourceSnapshotComparison',
+        )
+        run_node(
+            r'''
+const VALID_SOURCES = new Set(['substack','medium']);
+const VALID_PUBLICATION_ACCESS = new Set(['public','member','unknown']);
+const VALID_DIRECTIONS = new Set(['long','short','arbitrage/relative value','long/short','unspecified']);
+const safeUrl = (value) => String(value || '').startsWith('https://') ? String(value) : '#';
+const validDateInput = (value) => /^\d{4}-\d{2}-\d{2}$/.test(String(value || '')) ? String(value) : '';
+'''
+            + function
+            + r'''
+for (const value of [null,{}, {url:'javascript:alert(1)'}]) {
+  if (normalizeSourceSnapshot(value,'i_current') !== null) {
+    throw new Error('missing or unsafe retained evidence silently rebound to current source');
+  }
+}
+const valid = normalizeSourceSnapshot({
+  article_id:'a1',title:'Retained',url:'https://example.com/source',date:'2026-01-01',
+  source:'substack',publication_access:'public',passage:'Exact retained passage',
+  direction:'long',instruments:['equity'],data_checksum:'abc',review_flags_verified:true,
+  negation_risk:true,reference_line:false,description_truncated:true
+},'i_current');
+if (!valid || valid.passage !== 'Exact retained passage' || valid.url !== 'https://example.com/source' ||
+    !valid.review_flags_verified || valid.negation_risk !== true || valid.reference_line !== false ||
+    valid.description_truncated !== true) {
+  throw new Error('valid retained evidence was rejected');
+}
+const legacy = normalizeSourceSnapshot({
+  article_id:'a1',title:'Legacy retained',url:'https://example.com/legacy',date:'2025-01-01',
+  source:'substack',publication_access:'public',passage:'Legacy passage',direction:'unspecified'
+},'i_legacy');
+if (!legacy || legacy.review_flags_verified || legacy.negation_risk !== null ||
+    legacy.reference_line !== null || legacy.description_truncated !== null) {
+  throw new Error('legacy snapshot without proof falsely asserted clean review flags');
+}
+const malformedFlags = normalizeSourceSnapshot({
+  article_id:'a1',title:'Malformed flags',url:'https://example.com/malformed',date:'2025-01-01',
+  source:'substack',publication_access:'public',passage:'Malformed flags passage',direction:'unspecified',
+  review_flags_verified:true,negation_risk:false
+},'i_malformed');
+if (!malformedFlags || malformedFlags.review_flags_verified || malformedFlags.reference_line !== null) {
+  throw new Error('partial review-flag proof falsely asserted a clean retained capture');
+}
+'''
+        )
+
+    def test_research_task_filter_sort_and_facets_use_retained_source_values(self):
+        functions = (
+            javascript_between(
+                'function dateRangeAnchor() {',
+                '\nfunction setMatches',
+            )
+            + javascript_between(
+                'function ideaMatches(idea, skip) {',
+                '\nfunction ideaMatchesResearchFacets',
+            )
+            + javascript_between(
+                'function sortedRecords(records) {',
+                '\nfunction filteredRecords',
+            )
+            + javascript_between(
+                'function recordValues(record, facet) {',
+                '\nfunction updateFacetCounts',
+            )
+            + javascript_between(
+                'function queueRecordForWorkflow(item) {',
+                '\nfunction reviewIsOverdue',
+            )
+        )
+        run_node(
+            r'''
+const normalize = (value) => String(value || '').toLowerCase().replace(/\s+/g,' ').trim();
+const state = {
+  view:'queue',sort:'newest',query:'retained alpha',queueStatuses:new Set(),
+  range:'all',
+  sources:new Set(['medium']),revisions:new Set(['prior']),directions:new Set(['short']),
+  instruments:new Set(['option']),publicationAccess:new Set(['public']),
+  managers:new Set(),quality:new Set(),content:new Set(),documentation:'all',newOnly:false
+};
+const workflowStatusLabel = (value) => value;
+const matchesSearch = (haystack) => normalize(state.query).split(' ').every((token) => haystack.includes(token));
+const MAX_DATE = '2026-12-31';
+const setMatches = (selected,values) => !selected.size || values.some((value) => selected.has(value));
+const isArticleView = () => false;
+const relevanceScore = () => 0;
+const hasValue = (value) => Boolean(value);
+const workflowItems = new Map();
+const IDEA_BY_ID = new Map();
+function idea(id,currentDate) {
+  return {id,article_id:'current-' + id,direction:'long',instruments:['equity'],manager:'CURRENT MANAGER',
+    manager_key:'current',documentation_score:5,quant:'CURRENT',thesis:'CURRENT',outcome:'CURRENT',
+    _article:{id:'current-' + id,title:'CURRENT BETA',date:currentDate,source:'substack',
+      publication_access:'member',body_revision_status:'current',content_status:'full'}};
+}
+const olderCurrent = idea('i_old','2026-12-31');
+const newerCurrent = idea('i_new','2025-01-01');
+IDEA_BY_ID.set('i_old',olderCurrent);
+IDEA_BY_ID.set('i_new',newerCurrent);
+workflowItems.set('i_old',{status:'review',priority:'normal',owner:'A',review_date:'',updated_at:'',
+  next_action:'',thesis:'',contrary:'',independent_source:'',numeric_source:'',catalyst:'',horizon:'',
+  falsifier:'',tags:'',note:'',source_snapshot:{article_id:'retained-old',title:'Retained Alpha old',
+    passage:'retained alpha passage',underlying:'VIX',source:'medium',direction:'short',
+    instruments:['option'],publication_access:'public',body_revision_status:'prior',date:'2024-01-01'}});
+workflowItems.set('i_new',{status:'review',priority:'normal',owner:'B',review_date:'',updated_at:'',
+  next_action:'',thesis:'',contrary:'',independent_source:'',numeric_source:'',catalyst:'',horizon:'',
+  falsifier:'',tags:'',note:'',source_snapshot:{article_id:'retained-new',title:'Retained Alpha new',
+    passage:'retained alpha passage',underlying:'VIX',source:'medium',direction:'short',
+    instruments:['option'],publication_access:'public',body_revision_status:'prior',date:'2026-01-01'}});
+workflowItems.set('i_orphan',{id:'i_orphan',status:'review',priority:'normal',owner:'C',review_date:'',updated_at:'',
+  next_action:'',thesis:'',contrary:'',independent_source:'',numeric_source:'',catalyst:'',horizon:'',
+  falsifier:'',tags:'',note:'',source_snapshot:{article_id:'retained-orphan',title:'Retained Alpha orphan',
+    url:'https://example.com/orphan',passage:'retained alpha orphan passage',underlying:'VIX',source:'medium',direction:'short',
+    instruments:['option'],publication_access:'public',body_revision_status:'prior',date:'2025-06-01',
+    review_flags_verified:false,data_checksum:'old'}});
+'''
+            + functions
+            + r'''
+if (!ideaMatches(olderCurrent) || !ideaMatches(newerCurrent)) {
+  throw new Error('retained task filters/search incorrectly used current source values');
+}
+state.query = 'current beta';
+if (ideaMatches(olderCurrent) || ideaMatches(newerCurrent)) {
+  throw new Error('current source text leaked into retained task search');
+}
+state.query = '';
+const queueUniverse = queueRecords();
+const orphan = queueUniverse.find((row) => row.id === 'i_orphan');
+if (queueUniverse.length !== 3 || !orphan || !orphan._retainedOnly || !ideaMatches(orphan)) {
+  throw new Error('orphaned retained task did not remain in the full queue workflow');
+}
+const ordered = sortedRecords([olderCurrent,newerCurrent]);
+if (ordered[0].id !== 'i_new') throw new Error('queue newest sort used current publication dates');
+state.range = '30d';
+if (!inDateRange('2025-12-15')) throw new Error('queue date range used the mutable catalogue maximum');
+state.range = 'all';
+workflowItems.get('i_old').source_snapshot.date = '';
+workflowItems.get('i_new').source_snapshot.date = '';
+const emptyDateOrder = sortedRecords([olderCurrent,newerCurrent]);
+if (emptyDateOrder.map((row) => row.id).join(',') !== 'i_new,i_old') {
+  throw new Error('queue ties inherited mutable current-record order');
+}
+for (const [facet,expected] of [
+  ['source','medium'],['revision','prior'],['access','public'],['direction','short'],['instrument','option']
+]) {
+  if (!recordValues(olderCurrent,facet).includes(expected)) {
+    throw new Error('queue facet used current source for ' + facet);
+  }
+}
+for (const unsupported of ['manager','quality','content']) {
+  if (recordValues(olderCurrent,unsupported).length) {
+    throw new Error('unsupported current-only queue facet remained active: ' + unsupported);
+  }
+}
+'''
+        )
+
+    def test_empty_evidence_desk_defers_observations_until_first_setup(self):
+        helpers = (
+            javascript_between(
+                'function normalize(value) {',
+                'function articleBriefSearch',
+            )
+            + javascript_between(
+                'function structureWords(value) {',
+                'function structureInstrumentOptions()',
+            )
+            + javascript_between(
+                'function currentStateNeedsObservations() {',
+                '\nfunction queueObservationResultFocus',
+            )
+        )
+        run_node(
+            r'''
+const state = {
+  view:'structure',structureQuestion:'',structureFocus:'',structureInstrument:'',
+  structureDirection:'any',structurePeriod:'all',directions:new Set(),
+  instruments:new Set(),managers:new Set(),quality:new Set(),documentation:'all'
+};
+const isArticleView = () => false;
+'''
+            + helpers
+            + r'''
+let requests = 0;
+function requestIfNeeded() {
+  if (currentStateNeedsObservations()) requests += 1;
+}
+requestIfNeeded();
+state.structureQuestion = 'Question wording must remain memory-only';
+requestIfNeeded();
+if (requests !== 0) throw new Error('empty/question-only landing requested observations');
+state.structureFocus = 'VIX';
+requestIfNeeded();
+if (requests !== 1) throw new Error('first literal evidence subject did not request observations');
+state.structureFocus = '';
+state.structureInstrument = 'option';
+if (!currentStateNeedsObservations()) {
+  throw new Error('a structured evidence refinement did not define a setup');
 }
 '''
         )
@@ -272,7 +653,7 @@ const state = {
   instruments:new Set(),managers:new Set(),quality:new Set(),publicationAccess:new Set(),content:new Set(),
   queueStatuses:new Set(),documentation:'all',newOnly:false,range:'all',
   coverage:'all',briefLens:'all',threadTopic:'',sort:'newest',
-  structureFocus:'',structureInstrument:'',structureDirection:'any',
+  structureQuestion:'',structureFocus:'',structureInstrument:'',structureDirection:'any',
   structurePeriod:'all',structureSlope:'any',structureLevel:'any',
   structureMacro:false,structureAnchor:'',structurePassage:'',
   structureShareable:false,structureControlsOpen:false,
@@ -284,6 +665,7 @@ globalThis.history = {
   replaceState(_state,_title,target) { historyCalls.push(['replace',target]); }
 };
 globalThis.location = {
+  href:'https://example.test/terminal/#view=briefing&selected=a_current&topic=vix',
   hash:'#view=briefing&selected=a_current&topic=vix',pathname:'/terminal/',search:''
 };
 '''
@@ -323,13 +705,16 @@ if (historyCalls.length !== 1 ||
 // A deliberately shared Structure URL restores only bounded values. The
 // selected passage is meaningful only together with a real source note.
 historyCalls.length = 0;
-location.hash = '#focus=VIX&sinst=option&sdir=long&speriod=2026&smacro=1' +
+location.hash = '#squestion=Could+this+evidence+survive+review%3F&focus=VIX' +
+  '&sinst=option&sdir=long&speriod=2026&smacro=1' +
   '&sslope=high&slevel=low&sanchor=a_current&spassage=i_passage';
 hydrateFromHash();
-if (state.view !== 'structure' || state.structureFocus !== 'VIX' ||
+if (state.view !== 'structure' ||
+    state.structureQuestion !== 'Could this evidence survive review?' ||
+    state.structureFocus !== 'VIX' ||
     state.structureInstrument !== 'option' || state.structureDirection !== 'long' ||
     state.structurePeriod !== '2026' || !state.structureMacro ||
-    state.structureSlope !== 'high' || state.structureLevel !== 'low' ||
+    state.structureSlope !== 'any' || state.structureLevel !== 'any' ||
     state.structureAnchor !== 'a_current' || state.structurePassage !== 'i_passage' ||
     !state.structureShareable || !state.structureControlsOpen) {
   throw new Error('a bounded shared Structure view was not restored');
@@ -355,6 +740,7 @@ if (historyCalls.length !== 1 || historyCalls[0][1] !== '#focus=FX') {
 // Ordinary edits are private to memory. Canonicalizing an unshared Structure
 // setup clears a stale hash all the way back to the path—never a dangling #.
 state.structureFocus = 'private setup';
+state.structureQuestion = 'private research question';
 state.structureInstrument = '';
 state.structureDirection = 'any';
 state.structurePeriod = 'all';
@@ -372,17 +758,19 @@ if (historyCalls.length !== 1 || historyCalls[0][0] !== 'replace' ||
   throw new Error('an ordinary Structure edit leaked into the address');
 }
 
-// Copy view is the only action that asks updateHash to expose the local setup.
+// Copy view asks for a pure URL. It must not mutate history or the current
+// address while serializing the explicitly shared, non-confidential setup.
 location.hash = '';
 historyCalls.length = 0;
-updateHash(true);
-if (historyCalls.length !== 1 ||
-    historyCalls[0][1] !== '#focus=private+setup') {
-  throw new Error('an explicitly shared Structure setup was not serialized');
+const shareUrl = updateHash(true,true);
+if (historyCalls.length !== 0 ||
+    !shareUrl.includes('#squestion=private+research+question&focus=private+setup')) {
+  throw new Error('Copy view mutated history or failed to serialize its bounded setup');
 }
 
 // An already-empty canonical address is stable and causes no history churn.
 state.structureFocus = '';
+state.structureQuestion = '';
 state.structureShareable = false;
 location.hash = '';
 historyCalls.length = 0;
@@ -586,6 +974,51 @@ if (!workflowItems.has('i_test') || messages.at(-1) !== 'Queue could not be save
 '''
         )
 
+    def test_queue_import_requires_explicit_retained_source_conflict_approval(self):
+        function = javascript_between(
+            'function restoreQueueFile(file) {',
+            "\n\ndocument.getElementById('table-body')",
+        )
+        run_node(
+            function
+            + r'''
+const messages = [];
+const confirmations = [];
+globalThis.showToast = (message) => messages.push(message);
+globalThis.confirmQueueStorageBoundary = () => true;
+globalThis.FileReader = class {
+  readAsText(file) { this.result = file.text; this.onload(); }
+};
+const existing = {id:'i_same',updated_at:'2026-01-01T00:00:00Z',source_snapshot:{url:'https://example.com/retained-a',passage:'A'}};
+globalThis.workflowItems = new Map([['i_same',existing]]);
+globalThis.cloneWorkflowMap = (value) => new Map(Array.from(value.entries()).map(([key,item]) => [key,JSON.parse(JSON.stringify(item))]));
+globalThis.MAX_QUEUE_ITEMS = 250;
+globalThis.normalizeWorkflowItem = (value) => value;
+globalThis.SNAPSHOT = {data_checksum:'release'};
+globalThis.window = {confirm(message) {
+  confirmations.push(message);
+  return !message.startsWith('Retained source conflicts');
+}};
+globalThis.sessionStorage = {setItem() { throw new Error('rollback must not be written before conflict approval'); }};
+globalThis.RESTORE_ROLLBACK_KEY = 'rollback';
+globalThis.persistWorkflow = () => true;
+globalThis.render = () => {};
+globalThis.showPersistentNotice = () => {};
+globalThis.number = String;
+globalThis.savedIdeas = new Set(['i_same']);
+globalThis.lastRestoreWorkflowItems = null;
+const imported = {id:'i_same',updated_at:'2026-02-01T00:00:00Z',source_snapshot:{url:'https://example.com/retained-b',passage:'B'}};
+restoreQueueFile({size:500,text:JSON.stringify({schema_version:3,data_checksum:'release',items:[imported]})});
+if (workflowItems.get('i_same').source_snapshot.passage !== 'A') {
+  throw new Error('conflicting import silently replaced the retained source anchor');
+}
+if (!confirmations.some((message) => message.startsWith('Retained source conflicts')) ||
+    messages.at(-1) !== 'Queue import cancelled because retained source anchors conflict') {
+  throw new Error('retained-source conflict was not separately disclosed and rejected');
+}
+'''
+        )
+
     def test_deferred_network_failure_and_timeout_use_safe_messages(self):
         function = javascript_between(
             'function fetchReleaseText(url,unavailableMessage) {',
@@ -714,14 +1147,14 @@ function observation(overrides) {
 }
 function deskSets(patch) {
   Object.assign(state, {
-    structureFocus:'', structureInstrument:'', structureDirection:'any',
+    structureQuestion:'', structureFocus:'', structureInstrument:'', structureDirection:'any',
     structurePeriod:'all', structureSlope:'any', structureLevel:'any',
     structureMacro:false, structureAnchor:'', structurePassage:''
   }, patch || {});
   return structureMatchSets();
 }
 function desk(patch) { return deskSets(patch).primary; }
-const state = {structureFocus:'',structureInstrument:'',structureDirection:'any',
+const state = {structureQuestion:'',structureFocus:'',structureInstrument:'',structureDirection:'any',
   structurePeriod:'all',structureSlope:'any',structureLevel:'any',
   structureMacro:false,structureAnchor:'',structurePassage:''};
 '''
@@ -840,6 +1273,32 @@ if (both.all.some(function (row) {
 }
 ''')
 
+    def test_decision_question_is_required_for_handoff_but_never_changes_retrieval(self):
+        self.desk_runtime(r'''
+const IDEAS = [
+  observation({id:'vix', underlying:'VIX'}),
+  observation({id:'other', underlying:'JGB'})
+];
+const baseline = deskSets({structureFocus:'VIX'}).all.map(function (row) {
+  return row.idea.id;
+});
+const firstQuestion = deskSets({structureFocus:'VIX',
+  structureQuestion:'Should volatility exposure be reviewed?'}).all.map(function (row) {
+  return row.idea.id;
+});
+const secondQuestion = deskSets({structureFocus:'VIX',
+  structureQuestion:'Completely different analyst framing'}).all.map(function (row) {
+  return row.idea.id;
+});
+if (baseline.join(',') !== 'vix' || firstQuestion.join(',') !== baseline.join(',') ||
+    secondQuestion.join(',') !== baseline.join(',')) {
+  throw new Error('analyst-authored decision wording changed deterministic retrieval');
+}
+if (!structureDecisionQuestion().includes('Completely different')) {
+  throw new Error('the decision question was not retained separately for handoff');
+}
+''')
+
     def test_period_restricts_comparables_to_the_selected_record(self):
         self.desk_runtime(r'''
 const IDEAS = [
@@ -953,12 +1412,8 @@ if (observationFollowUps({id:'x'}).length !== 0) {
 }
 ''')
 
-    def test_rate_conditions_come_from_the_published_curve(self):
-        """Evidence can be filtered by publication-calendar-date provenance.
-
-        A date with no official observation carries the prior published as-of
-        day, never an interpolation or an intraday timing claim.
-        """
+    def test_rate_context_is_post_retrieval_provenance_only(self):
+        """Treasury context can annotate, but never select or rank, evidence."""
         self.desk_runtime(r'''
 const dated = function (id, date) {
   return {title:'', date:date, url:'https://example.test/' + id, source:'substack', id:id};
@@ -982,36 +1437,26 @@ if (rateReading(IDEAS[2]) !== null) {
   throw new Error('a date the series does not cover must have no reading');
 }
 
-const flattest = desk({structureInstrument:'equity',structureMacro:true,
-  structureSlope:'low'}).map(function (r) { return r.idea.id; });
-if (flattest.join(',') !== 'flat') {
-  throw new Error('curve-shape input did not select its band: ' + flattest);
-}
-const steepest = desk({structureInstrument:'equity',structureMacro:true,
-  structureSlope:'high'});
-if (steepest.length !== 1 || steepest[0].idea.id !== 'steep') {
-  throw new Error('curve-shape input did not select the steeper band');
-}
-if (!steepest[0].reasons.join(' ').toLowerCase().includes('curve shape')) {
-  throw new Error('a rate-conditioned match must say the curve was matched');
-}
-const level = desk({structureInstrument:'equity',structureMacro:true,
-  structureLevel:'high'}).map(function (r) { return r.idea.id; });
-if (level.join(',') !== 'steep') throw new Error('10Y level input did not select: ' + level);
-
-// An observation the curve cannot price is excluded rather than guessed at.
-const all = desk({structureInstrument:'equity'});
-if (all.length !== 3) throw new Error('an unconditioned setup should keep every passage');
-const ignoredBand = desk({structureInstrument:'equity',structureSlope:'low'});
-if (ignoredBand.length !== 3) {
-  throw new Error('a macro band filtered evidence without explicit macro opt-in');
-}
-const conditioned = desk({structureInstrument:'equity',structureMacro:true,
-  structureSlope:'low'}).concat(desk({structureInstrument:'equity',structureMacro:true,
-  structureSlope:'mid'})).concat(desk({structureInstrument:'equity',structureMacro:true,
-  structureSlope:'high'})).map(function (r) { return r.idea.id; });
-if (conditioned.indexOf('unpriced') !== -1) {
-  throw new Error('an observation with no curve reading was given a band');
+const baseline = desk({structureInstrument:'equity'}).map(function (row) {
+  return row.idea.id;
+});
+if (baseline.length !== 3) throw new Error('the evidence setup lost a captured passage');
+[
+  {structureInstrument:'equity',structureMacro:true},
+  {structureInstrument:'equity',structureMacro:true,structureSlope:'low'},
+  {structureInstrument:'equity',structureMacro:true,structureSlope:'high'},
+  {structureInstrument:'equity',structureMacro:true,structureLevel:'low'},
+  {structureInstrument:'equity',structureMacro:true,structureLevel:'high'}
+].forEach(function (patch) {
+  const ids = desk(patch).map(function (row) { return row.idea.id; });
+  if (ids.join(',') !== baseline.join(',')) {
+    throw new Error('optional macro context changed evidence IDs or order: ' + ids);
+  }
+});
+if (desk({structureInstrument:'equity',structureMacro:true}).some(function (row) {
+  return row.reasons.join(' ').toLowerCase().includes('curve');
+})) {
+  throw new Error('post-retrieval macro context leaked into match reasons');
 }
 
 const pattern = structurePattern(desk({structureInstrument:'equity',structureMacro:true}));
@@ -1054,7 +1499,7 @@ const byLabel = new Map(lines.map(function (row) { return [row[0], row[1]]; }));
 if (pattern.total !== 4 || pattern.noteTotal !== 3) {
   throw new Error('passages were mistaken for independent source notes');
 }
-if (!byLabel.get('Evidence set').includes('3 source notes containing 4 matching extracted passages')) {
+if (!byLabel.get('Evidence set').includes('3 authored notes containing 4 matching extracted passages')) {
   throw new Error('the note did not state both source-note and passage breadth');
 }
 if (!byLabel.get('Evidence set').includes('Options')) {
@@ -1062,31 +1507,32 @@ if (!byLabel.get('Evidence set').includes('Options')) {
 }
 // The filtered instrument is in every row by construction; reporting it as
 // 100% would say nothing, so the co-instrument is what gets reported.
-const structured = byLabel.get('Parsed instrument context');
+const structured = byLabel.get('Parser candidates');
 if (structured.includes('Options')) {
   throw new Error('the note restated the filter as a finding');
 }
-if (!structured.includes('Equity is mentioned in 1 of 3 source notes (33%)') ||
+if (!structured.includes('Equity is mentioned in 1 of 3 authored notes') ||
     !structured.includes('not validated position legs')) {
   throw new Error('co-occurrence context was not bounded honestly: ' + structured);
 }
-if (!byLabel.get('Captured evidence').includes(
-    '1 of 3 source notes (33%) contain numeric context')) {
+if (!byLabel.get('Detected fields').includes(
+    '1 of 3 authored notes contain a numeric phrase')) {
   throw new Error('note-clustered evidence coverage is wrong: ' +
-    byLabel.get('Captured evidence'));
+    byLabel.get('Detected fields'));
 }
 const limits = byLabel.get('Primary diligence gap');
-if (!limits.includes('No selected source note contains a source-stated outcome')) {
+if (!limits.includes('No selected authored note contains a detected outcome / P&L phrase')) {
   throw new Error('the note must state the outcome gap');
 }
-if (!limits.includes('not a performance base rate')) {
+if (!limits.includes('one-author, purposive archive') ||
+    !limits.includes('performance base rate')) {
   throw new Error('passage frequency was allowed to read as performance evidence');
 }
 
 const markdown = deskNoteMarkdown(pattern, ranked);
 if (!markdown.startsWith('# Research evidence memo')) throw new Error('memo has no title');
 if (!markdown.includes('**Evidence set.**')) throw new Error('memo lost its sections');
-if (!markdown.includes('## Primary retrieved source notes')) throw new Error('memo cites nothing');
+if (!markdown.includes('## Primary retrieved authored notes')) throw new Error('memo cites nothing');
 if (!markdown.includes('runtime-test-checksum')) throw new Error('memo lost snapshot provenance');
 if (!markdown.includes('https://navnoorbawa.substack.com/p/note-a')) {
   throw new Error('memo lost its source links');
@@ -1103,16 +1549,16 @@ if (markdown.includes(location.href)) {
   throw new Error('the memo leaked the local Structure URL');
 }
 
-// A two-note set is explicitly too thin for percentages. Repeated passages
-// from note a still count once.
+// Raw counts remain raw even in a two-note set. Repeated passages from note a
+// still count once, and the one-author archive boundary remains explicit.
 const thinRows = ranked.filter(function (row) {
   return row.idea._article.id === 'a' || row.idea._article.id === 'b';
 });
 const thin = structurePattern(thinRows);
 const thinText = deskNoteLines(thin).map(function (row) { return row[1]; }).join(' ');
 if (thin.noteTotal !== 2 || thinText.includes('%') ||
-    !thinText.includes('too thin for distributional interpretation')) {
-  throw new Error('a thin source-note set was presented as a distribution');
+    !thinText.includes('one-author, purposive archive')) {
+  throw new Error('a thin source-note set was scored or lost its archive boundary');
 }
 
 // An empty class produces no note at all rather than a note about nothing.
@@ -1156,7 +1602,7 @@ class DeskToDecisionRuntimeTests(unittest.TestCase):
     """An explicitly anchored source passage can seed only evidence fields.
 
     The bridge never chooses a passage for the analyst, never writes thesis or
-    risk, and never leaves a half-written packet after persistence failure.
+    falsifier, and never leaves a half-written packet after persistence failure.
     """
 
     def bridge_runtime(self, assertions):
@@ -1223,8 +1669,8 @@ if (!item.note.includes('[ANCHOR] Note i1') ||
     !item.note.includes('runtime-test-checksum')) {
   throw new Error('the packet lost its selected source provenance');
 }
-if (item.thesis !== '' || item.risk !== '') {
-  throw new Error('the desk wrote the analyst thesis or risk field');
+if (item.thesis !== '' || item.falsifier !== '') {
+  throw new Error('the desk wrote the analyst thesis or falsifier field');
 }
 if (!item.tags.includes('research evidence:')) throw new Error('packet was not tagged');
 if (workflowItems.has('i2')) throw new Error('the desk silently chose another passage');
@@ -1256,7 +1702,7 @@ if (item.note.length > WORKFLOW_TEXT_LIMITS.note) {
 }
 if (!item.note.includes('Selected exact passage: ') ||
     !item.note.includes('PACKET EVIDENCE SCOPE') ||
-    !item.note.includes('This packet cites 5 of 7 retrieved source notes')) {
+    !item.note.includes('This packet cites 5 of 7 retrieved authored notes')) {
   throw new Error('long packet lost its anchor or explicit source-count scope');
 }
 if (!item.note.includes('What evidence would distinguish a real analogue from a narrative resemblance?')) {
@@ -1269,6 +1715,15 @@ if (!item.note.includes('[Additional retrieved-source detail omitted')) {
 
     def test_a_packet_requires_an_exact_passage_inside_the_selected_note(self):
         self.bridge_runtime(r"""
+state.structureQuestion = '';
+openDecisionPacketFromDesk();
+if (workflowItems.size !== 0 ||
+    !toast.includes('Enter a non-confidential decision question')) {
+  throw new Error('a local task opened without an explicit analyst question');
+}
+
+toast = '';
+state.structureQuestion = 'What published evidence should we verify?';
 state.structurePassage = '';
 openDecisionPacketFromDesk();
 if (workflowItems.size !== 0 ||
@@ -1291,26 +1746,44 @@ if (!workflowItems.has('i1')) {
 }
 """)
 
+    def test_headline_only_context_passage_cannot_anchor_a_research_task(self):
+        self.bridge_runtime(r"""
+IDEAS[0]._article.title = 'HeadlineOnly market note';
+IDEAS[0]._search = normalize([IDEAS[0]._article.title,IDEAS[0].description,
+  IDEAS[0].direction,IDEAS[0].instruments.join(' '),IDEAS[0].underlying].join(' '));
+state.structureFocus = 'HeadlineOnly';
+state.structureAnchor = 'a_i1';
+state.structurePassage = 'i1';
+if (structureMatches().length !== 1 || structurePassageDirectMatch(IDEAS[0])) {
+  throw new Error('the fixture did not isolate a headline-only contextual match');
+}
+openDecisionPacketFromDesk();
+if (workflowItems.size !== 0 ||
+    !toast.includes('Anchor the exact source passage')) {
+  throw new Error('headline-only article context was allowed to seed a research task');
+}
+""")
+
     def test_the_desk_never_writes_the_analysts_own_view(self):
         self.bridge_runtime(r"""
 openDecisionPacketFromDesk();
 const item = workflowItems.get('i1');
 // The desk supplies evidence and a prompt. The thesis is the analyst's.
-if (item.thesis !== '' || item.risk !== '') {
-  throw new Error('the desk wrote a thesis or risk view');
+if (item.thesis !== '' || item.falsifier !== '') {
+  throw new Error('the desk wrote a thesis or falsifier view');
 }
 
 item.note = 'MY OWN NOTE';
-item.risk = 'MY OWN FALSIFIER';
+item.falsifier = 'MY OWN FALSIFIER';
 item.tags = 'my tag';
 toast = '';
 openDecisionPacketFromDesk();
-if (item.note !== 'MY OWN NOTE' || item.risk !== 'MY OWN FALSIFIER' ||
+if (item.note !== 'MY OWN NOTE' || item.falsifier !== 'MY OWN FALSIFIER' ||
     item.tags !== 'my tag') {
   throw new Error('re-opening overwrote entries the analyst had made');
 }
-if (!toast.includes('left untouched')) {
-  throw new Error('the reader was not told nothing was changed');
+if (!toast.includes('earlier Desk scope')) {
+  throw new Error('the reader was not warned that the unchanged task has an earlier scope');
 }
 """)
 

@@ -362,7 +362,7 @@ the wrong title, image, or article route.
 
 The build validator recursively rejects forbidden private-analytics keys from
 every `data/` file. The data layer contains no reader identifier, search log,
-decision packet, cookie, tracking pixel, or behavioral event. Member-source
+Research Task, cookie, tracking pixel, or behavioral event. Member-source
 body text is limited to the bounded anonymous preview proof above; no
 authenticated or legacy cached member body belongs in a current release.
 Downloading a static endpoint does not authorize downstream systems to enrich
@@ -370,6 +370,40 @@ it with private
 creator-dashboard or reader-level data. Earlier Git commits and retained release
 artifacts are outside this mutable endpoint contract and are tracked separately
 as unresolved `LAUNCH-058` in [ISSUES.md](ISSUES.md).
+
+## Local Research Task interchange
+
+Research Tasks are not a public `/data/` endpoint. Their plaintext export and
+tab-session storage use `schema_version: 3`, a bounded list of at most 250
+items, and a required `source_snapshot` for each item. The snapshot retains the
+observation and article IDs, exact displayed passage, public title/URL/date,
+source, access and revision labels, parsed direction/instruments/underlying,
+the three capture-time review flags plus their verification marker, and release
+checksum. All three flags must be booleans before `review_flags_verified` can be
+true; otherwise every flag is `null`/unavailable rather than falsely clean.
+Missing or unsafe snapshots fail closed; the consumer must never substitute
+current release text. `legacy_bookmark_migration: true` means an ID-only legacy
+bookmark received its snapshot from the active release during migration, not
+from the historical bookmark date.
+
+Human fields are limited to task status/priority, owner, review date, next
+action, hypothesis, contrary evidence, independent public source, numeric claim
+context, catalyst, horizon, falsifier, tags, and memo. The only attestation keys
+are `context_reviewed`, `public_source_recorded`, `numeric_traced`,
+`contrary_recorded`, `falsifier_recorded`, and `claims_scope_reviewed`. A true
+attestation requires its matching valid timestamp. Canonical normalization of
+session data, imports, backups, and rollback payloads discards retired
+confidence, position/entry, payoff, implementation, portfolio, live-risk, and
+legacy attestation fields instead of reinterpreting them.
+
+All task-facing display, filters, date ranges, ordering, links, shortcuts,
+citations, copies, and CSV exports are derived from the retained snapshot. A
+separate comparison may report current-release drift, but cannot replace the
+retained evidence. Orphaned tasks remain visible up to the bounded 250-item
+limit and participate in the same search, filter, sort, edit, archive, copy,
+shortcut, and CSV paths. A newer imported task with the same ID but a different
+normalized `source_snapshot` is a retained-source conflict and requires a
+separate explicit confirmation before the ordinary import preview.
 
 ## Consumer workflow
 

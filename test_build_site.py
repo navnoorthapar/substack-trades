@@ -211,6 +211,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         render_end = self.html.index('\nfunction resetFilters', render_start)
         gate = self.html[gate_start:render_end]
         for text in (
+            "if (state.view === 'structure') return structureSetupDefined()",
             'if (!isArticleView()) return true',
             'state.directions.size || state.instruments.size || state.managers.size',
             'function requestObservationsForCurrentState(forceRetry)',
@@ -429,7 +430,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'What changes our mind',
             'Author’s countercase',
             'What would change the view',
-            'Tab-session IC overlay',
+            'Tab-session research overlay',
             'Local · this tab',
             'Open source dossier',
             'Copy IC brief',
@@ -501,11 +502,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'No anonymous article-body preview was available in this release',
             briefing,
         )
-        self.assertIn('Packets attach to individual observations', briefing)
-        self.assertIn('never silently assigns an article-level recommendation', briefing)
-        self.assertIn('const articleIdeaIds = new Set(selected.idea_ids || [])', briefing)
+        self.assertIn('Active retained source-passage task', briefing)
+        self.assertIn('current observation absent', briefing)
+        self.assertIn('never treats them as current recommendations', briefing)
         self.assertIn('Array.from(workflowItems.values()).filter', briefing)
         self.assertIn('item.source_snapshot.article_id === selected.id', briefing)
+        self.assertNotIn('articleIdeaIds.has(item.id)', briefing)
         self.assertNotIn('const localPackets = observationsReady ?', briefing)
         self.assertNotIn('Analyst synthesis', briefing)
         self.assertNotIn('Evidence quality', briefing)
@@ -707,7 +709,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "['briefing','Latest Brief']",
             "['ideas','Evidence Monitor']",
             "['research','Research Library']",
-            "['queue','Decision Queue']",
+            "['queue','Research Tasks']",
             'data-brief-lens=',
             'aria-pressed=',
             'aria-current="page"',
@@ -807,8 +809,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.assertIn(text, print_css)
         hidden_rule = print_css[print_css.index('.app-header,'):print_css.index('{display:none!important}', print_css.index('.app-header,'))]
         self.assertNotIn('.intel-side,', hidden_rule)
-        self.assertIn('IC decision sheet · published source', self.html)
-        self.assertIn('Independent diligence remains required.', self.html)
+        self.assertIn('Research challenge sheet · published source', self.html)
+        self.assertIn('Independent research remains required.', self.html)
 
     def test_clipboard_failure_preserves_text_in_accessible_manual_fallback(self):
         self.assertIn('id="manual-copy-dialog" aria-labelledby="manual-copy-title"', self.html)
@@ -825,7 +827,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.html,
         )
         self.assertIn(
-            'aria-label="Restore decision queue from a JSON file" tabindex="-1"',
+            'aria-label="Restore research tasks from a JSON file" tabindex="-1"',
             self.html,
         )
         self.assertIn(
@@ -1476,7 +1478,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Read full note on Substack ↗',
             'See subscription plans ↗',
             'Related subscriber research',
-            'This terminal sends no search, filter, or decision-queue data.',
+            'This terminal sends no search, filter, or research-task data.',
             'https://www.navnoorbawaresearch.com/subscribe',
             'rel="noopener noreferrer"',
         ):
@@ -1538,70 +1540,69 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn("document.getElementById('inspector').scrollTop = 0", inspector)
         self.assertIn('renderedInspectorKey = inspectorKey', inspector)
 
-    def test_decision_queue_v3_is_structured_tab_scoped_and_portable(self):
+    def test_research_tasks_v3_are_human_authored_tab_scoped_and_portable(self):
         for text in (
             "const WORKFLOW_KEY = 'nrt-decision-queue-session-v3'",
             "const RESTORE_ROLLBACK_KEY = 'nrt-decision-queue-restore-rollback-v1'",
             "const LEGACY_LOCAL_WORKFLOW_KEYS = ['nrt-decision-queue-v2','nrt-decision-queue-v1','nrt-saved-ideas']",
             "new Set(['review','diligence','monitor','archived'])",
             "new Set(['low','normal','high'])",
-            "new Set(['unrated','low','medium','high'])",
             'const MAX_QUEUE_ITEMS = 250',
-            "localStorage.getItem('nrt-saved-ideas')",
-            'Human-entered IC decision packet',
             'data-workflow-select="status"',
             'data-workflow-select="priority"',
-            'data-workflow-select="confidence"',
             'data-workflow-field="owner"',
             'data-workflow-field="review_date"',
             'data-workflow-field="next_action"',
             'data-workflow-field="thesis"',
             'data-workflow-field="contrary"',
+            'data-workflow-field="independent_source"',
+            'data-workflow-field="numeric_source"',
             'data-workflow-field="catalyst"',
             'data-workflow-field="horizon"',
-            'data-workflow-field="payoff"',
-            'data-workflow-field="risk"',
-            'data-workflow-field="implementation"',
-            'data-workflow-field="portfolio"',
+            'data-workflow-field="falsifier"',
             'data-workflow-field="tags"',
             'data-workflow-field="note"',
             'function backupQueue()',
             'function restoreQueueFile(file)',
             'data_checksum:String(SNAPSHOT.data_checksum',
-            'source_snapshot:sourceSnapshotForIdea(id)',
+            'source_snapshot:sourceSnapshotForIdea(id,legacyBookmarkMigration)',
+            'review_flags_verified:true',
+            'Review flags unavailable at capture',
+            'legacy_bookmark_migration',
+            'Legacy ID-only bookmark',
+            'Retained source conflicts',
+            'current observation absent',
+            'current comparison unavailable',
             'Retained source snapshots',
             'Passage snapshot unavailable',
             'cloneWorkflowMap(workflowItems)',
-            'Queue import preview',
-            'Source snapshot mismatch',
             'undoLastQueueRestore()',
             'plaintext storage scoped to this browser tab session',
             'data-action="clear-queue"',
             'data-action="backup-raw-storage"',
             'data-action="clear-unreadable-storage"',
             'workflowLoadBlocked',
-            'stored queue schema is not an array',
-            'stored queue item is invalid or duplicated',
-            'legacy saved queue schema is not an array',
             'workflowStorageDirty',
             'legacyCleanupPending',
             'lastPersistedWorkflow',
             'window.addEventListener(\'beforeunload\'',
-            'Queue backup could not be validated',
-            'Queue could not be saved in this tab session',
             'Automatic clipboard access was blocked. The complete text is preserved below',
-            'Copy decision packet',
-            'Archive packet',
-            'Return to review',
+            'Copy research task',
+            'Copy retained citation',
+            'function retainedSourceCitation(item)',
+            'function selectedOpenUrl()',
+            'Archive task',
+            'Return to new',
             'Stored only in this tab session unless exported',
             'Not an enterprise audit record',
             'Do not enter confidential',
         ):
             self.assertIn(text, self.html)
         self.assertRegex(self.html, r'id="queue-restore-input"[^>]*accept="application/json,\.json"')
-        self.assertRegex(self.html, r'schema_version\s*:\s*2')
-        self.assertRegex(self.html, r'!\[1,2\]\.includes\(payload\.schema_version\)')
+        self.assertRegex(self.html, r'schema_version\s*:\s*3')
+        self.assertRegex(self.html, r'!\[1,2,3\]\.includes\(payload\.schema_version\)')
         self.assertRegex(self.html, r'payload\.items\.slice\(\s*0\s*,\s*MAX_QUEUE_ITEMS\s*\)')
+        self.assertIn("if (!/^[A-Za-z0-9_-]{1,100}$/.test(id)) return null", self.html)
         self.assertRegex(self.html, r'item\[field\]\s*=\s*String\(value\[field\]\s*\|\|\s*[\'\"]{2}\)\.slice\(0,WORKFLOW_TEXT_LIMITS\[field\]\)')
         self.assertIn('note:4000', self.html)
         self.assertIn('tags:500', self.html)
@@ -1616,29 +1617,123 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('legacyCleanupPending = false', persist)
 
         for gate_key, label in (
-            ('source', 'Original publication reviewed'),
-            ('independent', 'Independent evidence obtained'),
-            ('market', 'Live market price and valuation checked'),
-            ('liquidity', 'Liquidity, capacity, borrow and funding checked'),
-            ('portfolio', 'Portfolio exposure, correlation and stress checked'),
-            ('compliance', 'Legal and compliance constraints checked'),
+            ('context_reviewed', 'Surrounding publication context reviewed'),
+            ('public_source_recorded', 'Independent public source recorded'),
+            ('numeric_traced', 'Key numeric phrase traced to its cited context'),
+            ('contrary_recorded', 'Contrary evidence or alternative explanation recorded'),
+            ('falsifier_recorded', 'Falsifier or observable checkpoint recorded'),
+            ('claims_scope_reviewed', 'Task reviewed for unsupported claims and non-confidential scope'),
         ):
             self.assertIn("['" + gate_key + "','" + label + "']", self.html)
-        self.assertIn("const PACKET_CASE_FIELDS = ['thesis','contrary','catalyst','horizon','payoff','risk','implementation','portfolio']", self.html)
-        self.assertIn('total:18', self.html)
-        self.assertIn('completed === 18', self.html)
-        self.assertIn('not approval', self.html)
+        gates_start = self.html.index('const DILIGENCE_GATES = [')
+        gates_end = self.html.index('\n];', gates_start)
+        gates = self.html[gates_start:gates_end]
+        for retired_gate in ("['source'", "['independent'", "['market'", "['liquidity'", "['portfolio'", "['compliance'"):
+            self.assertNotIn(retired_gate, gates)
+        limits_start = self.html.index('const WORKFLOW_TEXT_LIMITS = {')
+        limits_end = self.html.index('\n};', limits_start)
+        workflow_limits = self.html[limits_start:limits_end]
+        normalization_start = self.html.index('function normalizeWorkflowItem(value)')
+        normalization_end = self.html.index('\nfunction newWorkflowItem', normalization_start)
+        normalization = self.html[normalization_start:normalization_end]
+        for forbidden in ('confidence', 'payoff', 'implementation', 'portfolio', 'risk'):
+            self.assertNotIn(forbidden, workflow_limits)
+            self.assertNotIn(forbidden + ':', normalization)
+        self.assertNotIn('VALID_CONFIDENCE', self.html)
+        serialization_start = self.html.index('function workflowSerialization()')
+        serialization_end = self.html.index('\nfunction clearLegacyLocalWorkflowKeys', serialization_start)
+        self.assertIn('normalizeWorkflowItem(value)', self.html[serialization_start:serialization_end])
+        backup_start = self.html.index('function backupQueue()')
+        backup_end = self.html.index('\nfunction cloneWorkflowMap', backup_start)
+        self.assertIn('normalizeWorkflowItem(value)', self.html[backup_start:backup_end])
+        install_start = self.html.index('function installStoredWorkflow(raw)')
+        install_end = self.html.index('\nfunction migrateLegacySavedIdeas', install_start)
+        install = self.html[install_start:install_end]
+        self.assertIn('if (serialized !== sessionRaw) sessionStorage.setItem(WORKFLOW_KEY,serialized)', install)
+        self.assertIn('if (canonicalRollback !== rollbackRaw) sessionStorage.setItem(RESTORE_ROLLBACK_KEY,canonicalRollback)', install)
+
+        export_start = self.html.index('function exportCsv()')
+        queue_export_start = self.html.index("} else if (state.view === 'queue') {", export_start)
+        queue_export_end = self.html.index('\n  } else {', queue_export_start)
+        queue_export = self.html[queue_export_start:queue_export_end]
+        for text in (
+            'workflow && workflow.source_snapshot',
+            'source ? source.passage',
+            'source ? source.title',
+            'source ? source.data_checksum',
+            'retainedSourceSnapshotComparison(workflow,idea)',
+            'Current-release differences',
+        ):
+            self.assertIn(text, queue_export)
+        for mutable_current_field in ('passageText(idea)', 'idea.thesis', 'idea.quant', 'idea.outcome', 'article.title'):
+            self.assertNotIn(mutable_current_field, queue_export)
 
         toggle_start = self.html.index('function toggleSaved(id)')
         toggle_end = self.html.index('\nfunction csvCell(value)', toggle_start)
         toggle = self.html[toggle_start:toggle_end]
         self.assertIn("previous.status === 'archived' ? 'review' : 'archived'", toggle)
-        self.assertIn('Decision packet archived', toggle)
-        self.assertIn('Decision packet returned to review', toggle)
+
+        inspector_start = self.html.index('function renderIdeaInspector(idea)')
+        inspector_end = self.html.index('\nfunction renderArticleInspector', inspector_start)
+        inspector = self.html[inspector_start:inspector_end]
+        for text in (
+            'Local research task',
+            'Human-authored',
+            'Field presence never becomes a readiness score.',
+            'retainedSourceSnapshotMarkup(workflow,idea)',
+            'Human research attestations',
+            'Attested ',
+            'No completion or confidence score is calculated.',
+            "if (state.view === 'queue' && workflow && workflow.source_snapshot)",
+            'RETAINED TASK SOURCE',
+            'Current-release data is not substituted into the task',
+        ):
+            self.assertIn(text, inspector)
+        for forbidden in (
+            'data-workflow-select="confidence"',
+            'data-workflow-field="payoff"',
+            'data-workflow-field="implementation"',
+            'data-workflow-field="portfolio"',
+            'Packet coverage',
+            '/18',
+        ):
+            self.assertNotIn(forbidden, inspector)
+
+        self.assertIn('body[data-view="queue"] .current-extraction-filter{display:none}', self.html)
+        self.assertIn('function normalizeQueueFacets()', self.html)
+        self.assertIn('state.managers.clear()', self.html[self.html.index('function normalizeQueueFacets()'):self.html.index('\nfunction render()', self.html.index('function normalizeQueueFacets()'))])
+        self.assertIn("if (state.view === 'queue')", self.html[self.html.index('function recordValues(record, facet)'):self.html.index('\nfunction updateFacetCounts', self.html.index('function recordValues(record, facet)'))])
+        observation_need_start = self.html.index('function currentStateNeedsObservations()')
+        observation_need_end = self.html.index('\nfunction queueObservationResultFocus', observation_need_start)
+        self.assertIn("if (state.view === 'queue') return false", self.html[observation_need_start:observation_need_end])
+        self.assertIn('function requestQueueComparisonArchive()', self.html)
+        self.assertIn("state.view !== 'queue' && !isArticleView() && !observationsReady", self.html)
+
+        queue_records_start = self.html.index('function queueRecordForWorkflow(item)')
+        queue_records_end = self.html.index('\nfunction reviewIsOverdue', queue_records_start)
+        queue_records = self.html[queue_records_start:queue_records_end]
+        self.assertIn('function queueRecords()', queue_records)
+        self.assertIn('Array.from(workflowItems.values()).map(queueRecordForWorkflow)', queue_records)
+        self.assertIn('_retainedOnly:true', queue_records)
+
+        retained_start = self.html.index('function retainedSourceSnapshotComparison(item,idea)')
+        retained_end = self.html.index('\nfunction blankChecks()', retained_start)
+        retained = self.html[retained_start:retained_end]
+        for text in (
+            'captured passage',
+            'dataset revision',
+            'Retained task source snapshot',
+            'The current release differs in ',
+            'copied and exported tasks preserve it',
+            'rel="noopener noreferrer"',
+        ):
+            self.assertIn(text, retained)
 
         self.assertIn("document.addEventListener('focusout'", self.html)
         self.assertIn("window.addEventListener('pagehide'", self.html)
         self.assertIn('validTimestamp(value.updated_at)', self.html)
+        self.assertIn("validTimestamp(value.check_times && value.check_times[row[0]])", self.html)
+        self.assertIn('item.check_times[gate] = attestedAt', self.html)
         self.assertIn('item.updated_at > existing.updated_at', self.html)
         self.assertIn('The current queue will be retained as a tab-scoped rollback across reloads.', self.html)
         self.assertIn('sessionStorage.setItem(\n          RESTORE_ROLLBACK_KEY', self.html)
@@ -1653,8 +1748,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-c',
             'https://www.sec.gov/resources-small-businesses/small-business-compliance-guides/investment-adviser-marketing',
             'These references shape research questions, evidence retention, and disclosure boundaries; they do not certify a packet or establish legal compliance.',
-            'Packet coverage counts populated analyst fields and self-attested control gates.',
-            'It is not a confidence score, approval, recommendation, or evidence that a control was performed.',
+            'Field presence never becomes a readiness score.',
+            'No completion or confidence score is calculated.',
         ):
             self.assertIn(text, self.html)
 
@@ -1682,8 +1777,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn(
             "state.view = viewNumber === '1' ? 'structure'", self.html)
         for leading in (
-            "['structure','Structure Desk'],['briefing','Latest Brief']",
-            "['01','structure','Structure Desk'],['02','briefing','Latest Brief']",
+            "['structure','Evidence Desk'],['briefing','Latest Brief']",
+            "['01','structure','Evidence Desk'],['02','briefing','Latest Brief']",
         ):
             self.assertIn(leading, self.html)
         self.assertIn(
@@ -1709,43 +1804,59 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             facets['source_note_count'],
             len({idea['article_id'] for idea in self.ideas}),
         )
+        desk_article_ids = {idea['article_id'] for idea in self.ideas}
+        self.assertEqual(
+            facets['full_current_note_count'],
+            sum(
+                1 for article in self.articles
+                if article['id'] in desk_article_ids
+                and article['content_status'] == 'full'
+                and article['body_revision_status'] == 'current'
+            ),
+        )
         self.assertTrue(facets['instruments'])
         self.assertTrue(all(len(row) == 3 for row in facets['instruments']))
         self.assertTrue(all(row[2] <= row[1] for row in facets['instruments']))
+        crypto = [
+            row for row in facets['underlyings']
+            if str(row[0]).casefold() == 'crypto'
+        ]
+        self.assertEqual(
+            [(row[1], row[2]) for row in crypto],
+            [(3, 2)],
+            'build-time facets must normalize and deduplicate like runtime facets',
+        )
         self.assertIn('if (!IDEAS.length) return (DESK_FACETS.instruments || [])', self.html)
 
     def test_structure_desk_is_wired_as_a_first_class_view(self):
         for text in (
-            'Research Structuring Desk',
+            'Research Evidence Desk',
             '<section class="structure-shell" id="structure-shell"',
             "'briefing','ideas','research','queue','structure'",
             'structure:8',
             "state.view === 'structure'",
             'renderStructureDesk(structureMatches())',
+            'id="structure-question-input"',
             'id="structure-focus-input"',
             "structureChipRow('Instrument','structure-instrument'",
             "structureChipRow('Stance','structure-direction'",
             "structureChipRow('Period','structure-period'",
             'data-structure-focus="',
-            "'[data-structure-instrument],[data-structure-direction],"
-            "[data-structure-period],'",
-            "[data-structure-focus],[data-structure-slope],[data-structure-level],"
-            "[data-structure-macro]'",
             'data-structure-passage="',
             'data-structure-more="1"',
-            'No setup defined',
-            'Primary retrieved source notes',
-            'Coverage audit',
+            'No evidence subject defined',
+            'Retrieved authored notes',
+            'Research handoff',
             'Related mentions — excluded from the evidence set',
-            'Create diligence packet',
-            'Instrument mentions by source note',
+            'Open local research task',
+            'Parser candidates',
             'Optional macro provenance',
-            "structureChipRow('U.S. curve band','structure-slope'",
-            "structureChipRow('U.S. 10Y band','structure-level'",
             'not timestamp-aligned and may post-date a same-day article',
             'const RATE_CONTEXT = ',
         ):
             self.assertIn(text, self.html)
+        self.assertNotIn("structureChipRow('U.S. curve band','structure-slope'", self.html)
+        self.assertNotIn("structureChipRow('U.S. 10Y band','structure-level'", self.html)
 
         # The desk must keep the terminal's table chrome out of the way and
         # bring its own layout, exactly as the briefing view does.
@@ -1761,12 +1872,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         hash_end = self.html.index('\nfunction ', hash_start + 10)
         writer = self.html[hash_start:hash_end]
         for pair in (
+            "params.set('squestion',state.structureQuestion.slice(0,180))",
             "params.set('focus',state.structureFocus.slice(0,120))",
             "params.set('sinst',state.structureInstrument)",
             "params.set('sdir',state.structureDirection)",
             "params.set('speriod',state.structurePeriod)",
-            "params.set('sslope',state.structureSlope)",
-            "params.set('slevel',state.structureLevel)",
             "params.set('smacro','1')",
             "params.set('sanchor',state.structureAnchor)",
             "params.set('spassage',state.structurePassage)",
@@ -1776,17 +1886,20 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "state.view === 'structure' && (includeQuery || state.structureShareable)",
             writer,
         )
+        self.assertIn('const returnOnly = Boolean(arguments[1]);', writer)
+        self.assertIn('if (returnOnly) return new URL(target,location.href).href;', writer)
         self.assertIn("if (state.structureMacro) {", writer)
         self.assertIn("const current = location.hash || location.pathname", writer)
+        self.assertNotIn("params.set('sslope'", writer)
+        self.assertNotIn("params.set('slevel'", writer)
         self.assertNotIn("if (state.view === 'structure') {", writer)
 
         for guard in (
+            "state.structureQuestion = String(params.get('squestion') || '').slice(0,180)",
             "state.structureFocus = String(params.get('focus') || '').slice(0,120)",
             "VALID_INSTRUMENTS.has(params.get('sinst'))",
             "VALID_DIRECTIONS.has(params.get('sdir'))",
             "/^[0-9]{4}$/.test(String(params.get('speriod') || ''))",
-            "VALID_RATE_BANDS.has(params.get('sslope'))",
-            "VALID_RATE_BANDS.has(params.get('slevel'))",
             "state.structureMacro = params.get('smacro') === '1'",
             "ARTICLE_BY_ID.has(params.get('sanchor'))",
             "/^[A-Za-z0-9_-]{1,96}$/.test(String(params.get('spassage') || ''))",
@@ -1794,10 +1907,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         ):
             self.assertIn(guard, self.html)
         self.assertIn("const VALID_RATE_BANDS = new Set(['low','mid','high']);", self.html)
-        self.assertIn("if (state.view === 'structure') state.structureShareable = true;", self.html)
+        self.assertNotIn("if (state.view === 'structure') state.structureShareable = true;", writer)
         self.assertIn("state.structureShareable = false;", self.html)
         self.assertIn('maxlength="120" spellcheck="false"', self.html)
+        self.assertIn('maxlength="180" spellcheck="false"', self.html)
         self.assertIn("const value = input.value.slice(0,120);", self.html)
+        self.assertIn('const shareUrl = updateHash(true,true);', self.html)
 
     def test_structure_desk_export_matches_what_the_desk_shows(self):
         """The export preserves the source-note unit used by the desk."""
@@ -1811,16 +1926,55 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn("if (state.view === 'structure') {", export)
         for column in (
             "'Retrieval order (same tier then publication date)'",
-            "'Retrieval tier'", "'Included passage count'",
+            "'Retrieval tier'", "'Captured passage count'",
+            "'Directly matching passage count'", "'Context-only passage count'",
+            "'Detected numeric phrases'", "'Parser candidates: thesis phrases'",
+            "'Detected outcome / P&L phrases'",
             "'U.S. 10Y-2Y observation by publication date'", "'Curve as of'",
             "'Related later notes via article topic (not outcome)'",
-            "'Outcomes recorded at source'",
         ):
             self.assertIn(column, export)
         self.assertIn('Array.from(group.reasons).join', export)
         self.assertIn('structureGroupFacts(group)', export)
         self.assertIn('observationFollowUps(firstIdea).length', export)
         self.assertIn('state.structureMacro ? rateReading(firstIdea) : null', export)
+        self.assertIn("structurePassageDirectMatch(row.idea) ? 'direct match' : 'context only'", export)
+        self.assertIn("const evidenceRows = group.tier === 'subject' ? directRows : group.rows", export)
+
+    def test_research_task_csv_excludes_scores_and_sensitive_investment_fields(self):
+        export_start = self.html.index('function exportCsv()')
+        export_end = self.html.index('\nfunction applyPreset', export_start)
+        export = self.html[export_start:export_end]
+        task_start = export.index("} else if (state.view === 'queue') {")
+        task_end = export.index('\n  } else {', task_start)
+        task_export = export[task_start:task_end]
+        for column in (
+            'Retained source passage',
+            'Retained dataset checksum',
+            'Current-release differences',
+            'Research task status',
+            'Research owner',
+            'Next review',
+            'Next action',
+            'Research hypothesis to test',
+            'Contrary evidence',
+            'Public catalyst / checkpoint',
+            'Horizon',
+            'Falsifier / observable checkpoint',
+            'Independent public source recorded',
+            'Unsupported-claims / non-confidential review',
+            'Task updated',
+        ):
+            self.assertIn(column, task_export)
+        for forbidden in (
+            'Analyst confidence',
+            'Packet coverage',
+            'Expected / actual payoff',
+            'Implementation / borrow / funding',
+            'Portfolio fit / sizing',
+            'Readiness score',
+        ):
+            self.assertNotIn(forbidden, task_export)
 
     def test_structure_desk_shows_the_evidence_gate_in_its_own_shell(self):
         """The desk hides the table, so the shared gate would leave it blank
@@ -1842,13 +1996,15 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         render_end = self.html.index('\nfunction render()', render_start)
         render = self.html[render_start:render_end]
 
-        # A defined setup puts the source-note snapshot before refinements and
-        # the evidence matrix; an undefined setup gets an explicit start state.
-        layout = render.index("startChips + '</header>' + notePanel + refineBar +")
+        # Scope inputs and refinements precede a verbatim-evidence-first
+        # workbench; an undefined setup gets an explicit start state.
+        layout = render.index("startChips + '</header>' + refineBar +")
         self.assertGreater(layout, 0)
         self.assertIn("const startState = !gate && !defined", render)
-        self.assertIn('No setup defined', render)
-        self.assertIn('Build an evidence-bound research set', render)
+        self.assertIn('No evidence subject defined', render)
+        self.assertIn('Start with a published-research subject', render)
+        self.assertIn("'<div class=\"structure-workbench\">' + comparablePanel + railPanel", render)
+        self.assertIn('Verbatim evidence first', render)
 
         # Refinements are closed until asked for, and say so to assistive tech.
         self.assertIn(
@@ -1869,18 +2025,15 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         # see what produced the view they were sent.
         self.assertIn('state.structureControlsOpen = Boolean(', self.html)
 
-        # The four figures use source notes as the independent unit and state
-        # passage/evidence coverage without turning later coverage into return.
-        self.assertIn('desk-anchors', render)
-        self.assertIn("'source ' + (pattern.noteTotal === 1 ? 'note' : 'notes')", render)
-        self.assertIn("'matching source passages'", render)
-        self.assertIn("'notes with numeric context'", render)
-        self.assertIn("'notes with source outcome'", render)
-        self.assertNotIn("'revisited later'", render)
-        self.assertLess(
-            render.index('anchorRow'), render.index('noteLines.map'),
-            'the orienting figures must precede the prose',
-        )
+        # The handoff rail reports raw source counts and explicit human gaps;
+        # it never turns field presence into a score.
+        self.assertIn('Research handoff', render)
+        self.assertIn('no readiness score', render)
+        self.assertIn('Evidence breadth', render)
+        self.assertIn('Human research case', render)
+        self.assertIn('Live investment controls', render)
+        self.assertNotIn('desk-anchors', render)
+        self.assertNotIn('Math.round', render)
 
         # Corpus telemetry is engineering assurance, not decision information,
         # so the desk does not spend a reader's attention on it.
@@ -1891,7 +2044,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         # with the question rather than inside the refinements.
         self.assertIn('desk-starts', render)
         self.assertIn('class="desk-start', render)
-        self.assertIn("countLabel(row.notes,'source note')", render)
+        self.assertIn("countLabel(row.notes,'authored note')", render)
         self.assertIn("countLabel(row.count,'passage')", render)
         for rule in (
             r'\.desk-refine-toggle\[aria-expanded="true"\]',
@@ -1907,12 +2060,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'this test assumes outcomes are not universally recorded',
         )
         for text in (
-            'Published-research evidence only · no live holdings, prices, P&amp;L, sizing, exposure, liquidity, compliance approval, or recommendation',
+            'Builds a research task—not an investment recommendation or portfolio decision. No live holdings, prices, P&amp;L, sizing, exposure, liquidity, or compliance approval.',
             'Instrument fields are lexical source mentions, not validated legs.',
             'Related subsequent notes are article-topic links, not outcomes.',
-            'passages contain a source-stated outcome.',
-            'No selected source note contains a source-stated outcome.',
-            'Passage frequency is descriptive archive coverage, not a performance base rate.',
+            'passages contain a detected outcome / P&amp;L phrase requiring source review.',
+            'No selected authored note contains a detected outcome / P&L phrase.',
+            'This one-author, purposive archive is not independent corroboration or a performance base rate.',
             'Optional publication-date provenance only.',
             'fixed cut points from the complete',
             'official observation dated on or before the publication calendar date.',
@@ -1958,15 +2111,15 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Latest Brief',
             'Evidence Monitor',
             'Research Library',
-            'Decision Queue',
+            'Research Tasks',
             'Research evidence',
             'Export CSV',
             'Copy view',
             'Source passage',
             'Parsed directional language',
             'Mentioned entity',
-            'Numeric context',
-            'Reported outcome',
+            'Detected numeric phrase',
+            'Detected outcome / P&L phrase',
         ):
             self.assertIn(text, self.html)
         expected_manager_keys = {
@@ -2109,7 +2262,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         hash_end = self.html.index('\nlet queryCacheKey', hash_start)
         hash_logic = self.html[hash_start:hash_end]
         self.assertIn('if (includeQuery && state.query)', hash_logic)
-        self.assertIn('updateHash(true);', self.html)
+        self.assertIn('updateHash(true,true);', self.html)
         self.assertIn('Shareable view copied with search phrase', self.html)
 
     def test_command_palette_is_reachable_labelled_and_delegates_to_real_controls(self):
@@ -2857,7 +3010,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             r'\.dir-short\{[^}]*color:var\(--short\)[^}]*border-color:var\(--short-line\)'
             r'[^}]*background:var\(--short-soft\)',
         )
-        self.assertRegex(self.html, r'\.documentation-badge\.complete\{[^}]*color:var\(--positive\)')
+        self.assertNotIn('documentation-badge', self.html)
         self.assertRegex(self.html, r'\.status-dot\.stale\{[^}]*background:var\(--negative\)')
 
     def test_mobile_filter_drawer_has_a_wired_close_control(self):

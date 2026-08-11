@@ -612,29 +612,21 @@ for _idea in client_ideas:
             _instrument_articles.setdefault(_instrument, set()).add(
                 _idea['article_id']
             )
-_underlying_counts = _desk_facet_counts(
-    lambda idea: [
-        part.strip() for part in str(idea['underlying'] or '').split(';')
-        if part.strip() and part.strip() not in {'—', '-'}
-    ]
-)
 _underlying_labels: dict[str, str] = {}
-for _idea in client_ideas:
-    for _part in str(_idea['underlying'] or '').split(';'):
-        _part = _part.strip()
-        if _part and _part not in {'—', '-'}:
-            _underlying_labels.setdefault(normalize_identity_text(_part), _part)
 _underlying_totals: dict[str, int] = {}
 _underlying_articles: dict[str, set[str]] = {}
-for _label, _count in _underlying_counts.items():
-    _key = normalize_identity_text(_label)
-    _underlying_totals[_key] = _underlying_totals.get(_key, 0) + _count
 for _idea in client_ideas:
+    _seen_underlyings: set[str] = set()
     for _part in str(_idea['underlying'] or '').split(';'):
         _part = _part.strip()
         if not _part or _part in {'—', '-'}:
             continue
         _key = normalize_identity_text(_part)
+        if not _key or _key in _seen_underlyings:
+            continue
+        _seen_underlyings.add(_key)
+        _underlying_labels.setdefault(_key, _part)
+        _underlying_totals[_key] = _underlying_totals.get(_key, 0) + 1
         _underlying_articles.setdefault(_key, set()).add(_idea['article_id'])
 _instrument_facets = sorted(
     (
@@ -650,10 +642,17 @@ _underlying_facets = sorted(
     ),
     key=lambda row: (-row[2], -row[1], row[0].casefold()),
 )
+_desk_article_ids = {idea['article_id'] for idea in client_ideas}
 desk_facets = {
     'observation_count': len(client_ideas),
-    'source_note_count': len({idea['article_id'] for idea in client_ideas}),
+    'source_note_count': len(_desk_article_ids),
     'outcome_count': sum(1 for idea in client_ideas if idea['outcome']),
+    'full_current_note_count': sum(
+        1 for article in client_articles
+        if article['id'] in _desk_article_ids
+        and article['content_status'] == 'full'
+        and article['body_revision_status'] == 'current'
+    ),
     'instruments': [
         [key, count, source_notes]
         for key, count, source_notes in _instrument_facets
@@ -1106,6 +1105,7 @@ button.kpi-item:hover{background:var(--surface-3);box-shadow:inset 0 -2px var(--
 body[data-view="research"] .research-only-filter{display:block}
 .queue-only-filter{display:none}
 body[data-view="queue"] .queue-only-filter{display:block}
+body[data-view="queue"] .current-extraction-filter{display:none}
 .preset-list{display:grid;gap:4px}
 .preset-button{
   width:100%;min-height:32px;border:1px solid var(--control-line);border-radius:3px;
@@ -1189,7 +1189,7 @@ body[data-view="queue"] .queue-command{display:inline-flex}
 .mix-legend{font:10px var(--mono);color:var(--text-muted);white-space:nowrap}
 
 /* Evidence-bound research structuring and diligence desk */
-.structure-shell{display:none;flex:1 1 auto;min-height:0;overflow:auto;padding:20px 22px 44px;background:var(--bg)}
+.structure-shell{display:none;flex:1 1 auto;min-height:0;overflow:auto;padding:14px 18px 44px;background:var(--bg)}
 body[data-view="structure"] .structure-shell{display:block}
 body[data-view="structure"] .kpi-strip,
 body[data-view="structure"] .table-shell,
@@ -1204,22 +1204,22 @@ body[data-view="structure"] .main-panel{grid-column:1/-1}
 body[data-view="structure"] .global-search{display:none}
 body[data-view="structure"] .app-header{grid-template-columns:minmax(250px,330px) minmax(0,1fr)}
 body[data-view="structure"] .header-right{grid-column:2}
-.structure-wrap{max-width:1480px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.structure-wrap{max-width:1560px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
 .structure-head{padding:0}
 .structure-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
 .structure-kicker{font:650 9px var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:4px}
-.structure-head h2{font:650 24px/1.12 var(--sans);letter-spacing:-.025em}
+.structure-head h2{font:650 23px/1.12 var(--sans);letter-spacing:-.025em}
 .structure-boundary{max-width:520px;text-align:right;font:10px/1.5 var(--mono);color:var(--text-muted)}
-.structure-lede{color:var(--text-secondary);font-size:12px;line-height:1.5;margin:5px 0 11px;max-width:82ch}
-.structure-search-row{display:grid;grid-template-columns:minmax(260px,1fr) auto;gap:8px;max-width:900px}
-.structure-search input{width:100%;min-height:44px;padding:0 13px;border-radius:0;
+.structure-scope-grid{display:grid;grid-template-columns:minmax(320px,1.2fr) minmax(280px,.8fr);gap:8px;margin-top:8px}
+.structure-scope-field{display:grid;gap:4px}
+.structure-scope-field>span{font:650 9.5px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted)}
+.structure-scope-field input{width:100%;min-height:44px;padding:0 12px;border-radius:0;
   border:1px solid var(--control-line);background:var(--surface-1);color:var(--text);
-  font-size:14px;line-height:1.3;box-shadow:none}
-.structure-search input::placeholder{color:var(--text-muted)}
-.structure-search input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;
+  font-size:13px;line-height:1.3;box-shadow:none}
+.structure-scope-field input::placeholder{color:var(--text-muted)}
+.structure-scope-field input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;
   border-color:var(--accent)}
-.structure-search-help{display:flex;align-items:center;border:1px solid var(--line);padding:0 12px;
-  color:var(--text-muted);font:10px/1.35 var(--mono);background:var(--surface-2)}
+.structure-memory-note{margin-top:5px;font:9.5px/1.4 var(--mono);color:var(--text-muted)}
 .desk-starts{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:8px}
 .desk-starts-label{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;
   color:var(--text-muted);margin-right:2px}
@@ -1228,7 +1228,7 @@ body[data-view="structure"] .header-right{grid-column:2}
   font-size:11px;cursor:pointer}
 .desk-start:hover{border-color:var(--accent);color:var(--text)}
 .desk-start.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-.desk-start-count{font:600 9px var(--mono);color:var(--text-muted)}
+.desk-start-count{font:600 9px var(--mono);color:var(--text-muted);text-transform:none}
 .desk-start.active .desk-start-count{color:var(--on-accent)}
 .desk-start.clear{background:transparent;color:var(--text-muted)}
 .desk-refine{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
@@ -1296,7 +1296,7 @@ body[data-view="structure"] .header-right{grid-column:2}
 .desk-note dd{font-size:11px;line-height:1.5;color:var(--text-secondary);margin:0}
 .structure-disclosure{border:1px solid var(--line);border-left:3px solid var(--warning);
   background:var(--surface-1);border-radius:0;padding:10px 12px;font-size:10.5px;color:var(--text-muted);line-height:1.5}
-.structure-grid{display:grid;grid-template-columns:minmax(0,2.3fr) minmax(270px,.7fr);gap:12px;align-items:start}
+.structure-workbench{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,340px);gap:10px;align-items:start}
 .structure-panel{border:1px solid var(--line);border-radius:0;background:var(--surface-1);padding:0;overflow:hidden}
 .structure-panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
 .structure-panel h3{font:650 11px var(--mono);letter-spacing:.07em;text-transform:uppercase;margin:0}
@@ -1312,18 +1312,21 @@ body[data-view="structure"] .header-right{grid-column:2}
 .structure-bar-value{font:600 11px var(--mono);color:var(--text-muted);text-align:right}
 .structure-managers{font-size:10.5px;color:var(--text-secondary);line-height:1.55;padding:0 12px 11px}
 .structure-comparables{min-width:0}
-.structure-matrix{display:grid;min-width:820px}
-.structure-matrix-head,.structure-evidence-row{display:grid;grid-template-columns:86px minmax(210px,1.5fr) 118px 150px 128px minmax(160px,1fr);align-items:stretch}
+.structure-matrix{display:grid;min-width:780px}
+.structure-matrix-head,.structure-evidence-row{display:grid;grid-template-columns:minmax(290px,1.55fr) 132px 180px minmax(210px,1fr);align-items:stretch}
 .structure-matrix-head{min-height:34px;background:var(--surface-2);border-bottom:1px solid var(--line-strong);font:650 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
 .structure-matrix-head>span,.structure-evidence-cell{min-width:0;padding:8px 9px;border-right:1px solid var(--line)}
 .structure-matrix-head>span:last-child,.structure-evidence-cell:last-child{border-right:0}
-.structure-evidence-group{border-bottom:1px solid var(--line)}
+.structure-evidence-group{border-bottom:1px solid var(--line);box-shadow:inset 3px 0 transparent}
+.structure-evidence-group.selected{box-shadow:inset 3px 0 var(--positive)}
 .structure-evidence-group:last-child{border-bottom:0}
 .structure-evidence-row{font-size:11px;color:var(--text-secondary)}
 .structure-evidence-row:hover{background:var(--surface-2)}
 .structure-evidence-cell{line-height:1.4}
-.structure-evidence-cell strong{display:block;color:var(--text);font-size:11px;line-height:1.35}
-.structure-evidence-cell small{display:block;margin-top:3px;color:var(--text-muted);font:10px/1.4 var(--mono)}
+.structure-evidence-cell strong{display:block;color:var(--text);font-size:11.5px;line-height:1.38}
+.structure-evidence-cell small{display:block;margin-top:4px;color:var(--text-muted);font:10px/1.45 var(--mono)}
+.structure-row-excerpt{margin:7px 0 0;padding:0 0 0 9px;border-left:2px solid var(--line-strong);font-size:11px;line-height:1.48;color:var(--text-secondary)}
+.structure-selected-label{display:inline-flex;margin-top:7px;min-height:22px;align-items:center;padding:0 6px;border:1px solid var(--positive-line);background:var(--positive-soft);color:var(--positive);font:650 9px var(--mono);text-transform:uppercase;letter-spacing:.05em}
 .structure-anchor{width:100%;min-height:34px;border:1px solid var(--control-line);background:var(--surface-1);color:var(--text-secondary);font:9.5px var(--mono);cursor:pointer}
 .structure-anchor:hover{border-color:var(--control-line-hover);color:var(--text)}
 .structure-anchor.active{border-color:var(--accent);background:var(--accent);color:var(--on-accent);font-weight:700}
@@ -1347,9 +1350,17 @@ body[data-view="structure"] .header-right{grid-column:2}
 .structure-passage-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;font:650 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted)}
 .structure-use-passage{min-height:34px;padding:0 10px}
 .structure-use-passage.active{border-color:var(--positive-line);background:var(--positive-soft);color:var(--positive)}
-.structure-passage-item p{font-size:11px;line-height:1.55;color:var(--text-secondary)}
+.structure-passage-text{margin:0;padding:0 0 0 10px;border-left:2px solid var(--accent);font-size:12px;line-height:1.58;color:var(--text)}
+.structure-passage-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px}
+.structure-passage-fields>div{padding:8px;border:1px solid var(--line);background:var(--surface-2)}
+.structure-passage-fields span{display:block;font:650 9px/1.35 var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)}
+.structure-passage-fields p{margin-top:5px;font-size:11px;line-height:1.48;color:var(--text-secondary)}
 .structure-passage-meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;font:10px var(--mono);color:var(--text-muted)}
 .structure-passage-warning{color:var(--warning);font-weight:650}
+.structure-member-continue{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px;border-top:1px solid var(--warning-line);background:var(--warning-soft)}
+.structure-member-continue strong{font:650 9.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--warning)}
+.structure-member-continue p{margin-top:3px;font-size:10.5px;line-height:1.45;color:var(--text-secondary)}
+.structure-member-continue>div:last-child{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .structure-thesis,.structure-outcome{font-size:12px;line-height:1.5;margin-top:8px;
   padding:7px 9px;border-radius:5px;background:var(--surface-3);color:var(--text-secondary)}
 .structure-thesis span,.structure-outcome span{display:block;font:600 10px var(--mono);
@@ -1380,15 +1391,37 @@ body[data-view="structure"] .header-right{grid-column:2}
 .structure-related summary{min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px;cursor:pointer;font:650 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary)}
 .structure-related summary::marker{content:""}
 .structure-related-list{display:grid;border-top:1px solid var(--line)}
+.structure-related-tier h3{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--surface-2);font:650 9.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+.structure-related-tier h3 span{font-weight:500;letter-spacing:0;text-transform:none}
 .structure-related-row{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:10.5px;color:var(--text-secondary)}
 .structure-related-row:last-child{border-bottom:0}
 .structure-related-row a{color:var(--accent)}
 .structure-thin{color:var(--warning);font-weight:650}
 .structure-macro-note{margin:10px 12px;padding:9px;border:1px solid var(--warning-line);background:var(--warning-soft);font-size:10px;line-height:1.5;color:var(--warning)}
+.structure-diligence{position:sticky;top:8px;max-height:calc(100vh - 150px);overflow:auto}
+.desk-gates{list-style:none;margin:0;padding:0;display:grid}
+.desk-gates li{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:start;padding:9px 10px;border-bottom:1px solid var(--line)}
+.desk-gate-index{font:650 9px var(--mono);color:var(--text-muted);padding-top:2px}
+.desk-gates strong{display:block;font:650 10.5px/1.35 var(--sans);color:var(--text)}
+.desk-gates p{margin-top:3px;font-size:10px;line-height:1.45;color:var(--text-muted)}
+.desk-gates b{font:650 9px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--accent);text-align:right;max-width:82px}
+.desk-handoff-actions{display:grid;grid-template-columns:1fr;gap:6px;padding:10px;border-bottom:1px solid var(--line)}
+.desk-handoff-actions button{width:100%;min-height:40px;justify-content:center}
+.desk-handoff-actions button:disabled{opacity:.55;cursor:not-allowed}
+.desk-capture-details{border-bottom:1px solid var(--line)}
+.desk-capture-details summary{display:flex;align-items:center;min-height:40px;padding:0 10px;cursor:pointer;font:650 10px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary)}
+.desk-capture-details dl{display:grid;margin:0;background:var(--line);gap:1px;border-top:1px solid var(--line)}
+.desk-capture-details dl>div{padding:8px 10px;background:var(--surface-1)}
+.desk-capture-details dt{font:650 9px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+.desk-capture-details dd{margin-top:3px;font-size:10px;line-height:1.45;color:var(--text-muted)}
+.desk-corpus-boundary{padding:10px;background:var(--surface-2)}
+.desk-corpus-boundary strong{font:650 9.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary)}
+.desk-corpus-boundary p{margin:5px 0 8px;font-size:10px;line-height:1.5;color:var(--text-muted)}
+.desk-corpus-boundary button{min-height:36px;width:100%;justify-content:center}
 @media (max-width:1080px){
-  .structure-grid{grid-template-columns:minmax(0,1fr)}
+  .structure-workbench{grid-template-columns:minmax(0,1fr)}
+  .structure-diligence{position:static;max-height:none}
   .structure-control-label{min-width:100%}
-  .desk-note dl{grid-template-columns:repeat(2,minmax(0,1fr))}
   .structure-comparables{overflow-x:auto}
 }
 @media (max-width:759px){
@@ -1405,31 +1438,30 @@ body[data-view="structure"] .header-right{grid-column:2}
   .structure-title-row{display:block}
   .structure-boundary{margin-top:6px;text-align:left}
   .structure-head h2{font-size:22px}
-  .structure-lede{font-size:12px}
-  .structure-search-row{grid-template-columns:1fr}
-  .structure-search-help{min-height:38px}
+  .structure-scope-grid{grid-template-columns:1fr}
   .desk-start{min-height:44px;padding:0 11px}
   .desk-start-state{grid-template-columns:1fr}
   .desk-start-copy{padding:16px}
   .desk-start-steps{grid-template-columns:1fr}
   .desk-start-step{padding:12px 14px}
-  .desk-note-head{align-items:flex-start;display:block}
-  .desk-note-actions{margin-top:9px;display:grid;grid-template-columns:1fr}
-  .desk-note-actions .secondary-action{width:100%;min-height:44px}
-  .desk-anchors,.desk-note dl{grid-template-columns:1fr 1fr}
-  .desk-refine-toggle,.desk-active-filter,.structure-chip{min-height:44px}
+  .desk-refine-toggle,.desk-active-filter,.structure-chip,
+  .desk-handoff-actions button,.desk-capture-details summary,.desk-corpus-boundary button{min-height:44px}
   .structure-controls{padding:10px}
   .structure-chips{display:grid;grid-template-columns:1fr 1fr;width:100%}
   .structure-chip{white-space:normal;text-align:left;justify-content:space-between}
   .structure-matrix{min-width:0;display:block}
   .structure-matrix-head{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%)}
-  .structure-evidence-row{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line-strong)}
+  .structure-evidence-row{display:grid;grid-template-columns:1fr;border-bottom:1px solid var(--line-strong)}
   .structure-evidence-cell{border-right:0;border-bottom:1px solid var(--line);padding:10px}
-  .structure-evidence-cell:nth-child(2),.structure-evidence-cell:last-of-type{grid-column:1/-1}
+  .structure-evidence-cell{grid-column:1/-1}
   .structure-anchor{min-height:44px}
   .structure-anchor-status,.structure-use-passage{min-height:44px}
   .structure-source{min-height:44px}
   .structure-passage-head{align-items:stretch;flex-direction:column}
+  .structure-passage-fields{grid-template-columns:1fr}
+  .structure-member-continue{grid-template-columns:1fr}
+  .structure-member-continue>div:last-child{display:grid;justify-content:stretch}
+  .structure-member-continue a{min-height:44px;justify-content:center}
   .structure-row-detail{grid-column:1/-1}
   .structure-row-detail summary{min-height:44px}
   .structure-related-row{grid-template-columns:1fr}
@@ -1918,8 +1950,6 @@ body[data-view="briefing"] .briefing-shell{
   border-radius:3px;color:var(--text-muted);font:600 10px var(--mono)
 }
 .evidence-flag.on{border-color:var(--quant-line);color:var(--quant);background:var(--quant-soft)}
-.documentation-badge{min-width:34px;height:19px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:3px;color:var(--text-secondary);font:650 10px var(--mono);background:var(--surface-2)}
-.documentation-badge.complete{color:var(--positive);border-color:var(--positive-line);background:var(--positive-soft)}
 .review-flag{color:var(--warning);font:650 10px var(--mono)}
 .new-badge{display:inline-flex;margin-left:6px;color:var(--accent);font:650 10px var(--mono);text-transform:uppercase}
 .workflow-badge{display:inline-flex;margin-left:6px;padding:1px 5px;border:1px solid var(--line-strong);border-radius:3px;color:var(--text-secondary);font:650 10px var(--mono);text-transform:uppercase}
@@ -2029,6 +2059,19 @@ body.density-compact .idea-title{-webkit-line-clamp:1}
 .workflow-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .workflow-panel h3{font:650 10px var(--mono);text-transform:uppercase;letter-spacing:.07em}
 .workflow-coverage{display:inline-flex;padding:3px 6px;border:1px solid var(--accent);border-radius:3px;background:var(--accent-soft);color:var(--accent);font:650 10px var(--mono)}
+.retained-source{margin-top:10px;padding:10px;border:1px solid var(--line-strong);border-radius:3px;background:var(--surface-1)}
+.retained-source.retained-source-stale{border-color:var(--warning-line);background:var(--warning-soft)}
+.retained-source-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.retained-source-heading h4{font:650 10px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text)}
+.retained-source-heading span{font:9px var(--mono);color:var(--text-muted)}
+.retained-source-status{margin-top:6px;font-size:10px;line-height:1.45;color:var(--text-secondary)}
+.retained-source-stale .retained-source-status{color:var(--warning)}
+.retained-source-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 8px;margin-top:8px}
+.retained-source-meta div{min-width:0}.retained-source-meta dt{font:9px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)}
+.retained-source-meta dd{margin-top:2px;font-size:10px;color:var(--text-secondary);overflow-wrap:anywhere}
+.retained-source-title{display:block;margin-top:9px;font-size:11px;color:var(--text);line-height:1.4}
+.retained-source blockquote{margin:7px 0 8px;padding-left:9px;border-left:2px solid var(--accent);font-size:11px;line-height:1.55;color:var(--text-secondary);overflow-wrap:anywhere}
+.retained-source a{min-height:34px;display:inline-flex;align-items:center;color:var(--accent);font-size:10px;text-decoration:none}
 .workflow-subhead{margin:12px 0 3px;padding-top:10px;border-top:1px solid var(--line);font:650 10px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary)}
 .workflow-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
 .workflow-field{display:grid;gap:4px;margin-top:8px;color:var(--text-muted);font-size:10px}
@@ -2041,6 +2084,7 @@ body.density-compact .idea-title{-webkit-line-clamp:1}
 .workflow-gate{display:flex;align-items:flex-start;gap:7px;padding:7px;border:1px solid var(--control-line);border-radius:3px;background:var(--surface-1);color:var(--text-secondary);font-size:10px;line-height:1.4;cursor:pointer}
 .workflow-gate:hover{border-color:var(--control-line-hover);background:var(--surface-3);color:var(--text)}
 .workflow-gate input{width:16px;height:16px;flex:0 0 auto;margin:0;accent-color:var(--accent)}
+.workflow-gate small{display:block;margin-top:2px;font:9px var(--mono);color:var(--text-muted)}
 .workflow-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .workflow-warning{font-size:10px;color:var(--text-muted);line-height:1.45;margin-top:8px}
 .orphaned-queue{display:none;border-bottom:1px solid var(--line);background:var(--surface-1);padding:10px 12px}
@@ -2069,7 +2113,7 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .view-tab.active{background:var(--selected);box-shadow:none;border-bottom-color:var(--selected-line)}
 .facet-option,.facet-clear,.date-option,.manager-search,.preset-button,
 .select-control,.command-button,.filter-chip,.load-more,.row-open,.direction-badge,.source-badge,
-.coverage-badge,.evidence-flag,.documentation-badge,.workflow-badge,.related-idea,
+.coverage-badge,.evidence-flag,.workflow-badge,.related-idea,
 .workflow-panel,.workflow-field select,.workflow-field input,.workflow-field textarea,
 .workflow-gate,.orphaned-item,.provenance,.quant-block,.review-notice{border-radius:0}
 .filter-group{padding:16px 12px}
@@ -2401,7 +2445,6 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .brief-metrics{grid-template-columns:1fr 1fr}
   .brief-grid{grid-template-columns:1fr}
   .brief-record{grid-template-columns:68px 80px minmax(0,1fr)}
-  .brief-record .documentation-badge{display:none}
   .diligence-grid{grid-template-columns:1fr}
   .premium-access{padding:15px 14px}
   .premium-access-head{display:block}
@@ -2458,6 +2501,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
   .header-library,#method-button{display:none}
   .global-search{grid-column:1/-1;grid-row:2}
   #search{height:44px;padding-left:27px;font-size:16px}
+  .retained-source a{min-height:44px}
   body[data-view="briefing"] .workspace{height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h))}
   .ic-compact-group{grid-template-columns:62px minmax(0,1fr)}
   .ic-compact-label{padding:0 8px;font-size:8px}
@@ -2736,7 +2780,7 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
       </div>
     </section>
 
-    <section class="filter-group" aria-labelledby="manager-filter-label">
+    <section class="filter-group current-extraction-filter" aria-labelledby="manager-filter-label">
       <div class="filter-heading">
         <h2 id="manager-filter-label">Mentioned entity</h2>
         <button class="text-button" type="button" data-clear-facet="manager">Any</button>
@@ -2748,27 +2792,27 @@ __MANAGER_BUTTONS__
       </div>
     </section>
 
-    <section class="filter-group" aria-labelledby="evidence-filter-label">
+    <section class="filter-group current-extraction-filter" aria-labelledby="evidence-filter-label">
       <div class="filter-heading"><h2 id="evidence-filter-label">Captured fields</h2></div>
       <div class="facet-list">
-        <button class="facet-option" type="button" data-filter="quality" data-value="quant"><span>Numeric context</span><span class="facet-count" data-count-quality="quant"></span></button>
-        <button class="facet-option" type="button" data-filter="quality" data-value="thesis"><span>Has edge / thesis</span><span class="facet-count" data-count-quality="thesis"></span></button>
-        <button class="facet-option" type="button" data-filter="quality" data-value="outcome"><span>Reported outcome</span><span class="facet-count" data-count-quality="outcome"></span></button>
+        <button class="facet-option" type="button" data-filter="quality" data-value="quant"><span>Detected numeric phrase</span><span class="facet-count" data-count-quality="quant"></span></button>
+        <button class="facet-option" type="button" data-filter="quality" data-value="thesis"><span>Thesis-phrase candidate</span><span class="facet-count" data-count-quality="thesis"></span></button>
+        <button class="facet-option" type="button" data-filter="quality" data-value="outcome"><span>Detected outcome / P&amp;L phrase</span><span class="facet-count" data-count-quality="outcome"></span></button>
         <button class="facet-option" type="button" data-filter="quality" data-value="manager"><span>Mentioned entity</span><span class="facet-count" data-count-quality="manager"></span></button>
       </div>
     </section>
 
-    <section class="filter-group" aria-labelledby="documentation-filter-label">
+    <section class="filter-group current-extraction-filter" aria-labelledby="documentation-filter-label">
       <div class="filter-heading"><h2 id="documentation-filter-label">Documentation coverage</h2></div>
       <div class="facet-list">
         <button class="facet-clear active" type="button" data-clear-documentation><span>Any coverage</span></button>
         <button class="facet-option" type="button" data-filter="documentation" data-value="triage"><span>High-context triage</span></button>
-        <button class="facet-option" type="button" data-filter="documentation" data-value="documented"><span>All 5 fields captured</span></button>
-        <button class="facet-option" type="button" data-filter="documentation" data-value="strong"><span>At least 4 fields</span></button>
-        <button class="facet-option" type="button" data-filter="documentation" data-value="needs-context"><span>Needs context (1–2)</span></button>
+        <button class="facet-option" type="button" data-filter="documentation" data-value="documented"><span>All tracked fields captured</span></button>
+        <button class="facet-option" type="button" data-filter="documentation" data-value="strong"><span>Most tracked fields captured</span></button>
+        <button class="facet-option" type="button" data-filter="documentation" data-value="needs-context"><span>Sparse captured fields</span></button>
         <button class="facet-option" type="button" data-filter="documentation" data-value="review"><span>Extraction review flag</span></button>
       </div>
-      <p class="filter-note">Five fields: market, parsed directional language, underlying, thesis, and numeric context. Coverage is not investment quality or evidence of a position.</p>
+      <p class="filter-note">Tracked fields: market, parsed directional language, underlying, thesis-phrase candidate, and detected numeric phrase. Coverage is not investment quality or evidence of a position.</p>
     </section>
 
     <section class="filter-group" aria-labelledby="access-filter-label">
@@ -2782,7 +2826,7 @@ __MANAGER_BUTTONS__
       <p class="filter-note">Source access is distinct from how much text this public index captured.</p>
     </section>
 
-    <section class="filter-group" aria-labelledby="content-filter-label">
+    <section class="filter-group current-extraction-filter" aria-labelledby="content-filter-label">
       <div class="filter-heading"><h2 id="content-filter-label">Indexed coverage</h2></div>
       <div class="facet-list">
         <button class="facet-clear active" type="button" data-clear-facet="content"><span>Full + excerpt</span><span class="facet-count" data-count-clear="content"></span></button>
@@ -2801,11 +2845,11 @@ __MANAGER_BUTTONS__
     </section>
 
     <section class="filter-group queue-only-filter" aria-labelledby="queue-filter-label">
-      <div class="filter-heading"><h2 id="queue-filter-label">Decision queue status</h2></div>
+      <div class="filter-heading"><h2 id="queue-filter-label">Research task status</h2></div>
       <div class="facet-list">
         <button class="facet-clear active" type="button" data-clear-queue-status><span>Any queue status</span></button>
         <button class="facet-option" type="button" data-filter="queue-status" data-value="review"><span>Review</span></button>
-        <button class="facet-option" type="button" data-filter="queue-status" data-value="diligence"><span>Diligence</span></button>
+        <button class="facet-option" type="button" data-filter="queue-status" data-value="diligence"><span>Verifying</span></button>
         <button class="facet-option" type="button" data-filter="queue-status" data-value="monitor"><span>Monitor</span></button>
         <button class="facet-option" type="button" data-filter="queue-status" data-value="archived"><span>Archived</span></button>
       </div>
@@ -2817,11 +2861,11 @@ __MANAGER_BUTTONS__
   <main class="main-panel" id="main-panel" tabindex="-1">
     <div class="command-bar">
       <nav class="view-tabs" aria-label="Terminal views">
-        <button class="view-tab active" type="button" data-view="structure" aria-keyshortcuts="Alt+Shift+1">Structure Desk</button>
+        <button class="view-tab active" type="button" data-view="structure" aria-keyshortcuts="Alt+Shift+1">Evidence Desk</button>
         <button class="view-tab" type="button" data-view="briefing" aria-keyshortcuts="Alt+Shift+2">Latest Brief</button>
         <button class="view-tab" type="button" data-view="ideas" aria-keyshortcuts="Alt+Shift+3">Evidence Monitor</button>
         <button class="view-tab" type="button" data-view="research" aria-keyshortcuts="Alt+Shift+4">Research Library</button>
-        <button class="view-tab" type="button" data-view="queue" aria-keyshortcuts="Alt+Shift+5">Decision Queue <span id="saved-count"></span></button>
+        <button class="view-tab" type="button" data-view="queue" aria-keyshortcuts="Alt+Shift+5">Research Tasks <span id="saved-count"></span></button>
       </nav>
       <span class="result-summary" id="result-summary"></span>
       <span class="command-spacer"></span>
@@ -2848,7 +2892,7 @@ __MANAGER_BUTTONS__
 
     <section class="orphaned-queue" id="orphaned-queue" aria-labelledby="orphaned-title">
       <h2 id="orphaned-title">Retained source snapshots</h2>
-      <p>These local decision packets refer to passages no longer present in the current extraction. They are preserved for auditability and remain available in queue backups.</p>
+      <p>These local research tasks refer to passages no longer present in the current extraction. Their retained source snapshots remain available in task backups.</p>
       <div class="orphaned-list" id="orphaned-list"></div>
     </section>
 
@@ -2856,7 +2900,7 @@ __MANAGER_BUTTONS__
       <div class="context-metrics">
         <span class="context-metric"><b id="visible-primary">0</b><span id="visible-primary-label">observations</span></span>
         <span class="context-metric"><b id="visible-articles">0</b><span id="visible-secondary-label">notes</span></span>
-        <span class="context-metric"><b id="visible-managers">0</b><span>mentioned entities</span></span>
+        <span class="context-metric"><b id="visible-managers">0</b><span id="visible-tertiary-label">mentioned entities</span></span>
       </div>
       <div class="direction-mix" id="direction-mix" role="img" aria-label="Parsed directional language in visible passages; not portfolio exposure"></div>
       <span class="mix-legend" id="mix-legend"></span>
@@ -2864,7 +2908,7 @@ __MANAGER_BUTTONS__
 
     <section class="briefing-shell" id="briefing-shell" aria-label="Article intelligence brief"></section>
 
-    <section class="structure-shell" id="structure-shell" aria-label="Published-research structuring and diligence"></section>
+    <section class="structure-shell" id="structure-shell" aria-label="Published-research evidence discovery and handoff"></section>
 
     <section class="table-shell" id="table-shell" aria-label="Research results">
       <div class="data-table" id="data-table" role="grid" aria-label="Research results" aria-rowcount="0" aria-multiselectable="false">
@@ -2901,7 +2945,7 @@ __MANAGER_BUTTONS__
 </div>
 
 <input class="sr-only" id="queue-restore-input" type="file" accept="application/json,.json"
-  aria-label="Restore decision queue from a JSON file" tabindex="-1">
+  aria-label="Restore research tasks from a JSON file" tabindex="-1">
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="persistent-notice" id="persistent-notice" role="alert" hidden>
@@ -2943,7 +2987,7 @@ __MANAGER_BUTTONS__
     <div class="shortcut-item"><span>First / last visible row</span><span><kbd>Home</kbd> <kbd>End</kbd></span></div>
     <div class="shortcut-item"><span>Open evidence inspector</span><kbd>Enter</kbd></div>
     <div class="shortcut-item"><span>Open original research</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>O</kbd></span></div>
-    <div class="shortcut-item"><span>Add or archive selected decision packet</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>S</kbd></span></div>
+    <div class="shortcut-item"><span>Add or archive selected research task</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>S</kbd></span></div>
     <div class="shortcut-item"><span>Copy selected citation</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>C</kbd></span></div>
     <div class="shortcut-item"><span>Toggle filters</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>F</kbd></span></div>
     <div class="shortcut-item"><span>Structure / Brief / Monitor / Library / Queue</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1–5</kbd></span></div>
@@ -2971,15 +3015,15 @@ __MANAGER_BUTTONS__
     </section>
     <section class="method-card">
       <h3>Decision boundary</h3>
-      <p>Records are research observations—not verified trades, current holdings, or recommendations. This terminal supports published-source intake and a human-entered decision packet. It does not contain live prices, positions, P&amp;L, sizing, execution, portfolio risk, liquidity, financing, counterparties, investor records, or compliance approvals.</p>
+      <p>Records are research observations—not verified trades, current holdings, or recommendations. This terminal supports published-source intake and a human-entered local research task. It does not contain live prices, positions, P&amp;L, sizing, execution, portfolio risk, liquidity, financing, counterparties, investor records, or compliance approvals.</p>
     </section>
     <section class="method-card">
-      <h3>Tab-session decision queue</h3>
+      <h3>Tab-session research tasks</h3>
       <p>Queue packets and self-attested diligence gates stay only in this browser tab session unless you export a plaintext backup. They are not an authenticated or immutable enterprise audit record. Do not enter confidential, personal, client, position, or regulated information.</p>
     </section>
     <section class="method-card">
       <h3>Privacy &amp; measurement</h3>
-      <p>The terminal has no advertising, cookies, third-party analytics, session replay, or background data submission. Theme and review state use functional device storage; decision packets use only tab-session storage. The browser requests only release-bound files from this site; an external publication or subscription page opens only when you choose it. Subscription links contain no search, filter, article, or decision-queue context.</p>
+      <p>The terminal has no advertising, cookies, third-party analytics, session replay, or background data submission. Theme and review state use functional device storage; research tasks use only tab-session storage. The browser requests only release-bound files from this site; an external publication or subscription page opens only when you choose it. Subscription links contain no search, filter, article, or research-task context.</p>
     </section>
     <section class="method-card">
       <h3>Institutional basis</h3>
@@ -3271,6 +3315,7 @@ const MANAGER_LABELS = new Map(Object.entries(EMBEDDED_MANAGER_LABELS));
 const MANAGERS = Array.from(MANAGER_LABELS.keys()).sort(function (a, b) { return MANAGER_LABELS.get(a).localeCompare(MANAGER_LABELS.get(b)); });
 let observationsPromise = null;
 let observationGatePromise = null;
+let queueComparisonPromise = null;
 let observationsReady = false;
 let observationsFailed = false;
 let pendingObservationFocus = null;
@@ -3353,25 +3398,23 @@ const VALID_PUBLICATION_ACCESS = new Set(['public','member','unknown']);
 const VALID_DOCUMENTATION = new Set(['triage','documented','strong','needs-context','review']);
 const VALID_QUEUE_STATUSES = new Set(['review','diligence','monitor','archived']);
 const VALID_PRIORITIES = new Set(['low','normal','high']);
-const VALID_CONFIDENCE = new Set(['unrated','low','medium','high']);
 const BRIEF_LENSES = Object.freeze([
   ['all','Latest'],['checkpoint','Public checkpoints'],['evidence','Contextual evidence'],
   ['countercase','Countercase'],['falsifier','Falsifiers'],['implementation','Implementation / capacity']
 ]);
 const VALID_BRIEF_LENSES = new Set(BRIEF_LENSES.map(function (row) { return row[0]; }));
 const DILIGENCE_GATES = [
-  ['source','Original publication reviewed'],
-  ['independent','Independent evidence obtained'],
-  ['market','Live market price and valuation checked'],
-  ['liquidity','Liquidity, capacity, borrow and funding checked'],
-  ['portfolio','Portfolio exposure, correlation and stress checked'],
-  ['compliance','Legal and compliance constraints checked']
+  ['context_reviewed','Surrounding publication context reviewed'],
+  ['public_source_recorded','Independent public source recorded'],
+  ['numeric_traced','Key numeric phrase traced to its cited context'],
+  ['contrary_recorded','Contrary evidence or alternative explanation recorded'],
+  ['falsifier_recorded','Falsifier or observable checkpoint recorded'],
+  ['claims_scope_reviewed','Task reviewed for unsupported claims and non-confidential scope']
 ];
-const PACKET_CASE_FIELDS = ['thesis','contrary','catalyst','horizon','payoff','risk','implementation','portfolio'];
 const WORKFLOW_TEXT_LIMITS = {
   tags:500,note:4000,owner:120,horizon:160,thesis:1800,contrary:1600,
-  catalyst:1400,payoff:1800,risk:1800,implementation:1800,portfolio:1800,
-  next_action:700
+  catalyst:1400,independent_source:1200,numeric_source:1200,
+  falsifier:1800,next_action:700
 };
 const MAX_QUEUE_ITEMS = 250;
 const PAGE_SIZE = {briefing:24,ideas:50,research:80,queue:100,structure:8};
@@ -3606,7 +3649,7 @@ function premiumAccessMarkup(article,context) {
     '<div class="premium-access-head"><div><div class="premium-access-kicker">' + escapeHtml(kicker) + '</div><' + headingTag + ' id="' + labelId + '">Continue the complete research note</' + headingTag + '></div><span class="premium-access-state">Full note on Substack</span></div>' +
     '<p class="premium-access-copy">' + escapeHtml(boundaryCopy) + '</p>' +
     framingMarkup +
-    '<div class="premium-access-actions"><a class="primary-action premium-primary" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Read the full note on Substack (opens in a new tab)">Read full note on Substack ↗</a><a class="secondary-action" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="See Navnoor Research subscription plans (opens in a new tab)">See subscription plans ↗</a><p class="premium-access-note">Review current price, trial eligibility, renewal, and cancellation terms on Substack before purchasing. This terminal sends no search, filter, or decision-queue data.</p></div></section>';
+    '<div class="premium-access-actions"><a class="primary-action premium-primary" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Read the full note on Substack (opens in a new tab)">Read full note on Substack ↗</a><a class="secondary-action" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="See Navnoor Research subscription plans (opens in a new tab)">See subscription plans ↗</a><p class="premium-access-note">Review current price, trial eligibility, renewal, and cancellation terms on Substack before purchasing. This terminal sends no search, filter, or research-task data.</p></div></section>';
 }
 function articleEvidence(article) {
   return briefSection(article,'evidence') || (article && article.brief && article.brief.fallback_evidence) || null;
@@ -3658,7 +3701,7 @@ function validTimestamp(value) {
   if (Number.isNaN(time) || time < Date.UTC(2000,0,1) || time > Date.now() + 10 * 60 * 1000) return '';
   return parsed.toISOString();
 }
-function sourceSnapshotForIdea(id) {
+function sourceSnapshotForIdea(id,legacyBookmarkMigration) {
   const idea = IDEA_BY_ID.get(id);
   if (!idea) return null;
   const article = idea._article || ARTICLE_BY_ID.get(idea.article_id);
@@ -3677,14 +3720,22 @@ function sourceSnapshotForIdea(id) {
     body_revision_status:String(article.body_revision_status || 'unverified').slice(0,20),
     source_updated_at:String(article.source_updated_at || '').slice(0,40),
     observed_source_updated_at:String(article.observed_source_updated_at || '').slice(0,40),
-    data_checksum:String(SNAPSHOT.data_checksum || '')
+    data_checksum:String(SNAPSHOT.data_checksum || ''),
+    review_flags_verified:true,
+    negation_risk:Boolean(idea.negation_risk),
+    reference_line:Boolean(idea.reference_line),
+    description_truncated:Boolean(idea.description_truncated),
+    legacy_bookmark_migration:Boolean(legacyBookmarkMigration)
   };
 }
 function normalizeSourceSnapshot(value,id) {
-  const current = sourceSnapshotForIdea(id);
-  if (!value || typeof value !== 'object') return current;
+  if (!value || typeof value !== 'object') return null;
   const url = safeUrl(String(value.url || ''));
-  if (url === '#') return current;
+  if (url === '#') return null;
+  const reviewFlagsVerified = value.review_flags_verified === true &&
+    ['negation_risk','reference_line','description_truncated'].every(function (field) {
+      return typeof value[field] === 'boolean';
+    });
   return {
     article_id:String(value.article_id || '').slice(0,80),
     title:String(value.title || 'Retained research source').slice(0,500),
@@ -3699,30 +3750,117 @@ function normalizeSourceSnapshot(value,id) {
     body_revision_status:['current','prior','unverified'].includes(value.body_revision_status) ? value.body_revision_status : 'unverified',
     source_updated_at:String(value.source_updated_at || '').slice(0,40),
     observed_source_updated_at:String(value.observed_source_updated_at || '').slice(0,40),
-    data_checksum:String(value.data_checksum || '').slice(0,64)
+    data_checksum:String(value.data_checksum || '').slice(0,64),
+    review_flags_verified:reviewFlagsVerified,
+    negation_risk:reviewFlagsVerified ? Boolean(value.negation_risk) : null,
+    reference_line:reviewFlagsVerified ? Boolean(value.reference_line) : null,
+    description_truncated:reviewFlagsVerified ? Boolean(value.description_truncated) : null,
+    legacy_bookmark_migration:value.legacy_bookmark_migration === true
   };
+}
+function retainedReviewFlagSummary(snapshot) {
+  if (!snapshot || !snapshot.review_flags_verified) return 'Review flags unavailable at capture';
+  const flags = [
+    snapshot.negation_risk ? 'negation risk' : '',
+    snapshot.reference_line ? 'reference-line risk' : '',
+    snapshot.description_truncated ? 'passage truncated' : ''
+  ].filter(Boolean);
+  return flags.length ? flags.join('; ') : 'No automated review flag captured';
+}
+function retainedSourceSnapshotComparison(item,idea) {
+  const retained = item && item.source_snapshot;
+  const current = idea ? sourceSnapshotForIdea(idea.id) : null;
+  if (!retained) return {current:current,differences:['retained source unavailable']};
+  if (!current) return {current:null,differences:[observationsReady ? 'current observation absent' : observationsFailed ? 'current comparison unavailable' : 'current comparison pending']};
+  const fields = [
+    ['article_id','article identity'],['title','title'],['url','source URL'],
+    ['date','publication date'],['source','publication channel'],
+    ['publication_access','source access'],['passage','captured passage'],
+    ['direction','parsed directional language'],['instruments','parsed instrument mentions'],
+    ['underlying','captured underlying'],['body_revision_status','body revision'],
+    ['source_updated_at','source revision timestamp'],
+    ['observed_source_updated_at','observed-source timestamp'],
+    ['review_flags_verified','review-flag provenance'],['negation_risk','negation-risk flag'],
+    ['reference_line','reference-line flag'],['description_truncated','truncation flag'],
+    ['data_checksum','dataset revision']
+  ];
+  const differences = fields.filter(function (row) {
+    const retainedValue = Array.isArray(retained[row[0]]) ? retained[row[0]].join('\u001f') : String(retained[row[0]] || '');
+    const currentValue = Array.isArray(current[row[0]]) ? current[row[0]].join('\u001f') : String(current[row[0]] || '');
+    return retainedValue !== currentValue;
+  }).map(function (row) { return row[1]; });
+  return {current:current,differences:differences};
+}
+function retainedSourceSnapshotMarkup(item,idea) {
+  const retained = item && item.source_snapshot;
+  if (!retained) return '';
+  const comparison = retainedSourceSnapshotComparison(item,idea);
+  const sourceChanges = comparison.differences.filter(function (label) { return label !== 'dataset revision'; });
+  const releaseChanged = comparison.differences.includes('dataset revision');
+  let statusClass = 'retained-source-current';
+  let status = 'Retained evidence matches the current release record.';
+  if (sourceChanges.includes('current comparison pending')) {
+    statusClass = 'retained-source-revision';
+    status = 'Current-release comparison is pending while the exact observation archive loads. Every task action remains bound to the retained evidence below.';
+  } else if (sourceChanges.includes('current comparison unavailable')) {
+    statusClass = 'retained-source-revision';
+    status = 'The current observation archive is unavailable. This task remains fully usable and bound to the retained evidence below.';
+  } else if (sourceChanges.includes('current observation absent')) {
+    statusClass = 'retained-source-stale';
+    status = 'The retained observation is absent from the current release. This task remains fully usable and bound to the retained evidence below.';
+  } else if (sourceChanges.length) {
+    statusClass = 'retained-source-stale';
+    status = 'The current release differs in ' + sourceChanges.join(', ') + '. This task remains bound to the retained evidence below; copied and exported tasks preserve it.';
+  } else if (releaseChanged) {
+    statusClass = 'retained-source-revision';
+    status = 'The active dataset revision has changed, while the retained source fields still match. This task remains bound to its captured release.';
+  }
+  const access = retained.publication_access === 'member' ? 'Member at source' :
+    retained.publication_access === 'public' ? 'Public at source' : 'Access unverified';
+  const revision = retained.body_revision_status === 'current' ? 'Current when captured' :
+    retained.body_revision_status === 'prior' ? 'Prior revision capture' : 'Revision unverified';
+  const date = retained.date ? '<time datetime="' + escapeHtml(retained.date) + '">' + escapeHtml(formatDate(retained.date)) + '</time>' : 'Date unavailable';
+  const migrationNotice = retained.legacy_bookmark_migration
+    ? '<p class="review-notice"><strong>Legacy ID-only bookmark.</strong> This source snapshot was captured from the active release during migration; it is not historical retained evidence from the original bookmark date.</p>' : '';
+  return '<section class="retained-source ' + statusClass + '" aria-label="Retained task source snapshot">' +
+    '<div class="retained-source-heading"><h4>Retained task source snapshot</h4><span>Dataset ' + escapeHtml(String(retained.data_checksum || '').slice(0,12) || 'unknown') + '</span></div>' +
+    '<p class="retained-source-status">' + escapeHtml(status) + '</p>' +
+    '<dl class="retained-source-meta"><div><dt>Source</dt><dd>' + escapeHtml(sourceLabel(retained.source)) + '</dd></div>' +
+      '<div><dt>Published</dt><dd>' + date + '</dd></div><div><dt>Access</dt><dd>' + escapeHtml(access) + '</dd></div>' +
+      '<div><dt>Revision</dt><dd>' + escapeHtml(revision) + '</dd></div>' +
+      '<div><dt>Review flags</dt><dd>' + escapeHtml(retainedReviewFlagSummary(retained)) + '</dd></div></dl>' + migrationNotice +
+    '<strong class="retained-source-title">' + escapeHtml(retained.title || 'Retained research source') + '</strong>' +
+    '<blockquote>' + escapeHtml(retained.passage || 'Passage snapshot unavailable') + '</blockquote>' +
+    '<a href="' + escapeHtml(safeUrl(retained.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Open retained source in a new tab">Open retained source ↗</a>' +
+    '</section>';
 }
 function blankChecks() {
   return DILIGENCE_GATES.reduce(function (result,row) { result[row[0]] = false; return result; },{});
 }
+function blankCheckTimes() {
+  return DILIGENCE_GATES.reduce(function (result,row) { result[row[0]] = ''; return result; },{});
+}
 function normalizeWorkflowItem(value) {
   if (!value || typeof value !== 'object') return null;
   const id = String(value.id || '').slice(0,100);
-  if (!id) return null;
+  if (!/^[A-Za-z0-9_-]{1,100}$/.test(id)) return null;
   const snapshot = normalizeSourceSnapshot(value.source_snapshot,id);
   if (!snapshot) return null;
   const checks = blankChecks();
+  const checkTimes = blankCheckTimes();
   DILIGENCE_GATES.forEach(function (row) {
-    checks[row[0]] = Boolean(value.checks && value.checks[row[0]]);
+    const timestamp = value.checks && value.checks[row[0]]
+      ? validTimestamp(value.check_times && value.check_times[row[0]]) : '';
+    checks[row[0]] = Boolean(timestamp);
+    checkTimes[row[0]] = timestamp;
   });
   const item = {
     id:id,
     status:VALID_QUEUE_STATUSES.has(value.status) ? value.status : 'review',
     priority:VALID_PRIORITIES.has(value.priority) ? value.priority : 'normal',
-    confidence:VALID_CONFIDENCE.has(value.confidence) ? value.confidence : 'unrated',
     review_date:validDateInput(value.review_date),
-    verified_at:validTimestamp(value.verified_at),
     checks:checks,
+    check_times:checkTimes,
     source_snapshot:snapshot,
     updated_at:validTimestamp(value.updated_at)
   };
@@ -3731,23 +3869,48 @@ function normalizeWorkflowItem(value) {
   });
   return item;
 }
-function newWorkflowItem(id) {
+function newWorkflowItem(id,legacyBookmarkMigration) {
   return normalizeWorkflowItem({
-    id:id,status:'review',priority:'normal',confidence:'unrated',checks:blankChecks(),
-    source_snapshot:sourceSnapshotForIdea(id),updated_at:new Date().toISOString()
+    id:id,status:'review',priority:'normal',checks:blankChecks(),
+    source_snapshot:sourceSnapshotForIdea(id,legacyBookmarkMigration),updated_at:new Date().toISOString()
   });
 }
-function packetCoverage(item) {
-  if (!item) return {caseCount:0,controlCount:0,workflowCount:0,completed:0,total:18,complete:false};
-  const caseCount = PACKET_CASE_FIELDS.filter(function (field) { return hasValue(item[field]); }).length;
-  const controlCount = DILIGENCE_GATES.filter(function (row) { return Boolean(item.checks && item.checks[row[0]]); }).length;
-  const workflowCount = Number(hasValue(item.owner)) + Number(Boolean(item.review_date)) +
-    Number(item.confidence !== 'unrated') + Number(hasValue(item.next_action));
-  const completed = caseCount + controlCount + workflowCount;
-  return {caseCount:caseCount,controlCount:controlCount,workflowCount:workflowCount,completed:completed,total:18,complete:completed === 18};
+function queueRecordForWorkflow(item) {
+  const current = IDEA_BY_ID.get(item.id);
+  if (current) return current;
+  const source = item.source_snapshot;
+  const article = {
+    id:source.article_id || 'retained-' + item.id,
+    title:source.title || 'Retained research source',
+    subtitle:'',url:source.url,date:source.date || '',source:source.source,
+    publication_access:source.publication_access,
+    body_revision_status:source.body_revision_status,
+    source_updated_at:source.source_updated_at,
+    observed_source_updated_at:source.observed_source_updated_at,
+    content_status:'excerpt',alternate_urls:{},idea_ids:[item.id],_ideas:[]
+  };
+  return {
+    id:item.id,article_id:article.id,direction:source.direction,
+    instruments:(source.instruments || []).slice(),underlying:source.underlying,
+    manager:'',manager_raw:'',manager_key:'',description:source.passage,
+    description_truncated:source.description_truncated === true,
+    negation_risk:source.negation_risk === true,reference_line:source.reference_line === true,
+    documentation_fields:{market:false,stance:false,underlying:false,thesis:false,numeric:false},
+    documentation_score:0,quant:'',thesis:'',outcome:'',_article:article,_retainedOnly:true
+  };
+}
+function queueRecords() {
+  return Array.from(workflowItems.values()).map(queueRecordForWorkflow);
+}
+function queueRecordById(id) {
+  const item = workflowItems.get(id);
+  return item ? queueRecordForWorkflow(item) : null;
 }
 function reviewIsOverdue(item) {
   return Boolean(item && item.status !== 'archived' && item.review_date && item.review_date < new Date().toISOString().slice(0,10));
+}
+function workflowStatusLabel(value) {
+  return ({review:'New',diligence:'Verifying',monitor:'Monitoring',archived:'Archived'})[value] || 'New';
 }
 function documentationMatches(idea) {
   if (state.documentation === 'all') return true;
@@ -3772,7 +3935,10 @@ let legacyStorageCheckUnavailable = false;
 let legacySavedIdsPendingClear = false;
 let legacyCleanupPending = false;
 function workflowSerialization() {
-  return JSON.stringify(Array.from(workflowItems.values()).slice(0,MAX_QUEUE_ITEMS));
+  const canonical = Array.from(workflowItems.values()).slice(0,MAX_QUEUE_ITEMS).map(function (value) {
+    return normalizeWorkflowItem(value);
+  }).filter(Boolean);
+  return JSON.stringify(canonical);
 }
 function clearLegacyLocalWorkflowKeys() {
   LEGACY_LOCAL_WORKFLOW_KEYS.forEach(function (key) { localStorage.removeItem(key); });
@@ -3859,6 +4025,9 @@ try {
     storedWorkflowRaw = sessionRaw;
     unreadableWorkflowLocation = 'session';
     installStoredWorkflow(sessionRaw);
+    const serialized = workflowSerialization();
+    if (serialized !== sessionRaw) sessionStorage.setItem(WORKFLOW_KEY,serialized);
+    lastPersistedWorkflow = serialized;
     storedWorkflowValidated = true;
   } else {
     let legacyRaw = '';
@@ -3917,6 +4086,8 @@ try {
       if (!item || rollback.has(item.id)) throw new Error('invalid rollback item');
       rollback.set(item.id,item);
     });
+    const canonicalRollback = JSON.stringify(Array.from(rollback.values()));
+    if (canonicalRollback !== rollbackRaw) sessionStorage.setItem(RESTORE_ROLLBACK_KEY,canonicalRollback);
     lastRestoreWorkflowItems = rollback;
   }
 } catch (_error) {
@@ -3926,7 +4097,7 @@ function migrateLegacySavedIdeas() {
   if (!pendingLegacyIdeaIds.length || workflowItems.size >= MAX_QUEUE_ITEMS) return;
   pendingLegacyIdeaIds.forEach(function (id) {
     if (IDEA_BY_ID.has(id) && workflowItems.size < MAX_QUEUE_ITEMS) {
-      const item = newWorkflowItem(id);
+      const item = newWorkflowItem(id,true);
       if (item) workflowItems.set(id,item);
     }
   });
@@ -3938,7 +4109,7 @@ function migrateLegacySavedIdeas() {
       legacyCleanupPending = false;
       workflowLegacyMigrated = true;
       legacySavedIdsPendingClear = false;
-      showPersistentNotice('A legacy persistent queue was moved into this safer tab session and removed from origin-wide storage. Export a plaintext backup before closing the tab if it must be retained.','Back up queue','backup-queue');
+      showPersistentNotice('Legacy ID-only bookmarks were moved into this safer tab session and removed from origin-wide storage. Their source snapshots were captured from the active release during migration—not from the historical bookmark date. Review them and export a plaintext backup before closing the tab if they must be retained.','Back up queue','backup-queue');
     } catch (_error) {
       legacyStorageCheckUnavailable = true;
     }
@@ -3993,6 +4164,7 @@ const state = {
   coverage:'all',
   briefLens:'all',
   threadTopic:'',
+  structureQuestion:'',
   structureFocus:'',
   structureInstrument:'',
   structureDirection:'any',
@@ -4038,6 +4210,7 @@ function hydrateFromHash() {
   // Desk inputs can contain a proprietary research question. They hydrate
   // only from a URL the reader explicitly shared; ordinary edits remain
   // memory-only and are removed from the address on the next render.
+  state.structureQuestion = String(params.get('squestion') || '').slice(0,180);
   state.structureFocus = String(params.get('focus') || '').slice(0,120);
   state.structureInstrument = VALID_INSTRUMENTS.has(params.get('sinst'))
     ? params.get('sinst') : '';
@@ -4045,10 +4218,10 @@ function hydrateFromHash() {
     ? params.get('sdir') : 'any';
   state.structurePeriod = /^[0-9]{4}$/.test(String(params.get('speriod') || ''))
     ? params.get('speriod') : 'all';
-  state.structureSlope = VALID_RATE_BANDS.has(params.get('sslope'))
-    ? params.get('sslope') : 'any';
-  state.structureLevel = VALID_RATE_BANDS.has(params.get('slevel'))
-    ? params.get('slevel') : 'any';
+  // Treasury data is optional post-retrieval provenance. It never changes
+  // evidence membership, order, or the research handoff state.
+  state.structureSlope = 'any';
+  state.structureLevel = 'any';
   state.structureMacro = params.get('smacro') === '1';
   if (!state.structureMacro) {
     state.structureSlope = 'any';
@@ -4060,7 +4233,7 @@ function hydrateFromHash() {
     ? params.get('spassage') : '';
   if (!state.structureAnchor) state.structurePassage = '';
   state.structureShareable = Boolean(
-    state.structureFocus || state.structureInstrument ||
+    state.structureQuestion || state.structureFocus || state.structureInstrument ||
     state.structureDirection !== 'any' || state.structurePeriod !== 'all' ||
     state.structureMacro || state.structureAnchor || state.structurePassage
   );
@@ -4084,32 +4257,34 @@ function markMeaningfulNavigation() {
   nextHistoryMode = 'push';
 }
 function updateHash(includeQuery) {
+  const returnOnly = Boolean(arguments[1]);
   const params = new URLSearchParams();
   if (state.view !== 'structure') params.set('view',state.view);
-  if (includeQuery && state.query) params.set('q',state.query.slice(0,300));
-  if (state.sources.size) params.set('src',Array.from(state.sources).join('|'));
-  if (state.revisions.size) params.set('revision',Array.from(state.revisions).join('|'));
-  if (state.directions.size) params.set('dir',Array.from(state.directions).join('|'));
-  if (state.instruments.size) params.set('inst',Array.from(state.instruments).join('|'));
-  if (state.managers.size) params.set('mgr',Array.from(state.managers).join('|'));
-  if (state.quality.size) params.set('evidence',Array.from(state.quality).join('|'));
-  if (state.publicationAccess.size) params.set('access',Array.from(state.publicationAccess).join('|'));
-  if (state.content.size) params.set('content',Array.from(state.content).join('|'));
-  if (state.queueStatuses.size) params.set('queue',Array.from(state.queueStatuses).join('|'));
-  if (state.documentation !== 'all') params.set('doc',state.documentation);
-  if (state.newOnly) params.set('new','1');
-  if (state.range !== 'all') params.set('range',state.range);
-  if (state.coverage !== 'all' && state.view === 'research') params.set('coverage',state.coverage);
-  if (state.briefLens !== 'all' && state.view === 'briefing') params.set('lens',state.briefLens);
+  if (state.view !== 'structure') {
+    if (includeQuery && state.query) params.set('q',state.query.slice(0,300));
+    if (state.sources.size) params.set('src',Array.from(state.sources).join('|'));
+    if (state.revisions.size) params.set('revision',Array.from(state.revisions).join('|'));
+    if (state.directions.size) params.set('dir',Array.from(state.directions).join('|'));
+    if (state.instruments.size) params.set('inst',Array.from(state.instruments).join('|'));
+    if (state.managers.size) params.set('mgr',Array.from(state.managers).join('|'));
+    if (state.quality.size) params.set('evidence',Array.from(state.quality).join('|'));
+    if (state.publicationAccess.size) params.set('access',Array.from(state.publicationAccess).join('|'));
+    if (state.content.size) params.set('content',Array.from(state.content).join('|'));
+    if (state.queueStatuses.size) params.set('queue',Array.from(state.queueStatuses).join('|'));
+    if (state.documentation !== 'all') params.set('doc',state.documentation);
+    if (state.newOnly) params.set('new','1');
+    if (state.range !== 'all') params.set('range',state.range);
+    if (state.coverage !== 'all' && state.view === 'research') params.set('coverage',state.coverage);
+    if (state.briefLens !== 'all' && state.view === 'briefing') params.set('lens',state.briefLens);
+  }
   if (state.view === 'structure' && (includeQuery || state.structureShareable)) {
+    if (state.structureQuestion) params.set('squestion',state.structureQuestion.slice(0,180));
     if (state.structureFocus) params.set('focus',state.structureFocus.slice(0,120));
     if (state.structureInstrument) params.set('sinst',state.structureInstrument);
     if (state.structureDirection !== 'any') params.set('sdir',state.structureDirection);
     if (state.structurePeriod !== 'all') params.set('speriod',state.structurePeriod);
     if (state.structureMacro) {
       params.set('smacro','1');
-      if (state.structureSlope !== 'any') params.set('sslope',state.structureSlope);
-      if (state.structureLevel !== 'any') params.set('slevel',state.structureLevel);
     }
     if (state.structureAnchor) params.set('sanchor',state.structureAnchor);
     if (state.structureAnchor && state.structurePassage) {
@@ -4118,11 +4293,12 @@ function updateHash(includeQuery) {
   }
   const threadRow = THREAD_ARTICLES[state.selected];
   if (state.view === 'briefing' && threadRow && threadRow.topics.includes(state.threadTopic)) params.set('topic',state.threadTopic);
-  if (state.sort !== 'newest') params.set('sort',state.sort);
-  if (state.density !== 'compact') params.set('density',state.density);
+  if (state.view !== 'structure' && state.sort !== 'newest') params.set('sort',state.sort);
+  if (state.view !== 'structure' && state.density !== 'compact') params.set('density',state.density);
   if (state.selected && state.view !== 'structure') params.set('selected',state.selected);
   const encoded = params.toString();
   const target = encoded ? '#' + encoded : location.pathname + location.search;
+  if (returnOnly) return new URL(target,location.href).href;
   const current = location.hash || location.pathname + location.search;
   if (!restoringHistory && target !== current) {
     history[nextHistoryMode === 'push' ? 'pushState' : 'replaceState'](null,'',target);
@@ -4147,9 +4323,16 @@ function matchesSearch(haystack) {
   const tokens = queryTokens();
   return tokens.every(function (token) { return haystack.includes(token); });
 }
+function dateRangeAnchor() {
+  if (state.view !== 'queue') return MAX_DATE;
+  return Array.from(workflowItems.values()).reduce(function (latest,item) {
+    const date = item.source_snapshot ? item.source_snapshot.date || '' : '';
+    return date > latest ? date : latest;
+  },'1970-01-01');
+}
 function inDateRange(date) {
   if (state.range === 'all') return true;
-  const newest = new Date(MAX_DATE + 'T00:00:00Z');
+  const newest = new Date(dateRangeAnchor() + 'T00:00:00Z');
   const candidate = new Date(date + 'T00:00:00Z');
   const days = state.range === '30d' ? 30 : state.range === '90d' ? 90 : 365;
   return newest - candidate <= days * 86400000 && candidate <= newest;
@@ -4172,8 +4355,25 @@ function qualityMatches(record, isArticle) {
 function ideaMatches(idea, skip) {
   const article = idea._article;
   const workflow = workflowItems.get(idea.id);
-  if (state.view === 'queue' && !workflow) return false;
-  if (state.view === 'queue' && state.queueStatuses.size && !state.queueStatuses.has(workflow.status)) return false;
+  if (state.view === 'queue') {
+    if (!workflow || !workflow.source_snapshot) return false;
+    const source = workflow.source_snapshot;
+    if (state.queueStatuses.size && !state.queueStatuses.has(workflow.status)) return false;
+    if (skip !== 'source' && state.sources.size && !state.sources.has(source.source)) return false;
+    if (skip !== 'revision' && state.revisions.size && !state.revisions.has(source.body_revision_status)) return false;
+    if (!inDateRange(source.date)) return false;
+    if (skip !== 'direction' && state.directions.size && !state.directions.has(source.direction)) return false;
+    if (skip !== 'instrument' && !setMatches(state.instruments,source.instruments || [])) return false;
+    if (skip !== 'access' && state.publicationAccess.size && !state.publicationAccess.has(source.publication_access)) return false;
+    const retainedSearch = normalize([
+      source.title,source.passage,source.underlying,source.source,source.direction,
+      (source.instruments || []).join(' '),workflowStatusLabel(workflow.status),workflow.priority,
+      workflow.owner,workflow.review_date,workflow.next_action,workflow.thesis,workflow.contrary,
+      workflow.independent_source,workflow.numeric_source,workflow.catalyst,workflow.horizon,
+      workflow.falsifier,workflow.tags,workflow.note
+    ].join(' '));
+    return matchesSearch(retainedSearch);
+  }
   if (skip !== 'source' && state.sources.size && !state.sources.has(article.source)) return false;
   if (skip !== 'revision' && state.revisions.size && !state.revisions.has(article.body_revision_status)) return false;
   if (!inDateRange(article.date)) return false;
@@ -4246,37 +4446,50 @@ function relevanceScore(record) {
 }
 function sortedRecords(records) {
   return records.slice().sort(function (left,right) {
+    if (state.view === 'queue') {
+      const leftWorkflow = workflowItems.get(left.id) || {};
+      const rightWorkflow = workflowItems.get(right.id) || {};
+      const leftDate = leftWorkflow.source_snapshot ? leftWorkflow.source_snapshot.date || '' : '';
+      const rightDate = rightWorkflow.source_snapshot ? rightWorkflow.source_snapshot.date || '' : '';
+      const idOrder = String(left.id).localeCompare(String(right.id));
+      if (state.sort === 'oldest') return leftDate.localeCompare(rightDate) || idOrder;
+      if (state.sort === 'queue-status') {
+        const order = {diligence:0,review:1,monitor:2,archived:3};
+        return (order[leftWorkflow.status] ?? 9) - (order[rightWorkflow.status] ?? 9) || rightDate.localeCompare(leftDate) || idOrder;
+      }
+      if (state.sort === 'priority') {
+        const order = {high:0,normal:1,low:2};
+        return (order[leftWorkflow.priority] ?? 9) - (order[rightWorkflow.priority] ?? 9) || rightDate.localeCompare(leftDate) || idOrder;
+      }
+      if (state.sort === 'review-date') {
+        return String(leftWorkflow.review_date || '9999-12-31').localeCompare(String(rightWorkflow.review_date || '9999-12-31')) || rightDate.localeCompare(leftDate) || idOrder;
+      }
+      if (state.sort === 'updated') {
+        return String(rightWorkflow.updated_at || '').localeCompare(String(leftWorkflow.updated_at || '')) || rightDate.localeCompare(leftDate) || idOrder;
+      }
+      return rightDate.localeCompare(leftDate) || idOrder;
+    }
     const leftArticle = isArticleView() ? left : left._article;
     const rightArticle = isArticleView() ? right : right._article;
-    if (state.sort === 'oldest') return leftArticle.date.localeCompare(rightArticle.date);
-    if (state.sort === 'manager') return String(left.manager || '').localeCompare(String(right.manager || '')) || rightArticle.date.localeCompare(leftArticle.date);
-    if (state.sort === 'market') return String((left.instruments || [])[0] || '').localeCompare(String((right.instruments || [])[0] || '')) || rightArticle.date.localeCompare(leftArticle.date);
-    if (state.sort === 'direction') return String(left.direction || '').localeCompare(String(right.direction || '')) || rightArticle.date.localeCompare(leftArticle.date);
+    const leftDate = leftArticle.date;
+    const rightDate = rightArticle.date;
+    if (state.sort === 'oldest') return leftDate.localeCompare(rightDate);
+    if (state.sort === 'manager') return String(left.manager || '').localeCompare(String(right.manager || '')) || rightDate.localeCompare(leftDate);
+    if (state.sort === 'market') return String((left.instruments || [])[0] || '').localeCompare(String((right.instruments || [])[0] || '')) || rightDate.localeCompare(leftDate);
+    if (state.sort === 'direction') return String(left.direction || '').localeCompare(String(right.direction || '')) || rightDate.localeCompare(leftDate);
     if (state.sort === 'article') return leftArticle.title.localeCompare(rightArticle.title);
-    if (state.sort === 'documented') return Number(right.documentation_score || 0) - Number(left.documentation_score || 0) || rightArticle.date.localeCompare(leftArticle.date);
-    if (state.sort === 'queue-status') {
-      const order = {diligence:0,review:1,monitor:2,archived:3};
-      return (order[(workflowItems.get(left.id) || {}).status] ?? 9) - (order[(workflowItems.get(right.id) || {}).status] ?? 9) || rightArticle.date.localeCompare(leftArticle.date);
-    }
-    if (state.sort === 'priority') {
-      const order = {high:0,normal:1,low:2};
-      return (order[(workflowItems.get(left.id) || {}).priority] ?? 9) - (order[(workflowItems.get(right.id) || {}).priority] ?? 9) || rightArticle.date.localeCompare(leftArticle.date);
-    }
-    if (state.sort === 'review-date') {
-      return String((workflowItems.get(left.id) || {}).review_date || '9999-12-31').localeCompare(String((workflowItems.get(right.id) || {}).review_date || '9999-12-31')) || rightArticle.date.localeCompare(leftArticle.date);
-    }
-    if (state.sort === 'updated') {
-      return String((workflowItems.get(right.id) || {}).updated_at || '').localeCompare(String((workflowItems.get(left.id) || {}).updated_at || '')) || rightArticle.date.localeCompare(leftArticle.date);
-    }
+    if (state.sort === 'documented') return Number(right.documentation_score || 0) - Number(left.documentation_score || 0) || rightDate.localeCompare(leftDate);
     if (state.sort === 'most-ideas') return right.trade_count - left.trade_count || right.date.localeCompare(left.date);
     if (state.sort === 'read-time') return right.read_minutes - left.read_minutes || right.date.localeCompare(left.date);
     if (state.sort === 'title') return left.title.localeCompare(right.title);
-    if (state.sort === 'relevance') return relevanceScore(right) - relevanceScore(left) || rightArticle.date.localeCompare(leftArticle.date);
-    return rightArticle.date.localeCompare(leftArticle.date);
+    if (state.sort === 'relevance') return relevanceScore(right) - relevanceScore(left) || rightDate.localeCompare(leftDate);
+    return rightDate.localeCompare(leftDate);
   });
 }
 function filteredRecords(skip) {
-  const records = isArticleView()
+  const records = state.view === 'queue'
+    ? queueRecords().filter(function (idea) { return ideaMatches(idea,skip); })
+    : isArticleView()
     ? ARTICLES.filter(function (article) { return articleMatches(article,skip); })
     : IDEAS.filter(function (idea) { return ideaMatches(idea,skip); });
   return sortedRecords(records);
@@ -4285,7 +4498,10 @@ function filteredRecords(skip) {
 function setSortOptions() {
   const select = document.getElementById('sort-select');
   const research = isArticleView();
-  const options = research ? [
+  const options = state.view === 'queue' ? [
+    ['newest','Newest retained source'],['oldest','Oldest retained source'],
+    ['queue-status','Task status'],['priority','Priority'],['review-date','Next review'],['updated','Task updated']
+  ] : research ? [
     ...(state.query ? [['relevance','Search relevance']] : []),
     ['newest','Newest first'],['oldest','Oldest first'],['most-ideas','Most observations'],
     ['read-time','Longest read'],['title','Title A–Z']
@@ -4293,7 +4509,6 @@ function setSortOptions() {
     ['newest','Newest first'],['oldest','Oldest first'],['manager','Manager A–Z'],
     ['market','Market A–Z'],['direction','Direction A–Z'],['article','Article A–Z'],
     ['documented','Most documented'],
-    ...(state.view === 'queue' ? [['queue-status','Queue status'],['priority','Priority'],['review-date','Next review'],['updated','Packet updated']] : []),
     ['relevance','Search relevance']
   ];
   if (!options.some(function (option) { return option[0] === state.sort; })) state.sort = 'newest';
@@ -4319,6 +4534,17 @@ function renderTableHead() {
       '<div class="head-cell" role="columnheader">Coverage</div>' +
       '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('read-time') + '"><button class="head-sort" type="button" data-sort="read-time">Read</button></div>' +
       '<div class="head-cell" role="columnheader"><span class="sr-only">Open</span></div>';
+  } else if (state.view === 'queue') {
+    head.className = 'table-head idea-grid';
+    head.innerHTML =
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('newest') + '"><button class="head-sort" type="button" data-sort="newest">Retained date</button></div>' +
+      '<div class="head-cell" role="columnheader">Retained stance</div>' +
+      '<div class="head-cell" role="columnheader">Retained market</div>' +
+      '<div class="head-cell" role="columnheader">Task owner / status</div>' +
+      '<div class="head-cell" role="columnheader">Retained source passage</div>' +
+      '<div class="head-cell" role="columnheader">Provenance</div>' +
+      '<div class="head-cell" role="columnheader">Retained channel</div>' +
+      '<div class="head-cell" role="columnheader"><span class="sr-only">Open retained source</span></div>';
   } else {
     head.className = 'table-head idea-grid';
     head.innerHTML =
@@ -4341,32 +4567,66 @@ function evidenceMarkup(idea) {
   const quant = hasValue(idea.quant);
   const thesis = hasValue(idea.thesis);
   const outcome = hasValue(idea.outcome);
-  const label = 'Documentation coverage ' + idea.documentation_score + ' of 5; numeric context ' + (quant ? 'available' : 'unavailable') + '; thesis ' +
-    (thesis ? 'available' : 'unavailable') + '; reported outcome ' + (outcome ? 'available' : 'unavailable');
+  const label = 'Detected numeric phrase ' + (quant ? 'captured' : 'absent') + '; parser candidate thesis phrase ' +
+    (thesis ? 'captured' : 'absent') + '; detected outcome / P&L phrase ' + (outcome ? 'captured' : 'absent');
   return '<span class="evidence-set" role="img" aria-label="' + label + '">' +
-    '<span class="documentation-badge ' + (idea.documentation_score === 5 ? 'complete' : '') + '" aria-hidden="true" title="Documentation coverage">' + idea.documentation_score + '/5</span>' +
-    '<span class="evidence-flag ' + (quant ? 'on' : '') + '" aria-hidden="true" title="Numeric context">N' + (quant ? '+' : '−') + '</span>' +
-    '<span class="evidence-flag ' + (thesis ? 'on' : '') + '" aria-hidden="true" title="Edge or thesis">T' + (thesis ? '+' : '−') + '</span>' +
-    '<span class="evidence-flag ' + (outcome ? 'on' : '') + '" aria-hidden="true" title="Reported outcome">O' + (outcome ? '+' : '−') + '</span>' +
+    '<span class="evidence-flag ' + (quant ? 'on' : '') + '" aria-hidden="true" title="Detected numeric phrase">N' + (quant ? '+' : '−') + '</span>' +
+    '<span class="evidence-flag ' + (thesis ? 'on' : '') + '" aria-hidden="true" title="Parser candidate: thesis phrase">T' + (thesis ? '+' : '−') + '</span>' +
+    '<span class="evidence-flag ' + (outcome ? 'on' : '') + '" aria-hidden="true" title="Detected outcome or P&amp;L phrase">O' + (outcome ? '+' : '−') + '</span>' +
     '</span>';
 }
 function passageText(idea) {
   const text = String(idea.description || 'No source passage extracted');
   return idea.description_truncated && !text.endsWith('…') ? text + '…' : text;
 }
+function researchTaskRow(idea,workflow) {
+  const source = workflow.source_snapshot;
+  const selected = state.selected === idea.id;
+  const comparison = retainedSourceSnapshotComparison(workflow,idea);
+  const sourceChanges = comparison.differences.filter(function (label) { return label !== 'dataset revision'; });
+  const releaseChanged = comparison.differences.includes('dataset revision');
+  const changeLabel = sourceChanges.includes('current observation absent') ? 'Current observation absent' :
+    sourceChanges.includes('current comparison pending') ? 'Comparison pending' :
+    sourceChanges.includes('current comparison unavailable') ? 'Comparison unavailable' :
+    sourceChanges.length ? 'Source changed' : releaseChanged ? 'Dataset changed' : 'Source retained';
+  const primaryInstrument = (source.instruments || [])[0] || 'unspecified';
+  const otherInstruments = (source.instruments || []).slice(1).map(instrumentLabel).join(', ');
+  const access = source.publication_access === 'member' ? 'Member at source' :
+    source.publication_access === 'public' ? 'Public at source' : 'Access unverified';
+  const sourceDetail = access + ' · ' + (source.body_revision_status === 'current' ? 'Current when captured' :
+    source.body_revision_status === 'prior' ? 'Prior revision capture' : 'Revision unverified') +
+    ' · ' + retainedReviewFlagSummary(source);
+  const rowLabel = (source.date || 'date unavailable') + ', retained task source, ' +
+    directionLabel(source.direction) + ', ' + (source.instruments || []).map(instrumentLabel).join(', ') + ', ' +
+    (source.passage || 'passage unavailable') + ', ' + sourceLabel(source.source) + ', ' + changeLabel;
+  const workflowBadge = '<span class="workflow-badge">' + escapeHtml(workflowStatusLabel(workflow.status)) + '</span>' +
+    (reviewIsOverdue(workflow) ? '<span class="review-flag">Overdue</span>' : '');
+  const changeBadge = '<span class="' + (sourceChanges.length || releaseChanged ? 'review-flag' : 'workflow-badge') + '">' + escapeHtml(changeLabel) + '</span>';
+  return '<div class="data-row idea-grid" role="row" data-record-id="' + idea.id + '" tabindex="' + (selected ? '0' : '-1') + '" aria-selected="' + selected + '" aria-keyshortcuts="Enter Space ArrowUp ArrowDown Home End Alt+Shift+O Alt+Shift+S Alt+Shift+C" aria-label="' + escapeHtml(rowLabel) + '">' +
+    '<div class="data-cell cell-date" role="gridcell">' + (source.date ? '<time datetime="' + escapeHtml(source.date) + '">' + shortDate(source.date) + '</time>' : '—') + '</div>' +
+    '<div class="data-cell cell-bias" role="gridcell"><span class="direction-badge ' + directionClass(source.direction) + '" title="' + escapeHtml(directionLabel(source.direction) + ' in the retained source passage; not a verified position') + '">' + compactDirectionLabel(source.direction) + '</span></div>' +
+    '<div class="data-cell cell-market" role="gridcell"><div class="instrument-primary">' + escapeHtml(instrumentLabel(primaryInstrument)) + '</div>' +
+      (otherInstruments ? '<div class="instrument-secondary">+' + escapeHtml(otherInstruments) + '</div>' : '') + '</div>' +
+    '<div class="data-cell cell-manager" role="gridcell"><div class="manager-name ' + (workflow.owner ? '' : 'missing') + '">' + escapeHtml(workflow.owner || 'Unassigned') + workflowBadge + '</div></div>' +
+    '<div class="data-cell cell-idea" role="gridcell"><div class="idea-title">' + escapeHtml(source.passage || 'Passage snapshot unavailable') + '</div>' +
+      '<div class="idea-context">' + escapeHtml(source.underlying || source.title || 'Retained research source') + ' · ' + changeBadge + '</div></div>' +
+    '<div class="data-cell cell-evidence" role="gridcell"><span class="coverage-badge">Retained</span><div class="instrument-secondary">Dataset ' + escapeHtml(String(source.data_checksum || '').slice(0,12) || 'unknown') + '</div></div>' +
+    '<div class="data-cell cell-source" role="gridcell"><span class="source-badge source-' + source.source + '">' + sourceLabel(source.source) + '</span><div class="instrument-secondary">' + escapeHtml(sourceDetail) + '</div></div>' +
+    '<div class="data-cell cell-open" role="gridcell"><a class="row-open" tabindex="-1" href="' + escapeHtml(safeUrl(source.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Open retained source: ' + escapeHtml(source.title || 'research source') + ' in a new tab">↗</a></div>' +
+    '</div>';
+}
 function ideaRow(idea) {
   const article = idea._article;
+  const workflow = workflowItems.get(idea.id);
+  if (state.view === 'queue' && workflow && workflow.source_snapshot) return researchTaskRow(idea,workflow);
   const primaryInstrument = idea.instruments[0] || 'unspecified';
   const otherInstruments = idea.instruments.slice(1).map(instrumentLabel).join(', ');
   const selected = state.selected === idea.id;
   const rowLabel = formatDate(article.date) + ', ' + directionLabel(idea.direction) + ', ' +
     idea.instruments.map(instrumentLabel).join(', ') + ', ' + (idea.manager || 'manager not stated') + ', ' +
     (idea.description || 'no description extracted') + ', ' + sourceLabel(article.source);
-  const workflow = workflowItems.get(idea.id);
   const newBadge = isNewArticle(article) ? '<span class="new-badge">New</span>' : '';
-  const coverage = packetCoverage(workflow);
-  const workflowBadge = workflow ? '<span class="workflow-badge">' + escapeHtml(workflow.status) + '</span>' +
-    '<span class="workflow-badge coverage" title="Decision packet coverage; not approval">' + coverage.completed + '/' + coverage.total + '</span>' +
+  const workflowBadge = workflow ? '<span class="workflow-badge">' + escapeHtml(workflowStatusLabel(workflow.status)) + '</span>' +
     (reviewIsOverdue(workflow) ? '<span class="review-flag">Overdue</span>' : '') : '';
   const review = reviewFlagged(idea) ? '<span class="review-flag" title="Source or extraction review recommended">Review</span>' : '';
   const sourceDetail = sourceAccessLabel(article) + (article.body_revision_status === 'current' ? '' : ' · ' + bodyRevisionLabel(article));
@@ -4451,7 +4711,7 @@ function renderRows(records) {
   const empty = document.getElementById('empty-state');
   empty.classList.toggle('visible',records.length === 0);
   const queueEmpty = state.view === 'queue' && workflowItems.size === 0;
-  document.getElementById('empty-title').textContent = queueEmpty ? 'Decision queue is empty in this tab session' : 'No matching records';
+  document.getElementById('empty-title').textContent = queueEmpty ? 'Research Tasks is empty in this tab session' : 'No matching records';
   document.getElementById('empty-copy').textContent = queueEmpty
     ? 'Open a research observation and choose Add to review.'
     : 'Adjust the search or clear one of the active filters.';
@@ -4464,21 +4724,43 @@ function renderRows(records) {
 function renderOrphanedQueue() {
   const shell = document.getElementById('orphaned-queue');
   const list = document.getElementById('orphaned-list');
-  const orphaned = Array.from(workflowItems.values()).filter(function (item) { return !IDEA_BY_ID.has(item.id); });
-  const visible = state.view === 'queue' && orphaned.length > 0;
-  shell.classList.toggle('visible',visible);
-  if (!visible) {
-    list.replaceChildren();
-    return;
-  }
-  list.innerHTML = orphaned.slice(0,50).map(function (item) {
-    const source = item.source_snapshot;
-    const coverage = packetCoverage(item);
-    return '<article class="orphaned-item"><time datetime="' + escapeHtml(source.date) + '">' + escapeHtml(source.date || 'Date unknown') + '</time><div><strong>' + escapeHtml(source.title) + '</strong><p>' + escapeHtml(source.passage || 'Passage snapshot unavailable') + '</p><small>' + escapeHtml(item.status) + ' · packet ' + coverage.completed + '/' + coverage.total + ' · retained from dataset ' + escapeHtml(String(source.data_checksum || '').slice(0,12) || 'unknown') + '</small></div><a href="' + escapeHtml(safeUrl(source.url)) + '" target="_blank" rel="noopener noreferrer">Open source ↗</a></article>';
-  }).join('');
+  shell.classList.remove('visible');
+  list.replaceChildren();
 }
 
 function renderContext(records) {
+  if (state.view === 'queue') {
+    const tasks = records.map(function (idea) { return workflowItems.get(idea.id); }).filter(Boolean);
+    const retainedNotes = new Set(tasks.map(function (item) { return item.source_snapshot.article_id; }).filter(Boolean));
+    const owners = new Set(tasks.map(function (item) { return normalize(item.owner); }).filter(Boolean));
+    const counts = {long:0,short:0,'arbitrage/relative value':0,'long/short':0,unspecified:0};
+    tasks.forEach(function (item) {
+      const direction = item.source_snapshot.direction || 'unspecified';
+      counts[direction] = (counts[direction] || 0) + 1;
+    });
+    document.getElementById('visible-primary').textContent = number(tasks.length);
+    document.getElementById('visible-primary-label').textContent = 'retained-source tasks';
+    document.getElementById('visible-articles').textContent = number(retainedNotes.size);
+    document.getElementById('visible-secondary-label').textContent = 'retained source notes';
+    document.getElementById('visible-managers').textContent = number(owners.size);
+    document.getElementById('visible-tertiary-label').textContent = 'research owners';
+    const total = tasks.length || 1;
+    const segments = [
+      ['long','mix-long'],['short','mix-short'],['arbitrage/relative value','mix-arb'],
+      ['long/short','mix-ls'],['unspecified','mix-unspecified']
+    ];
+    const directionMix = document.getElementById('direction-mix');
+    directionMix.innerHTML = segments.map(function (row) {
+      const width = counts[row[0]] / total * 100;
+      return '<span class="mix-segment ' + row[1] + '" style="width:' + width.toFixed(3) + '%" title="Retained ' + directionLabel(row[0]) + ': ' + number(counts[row[0]]) + '"></span>';
+    }).join('');
+    const directionSummary = 'Retained parsed passage language—not exposure · Long ' + number(counts.long) + ' · Short ' + number(counts.short) + ' · Relative value ' +
+      number(counts['arbitrage/relative value']) + ' · L/S ' + number(counts['long/short']) +
+      ' · No reliable stance ' + number(counts.unspecified);
+    directionMix.setAttribute('aria-label',directionSummary);
+    document.getElementById('mix-legend').textContent = directionSummary;
+    return;
+  }
   let visibleIdeas;
   let visibleArticles;
   if (state.view === 'research') {
@@ -4497,6 +4779,7 @@ function renderContext(records) {
   document.getElementById('visible-secondary-label').textContent = state.view === 'research' ? 'observations' : 'notes';
   if (state.view === 'research') document.getElementById('visible-articles').textContent = number(visibleIdeas.length);
   document.getElementById('visible-managers').textContent = number(managers.size);
+  document.getElementById('visible-tertiary-label').textContent = 'mentioned entities';
 
   const counts = {long:0,short:0,'arbitrage/relative value':0,'long/short':0,unspecified:0};
   visibleIdeas.forEach(function (idea) { counts[idea.direction] = (counts[idea.direction] || 0) + 1; });
@@ -4951,9 +5234,9 @@ function briefRailMarkup(lenses,article) {
     [number(substackCount),'Substack'],[number(mediumCount),'Unique Medium']
   ];
   const views = [
-    ['01','structure','Structure Desk'],['02','briefing','Latest Brief'],
+    ['01','structure','Evidence Desk'],['02','briefing','Latest Brief'],
     ['03','ideas','Evidence Monitor'],['04','research','Research Library'],
-    ['05','queue','Decision Queue']
+    ['05','queue','Research Tasks']
   ];
   let jumpMarkup = '';
   if (article) {
@@ -4986,9 +5269,9 @@ function briefRailMarkup(lenses,article) {
 }
 function briefCompactNavMarkup(lenses) {
   const views = [
-    ['structure','Structure Desk'],['briefing','Latest Brief'],
+    ['structure','Evidence Desk'],['briefing','Latest Brief'],
     ['ideas','Evidence Monitor'],['research','Research Library'],
-    ['queue','Decision Queue']
+    ['queue','Research Tasks']
   ];
   return '<nav class="ic-compact-nav" aria-label="Briefing navigation"><div class="ic-compact-group" role="group" aria-label="Research views"><span class="ic-compact-label" aria-hidden="true">Views</span><div class="ic-compact-scroll">' +
     views.map(function (row) {
@@ -5105,11 +5388,27 @@ function renderIntelligenceBrief(records) {
   const articlePosition = Math.max(1,ARTICLES.findIndex(function (article) { return article.id === selected.id; }) + 1);
   const sourceRelease = SNAPSHOT.sources && SNAPSHOT.sources[selected.source] || {};
   const sourceHealthClass = sourceRelease.status === 'ok' ? ' ok' : sourceRelease.status === 'degraded' ? ' degraded' : ' unavailable';
-  const articleIdeaIds = new Set(selected.idea_ids || []);
   const localPackets = Array.from(workflowItems.values()).filter(function (item) {
-    return Boolean(item && ((item.source_snapshot && item.source_snapshot.article_id === selected.id) || articleIdeaIds.has(item.id)));
+    return Boolean(item && item.source_snapshot && item.source_snapshot.article_id === selected.id);
   });
-  const activePackets = localPackets.filter(function (item) { return item.status !== 'archived'; }).length;
+  const activeLocalPackets = localPackets.filter(function (item) { return item.status !== 'archived'; });
+  const activePackets = activeLocalPackets.length;
+  const missingCurrentPackets = observationsReady ? activeLocalPackets.filter(function (item) {
+    return !IDEA_BY_ID.has(item.id);
+  }).length : 0;
+  const changedCurrentPackets = observationsReady ? activeLocalPackets.filter(function (item) {
+    const idea = IDEA_BY_ID.get(item.id);
+    return Boolean(idea && retainedSourceSnapshotComparison(item,idea).differences.some(function (label) {
+      return label !== 'dataset revision';
+    }));
+  }).length : 0;
+  const changedDatasetPackets = activeLocalPackets.filter(function (item) {
+    return String(item.source_snapshot.data_checksum || '') !== String(SNAPSHOT.data_checksum || '');
+  }).length;
+  const packetComparison = observationsReady
+    ? number(changedCurrentPackets) + ' source-changed · ' + number(missingCurrentPackets) + ' current observation absent · ' +
+      number(changedDatasetPackets) + ' captured under another dataset revision.'
+    : number(changedDatasetPackets) + ' captured under another dataset revision; current-observation comparison is available after opening Research Tasks.';
   const subtitleMarkup = selected.subtitle ? '<p class="ic-dek">' + escapeHtml(selected.subtitle) + '</p>' : '';
   const metadataOnlyMember = selected.publication_access === 'member' && !hasIndexedMemberPreview(selected);
   const openingText = leadRow && leadRow.span && leadRow.span.text || articleClaim(selected);
@@ -5131,9 +5430,9 @@ function renderIntelligenceBrief(records) {
         researchMapMarkup(selected) + evidenceLedgerMarkup(selected) +
         '<div class="intel-section-grid">' + (sectionMarkup || '<div class="intel-empty">No additional countercase, falsifier, or implementation passage was identified. Open the original article for full context.</div>') + '</div>' +
       '</section>' + researchThreadMarkup(selected) + '<div class="intel-actions">' + (isPaidSubstackArticle(selected) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '<button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open source dossier</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy IC brief</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
-    '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">IC decision sheet · source + local</span><span class="print-only">IC decision sheet · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">What changes our mind</h2><p class="ic-sheet-intro"><span class="screen-only">The source-defined thesis, contrary case, falsifier, and public watch items remain separate from tab-session workflow.</span><span class="print-only">Source-defined thesis, contrary case, falsifier, and public watch items. Independent diligence remains required.</span></p>' +
+    '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">Research challenge sheet · source + local</span><span class="print-only">Research challenge sheet · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">What changes our mind</h2><p class="ic-sheet-intro"><span class="screen-only">The source-defined thesis, contrary case, falsifier, and public watch items remain separate from tab-session workflow.</span><span class="print-only">Source-defined thesis, contrary case, falsifier, and public watch items. Independent research remains required.</span></p>' +
       decisionSheetSectionMarkup(leadRow,'Author’s thesis') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase') + decisionSheetSectionMarkup(falsifierRow,'What would change the view') + decisionSheetSectionMarkup(implementationRow,'What to watch') + checkpointSection +
-      '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Tab-session IC overlay</span><span class="ic-authored">Local · this tab</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active source-passage packet' + (activePackets === 1 ? '' : 's') + ' for this article. Packets attach to individual observations; this brief never silently assigns an article-level recommendation.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open decision queue</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy brief</button></div></section>' +
+      '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Tab-session research overlay</span><span class="ic-authored">Local · this tab</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active retained source-passage task' + (activePackets === 1 ? '' : 's') + ' whose captured article identity matches this dossier. ' + escapeHtml(packetComparison) + ' The brief never treats them as current recommendations.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open research tasks</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy brief</button></div></section>' +
       '<p class="ic-boundary-note">Evidence boundary: exact published-source passages; not independently verified, not a live market as-of, and not a portfolio recommendation. Full source context remains controlling.</p></div></aside>' +
     '<section class="ic-archive-grid" id="brief-archive">' + archiveCoverageMarkup(records) + relatedResearchMarkup(selected) + premiumArchiveMarkup(selected) + '</section>' +
     '<section class="intel-stream"><div class="intel-card-head"><h3>Recent article dossiers</h3><span>' + number(records.length) + ' in this lens</span></div><div class="intel-stream-list">' + (stream || '<div class="intel-empty">No additional articles in this lens.</div>') + '</div></section></div>';
@@ -5142,12 +5441,24 @@ function renderIntelligenceBrief(records) {
 
 function contextualRecords(skip) {
   if (isArticleView()) return ARTICLES.filter(function (article) { return articleMatches(article,skip); });
+  if (state.view === 'queue') return queueRecords().filter(function (idea) { return ideaMatches(idea,skip); });
   return IDEAS.filter(function (idea) { return ideaMatches(idea,skip); });
 }
 function recordArticle(record) {
   return isArticleView() ? record : record._article;
 }
 function recordValues(record, facet) {
+  if (state.view === 'queue') {
+    const workflow = workflowItems.get(record.id);
+    const source = workflow && workflow.source_snapshot;
+    if (!source) return [];
+    if (facet === 'source') return [source.source];
+    if (facet === 'revision') return [source.body_revision_status];
+    if (facet === 'access') return [source.publication_access];
+    if (facet === 'direction') return [source.direction];
+    if (facet === 'instrument') return source.instruments || [];
+    return [];
+  }
   if (isArticleView()) {
     if (facet === 'source') return [record.source];
     if (facet === 'revision') return [record.body_revision_status];
@@ -5203,15 +5514,15 @@ function filterLabel(facet,value) {
   }[value];
   if (facet === 'direction') return directionLabel(value);
   if (facet === 'instrument') return instrumentLabel(value);
-  if (facet === 'quality') return {quant:'Numeric context',thesis:'Has thesis',outcome:'Reported outcome',manager:'Mentioned entity'}[value];
+  if (facet === 'quality') return {quant:'Detected numeric phrase',thesis:'Parser candidate: thesis phrase',outcome:'Detected outcome / P&L phrase',manager:'Mentioned entity'}[value];
   if (facet === 'access') return {public:'Public at source',member:'Member at source',unknown:'Access unverified'}[value];
   if (facet === 'content') return value === 'full' ? 'Full text' : 'Excerpt / metadata';
   if (facet === 'manager') return MANAGER_LABELS.get(value) || value;
   if (facet === 'range') return value.toUpperCase();
   if (facet === 'coverage') return value === 'ideas' ? 'With observations' : value === 'research' ? 'Research-only' : 'All research';
   if (facet === 'documentation') return {
-    triage:'High-context triage',documented:'All 5 fields captured',strong:'At least 4 fields',
-    'needs-context':'Needs context (1–2)',review:'Extraction review flag'
+    triage:'High-context triage',documented:'All tracked fields captured',strong:'Most tracked fields captured',
+    'needs-context':'Sparse captured fields',review:'Extraction review flag'
   }[value];
   if (facet === 'queue-status') return 'Queue: ' + value;
   return value;
@@ -5313,52 +5624,66 @@ function renderIdeaInspector(idea) {
     badges.push('<span class="coverage-badge">' + escapeHtml(instrumentLabel(instrument)) + '</span>');
   });
   if (idea.manager) badges.push('<span class="coverage-badge">' + escapeHtml(idea.manager) + '</span>');
-  badges.push('<span class="documentation-badge ' + (idea.documentation_score === 5 ? 'complete' : '') + '">' + idea.documentation_score + '/5 fields</span>');
   badges.push('<span class="coverage-badge' + (isPaidSubstackArticle(article) ? ' premium-badge' : '') + '">' + escapeHtml(sourceAccessLabel(article)) + '</span>');
   badges.push('<span class="coverage-badge ' + (article.body_revision_status === 'current' ? '' : 'coverage-revision') + '">' + escapeHtml(bodyRevisionLabel(article)) + '</span>');
   const reviewReasons = [];
   if (idea.negation_risk) reviewReasons.push('directional language appears near a negation');
   if (idea.reference_line) reviewReasons.push('passage resembles a link or reference line');
   if (idea.description_truncated) reviewReasons.push('captured passage may be truncated');
-  const capturedLabels = {market:'Market',stance:'Parsed stance',underlying:'Underlying',thesis:'Edge / thesis',numeric:'Numeric context'};
+  const capturedLabels = {market:'Market mention',stance:'Directional-language candidate',underlying:'Underlying mention',thesis:'Thesis-phrase candidate',numeric:'Numeric phrase'};
   const capturedDiligence = Object.keys(capturedLabels).map(function (key) {
     const captured = idea.documentation_fields[key];
     return '<div class="diligence-item ' + (captured ? 'captured' : '') + '"><span class="diligence-mark">' + (captured ? '✓' : '—') + '</span><span>' + capturedLabels[key] + (captured ? ' captured' : ' not captured') + '</span></div>';
   }).join('');
-  const unassessed = ['Live price / valuation','Catalyst / horizon','Sizing','Liquidity / capacity','Downside / exit','Portfolio fit'];
+  const unassessed = ['Surrounding article context','Independent corroboration','Contrary evidence','Falsifier / checkpoint','Current applicability'];
   const unassessedDiligence = unassessed.map(function (label) {
     return '<div class="diligence-item"><span class="diligence-mark">!</span><span>' + label + ' not assessed by source extraction</span></div>';
   }).join('');
-  const packet = packetCoverage(workflow);
   const gateControls = workflow ? DILIGENCE_GATES.map(function (row) {
-    return '<label class="workflow-gate"><input type="checkbox" data-workflow-id="' + idea.id + '" data-workflow-gate="' + row[0] + '"' + (workflow.checks[row[0]] ? ' checked' : '') + '><span>' + escapeHtml(row[1]) + '</span></label>';
+    const checked = Boolean(workflow.checks[row[0]]);
+    const attestedAt = checked && workflow.check_times && workflow.check_times[row[0]]
+      ? '<small>Attested ' + escapeHtml(formatCheckedAt(workflow.check_times[row[0]])) + '</small>' : '';
+    return '<label class="workflow-gate"><input type="checkbox" data-workflow-id="' + idea.id + '" data-workflow-gate="' + row[0] + '"' + (checked ? ' checked' : '') + '><span>' + escapeHtml(row[1]) + attestedAt + '</span></label>';
   }).join('') : '';
   const workflowPanel = workflow ?
-    '<section class="workflow-panel"><div class="workflow-header"><h3>Human-entered IC decision packet</h3><span class="workflow-coverage" aria-label="Decision packet coverage ' + packet.completed + ' of ' + packet.total + '; not approval">' + packet.completed + '/' + packet.total + '</span></div>' +
-      '<p class="workflow-warning">Packet coverage counts populated analyst fields and self-attested control gates. It is not a confidence score, approval, recommendation, or evidence that a control was performed.</p>' +
-      '<div class="workflow-subhead">Decision control</div><div class="workflow-grid">' +
-        '<label class="workflow-field">Status<select data-workflow-id="' + idea.id + '" data-workflow-select="status"><option value="review"' + (workflow.status === 'review' ? ' selected' : '') + '>Review</option><option value="diligence"' + (workflow.status === 'diligence' ? ' selected' : '') + '>Diligence</option><option value="monitor"' + (workflow.status === 'monitor' ? ' selected' : '') + '>Monitor</option><option value="archived"' + (workflow.status === 'archived' ? ' selected' : '') + '>Archived</option></select></label>' +
+    '<section class="workflow-panel"><div class="workflow-header"><h3>Local research task</h3><span class="workflow-coverage">Human-authored</span></div>' +
+      '<p class="workflow-warning">This is a tab-session research scratchpad—not an approval, recommendation, investment record, or enterprise audit trail. Field presence never becomes a readiness score.</p>' +
+      retainedSourceSnapshotMarkup(workflow,idea) +
+      '<div class="workflow-subhead">Research task control</div><div class="workflow-grid">' +
+        '<label class="workflow-field">Status<select data-workflow-id="' + idea.id + '" data-workflow-select="status"><option value="review"' + (workflow.status === 'review' ? ' selected' : '') + '>New</option><option value="diligence"' + (workflow.status === 'diligence' ? ' selected' : '') + '>Verifying</option><option value="monitor"' + (workflow.status === 'monitor' ? ' selected' : '') + '>Monitoring</option><option value="archived"' + (workflow.status === 'archived' ? ' selected' : '') + '>Archived</option></select></label>' +
         '<label class="workflow-field">Priority<select data-workflow-id="' + idea.id + '" data-workflow-select="priority"><option value="low"' + (workflow.priority === 'low' ? ' selected' : '') + '>Low</option><option value="normal"' + (workflow.priority === 'normal' ? ' selected' : '') + '>Normal</option><option value="high"' + (workflow.priority === 'high' ? ' selected' : '') + '>High</option></select></label>' +
-        '<label class="workflow-field">Decision owner<input data-workflow-id="' + idea.id + '" data-workflow-field="owner" value="' + escapeHtml(workflow.owner) + '" maxlength="120" autocomplete="off" placeholder="Initials or role"></label>' +
+        '<label class="workflow-field">Research owner<input data-workflow-id="' + idea.id + '" data-workflow-field="owner" value="' + escapeHtml(workflow.owner) + '" maxlength="120" autocomplete="off" placeholder="Initials or role"></label>' +
         '<label class="workflow-field">Next review<input type="date" data-workflow-id="' + idea.id + '" data-workflow-field="review_date" value="' + escapeHtml(workflow.review_date) + '"></label>' +
-        '<label class="workflow-field">Analyst confidence<select data-workflow-id="' + idea.id + '" data-workflow-select="confidence"><option value="unrated"' + (workflow.confidence === 'unrated' ? ' selected' : '') + '>Unrated</option><option value="low"' + (workflow.confidence === 'low' ? ' selected' : '') + '>Low</option><option value="medium"' + (workflow.confidence === 'medium' ? ' selected' : '') + '>Medium</option><option value="high"' + (workflow.confidence === 'high' ? ' selected' : '') + '>High</option></select></label>' +
         '<label class="workflow-field">Tags<input data-workflow-id="' + idea.id + '" data-workflow-field="tags" value="' + escapeHtml(workflow.tags) + '" maxlength="500" autocomplete="off" placeholder="macro, RV, event"></label>' +
         '<label class="workflow-field wide">Next action<input data-workflow-id="' + idea.id + '" data-workflow-field="next_action" value="' + escapeHtml(workflow.next_action) + '" maxlength="700" autocomplete="off" placeholder="Evidence, call, model, or review required next"></label>' +
       '</div>' +
-      '<div class="workflow-subhead">Investment case</div>' +
-      '<label class="workflow-field">Variant thesis / edge<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="thesis" maxlength="1800" placeholder="What is mispriced, and why can this process identify it?">' + escapeHtml(workflow.thesis) + '</textarea></label>' +
+      '<div class="workflow-subhead">Analyst research framing</div>' +
+      '<label class="workflow-field">Research hypothesis to test<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="thesis" maxlength="1800" placeholder="What public-source proposition needs to be tested?">' + escapeHtml(workflow.thesis) + '</textarea></label>' +
       '<label class="workflow-field">Contrary evidence<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="contrary" maxlength="1600" placeholder="Strongest disconfirming evidence or alternative explanation">' + escapeHtml(workflow.contrary) + '</textarea></label>' +
-      '<div class="workflow-grid"><label class="workflow-field">Catalyst / expected path<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="catalyst" maxlength="1400" placeholder="What closes the gap?">' + escapeHtml(workflow.catalyst) + '</textarea></label>' +
+      '<div class="workflow-grid"><label class="workflow-field">Independent public source citation<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="independent_source" maxlength="1200" placeholder="URL, title, date, and the claim it supports or disputes">' + escapeHtml(workflow.independent_source) + '</textarea></label>' +
+      '<label class="workflow-field">Key numeric claim / cited context<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="numeric_source" maxlength="1200" placeholder="Exact number, unit, period, source, and surrounding qualification">' + escapeHtml(workflow.numeric_source) + '</textarea></label></div>' +
+      '<div class="workflow-grid"><label class="workflow-field">Public catalyst / checkpoint<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="catalyst" maxlength="1400" placeholder="What observable public event or evidence changes the review?">' + escapeHtml(workflow.catalyst) + '</textarea></label>' +
       '<label class="workflow-field">Horizon<input data-workflow-id="' + idea.id + '" data-workflow-field="horizon" value="' + escapeHtml(workflow.horizon) + '" maxlength="160" autocomplete="off" placeholder="Days, months, event window"></label></div>' +
-      '<label class="workflow-field">Valuation / entry / payoff<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="payoff" maxlength="1800" placeholder="Market as-of, entry reference, base/bull/bear payoff">' + escapeHtml(workflow.payoff) + '</textarea></label>' +
-      '<label class="workflow-field">Falsifier / downside / exit<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="risk" maxlength="1800" placeholder="What proves the thesis wrong, and what ends the review?">' + escapeHtml(workflow.risk) + '</textarea></label>' +
-      '<label class="workflow-field">Implementation / liquidity / funding<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="implementation" maxlength="1800" placeholder="Instrument, borrow, spread, capacity, financing and exit-cost dependencies">' + escapeHtml(workflow.implementation) + '</textarea></label>' +
-      '<label class="workflow-field">Mandate / portfolio fit<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="portfolio" maxlength="1800" placeholder="Exposure, correlation, concentration, crowding and stress considerations">' + escapeHtml(workflow.portfolio) + '</textarea></label>' +
-      '<div class="workflow-subhead">Self-attested control gates</div><fieldset class="workflow-gates"><legend>Check only after completing the work in controlled fund systems.</legend>' + gateControls + '</fieldset>' +
-      '<label class="workflow-field">Research memo<textarea data-workflow-id="' + idea.id + '" data-workflow-field="note" maxlength="4000" placeholder="Public-source diligence and decision rationale only…">' + escapeHtml(workflow.note) + '</textarea></label>' +
-      '<p class="workflow-warning">Case ' + packet.caseCount + '/8 · controls ' + packet.controlCount + '/6 · workflow ' + packet.workflowCount + '/4. Updated ' + escapeHtml(workflow.updated_at ? formatCheckedAt(workflow.updated_at) : 'not recorded') + (workflow.verified_at ? '; source marked reviewed ' + escapeHtml(formatCheckedAt(workflow.verified_at)) : '') + '.</p>' +
-      '<div class="workflow-actions"><button class="secondary-action" type="button" data-copy-packet="' + idea.id + '">Copy decision packet</button><button class="secondary-action" type="button" data-save-idea="' + idea.id + '">' + (workflow.status === 'archived' ? 'Return to review' : 'Archive packet') + '</button></div>' +
+      '<label class="workflow-field">Falsifier / observable checkpoint<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="falsifier" maxlength="1800" placeholder="What public observation would falsify or materially weaken the hypothesis?">' + escapeHtml(workflow.falsifier) + '</textarea></label>' +
+      '<div class="workflow-subhead">Human research attestations</div><fieldset class="workflow-gates"><legend>Check only after recording the supporting public-source work in this task.</legend>' + gateControls + '</fieldset>' +
+      '<label class="workflow-field">Research memo<textarea data-workflow-id="' + idea.id + '" data-workflow-field="note" maxlength="4000" placeholder="Public-source research context only…">' + escapeHtml(workflow.note) + '</textarea></label>' +
+      '<p class="workflow-warning">Updated ' + escapeHtml(workflow.updated_at ? formatCheckedAt(workflow.updated_at) : 'not recorded') + '. No completion or confidence score is calculated.</p>' +
+      '<div class="workflow-actions"><button class="secondary-action" type="button" data-copy-packet="' + idea.id + '">Copy research task</button><button class="secondary-action" type="button" data-save-idea="' + idea.id + '">' + (workflow.status === 'archived' ? 'Return to new' : 'Archive task') + '</button></div>' +
       '<p class="workflow-warning">Stored only in this tab session unless exported; closing the tab session discards it. Backups are plaintext. Not an enterprise audit record. Do not enter confidential, personal, client, position, or regulated information.</p></section>' : '';
+  if (state.view === 'queue' && workflow && workflow.source_snapshot) {
+    const source = workflow.source_snapshot;
+    return '<div class="inspector-content">' +
+      '<div class="record-eyebrow"><span class="source-badge source-' + source.source + '">' + sourceLabel(source.source) + '</span>' +
+        (source.date ? '<time datetime="' + escapeHtml(source.date) + '">' + escapeHtml(formatDate(source.date)) + '</time>' : '<span>Date unavailable</span>') +
+        '<span class="record-id">' + idea.id.toUpperCase() + ' · RETAINED TASK SOURCE</span></div>' +
+      '<h2 class="record-title">' + escapeHtml(source.title || 'Retained research source') + '</h2>' +
+      '<p class="record-subtitle">This task is bound to the retained source snapshot below. Current-release data is not substituted into the task, its citation, or its exports.</p>' +
+      '<div class="record-actions"><a class="primary-action" href="' + escapeHtml(safeUrl(source.url)) + '" target="_blank" rel="noopener noreferrer">Open retained source ↗</a>' +
+        '<button class="secondary-action" type="button" data-copy-retained-citation="' + idea.id + '">Copy retained citation</button></div>' +
+      workflowPanel +
+      '<div class="provenance">Research Task provenance is frozen to retained dataset ' + escapeHtml(String(source.data_checksum || '').slice(0,12) || 'unknown') + '. The active release is used only to report explicit differences. This tab-session task is not an approval, recommendation, investment record, or enterprise audit trail.</div>' +
+      '</div>';
+  }
   return '<div class="inspector-content">' +
     '<div class="record-eyebrow"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span><time datetime="' + article.date + '">' + formatDate(article.date) + '</time><span class="record-id">' + idea.id.toUpperCase() + '</span></div>' +
     '<h2 class="record-title">' + escapeHtml(article.title) + '</h2>' +
@@ -5367,25 +5692,26 @@ function renderIdeaInspector(idea) {
       (isPaidSubstackArticle(article) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(article)) + '</a>') +
       (alternate ? '<a class="secondary-action" href="' + escapeHtml(safeUrl(alternate)) + '" target="_blank" rel="noopener noreferrer">Medium copy ↗</a>' : '') +
       (workflow ? '' : '<button class="secondary-action" type="button" data-save-idea="' + idea.id + '">☆ Add to review</button>') +
-      '<button class="secondary-action" type="button" data-copy-citation="' + idea.id + '">Copy citation</button>' +
+      (workflow ? '<button class="secondary-action" type="button" data-copy-retained-citation="' + idea.id + '">Copy retained citation</button>' :
+        '<button class="secondary-action" type="button" data-copy-citation="' + idea.id + '">Copy citation</button>') +
     '</div>' +
     '<div class="record-facts">' + badges.join('') + '</div>' +
     bodyRevisionWarningMarkup(article) +
     (reviewReasons.length ? '<div class="review-notice"><strong>Extraction review recommended:</strong> ' + escapeHtml(reviewReasons.join('; ')) + '. Verify the surrounding source context before interpreting stance.</div>' : '') +
+    workflowPanel +
     detailSection('Source passage',passageText(idea),'primary-text') +
     premiumAccessMarkup(article,'idea') +
     detailSection('Underlying',idea.underlying) +
     (idea.manager_raw && idea.manager_raw !== idea.manager ? detailSection('Original entity mention',idea.manager_raw) : '') +
-    detailSection('Edge / thesis',idea.thesis) +
-    '<section class="inspector-section"><h3>Numeric context</h3>' +
+    detailSection('Parser candidate: thesis phrase',idea.thesis) +
+    '<section class="inspector-section"><h3>Detected numeric phrase</h3>' +
       (idea.quant ? '<div class="quant-block">' + escapeHtml(idea.quant) + '</div>' : '<p class="missing">—</p>') +
     '</section>' +
-    '<section class="inspector-section"><h3>Reported outcome</h3>' +
+    '<section class="inspector-section"><h3>Detected outcome / P&amp;L phrase</h3>' +
       (idea.outcome ? '<p class="reported-outcome">' + escapeHtml(idea.outcome) + '</p>' : '<p class="missing">—</p>') +
     '</section>' +
     '<section class="inspector-section"><h3>Source-extracted coverage</h3><div class="diligence-grid">' + capturedDiligence + unassessedDiligence + '</div></section>' +
-    workflowPanel +
-    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; dataset assembled ' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '; ' + escapeHtml(sourceCollectionSummary(article.source)) + '; ' + escapeHtml(bodyRevisionSummary(article)) + ' This is not a live market as-of timestamp. Rules-based passage extracted from published research by one author. “No reliable stance” means the source did not express a direction the parser could safely classify. Mentions are not verified positions; reported outcomes are not independently verified. Review the original publication before any investment or execution decision.</div>' +
+    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; dataset assembled ' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '; ' + escapeHtml(sourceCollectionSummary(article.source)) + '; ' + escapeHtml(bodyRevisionSummary(article)) + ' This is not a live market as-of timestamp. Rules-based passage extracted from published research by one author. “No reliable stance” means the source did not express a direction the parser could safely classify. Mentions are not verified positions; detected outcome / P&amp;L phrases are not independently verified results. Review the original publication before any investment or execution decision.</div>' +
     '</div>';
 }
 function renderArticleInspector(article) {
@@ -5467,7 +5793,7 @@ function renderInspector() {
       if (state.view !== 'briefing') restorePendingBriefFocus();
     }
   } else {
-    const idea = IDEA_BY_ID.get(state.selected);
+    const idea = state.view === 'queue' ? queueRecordById(state.selected) : IDEA_BY_ID.get(state.selected);
     container.innerHTML = idea ? renderIdeaInspector(idea) : '';
   }
   if (shouldResetScroll) document.getElementById('inspector').scrollTop = 0;
@@ -5475,6 +5801,8 @@ function renderInspector() {
 }
 
 function currentStateNeedsObservations() {
+  if (state.view === 'queue') return false;
+  if (state.view === 'structure') return structureSetupDefined();
   if (!isArticleView()) return true;
   return Boolean(
     state.directions.size || state.instruments.size || state.managers.size ||
@@ -5550,6 +5878,19 @@ function requestObservationsForCurrentState(forceRetry) {
   observationGatePromise = gatePromise;
   return gatePromise;
 }
+function requestQueueComparisonArchive() {
+  if (state.view !== 'queue' || observationsReady || observationsFailed || queueComparisonPromise) return;
+  queueComparisonPromise = loadObservations().then(function () {
+    queueComparisonPromise = null;
+    if (state.view === 'queue') render();
+  }).catch(function () {
+    queueComparisonPromise = null;
+    if (state.view === 'queue') {
+      render();
+      document.getElementById('announcer').textContent = 'Retained research tasks remain available; current-release comparison is unavailable';
+    }
+  });
+}
 function renderObservationGate() {
   setSortOptions();
   setPressedStates();
@@ -5587,7 +5928,7 @@ function renderObservationGate() {
 }
 function syncExportAvailability() {
   const exportButton = document.querySelector('[data-action="export"]');
-  const unavailable = !isArticleView() && !observationsReady;
+  const unavailable = state.view !== 'queue' && !isArticleView() && !observationsReady;
   exportButton.disabled = unavailable;
   exportButton.title = unavailable
     ? 'Available after the release-bound evidence archive is verified'
@@ -5709,6 +6050,9 @@ function structurePhrase(value) {
 function structureFocusTokens() {
   return Array.from(new Set(structureWords(state.structureFocus)));
 }
+function structureDecisionQuestion() {
+  return String(state.structureQuestion || '').trim();
+}
 function structureSetupDefined() {
   return Boolean(
     structureFocusTokens().length || state.structureInstrument ||
@@ -5796,20 +6140,6 @@ function structureMatch(idea) {
   }
   const date = (idea._article && idea._article.date) || '';
   if (state.structurePeriod !== 'all' && date.slice(0,4) !== state.structurePeriod) return null;
-  if (state.structureMacro && (state.structureSlope !== 'any' || state.structureLevel !== 'any')) {
-    const rates = rateReading(idea);
-    if (!rates) return null;
-    if (state.structureSlope !== 'any') {
-      if (rates.slopeBand !== state.structureSlope) return null;
-      score += 15;
-      reasons.push('Curve shape: ' + rateBandLabel('slope',rates.slopeBand).toLowerCase());
-    }
-    if (state.structureLevel !== 'any') {
-      if (rates.levelBand !== state.structureLevel) return null;
-      score += 15;
-      reasons.push('10Y level: ' + rateBandLabel('level',rates.levelBand).toLowerCase());
-    }
-  }
   const tokens = structureFocusTokens();
   if (tokens.length) {
     const parts = underlyingParts(idea);
@@ -5893,6 +6223,18 @@ function structureMatchSets() {
 function structureMatches() {
   return structureMatchSets().primary;
 }
+function structurePassageDirectMatch(idea) {
+  const tokens = structureFocusTokens();
+  if (!tokens.length) return true;
+  const focus = structurePhrase(state.structureFocus);
+  const parts = underlyingParts(idea).map(structurePhrase);
+  if (parts.includes(focus)) return true;
+  const words = new Set(structureWords([
+    idea.manager_raw,idea.underlying,idea.instruments.join(' '),idea.direction,
+    idea.description,idea.quant,idea.thesis,idea.outcome
+  ].join(' ')));
+  return tokens.every(function (token) { return words.has(token); });
+}
 function structureArticleGroups(rows) {
   const groups = new Map();
   rows.forEach(function (row) {
@@ -5924,7 +6266,10 @@ function structureGroupFacts(group) {
   let truncated = false;
   let review = false;
   let documentation = 0;
-  group.rows.forEach(function (row) {
+  const factRows = group.tier === 'subject' ? group.rows.filter(function (row) {
+    return structurePassageDirectMatch(row.idea);
+  }) : group.rows;
+  factRows.forEach(function (row) {
     const idea = row.idea;
     idea.instruments.forEach(function (value) {
       if (value && value !== 'unspecified') instruments.add(value);
@@ -6072,19 +6417,26 @@ function structurePassageMarkup(row,index) {
   const followUps = observationFollowUps(idea).slice(0,2);
   const warnings = structurePassageWarnings(idea);
   const selected = state.structurePassage === idea.id;
+  const eligible = structurePassageDirectMatch(idea);
   return '<div class="structure-passage-item"><div class="structure-passage-head"><span>Passage ' +
     number(index) + '</span><button class="secondary-action structure-use-passage' +
     (selected ? ' active' : '') + '" type="button" data-structure-passage="' +
     escapeHtml(idea.id) + '" aria-pressed="' + (selected ? 'true' : 'false') +
-    '" aria-label="' + (selected ? 'Selected' : 'Use') + ' passage ' + number(index) +
-    ' from ' + escapeHtml(String((idea._article || {}).title || 'source note')) +
-    ' as the diligence packet anchor">' + (selected ? 'Anchored passage' : 'Anchor this passage') +
-    '</button></div><p>' + escapeHtml(passageText(idea)) + '</p>' +
-    '<div class="structure-passage-meta"><span>Stance: ' + escapeHtml(directionLabel(idea.direction)) + '</span>' +
-    '<span>Documentation: ' + number(idea.documentation_score) + '/5</span>' +
-    (idea.quant ? '<span>Numeric context: ' + escapeHtml(idea.quant) + '</span>' : '') +
-    (idea.thesis ? '<span>Source-stated edge captured</span>' : '') +
-    (idea.outcome ? '<span>Source-stated outcome captured</span>' : '') +
+    '"' + (eligible ? '' : ' disabled') + ' aria-label="' +
+    (eligible ? (selected ? 'Selected' : 'Use') : 'Context-only; cannot use') + ' passage ' + number(index) +
+    ' from ' + escapeHtml(String((idea._article || {}).title || 'authored note')) +
+    ' as the local research task anchor">' +
+    (eligible ? (selected ? 'Anchored passage' : 'Anchor this passage') : 'Context-only passage') +
+    '</button></div><blockquote class="structure-passage-text">' + escapeHtml(passageText(idea)) + '</blockquote>' +
+    '<div class="structure-passage-fields">' +
+    (idea.quant ? '<div><span>Detected numeric phrase · verify in context</span><p>' +
+      escapeHtml(idea.quant) + '</p></div>' : '') +
+    (idea.thesis ? '<div><span>Parser candidate · thesis phrase</span><p>' +
+      escapeHtml(idea.thesis) + '</p></div>' : '') +
+    (idea.outcome ? '<div><span>Detected outcome / P&amp;L phrase · not a verified result</span><p>' +
+      escapeHtml(idea.outcome) + '</p></div>' : '') + '</div>' +
+    '<div class="structure-passage-meta"><span>Parser candidate · directional language: ' +
+      escapeHtml(directionLabel(idea.direction)) + '</span>' +
     warnings.map(function (warning) {
       return '<span class="structure-passage-warning">Review: ' +
         escapeHtml(warning) + '</span>';
@@ -6114,9 +6466,9 @@ function structureComparableRow(group,rank) {
     group.tier === 'subject' ? 'Authored headline subject' :
     group.tier === 'related' ? 'Structured field' : 'Filtered set';
   const flags = [
-    ['N','Numeric context',facts.withQuant],
-    ['T','Source-stated edge',facts.withThesis],
-    ['O','Source-stated outcome',facts.withOutcome]
+    ['N','Detected numeric phrase',facts.withQuant],
+    ['T','Parser candidate: thesis phrase',facts.withThesis],
+    ['O','Detected outcome or P&L phrase',facts.withOutcome]
   ].map(function (row) {
     return '<span class="structure-evidence-flag' + (row[2] ? ' on' : '') +
       '"><span aria-hidden="true">' + row[0] + (row[2] ? '+' : '−') + '</span>' +
@@ -6127,9 +6479,9 @@ function structureComparableRow(group,rank) {
   if (!facts.directions.length) gaps.push('stance absent');
   if (!facts.instruments.length) gaps.push('instrument absent');
   if (!facts.underlyings.length) gaps.push('underlying absent');
-  if (!facts.withQuant) gaps.push('numeric context absent');
-  if (!facts.withThesis) gaps.push('edge absent');
-  if (!facts.withOutcome) gaps.push('outcome absent');
+  if (!facts.withQuant) gaps.push('numeric phrase absent');
+  if (!facts.withThesis) gaps.push('thesis-phrase candidate absent');
+  if (!facts.withOutcome) gaps.push('outcome / P&L phrase absent');
   if (facts.truncated) gaps.push('passage truncated');
   if (facts.review) gaps.push('extraction review required');
   if (article.content_status !== 'full') gaps.push('indexed excerpt only');
@@ -6137,35 +6489,43 @@ function structureComparableRow(group,rank) {
   const selected = state.structureAnchor === group.id && group.rows.some(function (row) {
     return row.idea.id === state.structurePassage;
   });
-  return '<div class="structure-evidence-group" role="rowgroup" data-structure-note="' +
+  const previewRow = group.rows.filter(function (row) {
+    return structurePassageDirectMatch(row.idea);
+  })[0] || group.rows[0];
+  const firstPassage = previewRow ? boundedPromotionText(passageText(previewRow.idea),220) : '';
+  return '<div class="structure-evidence-group' + (selected ? ' selected' : '') +
+    '" role="rowgroup" data-structure-note="' +
     escapeHtml(group.id) + '"><div class="structure-evidence-row" role="row">' +
-    '<div class="structure-evidence-cell" role="cell"><span class="structure-anchor-status' +
-      (selected ? ' active' : '') + '">' + (selected ? 'Passage anchored' : 'Choose below') + '</span></div>' +
     '<div class="structure-evidence-cell" role="cell"><strong>' +
       escapeHtml(article.title || 'Untitled source note') + '</strong><small>' +
       escapeHtml(formatDate(article.date)) + ' · ' + escapeHtml(sourceLabel(article.source)) +
       ' · ' + escapeHtml(sourceAccessLabel(article)) + ' · indexed coverage: ' +
-      escapeHtml(article.content_status === 'full' ? 'full text' : 'excerpt only') + '</small></div>' +
+      escapeHtml(article.content_status === 'full' ? 'full text' : 'excerpt only') + '</small>' +
+      (firstPassage ? '<blockquote class="structure-row-excerpt">' + escapeHtml(firstPassage) + '</blockquote>' : '') +
+      (selected ? '<span class="structure-selected-label">Exact passage anchored</span>' : '') + '</div>' +
     '<div class="structure-evidence-cell" role="cell"><span class="structure-tier ' +
       escapeHtml(group.tier) + '">' + escapeHtml(tierLabel) + '</span><small>' +
       escapeHtml(Array.from(group.reasons).join(' · ') || 'Explicit filters') + '</small></div>' +
     '<div class="structure-evidence-cell" role="cell"><strong>' + escapeHtml(structure) +
       '</strong><small>' + escapeHtml(stance) + ' · parsed mentions, not validated legs</small></div>' +
-    '<div class="structure-evidence-cell" role="cell"><strong>' + number(group.rows.length) +
-      ' passage' + (group.rows.length === 1 ? '' : 's') + '</strong><div class="structure-evidence-flags">' +
-      flags + '</div><small>Best documentation ' + number(facts.documentation) + '/5</small></div>' +
     '<div class="structure-evidence-cell" role="cell"><strong>' +
       escapeHtml(gaps.length ? gaps.join(' · ') : 'Inspect exact passage; no automated gap label') +
-      '</strong><small>Retrieval relevance and documentation are separate.</small>' +
+      '</strong><div class="structure-evidence-flags">' + flags + '</div><small>' +
+      countLabel(group.rows.length,'captured passage') + ' · parser fields are candidates, not verified conclusions.</small>' +
       '<a class="structure-source" href="' + escapeHtml(safeUrl(article.url)) +
       '" target="_blank" rel="noopener noreferrer">Open source ↗</a></div></div>' +
     '<div class="structure-row-detail" role="row"><div class="structure-row-detail-cell" ' +
-      'role="cell" aria-colspan="6"><details' + (selected ? ' open' : '') +
-      '><summary>Inspect ' + number(group.rows.length) +
-      ' captured source passage' + (group.rows.length === 1 ? '' : 's') + '</summary>' +
+      'role="cell" aria-colspan="4"><details' + (selected ? ' open' : '') +
+      '><summary>Inspect and anchor ' + number(group.rows.length) +
+      ' exact captured source passage' + (group.rows.length === 1 ? '' : 's') + '</summary>' +
       '<div class="structure-passages">' + group.rows.map(function (row,index) {
         return structurePassageMarkup(row,index + 1);
-      }).join('') + '</div></details></div></div></div>';
+      }).join('') + '</div>' +
+      (isPaidSubstackArticle(article)
+        ? '<div class="structure-member-continue"><div><strong>Subscriber-source boundary</strong><p>This desk contains only the verified anonymous preview. Continue to the exact source for the complete research note.</p></div><div><a class="primary-action" href="' +
+          escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Read complete research note (opens in a new tab)">Read complete research note ↗</a><a class="secondary-action" href="' +
+          escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="See subscription plans (opens in a new tab)">See subscription plans ↗</a></div></div>'
+        : '') + '</details></div></div></div>';
 }
 function countLabel(value,singular,plural) {
   return number(value) + ' ' + (Number(value) === 1 ? singular : (plural || singular + 's'));
@@ -6173,15 +6533,27 @@ function countLabel(value,singular,plural) {
 function structureRelatedPanel(rows) {
   const groups = structureArticleGroups(rows);
   if (!groups.length) return '';
+  const labels = {
+    subject:'Authored headline subjects — contextual, excluded',
+    related:'Structured-field context — excluded',
+    mention:'Text-only mentions — excluded'
+  };
+  const sections = ['subject','related','mention'].map(function (tier) {
+    const tierGroups = groups.filter(function (group) { return group.tier === tier; });
+    if (!tierGroups.length) return '';
+    return '<section class="structure-related-tier"><h3>' + escapeHtml(labels[tier]) +
+      '<span>' + countLabel(tierGroups.length,'authored note') + '</span></h3>' +
+      tierGroups.slice(0,12).map(function (group) {
+        return '<div class="structure-related-row"><span>' + escapeHtml(formatDate(group.article.date)) +
+          '</span><span>' + escapeHtml(group.article.title || 'Untitled source note') +
+          '<small>' + escapeHtml(Array.from(group.reasons).join(' · ')) + '</small></span>' +
+          '<a href="' + escapeHtml(safeUrl(group.article.url)) +
+          '" target="_blank" rel="noopener noreferrer">Open source ↗</a></div>';
+      }).join('') + '</section>';
+  }).filter(Boolean).join('');
   return '<details class="structure-related"><summary><span>Related mentions — excluded from the evidence set</span><span>' +
-    countLabel(groups.length,'source note') + ' · ' + countLabel(rows.length,'passage') + '</span></summary>' +
-    '<div class="structure-related-list">' + groups.slice(0,12).map(function (group) {
-      return '<div class="structure-related-row"><span>' + escapeHtml(formatDate(group.article.date)) +
-        '</span><span>' + escapeHtml(group.article.title || 'Untitled source note') +
-        '<small>' + escapeHtml(Array.from(group.reasons).join(' · ')) + '</small></span>' +
-        '<a href="' + escapeHtml(safeUrl(group.article.url)) +
-        '" target="_blank" rel="noopener noreferrer">Open source ↗</a></div>';
-    }).join('') + '</div></details>';
+    countLabel(groups.length,'authored note') + ' · ' + countLabel(rows.length,'passage') + '</span></summary>' +
+    '<div class="structure-related-list">' + sections + '</div></details>';
 }
 function deskShare(total) {
   return total ? Math.round((total[0] / total[1]) * 100) : 0;
@@ -6198,12 +6570,6 @@ function deskReferenceClass() {
   if (state.structureInstrument) parts.push(instrumentLabel(state.structureInstrument));
   if (state.structureDirection !== 'any') parts.push(directionLabel(state.structureDirection));
   if (state.structurePeriod !== 'all') parts.push(state.structurePeriod);
-  if (state.structureMacro && state.structureSlope !== 'any') {
-    parts.push(rateBandLabel('slope',state.structureSlope).toLowerCase() + ' curve');
-  }
-  if (state.structureMacro && state.structureLevel !== 'any') {
-    parts.push(rateBandLabel('level',state.structureLevel).toLowerCase());
-  }
   return parts.join(' · ');
 }
 // Build the note as data first so the panel and the copied memo cannot drift.
@@ -6211,13 +6577,10 @@ function deskNoteLines(pattern) {
   const notes = pattern.noteTotal;
   if (!notes) return [];
   const tier = structureMatchSets().tier;
-  function coverage(count) {
-    const base = number(count) + ' of ' + countLabel(notes,'source note');
-    return notes >= 3 ? base + ' (' + deskShare([count,notes]) + '%)' : base;
-  }
+  function coverage(count) { return number(count) + ' of ' + countLabel(notes,'authored note'); }
   const lines = [];
   lines.push(['Evidence set',
-    number(notes) + ' source ' + (notes === 1 ? 'note' : 'notes') + ' containing ' +
+    number(notes) + ' authored ' + (notes === 1 ? 'note' : 'notes') + ' containing ' +
     number(pattern.total) + (tier === 'subject'
       ? ' captured ' + (pattern.total === 1 ? 'passage' : 'passages') + ' from headline-matched notes'
       : ' matching extracted ' + (pattern.total === 1 ? 'passage' : 'passages')) +
@@ -6228,13 +6591,15 @@ function deskNoteLines(pattern) {
   const top = pattern.instruments.filter(function (row) {
     return row[0] !== state.structureInstrument;
   })[0];
-  lines.push(['Parsed instrument context',top
+  lines.push(['Parser candidates',top
     ? instrumentLabel(top[0]) + ' is mentioned in ' + coverage(top[1]) +
-      '. These are archive co-occurrences, not validated position legs.'
-    : 'No additional instrument mention is repeated across the selected source notes.']);
-  lines.push(['Captured evidence',coverage(pattern.withQuant) +
-    (notes === 1 ? ' contains' : ' contain') + ' numeric context; ' + coverage(pattern.withThesis) +
-    (notes === 1 ? ' contains' : ' contain') + ' a source-stated edge; ' + coverage(pattern.withFull) +
+      '. Direction, instrument, thesis, numeric, and outcome fields are lexical parser candidates—not validated position legs or investment conclusions.'
+    : 'No additional instrument mention is repeated. Parser fields remain candidates for human review.']);
+  lines.push(['Detected fields',coverage(pattern.withQuant) +
+    (notes === 1 ? ' contains' : ' contain') + ' a numeric phrase; ' + coverage(pattern.withThesis) +
+    (notes === 1 ? ' contains' : ' contain') + ' a thesis-phrase candidate; ' + coverage(pattern.withOutcome) +
+    (notes === 1 ? ' contains' : ' contain') + ' an outcome / P&L phrase. Field presence is not evidence strength.']);
+  lines.push(['Capture boundary',coverage(pattern.withFull) +
     (notes === 1 ? ' uses' : ' use') + ' a full-text capture; ' + coverage(notes - pattern.withFull) +
     (notes === 1 ? ' is' : ' are') + ' excerpt-backed; ' + coverage(pattern.withCurrent) +
     (notes === 1 ? ' uses' : ' use') + ' a current source capture.']);
@@ -6243,12 +6608,10 @@ function deskNoteLines(pattern) {
     coverage(pattern.withTruncation) +
     (notes === 1 ? ' contains' : ' contain') + ' a truncated captured passage. Zero flags do not independently verify the source.']);
   const outcomeGap = pattern.withOutcome
-    ? coverage(pattern.withOutcome) + (notes === 1 ? ' contains' : ' contain') + ' a source-stated outcome.'
-    : 'No selected source note contains a source-stated outcome.';
+    ? coverage(pattern.withOutcome) + (notes === 1 ? ' contains' : ' contain') + ' a detected outcome / P&L phrase requiring source review.'
+    : 'No selected authored note contains a detected outcome / P&L phrase.';
   lines.push(['Primary diligence gap',outcomeGap +
-    (notes < 3
-      ? ' The set is too thin for distributional interpretation.'
-      : ' Passage frequency is descriptive archive coverage, not a performance base rate.')]);
+    ' This one-author, purposive archive is not independent corroboration or a performance base rate.']);
   return lines;
 }
 function deskNoteMarkdown(pattern, rows) {
@@ -6269,8 +6632,11 @@ function deskNoteMarkdown(pattern, rows) {
   }).join('\n');
   const macro = state.structureMacro
     ? '\n\n## Optional macro provenance\n\n' + rateSourceText() : '';
-  return '# Research evidence memo — ' + deskReferenceClass() + '\n\n' + body +
-    '\n\n## Primary retrieved source notes\n\n' + cited + macro +
+  const question = structureDecisionQuestion()
+    ? '\n\n## Decision to test — analyst-authored\n\n' + structureDecisionQuestion()
+    : '\n\n## Decision to test\n\nNot entered. The evidence set is not an investment case.';
+  return '# Research evidence memo — ' + deskReferenceClass() + question + '\n\n' + body +
+    '\n\n## Primary retrieved authored notes\n\n' + cited + macro +
     '\n\n---\n\nGenerated from snapshot ' + String(SNAPSHOT.data_checksum || '') +
     '. Published-research evidence only; no live holdings, pricing, sizing, P&L, or recommendation.\n';
 }
@@ -6300,11 +6666,7 @@ function renderStructureDesk(rows, gate) {
     '" type="button" data-structure-macro="' + (state.structureMacro ? '0' : '1') +
     '" aria-pressed="' + (state.structureMacro ? 'true' : 'false') + '">' +
     (state.structureMacro ? 'U.S. publication-date curve shown' : 'Add U.S. publication-date curve') +
-    '</button></div></div>' +
-    (state.structureMacro
-      ? structureChipRow('U.S. curve band','structure-slope',RATE_BANDS.slope,state.structureSlope,['any','Any fixed-universe band']) +
-        structureChipRow('U.S. 10Y band','structure-level',RATE_BANDS.level,state.structureLevel,['any','Any fixed-universe band'])
-      : '');
+    '</button></div></div>';
   // The recurring underlyings are how most readers begin, so they sit with
   // the question rather than inside the refinements.
   const startChips = underlyingOptions.length
@@ -6314,9 +6676,9 @@ function renderStructureDesk(rows, gate) {
         return '<button class="desk-start' + (active ? ' active' : '') + '" type="button" ' +
           'data-structure-focus="' + escapeHtml(row.label) + '" aria-pressed="' +
           (active ? 'true' : 'false') + '" aria-label="' + escapeHtml(row.label) + ': ' +
-          countLabel(row.notes,'source note') + ' and ' + countLabel(row.count,'passage') + '">' +
-          escapeHtml(row.label) + '<span class="desk-start-count">' + number(row.notes) + 'N · ' +
-          number(row.count) + 'P</span></button>';
+          countLabel(row.notes,'authored note') + ' and ' + countLabel(row.count,'passage') + '">' +
+          escapeHtml(row.label) + '<span class="desk-start-count">' + countLabel(row.notes,'note') + ' · ' +
+          countLabel(row.count,'passage') + '</span></button>';
       }).join('') +
       (state.structureFocus
         ? '<button class="desk-start clear" type="button" data-structure-focus="">Clear</button>'
@@ -6329,10 +6691,6 @@ function renderStructureDesk(rows, gate) {
       ? ['structure-direction','any',directionLabel(state.structureDirection)] : null,
     state.structurePeriod !== 'all'
       ? ['structure-period','all',state.structurePeriod + ' record'] : null,
-    state.structureSlope !== 'any'
-      ? ['structure-slope','any',rateBandLabel('slope',state.structureSlope)] : null,
-    state.structureLevel !== 'any'
-      ? ['structure-level','any',rateBandLabel('level',state.structureLevel)] : null,
     state.structureMacro ? ['structure-macro','0','U.S. publication-date curve'] : null
   ].filter(Boolean);
   const refineBar = '<div class="desk-refine">' +
@@ -6357,7 +6715,7 @@ function renderStructureDesk(rows, gate) {
     })[0];
     const passageIsPresent = selectedGroup && state.structurePassage &&
       selectedGroup.rows.some(function (row) {
-        return row.idea.id === state.structurePassage;
+        return row.idea.id === state.structurePassage && structurePassageDirectMatch(row.idea);
       });
     if (!passageIsPresent && (state.structureAnchor || state.structurePassage)) {
       state.structureAnchor = '';
@@ -6370,80 +6728,64 @@ function renderStructureDesk(rows, gate) {
   const packetAnchorRow = packetAnchorGroup && packetAnchorGroup.rows.filter(function (row) {
     return row.idea.id === state.structurePassage;
   })[0];
+  const questionEntered = Boolean(structureDecisionQuestion());
+  const canOpenPacket = Boolean(questionEntered && packetAnchorRow);
   const packetAnchor = packetAnchorRow
-    ? '<p class="desk-packet-anchor"><strong>Packet anchor</strong><span>' +
+    ? '<p class="desk-packet-anchor"><strong>Exact anchor</strong><span>' +
       escapeHtml(packetAnchorGroup.article.title || 'Untitled source note') +
       ' · exact passage selected</span></p>'
     : '';
-  const anchorStats = pattern.noteTotal ? [
-    [number(pattern.noteTotal),'source ' + (pattern.noteTotal === 1 ? 'note' : 'notes')],
-    [number(pattern.total),sets.tier === 'subject'
-      ? 'captured passages in matched notes' : 'matching source passages'],
-    [number(pattern.withQuant),'notes with numeric context'],
-    [number(pattern.withOutcome),'notes with source outcome']
-  ] : [];
-  const anchorRow = anchorStats.length
-    ? '<div class="desk-anchors">' + anchorStats.map(function (row) {
-        return '<div class="desk-anchor"><b>' + escapeHtml(row[0]) + '</b><span>' +
-          escapeHtml(row[1]) + '</span></div>';
-      }).join('') + '</div>'
-    : '';
   const noteLines = deskNoteLines(pattern);
-  const notePanel = noteLines.length
-    ? '<section class="desk-note"><header class="desk-note-head">' +
-      '<h3>Decision snapshot</h3><div class="desk-note-actions">' +
-      '<button class="secondary-action" type="button" ' +
-      'data-structure-open-packet="1"' + (state.structurePassage ? '' : ' disabled') +
-      '>' + (state.structurePassage ? 'Create diligence packet' : 'Anchor a source passage first') + '</button>' +
-      '<button class="secondary-action" type="button" ' +
-      'data-structure-copy-note="1">Copy evidence memo</button></div></header>' +
-      packetAnchor + anchorRow + '<dl>' +
-      noteLines.map(function (row) {
-        return '<div><dt>' + escapeHtml(row[0]) + '</dt><dd>' + escapeHtml(row[1]) + '</dd></div>';
-      }).join('') + '</dl></section>'
-    : '';
   const summary = pattern.noteTotal
-    ? '<p class="structure-summary">Counts are clustered by source note: <b>' +
+    ? '<p class="structure-summary">Counts are clustered by authored note: <b>' +
       number(pattern.noteTotal) + '</b> ' + (pattern.noteTotal === 1 ? 'note contains' : 'notes contain') + ' <b>' + number(pattern.total) +
       '</b> ' + (sets.tier === 'subject' ? 'captured passages in headline-matched notes' :
         'matching passages') + '. Repeated passages from one note never receive separate votes.</p>'
     : '<p class="structure-summary">No primary exact, headline, or structured-field evidence matches these inputs.</p>';
-  function bars(entries,total,label) {
-    if (!entries.length) return '<p class="structure-none">Nothing recorded.</p>';
-    const name = label || function (value) { return value; };
-    return '<ul class="structure-bars">' + entries.map(function (entry) {
-      const share = total ? Math.round((entry[1] / total) * 100) : 0;
-      const value = number(entry[1]) + ' note' + (entry[1] === 1 ? '' : 's') +
-        (total >= 3 ? ' · ' + share + '%' : '');
-      return '<li aria-label="' + escapeHtml(name(entry[0])) + ': ' + value + ' of ' +
-        number(total) + '"><span class="structure-bar-label">' + escapeHtml(name(entry[0])) +
-        '</span><span class="structure-bar" aria-hidden="true"><i style="width:' + share + '%"></i></span>' +
-        '<span class="structure-bar-value">' + escapeHtml(value) + '</span></li>';
-    }).join('') + '</ul>';
-  }
-  const patternPanel = '<section class="structure-panel"><div class="structure-panel-head"><h3>Coverage audit</h3>' +
-    '<span class="structure-summary">source-note clustered</span></div>' +
-    (gate ? '<p class="structure-none">' + escapeHtml(gate.title) + '</p>' : summary) +
-    (pattern.noteTotal ? '<p class="structure-note">Presence counts are note-clustered; one source note may contain more than one parsed instrument or stance.</p>' : '') +
-    '<h4>Instrument mentions by source note</h4>' + bars(pattern.instruments,pattern.noteTotal,instrumentLabel) +
-    '<h4>Parsed stance-language presence</h4>' + bars(pattern.directions,pattern.noteTotal,directionLabel) +
-    (pattern.periods.length > 1
-      ? '<h4>Publication year</h4>' + bars(pattern.periods,pattern.noteTotal)
-      : '') +
-    (state.structureMacro && pattern.slopeBands.length
-      ? '<h4>U.S. curve observation by publication date</h4>' + bars(pattern.slopeBands,pattern.noteTotal)
-      : '') +
-    (state.structureMacro && pattern.levelBands.length
-      ? '<h4>U.S. 10Y observation by publication date</h4>' + bars(pattern.levelBands,pattern.noteTotal) +
-        '<p class="structure-macro-note">' + rateSourceNote() + '</p>'
-      : '') +
-    (pattern.managers.length
-      ? '<h4>Managers named in these passages</h4><p class="structure-managers">' +
-        pattern.managers.slice(0,8).map(function (entry) {
-          return escapeHtml(entry[0]) + ' (' + number(entry[1]) + ')';
-        }).join(' · ') + '</p>'
-      : '') +
-    '</section>';
+  const diligenceItems = [
+    ['Decision to test',questionEntered ? 'Captured' : 'Not entered',questionEntered
+      ? structureDecisionQuestion() : 'Enter a non-confidential analyst question. It does not affect retrieval.'],
+    ['Evidence breadth',pattern.noteTotal ? countLabel(pattern.noteTotal,'authored note') : 'No set',pattern.noteTotal
+      ? countLabel(pattern.total,'captured passage') + ' · one-author purposive archive, not independent corroboration.'
+      : 'Define an evidence subject or refinement.'],
+    ['Capture integrity',pattern.noteTotal
+      ? number(pattern.withCurrent) + ' current · ' + number(pattern.withFull) + ' full' : 'Not assessed',pattern.noteTotal
+      ? number(pattern.noteTotal - pattern.withFull) + ' excerpt-backed · ' + number(pattern.withReview) +
+        ' notes carry an automated review flag.' : 'No evidence set loaded.'],
+    ['Exact source anchor',packetAnchorRow ? 'Selected' : 'Required',packetAnchorRow
+      ? packetAnchorGroup.article.title : 'Inspect one note and anchor the exact published passage to hand off.'],
+    ['Human research case','Unassessed','Hypothesis, contrary evidence, falsifier, catalyst, and next action remain analyst-authored.'],
+    ['Live investment controls','Not connected','Holdings, prices, valuation, liquidity, funding, portfolio constraints, compliance, and execution are outside this static desk.']
+  ];
+  const railPanel = '<aside class="structure-panel structure-diligence" aria-label="Research handoff status">' +
+    '<div class="structure-panel-head"><h3>Research handoff</h3><span class="structure-summary">no readiness score</span></div>' +
+    (gate ? '<p class="structure-none">' + escapeHtml(gate.title) + '</p>' : summary) + packetAnchor +
+    '<ol class="desk-gates">' + diligenceItems.map(function (row,index) {
+      return '<li><span class="desk-gate-index">0' + number(index + 1) + '</span><div><strong>' +
+        escapeHtml(row[0]) + '</strong><p>' + escapeHtml(row[2]) + '</p></div><b>' +
+        escapeHtml(row[1]) + '</b></li>';
+    }).join('') + '</ol>' +
+    '<div class="desk-handoff-actions"><button class="primary-action" type="button" ' +
+      'data-structure-open-packet="1"' + (canOpenPacket ? '' : ' disabled') + '>' +
+      (canOpenPacket ? (workflowItems.has(packetAnchorRow.idea.id) ? 'Open existing research task' : 'Open local research task') :
+        !questionEntered ? 'Enter decision question first' : 'Anchor an exact passage first') + '</button>' +
+      '<button class="secondary-action" type="button" data-structure-copy-note="1"' +
+        (pattern.noteTotal ? '' : ' disabled') + '>Copy evidence memo</button></div>' +
+    (noteLines.length ? '<details class="desk-capture-details"><summary>Capture quality &amp; gaps</summary><dl>' +
+      noteLines.map(function (row) {
+        return '<div><dt>' + escapeHtml(row[0]) + '</dt><dd>' + escapeHtml(row[1]) + '</dd></div>';
+      }).join('') + '</dl></details>' : '') +
+    '<div class="desk-corpus-boundary"><strong>Desk coverage</strong><p>' +
+      countLabel(DESK_FACETS.source_note_count || 0,'authored note') + ' · ' +
+      countLabel(deskUniverseTotal(),'extracted passage') + ' · ' +
+      countLabel(DESK_FACETS.full_current_note_count || 0,'full/current note') + ' · ' +
+      countLabel(outcomeTotal(),'detected outcome / P&amp;L phrase') +
+      '. The broader library contains ' + countLabel(ARTICLES.length,'body-backed dossier') +
+      '; the public catalogue contains ' + countLabel(SNAPSHOT.catalog_count || ARTICLES.length,'record') + '.</p>' +
+      '<button class="secondary-action" type="button" data-view="research">Open broader Research Library</button></div>' +
+    (state.structureMacro && pattern.priced
+      ? '<details class="desk-capture-details"><summary>Historical U.S. curve context</summary><p class="structure-macro-note">' +
+        rateSourceNote() + '</p></details>' : '') + '</aside>';
   const orderedGroups = packetAnchorGroup
     ? [packetAnchorGroup].concat(pattern.groups.filter(function (group) {
         return group.id !== packetAnchorGroup.id;
@@ -6451,57 +6793,72 @@ function renderStructureDesk(rows, gate) {
     : pattern.groups;
   const shown = orderedGroups.slice(0,state.limit);
   const comparablePanel = '<section class="structure-panel structure-comparables">' +
-    '<div class="structure-panel-head"><h3>Primary retrieved source notes</h3><span class="structure-summary">' +
-    countLabel(pattern.noteTotal,'note') + ' · ' + countLabel(pattern.total,'passage') + '</span></div>' +
+    '<div class="structure-panel-head"><div><div class="structure-kicker">Verbatim evidence first</div><h3>Retrieved authored notes</h3></div><span class="structure-summary">' +
+    countLabel(pattern.noteTotal,'authored note') + ' · ' + countLabel(pattern.total,'captured passage') + '</span></div>' +
     (gate
       ? '<p class="structure-none">' + escapeHtml(gate.copy) + '</p>' +
         (gate.action ? '<div class="empty-actions observation-retry">' + gate.action + '</div>' : '')
       : pattern.groups.length
-      ? '<div class="structure-matrix" role="table" aria-label="Retrieved research source notes">' +
-        '<div class="structure-matrix-head" role="row"><span role="columnheader">Anchor</span><span role="columnheader">Source note</span><span role="columnheader">Match</span><span role="columnheader">Parsed instrument mentions / stance</span><span role="columnheader">Coverage</span><span role="columnheader">Gaps / source</span></div>' +
+      ? '<div class="structure-matrix" role="table" aria-label="Retrieved authored research notes">' +
+        '<div class="structure-matrix-head" role="row"><span role="columnheader">Authored note &amp; captured passage</span><span role="columnheader">Why retrieved</span><span role="columnheader">Parser candidates</span><span role="columnheader">Capture gaps / source</span></div>' +
         shown.map(function (group) {
           return structureComparableRow(group,pattern.groups.indexOf(group) + 1);
         }).join('') + '</div>' +
         (pattern.groups.length > shown.length
           ? '<button class="secondary-action structure-more" type="button" data-structure-more="1">Show ' +
             number(Math.min(PAGE_SIZE.structure,pattern.groups.length - shown.length)) + ' more of ' +
-            number(pattern.groups.length) + ' source notes</button>'
+            number(pattern.groups.length) + ' authored notes</button>'
           : '')
       : '<p class="structure-none">No primary evidence set can be formed. Related article-text mentions, if any, remain separated below and do not enter the snapshot.</p>') +
     '</section>';
   const startState = !gate && !defined
-    ? '<section class="desk-start-state"><div class="desk-start-copy"><div class="structure-kicker">No setup defined</div>' +
-      '<h3>Build an evidence-bound research set</h3><p>Choose an underlying, named entity, instrument, stance, or publication window. The desk will cluster captured passages by source note, separate primary evidence from loose mentions, expose what is missing, and let you choose the exact passage that anchors a local diligence packet.</p></div>' +
-      '<div class="desk-start-steps"><div class="desk-start-step"><b>01 Define</b><span>This app keeps the question in memory and does not transmit it.</span></div><div class="desk-start-step"><b>02 Challenge</b><span>Inspect source-note breadth, missing fields, and revision limits.</span></div><div class="desk-start-step"><b>03 Decide</b><span>Anchor one exact passage; analyst thesis and risk remain blank.</span></div></div></section>'
+    ? '<section class="desk-start-state"><div class="desk-start-copy"><div class="structure-kicker">No evidence subject defined</div>' +
+      '<h3>Start with a published-research subject</h3><p>Enter a literal subject such as an underlying, firm, or strategy. The desk requires every material term, clusters captured passages by authored note, separates loose mentions, and exposes the exact source and missing context before any local handoff.</p></div>' +
+      '<div class="desk-start-steps"><div class="desk-start-step"><b>01 Scope</b><span>Frame the analyst question separately from deterministic retrieval.</span></div><div class="desk-start-step"><b>02 Verify</b><span>Read exact passages, capture limits, and parser warnings.</span></div><div class="desk-start-step"><b>03 Hand off</b><span>Anchor one exact passage; human research fields remain blank.</span></div></div></section>'
     : '';
   shell.innerHTML = '<div class="structure-wrap">' +
-    '<header class="structure-head"><div class="structure-title-row"><div><div class="structure-kicker">Pre-trade research workflow</div><h2>Research Structuring Desk</h2></div>' +
-    '<p class="structure-boundary">Published-research evidence only · no live holdings, prices, P&amp;L, sizing, exposure, liquidity, compliance approval, or recommendation</p></div>' +
-    '<p class="structure-lede">Define a research question, compare captured passages and parsed instrument/stance fields, challenge missing evidence, and carry one explicitly anchored passage into a local diligence packet.</p>' +
-    '<div class="structure-search"><label class="sr-only" for="structure-focus-input">Research subject or question</label>' +
-    '<div class="structure-search-row"><input id="structure-focus-input" type="search" maxlength="120" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Underlying, entity, strategy, or research question — e.g. VIX, S&amp;P 500, JGB" value="' +
-    escapeHtml(state.structureFocus) + '" autocomplete="off"><span class="structure-search-help">This app keeps it in memory · included in the URL only after Copy view</span></div></div>' +
-    startChips + '</header>' + notePanel + refineBar +
-    startState + (defined || gate ? '<div class="structure-grid">' + comparablePanel + patternPanel + '</div>' : '') +
+    '<header class="structure-head"><div class="structure-title-row"><div><div class="structure-kicker">Published-source discovery</div><h2>Research Evidence Desk</h2></div>' +
+    '<p class="structure-boundary">Builds a research task—not an investment recommendation or portfolio decision. No live holdings, prices, P&amp;L, sizing, exposure, liquidity, or compliance approval.</p></div>' +
+    '<div class="structure-scope-grid"><label class="structure-scope-field"><span>Decision to test · analyst input</span>' +
+      '<input id="structure-question-input" type="text" maxlength="180" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="Non-confidential question for the research task" value="' +
+      escapeHtml(state.structureQuestion) + '"></label>' +
+      '<label class="structure-scope-field"><span>Evidence subject · literal all-term retrieval</span>' +
+      '<input id="structure-focus-input" type="search" maxlength="120" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Underlying, firm, or strategy — e.g. VIX, S&amp;P 500, JGB" value="' +
+      escapeHtml(state.structureFocus) + '" autocomplete="off"></label></div>' +
+    '<p class="structure-memory-note">Both fields stay in page memory. Copy view explicitly creates a bounded URL; do not enter confidential research or position information.' +
+      (state.structureFocus ? ' Required retrieval terms: ' +
+        escapeHtml(structureFocusTokens().join(' + ')) + '.' : '') + '</p>' +
+    startChips + '</header>' + refineBar +
+    startState + (defined || gate ? '<div class="structure-workbench">' + comparablePanel + railPanel + '</div>' : '') +
     (!gate && defined ? structureRelatedPanel(sets.related) : '') +
-    '<p class="structure-disclosure"><strong>Evidence boundary.</strong> Structure Desk covers ' +
+    '<p class="structure-disclosure"><strong>Evidence boundary.</strong> The Evidence Desk covers ' +
     number(deskUniverseTotal()) + ' extracted passages clustered into ' +
-    number(DESK_FACETS.source_note_count || 0) + ' source notes; the broader library contains ' +
-    number(ARTICLES.length) + ' indexed records. Instrument fields are lexical source mentions, not validated legs. Related subsequent notes are article-topic links, not outcomes. Only ' +
-    number(outcomeTotal()) + ' passages contain a source-stated outcome. This is not a backtest, realised P&amp;L, or a recommendation.</p></div>';
+    number(DESK_FACETS.source_note_count || 0) + ' authored notes; the broader library contains ' +
+    number(ARTICLES.length) + ' body-backed dossiers and the public catalogue contains ' +
+    number(SNAPSHOT.catalog_count || ARTICLES.length) + ' records. Instrument fields are lexical source mentions, not validated legs. Related subsequent notes are article-topic links, not outcomes. Only ' +
+    number(outcomeTotal()) + ' passages contain a detected outcome / P&amp;L phrase requiring source review. This is not a backtest, realised P&amp;L, or a recommendation.</p></div>';
   shell.dataset.statusAnnouncement = gate
     ? gate.title
     : !defined
-      ? 'Define a setup to build a research evidence set'
+      ? 'Define an evidence subject to build a research evidence set'
       : pattern.noteTotal
-        ? countLabel(pattern.noteTotal,'source note') + ' and ' +
+        ? countLabel(pattern.noteTotal,'authored note') + ' and ' +
           (sets.tier === 'subject'
             ? countLabel(pattern.total,'captured passage') + ' in headline-matched notes'
             : countLabel(pattern.total,'matching passage'))
-        : 'No primary retrieved source notes for these inputs';
+        : 'No primary retrieved authored notes for these inputs';
+}
+function normalizeQueueFacets() {
+  if (state.view !== 'queue') return;
+  state.managers.clear();
+  state.quality.clear();
+  state.content.clear();
+  state.documentation = 'all';
+  state.newOnly = false;
 }
 function render() {
   if (state.view !== 'briefing') pendingBriefFocus = null;
+  normalizeQueueFacets();
   document.querySelectorAll('.observation-retry').forEach(function (element) { element.remove(); });
   document.querySelector('#empty-state .empty-actions').hidden = false;
   syncExportAvailability();
@@ -6529,17 +6886,17 @@ function render() {
   updateFacetCounts();
   renderOrphanedQueue();
   renderInspector();
-  const orphanedCount = state.view === 'queue' ? Array.from(workflowItems.keys()).filter(function (id) { return !IDEA_BY_ID.has(id); }).length : 0;
   const briefStatusAnnouncement = state.view === 'briefing'
     ? document.getElementById('briefing-shell').dataset.statusAnnouncement || ''
     : state.view === 'structure'
       ? document.getElementById('structure-shell').dataset.statusAnnouncement || ''
       : '';
   document.getElementById('result-summary').textContent = briefStatusAnnouncement ||
-    number(records.length) + ' ' + (isArticleView() ? 'article dossiers' : state.view === 'queue' ? 'current queued observations' : 'research observations') + (orphanedCount ? ' + ' + number(orphanedCount) + ' retained source snapshots' : '');
+    number(records.length) + ' ' + (isArticleView() ? 'article dossiers' : state.view === 'queue' ? 'retained-source research tasks' : 'research observations');
   updateHash();
   document.getElementById('announcer').textContent = briefStatusAnnouncement ||
-    number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Latest Brief' : state.view === 'research' ? 'Research Library' : state.view === 'queue' ? 'Decision Queue' : state.view === 'structure' ? 'Structure Desk' : 'Evidence Monitor');
+    number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Latest Brief' : state.view === 'research' ? 'Research Library' : state.view === 'queue' ? 'Research Tasks' : state.view === 'structure' ? 'Evidence Desk' : 'Evidence Monitor');
+  requestQueueComparisonArchive();
 }
 
 function resetFilters() {
@@ -6559,6 +6916,7 @@ function resetFilters() {
   state.coverage = 'all';
   state.briefLens = 'all';
   state.threadTopic = '';
+  state.structureQuestion = '';
   state.structureFocus = '';
   state.structureInstrument = '';
   state.structureDirection = 'any';
@@ -6669,6 +7027,14 @@ function selectedArticle() {
   const idea = IDEA_BY_ID.get(state.selected);
   return idea ? idea._article : null;
 }
+function selectedOpenUrl() {
+  if (state.view === 'queue') {
+    const item = workflowItems.get(state.selected);
+    return item && item.source_snapshot ? safeUrl(item.source_snapshot.url) : '#';
+  }
+  const article = selectedArticle();
+  return article ? safeUrl(article.url) : '#';
+}
 function moveSelection(delta) {
   let rows = Array.from(document.querySelectorAll('[data-record-id]'));
   if (!rows.length) return;
@@ -6745,48 +7111,67 @@ function ideaCitation(idea) {
     String(SNAPSHOT.data_checksum || '').slice(0,12) + '; ' +
     bodyRevisionSummary(article) + ' ' + article.url;
 }
+function retainedSourceCitation(item) {
+  const snapshot = item && item.source_snapshot;
+  if (!snapshot) return '';
+  return 'Navnoor Bawa, “' + (snapshot.title || 'Retained research source') + ',” ' +
+    sourceLabel(snapshot.source) + ', ' + (snapshot.date || 'date unavailable') +
+    '; retained dataset ' + String(snapshot.data_checksum || '').slice(0,12) +
+    '; body revision ' + (snapshot.body_revision_status || 'unverified') + '; ' +
+    (snapshot.url || '#') + '\nRetained passage: ' +
+    (snapshot.passage || 'Passage snapshot unavailable') + '\nRetained review flags: ' +
+    retainedReviewFlagSummary(snapshot) + (snapshot.legacy_bookmark_migration
+      ? '\nCapture basis: active-release snapshot created from a legacy ID-only bookmark during migration; not historical bookmark-date evidence.' : '');
+}
 function articleCitation(article) {
   return 'Navnoor Bawa, “' + article.title + ',” ' + sourceLabel(article.source) +
     ', ' + article.date + '; dataset ' + String(SNAPSHOT.data_checksum || '').slice(0,12) +
     '; ' + bodyRevisionSummary(article) + ' ' + article.url;
 }
 function decisionPacketText(idea,item) {
-  const article = idea._article;
-  const packet = packetCoverage(item);
+  const snapshot = item && item.source_snapshot;
+  if (!snapshot) return '';
   const checks = DILIGENCE_GATES.map(function (row) {
-    return '- [' + (item.checks[row[0]] ? 'x' : ' ') + '] ' + row[1];
+    const timestamp = item.checks[row[0]] && item.check_times && item.check_times[row[0]]
+      ? ' — attested ' + item.check_times[row[0]] : '';
+    return '- [' + (item.checks[row[0]] ? 'x' : ' ') + '] ' + row[1] + timestamp;
   }).join('\n');
   return [
-    'NAVNOOR RESEARCH TERMINAL — HUMAN-ENTERED DECISION PACKET',
-    'Packet coverage: ' + packet.completed + '/' + packet.total + ' (not approval or confidence)',
-    'Status: ' + item.status + ' | Priority: ' + item.priority + ' | Analyst confidence: ' + item.confidence,
-    'Decision owner: ' + (item.owner || 'Not assigned') + ' | Next review: ' + (item.review_date || 'Not set'),
+    'NAVNOOR RESEARCH TERMINAL — LOCAL RESEARCH TASK',
+    'Status: ' + workflowStatusLabel(item.status) + ' | Priority: ' + item.priority,
+    'Research owner: ' + (item.owner || 'Not assigned') + ' | Next review: ' + (item.review_date || 'Not set'),
     'Next action: ' + (item.next_action || 'Not recorded'),
     '',
-    'SOURCE',
-    ideaCitation(idea),
-    'Published passage: ' + passageText(idea),
-    'Publication access: ' + publicationAccessLabel(article),
-    'Indexed coverage: ' + (article.content_status === 'full' ? 'Full text indexed' : 'Excerpt indexed'),
-    'Body revision: ' + bodyRevisionSummary(article),
+    'RETAINED SOURCE SNAPSHOT',
+    'Navnoor Bawa, “' + (snapshot.title || 'Retained research source') + ',” ' +
+      sourceLabel(snapshot.source) + ', ' + (snapshot.date || 'date unavailable') + '; dataset ' +
+      String(snapshot.data_checksum || '').slice(0,12) + '; ' + (snapshot.url || '#'),
+    'Published passage: ' + (snapshot.passage || 'Passage snapshot unavailable'),
+    'Publication access: ' + (snapshot.publication_access === 'member' ? 'Member at source' :
+      snapshot.publication_access === 'public' ? 'Public at source' : 'Access unverified'),
+    'Body revision: ' + (snapshot.body_revision_status || 'unverified') +
+      (snapshot.source_updated_at ? ' · source revision ' + snapshot.source_updated_at : ''),
+    'Retained review flags: ' + retainedReviewFlagSummary(snapshot),
+    'Capture basis: ' + (snapshot.legacy_bookmark_migration
+      ? 'Active-release snapshot created from a legacy ID-only bookmark during migration; not historical bookmark-date evidence.'
+      : 'Source snapshot captured when this research task was created or imported.'),
     '',
-    'INVESTMENT CASE (analyst-entered)',
-    'Variant thesis / edge: ' + (item.thesis || 'Not recorded'),
+    'ANALYST RESEARCH FRAMING',
+    'Research hypothesis to test: ' + (item.thesis || 'Not recorded'),
     'Contrary evidence: ' + (item.contrary || 'Not recorded'),
-    'Catalyst / expected path: ' + (item.catalyst || 'Not recorded'),
+    'Independent public source citation: ' + (item.independent_source || 'Not recorded'),
+    'Key numeric claim / cited context: ' + (item.numeric_source || 'Not recorded'),
+    'Public catalyst / checkpoint: ' + (item.catalyst || 'Not recorded'),
     'Horizon: ' + (item.horizon || 'Not recorded'),
-    'Valuation / entry / payoff: ' + (item.payoff || 'Not recorded'),
-    'Falsifier / downside / exit: ' + (item.risk || 'Not recorded'),
-    'Implementation / liquidity / funding: ' + (item.implementation || 'Not recorded'),
-    'Mandate / portfolio fit: ' + (item.portfolio || 'Not recorded'),
+    'Falsifier / observable checkpoint: ' + (item.falsifier || 'Not recorded'),
     '',
-    'SELF-ATTESTED CONTROL GATES',
+    'HUMAN RESEARCH ATTESTATIONS',
     checks,
     '',
     'Tags: ' + (item.tags || 'None'),
     'Research memo: ' + (item.note || 'Not recorded'),
     'Updated: ' + (item.updated_at || 'Not recorded'),
-    'Terminal boundary: no live positions, pricing, P&L, sizing, execution, portfolio risk, liquidity, counterparty, investor, or compliance data.'
+    'Terminal boundary: no live positions, pricing, P&L, sizing, execution, portfolio risk, liquidity, counterparty, investor, or compliance data. This task is not an investment decision or enterprise audit record.'
   ].join('\n');
 }
 function confirmQueueStorageBoundary() {
@@ -6794,7 +7179,7 @@ function confirmQueueStorageBoundary() {
     if (sessionStorage.getItem(QUEUE_BOUNDARY_ACK_KEY) === 'acknowledged') return true;
   } catch (_error) {}
   const accepted = window.confirm(
-    'Tab-session queue warning\n\nDecision packets use plaintext storage scoped to this browser tab session and are discarded when the tab session closes. Do not enter confidential, personal, client, position, or regulated information. Exported queue backups are plaintext files.\n\nContinue and enable the tab-session queue?'
+    'Tab-session research-task warning\n\nResearch tasks use plaintext storage scoped to this browser tab session and are discarded when the tab session closes. Do not enter confidential, personal, client, position, or regulated information. Exported backups are plaintext files.\n\nContinue and enable tab-session research tasks?'
   );
   if (accepted) {
     try { sessionStorage.setItem(QUEUE_BOUNDARY_ACK_KEY,'acknowledged'); } catch (_error) {}
@@ -6802,13 +7187,13 @@ function confirmQueueStorageBoundary() {
   return accepted;
 }
 function toggleSaved(id) {
-  if (!IDEA_BY_ID.has(id)) return;
+  if (!IDEA_BY_ID.has(id) && !workflowItems.has(id)) return;
   const active = document.activeElement;
   const restoreSave = active && active.closest && active.closest('[data-save-idea="' + CSS.escape(id) + '"]');
   const restoreRow = active && active.closest && active.closest('[data-record-id]');
   const previous = workflowItems.get(id);
   if (!previous && workflowItems.size >= MAX_QUEUE_ITEMS) {
-    showToast('Decision queue limit reached; back up and archive older packets');
+    showToast('Research task limit reached; back up and archive older tasks');
     return;
   }
   if (!previous && !confirmQueueStorageBoundary()) return;
@@ -6829,7 +7214,7 @@ function toggleSaved(id) {
     render();
     return;
   }
-  showToast(previous ? (previous.status === 'archived' ? 'Decision packet archived' : 'Decision packet returned to review') : 'Added to review in this tab session');
+  showToast(previous ? (previous.status === 'archived' ? 'Research task archived' : 'Research task returned to verification') : 'Research task added in this tab session');
   render();
   if (restoreSave) {
     const replacement = document.querySelector('[data-save-idea="' + CSS.escape(id) + '"]');
@@ -6855,18 +7240,17 @@ function boundedPacketNote(head,middle,tail) {
 function deskPreMortem(pattern) {
   const notes = pattern.noteTotal;
   function coverage(count) {
-    return number(count) + ' of ' + countLabel(notes,'source note') +
-      (notes >= 3 ? ' (' + deskShare([count,notes]) + '%)' : '');
+    return number(count) + ' of ' + countLabel(notes,'authored note');
   }
   const gaps = [
     'stance was not stated in ' + coverage(
       (pattern.directions.filter(function (row) { return row[0] === 'unspecified'; })[0] || ['',0])[1]
     ),
-    coverage(pattern.withOutcome) + (notes === 1 ? ' contains' : ' contain') + ' a source-stated outcome',
-    coverage(pattern.withQuant) + (notes === 1 ? ' contains' : ' contain') + ' numeric context',
-    coverage(pattern.withThesis) + (notes === 1 ? ' contains' : ' contain') + ' a source-stated edge'
+    coverage(pattern.withOutcome) + (notes === 1 ? ' contains' : ' contain') + ' a detected outcome / P&L phrase',
+    coverage(pattern.withQuant) + (notes === 1 ? ' contains' : ' contain') + ' a detected numeric phrase',
+    coverage(pattern.withThesis) + (notes === 1 ? ' contains' : ' contain') + ' a parser candidate for a thesis phrase'
   ];
-  return 'EVIDENCE CHALLENGE — ' + countLabel(notes,'source note') + ' / ' +
+  return 'EVIDENCE CHALLENGE — ' + countLabel(notes,'authored note') + ' / ' +
     countLabel(pattern.total,'passage') + ' (' + deskReferenceClass() + '):\n' +
     gaps.map(function (line) { return '- ' + line; }).join('\n') +
     '\n\nAnalyst questions left deliberately unanswered: What would falsify the thesis? ' +
@@ -6874,6 +7258,10 @@ function deskPreMortem(pattern) {
     'What evidence would distinguish a real analogue from a narrative resemblance?';
 }
 function openDecisionPacketFromDesk() {
+  if (!structureDecisionQuestion()) {
+    showToast('Enter a non-confidential decision question before opening a local research task');
+    return;
+  }
   const ranked = structureMatches();
   if (!ranked.length) {
     showToast('Define a setup with primary retrieved evidence before creating a packet');
@@ -6884,16 +7272,20 @@ function openDecisionPacketFromDesk() {
     return group.id === state.structureAnchor;
   })[0];
   const selectedRow = selectedGroup && selectedGroup.rows.filter(function (row) {
-    return row.idea.id === state.structurePassage;
+    return row.idea.id === state.structurePassage && structurePassageDirectMatch(row.idea);
   })[0];
   if (!selectedGroup || !selectedRow) {
-    showToast('Anchor the exact source passage that should open this diligence packet');
+    showToast('Anchor the exact source passage that should open this local research task');
     return;
   }
   const anchor = selectedRow.idea;
   const previous = workflowItems.get(anchor.id);
+  const expectedQuestionLine = 'Decision to test — analyst-authored: ' + structureDecisionQuestion();
+  const expectedScopeLine = 'RESEARCH EVIDENCE SET opened from Research Evidence Desk — ' + deskReferenceClass();
+  const previousContextMatches = Boolean(previous && String(previous.note || '').includes(expectedQuestionLine) &&
+    String(previous.note || '').includes(expectedScopeLine));
   if (!previous && workflowItems.size >= MAX_QUEUE_ITEMS) {
-    showToast('Decision queue limit reached; back up and archive older packets');
+    showToast('Research task limit reached; back up and archive older tasks');
     return;
   }
   if (!previous && !confirmQueueStorageBoundary()) return;
@@ -6902,9 +7294,9 @@ function openDecisionPacketFromDesk() {
   const restore = previous
     ? {note:item.note,tags:item.tags,updated_at:item.updated_at}
     : null;
-  // Generated evidence belongs only in the non-counted note field. Thesis,
-  // falsifier/risk, catalyst, payoff, implementation, portfolio fit, owner,
-  // review date, and diligence gates remain entirely analyst-authored.
+  // Generated evidence belongs only in the research memo. The hypothesis,
+  // contrary evidence, citations, falsifier, catalyst, owner, review date,
+  // and human attestations remain entirely analyst-authored.
   let seeded = 0;
   if (!hasValue(item.note)) {
     const packetGroups = [selectedGroup].concat(pattern.groups.filter(function (group) {
@@ -6927,7 +7319,8 @@ function openDecisionPacketFromDesk() {
         ' — ' + safeUrl(article.url);
     }).join('\n');
     const packetHead =
-      'RESEARCH EVIDENCE SET opened from Structure Desk — ' + deskReferenceClass() +
+      'RESEARCH EVIDENCE SET opened from Research Evidence Desk — ' + deskReferenceClass() +
+      '\nDecision to test — analyst-authored: ' + structureDecisionQuestion() +
       '\nSnapshot checksum: ' + String(SNAPSHOT.data_checksum || '') +
       '\nSelected source anchor: ' + String(selectedGroup.article.title || '') +
       '\nSelected source URL: ' + safeUrl(selectedGroup.article.url) +
@@ -6939,7 +7332,7 @@ function openDecisionPacketFromDesk() {
         (anchorWarnings.length ? anchorWarnings.join('; ') : 'No automated flag; inspect exact passage') +
       '\nSelected exact passage: ' + passageText(anchor) +
       anchorRateText +
-      '\n\nPRIMARY RETRIEVED SOURCE NOTES — ' + number(packetGroups.length) + ' OF ' +
+      '\n\nPRIMARY RETRIEVED AUTHORED NOTES — ' + number(packetGroups.length) + ' OF ' +
         number(pattern.noteTotal) + '; ANCHOR FIRST; FULL SET REMAINS IN DESK / CSV\n';
     const packetMiddle = packetSources +
       '\n\n' + deskNoteLines(pattern).map(function (row) {
@@ -6949,7 +7342,7 @@ function openDecisionPacketFromDesk() {
         ? '\n\nOPTIONAL MACRO PROVENANCE\n' + rateSourceText() : '') +
       '\n\nPACKET EVIDENCE SCOPE\nThis packet cites ' + number(packetGroups.length) +
         ' of ' + number(pattern.noteTotal) +
-        ' retrieved ' + (pattern.noteTotal === 1 ? 'source note' : 'source notes') +
+        ' retrieved ' + (pattern.noteTotal === 1 ? 'authored note' : 'authored notes') +
         '; inspect the desk or CSV for the complete set.\n\n' +
       deskPreMortem(pattern);
     item.note = boundedPacketNote(packetHead,packetMiddle,packetTail);
@@ -6974,9 +7367,11 @@ function openDecisionPacketFromDesk() {
   state.selected = anchor.id;
   state.limit = PAGE_SIZE.queue;
   render();
-  showToast(seeded
-    ? 'Diligence packet opened with source evidence; analyst thesis and risk remain blank'
-    : 'Decision packet already open; existing entries were left untouched');
+  showToast(previous && !previousContextMatches
+    ? 'Existing research task opened unchanged; its stored evidence belongs to an earlier Desk scope'
+    : seeded
+    ? 'Local research task opened with source evidence; analyst hypothesis and falsifier remain blank'
+    : 'Research task already open; existing entries were left untouched');
 }
 function csvCell(value) {
   let text = String(value ?? '');
@@ -6984,7 +7379,7 @@ function csvCell(value) {
   return '"' + text.replace(/"/g,'""') + '"';
 }
 function exportCsv() {
-  if (!isArticleView() && !observationsReady) {
+  if (state.view !== 'queue' && !isArticleView() && !observationsReady) {
     showToast('Export waits for the verified evidence archive');
     requestObservationsForCurrentState(false);
     return;
@@ -7000,9 +7395,10 @@ function exportCsv() {
     const ranked = records;
     rows = [[
       'Retrieval order (same tier then publication date)','Retrieval tier',
-      'Why it matched','Date','Included passage count',
+      'Why it matched','Date','Captured passage count','Directly matching passage count',
+      'Context-only passage count',
       'Instrument mentions','Parsed stances','Underlyings',
-      'Numeric anchors','Source-stated edges','Outcomes recorded at source',
+      'Detected numeric phrases','Parser candidates: thesis phrases','Detected outcome / P&L phrases',
       'Body revision','Indexed coverage','Review required','Passage truncated',
       'Related later notes via article topic (not outcome)',
       'U.S. 2Y observation by publication date','U.S. 10Y observation by publication date',
@@ -7012,10 +7408,14 @@ function exportCsv() {
     ]].concat(ranked.map(function (group, index) {
       const article = group.article;
       const facts = structureGroupFacts(group);
-      const firstIdea = group.rows[0].idea;
+      const directRows = group.rows.filter(function (row) {
+        return structurePassageDirectMatch(row.idea);
+      });
+      const evidenceRows = group.tier === 'subject' ? directRows : group.rows;
+      const firstIdea = (evidenceRows[0] || group.rows[0]).idea;
       const rates = state.structureMacro ? rateReading(firstIdea) : null;
-      function unique(field) {
-        return Array.from(new Set(group.rows.map(function (row) {
+      function unique(field, rows) {
+        return Array.from(new Set((rows || evidenceRows).map(function (row) {
           return String(row.idea[field] || '').trim();
         }).filter(Boolean))).join('\n');
       }
@@ -7025,6 +7425,8 @@ function exportCsv() {
         Array.from(group.reasons).join('; '),
         article.date,
         group.rows.length,
+        evidenceRows.length,
+        group.rows.length - evidenceRows.length,
         facts.instruments.map(instrumentLabel).join('; '),
         facts.directions.map(directionLabel).join('; ') || 'Not stated',
         facts.underlyings.join('; '),
@@ -7045,7 +7447,10 @@ function exportCsv() {
         rates ? rateBandLabel('slope',rates.slopeBand) : '',
         rates ? rateBandLabel('level',rates.levelBand) : '',
         unique('manager_raw'),
-        group.rows.map(function (row) { return passageText(row.idea); }).join('\n\n'),
+        group.rows.map(function (row) {
+          return '[' + (structurePassageDirectMatch(row.idea) ? 'direct match' : 'context only') + '] ' +
+            passageText(row.idea);
+        }).join('\n\n'),
         article.title,
         sourceLabel(article.source),
         article.url
@@ -7055,14 +7460,44 @@ function exportCsv() {
     rows = [['Date','Publication channel','Article','Subtitle','Research observations','Publication access','Indexed coverage','Body revision','Body source revision','Observed source revision','URL']].concat(records.map(function (article) {
       return [article.date,sourceLabel(article.source),article.title,article.subtitle,article.trade_count,article.publication_access,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,article.url];
     }));
+  } else if (state.view === 'queue') {
+    rows = [['Observation ID','Retained publication date','Retained publication channel','Retained article','Retained source passage','Retained parser candidate: directional language','Retained instrument mentions','Retained underlying mention','Retained publication access','Retained body revision','Retained body source revision','Retained observed source revision','Retained review flags','Snapshot capture basis','Retained dataset checksum','Current-release differences','Research task status','Priority','Research owner','Next review','Next action','Research hypothesis to test','Contrary evidence','Independent public source citation','Key numeric claim / cited context','Public catalyst / checkpoint','Horizon','Falsifier / observable checkpoint','Surrounding publication context reviewed','Independent public source recorded','Numeric phrase traced to cited context','Contrary evidence recorded','Falsifier / checkpoint recorded','Unsupported-claims / non-confidential review','Human attestation timestamps (UTC)','Local tags','Local memo','Task updated','Retained source URL']].concat(records.map(function (idea) {
+      const workflow = workflowItems.get(idea.id);
+      const source = workflow && workflow.source_snapshot;
+      const checks = workflow ? workflow.checks || {} : {};
+      const checkTimes = workflow ? workflow.check_times || {} : {};
+      const comparison = workflow ? retainedSourceSnapshotComparison(workflow,idea) : {differences:[]};
+      const attestationTimes = DILIGENCE_GATES.map(function (row) {
+        return checkTimes[row[0]] ? row[1] + ': ' + checkTimes[row[0]] : '';
+      }).filter(Boolean).join('; ');
+      return [
+        idea.id,source ? source.date : '',source ? sourceLabel(source.source) : '',
+        source ? source.title : '',source ? source.passage : '',
+        source ? directionLabel(source.direction) : '',
+        source ? (source.instruments || []).map(instrumentLabel).join('; ') : '',
+        source ? source.underlying : '',source ? source.publication_access : '',
+        source ? source.body_revision_status : '',source ? source.source_updated_at : '',
+        source ? source.observed_source_updated_at : '',source ? retainedReviewFlagSummary(source) : '',
+        source ? (source.legacy_bookmark_migration ? 'active-release legacy ID-only bookmark migration' : 'task capture or import') : '',
+        source ? source.data_checksum : '',
+        comparison.differences.length ? comparison.differences.join('; ') : 'none',
+        workflow ? workflowStatusLabel(workflow.status) : '',workflow ? workflow.priority : '',
+        workflow ? workflow.owner : '',workflow ? workflow.review_date : '',workflow ? workflow.next_action : '',
+        workflow ? workflow.thesis : '',workflow ? workflow.contrary : '',
+        workflow ? workflow.independent_source : '',workflow ? workflow.numeric_source : '',
+        workflow ? workflow.catalyst : '',workflow ? workflow.horizon : '',workflow ? workflow.falsifier : '',
+        checks.context_reviewed ? 'yes' : '',checks.public_source_recorded ? 'yes' : '',
+        checks.numeric_traced ? 'yes' : '',checks.contrary_recorded ? 'yes' : '',
+        checks.falsifier_recorded ? 'yes' : '',checks.claims_scope_reviewed ? 'yes' : '',
+        attestationTimes,workflow ? workflow.tags : '',workflow ? workflow.note : '',
+        workflow ? workflow.updated_at : '',source ? source.url : ''
+      ];
+    }));
   } else {
-    rows = [['Date','Parsed stance','Instruments','Underlying','Mentioned entity','Original entity mention','Source passage','Extracted edge / thesis','Numeric context','Reported outcome','Documentation coverage','Review flags','Publication access','Indexed coverage','Body revision','Body source revision','Observed source revision','Queue status','Priority','Decision owner','Next review','Analyst confidence','Next action','Variant thesis','Contrary evidence','Catalyst','Horizon','Valuation / payoff','Falsifier / downside / exit','Implementation / liquidity / funding','Mandate / portfolio fit','Source reviewed','Independent evidence','Live market / valuation checked','Liquidity / funding checked','Portfolio risk checked','Compliance checked','Packet coverage','Local tags','Local memo','Packet updated','Article','Publication channel','URL']].concat(records.map(function (idea) {
+    rows = [['Date','Parser candidate: directional language','Instrument mentions','Underlying mention','Mentioned entity','Original entity mention','Source passage','Parser candidate: thesis phrase','Detected numeric phrase','Detected outcome / P&L phrase','Review flags','Publication access','Indexed coverage','Body revision','Body source revision','Observed source revision','Article','Publication channel','URL']].concat(records.map(function (idea) {
       const article = idea._article;
-      const workflow = workflowItems.get(idea.id) || {};
-      const packet = packetCoverage(workflowItems.get(idea.id));
       const flags = [idea.negation_risk ? 'negation-risk' : '',idea.reference_line ? 'reference-line' : '',idea.description_truncated ? 'truncated' : '',article.body_revision_status === 'prior' ? 'prior-revision' : '',article.body_revision_status === 'unverified' ? 'unverified-revision' : ''].filter(Boolean).join('; ');
-      const checks = workflow.checks || {};
-      return [article.date,directionLabel(idea.direction),idea.instruments.map(instrumentLabel).join('; '),idea.underlying,idea.manager,idea.manager_raw,passageText(idea),idea.thesis,idea.quant,idea.outcome,idea.documentation_score + '/5',flags,article.publication_access,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,workflow.status || '',workflow.priority || '',workflow.owner || '',workflow.review_date || '',workflow.confidence || '',workflow.next_action || '',workflow.thesis || '',workflow.contrary || '',workflow.catalyst || '',workflow.horizon || '',workflow.payoff || '',workflow.risk || '',workflow.implementation || '',workflow.portfolio || '',checks.source ? 'yes' : '',checks.independent ? 'yes' : '',checks.market ? 'yes' : '',checks.liquidity ? 'yes' : '',checks.portfolio ? 'yes' : '',checks.compliance ? 'yes' : '',workflow.id ? packet.completed + '/' + packet.total : '',workflow.tags || '',workflow.note || '',workflow.updated_at || '',article.title,sourceLabel(article.source),article.url];
+      return [article.date,directionLabel(idea.direction),idea.instruments.map(instrumentLabel).join('; '),idea.underlying,idea.manager,idea.manager_raw,passageText(idea),idea.thesis,idea.quant,idea.outcome,flags,article.publication_access,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,article.title,sourceLabel(article.source),article.url];
     }));
   }
   const csv = '\uFEFF' + rows.map(function (row) { return row.map(csvCell).join(','); }).join('\r\n');
@@ -7179,7 +7614,7 @@ function clearUnreadableWorkflow() {
   }
 }
 function clearTabQueue() {
-  if (!window.confirm('Clear every decision packet in this tab session and any legacy persistent queue? Export a backup first if any record must be retained.')) return;
+  if (!window.confirm('Clear every research task in this tab session and any legacy persistent queue? Export a backup first if any record must be retained.')) return;
   try {
     const legacyCleared = clearQueueStorageKeys();
     sessionStorage.removeItem(QUEUE_BOUNDARY_ACK_KEY);
@@ -7195,22 +7630,25 @@ function clearTabQueue() {
     persistWorkflow();
     syncWorkflowStorageAlert();
     render();
-    if (legacyCleared) showToast('Tab-session decision queue and legacy storage cleared');
+    if (legacyCleared) showToast('Tab-session research tasks and legacy storage cleared');
     else showPersistentNotice('The tab-session queue was cleared, but legacy origin-wide storage could not be accessed. Clear old site data in browser settings.');
   } catch (_error) {
-    showToast('Tab-session decision queue could not be cleared');
+    showToast('Tab-session research tasks could not be cleared');
   }
 }
 function backupQueue() {
+  const items = Array.from(workflowItems.values()).slice(0,MAX_QUEUE_ITEMS).map(function (value) {
+    return normalizeWorkflowItem(value);
+  }).filter(Boolean);
   const payload = {
-    schema_version:2,
+    schema_version:3,
     exported_at:new Date().toISOString(),
     data_checksum:String(SNAPSHOT.data_checksum || ''),
-    items:Array.from(workflowItems.values())
+    items:items
   };
   downloadLocalFile(
     new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),
-    'navnoor-decision-queue-' + new Date().toISOString().slice(0,10) + '.json'
+    'navnoor-research-tasks-' + new Date().toISOString().slice(0,10) + '.json'
   );
   showToast(number(workflowItems.size) + ' queue records backed up');
 }
@@ -7247,12 +7685,14 @@ function restoreQueueFile(file) {
   reader.onload = function () {
     try {
       const payload = JSON.parse(String(reader.result || ''));
-      if (!payload || ![1,2].includes(payload.schema_version) || !Array.isArray(payload.items)) throw new Error('invalid schema');
+      if (!payload || ![1,2,3].includes(payload.schema_version) || !Array.isArray(payload.items)) throw new Error('invalid schema');
       const previousItems = cloneWorkflowMap(workflowItems);
       const restored = cloneWorkflowMap(workflowItems);
       let added = 0;
       let updated = 0;
       let skipped = 0;
+      let sourceConflicts = 0;
+      const sourceConflictIds = [];
       payload.items.slice(0,MAX_QUEUE_ITEMS).forEach(function (value) {
         const item = normalizeWorkflowItem(value);
         if (!item) { skipped += 1; return; }
@@ -7262,6 +7702,10 @@ function restoreQueueFile(file) {
           restored.set(item.id,item);
           added += 1;
         } else if (item.updated_at && (!existing.updated_at || item.updated_at > existing.updated_at)) {
+          if (JSON.stringify(existing.source_snapshot) !== JSON.stringify(item.source_snapshot)) {
+            sourceConflicts += 1;
+            sourceConflictIds.push(item.id);
+          }
           restored.set(item.id,item);
           updated += 1;
         } else {
@@ -7279,7 +7723,16 @@ function restoreQueueFile(file) {
         showToast('Queue import cancelled because the source snapshot differs');
         return;
       }
-      const preview = 'Queue import preview\n\nNew packets: ' + added + '\nUpdated packets: ' + updated + '\nSkipped or older packets: ' + skipped + (snapshotDiffers ? '\nSource snapshot: DIFFERENT' : '\nSource snapshot: matching') + '\n\nThe current queue will be retained as a tab-scoped rollback across reloads. Export a separate plaintext backup for long-term retention. Continue?';
+      if (sourceConflicts && !window.confirm(
+        'Retained source conflicts\n\n' + sourceConflicts + ' newer imported task' + (sourceConflicts === 1 ? '' : 's') +
+        ' would replace an existing exact retained source anchor. Affected task IDs: ' + sourceConflictIds.slice(0,20).join(', ') +
+        (sourceConflictIds.length > 20 ? ', …' : '') +
+        '\n\nCancel is safest. Continue only if you intentionally want the imported retained evidence to replace the existing task snapshots.'
+      )) {
+        showToast('Queue import cancelled because retained source anchors conflict');
+        return;
+      }
+      const preview = 'Queue import preview\n\nNew packets: ' + added + '\nUpdated packets: ' + updated + '\nSkipped or older packets: ' + skipped + '\nRetained-source conflicts approved: ' + sourceConflicts + (snapshotDiffers ? '\nBackup dataset: DIFFERENT' : '\nBackup dataset: matching') + '\n\nThe current queue will be retained as a tab-scoped rollback across reloads. Export a separate plaintext backup for long-term retention. Continue?';
       if (!window.confirm(preview)) {
         showToast('Queue import cancelled after preview');
         return;
@@ -7322,8 +7775,8 @@ document.getElementById('table-body').addEventListener('click',function (event) 
 document.getElementById('table-body').addEventListener('dblclick',function (event) {
   const row = event.target.closest('[data-record-id]');
   if (!row || event.target.closest('a')) return;
-  const article = selectedArticle();
-  if (article) window.open(safeUrl(article.url),'_blank','noopener,noreferrer');
+  const url = selectedOpenUrl();
+  if (url !== '#') window.open(url,'_blank','noopener,noreferrer');
 });
 document.getElementById('table-body').addEventListener('keydown',function (event) {
   const row = event.target.closest('[data-record-id]');
@@ -7713,15 +8166,24 @@ document.addEventListener('click',function (event) {
   }
   const copyPacket = event.target.closest('[data-copy-packet]');
   if (copyPacket) {
-    const idea = IDEA_BY_ID.get(copyPacket.dataset.copyPacket);
     const item = workflowItems.get(copyPacket.dataset.copyPacket);
-    if (idea && item) copyText(decisionPacketText(idea,item),'Decision packet copied');
+    const packet = item ? decisionPacketText(null,item) : '';
+    if (packet) copyText(packet,'Research task copied');
+    else showToast('Research task copy stopped because retained source evidence is unavailable');
     return;
   }
   const copyIdea = event.target.closest('[data-copy-citation]');
   if (copyIdea) {
     const idea = IDEA_BY_ID.get(copyIdea.dataset.copyCitation);
     if (idea) copyText(ideaCitation(idea),'Idea citation copied');
+    return;
+  }
+  const copyRetained = event.target.closest('[data-copy-retained-citation]');
+  if (copyRetained) {
+    const item = workflowItems.get(copyRetained.dataset.copyRetainedCitation);
+    const citation = retainedSourceCitation(item);
+    if (citation) copyText(citation,'Retained source citation copied');
+    else showToast('Citation copy stopped because retained source evidence is unavailable');
     return;
   }
   const copyArticle = event.target.closest('[data-copy-article]');
@@ -7737,9 +8199,8 @@ document.addEventListener('click',function (event) {
       try { localStorage.setItem('nrt-density',state.density); } catch (_error) {}
       render();
     } else if (action.dataset.action === 'copy-view') {
-      if (state.view === 'structure') state.structureShareable = true;
-      updateHash(true);
-      copyText(location.href,state.view === 'structure' && state.structureFocus
+      const shareUrl = updateHash(true,true);
+      copyText(shareUrl,state.view === 'structure' && (state.structureQuestion || state.structureFocus)
         ? 'Shareable view copied with the non-confidential desk setup'
         : state.query ? 'Shareable view copied with search phrase' : 'Shareable view copied');
     } else if (action.dataset.action === 'export') {
@@ -7755,7 +8216,7 @@ document.addEventListener('click',function (event) {
     } else if (action.dataset.action === 'clear-queue') {
       clearTabQueue();
     } else if (action.dataset.action === 'retry-storage') {
-      if (persistWorkflow()) showToast('Decision queue saved in this tab session');
+      if (persistWorkflow()) showToast('Research Tasks saved in this tab session');
     } else if (action.dataset.action === 'mark-reviewed') {
       markReviewedThroughLatest();
     } else if (action.dataset.action === 'inspector') {
@@ -7788,14 +8249,16 @@ document.addEventListener('change',function (event) {
   const previous = JSON.parse(JSON.stringify(item));
   if (selectControl) {
     const field = selectControl.dataset.workflowSelect;
-    const valid = field === 'status' ? VALID_QUEUE_STATUSES : field === 'priority' ? VALID_PRIORITIES : field === 'confidence' ? VALID_CONFIDENCE : null;
+    const valid = field === 'status' ? VALID_QUEUE_STATUSES : field === 'priority' ? VALID_PRIORITIES : null;
     if (!valid || !valid.has(selectControl.value)) return;
     item[field] = selectControl.value;
   } else if (gateControl) {
     const gate = gateControl.dataset.workflowGate;
     if (!DILIGENCE_GATES.some(function (row) { return row[0] === gate; })) return;
     item.checks[gate] = gateControl.checked;
-    if (gate === 'source') item.verified_at = gateControl.checked ? new Date().toISOString() : '';
+    if (!item.check_times) item.check_times = blankCheckTimes();
+    const attestedAt = gateControl.checked ? new Date().toISOString() : '';
+    item.check_times[gate] = attestedAt;
   } else if (dateControl) {
     item.review_date = validDateInput(dateControl.value);
   }
@@ -7878,8 +8341,26 @@ function renderArticleAwareSearch(focusResult) {
   }
   finish();
 }
+let structureQuestionTimer = null;
 let structureFocusTimer = null;
 document.addEventListener('input',function (event) {
+  const question = event.target.closest && event.target.closest('#structure-question-input');
+  if (question) {
+    clearTimeout(structureQuestionTimer);
+    const value = question.value.slice(0,180);
+    const caret = question.selectionStart;
+    structureQuestionTimer = setTimeout(function () {
+      state.structureQuestion = value;
+      state.structureShareable = false;
+      render();
+      const restored = document.getElementById('structure-question-input');
+      if (!restored) return;
+      restored.focus();
+      const position = Math.min(caret === null ? value.length : caret,restored.value.length);
+      restored.setSelectionRange(position,position);
+    },200);
+    return;
+  }
   const input = event.target.closest && event.target.closest('#structure-focus-input');
   if (!input) return;
   clearTimeout(structureFocusTimer);
@@ -8011,9 +8492,9 @@ function gotoView(view) {
 }
 function buildPaletteCommands() {
   const commands = [
-    ['structure','Structure Desk'],['briefing','Latest Brief'],
+    ['structure','Evidence Desk'],['briefing','Latest Brief'],
     ['ideas','Evidence Monitor'],['research','Research Library'],
-    ['queue','Decision Queue']
+    ['queue','Research Tasks']
   ].map(function (row) {
     return {kind:'View',label:'Go to ' + row[1],meta:'',run:function () { gotoView(row[0]); }};
   });
@@ -8155,6 +8636,15 @@ document.addEventListener('keydown',function (event) {
       const restored = document.getElementById('structure-focus-input');
       if (restored) restored.focus();
     }
+    if (target === document.getElementById('structure-question-input') &&
+        (target.value || state.structureQuestion)) {
+      clearTimeout(structureQuestionTimer);
+      state.structureQuestion = '';
+      state.structureShareable = false;
+      render();
+      const restored = document.getElementById('structure-question-input');
+      if (restored) restored.focus();
+    }
     return;
   }
   if (shortcutDialog.open || manualCopyDialog.open || editable || interactive || event.metaKey || event.ctrlKey) return;
@@ -8228,14 +8718,19 @@ document.addEventListener('keydown',function (event) {
     moveSelection(-1);
   } else if (event.code === 'KeyO') {
     event.preventDefault();
-    const article = selectedArticle();
-    if (article) window.open(safeUrl(article.url),'_blank','noopener,noreferrer');
+    const url = selectedOpenUrl();
+    if (url !== '#') window.open(url,'_blank','noopener,noreferrer');
   } else if (event.code === 'KeyS' && (state.view === 'ideas' || state.view === 'queue') && state.selected) {
     event.preventDefault();
     toggleSaved(state.selected);
   } else if (event.code === 'KeyC' && state.selected) {
     event.preventDefault();
-    if (isArticleView()) {
+    if (state.view === 'queue') {
+      const item = workflowItems.get(state.selected);
+      const citation = retainedSourceCitation(item);
+      if (citation) copyText(citation,'Retained source citation copied');
+      else showToast('Citation copy stopped because retained source evidence is unavailable');
+    } else if (isArticleView()) {
       const article = ARTICLE_BY_ID.get(state.selected);
       if (article) copyText(articleCitation(article),'Article citation copied');
     } else {
@@ -8380,13 +8875,13 @@ function renderStaticStats() {
 
 syncWorkflowStorageAlert();
 if (workflowLoadBlocked) {
-  showPersistentNotice('Stored decision-queue data could not be read. Saving is blocked until you back up or explicitly discard the unreadable record.');
+  showPersistentNotice('Stored research-task data could not be read. Saving is blocked until you back up or explicitly discard the unreadable record.');
 } else if (lastRestoreWorkflowItems) {
-  showPersistentNotice('A pre-import tab queue is available as a rollback from the most recent restore.','Undo import','undo-restore');
+  showPersistentNotice('Pre-import research tasks are available as a rollback from the most recent restore.','Undo import','undo-restore');
 } else if (workflowLegacyMigrated) {
-  showPersistentNotice('A legacy persistent queue was moved into this safer tab session and removed from origin-wide storage. Export a plaintext backup before closing the tab if it must be retained.','Back up queue','backup-queue');
+  showPersistentNotice('Legacy ID-only bookmarks were moved into this safer tab session. Their source snapshots were captured from the active release during migration—not from the historical bookmark date. Export a plaintext backup before closing the tab if they must be retained.','Back up tasks','backup-queue');
 } else if (legacyCleanupPending || legacyStorageCheckUnavailable) {
-  showPersistentNotice('Legacy origin-wide queue storage could not be checked or cleared. This tab queue remains session-scoped; clear old site data in browser settings if needed.');
+  showPersistentNotice('Legacy origin-wide task storage could not be checked or cleared. This tab remains session-scoped; clear old site data in browser settings if needed.');
 }
 hydrateFromHash();
 document.getElementById('search').value = state.query;
