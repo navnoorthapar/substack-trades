@@ -1,6 +1,125 @@
 [
   {
     "source": "medium",
+    "source_id": "5df8709c82cd",
+    "slug": "dimensional-crossed-1-trillion-book-to-markets-t-stat-is-10-3-or-2-7-5df8709c82cd",
+    "title": "Dimensional Crossed $1 Trillion. Book-to-Market’s t-Stat Is 10.3 or 2.7.",
+    "subtitle": "Every figure below comes from one paper’s own tables, run on real panels rather than simulations: Mitchell Petersen’s 2009 study in the…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-11T02:45:06Z",
+    "url": "https://medium.com/@navnoorbawa/dimensional-crossed-1-trillion-book-to-markets-t-stat-is-10-3-or-2-7-5df8709c82cd",
+    "audience": "unknown",
+    "wordcount": 26,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "7d5416c5daf6a583f9bb1ae869768084d86fa5e3808de0c3589fa126e89afd90",
+      "lead": {
+        "text": "Every figure below comes from one paper’s own tables, run on real panels rather than simulations: Mitchell Petersen’s 2009 study in the…",
+        "start": 0,
+        "end": 136,
+        "sha256": "ecb2b582e6ee64eb93e325ca70568eb58e82c36a62b5a741aed0f5964b8bcfe3",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-11T02:45:06Z",
+    "observed_source_updated_at": "2026-08-11T02:45:06Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "berkshires-cash-pile-just-fell-143bn",
+    "slug": "berkshires-cash-pile-just-fell-143bn",
+    "title": "Berkshire's Cash Pile Just Fell $14.3bn. Greg Abel Spent $24 Billion to Do It.",
+    "subtitle": "Net equity purchases of $19.8bn and a buyback that went from $235m to $4.2bn. Against a break-even near $14.5bn, that is what a quarter which actually moves this balance sheet looks like.",
+    "post_date": "2026-08-11T01:59:34.971Z",
+    "url": "https://navnoorbawa.substack.com/p/berkshires-cash-pile-just-fell-143bn",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "4b02e29d7043a98007190f07537bb540c465b485b14df14bdc28ff0f60d37909",
+      "lead": {
+        "text": "Berkshire Hathaway’s cash and Treasury bills fell to $359.2 billion at the end of June, from $373.5 billion three months earlier. That is the first decline since 2022 and the largest since the first quarter of that year. It is also the third decline in eighteen quarters, so the interesting question is what it took.",
+        "start": 0,
+        "end": 316,
+        "sha256": "4b02e29d7043a98007190f07537bb540c465b485b14df14bdc28ff0f60d37909",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-11T02:56:35.506Z",
+    "observed_source_updated_at": "2026-08-11T02:56:35.506Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Berkshire Hathaway’s cash and Treasury bills fell to $359.2 billion at the end of June, from $373.5 billion three months earlier. That is the first decline since 2022 and the largest since the first quarter of that year. It is also the third decline in eighteen quarters, so the interesting question is what it took.",
+      "character_count": 316,
+      "body_sha256": "4b02e29d7043a98007190f07537bb540c465b485b14df14bdc28ff0f60d37909"
+    }
+  },
+  {
+    "source": "medium",
+    "source_id": "e86893f746b4",
+    "slug": "cboe-already-grades-your-heston-calibration-three-fits-disagree-by-5-6x-e86893f746b4",
+    "title": "Cboe Already Grades Your Heston Calibration. Three Fits Disagree by 5.6x.",
+    "subtitle": "Three defensible Heston calibrations to the same 8 October 2024 SPX surface disagree by 5.6x on vol of vol, and the only thing separating…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-11T01:13:06Z",
+    "url": "https://medium.com/@navnoorbawa/cboe-already-grades-your-heston-calibration-three-fits-disagree-by-5-6x-e86893f746b4",
+    "audience": "unknown",
+    "wordcount": 29,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "a664ec26c8ab054353fbbfcae8a7ab80da7f97086d52f27cfc99e9d573b681a5",
+      "lead": {
+        "text": "Three defensible Heston calibrations to the same 8 October 2024 SPX surface disagree by 5.6x on vol of vol, and the only thing separating…",
+        "start": 0,
+        "end": 138,
+        "sha256": "f7c238440c6466efa1c2932fec8017256cd60ff62d389d6f0246a1c9206f039f",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-11T01:13:06Z",
+    "observed_source_updated_at": "2026-08-11T01:13:06Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "166246317",
+    "slug": "berkshires-cash-166246317",
+    "title": "Berkshire's Cash Line Grossed Up $23.2bn on One Treasury Settlement Date",
+    "subtitle": "",
+    "post_date": "2026-08-11",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/berkshires-cash-166246317",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "medium",
     "source_id": "5a135482c38d",
     "slug": "norges-bank-flagged-this-t-statistic-in-2012-on-the-same-data-it-runs-from-0-92-to-13-67-5a135482c38d",
     "title": "Norges Bank Flagged This t-Statistic in 2012. On the Same Data It Runs From 0.92 to 13.67.",
@@ -697,9 +816,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-03T14:48:46Z",
-    "observed_source_updated_at": "2026-08-03T14:48:46Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
