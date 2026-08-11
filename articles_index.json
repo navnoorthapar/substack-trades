@@ -98,6 +98,28 @@
   },
   {
     "source": "patreon",
+    "source_id": "166358162",
+    "slug": "ninety-second-166358162",
+    "title": "The Ninety-Second ODD Test That FINRA's New Cyber Channel Just Made Worth Running",
+    "subtitle": "",
+    "post_date": "2026-08-11",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/ninety-second-166358162",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
     "source_id": "166246317",
     "slug": "berkshires-cash-166246317",
     "title": "Berkshire's Cash Line Grossed Up $23.2bn on One Treasury Settlement Date",
