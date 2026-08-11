@@ -1,5 +1,42 @@
 [
   {
+    "source": "substack",
+    "source_id": "millenniums-7208bn-has-no-route-into",
+    "slug": "millenniums-7208bn-has-no-route-into",
+    "title": "Millennium's $720.8bn Has No Route Into FINRA's New Cyber Channel",
+    "subtitle": "FINRA's new intelligence channel is keyed to broker-dealer registration. 84.4% of private fund advisers report none, and the largest of them is Millennium.",
+    "post_date": "2026-08-11T15:29:27.534Z",
+    "url": "https://navnoorbawa.substack.com/p/millenniums-7208bn-has-no-route-into",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "69c3ca080ecb0c202066e4f96bc3fff03708d1dfb89a0f0b5b6820034e456f16",
+      "lead": {
+        "text": "This piece is also a film. It puts Millennium’s Schedule D 7.A. on screen with the broker-dealer field unticked, and draws the ladder from 84.4% down to 19.4% so you can watch where it narrows.",
+        "start": 0,
+        "end": 193,
+        "sha256": "69c3ca080ecb0c202066e4f96bc3fff03708d1dfb89a0f0b5b6820034e456f16",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-11T15:31:40.799Z",
+    "observed_source_updated_at": "2026-08-11T15:31:40.799Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "This piece is also a film. It puts Millennium’s Schedule D 7.A. on screen with the broker-dealer field unticked, and draws the ladder from 84.4% down to 19.4% so you can watch where it narrows.",
+      "character_count": 193,
+      "body_sha256": "69c3ca080ecb0c202066e4f96bc3fff03708d1dfb89a0f0b5b6820034e456f16"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "5df8709c82cd",
     "slug": "dimensional-crossed-1-trillion-book-to-markets-t-stat-is-10-3-or-2-7-5df8709c82cd",
