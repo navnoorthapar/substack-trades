@@ -1,6 +1,89 @@
 [
   {
     "source": "substack",
+    "source_id": "cboes-vixeq-says-3851-the-vix-says",
+    "slug": "cboes-vixeq-says-3851-the-vix-says",
+    "title": "Cboe's VIXEQ Says 38.51. The VIX Says 15.28. QVR Lost 30% Trading the Gap.",
+    "subtitle": "Index vol is a product of two terms. Correlation did 82.6% of the March move, and in August the other term swamped it.",
+    "post_date": "2026-08-13T02:11:10.661Z",
+    "url": "https://navnoorbawa.substack.com/p/cboes-vixeq-says-3851-the-vix-says",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-13T02:16:26.880Z",
+    "observed_source_updated_at": "2026-08-13T02:16:26.880Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "metadata-only",
+      "text": "",
+      "character_count": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "source": "medium",
+    "source_id": "fcc3e17a7203",
+    "slug": "bank-of-america-solved-options-speed-in-1999-dz-bank-was-still-running-the-same-trick-in-2015-fcc3e17a7203",
+    "title": "Bank of America Solved Options Speed in 1999. DZ Bank Was Still Running the Same Trick in 2015.",
+    "subtitle": "The model that fits markets better still cannot price a full options chain as fast as a 1999 formula can.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-13T01:20:26Z",
+    "url": "https://medium.com/@navnoorbawa/bank-of-america-solved-options-speed-in-1999-dz-bank-was-still-running-the-same-trick-in-2015-fcc3e17a7203",
+    "audience": "unknown",
+    "wordcount": 24,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "c81eb23212ddfd0cfb6edea32469333f3c4280272b7716bf7989cd47a85b60c0",
+      "lead": {
+        "text": "The model that fits markets better still cannot price a full options chain as fast as a 1999 formula can.",
+        "start": 0,
+        "end": 105,
+        "sha256": "364afaab9543d6450f0f05727b27f1f83652e0c5c5d8cdea61c9d1c2185f3bf7",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-13T01:20:26Z",
+    "observed_source_updated_at": "2026-08-13T01:20:26Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "166533522",
+    "slug": "vix-has-two-and-166533522",
+    "title": "The VIX Has Two Terms and Everyone Trades One: Why Correlation Rising Is Not Enough",
+    "subtitle": "",
+    "post_date": "2026-08-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/vix-has-two-and-166533522",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "substack",
     "source_id": "millenniums-7208bn-has-no-route-into",
     "slug": "millenniums-7208bn-has-no-route-into",
     "title": "Millennium's $720.8bn Has No Route Into FINRA's New Cyber Channel",
@@ -695,9 +778,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-04T18:23:30Z",
-    "observed_source_updated_at": "2026-08-04T18:23:30Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",

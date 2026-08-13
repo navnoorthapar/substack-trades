@@ -1,43 +1,43 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-08-12T16:31:19Z",
-  "latest_publication": "2026-08-11T15:29:27.534Z",
-  "catalog_latest_publication": "2026-08-11T15:29:27.534Z",
-  "article_count": 397,
-  "catalog_count": 506,
-  "registry_count": 109,
+  "checked_at": "2026-08-13T03:31:03Z",
+  "latest_publication": "2026-08-13T02:11:10.661Z",
+  "catalog_latest_publication": "2026-08-13T02:11:10.661Z",
+  "article_count": 399,
+  "catalog_count": 509,
+  "registry_count": 110,
   "observation_count": 101,
-  "data_checksum": "1743e1e1a4f2e11e28f2a7f7e4e7b8db619b68d94802368cd9df7001be531239",
+  "data_checksum": "c0c04b211f516275556199e2d2f9538bb76ab9268f78728eebfd650738325aac",
   "sources": {
     "substack": {
-      "checked_at": "2026-08-12T16:30:47Z",
+      "checked_at": "2026-08-13T03:30:32Z",
       "status": "degraded",
       "mode": "complete_api_degraded_body_provenance",
-      "published_count": 246,
-      "fetched_count": 246,
-      "included_count": 246,
-      "newest": "2026-08-11T15:29:27.534Z"
+      "published_count": 247,
+      "fetched_count": 247,
+      "included_count": 247,
+      "newest": "2026-08-13T02:11:10.661Z"
     },
     "medium": {
-      "checked_at": "2026-08-12T16:30:54Z",
+      "checked_at": "2026-08-13T03:30:37Z",
       "status": "degraded",
       "mode": "cached_archive_plus_rss",
-      "published_count": 380,
+      "published_count": 381,
       "fetched_count": 10,
-      "included_count": 151,
-      "newest": "2026-08-11T02:45:06Z"
+      "included_count": 152,
+      "newest": "2026-08-13T01:20:26Z"
     },
     "patreon": {
-      "checked_at": "2026-08-12T16:30:58Z",
+      "checked_at": "2026-08-13T03:30:40Z",
       "status": "ok",
       "mode": "public_metadata_api",
-      "published_count": 119,
-      "fetched_count": 119,
-      "included_count": 98,
-      "newest": "2026-08-11"
+      "published_count": 120,
+      "fetched_count": 120,
+      "included_count": 99,
+      "newest": "2026-08-13"
     },
     "fxempire": {
-      "checked_at": "2026-08-12T16:31:19Z",
+      "checked_at": "2026-08-13T03:31:03Z",
       "status": "ok",
       "mode": "manual_registry",
       "published_count": 11,
