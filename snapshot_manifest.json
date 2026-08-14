@@ -1,49 +1,57 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-08-14T16:31:00Z",
+  "checked_at": "2026-08-14T20:36:15Z",
   "latest_publication": "2026-08-14T14:28:30.426Z",
   "catalog_latest_publication": "2026-08-14T14:28:30.426Z",
   "article_count": 405,
-  "catalog_count": 520,
-  "registry_count": 115,
+  "catalog_count": 522,
+  "registry_count": 117,
   "observation_count": 112,
-  "data_checksum": "0da903cfba50004a573c7b1816e9bdc88edf02b527877acbbe2b181751eb7f13",
+  "data_checksum": "653ebd4445d78b4c49e36b1fcd26f834c74e13eddedffdd668eca2e56370daab",
   "sources": {
     "substack": {
-      "checked_at": "2026-08-14T16:30:34Z",
+      "checked_at": "2026-08-14T20:35:44Z",
       "status": "degraded",
       "mode": "complete_api_degraded_body_provenance",
       "published_count": 251,
       "fetched_count": 251,
       "included_count": 251,
-      "newest": "2026-08-14T14:28:30.426Z"
+      "newest": "2026-08-14T14:28:30.426Z",
+      "degraded_since": "2026-08-14T16:30:34Z",
+      "consecutive_degraded_checks": 2
     },
     "medium": {
-      "checked_at": "2026-08-14T16:30:39Z",
+      "checked_at": "2026-08-14T20:35:49Z",
       "status": "degraded",
       "mode": "cached_archive_plus_rss",
       "published_count": 383,
       "fetched_count": 10,
       "included_count": 154,
-      "newest": "2026-08-14T06:29:10Z"
+      "newest": "2026-08-14T06:29:10Z",
+      "degraded_since": "2026-08-14T16:30:39Z",
+      "consecutive_degraded_checks": 2
     },
     "patreon": {
-      "checked_at": "2026-08-14T16:30:42Z",
+      "checked_at": "2026-08-14T20:35:53Z",
       "status": "ok",
       "mode": "public_metadata_api",
-      "published_count": 125,
-      "fetched_count": 125,
-      "included_count": 104,
-      "newest": "2026-08-14"
+      "published_count": 127,
+      "fetched_count": 127,
+      "included_count": 106,
+      "newest": "2026-08-14",
+      "degraded_since": null,
+      "consecutive_degraded_checks": 0
     },
     "fxempire": {
-      "checked_at": "2026-08-14T16:31:00Z",
+      "checked_at": "2026-08-14T20:36:15Z",
       "status": "ok",
       "mode": "manual_registry",
       "published_count": 11,
       "fetched_count": 11,
       "included_count": 11,
-      "newest": "2026-07-20"
+      "newest": "2026-07-20",
+      "degraded_since": null,
+      "consecutive_degraded_checks": 0
     }
   }
 }

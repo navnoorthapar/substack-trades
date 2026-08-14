@@ -332,6 +332,50 @@
     "access": "paid"
   },
   {
+    "source": "patreon",
+    "source_id": "166694751",
+    "slug": "pricing-lock-up-166694751",
+    "title": "Pricing the Lock-Up Option: What Citadel and Millennium Are Actually Charging You for Duration",
+    "subtitle": "",
+    "post_date": "2026-08-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/pricing-lock-up-166694751",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "166696795",
+    "slug": "kalshi-pays-50-1-166696795",
+    "title": "Kalshi Pays $50,000 a Week Under Seal and $1,000 a Day in Public",
+    "subtitle": "",
+    "post_date": "2026-08-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/kalshi-pays-50-1-166696795",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "substack",
     "source_id": "cboes-vixeq-says-3851-the-vix-says",
     "slug": "cboes-vixeq-says-3851-the-vix-says",
