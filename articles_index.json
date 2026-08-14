@@ -1,5 +1,65 @@
 [
   {
+    "source": "medium",
+    "source_id": "4912dfd9ee85",
+    "slug": "mathworks-ships-one-sabr-alpha-hagans-equation-returns-two-3-6-points-apart-4912dfd9ee85",
+    "title": "MathWorks Ships One SABR Alpha. Hagan’s Equation Returns Two, 3.6 Points Apart.",
+    "subtitle": "Let me be precise about what I am and am not saying, since the interesting part is narrow. I’m not claiming desks pick the wrong root and…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-14T06:29:10Z",
+    "url": "https://medium.com/@navnoorbawa/mathworks-ships-one-sabr-alpha-hagans-equation-returns-two-3-6-points-apart-4912dfd9ee85",
+    "audience": "unknown",
+    "wordcount": 31,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "43e698c82aa27f1be59b413c530f17d4c08c162d269cad248a46eb704d5d09ff",
+      "lead": {
+        "text": "Let me be precise about what I am and am not saying, since the interesting part is narrow. I’m not claiming desks pick the wrong root and…",
+        "start": 0,
+        "end": 138,
+        "sha256": "46bfc2e3f83e5e6aabc2d21887b0cbee62f853e4e4cc38d90592687bac493478",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-14T06:29:10Z",
+    "observed_source_updated_at": "2026-08-14T06:29:10Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "c4c340597a67",
+    "slug": "nomura-and-bnp-paribas-quants-wrote-sabr-its-delta-costs-you-exactly-ρ²-c4c340597a67",
+    "title": "Nomura and BNP Paribas Quants Wrote SABR. Its Delta Costs You Exactly ρ².",
+    "subtitle": "Every swaption desk that runs SABR has a policy on β. It’s written down, it’s defended to model risk, and it gets reviewed. Almost none of…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-14T04:07:37Z",
+    "url": "https://medium.com/@navnoorbawa/nomura-and-bnp-paribas-quants-wrote-sabr-its-delta-costs-you-exactly-%CF%81%C2%B2-c4c340597a67",
+    "audience": "unknown",
+    "wordcount": 30,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "975108d675a7ba86b1bb4dce9433b2b5ce11b7351a6ba00cab47af2a8a983b76",
+      "lead": {
+        "text": "Every swaption desk that runs SABR has a policy on β. It’s written down, it’s defended to model risk, and it gets reviewed. Almost none of…",
+        "start": 0,
+        "end": 139,
+        "sha256": "3739e4737c7c7aa0abfb472fc5762f5adbec2388b47342b27798fa27a2edf7ab",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-14T04:07:37Z",
+    "observed_source_updated_at": "2026-08-14T04:07:37Z"
+  },
+  {
     "source": "substack",
     "source_id": "cboes-vixeq-says-3851-the-vix-says",
     "slug": "cboes-vixeq-says-3851-the-vix-says",
@@ -585,9 +645,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-06T06:56:38Z",
-    "observed_source_updated_at": "2026-08-06T06:56:38Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -615,9 +675,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-06T03:59:18Z",
-    "observed_source_updated_at": "2026-08-06T03:59:18Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
