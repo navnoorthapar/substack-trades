@@ -1,5 +1,187 @@
 [
   {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "CNBC’s reporting has it that Citadel “managed some $71 billion in assets on July 1”; the FT, reporting separately, called it “more than $71 billion in assets”. Two newsrooms, one figure. It’s investor capital: the equity clients and insiders have committed, the base performance is struck on, the denominator behind “Wellington returned 5.9% in July.”",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$71 billion, 5.9%",
+    "outcome_if_mentioned": "returned 5.9% in July.",
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "The 13F number is gross in a third and stranger way. It captures long positions in 13(f) securities only: no shorts, no bonds, no futures, no non-US listings. It also aggregates other included managers, and Citadel’s names one: Citadel Securities GP LLC. The market maker’s inventory rides inside the hedge fund adviser’s 13F, which squares with the ADV listing fifteen affiliated broker dealer and clearing entities as related persons. Read it as “Citadel’s portfolio” and you’re reading a market maker and a hedge fund added together, shorts deleted.",
+    "instruments": [
+      "bond",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "“Citadel’s portfolio” and you’re reading a market maker and a hedge fund added together, shorts deleted.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "Here’s the objection I’d raise if somebody showed me this, and it nearly killed the finding. Gross asset value isn’t comparable across strategies. A cash and carry Treasury position books both legs; a long equity position books once. If the fixed income book runs at 15x gross to capital and the equity book at 3x, then $331bn and $92bn imply something like $22bn and $31bn of capital, and the equity business is the larger one. I can’t rule that out. The capital split lives in Form PF and Form PF is not public.",
+    "instruments": [
+      "bond",
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$331bn, $92bn, $22bn, $31bn, at 15, at 3",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "Precisely this has now been quantified by the Federal Reserve. In a FEDS Note published 22 June 2026, Phillip J. Monin decomposes large hedge funds’ Treasury exposures from Form PF: $4.0 trillion gross as of September 2025, made up of $2.4 trillion long and $1.6 trillion short. Net those and you have $0.8 trillion, 20% of the gross figure. The cash futures basis trade alone runs about $830 billion, roughly double its early 2020 peak and 35% of long Treasury exposure, financed inside $3.0 trillion of repo borrowing that the OFR attributes to multi-strategy, macro and relative value funds.",
+    "instruments": [
+      "bond",
+      "futures",
+      "repo"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "of September 2025, made up of $2.",
+    "any_quant_detail": "$4.0 trillion, $2.4 trillion, $1.6 trillion, $0.8 trillion, $830 billion, 20%, 35%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "The honest reading is narrower and it still holds. Returns have fallen since that peak, with 2023 and 2024 flat at just over 15%, and 2025’s 10.2% sits at the bottom of the eight year range with only 2018 below it, against 19.46% annualised since 1990. The Global Fixed Income fund, the firm’s largest book, returned 9.4% in 2025. Over that same stretch the industry was adding gross rather than shedding it: OFR data has hedge fund repo borrowing more than doubling, up 104%, between Q4 2022 and Q4 2024, and the Fed’s decomposition has the cash futures basis trade at roughly twice its early 2020 peak.",
+    "instruments": [
+      "futures",
+      "repo"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "that peak, with 2023 and 2024 flat at just over 15%, and 2025’s 10.",
+    "any_quant_detail": "15%, 10.2%, 19.46%, 9.4%, 104%",
+    "outcome_if_mentioned": "returned 9.4% in 2025.",
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "The capital path says it arithmetically. Citadel ended 2022 with $62.3bn and stood at about $71bn on 1 July 2026, a 14% gain in three and a half years, while the portfolio earned multiples of that. The difference walked out as distributions. The money is generated. It is not retained.\nA capital return works the same way from the other side. A profit distribution takes equity off the right hand side of the balance sheet and the left hand side never hears about it, so handing back $5bn leaves gross assets untouched and raises the gross to equity ratio mechanically. Same footprint, smaller cushion. A capital return is a financing decision as much as a capacity decision, and only one of those readings is ever reported.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "much as a capacity decision, and only one of those readings is ever reported.",
+    "any_quant_detail": "$62.3bn, $71bn, $5bn, 14%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "Citadel sits second, and I’d call Millennium’s $720,845,951,000 on a comparable investor base the more levered of the two. Bridgewater is the row I’d study: comparable investor capital, a quarter of the regulatory assets, because macro views expressed through futures and swaps consume far less gross balance sheet than cash against derivative relative value. The ratio is a strategy signature. Size is a different table.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "macro views expressed through futures and swaps consume far less gross balance sheet than cash against derivative relative value.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "Gross asset value isn’t net asset value, and Form PF isn’t public. Schedule D asks for gross assets. The borrowings, the repo, the derivative notionals and the actual net exposures all live in Form PF, which the SEC collects and doesn’t publish at firm level. Everything I’ve said about Citadel’s financing is inferred from the gap between two published numbers. None of it is read off a liability schedule. And that private window is narrowing: on 20 April 2026 the SEC and CFTC jointly proposed lifting the Form PF filing threshold from $150m to $1bn, and the large hedge fund adviser threshold from $1.5bn to $10bn. Fewer filers, less collected. Which makes the free filing I have been reading from more load bearing, not less.",
+    "instruments": [
+      "repo"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$150m, $1bn, $1.5bn, $10bn",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "Underwriting Citadel’s returns or its fee load? Use $71 billion. That’s the equity performance is struck on, and the honest denominator.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$71 billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "article_date": "2026-08-14",
+    "trade_description": "The whole procedure is in the accompanying note: six steps, the eight adviser dataset, the three places it breaks. On the financing side I took apart how hedge funds trade the $30 trillion Treasury market, and before that how Millennium, Citadel and Point72 structure their pods. I publish this filing work as research on Patreon, for people underwriting a counterparty rather than reading about one. Shorter reads go up on LinkedIn, filmed versions on YouTube.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "research on Patreon, for people underwriting a counterparty rather than reading about one.",
+    "any_quant_detail": "$30 trillion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Millennium",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Simplify's $27m ETF Ran a 291% VaR. Its Shareholders Never Saw the Breach",
+    "article_url": "https://navnoorbawa.substack.com/p/simplifys-27m-etf-ran-a-291-var-its",
+    "article_date": "2026-08-14",
+    "trade_description": "Simplify’s Macro Strategy ETF ran a 291% relative value-at-risk reading against a 200% regulatory cap across two episodes in 2024, and the only reason any of us can read about it is that an enforcement action arrived twenty seven months later.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "291%, 200%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false,
+    "source_body_sha256": "4bdf1a89b9258e55f4605862bb8dcb84e07db78990bdc929d38b43031fe12889"
+  },
+  {
     "article_title": "Blue Owl's Credit Fundraising Fell 69% in a Quarter. Then It Hired a Tokyo Banker.",
     "article_url": "https://navnoorbawa.substack.com/p/blue-owls-credit-fundraising-fell",
     "article_date": "2026-08-03",

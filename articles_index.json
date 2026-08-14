@@ -1,5 +1,167 @@
 [
   {
+    "source": "substack",
+    "source_id": "citadel-filed-570-billion-with-the",
+    "slug": "citadel-filed-570-billion-with-the",
+    "title": "Citadel Filed $570 Billion With the SEC. Everyone Prints $71 Billion.",
+    "subtitle": "The SEC's own instruction says not to deduct the debt. That one sentence is worth 8.04x, and 58% of it sits in a single fixed income fund.",
+    "post_date": "2026-08-14T14:28:30.426Z",
+    "url": "https://navnoorbawa.substack.com/p/citadel-filed-570-billion-with-the",
+    "audience": "everyone",
+    "wordcount": 3309,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "2b31723fc5c0dd7ca6ed8d5e4f85a909356e59fabef4ea7a5d558faa38cd3f4e",
+      "lead": {
+        "text": "The claim: The “$71 billion” attached to Citadel in every 2026 ranking is the smallest of four defensible measurements of the same firm, and the largest is 15 times bigger. The one Citadel files with its regulator, $570,621,709,022, is the number that describes what the market actually faces. Size counterparty, financing or crowding risk off the league table figure and you are out by a factor of eight, on a correction that costs one free PDF.",
+        "start": 0,
+        "end": 446,
+        "sha256": "28809349f3de49a8a91c2f51843d4b32eb2b30dfda26570a60bd97e0d472dd58",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "implementation",
+          "source_order": 43,
+          "heading": "The capacity bound: returns fell from 38.1% to 10.2% while the industry’s gross doubled",
+          "heading_start": 12045,
+          "heading_end": 12132,
+          "heading_sha256": "2173537964e731b04b25e90f2b5a923570c26e7b96d4014f407bc83c010f7fe0",
+          "text": "If gross assets are the footprint, the next question is whether the footprint still buys what it used to. It doesn’t.",
+          "start": 12134,
+          "end": 12251,
+          "sha256": "be870c685976a9dfda67e77301485e8a458b5cf4bc08a6033db72b2a01219a61",
+          "truncated": false
+        },
+        {
+          "kind": "falsifier",
+          "source_order": 58,
+          "heading": "What would change my view: the annual amendment due March 2027",
+          "heading_start": 16912,
+          "heading_end": 16974,
+          "heading_sha256": "d2d09cc566addd99736f8e402746af1910fab5c1c72563782abeecc5ca7cdd0d",
+          "text": "My composition claim is the most exposed, so here is its test, stated precisely.",
+          "start": 16976,
+          "end": 17056,
+          "sha256": "2411dcbced01989998eae1dc5925e54e35951aa49d5ea77df0340a59f6c84ea8",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "The numbers: $71bn investment capital as of 1 July 2026 (press, two independent chains) · $570,621,709,022 regulatory assets under management across 37 accounts (Form ADV, filed 11 June 2026) · $618,473,172,395 in long 13(f) holdings (13F-HR, Q1 2026) · $331,320,173,932 in one fixed income master fund, 58.1% of the regulatory total.",
+        "start": 448,
+        "end": 782,
+        "sha256": "0ff2f781874ae0049417216e5ec9209246153f3af3b69e359f3ca9751c66975e",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-14T14:29:59.470Z",
+    "observed_source_updated_at": "2026-08-14T14:29:59.470Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "simplifys-27m-etf-ran-a-291-var-its",
+    "slug": "simplifys-27m-etf-ran-a-291-var-its",
+    "title": "Simplify's $27m ETF Ran a 291% VaR. Its Shareholders Never Saw the Breach",
+    "subtitle": "The first Rule 18f-4 enforcement action, the Carvana short behind it, and why 2,804 reports explain the rule and none disclose a breach.",
+    "post_date": "2026-08-14T08:52:11.319Z",
+    "url": "https://navnoorbawa.substack.com/p/simplifys-27m-etf-ran-a-291-var-its",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "4bdf1a89b9258e55f4605862bb8dcb84e07db78990bdc929d38b43031fe12889",
+      "lead": {
+        "text": "Simplify’s Macro Strategy ETF ran a 291% relative value-at-risk reading against a 200% regulatory cap across two episodes in 2024, and the only reason any of us can read about it is that an enforcement action arrived twenty seven months later.",
+        "start": 0,
+        "end": 243,
+        "sha256": "4bdf1a89b9258e55f4605862bb8dcb84e07db78990bdc929d38b43031fe12889",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-14T08:53:58.673Z",
+    "observed_source_updated_at": "2026-08-14T08:53:58.673Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Simplify’s Macro Strategy ETF ran a 291% relative value-at-risk reading against a 200% regulatory cap across two episodes in 2024, and the only reason any of us can read about it is that an enforcement action arrived twenty seven months later.",
+      "character_count": 243,
+      "body_sha256": "4bdf1a89b9258e55f4605862bb8dcb84e07db78990bdc929d38b43031fe12889"
+    }
+  },
+  {
+    "source": "substack",
+    "source_id": "simplifys-etf-says-no-holder-tops",
+    "slug": "simplifys-etf-says-no-holder-tops",
+    "title": "Simplify's ETF Says No Holder Tops 5%. The SEC Found One Trust Owns Nearly All.",
+    "subtitle": "The SEC's July order documents the ownership. The fund's own Statement of Additional Information reports none of it, three years running, while sister funds in the same filing name theirs.",
+    "post_date": "2026-08-14T08:37:09.036Z",
+    "url": "https://navnoorbawa.substack.com/p/simplifys-etf-says-no-holder-tops",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-14T08:38:30.386Z",
+    "observed_source_updated_at": "2026-08-14T08:38:30.386Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "metadata-only",
+      "text": "",
+      "character_count": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "source": "substack",
+    "source_id": "the-sec-called-70-of-simplifys-gbtc",
+    "slug": "the-sec-called-70-of-simplifys-gbtc",
+    "title": "The SEC Called 70% of Simplify's GBTC Payout Return of Capital. The Fund Made 39%.",
+    "subtitle": "The order publishes nine fund-years. Ranked on return of capital, the screen misses both of the best outcomes in its own table.",
+    "post_date": "2026-08-14T07:50:05.205Z",
+    "url": "https://navnoorbawa.substack.com/p/the-sec-called-70-of-simplifys-gbtc",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-14T08:55:07.913Z",
+    "observed_source_updated_at": "2026-08-14T08:55:07.913Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "metadata-only",
+      "text": "",
+      "character_count": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "4912dfd9ee85",
     "slug": "mathworks-ships-one-sabr-alpha-hagans-equation-returns-two-3-6-points-apart-4912dfd9ee85",
@@ -58,6 +220,116 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-08-14T04:07:37Z",
     "observed_source_updated_at": "2026-08-14T04:07:37Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "166644449",
+    "slug": "simplifys-suri-166644449",
+    "title": "Simplify's SURI: The Two-Document Screen That Flags a 90% Owner Before the SEC Does",
+    "subtitle": "",
+    "post_date": "2026-08-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/simplifys-suri-166644449",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "166643552",
+    "slug": "secs-simplify-98-166643552",
+    "title": "The SEC's Simplify Table: 98.80% Return of Capital Lost 6.23%, 88.78% Made 27.69%",
+    "subtitle": "",
+    "post_date": "2026-08-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/secs-simplify-98-166643552",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "166646380",
+    "slug": "reconstructing-166646380",
+    "title": "Reconstructing a 40 Act Fund's Derivative Leverage, and the One Number That Is Withheld",
+    "subtitle": "",
+    "post_date": "2026-08-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/reconstructing-166646380",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "166668577",
+    "slug": "reading-real-5-f-166668577",
+    "title": "Reading a Platform's Real Balance Sheet From Free Filings: The Item 5.F Method",
+    "subtitle": "",
+    "post_date": "2026-08-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/reading-real-5-f-166668577",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "166669391",
+    "slug": "reading-prime-166669391",
+    "title": "Reading a Prime Broker's Capital Consumption From Published Disclosure",
+    "subtitle": "",
+    "post_date": "2026-08-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/reading-prime-166669391",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
