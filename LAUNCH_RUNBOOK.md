@@ -55,8 +55,9 @@ and plist syntax, inline JavaScript compilation, updater, snapshot freshness,
 clean diff, and GitHub authentication all pass. On the scheduled Mac, repeat
 data validation with
 `--posts all_sources_posts.json` to bind the release to the ignored full-source
-cache. Confirm the generated artifact contains `index.html`, both deferred JSON
-assets, all six contract files under `data/`, exactly one PNG under `cards/` and
+cache. Confirm the generated artifact contains `index.html`, the verified
+`article_catalog.json` bootstrap asset, both deferred research JSON assets, all
+six contract files under `data/`, exactly one PNG under `cards/` and
 one HTML stub under `a/` for every catalogue slug, plus `robots.txt`,
 `sitemap.xml`, `site.webmanifest`, `favicon.svg`, and `og.jpg`. Inspect the
 reported six release fingerprints, public-data digest, size budgets, and
@@ -70,7 +71,7 @@ the scheduled refresh, pre-push gate, CI, and independent watchdog.
    immutable Pages artifact can deploy. Production makes one bounded Pages
    attempt; it never starts a blind same-SHA retry after a platform timeout.
 3. Require the post-deploy smoke step to confirm HTTPS, exact Git revision,
-   snapshot checksum/counts, exact HTML, both deferred JSON files, every file in
+   snapshot checksum/counts, exact HTML, the verified article catalogue, both deferred JSON files, every file in
    the six-endpoint public-data bundle, and the combined discovery/social
    support bundle. A fresh post-smoke authority step must still prove that the
    release SHA owns remote `main`, and the reconciliation step must succeed. A
@@ -129,8 +130,13 @@ gh run list --workflow update.yml --limit 5
 ## 5. Routine monitoring
 
 - Local ingestion runs at 09:00, 13:00, and 22:00 Asia/Kolkata and after login.
-- The production watchdog is scheduled every four hours and rejects snapshots
-  older than 16 hours.
+- The production watchdog is scheduled every four hours. It warns when a
+  snapshot is older than 16 hours and fails after 36 hours. A source adapter in
+  validated fallback/degraded mode is immediately non-healthy in local status,
+  remains publishable to preserve the last safe catalogue, produces a hosted
+  warning while transient, and fails the watchdog after 48 continuous hours.
+  `degraded_since` and `consecutive_degraded_checks` continue across manifests;
+  recovery resets both fields.
 - At least daily during launch week, inspect the latest updater log, deployment,
   watchdog, four source counts, per-source health, and published release
   timestamp. Fetch `/data/manifest.json` and verify its `dataset_version`,

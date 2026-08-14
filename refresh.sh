@@ -237,13 +237,26 @@ fi
 
 echo
 echo "=== Creating verifiable snapshot manifest ==="
-"$PYTHON" write_snapshot_manifest.py \
-    --articles "$WORK_DIR/articles.candidate.json" \
-    --trades "$WORK_DIR/trades.candidate.json" \
-    --substack-status "$WORK_DIR/substack-status.json" \
-    --medium-status "$WORK_DIR/medium-status.json" \
-    --patreon-status "$WORK_DIR/patreon-status.json" \
+MANIFEST_ARGS=(
+    --articles "$WORK_DIR/articles.candidate.json"
+    --trades "$WORK_DIR/trades.candidate.json"
+    --substack-status "$WORK_DIR/substack-status.json"
+    --medium-status "$WORK_DIR/medium-status.json"
+    --patreon-status "$WORK_DIR/patreon-status.json"
     --output "$WORK_DIR/snapshot_manifest.candidate.json"
+)
+if [ -f "$ROOT/snapshot_manifest.json" ]; then
+    MANIFEST_ARGS+=(--previous-manifest "$ROOT/snapshot_manifest.json")
+fi
+"$PYTHON" write_snapshot_manifest.py "${MANIFEST_ARGS[@]}"
+
+# A validated cached fallback remains safer than deleting research during a
+# temporary publisher outage.  Emit that state prominently here; local status
+# is nonzero for any degradation and the independent watchdog escalates a
+# continuous 48-hour streak.
+"$PYTHON" source_health.py \
+    --policy publish \
+    < "$WORK_DIR/snapshot_manifest.candidate.json"
 
 echo
 echo "=== Validating candidate data ==="

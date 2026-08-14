@@ -48,6 +48,7 @@ from validate_inline_scripts import validate_inline_scripts
 
 CORE_ASSETS = frozenset((
     'index.html',
+    'article_catalog.json',
     'article_briefs.json',
     'observations.json',
     'robots.txt',
@@ -67,7 +68,6 @@ FINGERPRINT_KEYS = (
 )
 PNG_SIGNATURE = b'\x89PNG\r\n\x1a\n'
 PNG_HEADER = (1200, 630, 8, 3, 0, 0, 0)
-ARTICLES_RE = re.compile(r'const ARTICLES = (.*?);\n')
 ARTICLE_WIRE_SCHEMA_RE = re.compile(
     r'(?m)^\s*const\s+ARTICLE_WIRE_SCHEMA_VERSION\s*=\s*([0-9]+)\s*;\s*$',
 )
@@ -111,6 +111,10 @@ class ReleasePolicy:
     index_min_bytes: int = 100_000
     index_max_bytes: int = 900_000
     index_gzip_max_bytes: int = 250_000
+    # Roughly thirteen times the current compact catalogue. The independent
+    # 20 MB release ceiling still bounds the artifact before this asset can
+    # become an unreviewed browser-memory liability.
+    article_catalog_max_bytes: int = 4_000_000
     brief_min_bytes: int = 100_000
     brief_max_bytes: int = 800_000
     observation_max_bytes: int = 1_500_000
@@ -679,7 +683,7 @@ def _validate_artifact_tree(
         'artifact directory set does not match a/, cards/, and data/',
     )
     _require(
-        len(files) == 14 + 2 * len(articles),
+        len(files) == 15 + 2 * len(articles),
         'artifact file count does not match its catalogue',
     )
     return files
@@ -691,6 +695,9 @@ def _validate_sizes(
         policy: ReleasePolicy,
 ) -> Dict[str, int]:
     index_bytes = _read_bytes(site / 'index.html', 'index.html')
+    article_catalog_bytes = _read_bytes(
+        site / 'article_catalog.json', 'article_catalog.json',
+    )
     brief_bytes = _read_bytes(
         site / 'article_briefs.json', 'article_briefs.json',
     )
@@ -724,6 +731,11 @@ def _validate_sizes(
         gzip_bytes <= policy.index_gzip_max_bytes,
         f'compressed index size {gzip_bytes} exceeds '
         f'{policy.index_gzip_max_bytes} bytes',
+    )
+    _require(
+        len(article_catalog_bytes) <= policy.article_catalog_max_bytes,
+        f'article catalogue size {len(article_catalog_bytes)} exceeds '
+        f'{policy.article_catalog_max_bytes} bytes',
     )
     _require(
         policy.brief_min_bytes <= len(brief_bytes) <= policy.brief_max_bytes,
@@ -763,6 +775,7 @@ def _validate_sizes(
     return {
         'index': len(index_bytes),
         'index_gzip': gzip_bytes,
+        'catalogue': len(article_catalog_bytes),
         'briefs': len(brief_bytes),
         'observations': len(observation_bytes),
         'data': data_bytes,
@@ -1008,22 +1021,49 @@ def _validate_support_assets(
     )
 
 
-def _extract_embedded_articles(html: str) -> List[Dict[str, Any]]:
-    matches = ARTICLES_RE.findall(html)
-    _require(len(matches) == 1,
-             'generated HTML must contain exactly one article wire payload')
-    payload = _decode_json(matches[0].encode('utf-8'), 'embedded article payload')
-    _require(isinstance(payload, list),
-             'embedded article payload must be a list')
+def _extract_catalog_articles(
+        payload: Any,
+        expected_checksum: str,
+        expected_count: int,
+) -> List[Dict[str, Any]]:
+    _require(
+        isinstance(payload, Mapping)
+        and set(payload) == {
+            'schema_version',
+            'article_wire_schema_version',
+            'data_checksum',
+            'articles',
+        },
+        'article catalogue must have the exact release envelope',
+    )
+    _require(
+        type(payload['schema_version']) is int
+        and payload['schema_version'] == 1,
+        'article catalogue schema_version must be 1',
+    )
+    _require(
+        type(payload['article_wire_schema_version']) is int
+        and payload['article_wire_schema_version'] == ARTICLE_WIRE_SCHEMA_VERSION,
+        'article catalogue wire schema version does not match the client contract',
+    )
+    _require(
+        payload['data_checksum'] == expected_checksum,
+        'article catalogue data checksum does not match the exact source release',
+    )
+    articles = payload['articles']
+    _require(
+        isinstance(articles, list) and len(articles) == expected_count,
+        'article catalogue count does not match body-backed source articles',
+    )
     hydrated = []
-    for position, article in enumerate(payload):
+    for position, article in enumerate(articles):
         _require(isinstance(article, Mapping),
-                 f'embedded article {position} must be an object')
+                 f'article catalogue row {position} must be an object')
         try:
             hydrated.append(hydrate_client_article(article))
         except ValueError as exc:
             raise ValueError(
-                f'embedded article {position} violates the wire contract: {exc}',
+                f'article catalogue row {position} violates the wire contract: {exc}',
             ) from exc
     return hydrated
 
@@ -1416,11 +1456,20 @@ def validate_release(
         expected_checksum,
     )
 
+    article_catalog_path = site / 'article_catalog.json'
+    article_catalog_bytes = _read_bytes(
+        article_catalog_path, 'article_catalog.json',
+    )
     brief_path = site / 'article_briefs.json'
     brief_bytes = _read_bytes(brief_path, 'article_briefs.json')
     observation_path = site / 'observations.json'
     observation_bytes = _read_bytes(
         observation_path, 'observations.json',
+    )
+    _require(
+        embedded_digests.get('article_catalog.json')
+        == _sha256(article_catalog_bytes),
+        'embedded article catalogue digest does not match exact asset bytes',
     )
     _require(
         embedded_digests.get('article_briefs.json') == _sha256(brief_bytes),
@@ -1432,7 +1481,15 @@ def validate_release(
         'embedded observation digest does not match exact asset bytes',
     )
 
-    generated_articles = _extract_embedded_articles(html)
+    _require(
+        re.search(r'(?m)^\s*const\s+ARTICLES\s*=\s*\[', html) is None,
+        'generated HTML must not embed the growing article catalogue',
+    )
+    generated_articles = _extract_catalog_articles(
+        _decode_json(article_catalog_bytes, 'article catalogue'),
+        expected_checksum,
+        content_count,
+    )
     article_url_by_id, source_by_url = _validate_article_bijection(
         source_articles, generated_articles,
     )

@@ -108,6 +108,17 @@ class TreasuryFetchBoundaryTests(unittest.TestCase):
                 fetch_treasury_curve._fetch_year(2026)
         self.assertEqual(response.read_calls, 0)
 
+    def test_parse_year_rejects_a_nonexistent_calendar_day(self):
+        document = b'''<feed xmlns="http://www.w3.org/2005/Atom"
+            xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+            xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices">
+          <entry><content><m:properties>
+            <d:NEW_DATE>2026-02-30T00:00:00</d:NEW_DATE>
+          </m:properties></content></entry>
+        </feed>'''
+        with self.assertRaisesRegex(ValueError, 'invalid calendar day'):
+            fetch_treasury_curve.parse_year(document, 2026, partial_year=True)
+
     def test_old_cli_controls_fail_before_refresh_logic(self):
         old_controls = (
             ['--years', '2025', '2026'],

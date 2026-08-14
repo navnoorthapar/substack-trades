@@ -18,6 +18,7 @@ from pathlib import Path
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
+from client_article_contract import ARTICLE_WIRE_SCHEMA_VERSION
 from data_contract import (
     DATA_ENDPOINT_NAMES,
     data_bundle_checksum,
@@ -28,6 +29,7 @@ from share_cards import render_article_stub, script_literal
 
 MAX_RESPONSE_BYTES = 12 * 1024 * 1024
 MAX_DEFERRED_BYTES = 2 * 1024 * 1024
+MAX_ARTICLE_CATALOG_BYTES = 4_000_000
 MAX_SUPPORT_ASSET_BYTES = 600 * 1024
 MAX_SHARE_CARD_BYTES = 100_000
 MAX_SHARE_STUB_BYTES = 64 * 1024
@@ -40,6 +42,7 @@ DATA_ENDPOINT_MAX_BYTES = {
     'families.json': 512 * 1024,
 }
 HTML_ASSET_NAME = 'index.html'
+ARTICLE_CATALOG_ASSET_NAME = 'article_catalog.json'
 DEFERRED_ASSET_NAME = 'article_briefs.json'
 OBSERVATION_ASSET_NAME = 'observations.json'
 SUPPORT_ASSET_NAMES = (
@@ -57,6 +60,7 @@ REQUIRED_META = {
     'nrt-article-count',
     'nrt-observation-count',
     'nrt-data-checksum',
+    'nrt-article-catalog-sha256',
     'nrt-brief-archive-sha256',
     'nrt-observation-archive-sha256',
 }
@@ -70,6 +74,7 @@ REQUIRED_ELEMENT_IDS = {
 }
 CHECKSUM_RE = re.compile(r'^[0-9a-f]{64}$')
 ASSET_DIGEST_META = {
+    ARTICLE_CATALOG_ASSET_NAME: 'nrt-article-catalog-sha256',
     DEFERRED_ASSET_NAME: 'nrt-brief-archive-sha256',
     OBSERVATION_ASSET_NAME: 'nrt-observation-archive-sha256',
 }
@@ -722,6 +727,42 @@ def validate_deferred_payload(payload, expected_checksum):
         raise ValueError('deferred article dossier briefs must be a non-empty object')
 
 
+def validate_article_catalog_payload(payload, expected_checksum, expected_count):
+    """Fail closed unless the startup catalogue belongs to the exact release."""
+    if not isinstance(payload, dict) or set(payload) != {
+        'schema_version',
+        'article_wire_schema_version',
+        'data_checksum',
+        'articles',
+    }:
+        raise ValueError('article catalogue must have the exact release envelope')
+    if type(payload['schema_version']) is not int or payload['schema_version'] != 1:
+        raise ValueError('article catalogue schema_version must be 1')
+    if (
+        type(payload['article_wire_schema_version']) is not int
+        or payload['article_wire_schema_version'] != ARTICLE_WIRE_SCHEMA_VERSION
+    ):
+        raise ValueError('article catalogue wire schema version is invalid')
+    checksum = payload['data_checksum']
+    if not isinstance(checksum, str) or not CHECKSUM_RE.fullmatch(checksum):
+        raise ValueError('article catalogue data_checksum is not a lowercase SHA-256 digest')
+    if checksum != expected_checksum:
+        raise ValueError(
+            f'article catalogue data_checksum is {checksum}, expected {expected_checksum}'
+        )
+    articles = payload['articles']
+    if not isinstance(articles, list) or len(articles) != expected_count:
+        actual = len(articles) if isinstance(articles, list) else 'invalid'
+        raise ValueError(f'article catalogue count is {actual}, expected {expected_count}')
+    ids = [str(article.get('id') or '') for article in articles if isinstance(article, dict)]
+    if (
+        len(ids) != expected_count
+        or any(re.fullmatch(r'a_[0-9a-f]{14}', article_id) is None for article_id in ids)
+        or len(ids) != len(set(ids))
+    ):
+        raise ValueError('article catalogue identities are missing, invalid, or duplicated')
+
+
 def validate_observation_payload(payload, expected_checksum, expected_count):
     """Fail closed unless parser observations belong to the exact snapshot."""
     if not isinstance(payload, dict):
@@ -749,6 +790,7 @@ def fetch_deferred_json(
     timeout,
     *,
     expected_sha256,
+    maximum_bytes=MAX_DEFERRED_BYTES,
 ):
     """Fetch, byte-verify, and decode a same-origin release asset over HTTPS."""
     if not CHECKSUM_RE.fullmatch(str(expected_sha256 or '')):
@@ -788,10 +830,10 @@ def fetch_deferred_json(
                 f'{asset_name} returned '
                 f'{content_type}, not application/json'
             )
-        payload = response.read(MAX_DEFERRED_BYTES + 1)
-    if len(payload) > MAX_DEFERRED_BYTES:
+        payload = response.read(maximum_bytes + 1)
+    if len(payload) > maximum_bytes:
         raise ValueError(
-            f'{asset_name} exceeds {MAX_DEFERRED_BYTES} bytes'
+            f'{asset_name} exceeds {maximum_bytes} bytes'
         )
     actual_sha256 = hashlib.sha256(payload).hexdigest()
     if actual_sha256 != expected_sha256:
@@ -813,6 +855,20 @@ def fetch_deferred_briefs(
         attempt,
         timeout,
         expected_sha256=expected_sha256,
+    )
+
+
+def fetch_article_catalog(
+    page_url, revision, attempt, timeout, *, expected_sha256,
+):
+    return fetch_deferred_json(
+        page_url,
+        ARTICLE_CATALOG_ASSET_NAME,
+        revision,
+        attempt,
+        timeout,
+        expected_sha256=expected_sha256,
+        maximum_bytes=MAX_ARTICLE_CATALOG_BYTES,
     )
 
 
@@ -996,6 +1052,18 @@ def smoke_test(
                         f'{asset_name} HTML digest is {declared_digest}, '
                         f'expected trusted build digest {expected_digest}'
                     )
+            catalogue = fetch_article_catalog(
+                page_url,
+                expected_revision,
+                attempt,
+                timeout,
+                expected_sha256=declared_asset_digests[
+                    ARTICLE_CATALOG_ASSET_NAME
+                ],
+            )
+            validate_article_catalog_payload(
+                catalogue, expected_checksum, expected_articles,
+            )
             deferred = fetch_deferred_briefs(
                 page_url,
                 expected_revision,
@@ -1062,7 +1130,8 @@ def smoke_test(
                 f'Smoke test passed on attempt {attempt}: HTTPS, revision '
                 f'{expected_revision[:12]}, {expected_articles} articles, '
                 f'{expected_observations} observations, exact release-bound HTML, '
-                f'deferred assets, support bundle{data_note}{share_note}.'
+                f'verified catalogue, deferred assets, support bundle'
+                f'{data_note}{share_note}.'
             )
             return
         except Exception as exc:  # Retries intentionally cover HTTP and stale-cache failures.

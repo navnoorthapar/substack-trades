@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Convert trades_extracted.json to a well-formatted Markdown file."""
 import json
-import os
 from collections import defaultdict
+from pathlib import Path
 
-INPUT  = '/Users/navnoorbawa/Downloads/substack trades/trades_extracted.json'
-OUTPUT = '/Users/navnoorbawa/Downloads/substack trades/trades_extracted.md'
-CORPUS = '/Users/navnoorbawa/Downloads/substack trades/all_posts.json'
+ROOT = Path(__file__).resolve().parent
+INPUT = ROOT / 'trades_extracted.json'
+OUTPUT = ROOT / 'trades_extracted.md'
+CORPUS = ROOT / 'all_posts.json'
 
 
 def slugify(text):
@@ -28,7 +29,7 @@ with open(INPUT, 'r', encoding='utf-8') as f:
 
 # Total posts in the corpus the trades were extracted from (derived, not hardcoded).
 total_posts = None
-if os.path.exists(CORPUS):
+if CORPUS.is_file():
     with open(CORPUS, 'r', encoding='utf-8') as f:
         corpus = json.load(f)
     if isinstance(corpus, list):
@@ -148,6 +149,6 @@ content = '\n'.join(lines)
 with open(OUTPUT, 'w', encoding='utf-8') as f:
     f.write(content)
 
-size_kb = os.path.getsize(OUTPUT) / 1024
+size_kb = OUTPUT.stat().st_size / 1024
 print(f'Written {len(trades)} trades across {len(articles_sorted)} articles.')
 print(f'Output: {OUTPUT}  ({size_kb:.0f} KB)')

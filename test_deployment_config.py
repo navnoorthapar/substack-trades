@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import subprocess
@@ -39,12 +40,16 @@ class DeploymentConfigurationTests(unittest.TestCase):
             launchctl_output,
             *,
             run_record=_UNSET,
+            watchdog_record=_UNSET,
             remote_main=_UNSET,
+            source_manifest=_UNSET,
     ):
         if remote_main is _UNSET:
             remote_main = 'a' * 40
         if run_record is _UNSET:
             run_record = f'completed|success|4242|{remote_main}'
+        if watchdog_record is _UNSET:
+            watchdog_record = f'completed|success|4342|{remote_main}'
         with tempfile.TemporaryDirectory() as directory:
             test_root = Path(directory)
             home = test_root / 'home'
@@ -53,6 +58,19 @@ class DeploymentConfigurationTests(unittest.TestCase):
             fake_bin.mkdir()
             (home / '.substack_trades_last_run').write_text(
                 f'{int(time.time())}\n', encoding='utf-8',
+            )
+            if source_manifest is _UNSET:
+                source_manifest = {
+                    'sources': {
+                        'substack': {
+                            'checked_at': '2026-08-01T00:00:00Z',
+                            'status': 'ok',
+                        },
+                    },
+                }
+            manifest_path = test_root / 'snapshot_manifest.json'
+            manifest_path.write_text(
+                json.dumps(source_manifest) + '\n', encoding='utf-8',
             )
 
             launchctl = fake_bin / 'launchctl'
@@ -78,7 +96,11 @@ class DeploymentConfigurationTests(unittest.TestCase):
                 '        *) exit 2 ;;\n'
                 '    esac\n'
                 'elif [ "$1" = "run" ] && [ "$2" = "list" ]; then\n'
-                '    printf \'%s\\n\' "$FAKE_RUN_RECORD"\n'
+                '    case " $* " in\n'
+                '        *" --workflow watchdog.yml "*) '
+                'printf \'%s\\n\' "$FAKE_WATCHDOG_RECORD" ;;\n'
+                '        *) printf \'%s\\n\' "$FAKE_RUN_RECORD" ;;\n'
+                '    esac\n'
                 'else\n'
                 '    exit 2\n'
                 'fi\n',
@@ -91,8 +113,10 @@ class DeploymentConfigurationTests(unittest.TestCase):
                 'FAKE_LAUNCHCTL_OUTPUT': launchctl_output,
                 'FAKE_REMOTE_MAIN': remote_main,
                 'FAKE_RUN_RECORD': run_record,
+                'FAKE_WATCHDOG_RECORD': watchdog_record,
                 'HOME': str(home),
                 'MAX_AGE_SECONDS': '57600',
+                'SNAPSHOT_MANIFEST_PATH': str(manifest_path),
                 'PATH': f'{fake_bin}:{environment.get("PATH", "")}',
             })
             return subprocess.run(
@@ -117,6 +141,69 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'Latest deployment: successful for current main (run 4242)',
             result.stdout,
         )
+        self.assertIn(
+            'Latest watchdog: successful for current main (run 4342)',
+            result.stdout,
+        )
+
+    def test_automation_status_requires_a_settled_current_watchdog(self):
+        current = 'a' * 40
+        cases = (
+            (
+                f'queued||4343|{current}',
+                'Latest watchdog: pending (queued, run 4343)',
+                'Wait for the pending watchdog to finish',
+            ),
+            (
+                f'in_progress||4344|{current}',
+                'Latest watchdog: pending (in_progress, run 4344)',
+                'Wait for the pending watchdog to finish',
+            ),
+            (
+                f'completed|failure|4345|{current}',
+                'Latest watchdog: failure (run 4345)',
+                'gh run view --repo navnoorthapar/substack-trades 4345 --log-failed',
+            ),
+            (
+                f'completed|success|4346|{"b" * 40}',
+                'Latest watchdog: successful but stale',
+                'run 4346 at bbbbbbbbbbbb; main aaaaaaaaaaaa',
+            ),
+            (
+                '',
+                'Latest watchdog: unavailable (no workflow run found)',
+                'gh run list --repo navnoorthapar/substack-trades --workflow watchdog.yml',
+            ),
+        )
+        for watchdog_record, evidence, recovery in cases:
+            with self.subTest(watchdog_record=watchdog_record):
+                result = self.run_automation_status(
+                    'state = not running\nruns = 3\nlast exit code = 0',
+                    remote_main=current,
+                    watchdog_record=watchdog_record,
+                )
+                self.assertEqual(
+                    result.returncode, 1, result.stdout + result.stderr,
+                )
+                self.assertIn(evidence, result.stdout)
+                self.assertIn(recovery, result.stdout)
+
+    def test_automation_status_is_nonzero_for_any_degraded_source(self):
+        result = self.run_automation_status(
+            'state = not running\nruns = 3\nlast exit code = 0',
+            source_manifest={
+                'sources': {
+                    'medium': {
+                        'checked_at': '2026-08-01T00:00:00Z',
+                        'status': 'degraded',
+                        'mode': 'cached_archive_plus_rss',
+                    },
+                },
+            },
+        )
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn('Source health PERSISTENT: medium is degraded', result.stdout)
+        self.assertIn('Inspect source modes in:', result.stdout)
 
     def test_automation_status_reports_an_active_refresh(self):
         result = self.run_automation_status(
@@ -620,6 +707,11 @@ class DeploymentConfigurationTests(unittest.TestCase):
             "steps.smoke.outcome == 'failure'",
             'Superseded watchdog reconciled',
             'Published release verification failed',
+            'Report publication-source health',
+            'python3 source_health.py',
+            '--policy watchdog',
+            '< snapshot_manifest.json',
+            'continuously degraded adapter remain green beyond 48 hours',
             "json.load(open('snapshot_manifest.json'",
             "snapshot['checked_at']",
             'datetime.now(timezone.utc)',
@@ -649,6 +741,8 @@ class DeploymentConfigurationTests(unittest.TestCase):
         )
         self.assertIn('MAX_AGE_SECONDS=${MAX_AGE_SECONDS:-57600}', self.automation_status)
         self.assertNotIn('129600', self.automation_status)
+        self.assertIn('--policy status', self.automation_status)
+        self.assertIn('source_health_issue=1', self.automation_status)
 
     def test_pull_requests_cannot_deploy(self):
         self.assertRegex(self.workflow, r'(?m)^\s*push:')
@@ -781,6 +875,9 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'push_succeeded=0',
             'git push origin main',
             'failed; retrying in ${retry_delay}s',
+            '--previous-manifest "$ROOT/snapshot_manifest.json"',
+            'source_health.py',
+            '--policy publish',
         ):
             self.assertIn(required, self.refresh)
         self.assertNotIn('--autostash', self.refresh)

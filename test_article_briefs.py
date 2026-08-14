@@ -261,6 +261,22 @@ The committee's August 1, 2026 vote is the explicit public checkpoint for this t
         )
         self.assertNotIn('Article updated', str(brief['checkpoints']))
 
+    def test_checkpoints_support_future_centuries_and_reject_invalid_dates(self):
+        post = {
+            'title': 'Long-Horizon Checkpoint Test',
+            'post_date': '2099-12-31T10:00:00Z',
+            'body_text': """The note identifies a public decision after the turn of the century.
+
+What to watch
+The committee's January 2, 2100 decision is the next public checkpoint. The February 29, 2100 decision date is not a real Gregorian calendar day.""",
+        }
+        brief = build_article_brief(post)
+        self.assertEqual(
+            [checkpoint['date'] for checkpoint in brief['checkpoints']],
+            ['2100-01-02'],
+        )
+        self.assertEqual(brief['checkpoints'][0]['date_label'], 'January 2, 2100')
+
     def test_tracked_catalogue_contains_no_display_boilerplate(self):
         articles = json.loads(
             (Path(__file__).parent / 'articles_index.json').read_text(

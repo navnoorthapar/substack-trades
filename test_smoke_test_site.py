@@ -24,6 +24,7 @@ from test_data_contract import (
 REVISION = 'a' * 40
 CHECKSUM = 'b' * 64
 HTML_DIGEST = 'c' * 64
+CATALOG_DIGEST = '3' * 64
 BRIEF_DIGEST = 'd' * 64
 OBSERVATION_DIGEST = 'e' * 64
 SUPPORT_DIGEST = 'f' * 64
@@ -49,12 +50,26 @@ def fixture_observations(checksum=CHECKSUM, schema_version=1, count=1327):
     }
 
 
+def fixture_catalog(checksum=CHECKSUM, schema_version=1, count=363):
+    return {
+        'schema_version': schema_version,
+        'article_wire_schema_version': (
+            smoke_test_site.ARTICLE_WIRE_SCHEMA_VERSION
+        ),
+        'data_checksum': checksum,
+        'articles': [
+            {'id': f'a_{index:014x}'} for index in range(count)
+        ],
+    }
+
+
 def fixture_html(
     revision=REVISION,
     articles='363',
     observations='1327',
     checksum=CHECKSUM,
     omitted_id=None,
+    catalog_digest=CATALOG_DIGEST,
     brief_digest=BRIEF_DIGEST,
     observation_digest=OBSERVATION_DIGEST,
 ):
@@ -67,6 +82,7 @@ def fixture_html(
 <meta name="nrt-article-count" content="{articles}">
 <meta name="nrt-observation-count" content="{observations}">
 <meta name="nrt-data-checksum" content="{checksum}">
+<meta name="nrt-article-catalog-sha256" content="{catalog_digest}">
 <meta name="nrt-brief-archive-sha256" content="{brief_digest}">
 <meta name="nrt-observation-archive-sha256" content="{observation_digest}">
 </head><body>{elements}
@@ -157,6 +173,7 @@ class SmokeTestSiteTests(unittest.TestCase):
                 fixture_html(), REVISION, 363, 1327, CHECKSUM,
             ),
             {
+                smoke_test_site.ARTICLE_CATALOG_ASSET_NAME: CATALOG_DIGEST,
                 smoke_test_site.DEFERRED_ASSET_NAME: BRIEF_DIGEST,
                 smoke_test_site.OBSERVATION_ASSET_NAME: OBSERVATION_DIGEST,
             },
@@ -189,6 +206,14 @@ class SmokeTestSiteTests(unittest.TestCase):
             )
 
     def test_missing_or_invalid_deferred_asset_digest_fails_closed(self):
+        with self.assertRaisesRegex(ValueError, 'article_catalog.json'):
+            smoke_test_site.validate_html(
+                fixture_html(catalog_digest='not-a-digest'),
+                REVISION,
+                363,
+                1327,
+                CHECKSUM,
+            )
         with self.assertRaisesRegex(ValueError, 'article_briefs.json'):
             smoke_test_site.validate_html(
                 fixture_html(brief_digest='not-a-digest'),
@@ -235,6 +260,35 @@ class SmokeTestSiteTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'non-empty object'):
             smoke_test_site.validate_deferred_payload(
                 fixture_deferred(briefs={}), CHECKSUM,
+            )
+
+    def test_article_catalogue_must_match_exact_release(self):
+        smoke_test_site.validate_article_catalog_payload(
+            fixture_catalog(), CHECKSUM, 363,
+        )
+        with self.assertRaisesRegex(ValueError, 'schema_version must be 1'):
+            smoke_test_site.validate_article_catalog_payload(
+                fixture_catalog(schema_version=2), CHECKSUM, 363,
+            )
+        wrong_wire = fixture_catalog()
+        wrong_wire['article_wire_schema_version'] += 1
+        with self.assertRaisesRegex(ValueError, 'wire schema'):
+            smoke_test_site.validate_article_catalog_payload(
+                wrong_wire, CHECKSUM, 363,
+            )
+        with self.assertRaisesRegex(ValueError, 'expected'):
+            smoke_test_site.validate_article_catalog_payload(
+                fixture_catalog(checksum='c' * 64), CHECKSUM, 363,
+            )
+        with self.assertRaisesRegex(ValueError, 'count is 1, expected 363'):
+            smoke_test_site.validate_article_catalog_payload(
+                fixture_catalog(count=1), CHECKSUM, 363,
+            )
+        duplicate = fixture_catalog(count=2)
+        duplicate['articles'][1]['id'] = duplicate['articles'][0]['id']
+        with self.assertRaisesRegex(ValueError, 'duplicated'):
+            smoke_test_site.validate_article_catalog_payload(
+                duplicate, CHECKSUM, 2,
             )
 
     def test_observation_archive_must_match_exact_release(self):
@@ -285,6 +339,13 @@ class SmokeTestSiteTests(unittest.TestCase):
                 smoke_test_site.OBSERVATION_ASSET_NAME,
             ),
             'https://example.test/research/observations.json',
+        )
+        self.assertEqual(
+            smoke_test_site.deferred_asset_url(
+                'https://example.test/research/?old=1',
+                smoke_test_site.ARTICLE_CATALOG_ASSET_NAME,
+            ),
+            'https://example.test/research/article_catalog.json',
         )
         with self.assertRaisesRegex(ValueError, 'unsupported deferred asset'):
             smoke_test_site.deferred_asset_url(
@@ -765,11 +826,16 @@ class SmokeTestSiteTests(unittest.TestCase):
     )
     @patch('smoke_test_site.fetch_deferred_briefs', return_value=fixture_deferred())
     @patch(
+        'smoke_test_site.fetch_article_catalog',
+        return_value=fixture_catalog(),
+    )
+    @patch(
         'smoke_test_site.fetch_html',
         return_value=(fixture_html(), 'https://example.test/research/'),
     )
     def test_smoke_requires_expected_support_bundle_when_supplied(
-        self, _fetch_html, _fetch_deferred, _fetch_observations, fetch_support,
+        self, _fetch_html, _fetch_catalog, _fetch_deferred,
+        _fetch_observations, fetch_support,
     ):
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             smoke_test_site.smoke_test(
@@ -795,6 +861,10 @@ class SmokeTestSiteTests(unittest.TestCase):
             patch(
                 'smoke_test_site.fetch_deferred_briefs',
                 return_value=fixture_deferred(),
+            ),
+            patch(
+                'smoke_test_site.fetch_article_catalog',
+                return_value=fixture_catalog(count=content_count),
             ),
             patch(
                 'smoke_test_site.fetch_deferred_observations',
@@ -833,6 +903,10 @@ class SmokeTestSiteTests(unittest.TestCase):
             patch(
                 'smoke_test_site.fetch_deferred_briefs',
                 return_value=fixture_deferred(),
+            ),
+            patch(
+                'smoke_test_site.fetch_article_catalog',
+                return_value=fixture_catalog(count=content_count),
             ),
             patch(
                 'smoke_test_site.fetch_deferred_observations',
@@ -875,6 +949,10 @@ class SmokeTestSiteTests(unittest.TestCase):
             patch(
                 'smoke_test_site.fetch_deferred_briefs',
                 return_value=fixture_deferred(),
+            ),
+            patch(
+                'smoke_test_site.fetch_article_catalog',
+                return_value=fixture_catalog(count=content_count),
             ),
             patch(
                 'smoke_test_site.fetch_deferred_observations',
@@ -931,11 +1009,15 @@ class SmokeTestSiteTests(unittest.TestCase):
     )
     @patch('smoke_test_site.fetch_deferred_briefs', return_value=fixture_deferred())
     @patch(
+        'smoke_test_site.fetch_article_catalog',
+        return_value=fixture_catalog(),
+    )
+    @patch(
         'smoke_test_site.fetch_html',
         return_value=(fixture_html(), 'https://example.test/canonical/'),
     )
     def test_same_origin_canonical_page_url_is_used_as_the_asset_base(
-        self, fetch_html, fetch_deferred, fetch_observations,
+        self, fetch_html, fetch_catalog, fetch_deferred, fetch_observations,
     ):
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             smoke_test_site.smoke_test(
@@ -963,16 +1045,28 @@ class SmokeTestSiteTests(unittest.TestCase):
             20.0,
             expected_sha256=OBSERVATION_DIGEST,
         )
+        fetch_catalog.assert_called_once_with(
+            'https://example.test/canonical/',
+            REVISION,
+            1,
+            20.0,
+            expected_sha256=CATALOG_DIGEST,
+        )
 
     @patch(
         'smoke_test_site.fetch_deferred_observations',
         return_value=fixture_observations(),
     )
     @patch('smoke_test_site.fetch_deferred_briefs', return_value=fixture_deferred())
+    @patch(
+        'smoke_test_site.fetch_article_catalog',
+        return_value=fixture_catalog(),
+    )
     @patch('smoke_test_site.time.sleep')
     @patch('smoke_test_site.fetch_html')
     def test_stale_release_is_retried_until_expected_revision_appears(
-        self, fetch_html, sleep, fetch_deferred, fetch_observations,
+        self, fetch_html, sleep, fetch_catalog, fetch_deferred,
+        fetch_observations,
     ):
         fetch_html.side_effect = [
             (fixture_html(revision='c' * 40), 'https://example.test/research/'),
@@ -1018,6 +1112,13 @@ class SmokeTestSiteTests(unittest.TestCase):
             20.0,
             expected_sha256=BRIEF_DIGEST,
         )
+        fetch_catalog.assert_called_once_with(
+            'https://example.test/research/',
+            REVISION,
+            2,
+            20.0,
+            expected_sha256=CATALOG_DIGEST,
+        )
         fetch_observations.assert_called_once_with(
             'https://example.test/research/',
             REVISION,
@@ -1034,11 +1135,16 @@ class SmokeTestSiteTests(unittest.TestCase):
     @patch('smoke_test_site.time.sleep')
     @patch('smoke_test_site.fetch_deferred_briefs')
     @patch(
+        'smoke_test_site.fetch_article_catalog',
+        return_value=fixture_catalog(),
+    )
+    @patch(
         'smoke_test_site.fetch_html',
         return_value=(fixture_html(), 'https://example.test/research/'),
     )
     def test_stale_deferred_asset_is_retried_with_page(
-        self, fetch_html, fetch_deferred, sleep, fetch_observations,
+        self, fetch_html, fetch_catalog, fetch_deferred, sleep,
+        fetch_observations,
     ):
         fetch_deferred.side_effect = [
             fixture_deferred(checksum='c' * 64),
@@ -1072,11 +1178,16 @@ class SmokeTestSiteTests(unittest.TestCase):
     @patch('smoke_test_site.fetch_deferred_observations')
     @patch('smoke_test_site.fetch_deferred_briefs', return_value=fixture_deferred())
     @patch(
+        'smoke_test_site.fetch_article_catalog',
+        return_value=fixture_catalog(),
+    )
+    @patch(
         'smoke_test_site.fetch_html',
         return_value=(fixture_html(), 'https://example.test/research/'),
     )
     def test_stale_observation_asset_retries_the_entire_release(
-        self, fetch_html, fetch_deferred, fetch_observations, sleep,
+        self, fetch_html, fetch_catalog, fetch_deferred,
+        fetch_observations, sleep,
     ):
         fetch_observations.side_effect = [
             fixture_observations(checksum='c' * 64),

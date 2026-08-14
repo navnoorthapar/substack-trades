@@ -10,6 +10,8 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+from source_health import track_source_health
+
 
 SCHEMA_VERSION = 2
 CONTENT_SOURCES = ('substack', 'medium')
@@ -114,7 +116,14 @@ def _registry_status(source, articles, checked_at):
     }
 
 
-def build_manifest(articles, observations, statuses, checksum, checked_at=None):
+def build_manifest(
+        articles,
+        observations,
+        statuses,
+        checksum,
+        checked_at=None,
+        previous_manifest=None,
+):
     _require(isinstance(articles, list), 'article index must be a list')
     _require(isinstance(observations, list), 'observation output must be a list')
     included = Counter(
@@ -128,10 +137,11 @@ def build_manifest(articles, observations, statuses, checksum, checked_at=None):
             resolved_statuses[source] = _registry_status(
                 source, articles, resolved_checked_at
             )
-    sources = {
+    raw_sources = {
         source: _source_manifest(source, resolved_statuses[source], included[source])
         for source in SOURCES if included[source]
     }
+    sources = track_source_health(raw_sources, previous_manifest)
     content_articles = [
         article for article in articles
         if isinstance(article, dict)
@@ -191,6 +201,11 @@ def main():
     parser.add_argument('--substack-status', type=Path, required=True)
     parser.add_argument('--medium-status', type=Path, required=True)
     parser.add_argument('--patreon-status', type=Path)
+    parser.add_argument(
+        '--previous-manifest',
+        type=Path,
+        help='prior snapshot used only to continue source-degradation streaks',
+    )
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--checked-at', help='override UTC timestamp (primarily for tests)')
     args = parser.parse_args()
@@ -208,9 +223,18 @@ def main():
             statuses['patreon'] = load_json(
                 args.patreon_status, 'Patreon fetch status'
             )
+        previous_manifest = (
+            load_json(args.previous_manifest, 'previous snapshot manifest')
+            if args.previous_manifest else None
+        )
         checksum = data_checksum(article_bytes, observation_bytes)
         manifest = build_manifest(
-            articles, observations, statuses, checksum, args.checked_at
+            articles,
+            observations,
+            statuses,
+            checksum,
+            args.checked_at,
+            previous_manifest,
         )
         atomic_write_json(args.output, manifest)
     except (KeyError, OSError, ValueError) as exc:

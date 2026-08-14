@@ -110,6 +110,19 @@ class SnapshotManifestTests(unittest.TestCase):
             self.assertEqual(manifest['registry_count'], 0)
             self.assertEqual(manifest['observation_count'], 1)
             self.assertEqual(manifest['sources']['medium']['included_count'], 1)
+            self.assertEqual(
+                manifest['sources']['medium']['degraded_since'],
+                '2026-07-14T02:00:01Z',
+            )
+            self.assertEqual(
+                manifest['sources']['medium']['consecutive_degraded_checks'],
+                1,
+            )
+            self.assertIsNone(manifest['sources']['substack']['degraded_since'])
+            self.assertEqual(
+                manifest['sources']['substack']['consecutive_degraded_checks'],
+                0,
+            )
             self.assertRegex(manifest['data_checksum'], r'^[0-9a-f]{64}$')
 
     def test_checksum_detects_even_format_only_file_changes(self):
@@ -186,6 +199,64 @@ class SnapshotManifestTests(unittest.TestCase):
             previous['article_count'] = 999
             with self.assertRaisesRegex(ValueError, 'inconsistent article_count'):
                 validate_previous_manifest(current, previous)
+
+    def test_degraded_streak_continuity_is_bound_to_the_previous_manifest(self):
+        with tempfile.TemporaryDirectory() as raw_directory:
+            directory = Path(raw_directory)
+            _, _, previous = self._fixture(directory)
+            # The currently deployed manifest predates streak tracking. Its
+            # source check is the earliest degradation instant we can prove.
+            previous['sources']['medium'].pop('degraded_since')
+            previous['sources']['medium'].pop('consecutive_degraded_checks')
+            statuses = sample_statuses()
+            statuses['substack']['checked_at'] = '2026-07-14T03:00:00Z'
+            statuses['medium']['checked_at'] = '2026-07-14T03:00:01Z'
+            current = build_manifest(
+                sample_articles(),
+                sample_observations(),
+                statuses,
+                previous['data_checksum'],
+                checked_at='2026-07-14T03:00:02Z',
+                previous_manifest=previous,
+            )
+            self.assertEqual(
+                current['sources']['medium']['degraded_since'],
+                '2026-07-14T02:00:01Z',
+            )
+            self.assertEqual(
+                current['sources']['medium']['consecutive_degraded_checks'],
+                2,
+            )
+            validate_previous_manifest(current, previous)
+
+            current['sources']['medium']['consecutive_degraded_checks'] = 1
+            with self.assertRaisesRegex(ValueError, 'does not continue'):
+                validate_previous_manifest(current, previous)
+
+            validate_previous_manifest(previous, previous)
+            stripped = json.loads(json.dumps(current))
+            stripped['sources']['medium'].pop('degraded_since')
+            stripped['sources']['medium'].pop('consecutive_degraded_checks')
+            with self.assertRaisesRegex(
+                ValueError, 'legacy source-health row changed without tracking fields'
+            ):
+                validate_previous_manifest(stripped, previous)
+
+            tracked_previous = build_manifest(
+                sample_articles(),
+                sample_observations(),
+                statuses,
+                previous['data_checksum'],
+                checked_at='2026-07-14T03:00:02Z',
+                previous_manifest=previous,
+            )
+            stripped_tracked = json.loads(json.dumps(tracked_previous))
+            stripped_tracked['sources']['medium'].pop('degraded_since')
+            stripped_tracked['sources']['medium'].pop(
+                'consecutive_degraded_checks'
+            )
+            with self.assertRaisesRegex(ValueError, 'tracking fields were removed'):
+                validate_previous_manifest(stripped_tracked, tracked_previous)
 
     def test_medium_dual_outage_fails_without_overwriting_catalogue(self):
         previous = [{

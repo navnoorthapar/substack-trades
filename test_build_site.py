@@ -49,6 +49,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         cls.html_path = cls.site_dir / 'index.html'
         cls.html_bytes = cls.html_path.read_bytes()
         cls.html = cls.html_bytes.decode('utf-8')
+        cls.article_catalog_path = cls.site_dir / 'article_catalog.json'
+        cls.article_catalog_bytes = cls.article_catalog_path.read_bytes()
+        cls.article_catalog = json.loads(
+            cls.article_catalog_bytes.decode('utf-8')
+        )
         cls.brief_path = cls.site_dir / 'article_briefs.json'
         cls.brief_bytes = cls.brief_path.read_bytes()
         cls.brief_archive = json.loads(cls.brief_bytes.decode('utf-8'))
@@ -66,12 +71,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             if article.get('content_status') != 'registry'
         ]
         cls.source_ideas = json.loads((ROOT / 'trades_extracted.json').read_text(encoding='utf-8'))
-        article_match = re.search(r'const ARTICLES = (.*?);\n', cls.html)
         threads_match = re.search(r'const THREADS = (.*?);\n', cls.html)
         snapshot_match = re.search(r'const SNAPSHOT = (.*?);\n', cls.html)
-        if not article_match or not threads_match or not snapshot_match:
+        if not threads_match or not snapshot_match:
             raise AssertionError('generated client payload is missing')
-        cls.article_payload = json.loads(article_match.group(1))
+        cls.article_payload = cls.article_catalog['articles']
         cls.articles = [
             hydrate_client_article(wire_article)
             for wire_article in cls.article_payload
@@ -89,6 +93,24 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn(
             f'const ARTICLE_WIRE_SCHEMA_VERSION = {ARTICLE_WIRE_SCHEMA_VERSION};',
             self.html,
+        )
+        self.assertEqual(
+            set(self.article_catalog),
+            {
+                'schema_version',
+                'article_wire_schema_version',
+                'data_checksum',
+                'articles',
+            },
+        )
+        self.assertEqual(self.article_catalog['schema_version'], 1)
+        self.assertEqual(
+            self.article_catalog['article_wire_schema_version'],
+            ARTICLE_WIRE_SCHEMA_VERSION,
+        )
+        self.assertEqual(
+            self.article_catalog['data_checksum'],
+            self.snapshot['data_checksum'],
         )
         self.assertEqual(len(self.articles), len(self.source_content_articles))
         self.assertEqual(len(self.ideas), len(self.source_ideas))
@@ -198,8 +220,9 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'clearTimeout(timeoutId)',
             'function releaseMismatchError(message)',
             'function recoverFromStaleReleaseShell()',
-            "current.searchParams.get('nrt_release') === token",
+            "current.searchParams.get('nrt_catalog_recovery') === '1'",
             "current.searchParams.set('nrt_release',token)",
+            "current.searchParams.set('nrt_catalog_recovery','1')",
             'window.location.replace(current.href)',
             'if (error && error.releaseMismatch) recoverFromStaleReleaseShell()',
         ):
@@ -978,6 +1001,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.assertIn(text, self.html)
 
     def test_deferred_assets_are_bound_to_exact_embedded_release_hashes(self):
+        catalogue_match = re.search(
+            r'<meta name="nrt-article-catalog-sha256" content="([0-9a-f]{64})">',
+            self.html,
+        )
         brief_match = re.search(
             r'<meta name="nrt-brief-archive-sha256" content="([0-9a-f]{64})">',
             self.html,
@@ -986,10 +1013,19 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             r'<meta name="nrt-observation-archive-sha256" content="([0-9a-f]{64})">',
             self.html,
         )
+        self.assertIsNotNone(catalogue_match)
         self.assertIsNotNone(brief_match)
         self.assertIsNotNone(observation_match)
+        self.assertEqual(
+            catalogue_match.group(1),
+            hashlib.sha256(self.article_catalog_bytes).hexdigest(),
+        )
         self.assertEqual(brief_match.group(1), hashlib.sha256(self.brief_bytes).hexdigest())
         self.assertEqual(observation_match.group(1), hashlib.sha256(self.observation_bytes).hexdigest())
+        self.assertIn(
+            "const ARTICLE_CATALOG_SHA256 = document.querySelector('meta[name=\"nrt-article-catalog-sha256\"]').content",
+            self.html,
+        )
         self.assertIn(
             "const BRIEF_ARCHIVE_SHA256 = document.querySelector('meta[name=\"nrt-brief-archive-sha256\"]').content",
             self.html,
@@ -999,10 +1035,42 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.html,
         )
 
+        corrupted_catalogue = self.article_catalog_bytes.replace(
+            b'"articles":', b'"articles" :', 1,
+        )
         corrupted_brief = self.brief_bytes.replace(b'"lead":', b'"lead" :', 1)
         corrupted_observations = self.observation_bytes.replace(b'"observations":', b'"observations" :', 1)
+        self.assertNotEqual(
+            hashlib.sha256(corrupted_catalogue).hexdigest(),
+            catalogue_match.group(1),
+        )
         self.assertNotEqual(hashlib.sha256(corrupted_brief).hexdigest(), brief_match.group(1))
         self.assertNotEqual(hashlib.sha256(corrupted_observations).hexdigest(), observation_match.group(1))
+
+    def test_no_javascript_bootstrap_exposes_status_instead_of_perpetual_loading(self):
+        overlay_start = self.html.index('<div class="bootstrap-status"')
+        overlay_end = self.html.index('<a class="skip-link"', overlay_start)
+        overlay = self.html[overlay_start:overlay_end]
+        self.assertIn('<noscript><div class="bootstrap-no-js" role="status">', overlay)
+        self.assertIn('The research terminal cannot verify its catalogue', overlay)
+        self.assertIn('href="data/latest.json">View release status</a>', overlay)
+        self.assertIn('<div id="bootstrap-js" hidden>', overlay)
+        self.assertLess(overlay.index('<noscript>'), overlay.index('id="bootstrap-js"'))
+        self.assertIn('noscript{display:block}', self.html)
+        self.assertNotIn('noscript{position:fixed', self.html)
+        self.assertIn(
+            "document.getElementById('bootstrap-js').hidden = false",
+            self.html,
+        )
+        self.assertIn(
+            '<div id="application-shell" inert aria-hidden="true">',
+            self.html,
+        )
+        self.assertIn('#application-shell[inert]{display:none}', self.html)
+        self.assertIn("applicationShell.removeAttribute('inert')", self.html)
+        self.assertIn("applicationShell.removeAttribute('aria-hidden')", self.html)
+        self.assertIn('if (retryingCatalogLoad)', self.html)
+        self.assertIn('if (recoveryFocus) recoveryFocus.focus()', self.html)
 
     def test_generated_release_is_reproducible_across_python_hash_seeds(self):
         with tempfile.TemporaryDirectory() as first, tempfile.TemporaryDirectory() as second:
@@ -1041,7 +1109,6 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "!Object.prototype.hasOwnProperty.call(payload.briefs,id)",
             "span.end - span.start !== Array.from(span.text).length",
             "!/^[0-9a-f]{64}$/.test(span.sha256)",
-            "window.crypto.subtle.digest('SHA-256'",
             "hashChecks.push({text:span.text,sha256:span.sha256,label:label})",
             "await Promise.all(hashChecks.map",
             "actualHash !== check.sha256",
@@ -1050,6 +1117,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "validateDeferredFeatureParity(ARTICLE_BY_ID.get(id),brief)",
         ):
             self.assertIn(required, validator)
+        self.assertIn("window.crypto.subtle.digest('SHA-256'", self.html)
 
         for required in (
             "uniqueKinds.size !== kinds.length",
@@ -2415,6 +2483,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertEqual(meta_content('nrt-observation-count'), str(len(self.ideas)))
         self.assertEqual(meta_content('nrt-data-checksum'), self.snapshot['data_checksum'])
         self.assertEqual(
+            meta_content('nrt-article-catalog-sha256'),
+            hashlib.sha256(self.article_catalog_bytes).hexdigest(),
+        )
+        self.assertEqual(
             meta_content('nrt-brief-archive-sha256'),
             hashlib.sha256(self.brief_bytes).hexdigest(),
         )
@@ -2573,7 +2645,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         )
         self.assertNotRegex(self.html, r'state\.limit\s*=\s*Math\.ceil\s*\(')
 
-    def test_embedded_article_wire_payload_is_compact_and_losslessly_hydrated(self):
+    def test_external_article_wire_payload_is_compact_and_losslessly_hydrated(self):
         always_derived = {
             'date',
             'publication_precision',
@@ -2594,7 +2666,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertLess(
             len(compact_bytes) / len(self.article_payload),
             1_100,
-            'embedded article wire rows lost their compact growth headroom',
+            'external article wire rows lost their compact growth headroom',
         )
 
         hydrate_start = self.html.index('function hydrateEmbeddedArticle(article)')
@@ -2616,6 +2688,103 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         ):
             self.assertIn(text, hydrate)
 
+        for text in (
+            "'article_catalog.json?v='",
+            'actualHash !== ARTICLE_CATALOG_SHA256',
+            "hasExactObjectKeys(payload,['article_wire_schema_version','articles','data_checksum','schema_version'])",
+            'payload.article_wire_schema_version !== ARTICLE_WIRE_SCHEMA_VERSION',
+            'payload.data_checksum !== SNAPSHOT.data_checksum',
+            'const ARTICLES = await loadArticleCatalog()',
+            'The release could not be verified. No partial or mismatched catalogue has been displayed.',
+            "status.setAttribute('role','alert')",
+            "document.getElementById('bootstrap-retry').addEventListener('click',startApplication)",
+        ):
+            self.assertIn(text, self.html)
+
+    def test_synthetic_catalogue_growth_cannot_consume_html_budget(self):
+        growth_count = 140
+        with tempfile.TemporaryDirectory(prefix='nrt-growth-') as directory:
+            source_root = materialize_source_tree(
+                ROOT, Path(directory) / 'source',
+            )
+            site_dir = Path(directory) / 'site'
+            article_path = source_root / 'articles_index.json'
+            raw_articles = json.loads(article_path.read_text(encoding='utf-8'))
+            rows = (
+                raw_articles['articles']
+                if isinstance(raw_articles, dict)
+                else raw_articles
+            )
+            base = next(
+                article for article in rows
+                if article.get('source') == 'substack'
+                and article.get('content_status') != 'registry'
+            )
+            for index in range(growth_count):
+                clone = json.loads(json.dumps(base))
+                slug = f'catalogue-growth-fixture-{index:04d}'
+                clone.update({
+                    'source_id': slug,
+                    'slug': slug,
+                    'title': f'Catalogue growth fixture {index:04d}',
+                    'url': f'https://navnoorbawa.substack.com/p/{slug}',
+                })
+                rows.append(clone)
+            article_path.write_text(
+                json.dumps(raw_articles, ensure_ascii=False, indent=2) + '\n',
+                encoding='utf-8',
+            )
+            manifest_path = source_root / 'snapshot_manifest.json'
+            manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+            manifest['article_count'] += growth_count
+            manifest['catalog_count'] += growth_count
+            manifest['sources']['substack']['included_count'] += growth_count
+            manifest['data_checksum'] = hashlib.sha256(
+                article_path.read_bytes()
+                + b'\0'
+                + (source_root / 'trades_extracted.json').read_bytes()
+            ).hexdigest()
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + '\n',
+                encoding='utf-8',
+            )
+            environment = os.environ.copy()
+            environment['SITE_OUTPUT_DIR'] = str(site_dir)
+            environment['SITE_REVISION'] = 'synthetic-growth'
+            subprocess.run(
+                [sys.executable, str(source_root / 'build_site.py')],
+                cwd=source_root,
+                env=environment,
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=90,
+            )
+            grown_html = (site_dir / 'index.html').read_bytes()
+            grown_catalogue = (
+                site_dir / 'article_catalog.json'
+            ).read_bytes()
+        catalogue_growth = len(grown_catalogue) - len(self.article_catalog_bytes)
+        html_growth = len(grown_html) - len(self.html_bytes)
+        self.assertGreater(
+            catalogue_growth,
+            80_000,
+            'growth fixture is too small to reproduce the former HTML failure',
+        )
+        self.assertLess(
+            html_growth,
+            catalogue_growth // 2,
+            'article wire bytes leaked back into the generated HTML',
+        )
+        self.assertLessEqual(len(grown_html), 900_000)
+        self.assertNotRegex(
+            grown_html.decode('utf-8'),
+            r'(?m)^\s*const\s+ARTICLES\s*=\s*\[',
+        )
+        builder_source = (ROOT / 'build_site.py').read_text(encoding='utf-8')
+        self.assertNotIn('__ARTICLES_JSON__', builder_source)
+        self.assertIn("DOCS_DIR / 'article_catalog.json'", builder_source)
+
     def test_static_artifact_stays_inside_the_institutional_performance_budget(self):
         self.assertLessEqual(
             len(self.html_bytes),
@@ -2626,6 +2795,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             len(gzip.compress(self.html_bytes, compresslevel=9)),
             250_000,
             'compressed first load exceeded the reviewed 250 KB budget',
+        )
+        self.assertLessEqual(
+            len(self.article_catalog_bytes),
+            4_000_000,
+            'verified article catalogue exceeded its reviewed 4 MB budget',
         )
         self.assertGreaterEqual(
             len(self.brief_bytes),
@@ -2645,7 +2819,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         artifact_files = [path for path in self.site_dir.rglob('*') if path.is_file()]
         slugs = {str(article['slug']) for article in self.source_articles}
         expected_files = {
-            'index.html', 'article_briefs.json', 'observations.json',
+            'index.html', 'article_catalog.json', 'article_briefs.json',
+            'observations.json',
             'robots.txt', 'sitemap.xml', 'site.webmanifest',
             'favicon.svg', 'og.jpg',
             'data/articles_index.json', 'data/latest.json',

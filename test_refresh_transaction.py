@@ -89,6 +89,9 @@ elif script == 'fetch_treasury_curve.py':
     }))
 elif script == 'write_snapshot_manifest.py':
     write_json(option('--output'), {'candidate': 'manifest'})
+elif script == 'source_health.py':
+    print('Source health DEGRADED: fake transient fallback')
+    raise SystemExit(0)
 elif script == 'validate_pipeline.py':
     raise SystemExit(41 if os.environ.get('FAKE_FAILURE') == 'validation' else 0)
 elif script == 'build_site.py':

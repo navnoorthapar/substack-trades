@@ -82,6 +82,15 @@ class CurveDatasetContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'calendar order'):
             validate_curve_dataset(shuffled)
 
+    def test_observation_keys_must_be_real_gregorian_calendar_days(self):
+        for invalid_day in ('2026-02-29', '2100-02-29', '2026-04-31'):
+            with self.subTest(day=invalid_day):
+                with self.assertRaisesRegex(ValueError, 'ISO calendar days'):
+                    validate_curve_dataset(dataset({invalid_day: row()}))
+
+        leap_day = dataset({'2400-02-29': row()})
+        self.assertEqual(validate_curve_dataset(leap_day)['first_date'], '2400-02-29')
+
     def test_load_rejects_unreadable_json(self):
         with tempfile.TemporaryDirectory() as work:
             path = Path(work) / 'curve.json'
@@ -110,6 +119,10 @@ class CurveReadingTests(unittest.TestCase):
 
     def test_a_trading_day_resolves_to_itself(self):
         self.assertEqual(curve_as_of(self.data, '2026-01-05')['as_of'], '2026-01-05')
+
+    def test_lookup_rejects_a_nonexistent_calendar_day(self):
+        with self.assertRaisesRegex(ValueError, 'ISO calendar day'):
+            curve_as_of(self.data, '2026-02-30')
 
     def test_bands_split_a_record_into_thirds_by_value(self):
         cuts = tercile_cuts([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])

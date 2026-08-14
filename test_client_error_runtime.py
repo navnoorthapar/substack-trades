@@ -88,6 +88,19 @@ const IDEAS = [observation('i1'), observation('i2', {direction:'unspecified'})];
 
 
 class ClientErrorRuntimeTests(unittest.TestCase):
+    def test_compact_dates_keep_the_full_year_across_centuries(self):
+        run_node(
+            "const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];\n"
+            + javascript_between(
+                'function shortDate(value) {',
+                '\nfunction number(value)',
+            )
+            + r'''
+if (shortDate('2026-01-02') !== '02 Jan 2026') throw new Error('current year was truncated');
+if (shortDate('2126-01-02') !== '02 Jan 2126') throw new Error('future century became ambiguous');
+'''
+        )
+
     def test_original_links_accept_only_canonical_owned_article_urls(self):
         function = javascript_between(
             'function safeUrl(value) {',
@@ -1022,7 +1035,7 @@ if (!confirmations.some((message) => message.startsWith('Retained source conflic
     def test_deferred_network_failure_and_timeout_use_safe_messages(self):
         function = javascript_between(
             'function fetchReleaseText(url,unavailableMessage) {',
-            '\nfunction loadBriefArchive()',
+            '\nasync function loadArticleCatalog()',
         )
         run_node(
             function
@@ -1044,6 +1057,112 @@ if (second !== 'Observation archive is unavailable (request timed out)') {
 '''
         )
 
+    def test_catalogue_failures_render_fallback_and_retry_without_partial_data(self):
+        helpers = javascript_between(
+            'function hasExactObjectKeys(value,expectedKeys) {',
+            '\nasync function bootstrapApplication(',
+        )
+        starter = javascript_between(
+            'function startApplication() {',
+            "\ndocument.getElementById('bootstrap-retry')",
+        )
+        scenarios = {
+            'http': (
+                "responses = [{ok:false},{ok:true,text:async () => validText}];"
+                "sha256Text = async () => ARTICLE_CATALOG_SHA256;"
+            ),
+            'hash': (
+                "responses = [{ok:true,text:async () => 'corrupt'},"
+                "{ok:true,text:async () => validText}];"
+                "let hashCall = 0; sha256Text = async () => "
+                "(++hashCall === 1 ? 'f'.repeat(64) : ARTICLE_CATALOG_SHA256);"
+            ),
+            'schema': (
+                "responses = [{ok:true,text:async () => "
+                "JSON.stringify({...validPayload,schema_version:2})},"
+                "{ok:true,text:async () => validText}];"
+                "sha256Text = async () => ARTICLE_CATALOG_SHA256;"
+            ),
+            'count': (
+                "responses = [{ok:true,text:async () => "
+                "JSON.stringify({...validPayload,articles:[]})},"
+                "{ok:true,text:async () => validText}];"
+                "sha256Text = async () => ARTICLE_CATALOG_SHA256;"
+            ),
+        }
+        for label, setup in scenarios.items():
+            with self.subTest(label=label):
+                run_node(
+                    r'''
+const ARTICLE_WIRE_SCHEMA_VERSION = 3;
+const ARTICLE_CATALOG_SHA256 = 'a'.repeat(64);
+const SNAPSHOT = {data_checksum:'b'.repeat(64)};
+const nodes = new Map();
+function node(id) {
+  if (!nodes.has(id)) nodes.set(id,{
+    id,hidden:false,disabled:false,textContent:'',dataset:{},attributes:{},
+    setAttribute(name,value) { this.attributes[name] = value; }
+  });
+  return nodes.get(id);
+}
+globalThis.document = {
+  activeElement:null,
+  getElementById:node,
+  querySelector(selector) {
+    if (selector.includes('nrt-article-count')) return {content:'1'};
+    throw new Error('unexpected selector ' + selector);
+  }
+};
+globalThis.window = {location:{
+  href:'https://example.test/?nrt_release=' + SNAPSHOT.data_checksum.slice(0,16) + '&nrt_catalog_recovery=1',
+  replace() { throw new Error('bounded recovery should already be exhausted'); }
+}};
+globalThis.AbortController = class { constructor() { this.signal = {}; } abort() {} };
+const validPayload = {
+  schema_version:1,article_wire_schema_version:3,
+  data_checksum:SNAPSHOT.data_checksum,
+  articles:[{id:'a_00000000000000'}]
+};
+const validText = JSON.stringify(validPayload);
+let responses = [];
+globalThis.fetch = async () => {
+  const response = responses.shift();
+  if (!response) throw new Error('unexpected extra request');
+  return response;
+};
+'''
+                    + helpers
+                    + '\n'
+                    + setup
+                    + r'''
+let installedArticles = [];
+let retryFlags = [];
+async function bootstrapApplication(retryingCatalogLoad) {
+  retryFlags.push(retryingCatalogLoad);
+  const articles = await loadArticleCatalog();
+  installedArticles = articles;
+  node('bootstrap-status').hidden = true;
+}
+'''
+                    + starter
+                    + r'''
+await startApplication();
+if (installedArticles.length !== 0) throw new Error('failed load installed partial articles');
+if (node('bootstrap-status').attributes.role !== 'alert' ||
+    node('bootstrap-actions').hidden !== false ||
+    node('bootstrap-retry').disabled !== false) {
+  throw new Error('failed load did not expose the accessible retry fallback');
+}
+document.activeElement = node('bootstrap-retry');
+await startApplication();
+if (installedArticles.length !== 1 || !node('bootstrap-status').hidden) {
+  throw new Error('one clean retry did not start with the verified catalogue');
+}
+if (JSON.stringify(retryFlags) !== '[false,true]') {
+  throw new Error('keyboard retry focus was not captured before disabling its button');
+}
+'''
+                )
     def test_stale_shell_recovery_is_bounded_to_one_release_reload(self):
         function = javascript_between(
             'function recoverFromStaleReleaseShell() {',
@@ -1060,8 +1179,10 @@ globalThis.window = {location:{
 }};
 if (!recoverFromStaleReleaseShell()) throw new Error('stale shell did not request recovery');
 if (!replaced.includes('nrt_release=abcdef0123456789')) throw new Error('release token was not bounded');
+if (!replaced.includes('nrt_catalog_recovery=1')) throw new Error('one-shot recovery marker was omitted');
 window.location.href = replaced;
-if (recoverFromStaleReleaseShell()) throw new Error('recovery would reload the same release repeatedly');
+SNAPSHOT.data_checksum = '0123456789abcdeffedcba';
+if (recoverFromStaleReleaseShell()) throw new Error('alternating stale shells could reload repeatedly');
 '''
         )
 

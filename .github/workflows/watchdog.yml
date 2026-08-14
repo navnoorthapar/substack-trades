@@ -143,6 +143,18 @@ jobs:
           echo "::error title=Published release verification failed::Main still equals $GITHUB_SHA and the bounded exact-release check failed."
           exit 1
 
+      - name: Report publication-source health
+        # A valid cached fallback may be published during a transient source
+        # outage. Keep exact-byte verification independent, but do not let a
+        # continuously degraded adapter remain green beyond 48 hours.
+        if: >-
+          !cancelled()
+          && steps.currency.outputs.current == 'true'
+        run: >-
+          python3 source_health.py
+          --policy watchdog
+          < snapshot_manifest.json
+
       - name: Report scheduled-refresh freshness
         # Freshness is reported even when the exact-release check failed, so a
         # stale snapshot and a drifting site are never confused for each other.

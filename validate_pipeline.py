@@ -25,6 +25,12 @@ from extract_trades import (
     has_negated_trade_signal,
 )
 from filter_trades import clean_underlying
+from source_health import (
+    DEGRADED_CHECKS_FIELD,
+    DEGRADED_SINCE_FIELD,
+    degradation_state,
+    track_source_health,
+)
 from write_snapshot_manifest import data_checksum
 
 
@@ -981,6 +987,7 @@ def validate_manifest(manifest, articles, trades, article_path, trade_path, now=
         )
         require(item.get('status') in VALID_FETCH_STATUSES,
                 f'manifest {source} has an invalid fetch status')
+        degradation_state(source, item, allow_legacy=True)
         require(isinstance(item.get('mode'), str) and item['mode'].strip(),
                 f'manifest {source} has no fetch mode')
         for field in ('published_count', 'fetched_count', 'included_count'):
@@ -1056,6 +1063,40 @@ def validate_previous_manifest(manifest, previous):
                 f'previous manifest {source} checked_at is later than its manifest')
         require(current_source_checked >= previous_source_checked,
                 f'{source} fetch checked_at moved backwards')
+        degradation_state(source, previous_source, allow_legacy=True)
+        current_has_tracking = (
+            DEGRADED_SINCE_FIELD in current_source
+            or DEGRADED_CHECKS_FIELD in current_source
+        )
+        previous_has_tracking = (
+            DEGRADED_SINCE_FIELD in previous_source
+            or DEGRADED_CHECKS_FIELD in previous_source
+        )
+        if not current_has_tracking:
+            require(
+                not previous_has_tracking,
+                f'{source} source-health tracking fields were removed',
+            )
+            require(
+                current_source == previous_source,
+                f'{source} legacy source-health row changed without tracking fields',
+            )
+            continue
+        degradation_state(source, current_source, allow_legacy=False)
+        expected = track_source_health(
+            {source: current_source},
+            {'sources': previous_sources},
+        )[source]
+        require(
+            current_source.get(DEGRADED_SINCE_FIELD)
+            == expected.get(DEGRADED_SINCE_FIELD),
+            f'{source} degraded_since does not continue the previous manifest',
+        )
+        require(
+            current_source.get(DEGRADED_CHECKS_FIELD)
+            == expected.get(DEGRADED_CHECKS_FIELD),
+            f'{source} degraded check count does not continue the previous manifest',
+        )
 
 
 def main():

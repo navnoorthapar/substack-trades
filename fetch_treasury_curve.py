@@ -26,6 +26,7 @@ from treasury_curve import (
     SCHEMA_VERSION,
     SOURCE,
     TENORS,
+    _is_iso_day,
     load_curve_dataset,
     validate_curve_dataset,
 )
@@ -121,6 +122,11 @@ def parse_year(document: bytes, year: int, *, partial_year: bool = False) -> Dic
         if not raw_date:
             continue
         day = raw_date[:10]
+        if not _is_iso_day(day):
+            raise ValueError(
+                f'treasury feed for {year} contains an invalid calendar day: '
+                f'{raw_date!r}'
+            )
         if not day.startswith(str(year)):
             continue
         row: Dict[str, float] = {}

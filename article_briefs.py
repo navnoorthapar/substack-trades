@@ -157,8 +157,8 @@ MONTHS = {
     'september': 9, 'october': 10, 'november': 11, 'december': 12,
 }
 DATE_RE = re.compile(
-    r'\b(' + '|'.join(MONTHS) + r')\s+(\d{1,2})(?:st|nd|rd|th)?'
-    r'(?:,\s*|\s+)(20\d{2})\b',
+    r'\b(' + '|'.join(MONTHS) + r')\s+([0-9]{1,2})(?:st|nd|rd|th)?'
+    r'(?:,\s*|\s+)([0-9]{4})\b',
     re.IGNORECASE,
 )
 EVENT_RE = re.compile(

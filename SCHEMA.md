@@ -23,8 +23,8 @@ snapshot identity, and then fetch the other files from the same release.
   meaning, or changing an identity rule requires a schema-version increment.
 - `manifest.schema_version` versions the public data-layer contract.
   `brief.schema_version` independently versions the bounded article-brief
-  structure. The terminal's embedded compact article payload has a separate
-  `ARTICLE_WIRE_SCHEMA_VERSION`; version 3 requires the three body-revision
+  structure. The terminal's compact `article_catalog.json` bootstrap asset has
+  a separate `ARTICLE_WIRE_SCHEMA_VERSION`; version 3 requires the three body-revision
   provenance fields plus `publication_access` (`public`, `member`, or
   `unknown`) and the bounded `member_preview_chars` count, and hydrates them
   unchanged into every runtime article.
@@ -59,6 +59,24 @@ snapshot identity, and then fetch the other files from the same release.
 | `data/search_index.json` | inverted index plus article rows | Fast entity/topic lookup and deduplication |
 | `data/related.json` | article-keyed adjacency lists | One to five explainable self-link candidates per article |
 | `data/families.json` | family-to-slug object | Deterministic topic-family partition |
+
+## Terminal bootstrap asset
+
+`article_catalog.json` is an application bootstrap asset rather than a seventh
+public-data endpoint. Its top-level object has exactly four keys:
+
+| Field | Type | Guarantee |
+|---|---|---|
+| `schema_version` | integer | Exactly `1` for this envelope |
+| `article_wire_schema_version` | integer | Must equal the terminal's supported compact article schema |
+| `data_checksum` | lowercase SHA-256 | Must equal the tracked snapshot checksum embedded in the same HTML shell |
+| `articles` | array | Exact compact projection of every body-backed research article, with unique `a_` plus 14-lowercase-hex runtime IDs |
+
+The tested HTML binds the exact asset bytes by SHA-256 and the expected article
+count. The client installs zero catalogue rows until the response is same-origin
+HTTP success and its digest, exact envelope, wire version, snapshot checksum,
+count, and identities all validate. This asset is capped separately from the
+first-load HTML and remains inside the aggregate Pages artifact budget.
 
 The endpoint list in `manifest.json` is authoritative. Every entry is relative
 to the project base URL. Resolve entries with a standards-compliant URL resolver

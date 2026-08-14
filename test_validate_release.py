@@ -21,17 +21,6 @@ REVISION = 'release-validator-test'
 RELEASE_CLI_TIMEOUT_SECONDS = 180
 
 
-def json_for_script(value):
-    return (
-        json.dumps(value, ensure_ascii=False, separators=(',', ':'))
-        .replace('&', r'\u0026')
-        .replace('<', r'\u003c')
-        .replace('>', r'\u003e')
-        .replace('\u2028', r'\u2028')
-        .replace('\u2029', r'\u2029')
-    )
-
-
 def can_flip_publication_access(article):
     """Report whether flipping publication_access keeps the row wire-valid.
 
@@ -154,26 +143,29 @@ class ReleaseValidatorTests(unittest.TestCase):
         path.write_bytes(payload)
 
     @staticmethod
-    def embedded_articles(html):
-        match = validate_release.ARTICLES_RE.search(html)
-        if not match:
-            raise AssertionError('test fixture has no embedded article payload')
-        return json.loads(match.group(1))
+    def embedded_articles(site):
+        payload = json.loads(
+            (site / 'article_catalog.json').read_text(encoding='utf-8')
+        )
+        return payload['articles']
 
     def replace_embedded_articles(self, site, transform):
-        path = site / 'index.html'
-        html = path.read_text(encoding='utf-8')
-        match = validate_release.ARTICLES_RE.search(html)
-        if not match:
-            raise AssertionError('test fixture has no embedded article payload')
-        articles = json.loads(match.group(1))
-        transform(articles)
-        replacement = f'const ARTICLES = {json_for_script(articles)};\n'
-        html = html[:match.start()] + replacement + html[match.end():]
-        self.rewrite(path, html.encode('utf-8'))
+        path = site / 'article_catalog.json'
+        payload = json.loads(path.read_text(encoding='utf-8'))
+        transform(payload['articles'])
+        self.rewrite(
+            path,
+            json.dumps(
+                payload,
+                ensure_ascii=False,
+                separators=(',', ':'),
+            ).encode('utf-8'),
+        )
+        self.replace_asset_digest(site, 'article_catalog.json')
 
     def replace_asset_digest(self, site, asset_name):
         meta_names = {
+            'article_catalog.json': 'nrt-article-catalog-sha256',
             'article_briefs.json': 'nrt-brief-archive-sha256',
             'observations.json': 'nrt-observation-archive-sha256',
         }
@@ -213,9 +205,7 @@ class ReleaseValidatorTests(unittest.TestCase):
         )
 
     def test_exact_build_passes_and_cli_emits_six_fingerprints(self):
-        wire = self.embedded_articles(
-            (self.site / 'index.html').read_text(encoding='utf-8'),
-        )
+        wire = self.embedded_articles(self.site)
         self.assertTrue(
             any('idea_ids' not in article for article in wire),
             'fixture does not exercise compact empty-list omission',
@@ -417,6 +407,7 @@ class ReleaseValidatorTests(unittest.TestCase):
         policy = validate_release.PRODUCTION_POLICY
         self.assertEqual(policy.index_max_bytes, 900_000)
         self.assertEqual(policy.index_gzip_max_bytes, 250_000)
+        self.assertEqual(policy.article_catalog_max_bytes, 4_000_000)
         self.assertEqual(policy.brief_max_bytes, 800_000)
         self.assertEqual(policy.observation_max_bytes, 1_500_000)
         self.assertEqual(policy.total_max_bytes, 20_000_000)
@@ -438,7 +429,7 @@ class ReleaseValidatorTests(unittest.TestCase):
     def test_embedded_article_set_requires_exact_source_id_url_bijection(self):
         with self.cloned_site() as site:
             self.replace_embedded_articles(site, lambda rows: rows.pop())
-            with self.assertRaisesRegex(ValueError, 'URL/ID bijection'):
+            with self.assertRaisesRegex(ValueError, 'catalogue count'):
                 self.validate(site)
 
         with self.cloned_site() as site:
@@ -553,8 +544,7 @@ class ReleaseValidatorTests(unittest.TestCase):
         mode is invisible to CI until fresh data reorders the payload, at
         which point it blocks the publisher instead.
         """
-        html = (self.site / 'index.html').read_text(encoding='utf-8')
-        rows = json.loads(validate_release.ARTICLES_RE.search(html).group(1))
+        rows = self.embedded_articles(self.site)
         self.assertGreater(len(rows), 1)
 
         for field, is_eligible, mutate in (

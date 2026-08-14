@@ -39,6 +39,7 @@ SUBSCRIPTION_URL = 'https://www.navnoorbawaresearch.com/subscribe'
 THEME_REVISION = 'editorial-terminal-2026-07'
 LIGHT_THEME_BG = '#f2e8dd'
 DARK_THEME_BG = '#050607'
+ARTICLE_CATALOG_SCHEMA_VERSION = 1
 
 with open(ROOT / 'trades_extracted.json', encoding='utf-8') as handle:
     trades = json.load(handle)
@@ -580,7 +581,6 @@ embedded_articles = [
     compact_client_article(client_article) for client_article in client_articles
 ]
 
-articles_json = json_for_script(embedded_articles)
 threads_json = json_for_script(thread_index)
 
 # The desk is the landing view, so its controls are rendered from counts fixed
@@ -741,6 +741,15 @@ observation_archive_payload = {
     'data_checksum': snapshot_manifest.get('data_checksum') or '',
     'observations': client_ideas,
 }
+article_catalog_payload = {
+    'schema_version': ARTICLE_CATALOG_SCHEMA_VERSION,
+    'article_wire_schema_version': ARTICLE_WIRE_SCHEMA_VERSION,
+    'data_checksum': snapshot_manifest.get('data_checksum') or '',
+    'articles': embedded_articles,
+}
+article_catalog_json = json.dumps(
+    article_catalog_payload, ensure_ascii=False, separators=(',', ':')
+)
 brief_archive_json = json.dumps(
     brief_archive_payload, ensure_ascii=False, separators=(',', ':')
 )
@@ -752,6 +761,9 @@ brief_archive_sha256 = hashlib.sha256(
 ).hexdigest()
 observation_archive_sha256 = hashlib.sha256(
     observation_archive_json.encode('utf-8')
+).hexdigest()
+article_catalog_sha256 = hashlib.sha256(
+    article_catalog_json.encode('utf-8')
 ).hexdigest()
 
 HTML_TEMPLATE = r"""<!DOCTYPE html>
@@ -791,6 +803,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="nrt-article-count" content="__ARTICLE_COUNT__">
 <meta name="nrt-observation-count" content="__OBSERVATION_COUNT__">
 <meta name="nrt-data-checksum" content="__DATA_CHECKSUM__">
+<meta name="nrt-article-catalog-sha256" content="__ARTICLE_CATALOG_SHA256__">
 <meta name="nrt-brief-archive-sha256" content="__BRIEF_ARCHIVE_SHA256__">
 <meta name="nrt-observation-archive-sha256" content="__OBSERVATION_ARCHIVE_SHA256__">
 <title>Navnoor Research Terminal</title>
@@ -2196,6 +2209,28 @@ html[data-theme="dark"] .method-card{border-radius:0}
 html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-radius:0}
 
 /* Overlays and feedback */
+.bootstrap-status{
+  position:fixed;inset:0;z-index:1200;display:grid;place-items:center;padding:24px;
+  background:var(--bg);color:var(--text)
+}
+.bootstrap-status[hidden]{display:none}
+.bootstrap-card{
+  width:min(520px,100%);padding:24px;border:1px solid var(--line-strong);
+  background:var(--surface-raised);box-shadow:var(--shadow)
+}
+.bootstrap-kicker{
+  margin:0 0 9px;color:var(--accent);font:650 9.5px var(--mono);
+  letter-spacing:.09em;text-transform:uppercase
+}
+.bootstrap-card h1{margin:0;font-size:20px;line-height:1.2;letter-spacing:-.015em}
+.bootstrap-detail{margin:10px 0 0;color:var(--text-secondary);font-size:11.5px;line-height:1.55}
+.bootstrap-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}
+.bootstrap-actions[hidden]{display:none}
+.bootstrap-actions a{display:inline-flex;align-items:center;min-height:38px}
+.bootstrap-no-js .bootstrap-actions a{min-height:44px}
+.bootstrap-status[data-state="error"] .bootstrap-card{border-color:var(--warning-line)}
+.bootstrap-status[data-state="error"] .bootstrap-kicker{color:var(--warning)}
+#application-shell[inert]{display:none}
 .drawer-backdrop{display:none}
 .toast{
   position:fixed;left:50%;bottom:22px;z-index:200;transform:translate(-50%,20px);
@@ -2264,7 +2299,7 @@ kbd{font:10px var(--mono);border:1px solid var(--line-strong);background:var(--s
 .method-card p,.method-card li{font-size:10.5px;line-height:1.55;color:var(--text-secondary)}
 .method-card ul{margin:6px 0 0;padding-left:17px}
 .method-card a{color:var(--accent);text-underline-offset:2px}
-noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:var(--bg);color:var(--text);padding:30px}
+noscript{display:block}
 
 ::-webkit-scrollbar{width:7px;height:7px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -2644,6 +2679,26 @@ noscript{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;bac
 </style>
 </head>
 <body class="density-compact" data-view="structure">
+<div class="bootstrap-status" id="bootstrap-status" data-state="no-js">
+  <div class="bootstrap-card">
+    <noscript><div class="bootstrap-no-js" role="status">
+      <p class="bootstrap-kicker">JavaScript required</p>
+      <h1>The research terminal cannot verify its catalogue</h1>
+      <p class="bootstrap-detail">Enable JavaScript to use the terminal, or inspect the public release status directly.</p>
+      <div class="bootstrap-actions"><a class="secondary-action" href="data/latest.json">View release status</a></div>
+    </div></noscript>
+    <div id="bootstrap-js" hidden>
+      <p class="bootstrap-kicker" id="bootstrap-kicker">Release verification</p>
+      <h1 id="bootstrap-title">Loading verified research catalogue</h1>
+      <p class="bootstrap-detail" id="bootstrap-detail">Checking the exact same-origin catalogue before the terminal starts.</p>
+      <div class="bootstrap-actions" id="bootstrap-actions" hidden>
+        <button class="primary-action" id="bootstrap-retry" type="button">Retry verified load</button>
+        <a class="secondary-action" href="data/latest.json">View release status</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="application-shell" inert aria-hidden="true">
 <a class="skip-link" href="#main-panel">Skip to research results</a>
 <p class="sr-only">Navnoor Research Terminal</p>
 
@@ -3052,12 +3107,117 @@ __MANAGER_BUTTONS__
   </div>
 </dialog>
 
-<noscript><div>This research terminal requires JavaScript to filter and inspect the embedded dataset.</div></noscript>
-
+</div>
 <script>
 const ARTICLE_WIRE_SCHEMA_VERSION = __ARTICLE_WIRE_SCHEMA_VERSION__;
 const SUBSCRIPTION_URL = __SUBSCRIPTION_URL_JSON__;
-const ARTICLES = __ARTICLES_JSON__;
+const SNAPSHOT = __SNAPSHOT_JSON__;
+const ARTICLE_CATALOG_SHA256 = document.querySelector('meta[name="nrt-article-catalog-sha256"]').content;
+function hasExactObjectKeys(value,expectedKeys) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const actualKeys = Object.keys(value).sort();
+  return actualKeys.length === expectedKeys.length && actualKeys.every(function (key,index) { return key === expectedKeys[index]; });
+}
+function sha256Text(value) {
+  if (!window.crypto || !window.crypto.subtle || typeof TextEncoder !== 'function') {
+    return Promise.reject(new Error('Cryptographic release verification is unavailable'));
+  }
+  return window.crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)).then(function (buffer) {
+    return Array.from(new Uint8Array(buffer)).map(function (byte) { return byte.toString(16).padStart(2,'0'); }).join('');
+  });
+}
+function releaseMismatchError(message) {
+  const error = new Error(message);
+  error.releaseMismatch = true;
+  return error;
+}
+function recoverFromStaleReleaseShell() {
+  const token = String(SNAPSHOT.data_checksum || '').slice(0,16);
+  if (!token) return false;
+  const current = new URL(window.location.href);
+  if (current.searchParams.get('nrt_catalog_recovery') === '1') return false;
+  current.searchParams.set('nrt_release',token);
+  current.searchParams.set('nrt_catalog_recovery','1');
+  window.location.replace(current.href);
+  return true;
+}
+function fetchReleaseText(url,unavailableMessage) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(function () { controller.abort(); },20_000);
+  return fetch(url,{
+    credentials:'same-origin',cache:'no-cache',signal:controller.signal
+  }).then(function (response) {
+    if (!response.ok) throw new Error(unavailableMessage);
+    return response.text();
+  }).catch(function (error) {
+    if (error && error.name === 'AbortError') throw new Error(unavailableMessage + ' (request timed out)');
+    throw error;
+  }).finally(function () {
+    clearTimeout(timeoutId);
+  });
+}
+async function loadArticleCatalog() {
+  const catalogUrl = 'article_catalog.json?v=' + encodeURIComponent(String(SNAPSHOT.data_checksum || ''));
+  const catalogText = await fetchReleaseText(catalogUrl,'The verified research catalogue is unavailable');
+  const actualHash = await sha256Text(catalogText);
+  if (actualHash !== ARTICLE_CATALOG_SHA256) {
+    throw releaseMismatchError('Research catalogue asset does not match this release');
+  }
+  let payload;
+  try { payload = JSON.parse(catalogText); }
+  catch (_error) { throw new Error('The verified research catalogue is invalid JSON'); }
+  if (!hasExactObjectKeys(payload,['article_wire_schema_version','articles','data_checksum','schema_version']) ||
+      payload.schema_version !== 1 ||
+      payload.article_wire_schema_version !== ARTICLE_WIRE_SCHEMA_VERSION ||
+      payload.data_checksum !== SNAPSHOT.data_checksum ||
+      !Array.isArray(payload.articles)) {
+    throw releaseMismatchError('Research catalogue does not match this release');
+  }
+  const expectedCount = Number(document.querySelector('meta[name="nrt-article-count"]').content);
+  if (!Number.isSafeInteger(expectedCount) || expectedCount < 1 || payload.articles.length !== expectedCount) {
+    throw releaseMismatchError('Research catalogue count does not match this release');
+  }
+  const ids = new Set();
+  payload.articles.forEach(function (article) {
+    if (!article || typeof article !== 'object' || Array.isArray(article) ||
+        typeof article.id !== 'string' || !/^a_[0-9a-f]{14}$/.test(article.id) ||
+        ids.has(article.id)) {
+      throw new Error('The verified research catalogue contains an invalid identity');
+    }
+    ids.add(article.id);
+  });
+  return payload.articles;
+}
+function setBootstrapLoading() {
+  const status = document.getElementById('bootstrap-status');
+  document.getElementById('bootstrap-js').hidden = false;
+  status.hidden = false;
+  status.dataset.state = 'loading';
+  status.setAttribute('role','status');
+  status.setAttribute('aria-live','polite');
+  status.setAttribute('aria-busy','true');
+  document.getElementById('bootstrap-kicker').textContent = 'Release verification';
+  document.getElementById('bootstrap-title').textContent = 'Loading verified research catalogue';
+  document.getElementById('bootstrap-detail').textContent = 'Checking the exact same-origin catalogue before the terminal starts.';
+  document.getElementById('bootstrap-actions').hidden = true;
+  document.getElementById('bootstrap-retry').disabled = true;
+}
+function handleArticleCatalogFailure(error) {
+  if (error && error.releaseMismatch && recoverFromStaleReleaseShell()) return;
+  const status = document.getElementById('bootstrap-status');
+  status.hidden = false;
+  status.dataset.state = 'error';
+  status.setAttribute('role','alert');
+  status.setAttribute('aria-live','assertive');
+  status.setAttribute('aria-busy','false');
+  document.getElementById('bootstrap-kicker').textContent = 'Catalogue unavailable';
+  document.getElementById('bootstrap-title').textContent = 'The terminal stopped before showing research';
+  document.getElementById('bootstrap-detail').textContent = 'The release could not be verified. No partial or mismatched catalogue has been displayed.';
+  document.getElementById('bootstrap-actions').hidden = false;
+  document.getElementById('bootstrap-retry').disabled = false;
+}
+async function bootstrapApplication(retryingCatalogLoad) {
+const ARTICLES = await loadArticleCatalog();
 function hydrateEmbeddedArticle(article) {
   const publishedAt = String(article.published_at || '');
   const wordcount = Number(article.wordcount || 0);
@@ -3135,7 +3295,6 @@ const THREAD_ARTICLES = (function () {
   return rows;
 })();
 let IDEAS = [];
-const SNAPSHOT = __SNAPSHOT_JSON__;
 const EMBEDDED_MANAGER_LABELS = __MANAGER_LABELS_JSON__;
 const BRIEF_ARCHIVE_SHA256 = document.querySelector('meta[name="nrt-brief-archive-sha256"]').content;
 const OBSERVATION_ARCHIVE_SHA256 = document.querySelector('meta[name="nrt-observation-archive-sha256"]').content;
@@ -3148,19 +3307,6 @@ const DEFERRED_SPAN_KEYS = ['end','sha256','start','text','truncated'];
 const DEFERRED_SECTION_KEYS = ['end','heading','kind','sha256','source_order','start','text','truncated'];
 const DEFERRED_CHECKPOINT_KEYS = ['context_kind','date','date_label','end','sha256','start','text','truncated'];
 const DEFERRED_SECTION_KINDS = new Set(['evidence','mechanism','countercase','falsifier','implementation']);
-function hasExactObjectKeys(value,expectedKeys) {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
-  const actualKeys = Object.keys(value).sort();
-  return actualKeys.length === expectedKeys.length && actualKeys.every(function (key,index) { return key === expectedKeys[index]; });
-}
-function sha256Text(value) {
-  if (!window.crypto || !window.crypto.subtle || typeof TextEncoder !== 'function') {
-    return Promise.reject(new Error('Cryptographic dossier verification is unavailable'));
-  }
-  return window.crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)).then(function (buffer) {
-    return Array.from(new Uint8Array(buffer)).map(function (byte) { return byte.toString(16).padStart(2,'0'); }).join('');
-  });
-}
 function validateDeferredSpan(span,expectedKeys,label,hashChecks) {
   if (!hasExactObjectKeys(span,expectedKeys)) throw new Error(label + ' has an invalid shape');
   if (typeof span.text !== 'string' || !span.text.length || typeof span.truncated !== 'boolean') throw new Error(label + ' has invalid source text');
@@ -3231,35 +3377,6 @@ async function validateDeferredBriefArchive(payload) {
     });
   }));
   return payload.briefs;
-}
-function releaseMismatchError(message) {
-  const error = new Error(message);
-  error.releaseMismatch = true;
-  return error;
-}
-function recoverFromStaleReleaseShell() {
-  const token = String(SNAPSHOT.data_checksum || '').slice(0,16);
-  if (!token) return false;
-  const current = new URL(window.location.href);
-  if (current.searchParams.get('nrt_release') === token) return false;
-  current.searchParams.set('nrt_release',token);
-  window.location.replace(current.href);
-  return true;
-}
-function fetchReleaseText(url,unavailableMessage) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(function () { controller.abort(); },20_000);
-  return fetch(url,{
-    credentials:'same-origin',cache:'no-cache',signal:controller.signal
-  }).then(function (response) {
-    if (!response.ok) throw new Error(unavailableMessage);
-    return response.text();
-  }).catch(function (error) {
-    if (error && error.name === 'AbortError') throw new Error(unavailableMessage + ' (request timed out)');
-    throw error;
-  }).finally(function () {
-    clearTimeout(timeoutId);
-  });
 }
 function loadBriefArchive() {
   if (briefArchivePromise) return briefArchivePromise;
@@ -3570,7 +3687,7 @@ function formatDate(value) {
 function shortDate(value) {
   if (!value || value === '1970-01-01') return '—';
   const parts = value.split('-').map(Number);
-  return String(parts[2]).padStart(2,'0') + ' ' + MONTHS[parts[1] - 1] + ' ' + String(parts[0]).slice(2);
+  return String(parts[2]).padStart(2,'0') + ' ' + MONTHS[parts[1] - 1] + ' ' + String(parts[0]).padStart(4,'0');
 }
 function number(value) {
   return Number(value || 0).toLocaleString();
@@ -8889,6 +9006,23 @@ state.inspector = storedInspector;
 renderStaticStats();
 if (state.query && isArticleView()) renderArticleAwareSearch(false);
 else render();
+const applicationShell = document.getElementById('application-shell');
+applicationShell.removeAttribute('inert');
+applicationShell.removeAttribute('aria-hidden');
+document.getElementById('bootstrap-status').hidden = true;
+document.getElementById('bootstrap-status').setAttribute('aria-busy','false');
+if (retryingCatalogLoad) {
+  const recoveryFocus = document.getElementById('structure-focus-input') || document.getElementById('search');
+  if (recoveryFocus) recoveryFocus.focus();
+}
+}
+function startApplication() {
+  const retryingCatalogLoad = document.activeElement === document.getElementById('bootstrap-retry');
+  setBootstrapLoading();
+  return bootstrapApplication(retryingCatalogLoad).catch(handleArticleCatalogFailure);
+}
+document.getElementById('bootstrap-retry').addEventListener('click',startApplication);
+startApplication();
 </script>
 </body>
 </html>
@@ -8897,7 +9031,6 @@ else render();
 HTML = (HTML_TEMPLATE
         .replace('__ARTICLE_WIRE_SCHEMA_VERSION__', str(ARTICLE_WIRE_SCHEMA_VERSION))
         .replace('__SUBSCRIPTION_URL_JSON__', json_for_script(SUBSCRIPTION_URL))
-        .replace('__ARTICLES_JSON__', articles_json)
         .replace('__THREADS_JSON__', threads_json)
         .replace('__RATE_CONTEXT_JSON__', rate_context_json)
         .replace('__DESK_FACETS_JSON__', desk_facets_json)
@@ -8907,6 +9040,7 @@ HTML = (HTML_TEMPLATE
         .replace('__THEME_REVISION__', THEME_REVISION)
         .replace('__LIGHT_THEME_BG__', LIGHT_THEME_BG)
         .replace('__DARK_THEME_BG__', DARK_THEME_BG)
+        .replace('__ARTICLE_CATALOG_SHA256__', article_catalog_sha256)
         .replace('__BRIEF_ARCHIVE_SHA256__', brief_archive_sha256)
         .replace('__OBSERVATION_ARCHIVE_SHA256__', observation_archive_sha256)
         .replace('__REVISION__', revision_meta)
@@ -9054,6 +9188,10 @@ out = DOCS_DIR / 'index.html'
 with open(out, 'w', encoding='utf-8') as handle:
     handle.write(HTML)
 
+article_catalog_out = DOCS_DIR / 'article_catalog.json'
+with open(article_catalog_out, 'w', encoding='utf-8') as handle:
+    handle.write(article_catalog_json)
+
 brief_out = DOCS_DIR / 'article_briefs.json'
 with open(brief_out, 'w', encoding='utf-8') as handle:
     handle.write(brief_archive_json)
@@ -9089,6 +9227,7 @@ data_summary = validate_data_layer(
 
 print(
     f'Built {out} ({len(HTML) // 1024} KB + '
+    f'{article_catalog_out.stat().st_size // 1024} KB verified catalogue + '
     f'{brief_out.stat().st_size // 1024} KB deferred dossiers + '
     f'{observations_out.stat().st_size // 1024} KB deferred observations, '
     f'{len(support_assets) + 1} support assets, '

@@ -25,7 +25,8 @@ Scheduled Mac
                                                                             |
                                                                             v
 GitHub Actions
-  tracked snapshot -> validation + tests -> terminal shell + deferred research JSON
+  tracked snapshot -> validation + tests -> terminal shell + verified article catalogue
+                                         -> deferred dossier + observation JSON
                                          -> six versioned data/*.json endpoints
                                          -> article-specific /cards/*.png + /a/*.html
                                          -> robots/sitemap/manifest/favicon/social image
@@ -241,18 +242,27 @@ indexed publication. Exact older opening passages and their attached numeric
 tokens load only on request. A capture
 difference is an extraction fact—not evidence of a changed view,
 contradiction, conviction, performance, or portfolio action.
+The compact terminal catalogue is a release-bound deferred bootstrap asset.
+The browser starts no research UI until `article_catalog.json` passes same-origin
+HTTP, exact SHA-256, wire-schema, snapshot-checksum, row-count, and unique-ID
+verification. A missing or mismatched catalogue leaves an accessible recovery
+screen with a bounded retry and release-status link; it never installs a partial
+catalogue. This keeps the first-load HTML bounded as the archive grows without
+weakening the exact-release contract.
+
 Older article dossiers are release-bound deferred assets. The browser rejects
 missing, unknown, malformed, or hash-mismatched dossier records before installing
 any of them, and it never converts an unavailable dossier into a claim that
-evidence is absent. Exact SHA-256 digests for both deferred assets are embedded
-in the tested HTML, so swapped, reordered, truncated, or otherwise altered asset
-bytes fail closed before JSON installation. Deployment additionally requires a
-three-way match between each independently recorded deferred-asset build digest,
-its HTML metadata binding, and the bytes fetched from production. The complete
-HTML document is also matched byte-for-byte to its tested build digest, and every
-generated inline script must pass Node.js syntax validation before upload. The
-larger observation archive loads only when a selected view or filter needs it,
-avoiding a late rerender of the active brief.
+evidence is absent. Exact SHA-256 digests for the article catalogue and both
+deferred research archives are embedded in the tested HTML, so swapped,
+reordered, truncated, or otherwise altered asset bytes fail closed before JSON
+installation. Deployment additionally requires a three-way match between each
+independently recorded asset build digest, its HTML metadata binding, and the
+bytes fetched from production. The complete HTML document is also matched
+byte-for-byte to its tested build digest, and every generated inline script must
+pass Node.js syntax validation before upload. The larger observation archive
+loads only when a selected view or filter needs it, avoiding a late rerender of
+the active brief.
 
 The briefing navigation remains complete when the desktop rail collapses, and
 the print/PDF layout preserves the authored research brief and public
@@ -363,7 +373,9 @@ launchctl print "gui/$(id -u)/com.navnoor.substacktrades"
 
 The status command certifies only a settled current release. It exits nonzero
 with wait-and-rerun guidance while ingestion or deployment is still active, and
-it rejects a green workflow whose head SHA does not equal remote `main`.
+it rejects a green workflow whose head SHA does not equal remote `main`. It also
+exits nonzero for any source in a validated degraded/fallback mode, naming the
+source, mode, streak start, and consecutive refresh count.
 
 Inspect scheduled-run logs:
 
@@ -376,7 +388,7 @@ tail -n 100 "$HOME/Library/Logs/SubstackTrades/refresh-error.log"
 `origin/main` using fast-forward-only semantics. Its production push is retried
 three times for transient network failures. Every push to `main` runs the
 regression suite, validates the tracked snapshot, builds a fresh immutable
-Pages artifact—including the terminal, deferred archives, six-endpoint public
+Pages artifact—including the terminal, verified catalogue, deferred archives, six-endpoint public
 data bundle, and per-article share assets—and deploys it. Pull requests run the
 same quality gate without production credentials or deployment. Production runs are
 serialized and never cancelled midway; stale pull-request runs are cancelled.
@@ -397,8 +409,8 @@ A push failure retains the clean local commit for the next retry. A candidate
 can therefore neither leak into the next scheduled run nor trigger a GitHub
 Pages deployment unless its full local quality gate passes. GitHub Pages
 then publishes the exact tested artifact atomically and the post-deploy smoke
-test verifies HTTPS, revision, counts, snapshot checksum, the two independently
-recorded deferred-asset hashes, the exact HTML hash, the complete six-endpoint
+test verifies HTTPS, revision, counts, snapshot checksum, the verified catalogue,
+the two independently recorded deferred-asset hashes, the exact HTML hash, the complete six-endpoint
 data bundle, and the discovery/social support assets before declaring it
 healthy. Artifact validation separately proves complete catalogue-to-card/stub
 coverage; the release checklist spot-checks representative pairs in production.
@@ -417,8 +429,15 @@ historical code, and fetches every live file over HTTPS for an exact
 revision-cache-busted byte comparison. A separate
 least-privilege watchdog is scheduled every four hours to rebuild the release
 fingerprints, verify the exact published revision and public-data bundle, and
-reject a research snapshot older than 16 hours, leaving margin above the
-longest scheduled refresh interval.
+monitor both snapshot age and source-adapter health. A validated cached fallback
+remains publishable so a transient upstream outage cannot delete research. Each
+manifest carries `degraded_since` and `consecutive_degraded_checks`; the first
+upgrade from an older manifest treats its last degraded source check as the first
+provable observation. The watchdog warns during the first 48 continuous hours
+and then fails until that source recovers, while exact-live verification still
+runs independently. Snapshot age warns after 16 hours and fails after 36 hours,
+leaving margin above the longest scheduled refresh interval without silently
+accepting a stopped publisher.
 
 Manually redeploy the current `main` snapshot without fetching publications:
 

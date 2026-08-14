@@ -18,6 +18,7 @@ part of it "steep" in the abstract would assert a distinction the data does not
 contain.
 """
 
+from datetime import date
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Union
@@ -57,9 +58,14 @@ def _is_iso_day(value: Any) -> bool:
     if value[4] != '-' or value[7] != '-':
         return False
     year, month, day = value[:4], value[5:7], value[8:10]
-    if not (year.isdigit() and month.isdigit() and day.isdigit()):
+    parts = (year, month, day)
+    if not all(part.isascii() and part.isdigit() for part in parts):
         return False
-    return '01' <= month <= '12' and '01' <= day <= '31'
+    try:
+        parsed = date.fromisoformat(value)
+    except ValueError:
+        return False
+    return parsed.isoformat() == value
 
 
 def validate_curve_dataset(dataset: Mapping[str, Any]) -> Dict[str, Any]:
