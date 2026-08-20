@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-08-20T15:01:07Z",
+  "checked_at": "2026-08-20T17:01:07Z",
   "latest_publication": "2026-08-20T13:31:31.862Z",
   "catalog_latest_publication": "2026-08-20T13:31:31.862Z",
   "article_count": 426,
@@ -10,7 +10,7 @@
   "data_checksum": "b26d6b2a80cdee88c78a749b7562cff12fc0a8f92448f716aed53215095a898d",
   "sources": {
     "substack": {
-      "checked_at": "2026-08-20T15:00:52Z",
+      "checked_at": "2026-08-20T17:00:15Z",
       "status": "ok",
       "mode": "complete_api",
       "published_count": 269,
@@ -21,40 +21,18 @@
       "consecutive_degraded_checks": 0
     },
     "medium": {
-      "checked_at": "2026-08-20T15:00:58Z",
+      "checked_at": "2026-08-20T17:00:28Z",
       "status": "ok",
-      "mode": "operator_reviewed_profile_bridge_plus_current_rss",
+      "mode": "validated_history_plus_current_rss",
       "published_count": 393,
       "fetched_count": 10,
       "included_count": 157,
       "newest": "2026-08-19T17:01:27Z",
-      "provenance": {
-        "surface": "operator-reviewed-direct-public-profile-sequence",
-        "profile_url": "https://medium.com/@navnoorbawa",
-        "reviewed_at": "2026-08-20T13:38:48Z",
-        "expires_at": "2026-08-23T13:38:48Z",
-        "rss_window_ids": [
-          "2c43ab51be6f",
-          "22c5145be448",
-          "81f251299b51",
-          "ffe184d9aac6",
-          "e420650f9cb3",
-          "b59e8c9dffe8",
-          "aef567d5f387",
-          "ec2cfdd830b6",
-          "2b210ad1a553",
-          "8a988fdacc1c"
-        ],
-        "previous_history_prefix_ids": [
-          "4912dfd9ee85",
-          "c4c340597a67"
-        ]
-      },
       "degraded_since": null,
       "consecutive_degraded_checks": 0
     },
     "patreon": {
-      "checked_at": "2026-08-20T15:01:00Z",
+      "checked_at": "2026-08-20T17:00:33Z",
       "status": "ok",
       "mode": "public_metadata_api",
       "published_count": 143,
@@ -65,7 +43,7 @@
       "consecutive_degraded_checks": 0
     },
     "fxempire": {
-      "checked_at": "2026-08-20T15:01:07Z",
+      "checked_at": "2026-08-20T17:01:07Z",
       "status": "ok",
       "mode": "manual_registry",
       "published_count": 11,
