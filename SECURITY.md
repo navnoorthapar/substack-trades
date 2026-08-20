@@ -44,8 +44,8 @@ critical issue should block or roll back a launch until a tested fix is live.
   available on a custom edge host cannot be set by this repository. The client
   refuses to run when embedded and attempts to escape a frame, but a dedicated
   host with a response-level `frame-ancestors 'none'` policy would be stronger.
-- Decision packets are plaintext, tab-session workflow aids and backups are
-  plaintext files—not a secure data vault or an enterprise audit record. The
+- Local Review entries are plaintext tab-session workflow aids, and their
+  backups are plaintext files—not a secure data vault or an enterprise audit record. The
   session ends with the top-level tab. Never store confidential or regulated
   information in either form.
 

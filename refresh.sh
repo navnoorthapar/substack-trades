@@ -329,10 +329,14 @@ FETCH_STATUS_OUTPUT="$WORK_DIR/substack-status.json" \
 
 echo
 echo "=== Fetching complete Medium archive ==="
-MEDIUM_OUTPUT="$WORK_DIR/medium.candidate.json" \
-PREVIOUS_MEDIUM="$ROOT/medium_posts.json" \
-FETCH_STATUS_OUTPUT="$WORK_DIR/medium-status.json" \
-    "$PYTHON" fetch_medium_posts.py
+# The Medium collector has no path-bearing external controls. Run its absolute
+# script path with zero arguments from the private transaction directory; it
+# reads only the script-root trusted catalogue/bridge and writes fixed candidate
+# and status filenames below this cwd.
+(
+    cd "$WORK_DIR"
+    "$PYTHON" "$ROOT/fetch_medium_posts.py"
+)
 
 echo
 echo "=== Fetching sparse public Patreon catalogue metadata ==="

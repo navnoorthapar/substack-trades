@@ -34,12 +34,16 @@ from fetch_all_posts import (
 )
 
 
-ROOT = Path(__file__).parent
-OUTPUT_PATH = Path(os.environ.get('MEDIUM_OUTPUT', ROOT / 'medium_posts.json')).expanduser()
-PREVIOUS_PATH = Path(os.environ.get('PREVIOUS_MEDIUM', ROOT / 'medium_posts.json')).expanduser()
+ROOT = Path(__file__).resolve().parent
+# The prior trusted catalogue and reviewed bridge are code-owned repository
+# inputs.  Candidate output is confined to one fixed name in the caller's
+# working directory; refresh.sh supplies a private mktemp directory as that cwd.
+# Do not restore path-bearing CLI or environment controls here: this collector
+# does not need arbitrary filesystem authority.
+OUTPUT_PATH = Path.cwd() / 'medium.candidate.json'
+PREVIOUS_PATH = ROOT / 'medium_posts.json'
 PROFILE_BRIDGE_PATH = ROOT / 'medium_profile_sequence_bridge.json'
-_status_output = os.environ.get('FETCH_STATUS_OUTPUT')
-FETCH_STATUS_PATH = Path(_status_output).expanduser() if _status_output else None
+FETCH_STATUS_PATH = Path.cwd() / 'medium-status.json'
 
 USERNAME = 'navnoorbawa'
 GRAPHQL_URL = f'https://{USERNAME}.medium.com/_/graphql'
@@ -608,7 +612,8 @@ def convert_post(post):
     return item
 
 
-def load_previous(path=PREVIOUS_PATH):
+def load_previous():
+    path = PREVIOUS_PATH
     if not path.exists():
         return []
     try:
@@ -638,8 +643,6 @@ def newest_post_date(posts):
 def write_fetch_status(
         status, mode, fetched_count, posts, error=None, provenance=None,
 ):
-    if FETCH_STATUS_PATH is None:
-        return
     payload = {
         'schema_version': 1,
         'source': 'medium',
@@ -1359,5 +1362,13 @@ def main():
     return 0
 
 
+def cli(argv):
+    """Expose no filesystem or network controls to the command line."""
+    if argv:
+        print('fetch_medium_posts.py accepts no arguments', file=sys.stderr)
+        return 2
+    return main()
+
+
 if __name__ == '__main__':
-    raise SystemExit(main())
+    raise SystemExit(cli(sys.argv[1:]))

@@ -103,6 +103,13 @@ class ShareCardTests(unittest.TestCase):
         self.assertIn('/a/color-%CE%B3-t.html', stub)
         self.assertIn('#view=briefing&amp;selected=a_52e608d0ef5392', stub)
         self.assertIn('og:image:width" content="1200', stub)
+        self.assertIn('<title>Rates &amp; Risk: &lt;A Test&gt; — Navnoor Research Archive</title>', stub)
+        self.assertIn('property="og:site_name" content="Navnoor Research Archive"', stub)
+        self.assertIn(
+            'name="twitter:image:alt" content="Share card for Rates &amp; Risk: &lt;A Test&gt;"',
+            stub,
+        )
+        self.assertIn('Open this article record', stub)
         self.assertIn("script-src 'sha256-", stub)
 
     def test_emit_creates_one_card_and_stub_per_unique_slug(self):

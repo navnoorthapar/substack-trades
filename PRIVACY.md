@@ -2,7 +2,7 @@
 
 Last updated: 2026-08-11
 
-Navnoor Research Terminal is a static, public research-intake website. It is
+Navnoor Research Archive is a static, public research-index website. It is
 designed to work without an account and without collecting reader data for the
 project owner.
 
@@ -10,17 +10,17 @@ project owner.
 
 The published application includes no analytics SDK, advertising pixel,
 tracking cookie, session replay, account system, form submission, or background
-telemetry. Search text, the analyst-authored decision question, the deterministic
-evidence subject, filters, reading activity, and Research Task entries are not
+telemetry. Search text, the local research question, the deterministic search
+subject, filters, reading activity, and Local Review entries are not
 transmitted to this project.
 
-The terminal may show a contextual link to an article on its original
+The archive may show a contextual link to an article on its original
 publication and, for Substack member-access previews, a separate link to the
-publication's subscription page. The Research Evidence Desk repeats those two
+publication's subscription page. Passage Search repeats those two
 choices once inside an expanded paid source note so the public evidence remains
 useful before any off-site continuation. Those links contain no reader question,
-evidence subject, filter, selected entity, article state, referral, or Research
-Task value. The external site receives a request only after the reader chooses
+search subject, filter, selected entity, article state, referral, or Local Review
+value. The external site receives a request only after the reader chooses
 the link and applies its own terms and privacy practices.
 
 GitHub Pages necessarily serves the static files and may process ordinary web
@@ -32,7 +32,7 @@ tracking script to the application.
 ## Public archive and data endpoints
 
 The site publishes a six-file, machine-readable `/data/` bundle containing the
-same public research catalogue used by the terminal. It includes public source
+same public research catalogue used by the archive. It includes public source
 metadata, bounded captured Substack/Medium research, deterministic topic and
 related-article indexes, and integrity/freshness counts. Article-specific social
 cards and crawler stubs contain bounded public title, source, publication date,
@@ -60,8 +60,8 @@ manually reviewed public byline metadata and do not include article bodies.
 > C3. PRIVACY RULE (absolute): this is a PUBLIC repo and PUBLIC site. NEVER add private analytics — no email open rates, subscriber counts, revenue, pledges, or dashboard-derived numbers. Only content metadata and already-public information (public reaction/comment counts are acceptable ONLY if already collected; do not build new private-data collection).
 
 The public data validator rejects forbidden private-analytics keys recursively.
-The data bundle does not contain reader identities, search history, Research
-Tasks, cookies, or behavioral events. The endpoint contract is documented in
+The data bundle does not contain reader identities, search history, Local
+Review entries, cookies, or behavioral events. The endpoint contract is documented in
 [SCHEMA.md](SCHEMA.md).
 
 ## Historical publication boundary
@@ -78,41 +78,41 @@ recorded as `LAUNCH-058` in [ISSUES.md](ISSUES.md).
 
 ## Data stored on the reader's device
 
-Research Tasks use plaintext `sessionStorage`, partitioned by origin and the
-current top-level browser tab. They survive reloads but end when that tab session
+Local Review uses plaintext `sessionStorage`, partitioned by origin and the
+current top-level browser tab. It survives reloads but ends when that tab session
 closes; other ordinary tabs do not receive the scratchpad. Review baselines and
-display preferences use persistent functional browser storage. Exported task
-backups are plaintext. The task editor is limited to human research framing,
+display preferences use persistent functional browser storage. Exported Local
+Review backups are plaintext. The editor is limited to human research framing,
 public-source citations, and timestamped attestations; it does not solicit
 confidence, position/entry, payoff,
 execution/borrow/funding, portfolio-fit, or live-risk fields. Free-text fields
 still must not contain confidential, personal, client, position, material
 non-public, or regulated information.
 
-The application asks for an acknowledgement before task storage is first used.
-A valid queue left by the prior origin-wide implementation is moved into the tab
+The application asks for an acknowledgement before Local Review storage is first used.
+A valid legacy queue left by the prior origin-wide implementation is moved into the tab
 session and removed from persistent storage. Unreadable records fail closed and
 can be preserved before destructive cleanup. Imports retain a tab-session
 rollback across reloads. Valid session data, imports, normal backups, and
-rollback payloads are canonicalized to the current bounded task schema. Retired
+rollback payloads are canonicalized to the current bounded Local Review schema. Retired
 confidence, position/entry, payoff, implementation, portfolio, live-risk, and
 legacy attestation fields are discarded; old booleans are never reinterpreted
 as new attestations, and an attestation is checked only when its matching
-timestamp is valid. A task without a safe retained source snapshot is rejected
+timestamp is valid. An item without a safe retained source snapshot is rejected
 rather than rebound to current article content. The interface can clear both
-the current tab tasks and accessible legacy queue keys; clearing browser site
+the current tab items and accessible legacy queue keys; clearing browser site
 data also removes them.
 
-Task display, filtering, sorting, date windows, source opening, keyboard
-shortcuts, copied citations, task text, and CSV exports use the retained source
+Local Review display, filtering, sorting, date windows, source opening, keyboard
+shortcuts, copied citations, item text, and CSV exports use the retained source
 snapshot. Current-release changes are shown only as an explicit comparison.
 This prevents an updated extraction from silently changing the evidence behind
-an existing task. Tasks whose current observation disappears remain fully
+an existing item. Items whose current observation disappears remain fully
 searchable, editable, archivable, copyable, and exportable. A newer same-ID
 import with a different retained source anchor requires its own explicit
 conflict approval before the ordinary import preview.
 
-New task snapshots retain the capture-time negation, reference-line, and
+New item snapshots retain the capture-time negation, reference-line, and
 truncation flags. Older or malformed payloads without a complete three-boolean
 proof are labeled `review flags unavailable`; absence is never silently
 interpreted as a clean capture. A migrated legacy ID-only bookmark is labeled
@@ -121,16 +121,16 @@ from the historical bookmark date.
 
 ## Explicit sharing
 
-The normal address bar does not persist global search text, the Research
-Evidence Desk's analyst decision question, its literal all-term evidence
-subject, Desk refinements, or source-passage anchors. Ordinary Desk edits remain
+The normal address bar does not persist global search text, Passage Search's
+local research question, its literal all-term search subject, refinements, or
+source-passage anchors. Ordinary Passage Search edits remain
 in page memory. When a reader explicitly selects **Copy view**, the application
 generates a share URL without mutating normal browser history or the active
-address. That copied URL may include the decision question, evidence subject,
+address. That copied URL may include the research question, search subject,
 refinements, optional Treasury-context toggle, and exact source anchor. Treasury
 context is post-retrieval provenance and cannot alter evidence membership or
 ordering. Treat the URL as public and use the feature only for non-confidential
-research context. Exported task backups and copied citations leave the browser
+research context. Exported Local Review backups and copied citations leave the browser
 only when the reader chooses where to send or save them.
 
 ## Contact

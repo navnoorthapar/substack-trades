@@ -1,6 +1,6 @@
 # Public data and share-asset contract
 
-Navnoor Research Terminal publishes a static, machine-readable view of the same
+Navnoor Research Archive publishes a static, machine-readable view of the same
 validated research catalogue used by the consumer application. The production
 base URL is:
 
@@ -23,7 +23,7 @@ snapshot identity, and then fetch the other files from the same release.
   meaning, or changing an identity rule requires a schema-version increment.
 - `manifest.schema_version` versions the public data-layer contract.
   `brief.schema_version` independently versions the bounded article-brief
-  structure. The terminal's compact `article_catalog.json` bootstrap asset has
+  structure. The archive's compact `article_catalog.json` bootstrap asset has
   a separate `ARTICLE_WIRE_SCHEMA_VERSION`; version 3 requires the three body-revision
   provenance fields plus `publication_access` (`public`, `member`, or
   `unknown`) and the bounded `member_preview_chars` count, and hydrates them
@@ -60,7 +60,7 @@ snapshot identity, and then fetch the other files from the same release.
 | `data/related.json` | article-keyed adjacency lists | One to five explainable self-link candidates per article |
 | `data/families.json` | family-to-slug object | Deterministic topic-family partition |
 
-## Terminal bootstrap asset
+## Application bootstrap asset
 
 `article_catalog.json` is an application bootstrap asset rather than a seventh
 public-data endpoint. Its top-level object has exactly four keys:
@@ -68,7 +68,7 @@ public-data endpoint. Its top-level object has exactly four keys:
 | Field | Type | Guarantee |
 |---|---|---|
 | `schema_version` | integer | Exactly `1` for this envelope |
-| `article_wire_schema_version` | integer | Must equal the terminal's supported compact article schema |
+| `article_wire_schema_version` | integer | Must equal the archive application's supported compact article schema |
 | `data_checksum` | lowercase SHA-256 | Must equal the tracked snapshot checksum embedded in the same HTML shell |
 | `articles` | array | Exact compact projection of every body-backed research article, with unique `a_` plus 14-lowercase-hex runtime IDs |
 
@@ -124,7 +124,7 @@ fields describe captured-source provenance, not whether the article's claims
 are correct or current in the market.
 
 If a public Substack list row exposes more than one exact preview surface,
-terminal truncation markers are ignored only for compatibility comparison.
+archive display truncation markers are ignored only for compatibility comparison.
 Compatible prefix/subset variants use the longest bounded exact surface;
 incompatible variants remain source-degraded but still select the same longest
 surface deterministically. A newly changed surface cannot reuse stale cached
@@ -167,7 +167,7 @@ exact substring of the proven preview. Non-member rows must not carry
 `member_preview`; source collectors reject unsupported Substack audience or
 Medium visibility enumeration values rather than assigning access by guesswork.
 
-The embedded terminal derives `publication_access` conservatively from the raw
+The archive application derives `publication_access` conservatively from the raw
 source label: Substack `everyone` is `public` and `only_paid` is `member`;
 Medium `public` is `public` and `locked` is `member`. A validated source surface
 without an access flag, such as a Medium RSS fallback, is `unknown`; collectors
@@ -411,13 +411,13 @@ the catalogue. No Patreon or FX Empire body is scraped or republished.
 For every globally unique article slug, the Pages artifact also contains:
 
 - `/cards/<slug>.png` — a generated 1200×630 PNG containing the bounded title,
-  source badge, publication date, and Navnoor Research wordmark.
+  source badge, publication date, and Navnoor Research Archive wordmark.
 - `/a/<slug>.html` — a lightweight static document with article-specific Open
   Graph and Twitter metadata, a canonical stub URL, and a redirect to the
-  matching hash-selected dossier in the consumer terminal for content-bearing
+  matching hash-selected article record in the consumer archive for content-bearing
   rows, or directly to the original public source for registry-only rows.
 
-The stub exists because social crawlers do not execute the terminal's hash
+The stub exists because social crawlers do not execute the archive's hash
 routing. Stub URLs are included in the sitemap. Cards and stubs are additive;
 they do not alter the existing consumer application, execute publication text,
 or expose non-public data. A release is invalid if any catalogue slug lacks its
@@ -430,7 +430,7 @@ the wrong title, image, or article route.
 
 The build validator recursively rejects forbidden private-analytics keys from
 every `data/` file. The data layer contains no reader identifier, search log,
-Research Task, cookie, tracking pixel, or behavioral event. Member-source
+Local Review entry, cookie, tracking pixel, or behavioral event. Member-source
 body text is limited to the bounded anonymous preview proof above; no
 authenticated or legacy cached member body belongs in a current release.
 Downloading a static endpoint does not authorize downstream systems to enrich
@@ -439,9 +439,9 @@ creator-dashboard or reader-level data. Earlier Git commits and retained release
 artifacts are outside this mutable endpoint contract and are tracked separately
 as unresolved `LAUNCH-058` in [ISSUES.md](ISSUES.md).
 
-## Local Research Task interchange
+## Local Review interchange
 
-Research Tasks are not a public `/data/` endpoint. Their plaintext export and
+Local Review entries are not a public `/data/` endpoint. Their plaintext export and
 tab-session storage use `schema_version: 3`, a bounded list of at most 250
 items, and a required `source_snapshot` for each item. The snapshot retains the
 observation and article IDs, exact displayed passage, public title/URL/date,
@@ -454,7 +454,7 @@ current release text. `legacy_bookmark_migration: true` means an ID-only legacy
 bookmark received its snapshot from the active release during migration, not
 from the historical bookmark date.
 
-Human fields are limited to task status/priority, owner, review date, next
+Human fields are limited to review status/priority, owner, review date, next
 action, hypothesis, contrary evidence, independent public source, numeric claim
 context, catalyst, horizon, falsifier, tags, and memo. The only attestation keys
 are `context_reviewed`, `public_source_recorded`, `numeric_traced`,
@@ -464,12 +464,12 @@ session data, imports, backups, and rollback payloads discards retired
 confidence, position/entry, payoff, implementation, portfolio, live-risk, and
 legacy attestation fields instead of reinterpreting them.
 
-All task-facing display, filters, date ranges, ordering, links, shortcuts,
+All Local Review-facing display, filters, date ranges, ordering, links, shortcuts,
 citations, copies, and CSV exports are derived from the retained snapshot. A
 separate comparison may report current-release drift, but cannot replace the
-retained evidence. Orphaned tasks remain visible up to the bounded 250-item
+retained evidence. Orphaned items remain visible up to the bounded 250-item
 limit and participate in the same search, filter, sort, edit, archive, copy,
-shortcut, and CSV paths. A newer imported task with the same ID but a different
+shortcut, and CSV paths. A newer imported item with the same ID but a different
 normalized `source_snapshot` is a retained-source conflict and requires a
 separate explicit confirmation before the ordinary import preview.
 

@@ -1,6 +1,10 @@
 import json
 import unittest
 import hashlib
+import os
+import subprocess
+import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from unittest import mock
@@ -33,6 +37,75 @@ class MediumFetchTests(unittest.TestCase):
         def read(self, size=-1):
             self.read_size = size
             return self.payload if size < 0 else self.payload[:size]
+
+    def test_filesystem_paths_are_fixed_and_legacy_controls_cannot_redirect(self):
+        with tempfile.TemporaryDirectory() as raw_directory:
+            directory = Path(raw_directory)
+            physical_directory = directory.resolve()
+            hostile_output = directory / 'attacker-output.json'
+            hostile_previous = directory / 'attacker-previous.json'
+            hostile_status = directory / 'attacker-status.json'
+            environment = os.environ.copy()
+            environment['PYTHONPATH'] = str(ROOT) + os.pathsep + environment.get(
+                'PYTHONPATH', '',
+            )
+            environment.update({
+                'MEDIUM_OUTPUT': str(hostile_output),
+                'PREVIOUS_MEDIUM': str(hostile_previous),
+                'FETCH_STATUS_OUTPUT': str(hostile_status),
+            })
+            probe = subprocess.run(
+                [
+                    sys.executable,
+                    '-c',
+                    (
+                        'import json, fetch_medium_posts as module; '
+                        'print(json.dumps({'
+                        '"output": str(module.OUTPUT_PATH), '
+                        '"previous": str(module.PREVIOUS_PATH), '
+                        '"status": str(module.FETCH_STATUS_PATH)}))'
+                    ),
+                ],
+                cwd=directory,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=10,
+                check=True,
+            )
+            paths = json.loads(probe.stdout)
+            self.assertEqual(
+                paths,
+                {
+                    'output': str(physical_directory / 'medium.candidate.json'),
+                    'previous': str(ROOT.resolve() / 'medium_posts.json'),
+                    'status': str(physical_directory / 'medium-status.json'),
+                },
+            )
+
+            rejected = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / 'fetch_medium_posts.py'),
+                    '--output',
+                    str(hostile_output),
+                ],
+                cwd=directory,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=10,
+                check=False,
+            )
+            self.assertEqual(rejected.returncode, 2)
+            self.assertIn('accepts no arguments', rejected.stderr)
+            for path in (
+                    hostile_output,
+                    hostile_previous,
+                    hostile_status,
+                    directory / 'medium.candidate.json',
+                    directory / 'medium-status.json'):
+                self.assertFalse(path.exists())
 
     @staticmethod
     def _rss_payload(prefix=b''):

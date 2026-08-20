@@ -1,9 +1,9 @@
-# Navnoor Research Terminal
+# Navnoor Research Archive
 
 This project collects authored research from `navnoorbawa.substack.com` and
 `medium.com/@navnoorbawa`, adds privacy-safe public catalogue metadata from
-Patreon and FX Empire, extracts structured investment observations, and
-publishes the institutional research terminal at
+Patreon and FX Empire, extracts structured fields from source passages, and
+publishes a research archive at
 <https://navnoorthapar.github.io/substack-trades/>.
 
 ## Architecture
@@ -25,8 +25,8 @@ Scheduled Mac
                                                                             |
                                                                             v
 GitHub Actions
-  tracked snapshot -> validation + tests -> terminal shell + verified article catalogue
-                                         -> deferred dossier + observation JSON
+  tracked snapshot -> validation + tests -> archive shell + verified article catalogue
+                                         -> deferred article-record + observation JSON
                                          -> six versioned data/*.json endpoints
                                          -> article-specific /cards/*.png + /a/*.html
                                          -> robots/sitemap/manifest/favicon/social image
@@ -73,7 +73,7 @@ timestamp rotates that budget across refreshes: new
 rows run first, followed by never-attempted and then oldest-attempted rows, so a
 fixed newest-first catalogue cannot permanently starve an older unresolved
 article. Previously captured exact bodies may be retained for research
-continuity only for source-public rows, but the tracked catalogue and terminal
+continuity only for source-public rows, but the tracked catalogue and archive
 distinguish current, prior, and revision-unverified captures. Historical public
 passages and their derived observations are visibly flagged, excluded from
 high-context eligibility, and never labeled as current full text.
@@ -106,7 +106,7 @@ classifications and keep the regex-only direction for new residuals.
 ## Machine-readable data layer
 
 Each deployment publishes six static, UTF-8 JSON endpoints from the same
-validated four-source snapshot as the terminal:
+validated four-source snapshot as the archive:
 
 - [`data/articles_index.json`](https://navnoorthapar.github.io/substack-trades/data/articles_index.json) — the complete Substack, Medium, Patreon, and FX Empire catalogue with bounded briefs.
 - [`data/latest.json`](https://navnoorthapar.github.io/substack-trades/data/latest.json) — the deterministic newest-20 projection.
@@ -138,17 +138,17 @@ planning. These signals organize published research; they are not positions,
 recommendations, confidence scores, or performance claims. Every catalogue row
 also produces `/cards/<slug>.png` and `/a/<slug>.html` for an article-specific
 social preview and crawler-readable entry point. Content-bearing stubs enter the
-matching terminal dossier; registry-only stubs open the original public source.
+matching article record; registry-only stubs open the original public source.
 The exact field, ranking, versioning, registry, privacy, and share-asset
 contracts are in [SCHEMA.md](SCHEMA.md).
 
 ## Subscriber conversion
 
 Member-access research is promoted as source completeness, never as a simulated
-browser paywall. The terminal keeps public research usable, distinguishes what
+browser paywall. The archive keeps public research usable, distinguishes what
 the source permits from how much this release captured, and presents a
 contextual continuation panel only for a canonical paid Substack record. In the
-Research Evidence Desk, the same boundary appears once inside an expanded paid
+Passage Search, the same boundary appears once inside an expanded paid
 source note, at the point where the analyst has inspected its captured passage.
 A non-empty panel passage is the exact anonymous source preview proven by the
 snapshot; a row without such a preview is labeled metadata-only. Each panel
@@ -167,12 +167,12 @@ publication workflow is in
 release-artifact handling remains the explicit launch blocker documented as
 `LAUNCH-058` in [ISSUES.md](ISSUES.md).
 
-## Product scope: institutional research intake
+## Product scope: published research archive
 
-This is an institutional research-intake and human-diligence terminal. It helps
-an owner, CIO, portfolio manager, trader, or quantitative researcher discover
-published ideas, inspect the exact supporting passage, triage uncertainty, and
-turn a candidate into a source-bound human research task. It is deliberately
+This is a published research index with source-linked passages and capture
+provenance. It helps a reader discover published ideas, inspect the exact
+supporting passage, triage uncertainty, and turn a candidate into a source-bound
+local review item. It is deliberately
 not a portfolio-management, order-management, risk, accounting, compliance, or
 investor-reporting system.
 
@@ -184,19 +184,19 @@ the [AIMA 2025 manager due-diligence questionnaire](https://www.aima.org/article
 and the [SEC investment-adviser marketing guide](https://www.sec.gov/resources-small-businesses/small-business-compliance-guides/investment-adviser-marketing).
 Those references shape questions, evidence retention, and disclosure boundaries;
 they do not certify the product or establish legal compliance.
-The terminal supports published-source discovery and pre-decision research. It
+The archive supports published-source discovery and pre-decision research. It
 does not manufacture NAV/P&L, attribution, exposure, leverage, VaR, stress,
 liquidity, funding, counterparty, capacity, execution, compliance, or investor
 metrics without the connected books and records required to calculate them.
 
-### Research Evidence Desk
+### Passage Search
 
-The Research Evidence Desk starts empty and does not fetch the deferred
-observation archive until the analyst defines an evidence subject or an explicit
+Passage Search starts empty and does not fetch the deferred observation archive
+until the reader defines a search subject or an explicit
 retrieval refinement. It separates two inputs with different responsibilities:
-**Decision to test** is analyst-authored framing that stays in page memory during
-ordinary use and never changes retrieval; **Evidence subject** is a deterministic
-literal all-material-term search over the published corpus. The Desk organizes
+**Research question** is local framing that stays in page memory during ordinary
+use and never changes retrieval; **Search subject** is a deterministic literal
+all-material-term search over the published corpus. Passage Search organizes
 that corpus for diligence; it does not infer a house view or turn a passage into
 a trade.
 
@@ -207,7 +207,7 @@ all-term match can enter the primary ledger. Authored-headline matches,
 structured-field context, and text-only mentions are shown in separate labeled
 context sections and cannot become an evidence anchor merely because the
 article title matched. The analyst must expand a source note and explicitly
-anchor one exact displayed passage before opening a local Research Task; no
+anchor one exact displayed passage before opening a local review item; no
 highest-ranked passage is selected on the analyst's behalf.
 
 Automated extraction remains visibly provisional. Numeric and outcome/P&L
@@ -227,14 +227,14 @@ no holdings, live or position prices, P&L, sizing, exposure, liquidity
 assessment, compliance determination, or recommendation. Those require the
 firm's own books, market data, controls, and accountable human judgment.
 
-The decision question, evidence subject, refinements, and source anchor remain
+The research question, search subject, refinements, and source anchor remain
 in page memory during ordinary use and are not silently written to the address
 bar. **Copy view** is the explicit sharing action: it generates a share URL from
-the current Desk state without mutating normal browser history or the active
-address. The copied URL may contain the non-confidential decision question,
-evidence subject, refinements, optional context toggle, and exact source anchor.
+the current Passage Search state without mutating normal browser history or the active
+address. The copied URL may contain the non-confidential research question,
+search subject, refinements, optional context toggle, and exact source anchor.
 
-The default Institutional Article Workbench is built around the article data:
+The Article Record is built around the article data:
 the first eligible authored passage, contextual evidence, mechanism,
 limitations, falsifiers, implementation, cited checkpoints, and exact source
 provenance. Its evidence ledger keeps detected numeric tokens attached to their
@@ -242,7 +242,7 @@ original passage; tokens are lexical, deduplicated, capped, and never presented
 as normalized or comparable facts. Duplicate spans are collapsed by source
 identity, related research requires an exact mentioned-entity or underlying
 overlap, and excerpt gaps are marked not assessable rather than absent.
-Research Threads add a longitudinal view within each body-backed dossier. They
+Related Research adds a longitudinal view within each body-backed article. It
 connect only repeated high-precision topics from the release search index,
 identify whether each match came from the title, subtitle, opening, or a
 classified section, retain full publication timestamps, show a bounded
@@ -251,7 +251,7 @@ indexed publication. Exact older opening passages and their attached numeric
 tokens load only on request. A capture
 difference is an extraction fact—not evidence of a changed view,
 contradiction, conviction, performance, or portfolio action.
-The compact terminal catalogue is a release-bound deferred bootstrap asset.
+The compact archive catalogue is a release-bound deferred bootstrap asset.
 The browser starts no research UI until `article_catalog.json` passes same-origin
 HTTP, exact SHA-256, wire-schema, snapshot-checksum, row-count, and unique-ID
 verification. A missing or mismatched catalogue leaves an accessible recovery
@@ -259,9 +259,9 @@ screen with a bounded retry and release-status link; it never installs a partial
 catalogue. This keeps the first-load HTML bounded as the archive grows without
 weakening the exact-release contract.
 
-Older article dossiers are release-bound deferred assets. The browser rejects
-missing, unknown, malformed, or hash-mismatched dossier records before installing
-any of them, and it never converts an unavailable dossier into a claim that
+Older article records are release-bound deferred assets. The browser rejects
+missing, unknown, malformed, or hash-mismatched records before installing any
+of them, and it never converts an unavailable record into a claim that
 evidence is absent. Exact SHA-256 digests for the article catalogue and both
 deferred research archives are embedded in the tested HTML, so swapped,
 reordered, truncated, or otherwise altered asset bytes fail closed before JSON
@@ -271,26 +271,26 @@ bytes fetched from production. The complete HTML document is also matched
 byte-for-byte to its tested build digest, and every generated inline script must
 pass Node.js syntax validation before upload. The larger observation archive
 loads only when a selected view or filter needs it, avoiding a late rerender of
-the active brief.
+the active article record.
 
-The briefing navigation remains complete when the desktop rail collapses, and
-the print/PDF layout preserves the authored research brief and public
-checkpoints while removing tab-session Research Task fields.
+The article-record navigation remains complete when the desktop rail collapses,
+and the print/PDF layout preserves authored passages and public checkpoints
+while removing tab-session Local Review fields.
 
 The default Light theme uses a Financial Times-inspired editorial grammar:
 warm paper surfaces, dark ink, serif research headlines, claret hierarchy, and
-restrained teal interaction cues. Dark mode uses a Bloomberg Terminal-inspired
+restrained teal interaction cues. Dark mode uses a high-density graphite
 grammar: near-black panes, square geometry, compact sans/monospace controls,
 amber command states, and cyan information cues. These are independent visual
 references only; the project does not copy either product or imply affiliation.
 Both modes use the same semantic data colors, text labels, focus treatment, and
 contrast gates.
 
-The Evidence Monitor and Research Library provide fast passage-level review.
+Parsed Passages and the Article Index provide fast passage-level review.
 Directional labels describe parsed language, not an actor, verified position,
-exposure, conviction, or current view. **Research Tasks** is a local,
+exposure, conviction, or current view. **Local Review** is a local,
 non-confidential scratchpad for human diligence, not a scored approval queue. A
-task retains the bounded source snapshot and dataset checksum, plus
+Local Review item retains the bounded source snapshot and dataset checksum, plus
 analyst-authored hypothesis, contrary evidence, an independent public-source
 citation, a key numeric claim with cited context, a public catalyst or
 checkpoint, horizon, falsifier, owner, next action, review date, tags, memo, and
@@ -298,15 +298,15 @@ timestamped research attestations. It deliberately omits analyst-confidence scor
 position or entry terms, payoff, execution/borrow/funding, portfolio-fit, and
 live risk fields.
 
-If a later extraction changes or removes the observation ID, the Research Task
+If a later extraction changes or removes the observation ID, the Local Review item
 remains visible with its retained source snapshot instead of silently
-disappearing. Task rows, filters, date ranges, sorting, keyboard/open actions,
+disappearing. Local Review rows, filters, date ranges, sorting, keyboard/open actions,
 citations, copies, and CSV exports remain bound to that retained snapshot; any
 current-release difference is labeled separately. A missing or unsafe snapshot
 fails closed rather than being replaced by current article text. Backup imports
-merge with existing work, require separate approval before a newer same-ID task
-can replace a different retained source anchor, and keep current-missing tasks
-first-class in the same table/editor/export workflow. Removal archives a task
+merge with existing work, require separate approval before a newer same-ID item
+can replace a different retained source anchor, and keep current-missing items
+first-class in the same table/editor/export workflow. Removal archives an item
 rather than destroying its history. "New since last review" advances only when the user explicitly
 marks the review baseline; simply opening or reloading the site does not
 acknowledge new research.
@@ -320,9 +320,9 @@ states an explicit affirmative position. These controls reduce false precision;
 they do not replace reading the original article or obtaining independent
 evidence.
 
-Research Tasks use plaintext `sessionStorage`, which is isolated to the
+Local Review uses plaintext `sessionStorage`, which is isolated to the
 current top-level browser tab and survives reloads only until that tab session
-closes. Explicit exports are plaintext backups. On first use, the terminal
+closes. Explicit exports are plaintext backups. On first use, the archive
 states these boundaries and prohibits confidential or regulated entries. A
 valid legacy origin-wide queue is transactionally moved into the tab session
 and removed from persistent storage; malformed legacy records fail closed and
@@ -331,10 +331,10 @@ rewritten into the current bounded schema: retired position-like text,
 confidence fields, and old attestation booleans are discarded rather than
 silently reinterpreted. A checked attestation survives only with its matching
 valid timestamp. Restore keeps a tab-scoped rollback across reloads. These
-tasks are not an authenticated, shared, encrypted, or immutable enterprise
+items are not an authenticated, shared, encrypted, or immutable enterprise
 audit record. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
 
-Each new task snapshot stores the capture-time negation, reference-line, and
+Each new item snapshot stores the capture-time negation, reference-line, and
 truncation flags with an explicit verification marker. Older or malformed
 imports without complete boolean proof show `review flags unavailable` instead
 of being treated as clean. Legacy ID-only bookmarks can be migrated, but the
@@ -419,7 +419,7 @@ the bounded cycle. After correcting it, start a new bounded cycle with
 `origin/main` using fast-forward-only semantics. Its production push is retried
 three times for transient network failures. Every push to `main` runs the
 regression suite, validates the tracked snapshot, builds a fresh immutable
-Pages artifact—including the terminal, verified catalogue, deferred archives, six-endpoint public
+Pages artifact—including the archive, verified catalogue, deferred archives, six-endpoint public
 data bundle, and per-article share assets—and deploys it. Pull requests run the
 same quality gate without production credentials or deployment. Production runs are
 serialized and never cancelled midway; stale pull-request runs are cancelled.
@@ -436,6 +436,11 @@ isolated candidate directory, the previous promoted snapshot is preserved, and
 the same complete Pages artifact policy used by CI runs before staging. Any
 regression-test, release-artifact, staging, or local-commit failure restores
 that snapshot.
+The Medium collector reads its prior trusted catalogue and reviewed bridge only
+from fixed script-root paths. It accepts no command-line path arguments or
+filesystem-path environment overrides; `refresh.sh` runs the absolute script
+with zero arguments from its private transaction directory, where the collector
+writes only the fixed candidate and status filenames.
 A push failure retains the clean local commit for the next retry. A candidate
 can therefore neither leak into the next scheduled run nor trigger a GitHub
 Pages deployment unless its full local quality gate passes. GitHub Pages
@@ -516,12 +521,12 @@ run rebuilds and redeploys the already tracked snapshot.
 
 The site intentionally ships no analytics SDK, tracking pixel, advertising
 cookie, session replay, or background telemetry. Search text and tab-session
-Research Tasks are not sent to this project. Explicit **Copy view** actions may
+Local Review contents are not sent to this project. Explicit **Copy view** actions may
 place the active non-confidential Desk framing in the copied URL so the user can
 choose to share it; generating that URL does not change the normal address-bar
 history. Maintainers can use GitHub's aggregate repository traffic window and
 Google Search Console for discovery health without embedding reader tracking in
-the terminal. Search Console ownership and sitemap submission are manual owner
+the archive. Search Console ownership and sitemap submission are manual owner
 steps documented in [LAUNCH_RUNBOOK.md](LAUNCH_RUNBOOK.md).
 
 ## Launch and incident operations

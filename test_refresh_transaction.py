@@ -66,8 +66,13 @@ if script == 'fetch_all_posts.py':
     write_json(os.environ['ARTICLES_OUTPUT'], [{'candidate': 'substack-article'}])
     write_json(os.environ['FETCH_STATUS_OUTPUT'], {'candidate': 'substack-status'})
 elif script == 'fetch_medium_posts.py':
-    write_json(os.environ['MEDIUM_OUTPUT'], [{'candidate': 'medium'}])
-    write_json(os.environ['FETCH_STATUS_OUTPUT'], {'candidate': 'medium-status'})
+    if len(arguments) != 1 or not Path(arguments[0]).is_absolute():
+        raise SystemExit(88)
+    for forbidden in ('MEDIUM_OUTPUT', 'PREVIOUS_MEDIUM', 'FETCH_STATUS_OUTPUT'):
+        if forbidden in os.environ:
+            raise SystemExit(89)
+    write_json(Path.cwd() / 'medium.candidate.json', [{'candidate': 'medium'}])
+    write_json(Path.cwd() / 'medium-status.json', {'candidate': 'medium-status'})
 elif script == 'fetch_patreon_posts.py':
     write_json(os.environ['PATREON_OUTPUT'], [{'candidate': 'patreon'}])
     write_json(os.environ['PATREON_STATUS_OUTPUT'], {'candidate': 'patreon-status'})

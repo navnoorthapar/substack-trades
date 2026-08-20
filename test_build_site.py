@@ -438,26 +438,26 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
     def test_article_intelligence_brief_is_source_led(self):
         self.assertIn('function renderIntelligenceBrief(records)', self.html)
         for text in (
-            'Latest Brief',
-            'Investment committee brief · published information',
-            'Author’s opening thesis',
+            'Article Record',
+            'Article record · published information',
+            'Opening authored passage',
             'Exact authored passage',
             'How the argument works',
             'No analyst conclusion, score, or portfolio recommendation is inferred.',
-            'Source dossier and decision boundaries',
-            'Institutional diligence map',
+            'Source record and captured challenges',
+            'Captured section map',
             'Evidence ledger',
             'Detected numbers with their authored context',
-            'Dossier coverage in this lens',
+            'Captured section coverage',
             'Related archive context',
-            'Recent article dossiers',
-            'What changes our mind',
-            'Author’s countercase',
-            'What would change the view',
-            'Tab-session research overlay',
+            'Recent articles',
+            'Source-defined challenges',
+            'Author’s countercase passage',
+            'Author’s falsifier passage',
+            'Tab-session local review',
             'Local · this tab',
-            'Open source dossier',
-            'Copy IC brief',
+            'Open article record',
+            'Copy article record',
             'Print / PDF',
             'not independently verified, not a live market as-of, and not a portfolio recommendation',
             'Evidence boundaries',
@@ -481,7 +481,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('evidenceSpotlightMarkup(selected)', briefing)
         self.assertIn('researchThreadMarkup(selected)', briefing)
         self.assertIn("analysisPanelMarkup(mechanismRow,'Mechanism'", briefing)
-        self.assertIn("decisionSheetSectionMarkup(countercaseRow,'Author’s countercase')", briefing)
+        self.assertIn("decisionSheetSectionMarkup(countercaseRow,'Author’s countercase passage')", briefing)
         self.assertIn('briefRailMarkup(lenses)', briefing)
         self.assertIn('archiveCoverageMarkup(records)', briefing)
         self.assertIn('relatedResearchMarkup(selected)', briefing)
@@ -519,14 +519,14 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             briefing,
         )
         self.assertIn(
-            "const openingLabel = leadRow ? 'Author’s opening thesis' : metadataOnlyMember ? 'Published metadata' : 'Published article framing'",
+            "const openingLabel = leadRow ? 'Opening authored passage' : metadataOnlyMember ? 'Published metadata' : 'Published article framing'",
             briefing,
         )
         self.assertIn(
             'No anonymous article-body preview was available in this release',
             briefing,
         )
-        self.assertIn('Active retained source-passage task', briefing)
+        self.assertIn('Active retained source-passage item', briefing)
         self.assertIn('current observation absent', briefing)
         self.assertIn('never treats them as current recommendations', briefing)
         self.assertIn('Array.from(workflowItems.values()).filter', briefing)
@@ -727,13 +727,13 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         end = self.html.index('\nlet pendingBriefFocus', start)
         compact = self.html[start:end]
         for text in (
-            'aria-label="Briefing navigation"',
-            'aria-label="Research views"',
-            'aria-label="Archive lenses"',
-            "['briefing','Latest Brief']",
-            "['ideas','Evidence Monitor']",
-            "['research','Research Library']",
-            "['queue','Research Tasks']",
+            'aria-label="Article record navigation"',
+            'aria-label="Archive views"',
+            'aria-label="Section filters"',
+            "['briefing','Article Record']",
+            "['ideas','Parsed Passages']",
+            "['research','Article Index']",
+            "['queue','Local Review']",
             'data-brief-lens=',
             'aria-pressed=',
             'aria-current="page"',
@@ -833,7 +833,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.assertIn(text, print_css)
         hidden_rule = print_css[print_css.index('.app-header,'):print_css.index('{display:none!important}', print_css.index('.app-header,'))]
         self.assertNotIn('.intel-side,', hidden_rule)
-        self.assertIn('Research challenge sheet · published source', self.html)
+        self.assertIn('Source-defined challenges · published source', self.html)
         self.assertIn('Independent research remains required.', self.html)
 
     def test_clipboard_failure_preserves_text_in_accessible_manual_fallback(self):
@@ -851,12 +851,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.html,
         )
         self.assertIn(
-            'aria-label="Restore research tasks from a JSON file" tabindex="-1"',
+            'aria-label="Restore local review from a JSON file" tabindex="-1"',
             self.html,
         )
         self.assertIn(
             'aria-labelledby="brief-key-evidence-title"><h2 class="sr-only" '
-            'id="brief-key-evidence-title">Source-backed numeric evidence</h2>',
+            'id="brief-key-evidence-title">Source-linked numeric passages</h2>',
             self.html,
         )
         self.assertIn(
@@ -996,8 +996,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'validateDeferredBriefArchive(payload)',
             "article.brief = validatedBriefs[id]",
             'refreshArticleSearch(article)',
-            'Loading the exact article dossier',
-            'Checking the deferred dossier against this release.',
+            'Loading the exact article record',
+            'Checking the deferred article record against this release.',
         ):
             self.assertIn(text, self.html)
 
@@ -1053,7 +1053,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         overlay_end = self.html.index('<a class="skip-link"', overlay_start)
         overlay = self.html[overlay_start:overlay_end]
         self.assertIn('<noscript><div class="bootstrap-no-js" role="status">', overlay)
-        self.assertIn('The research terminal cannot verify its catalogue', overlay)
+        self.assertIn('The research archive cannot verify its catalogue', overlay)
         self.assertIn('href="data/latest.json">View release status</a>', overlay)
         self.assertIn('<div id="bootstrap-js" hidden>', overlay)
         self.assertLess(overlay.index('<noscript>'), overlay.index('id="bootstrap-js"'))
@@ -1332,7 +1332,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Math.round(count / denominator * 100)',
             'Math.max(1,percent)',
             "row[0] + ': ' + count + ' of ' + records.length + ' articles'",
-            'Dossier coverage in this lens',
+            'Captured section coverage',
             'High-precision section presence only; not research quality, confidence, or a recommendation score.',
         ):
             self.assertIn(text, coverage)
@@ -1346,7 +1346,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'selected.manager_keys',
             'selected.underlyings',
             'selected.instruments',
-            'Same mentioned entity:',
+            'Same organization or person:',
             'Same extracted underlying:',
             'qualified:Boolean(managers.length || underlyings.length)',
             'Exact entity or underlying overlap',
@@ -1369,10 +1369,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'selected.instruments',
             'THREAD_ARTICLES[selected.id]',
             'Same research topic:',
-            'Same mentioned entity:',
+            'Same organization or person:',
             'Same extracted underlying:',
             'Same market:',
-            'exact-context overlap',
+            'shared indexed field',
             'does not imply a recommendation, position, or similar conclusion',
         ):
             self.assertIn(text, related)
@@ -1398,13 +1398,13 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
         self.assertIn('data-copy-brief="', self.html)
         self.assertIn('data-print-brief', self.html)
-        self.assertIn('Copy IC brief', self.html)
+        self.assertIn('Copy article record', self.html)
         self.assertIn('Print / PDF', self.html)
         self.assertRegex(
             self.html,
             re.compile(
                 r"ARTICLE_BY_ID\.get\(copyBrief\.dataset\.copyBrief\).*?"
-                r"copyText\(articleBriefText\(article\),'Institutional brief copied with source provenance'\)",
+                r"copyText\(articleBriefText\(article\),'Article record copied with source provenance'\)",
                 re.DOTALL,
             ),
         )
@@ -1567,7 +1567,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Read full note on Substack ↗',
             'See subscription plans ↗',
             'Related subscriber research',
-            'This terminal sends no search, filter, or research-task data.',
+            'This archive sends no search, filter, or local-review data.',
             'https://www.navnoorbawaresearch.com/subscribe',
             'rel="noopener noreferrer"',
         ):
@@ -1676,11 +1676,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'lastPersistedWorkflow',
             'window.addEventListener(\'beforeunload\'',
             'Automatic clipboard access was blocked. The complete text is preserved below',
-            'Copy research task',
+            'Copy local review',
             'Copy retained citation',
             'function retainedSourceCitation(item)',
             'function selectedOpenUrl()',
-            'Archive task',
+            'Archive item',
             'Return to new',
             'Stored only in this tab session unless exported',
             'Not an enterprise audit record',
@@ -1711,7 +1711,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             ('numeric_traced', 'Key numeric phrase traced to its cited context'),
             ('contrary_recorded', 'Contrary evidence or alternative explanation recorded'),
             ('falsifier_recorded', 'Falsifier or observable checkpoint recorded'),
-            ('claims_scope_reviewed', 'Task reviewed for unsupported claims and non-confidential scope'),
+            ('claims_scope_reviewed', 'Local-review item checked for unsupported claims and non-confidential scope'),
         ):
             self.assertIn("['" + gate_key + "','" + label + "']", self.html)
         gates_start = self.html.index('const DILIGENCE_GATES = [')
@@ -1766,7 +1766,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         inspector_end = self.html.index('\nfunction renderArticleInspector', inspector_start)
         inspector = self.html[inspector_start:inspector_end]
         for text in (
-            'Local research task',
+            'Local review item',
             'Human-authored',
             'Field presence never becomes a readiness score.',
             'retainedSourceSnapshotMarkup(workflow,idea)',
@@ -1774,8 +1774,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Attested ',
             'No completion or confidence score is calculated.',
             "if (state.view === 'queue' && workflow && workflow.source_snapshot)",
-            'RETAINED TASK SOURCE',
-            'Current-release data is not substituted into the task',
+            'RETAINED LOCAL-REVIEW SOURCE',
+            'Current-release data is not substituted into the item',
         ):
             self.assertIn(text, inspector)
         for forbidden in (
@@ -1811,9 +1811,9 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         for text in (
             'captured passage',
             'dataset revision',
-            'Retained task source snapshot',
+            'Retained local-review source snapshot',
             'The current release differs in ',
-            'copied and exported tasks preserve it',
+            'copied and exported items preserve it',
             'rel="noopener noreferrer"',
         ):
             self.assertIn(text, retained)
@@ -1824,7 +1824,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn("validTimestamp(value.check_times && value.check_times[row[0]])", self.html)
         self.assertIn('item.check_times[gate] = attestedAt', self.html)
         self.assertIn('item.updated_at > existing.updated_at', self.html)
-        self.assertIn('The current queue will be retained as a tab-scoped rollback across reloads.', self.html)
+        self.assertIn('The current Local Review set will be retained as a tab-scoped rollback across reloads.', self.html)
         self.assertIn('sessionStorage.setItem(\n          RESTORE_ROLLBACK_KEY', self.html)
 
     def test_institutional_methodology_links_and_operating_boundary_are_explicit(self):
@@ -1836,7 +1836,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a',
             'https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-c',
             'https://www.sec.gov/resources-small-businesses/small-business-compliance-guides/investment-adviser-marketing',
-            'These references shape research questions, evidence retention, and disclosure boundaries; they do not certify a packet or establish legal compliance.',
+            'These references shape research questions, evidence retention, and disclosure boundaries; they do not certify this archive or establish legal compliance.',
             'Field presence never becomes a readiness score.',
             'No completion or confidence score is calculated.',
         ):
@@ -1866,12 +1866,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn(
             "state.view = viewNumber === '1' ? 'structure'", self.html)
         for leading in (
-            "['structure','Evidence Desk'],['briefing','Latest Brief']",
-            "['01','structure','Evidence Desk'],['02','briefing','Latest Brief']",
+            "['structure','Passage Search'],['briefing','Article Record']",
+            "['01','structure','Passage Search'],['02','briefing','Article Record']",
         ):
             self.assertIn(leading, self.html)
         self.assertIn(
-            'Structure / Brief / Monitor / Library / Queue', self.html)
+            'Search / Record / Passages / Index / Review', self.html)
         self.assertIn(
             "].includes(hashView) ? hashView : 'structure';", self.html)
         self.assertIn(
@@ -1943,7 +1943,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_structure_desk_is_wired_as_a_first_class_view(self):
         for text in (
-            'Research Evidence Desk',
+            'Published Passage Search',
             '<section class="structure-shell" id="structure-shell"',
             "'briefing','ideas','research','queue','structure'",
             'structure:8',
@@ -1957,11 +1957,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'data-structure-focus="',
             'data-structure-passage="',
             'data-structure-more="1"',
-            'No evidence subject defined',
+            'No search subject defined',
             'Retrieved authored notes',
-            'Research handoff',
+            'Local review handoff',
             'Related mentions — excluded from the evidence set',
-            'Open local research task',
+            'Open local review item',
             'Parser candidates',
             'Optional macro provenance',
             'not timestamp-aligned and may post-date a same-day article',
@@ -2065,8 +2065,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Retained source passage',
             'Retained dataset checksum',
             'Current-release differences',
-            'Research task status',
-            'Research owner',
+            'Local review status',
+            'Review owner',
             'Next review',
             'Next action',
             'Research hypothesis to test',
@@ -2076,7 +2076,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Falsifier / observable checkpoint',
             'Independent public source recorded',
             'Unsupported-claims / non-confidential review',
-            'Task updated',
+            'Item updated',
         ):
             self.assertIn(column, task_export)
         for forbidden in (
@@ -2114,7 +2114,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         layout = render.index("startChips + '</header>' + refineBar +")
         self.assertGreater(layout, 0)
         self.assertIn("const startState = !gate && !defined", render)
-        self.assertIn('No evidence subject defined', render)
+        self.assertIn('No search subject defined', render)
         self.assertIn('Start with a published-research subject', render)
         self.assertIn("'<div class=\"structure-workbench\">' + comparablePanel + railPanel", render)
         self.assertIn('Verbatim evidence first', render)
@@ -2140,7 +2140,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
         # The handoff rail reports raw source counts and explicit human gaps;
         # it never turns field presence into a score.
-        self.assertIn('Research handoff', render)
+        self.assertIn('Local review handoff', render)
         self.assertIn('no readiness score', render)
         self.assertIn('Evidence breadth', render)
         self.assertIn('Human research case', render)
@@ -2173,7 +2173,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'this test assumes outcomes are not universally recorded',
         )
         for text in (
-            'Builds a research task—not an investment recommendation or portfolio decision. No live holdings, prices, P&amp;L, sizing, exposure, liquidity, or compliance approval.',
+            'Builds a local review item—not an investment recommendation or portfolio decision. No live holdings, prices, P&amp;L, sizing, exposure, liquidity, or compliance approval.',
             'Instrument fields are lexical source mentions, not validated legs.',
             'Related subsequent notes are article-topic links, not outcomes.',
             'passages contain a detected outcome / P&amp;L phrase requiring source review.',
@@ -2221,16 +2221,16 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_institutional_views_and_workflows_are_present(self):
         for text in (
-            'Latest Brief',
-            'Evidence Monitor',
-            'Research Library',
-            'Research Tasks',
+            'Article Record',
+            'Parsed Passages',
+            'Article Index',
+            'Local Review',
             'Research evidence',
             'Export CSV',
             'Copy view',
             'Source passage',
             'Parsed directional language',
-            'Mentioned entity',
+            'Organization or person',
             'Detected numeric phrase',
             'Detected outcome / P&L phrase',
         ):
@@ -2260,7 +2260,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_accessibility_structure_and_focus_behavior(self):
         self.assertIn('class="skip-link"', self.html)
-        self.assertIn('<p class="sr-only">Navnoor Research Terminal</p>', self.html)
+        self.assertIn('<p class="sr-only">Navnoor Research Archive</p>', self.html)
         self.assertIn('<h1 class="intel-title" id="lead-article-title">', self.html)
         self.assertIn('role="grid"', self.html)
         self.assertIn('aria-multiselectable="false"', self.html)
@@ -2582,7 +2582,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
     def test_search_social_and_discovery_metadata_are_complete_and_private(self):
         for text in (
             '<meta name="robots" content="index,follow,max-image-preview:large">',
-            '<meta property="og:site_name" content="Navnoor Research Terminal">',
+            '<meta property="og:site_name" content="Navnoor Research Archive">',
             '<meta property="og:image" content="https://navnoorthapar.github.io/substack-trades/og.jpg">',
             '<meta property="og:image:width" content="1200">',
             '<meta property="og:image:height" content="630">',

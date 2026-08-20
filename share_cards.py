@@ -218,7 +218,7 @@ def _display_date(value: object) -> str:
 
 
 def render_share_card(title: object, source: object, post_date: object) -> bytes:
-    """Render one Bloomberg-terminal-inspired, byte-stable indexed PNG."""
+    """Render one byte-stable indexed PNG for the published research archive."""
     pixels = bytearray([0]) * (WIDTH * HEIGHT)
     _rectangle(pixels, 48, 42, 1152, 588, 4)
     _rectangle(pixels, 48, 42, 58, 588, 2)
@@ -226,9 +226,9 @@ def render_share_card(title: object, source: object, post_date: object) -> bytes
     _rectangle(pixels, 80, 516, 1120, 518, 5)
 
     _rectangle(pixels, 80, 67, 128, 115, 5)
-    _draw_text(pixels, 'N/R', 86, 80, 3, 1)
-    _draw_text(pixels, 'NAVNOOR RESEARCH', 152, 73, 4, 1)
-    _draw_text(pixels, 'PUBLISHED RESEARCH INTELLIGENCE', 153, 108, 2, 3)
+    _draw_text(pixels, 'NA', 86, 80, 3, 1)
+    _draw_text(pixels, 'NAVNOOR RESEARCH ARCHIVE', 152, 73, 4, 1)
+    _draw_text(pixels, 'PUBLISHED RESEARCH INDEX', 153, 108, 2, 3)
 
     source_key = str(source or '').strip().casefold()
     source_label = SOURCE_LABELS.get(source_key, normalize_card_text(source))
@@ -240,7 +240,7 @@ def render_share_card(title: object, source: object, post_date: object) -> bytes
     for index, line in enumerate(layout_title(title)):
         _draw_text(pixels, line, 80, 226 + index * 57, 5, 1)
 
-    _draw_text(pixels, 'ARTICLE DOSSIER', 80, 548, 3, 3)
+    _draw_text(pixels, 'ARTICLE RECORD', 80, 548, 3, 3)
     _draw_text(pixels, 'NAVNOORTHAPAR.GITHUB.IO', 740, 548, 3, 2)
     png = _encode_indexed_png(bytes(pixels))
     if len(png) > MAX_CARD_BYTES:
@@ -274,7 +274,7 @@ def _site_root(value: object) -> str:
 def _description(article: Mapping[str, object]) -> str:
     value = str(article.get('subtitle') or '').strip()
     if not value:
-        value = 'Published research by Navnoor Research.'
+        value = 'Published research indexed by Navnoor Research Archive.'
     value = ' '.join(value.split())
     if len(value) > 200:
         value = value[:197].rstrip() + '...'
@@ -292,7 +292,7 @@ def script_literal(value: str) -> str:
 def render_article_stub(
         article: Mapping[str, object], article_id: str, site_url: str,
 ) -> str:
-    """Return an OG page linking humans to its dossier or registry source."""
+    """Return an OG page linking humans to its article record or source."""
     slug = _safe_slug(article.get('slug'))
     if not re.fullmatch(r'[A-Za-z0-9_-]+', article_id):
         raise ValueError('article_id must be a safe hash-route identifier')
@@ -312,7 +312,7 @@ def render_article_stub(
             '../#view=briefing&selected='
             f'{quote(article_id, safe="_- ").replace(" ", "%20")}'
         )
-        action_label = 'Open this research dossier'
+        action_label = 'Open this article record'
     script = f'location.replace({script_literal(route)});'
     digest = base64.b64encode(hashlib.sha256(script.encode()).digest()).decode()
     def escape(value: object) -> str:
@@ -326,12 +326,12 @@ def render_article_stub(
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-{digest}'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
   <meta http-equiv="refresh" content="0;url={escape(route)}">
-  <title>{escape(title)} — Navnoor Research</title>
+  <title>{escape(title)} — Navnoor Research Archive</title>
   <meta name="description" content="{escape(description)}">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="{escape(canonical)}">
   <meta property="og:type" content="article">
-  <meta property="og:site_name" content="Navnoor Research">
+  <meta property="og:site_name" content="Navnoor Research Archive">
   <meta property="og:title" content="{escape(title)}">
   <meta property="og:description" content="{escape(description)}">
   <meta property="og:url" content="{escape(canonical)}">
@@ -344,6 +344,7 @@ def render_article_stub(
   <meta name="twitter:title" content="{escape(title)}">
   <meta name="twitter:description" content="{escape(description)}">
   <meta name="twitter:image" content="{escape(image_url)}">
+  <meta name="twitter:image:alt" content="Share card for {escape(title)}">
   <script>{script}</script>
 </head>
 <body><p><a href="{escape(route)}">{action_label}</a></p></body>

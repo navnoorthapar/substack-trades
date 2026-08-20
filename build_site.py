@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the institutional research terminal at docs/index.html."""
+"""Build the Navnoor Research Archive at docs/index.html."""
 import base64
 import hashlib
 import html as html_lib
@@ -771,28 +771,28 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Institutional research intelligence across hedge funds, systematic strategies, derivatives, and market structure.">
+<meta name="description" content="Published research index with source-linked passages and capture provenance.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="color-scheme" content="light dark">
-<meta name="application-name" content="Navnoor Research Terminal">
+<meta name="application-name" content="Navnoor Research Archive">
 <meta name="theme-color" id="theme-color" content="__LIGHT_THEME_BG__">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
-<meta property="og:site_name" content="Navnoor Research Terminal">
-<meta property="og:title" content="Navnoor Research Terminal">
-<meta property="og:description" content="Source-backed institutional research dossiers with exact passages, evidence ledgers, checkpoints, and decision boundaries.">
+<meta property="og:site_name" content="Navnoor Research Archive">
+<meta property="og:title" content="Navnoor Research Archive">
+<meta property="og:description" content="Published research index with source-linked passages and capture provenance.">
 <meta property="og:url" content="https://navnoorthapar.github.io/substack-trades/">
 <meta property="og:image" content="https://navnoorthapar.github.io/substack-trades/og.jpg">
 <meta property="og:image:secure_url" content="https://navnoorthapar.github.io/substack-trades/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Navnoor Research Terminal institutional research intelligence preview">
+<meta property="og:image:alt" content="Navnoor Research Archive published research preview">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Navnoor Research Terminal">
-<meta name="twitter:description" content="Source-backed institutional research dossiers with exact passages, evidence ledgers, checkpoints, and decision boundaries.">
+<meta name="twitter:title" content="Navnoor Research Archive">
+<meta name="twitter:description" content="Published research index with source-linked passages and capture provenance.">
 <meta name="twitter:image" content="https://navnoorthapar.github.io/substack-trades/og.jpg">
-<meta name="twitter:image:alt" content="Navnoor Research Terminal institutional research intelligence preview">
+<meta name="twitter:image:alt" content="Navnoor Research Archive published research preview">
 <link rel="canonical" href="https://navnoorthapar.github.io/substack-trades/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="manifest" href="site.webmanifest">
@@ -806,16 +806,16 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="nrt-article-catalog-sha256" content="__ARTICLE_CATALOG_SHA256__">
 <meta name="nrt-brief-archive-sha256" content="__BRIEF_ARCHIVE_SHA256__">
 <meta name="nrt-observation-archive-sha256" content="__OBSERVATION_ARCHIVE_SHA256__">
-<title>Navnoor Research Terminal</title>
+<title>Navnoor Research Archive</title>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Navnoor Research Terminal","url":"https://navnoorthapar.github.io/substack-trades/","description":"Source-backed institutional research dossiers with exact passages, evidence ledgers, checkpoints, and decision boundaries.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"author":{"@type":"Person","name":"Navnoor Bawa","url":"https://medium.com/@navnoorbawa"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Navnoor Research Archive","url":"https://navnoorthapar.github.io/substack-trades/","description":"Published research index with source-linked passages and capture provenance.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"author":{"@type":"Person","name":"Navnoor Bawa","url":"https://medium.com/@navnoorbawa"}}
 </script>
 <script>
 (function () {
   if (window.top !== window.self) {
-    document.documentElement.textContent = 'Embedding is blocked. Open Navnoor Research Terminal directly.';
+    document.documentElement.textContent = 'Embedding is blocked. Open Navnoor Research Archive directly.';
     try { window.top.location.replace(window.self.location.href); } catch (_error) {}
-    throw new Error('Navnoor Research Terminal cannot run inside a frame');
+    throw new Error('Navnoor Research Archive cannot run inside a frame');
   }
   try {
     var themeRevision = '__THEME_REVISION__';
@@ -1665,7 +1665,7 @@ button.research-map-step:hover{border-color:var(--control-line-hover);background
 .checkpoint-mini{display:grid;grid-template-columns:92px 1fr;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:10.5px;color:var(--text-secondary)}
 .checkpoint-mini time{font:650 10px var(--mono);color:var(--checkpoint)}
 
-/* Investment Committee Brief — editorial reading system */
+/* Article record — editorial reading system */
 body[data-view="briefing"] .kpi-strip,
 body[data-view="briefing"] .command-bar,
 body[data-view="briefing"] .active-filters,
@@ -2683,14 +2683,14 @@ noscript{display:block}
   <div class="bootstrap-card">
     <noscript><div class="bootstrap-no-js" role="status">
       <p class="bootstrap-kicker">JavaScript required</p>
-      <h1>The research terminal cannot verify its catalogue</h1>
-      <p class="bootstrap-detail">Enable JavaScript to use the terminal, or inspect the public release status directly.</p>
+      <h1>The research archive cannot verify its catalogue</h1>
+      <p class="bootstrap-detail">Enable JavaScript to use the archive, or inspect the public release status directly.</p>
       <div class="bootstrap-actions"><a class="secondary-action" href="data/latest.json">View release status</a></div>
     </div></noscript>
     <div id="bootstrap-js" hidden>
       <p class="bootstrap-kicker" id="bootstrap-kicker">Release verification</p>
       <h1 id="bootstrap-title">Loading verified research catalogue</h1>
-      <p class="bootstrap-detail" id="bootstrap-detail">Checking the exact same-origin catalogue before the terminal starts.</p>
+      <p class="bootstrap-detail" id="bootstrap-detail">Checking the exact same-origin catalogue before the archive starts.</p>
       <div class="bootstrap-actions" id="bootstrap-actions" hidden>
         <button class="primary-action" id="bootstrap-retry" type="button">Retry verified load</button>
         <a class="secondary-action" href="data/latest.json">View release status</a>
@@ -2700,26 +2700,26 @@ noscript{display:block}
 </div>
 <div id="application-shell" inert aria-hidden="true">
 <a class="skip-link" href="#main-panel">Skip to research results</a>
-<p class="sr-only">Navnoor Research Terminal</p>
+<p class="sr-only">Navnoor Research Archive</p>
 
 <header class="app-header">
   <div class="brand">
-    <div class="brand-mark" aria-hidden="true">N/R</div>
+    <div class="brand-mark" aria-hidden="true">NA</div>
     <div>
-      <div class="brand-name">Navnoor Research</div>
-      <div class="brand-sub">Investment committee library</div>
+      <div class="brand-name">Navnoor Research Archive</div>
+      <div class="brand-sub">Published research index</div>
     </div>
   </div>
   <div class="global-search">
-    <label class="sr-only" for="search">Search claim, entity, market, evidence, or article</label>
+    <label class="sr-only" for="search">Search passage, organization, person, market, or article</label>
     <span class="search-glyph" aria-hidden="true">⌕</span>
     <input id="search" type="search" autocomplete="off" spellcheck="false" maxlength="300"
-      placeholder="Search claim, entity, market, evidence…" aria-keyshortcuts="Alt+/">
+      placeholder="Search passage, organization, person, market…" aria-keyshortcuts="Alt+/">
     <span class="search-key" aria-hidden="true">Alt /</span>
   </div>
   <div class="header-right">
     <div class="freshness" id="freshness-summary"><span class="status-dot" id="freshness-dot" aria-hidden="true"></span><span id="freshness-state">Unknown</span><span class="freshness-separator" aria-hidden="true">·</span><span id="freshness-label">research status loading</span></div>
-    <button class="utility-button header-library" type="button" data-view="research">Library</button>
+    <button class="utility-button header-library" type="button" data-view="research">Index</button>
     <button class="utility-button" id="palette-button" type="button" aria-label="Open command palette" aria-keyshortcuts="Control+K Meta+K">Command <span class="utility-key" aria-hidden="true">⌘K</span></button>
     <button class="utility-button" id="method-button" type="button" aria-label="Show data methodology">Method</button>
     <button class="utility-button" id="theme-button" type="button" aria-label="Switch to dark theme">Dark</button>
@@ -2728,7 +2728,7 @@ noscript{display:block}
   </div>
 </header>
 
-<section class="kpi-strip" aria-label="Article intelligence coverage">
+<section class="kpi-strip" aria-label="Published article coverage">
   <div class="kpi-item">
     <span class="kpi-value" id="kpi-latest">—</span><span class="kpi-label">Research<br>published through</span>
   </div>
@@ -2768,22 +2768,22 @@ noscript{display:block}
         <button class="preset-button" type="button" data-preset="recent">Recent high-context passages</button>
         <button class="preset-button" type="button" data-preset="new">New since last review</button>
         <button class="preset-button" type="button" data-preset="rv">Numeric relative value</button>
-        <button class="preset-button" type="button" data-preset="entity">Mentioned entity</button>
+        <button class="preset-button" type="button" data-preset="entity">Organization or person</button>
       </div>
       <p class="filter-note">Presets organize research passages; they are not recommendations or confidence scores.</p>
     </section>
 
     <section class="filter-group" aria-labelledby="source-filter-label">
-      <div class="filter-heading"><h2 id="source-filter-label">Publication channel</h2></div>
+      <div class="filter-heading"><h2 id="source-filter-label">Source</h2></div>
       <div class="facet-list">
-        <button class="facet-clear active" type="button" data-clear-facet="source"><span>Any channel</span><span class="facet-count" data-count-clear="source"></span></button>
+        <button class="facet-clear active" type="button" data-clear-facet="source"><span>Any source</span><span class="facet-count" data-count-clear="source"></span></button>
         <button class="facet-option" type="button" data-filter="source" data-value="substack"><span>Substack</span><span class="facet-count" data-count-source="substack"></span></button>
         <button class="facet-option" type="button" data-filter="source" data-value="medium"><span>Medium</span><span class="facet-count" data-count-source="medium"></span></button>
       </div>
     </section>
 
     <section class="filter-group" aria-labelledby="revision-filter-label">
-      <div class="filter-heading"><h2 id="revision-filter-label">Body revision provenance</h2></div>
+      <div class="filter-heading"><h2 id="revision-filter-label">Source capture</h2></div>
       <div class="facet-list">
         <button class="facet-clear active" type="button" data-clear-facet="revision"><span>Any body revision</span><span class="facet-count" data-count-clear="revision"></span></button>
         <button class="facet-option" type="button" data-filter="revision" data-value="current"><span>Current source capture</span><span class="facet-count" data-count-revision="current"></span></button>
@@ -2837,11 +2837,11 @@ noscript{display:block}
 
     <section class="filter-group current-extraction-filter" aria-labelledby="manager-filter-label">
       <div class="filter-heading">
-        <h2 id="manager-filter-label">Mentioned entity</h2>
+        <h2 id="manager-filter-label">Organization or person</h2>
         <button class="text-button" type="button" data-clear-facet="manager">Any</button>
       </div>
-      <label class="sr-only" for="manager-search">Search mentioned managers, firms, and entities</label>
-      <input class="manager-search" id="manager-search" type="search" autocomplete="off" placeholder="Find mentioned entity…">
+      <label class="sr-only" for="manager-search">Search organizations and people</label>
+      <input class="manager-search" id="manager-search" type="search" autocomplete="off" placeholder="Find organization or person…">
       <div class="facet-list manager-options" id="manager-options">
 __MANAGER_BUTTONS__
       </div>
@@ -2853,7 +2853,7 @@ __MANAGER_BUTTONS__
         <button class="facet-option" type="button" data-filter="quality" data-value="quant"><span>Detected numeric phrase</span><span class="facet-count" data-count-quality="quant"></span></button>
         <button class="facet-option" type="button" data-filter="quality" data-value="thesis"><span>Thesis-phrase candidate</span><span class="facet-count" data-count-quality="thesis"></span></button>
         <button class="facet-option" type="button" data-filter="quality" data-value="outcome"><span>Detected outcome / P&amp;L phrase</span><span class="facet-count" data-count-quality="outcome"></span></button>
-        <button class="facet-option" type="button" data-filter="quality" data-value="manager"><span>Mentioned entity</span><span class="facet-count" data-count-quality="manager"></span></button>
+        <button class="facet-option" type="button" data-filter="quality" data-value="manager"><span>Organization or person</span><span class="facet-count" data-count-quality="manager"></span></button>
       </div>
     </section>
 
@@ -2900,9 +2900,9 @@ __MANAGER_BUTTONS__
     </section>
 
     <section class="filter-group queue-only-filter" aria-labelledby="queue-filter-label">
-      <div class="filter-heading"><h2 id="queue-filter-label">Research task status</h2></div>
+      <div class="filter-heading"><h2 id="queue-filter-label">Local review status</h2></div>
       <div class="facet-list">
-        <button class="facet-clear active" type="button" data-clear-queue-status><span>Any queue status</span></button>
+        <button class="facet-clear active" type="button" data-clear-queue-status><span>Any review status</span></button>
         <button class="facet-option" type="button" data-filter="queue-status" data-value="review"><span>Review</span></button>
         <button class="facet-option" type="button" data-filter="queue-status" data-value="diligence"><span>Verifying</span></button>
         <button class="facet-option" type="button" data-filter="queue-status" data-value="monitor"><span>Monitor</span></button>
@@ -2915,12 +2915,12 @@ __MANAGER_BUTTONS__
 
   <main class="main-panel" id="main-panel" tabindex="-1">
     <div class="command-bar">
-      <nav class="view-tabs" aria-label="Terminal views">
-        <button class="view-tab active" type="button" data-view="structure" aria-keyshortcuts="Alt+Shift+1">Evidence Desk</button>
-        <button class="view-tab" type="button" data-view="briefing" aria-keyshortcuts="Alt+Shift+2">Latest Brief</button>
-        <button class="view-tab" type="button" data-view="ideas" aria-keyshortcuts="Alt+Shift+3">Evidence Monitor</button>
-        <button class="view-tab" type="button" data-view="research" aria-keyshortcuts="Alt+Shift+4">Research Library</button>
-        <button class="view-tab" type="button" data-view="queue" aria-keyshortcuts="Alt+Shift+5">Research Tasks <span id="saved-count"></span></button>
+      <nav class="view-tabs" aria-label="Archive views">
+        <button class="view-tab active" type="button" data-view="structure" aria-keyshortcuts="Alt+Shift+1">Passage Search</button>
+        <button class="view-tab" type="button" data-view="briefing" aria-keyshortcuts="Alt+Shift+2">Article Record</button>
+        <button class="view-tab" type="button" data-view="ideas" aria-keyshortcuts="Alt+Shift+3">Parsed Passages</button>
+        <button class="view-tab" type="button" data-view="research" aria-keyshortcuts="Alt+Shift+4">Article Index</button>
+        <button class="view-tab" type="button" data-view="queue" aria-keyshortcuts="Alt+Shift+5">Local Review <span id="saved-count"></span></button>
       </nav>
       <span class="result-summary" id="result-summary"></span>
       <span class="command-spacer"></span>
@@ -2929,16 +2929,16 @@ __MANAGER_BUTTONS__
       <button class="command-button table-command" type="button" data-action="density"><span class="button-label">Density: </span><span id="density-label">Compact</span></button>
       <button class="command-button" type="button" data-action="copy-view">Copy view</button>
       <button class="command-button" type="button" data-action="export">Export CSV</button>
-      <button class="command-button queue-command" type="button" data-action="backup-queue">Backup queue</button>
-      <button class="command-button queue-command" type="button" data-action="restore-queue">Restore queue</button>
-      <button class="command-button queue-command" type="button" data-action="clear-queue">Clear tab queue</button>
+      <button class="command-button queue-command" type="button" data-action="backup-queue">Back up local review</button>
+      <button class="command-button queue-command" type="button" data-action="restore-queue">Restore local review</button>
+      <button class="command-button queue-command" type="button" data-action="clear-queue">Clear local review</button>
       <button class="command-button active" type="button" data-action="inspector" aria-pressed="true" aria-expanded="true" aria-controls="inspector">Inspector</button>
     </div>
 
     <div class="storage-alert" id="storage-alert" role="alert" hidden>
-      <span id="storage-alert-text">Tab-session storage is unavailable. In-memory packet edits will not survive a reload; back up the queue before leaving.</span>
+      <span id="storage-alert-text">Tab-session storage is unavailable. In-memory local-review edits will not survive a reload; back up local review before leaving.</span>
       <button class="command-button" id="storage-retry" type="button" data-action="retry-storage">Retry save</button>
-      <button class="command-button" id="storage-backup" type="button" data-action="backup-queue">Backup queue</button>
+      <button class="command-button" id="storage-backup" type="button" data-action="backup-queue">Back up local review</button>
       <button class="command-button" id="storage-raw-backup" type="button" data-action="backup-raw-storage" hidden>Back up unreadable record</button>
       <button class="command-button" id="storage-clear" type="button" data-action="clear-unreadable-storage" hidden>Discard unreadable record</button>
     </div>
@@ -2947,7 +2947,7 @@ __MANAGER_BUTTONS__
 
     <section class="orphaned-queue" id="orphaned-queue" aria-labelledby="orphaned-title">
       <h2 id="orphaned-title">Retained source snapshots</h2>
-      <p>These local research tasks refer to passages no longer present in the current extraction. Their retained source snapshots remain available in task backups.</p>
+      <p>These local review items refer to passages no longer present in the current extraction. Their retained source snapshots remain available in review backups.</p>
       <div class="orphaned-list" id="orphaned-list"></div>
     </section>
 
@@ -2961,9 +2961,9 @@ __MANAGER_BUTTONS__
       <span class="mix-legend" id="mix-legend"></span>
     </section>
 
-    <section class="briefing-shell" id="briefing-shell" aria-label="Article intelligence brief"></section>
+    <section class="briefing-shell" id="briefing-shell" aria-label="Article record"></section>
 
-    <section class="structure-shell" id="structure-shell" aria-label="Published-research evidence discovery and handoff"></section>
+    <section class="structure-shell" id="structure-shell" aria-label="Published-passage search and local review handoff"></section>
 
     <section class="table-shell" id="table-shell" aria-label="Research results">
       <div class="data-table" id="data-table" role="grid" aria-label="Research results" aria-rowcount="0" aria-multiselectable="false">
@@ -2991,16 +2991,16 @@ __MANAGER_BUTTONS__
     </div>
     <div id="inspector-content">
       <div class="inspector-empty">
-        <div class="inspector-empty-mark">N/R</div>
+        <div class="inspector-empty-mark">NA</div>
         <h2>Select a record</h2>
-        <p>Inspect the complete idea, evidence, provenance, and source without losing your position in the monitor.</p>
+        <p>Inspect the complete passage, evidence, provenance, and source without losing your position in the index.</p>
       </div>
     </div>
   </aside>
 </div>
 
 <input class="sr-only" id="queue-restore-input" type="file" accept="application/json,.json"
-  aria-label="Restore research tasks from a JSON file" tabindex="-1">
+  aria-label="Restore local review from a JSON file" tabindex="-1">
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="persistent-notice" id="persistent-notice" role="alert" hidden>
@@ -3016,16 +3016,16 @@ __MANAGER_BUTTONS__
     <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
     <input id="command-palette-input" type="text" role="combobox" aria-expanded="true"
       aria-controls="command-palette-list" aria-autocomplete="list" aria-describedby="command-palette-hint"
-      placeholder="Jump to a view, dossier, or action…" autocomplete="off" spellcheck="false">
+      placeholder="Jump to a view, article record, or action…" autocomplete="off" spellcheck="false">
     <kbd>Esc</kbd>
   </div>
-  <ul class="palette-list" id="command-palette-list" role="listbox" aria-label="Commands and dossiers"></ul>
-  <p class="palette-empty" id="command-palette-empty" hidden>No command or dossier in this release matches that text.</p>
+  <ul class="palette-list" id="command-palette-list" role="listbox" aria-label="Commands and article records"></ul>
+  <p class="palette-empty" id="command-palette-empty" hidden>No command or article record in this release matches that text.</p>
   <div class="palette-foot" id="command-palette-hint">
     <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
     <span><kbd>Enter</kbd> run</span>
     <span><kbd>Esc</kbd> close</span>
-    <span>Dossier results open the brief for that publication.</span>
+    <span>Article results open the record for that publication.</span>
   </div>
 </dialog>
 
@@ -3035,17 +3035,17 @@ __MANAGER_BUTTONS__
     <button class="inspector-close" type="button" data-close-dialog aria-label="Close method and keyboard reference">×</button>
   </div>
   <div class="shortcut-grid">
-    <div class="shortcut-item"><span>Command palette — views, dossiers, actions</span><span><kbd>Ctrl</kbd>/<kbd>⌘</kbd> <kbd>K</kbd></span></div>
+    <div class="shortcut-item"><span>Command palette — views, article records, actions</span><span><kbd>Ctrl</kbd>/<kbd>⌘</kbd> <kbd>K</kbd></span></div>
     <div class="shortcut-item"><span>Focus global search</span><span><kbd>/</kbd> or <kbd>Alt</kbd> <kbd>/</kbd></span></div>
     <div class="shortcut-item"><span>Jump to result grid</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>G</kbd></span></div>
     <div class="shortcut-item"><span>Move through rows</span><span><kbd>J</kbd>/<kbd>K</kbd> or <kbd>↑</kbd> <kbd>↓</kbd></span></div>
     <div class="shortcut-item"><span>First / last visible row</span><span><kbd>Home</kbd> <kbd>End</kbd></span></div>
     <div class="shortcut-item"><span>Open evidence inspector</span><kbd>Enter</kbd></div>
     <div class="shortcut-item"><span>Open original research</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>O</kbd></span></div>
-    <div class="shortcut-item"><span>Add or archive selected research task</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>S</kbd></span></div>
+    <div class="shortcut-item"><span>Add or archive selected local review item</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>S</kbd></span></div>
     <div class="shortcut-item"><span>Copy selected citation</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>C</kbd></span></div>
     <div class="shortcut-item"><span>Toggle filters</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>F</kbd></span></div>
-    <div class="shortcut-item"><span>Structure / Brief / Monitor / Library / Queue</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1–5</kbd></span></div>
+    <div class="shortcut-item"><span>Search / Record / Passages / Index / Review</span><span><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1–5</kbd></span></div>
     <div class="shortcut-item"><span>Close panel</span><kbd>Esc</kbd></div>
     <div class="shortcut-item"><span>Show this reference</span><span><kbd>?</kbd> or <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>?</kbd></span></div>
   </div>
@@ -3055,34 +3055,34 @@ __MANAGER_BUTTONS__
       <p>This is a research index covering one author's Substack and Medium publication channels. Cross-posted articles are deduplicated. Scheduled checks run at 9 AM, 1 PM, and 10 PM Asia/Kolkata.</p>
     </section>
     <section class="method-card">
-      <h3>Article dossier method</h3>
+      <h3>Article record method</h3>
       <ul>
         <li>Opening authored passage uses the first validated eligible prose span, with a screened source subtitle only when no lead is available.</li>
         <li>Classified evidence, mechanism, countercase, falsifier, and implementation passages retain their authored headings; a numerical-context fallback is used only when no evidence heading was captured.</li>
         <li>Directional fields classify passage language only; they do not establish the actor, a position, exposure, or a current view.</li>
-        <li>Every dossier span is validated against the article body with offsets and a SHA-256 hash before publication.</li>
+        <li>Every article-record span is validated against the article body with offsets and a SHA-256 hash before publication.</li>
         <li>Full and Excerpt / metadata describe indexed coverage, never research quality. Publication access separately reports whether the canonical source marked the article public, member-access, or unverified.</li>
       </ul>
     </section>
     <section class="method-card">
-      <h3>Research Threads method</h3>
+      <h3>Related Research method</h3>
       <p>Threads connect body-backed articles only when the release’s high-precision topic index captures the same normalized organization, institution, market, instrument, model, or mechanism in at least two publications. Every timeline entry identifies the matched source field, uses the exact available publication timestamp, and sits inside a bounded seven-entry window. Capture comparisons report only whether research-role passages were detected in each source; opening-passage numbers stay attached to that exact passage. These fields do not infer a current view, reversal, contradiction, conviction, accuracy, performance, or portfolio action. Exact older passages load only on request and must match this release’s checksum.</p>
     </section>
     <section class="method-card">
       <h3>Decision boundary</h3>
-      <p>Records are research observations—not verified trades, current holdings, or recommendations. This terminal supports published-source intake and a human-entered local research task. It does not contain live prices, positions, P&amp;L, sizing, execution, portfolio risk, liquidity, financing, counterparties, investor records, or compliance approvals.</p>
+      <p>Records are research observations—not verified trades, current holdings, or recommendations. This archive supports published-source review and a human-entered local review item. It does not contain live prices, positions, P&amp;L, sizing, execution, portfolio risk, liquidity, financing, counterparties, investor records, or compliance approvals.</p>
     </section>
     <section class="method-card">
-      <h3>Tab-session research tasks</h3>
-      <p>Queue packets and self-attested diligence gates stay only in this browser tab session unless you export a plaintext backup. They are not an authenticated or immutable enterprise audit record. Do not enter confidential, personal, client, position, or regulated information.</p>
+      <h3>Tab-session local review</h3>
+      <p>Local review items and self-attested review gates stay only in this browser tab session unless you export a plaintext backup. They are not an authenticated or immutable audit record. Do not enter confidential, personal, client, position, or regulated information.</p>
     </section>
     <section class="method-card">
       <h3>Privacy &amp; measurement</h3>
-      <p>The terminal has no advertising, cookies, third-party analytics, session replay, or background data submission. Theme and review state use functional device storage; research tasks use only tab-session storage. The browser requests only release-bound files from this site; an external publication or subscription page opens only when you choose it. Subscription links contain no search, filter, article, or research-task context.</p>
+      <p>The archive has no advertising, cookies, third-party analytics, session replay, or background data submission. Theme and review state use functional device storage; local review uses only tab-session storage. The browser requests only release-bound files from this site; an external publication or subscription page opens only when you choose it. Subscription links contain no search, filter, article, or local-review context.</p>
     </section>
     <section class="method-card">
-      <h3>Institutional basis</h3>
-      <p>The workflow is informed by <a href="https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/investment-manager-selection" target="_blank" rel="noopener noreferrer">CFA Institute’s manager-selection framework</a>, <a href="https://www.aima.org/article/presenting-the-2025-edition.html" target="_blank" rel="noopener noreferrer">AIMA’s 2025 manager DDQ</a>, <a href="https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a" target="_blank" rel="noopener noreferrer">CFA Institute’s reasonable-basis standard</a>, <a href="https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-c" target="_blank" rel="noopener noreferrer">its research-record guidance</a>, and the <a href="https://www.sec.gov/resources-small-businesses/small-business-compliance-guides/investment-adviser-marketing" target="_blank" rel="noopener noreferrer">SEC’s substantiation and presentation principles for adviser marketing</a>. These references shape research questions, evidence retention, and disclosure boundaries; they do not certify a packet or establish legal compliance.</p>
+      <h3>Method references</h3>
+      <p>The workflow is informed by <a href="https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/investment-manager-selection" target="_blank" rel="noopener noreferrer">CFA Institute’s manager-selection framework</a>, <a href="https://www.aima.org/article/presenting-the-2025-edition.html" target="_blank" rel="noopener noreferrer">AIMA’s 2025 manager DDQ</a>, <a href="https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-a" target="_blank" rel="noopener noreferrer">CFA Institute’s reasonable-basis standard</a>, <a href="https://www.cfainstitute.org/standards/professionals/code-ethics-standards/standards-of-practice-v-c" target="_blank" rel="noopener noreferrer">its research-record guidance</a>, and the <a href="https://www.sec.gov/resources-small-businesses/small-business-compliance-guides/investment-adviser-marketing" target="_blank" rel="noopener noreferrer">SEC’s substantiation and presentation principles for adviser marketing</a>. These references shape research questions, evidence retention, and disclosure boundaries; they do not certify this archive or establish legal compliance.</p>
     </section>
     <section class="method-card">
       <h3>Owner operating stack</h3>
@@ -3198,7 +3198,7 @@ function setBootstrapLoading() {
   status.setAttribute('aria-busy','true');
   document.getElementById('bootstrap-kicker').textContent = 'Release verification';
   document.getElementById('bootstrap-title').textContent = 'Loading verified research catalogue';
-  document.getElementById('bootstrap-detail').textContent = 'Checking the exact same-origin catalogue before the terminal starts.';
+  document.getElementById('bootstrap-detail').textContent = 'Checking the exact same-origin catalogue before the archive starts.';
   document.getElementById('bootstrap-actions').hidden = true;
   document.getElementById('bootstrap-retry').disabled = true;
 }
@@ -3211,7 +3211,7 @@ function handleArticleCatalogFailure(error) {
   status.setAttribute('aria-live','assertive');
   status.setAttribute('aria-busy','false');
   document.getElementById('bootstrap-kicker').textContent = 'Catalogue unavailable';
-  document.getElementById('bootstrap-title').textContent = 'The terminal stopped before showing research';
+  document.getElementById('bootstrap-title').textContent = 'The archive stopped before showing research';
   document.getElementById('bootstrap-detail').textContent = 'The release could not be verified. No partial or mismatched catalogue has been displayed.';
   document.getElementById('bootstrap-actions').hidden = false;
   document.getElementById('bootstrap-retry').disabled = false;
@@ -3326,14 +3326,14 @@ function validateDeferredFeatureParity(article,brief) {
   const uniqueKinds = new Set(kinds);
   const sourceOrders = brief.sections.map(function (section) { return section.source_order; });
   const checkpointDates = brief.checkpoints.map(function (checkpoint) { return checkpoint.date; });
-  if (uniqueKinds.size !== kinds.length) throw new Error('Deferred article dossier contains duplicate section kinds');
+  if (uniqueKinds.size !== kinds.length) throw new Error('Deferred article record contains duplicate section kinds');
   if (new Set(sourceOrders).size !== sourceOrders.length || sourceOrders.some(function (value,index) { return index > 0 && value <= sourceOrders[index - 1]; })) {
-    throw new Error('Deferred article dossier sections are not in unique source order');
+    throw new Error('Deferred article record sections are not in unique source order');
   }
   if (checkpointDates.some(function (value,index) { return index > 0 && value < checkpointDates[index - 1]; })) {
     throw new Error('Deferred article checkpoints are not date ordered');
   }
-  if (uniqueKinds.has('evidence') && brief.fallback_evidence !== null) throw new Error('Deferred dossier cannot contain explicit and fallback evidence together');
+  if (uniqueKinds.has('evidence') && brief.fallback_evidence !== null) throw new Error('Deferred article record cannot contain explicit and fallback evidence together');
   const captured = {
     lead:brief.lead !== null,
     evidence:uniqueKinds.has('evidence') || brief.fallback_evidence !== null,
@@ -3341,24 +3341,24 @@ function validateDeferredFeatureParity(article,brief) {
     falsifier:uniqueKinds.has('falsifier'),implementation:uniqueKinds.has('implementation')
   };
   ['lead','evidence','mechanism','countercase','falsifier','implementation'].forEach(function (key) {
-    if (captured[key] !== Boolean(features[key])) throw new Error('Deferred dossier coverage does not match embedded release features');
+    if (captured[key] !== Boolean(features[key])) throw new Error('Deferred article-record coverage does not match embedded release features');
   });
-  if (brief.checkpoints.length !== Number(features.checkpoint_count || 0)) throw new Error('Deferred dossier checkpoint count does not match embedded release features');
+  if (brief.checkpoints.length !== Number(features.checkpoint_count || 0)) throw new Error('Deferred article-record checkpoint count does not match embedded release features');
 }
 async function validateDeferredBriefArchive(payload) {
   if (!payload || payload.schema_version !== 1 || payload.data_checksum !== SNAPSHOT.data_checksum || !payload.briefs || typeof payload.briefs !== 'object' || Array.isArray(payload.briefs)) {
-    throw new Error('Deferred article dossiers do not match this release');
+    throw new Error('Deferred article records do not match this release');
   }
   const expectedIds = ARTICLES.filter(function (article) { return article.brief === null; }).map(function (article) { return article.id; });
   const expectedIdSet = new Set(expectedIds);
   const actualIds = Object.keys(payload.briefs);
   if (actualIds.length !== expectedIds.length || actualIds.some(function (id) { return !expectedIdSet.has(id); }) || expectedIds.some(function (id) { return !Object.prototype.hasOwnProperty.call(payload.briefs,id); })) {
-    throw new Error('Deferred article dossier identities do not match this release');
+    throw new Error('Deferred article-record identities do not match this release');
   }
   const hashChecks = [];
   expectedIds.forEach(function (id) {
     const brief = payload.briefs[id];
-    if (!hasExactObjectKeys(brief,DEFERRED_BRIEF_KEYS) || !Array.isArray(brief.sections) || !Array.isArray(brief.checkpoints)) throw new Error('Deferred article dossier has an invalid shape');
+    if (!hasExactObjectKeys(brief,DEFERRED_BRIEF_KEYS) || !Array.isArray(brief.sections) || !Array.isArray(brief.checkpoints)) throw new Error('Deferred article record has an invalid shape');
     if (brief.lead !== null) validateDeferredSpan(brief.lead,DEFERRED_SPAN_KEYS,'Deferred lead',hashChecks);
     if (brief.fallback_evidence !== null) validateDeferredSpan(brief.fallback_evidence,DEFERRED_SPAN_KEYS,'Deferred fallback evidence',hashChecks);
     brief.sections.forEach(function (section) {
@@ -3382,10 +3382,10 @@ function loadBriefArchive() {
   if (briefArchivePromise) return briefArchivePromise;
   briefArchiveFailed = false;
   const archiveUrl = 'article_briefs.json?v=' + encodeURIComponent(String(SNAPSHOT.data_checksum || ''));
-  briefArchivePromise = fetchReleaseText(archiveUrl,'Deferred article dossiers are unavailable').then(function (archiveText) {
+  briefArchivePromise = fetchReleaseText(archiveUrl,'Deferred article records are unavailable').then(function (archiveText) {
     return sha256Text(archiveText).then(function (actualHash) {
-      if (actualHash !== BRIEF_ARCHIVE_SHA256) throw releaseMismatchError('Deferred article dossier asset does not match this release');
-      try { return JSON.parse(archiveText); } catch (_error) { throw new Error('Deferred article dossier asset is invalid JSON'); }
+      if (actualHash !== BRIEF_ARCHIVE_SHA256) throw releaseMismatchError('Deferred article-record asset does not match this release');
+      try { return JSON.parse(archiveText); } catch (_error) { throw new Error('Deferred article-record asset is invalid JSON'); }
     });
   }).then(function (payload) {
     return validateDeferredBriefArchive(payload);
@@ -3417,7 +3417,7 @@ function retryBriefArchive() {
 function ensureArticleBrief(article) {
   if (!article || article.brief) return Promise.resolve(article && article.brief);
   return loadBriefArchive().then(function (briefs) {
-    if (!Object.prototype.hasOwnProperty.call(briefs,article.id)) throw new Error('Exact deferred article dossier is unavailable');
+    if (!Object.prototype.hasOwnProperty.call(briefs,article.id)) throw new Error('Exact deferred article record is unavailable');
     article.brief = briefs[article.id];
     return article.brief;
   }).catch(function () {
@@ -3526,7 +3526,7 @@ const DILIGENCE_GATES = [
   ['numeric_traced','Key numeric phrase traced to its cited context'],
   ['contrary_recorded','Contrary evidence or alternative explanation recorded'],
   ['falsifier_recorded','Falsifier or observable checkpoint recorded'],
-  ['claims_scope_reviewed','Task reviewed for unsupported claims and non-confidential scope']
+  ['claims_scope_reviewed','Local-review item checked for unsupported claims and non-confidential scope']
 ];
 const WORKFLOW_TEXT_LIMITS = {
   tags:500,note:4000,owner:120,horizon:160,thesis:1800,contrary:1600,
@@ -3623,7 +3623,7 @@ function bodyRevisionLabel(article) {
   return 'Current source capture';
 }
 function bodyRevisionSummary(article) {
-  if (!article) return 'Body revision provenance is unavailable.';
+  if (!article) return 'Source capture provenance is unavailable.';
   const sourceRevision = String(article.source_updated_at || '');
   const observedRevision = String(article.observed_source_updated_at || '');
   if (article.body_revision_status === 'prior') {
@@ -3770,7 +3770,7 @@ function premiumAccessMarkup(article,context) {
     '<div class="premium-access-head"><div><div class="premium-access-kicker">' + escapeHtml(kicker) + '</div><' + headingTag + ' id="' + labelId + '">Continue the complete research note</' + headingTag + '></div><span class="premium-access-state">Full note on Substack</span></div>' +
     '<p class="premium-access-copy">' + escapeHtml(boundaryCopy) + '</p>' +
     framingMarkup +
-    '<div class="premium-access-actions"><a class="primary-action premium-primary" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Read the full note on Substack (opens in a new tab)">Read full note on Substack ↗</a><a class="secondary-action" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="See Navnoor Research subscription plans (opens in a new tab)">See subscription plans ↗</a><p class="premium-access-note">Review current price, trial eligibility, renewal, and cancellation terms on Substack before purchasing. This terminal sends no search, filter, or research-task data.</p></div></section>';
+    '<div class="premium-access-actions"><a class="primary-action premium-primary" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Read the full note on Substack (opens in a new tab)">Read full note on Substack ↗</a><a class="secondary-action" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="See Navnoor Research subscription plans (opens in a new tab)">See subscription plans ↗</a><p class="premium-access-note">Review current price, trial eligibility, renewal, and cancellation terms on Substack before purchasing. This archive sends no search, filter, or local-review data.</p></div></section>';
 }
 function articleEvidence(article) {
   return briefSection(article,'evidence') || (article && article.brief && article.brief.fallback_evidence) || null;
@@ -3922,19 +3922,19 @@ function retainedSourceSnapshotMarkup(item,idea) {
   let status = 'Retained evidence matches the current release record.';
   if (sourceChanges.includes('current comparison pending')) {
     statusClass = 'retained-source-revision';
-    status = 'Current-release comparison is pending while the exact observation archive loads. Every task action remains bound to the retained evidence below.';
+    status = 'Current-release comparison is pending while the exact observation archive loads. Every local-review action remains bound to the retained evidence below.';
   } else if (sourceChanges.includes('current comparison unavailable')) {
     statusClass = 'retained-source-revision';
-    status = 'The current observation archive is unavailable. This task remains fully usable and bound to the retained evidence below.';
+    status = 'The current observation archive is unavailable. This local-review item remains fully usable and bound to the retained evidence below.';
   } else if (sourceChanges.includes('current observation absent')) {
     statusClass = 'retained-source-stale';
-    status = 'The retained observation is absent from the current release. This task remains fully usable and bound to the retained evidence below.';
+    status = 'The retained observation is absent from the current release. This local-review item remains fully usable and bound to the retained evidence below.';
   } else if (sourceChanges.length) {
     statusClass = 'retained-source-stale';
-    status = 'The current release differs in ' + sourceChanges.join(', ') + '. This task remains bound to the retained evidence below; copied and exported tasks preserve it.';
+    status = 'The current release differs in ' + sourceChanges.join(', ') + '. This local-review item remains bound to the retained evidence below; copied and exported items preserve it.';
   } else if (releaseChanged) {
     statusClass = 'retained-source-revision';
-    status = 'The active dataset revision has changed, while the retained source fields still match. This task remains bound to its captured release.';
+    status = 'The active dataset revision has changed, while the retained source fields still match. This local-review item remains bound to its captured release.';
   }
   const access = retained.publication_access === 'member' ? 'Member at source' :
     retained.publication_access === 'public' ? 'Public at source' : 'Access unverified';
@@ -3943,8 +3943,8 @@ function retainedSourceSnapshotMarkup(item,idea) {
   const date = retained.date ? '<time datetime="' + escapeHtml(retained.date) + '">' + escapeHtml(formatDate(retained.date)) + '</time>' : 'Date unavailable';
   const migrationNotice = retained.legacy_bookmark_migration
     ? '<p class="review-notice"><strong>Legacy ID-only bookmark.</strong> This source snapshot was captured from the active release during migration; it is not historical retained evidence from the original bookmark date.</p>' : '';
-  return '<section class="retained-source ' + statusClass + '" aria-label="Retained task source snapshot">' +
-    '<div class="retained-source-heading"><h4>Retained task source snapshot</h4><span>Dataset ' + escapeHtml(String(retained.data_checksum || '').slice(0,12) || 'unknown') + '</span></div>' +
+  return '<section class="retained-source ' + statusClass + '" aria-label="Retained local-review source snapshot">' +
+    '<div class="retained-source-heading"><h4>Retained local-review source snapshot</h4><span>Dataset ' + escapeHtml(String(retained.data_checksum || '').slice(0,12) || 'unknown') + '</span></div>' +
     '<p class="retained-source-status">' + escapeHtml(status) + '</p>' +
     '<dl class="retained-source-meta"><div><dt>Source</dt><dd>' + escapeHtml(sourceLabel(retained.source)) + '</dd></div>' +
       '<div><dt>Published</dt><dd>' + date + '</dd></div><div><dt>Access</dt><dd>' + escapeHtml(access) + '</dd></div>' +
@@ -4070,8 +4070,8 @@ function syncWorkflowStorageAlert() {
   if (!alert) return;
   alert.hidden = !workflowStorageUnavailable && !workflowLoadBlocked;
   document.getElementById('storage-alert-text').textContent = workflowLoadBlocked
-    ? 'A stored tab-session or legacy queue record could not be read. Saving is blocked so recoverable data is not overwritten. Back up the unreadable record or discard it explicitly.'
-    : 'Tab-session storage is unavailable. In-memory packet edits will not survive a reload; back up the queue before leaving.';
+    ? 'A stored tab-session or legacy local-review record could not be read. Saving is blocked so recoverable data is not overwritten. Back up the unreadable record or discard it explicitly.'
+    : 'Tab-session storage is unavailable. In-memory review edits will not survive a reload; back up local review before leaving.';
   document.getElementById('storage-retry').hidden = workflowLoadBlocked;
   document.getElementById('storage-backup').hidden = workflowLoadBlocked;
   document.getElementById('storage-raw-backup').hidden = !workflowLoadBlocked || !unreadableWorkflowRaw;
@@ -4084,7 +4084,7 @@ function persistWorkflow() {
     workflowStorageDirty = true;
     workflowStorageUnavailable = true;
     syncWorkflowStorageAlert();
-    showToast('Queue saving is blocked until the unreadable stored record is resolved');
+    showToast('Local Review saving is blocked until the unreadable stored record is resolved');
     return false;
   }
   try {
@@ -4098,7 +4098,7 @@ function persistWorkflow() {
         legacyCleanupPending = false;
         legacyStorageCheckUnavailable = false;
         workflowLegacyMigrated = true;
-        showPersistentNotice('The legacy persistent queue was removed after a successful tab-session save. Export a plaintext backup before closing the tab if it must be retained.','Back up queue','backup-queue');
+        showPersistentNotice('The legacy origin-wide storage was removed after a successful tab-session save. Export a plaintext backup before closing the tab if it must be retained.','Back up local review','backup-queue');
       } catch (_error) {
         legacyStorageCheckUnavailable = true;
       }
@@ -4109,7 +4109,7 @@ function persistWorkflow() {
     workflowStorageDirty = serialized !== lastPersistedWorkflow;
     workflowStorageUnavailable = true;
     syncWorkflowStorageAlert();
-    showToast('Queue could not be saved in this tab session');
+    showToast('Local Review could not be saved in this tab session');
     return false;
   }
 }
@@ -4230,7 +4230,7 @@ function migrateLegacySavedIdeas() {
       legacyCleanupPending = false;
       workflowLegacyMigrated = true;
       legacySavedIdsPendingClear = false;
-      showPersistentNotice('Legacy ID-only bookmarks were moved into this safer tab session and removed from origin-wide storage. Their source snapshots were captured from the active release during migration—not from the historical bookmark date. Review them and export a plaintext backup before closing the tab if they must be retained.','Back up queue','backup-queue');
+      showPersistentNotice('Legacy ID-only bookmarks were moved into this safer tab session and removed from origin-wide storage. Their source snapshots were captured from the active release during migration—not from the historical bookmark date. Review them and export a plaintext backup before closing the tab if they must be retained.','Back up local review','backup-queue');
     } catch (_error) {
       legacyStorageCheckUnavailable = true;
     }
@@ -4621,7 +4621,7 @@ function setSortOptions() {
   const research = isArticleView();
   const options = state.view === 'queue' ? [
     ['newest','Newest retained source'],['oldest','Oldest retained source'],
-    ['queue-status','Task status'],['priority','Priority'],['review-date','Next review'],['updated','Task updated']
+    ['queue-status','Review status'],['priority','Priority'],['review-date','Next review'],['updated','Item updated']
   ] : research ? [
     ...(state.query ? [['relevance','Search relevance']] : []),
     ['newest','Newest first'],['oldest','Oldest first'],['most-ideas','Most observations'],
@@ -4661,7 +4661,7 @@ function renderTableHead() {
       '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('newest') + '"><button class="head-sort" type="button" data-sort="newest">Retained date</button></div>' +
       '<div class="head-cell" role="columnheader">Retained stance</div>' +
       '<div class="head-cell" role="columnheader">Retained market</div>' +
-      '<div class="head-cell" role="columnheader">Task owner / status</div>' +
+      '<div class="head-cell" role="columnheader">Review owner / status</div>' +
       '<div class="head-cell" role="columnheader">Retained source passage</div>' +
       '<div class="head-cell" role="columnheader">Provenance</div>' +
       '<div class="head-cell" role="columnheader">Retained channel</div>' +
@@ -4672,7 +4672,7 @@ function renderTableHead() {
       '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('newest') + '"><button class="head-sort" type="button" data-sort="newest">Date</button></div>' +
       '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('direction') + '"><button class="head-sort" type="button" data-sort="direction">Parsed stance</button></div>' +
       '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('market') + '"><button class="head-sort" type="button" data-sort="market">Market</button></div>' +
-      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('manager') + '"><button class="head-sort" type="button" data-sort="manager">Mentioned entity</button></div>' +
+      '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('manager') + '"><button class="head-sort" type="button" data-sort="manager">Organization or person</button></div>' +
       '<div class="head-cell" role="columnheader" aria-sort="' + ariaSort('article') + '"><button class="head-sort" type="button" data-sort="article">Source passage</button></div>' +
       '<div class="head-cell" role="columnheader">Captured</div>' +
       '<div class="head-cell" role="columnheader">Channel</div>' +
@@ -4717,7 +4717,7 @@ function researchTaskRow(idea,workflow) {
   const sourceDetail = access + ' · ' + (source.body_revision_status === 'current' ? 'Current when captured' :
     source.body_revision_status === 'prior' ? 'Prior revision capture' : 'Revision unverified') +
     ' · ' + retainedReviewFlagSummary(source);
-  const rowLabel = (source.date || 'date unavailable') + ', retained task source, ' +
+  const rowLabel = (source.date || 'date unavailable') + ', retained local-review source, ' +
     directionLabel(source.direction) + ', ' + (source.instruments || []).map(instrumentLabel).join(', ') + ', ' +
     (source.passage || 'passage unavailable') + ', ' + sourceLabel(source.source) + ', ' + changeLabel;
   const workflowBadge = '<span class="workflow-badge">' + escapeHtml(workflowStatusLabel(workflow.status)) + '</span>' +
@@ -4832,9 +4832,9 @@ function renderRows(records) {
   const empty = document.getElementById('empty-state');
   empty.classList.toggle('visible',records.length === 0);
   const queueEmpty = state.view === 'queue' && workflowItems.size === 0;
-  document.getElementById('empty-title').textContent = queueEmpty ? 'Research Tasks is empty in this tab session' : 'No matching records';
+  document.getElementById('empty-title').textContent = queueEmpty ? 'Local Review is empty in this tab session' : 'No matching records';
   document.getElementById('empty-copy').textContent = queueEmpty
-    ? 'Open a research observation and choose Add to review.'
+    ? 'Open a parsed passage and choose Add to review.'
     : 'Adjust the search or clear one of the active filters.';
 
   const more = document.getElementById('load-more-wrap');
@@ -4860,7 +4860,7 @@ function renderContext(records) {
       counts[direction] = (counts[direction] || 0) + 1;
     });
     document.getElementById('visible-primary').textContent = number(tasks.length);
-    document.getElementById('visible-primary-label').textContent = 'retained-source tasks';
+    document.getElementById('visible-primary-label').textContent = 'retained-source items';
     document.getElementById('visible-articles').textContent = number(retainedNotes.size);
     document.getElementById('visible-secondary-label').textContent = 'retained source notes';
     document.getElementById('visible-managers').textContent = number(owners.size);
@@ -4900,7 +4900,7 @@ function renderContext(records) {
   document.getElementById('visible-secondary-label').textContent = state.view === 'research' ? 'observations' : 'notes';
   if (state.view === 'research') document.getElementById('visible-articles').textContent = number(visibleIdeas.length);
   document.getElementById('visible-managers').textContent = number(managers.size);
-  document.getElementById('visible-tertiary-label').textContent = 'mentioned entities';
+  document.getElementById('visible-tertiary-label').textContent = 'organizations or people';
 
   const counts = {long:0,short:0,'arbitrage/relative value':0,'long/short':0,unspecified:0};
   visibleIdeas.forEach(function (idea) { counts[idea.direction] = (counts[idea.direction] || 0) + 1; });
@@ -4922,13 +4922,13 @@ function renderContext(records) {
 }
 
 const BRIEF_KIND_LABELS = {
-  evidence:'Contextual evidence passage', mechanism:'Mechanism', countercase:'Countercase / limitation',
-  falsifier:'What would change the view', implementation:'Implementation / what to watch'
+  evidence:'Contextual evidence passage', mechanism:'Mechanism passage', countercase:'Author’s countercase passage',
+  falsifier:'Author’s falsifier passage', implementation:'Implementation passage'
 };
 const BRIEF_SEQUENCE = [
   ['lead','Opening authored passage'],['evidence','Contextual evidence passage'],
-  ['mechanism','Mechanism'],['countercase','Countercase / limitation'],
-  ['falsifier','What would change the view'],['implementation','Implementation / what to watch']
+  ['mechanism','Mechanism passage'],['countercase','Author’s countercase passage'],
+  ['falsifier','Author’s falsifier passage'],['implementation','Implementation passage']
 ];
 function numberTokenRegex() {
   return /((?:\b(?:sharpe|sortino|rmse|r\s?[²2]|t-stat(?:istic)?|beta|alpha)\s*(?:of|=|:)?\s*)?(?:[$€£¥]\s*)?[+\-−]?\d+(?:,\d{3})*(?:\.\d+)?(?:\s*(?:-\s*to\s*-|[–—-]|to)\s*(?:[$€£¥]\s*)?[+\-−]?\d+(?:,\d{3})*(?:\.\d+)?)?(?:\s*(?:%|bp\b|bps\b|basis points?\b|[x×]\b|k\b|m\b|b\b|t\b|mn\b|bn\b|million\b|billion\b|trillion\b))?)/gi;
@@ -5054,7 +5054,7 @@ function researchMapMarkup(article) {
     const inner = '<b>' + String(index + 1).padStart(2,'0') + ' · ' + escapeHtml(row[1]) + '</b><span>' + escapeHtml(detail) + '</span>';
     return captured ? '<button class="research-map-step captured" type="button" data-brief-jump="' + target + '">' + inner + '</button>' : '<div class="research-map-step not-captured">' + inner + '</div>';
   }).join('');
-  return '<section class="research-map" aria-labelledby="research-map-title"><div class="research-map-head"><h3 id="research-map-title">Institutional diligence map</h3><p>Presence means an exact authored passage was captured—not that the argument is correct, complete, investable, or independently verified.</p></div><div class="research-map-track">' + steps + '</div></section>';
+  return '<section class="research-map" aria-labelledby="research-map-title"><div class="research-map-head"><h3 id="research-map-title">Captured section map</h3><p>Presence means an exact authored passage was captured—not that the argument is correct, complete, investable, or independently verified.</p></div><div class="research-map-track">' + steps + '</div></section>';
 }
 function archiveCoverageMarkup(records) {
   const definitions = [
@@ -5071,7 +5071,7 @@ function archiveCoverageMarkup(records) {
     const visiblePercent = count ? Math.max(1,percent) : 0;
     return '<div class="coverage-bar-row"><span>' + row[0] + '</span><div class="coverage-bar-track" role="img" aria-label="' + escapeHtml(row[0] + ': ' + count + ' of ' + records.length + ' articles') + '"><i class="coverage-bar-fill" style="width:' + visiblePercent + '%"></i></div><b>' + number(count) + '</b></div>';
   }).join('');
-  return '<section class="intel-side-card"><div class="intel-card-head"><h3>Dossier coverage in this lens</h3><span>' + number(records.length) + ' articles</span></div><div class="coverage-bars">' + bars + '</div><p class="coverage-caveat">High-precision section presence only; not research quality, confidence, or a recommendation score.</p></section>';
+  return '<section class="intel-side-card"><div class="intel-card-head"><h3>Captured section coverage</h3><span>' + number(records.length) + ' articles</span></div><div class="coverage-bars">' + bars + '</div><p class="coverage-caveat">High-precision section presence only; not research quality, confidence, or a recommendation score.</p></section>';
 }
 function relatedArticleRows(selected) {
   const selectedManagers = new Set(selected.manager_keys || []);
@@ -5081,7 +5081,7 @@ function relatedArticleRows(selected) {
     const managers = (article.manager_keys || []).filter(function (value) { return selectedManagers.has(value); });
     const underlyings = (article.underlyings || []).filter(function (value) { return selectedUnderlyings.has(normalize(value)); });
     const instruments = (article.instruments || []).filter(function (value) { return selectedInstruments.has(value) && value !== 'unspecified'; });
-    const reasons = managers.slice(0,1).map(function (value) { return 'Same mentioned entity: ' + (MANAGER_LABELS.get(value) || value); })
+    const reasons = managers.slice(0,1).map(function (value) { return 'Same organization or person: ' + (MANAGER_LABELS.get(value) || value); })
       .concat(underlyings.slice(0,2).map(function (value) { return 'Same extracted underlying: ' + value; }));
     return {article:article,score:managers.length * 10 + underlyings.length * 8 + instruments.length * 0.25,reasons:reasons,qualified:Boolean(managers.length || underlyings.length)};
   }).filter(function (row) { return row.qualified; }).sort(function (left,right) {
@@ -5115,7 +5115,7 @@ function relatedPremiumRows(selected) {
     const reasons = topics.slice(0,1).map(function (value) {
       const topic = THREADS.topics && THREADS.topics[value];
       return 'Same research topic: ' + (topic && topic.label || value);
-    }).concat(managers.slice(0,1).map(function (value) { return 'Same mentioned entity: ' + (MANAGER_LABELS.get(value) || value); }))
+    }).concat(managers.slice(0,1).map(function (value) { return 'Same organization or person: ' + (MANAGER_LABELS.get(value) || value); }))
       .concat(underlyings.slice(0,2).map(function (value) { return 'Same extracted underlying: ' + value; }));
     if (instruments.length) reasons.push('Same market: ' + instrumentLabel(instruments[0]));
     return {article:article,reasons:reasons,score:topics.length * 14 + managers.length * 10 + underlyings.length * 8 + instruments.length * 3};
@@ -5129,7 +5129,7 @@ function premiumArchiveMarkup(selected) {
   const items = rows.map(function (row) {
     return '<button class="next-item" type="button" data-brief-article="' + row.article.id + '"><time datetime="' + row.article.date + '">' + escapeHtml(shortDate(row.article.date)) + ' · Subscriber research</time><span class="next-title">' + escapeHtml(row.article.title) + '</span><span class="next-summary">' + escapeHtml(articleClaim(row.article)) + '</span><span class="related-context">' + row.reasons.map(function (reason) { return '<span>' + escapeHtml(reason) + '</span>'; }).join('') + '</span></button>';
   }).join('');
-  return '<section class="intel-side-card premium-archive-card"><div class="intel-card-head"><h3>Related subscriber research</h3><span>' + number(rows.length) + ' shown · exact-context overlap</span></div><p class="premium-archive-intro">These subscriber notes share an indexed research topic, normalized entity, extracted underlying, or market with the active dossier. The match organizes the archive; it does not imply a recommendation, position, or similar conclusion.</p><div class="next-list">' + items + '</div><div class="premium-archive-actions"><p>Open a dossier to inspect the bounded source material in this release, or review current subscription terms directly on Substack.</p><a class="secondary-action" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="See Navnoor Research subscription plans (opens in a new tab)">See subscription plans ↗</a></div></section>';
+  return '<section class="intel-side-card premium-archive-card"><div class="intel-card-head"><h3>Related subscriber research</h3><span>' + number(rows.length) + ' shown · shared indexed field</span></div><p class="premium-archive-intro">These subscriber notes share an indexed research topic, normalized entity, extracted underlying, or market with the active article record. The match organizes the archive; it does not imply a recommendation, position, or similar conclusion.</p><div class="next-list">' + items + '</div><div class="premium-archive-actions"><p>Open an article record to inspect the bounded source material in this release, or review current subscription terms directly on Substack.</p><a class="secondary-action" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="See Navnoor Research subscription plans (opens in a new tab)">See subscription plans ↗</a></div></section>';
 }
 function articleReasons(article) {
   const reasons = [];
@@ -5207,7 +5207,7 @@ function evidenceSpotlightMarkup(article) {
       '</div><h3>' + escapeHtml(row.label) + (row.heading ? ' · ' + escapeHtml(row.heading) : '') + '</h3><p>' + highlightArticleNumbers(row.span.text) + '</p>' +
       '<span class="source-tail" title="' + escapeHtml(String(row.span.sha256 || '')) + '">' + escapeHtml(spanProvenance(row.span)) + '</span></article>';
   }).join('');
-  return '<section class="ic-evidence-strip" id="brief-key-evidence" aria-labelledby="brief-key-evidence-title"><h2 class="sr-only" id="brief-key-evidence-title">Source-backed numeric evidence</h2>' + content + '</section>';
+  return '<section class="ic-evidence-strip" id="brief-key-evidence" aria-labelledby="brief-key-evidence-title"><h2 class="sr-only" id="brief-key-evidence-title">Source-linked numeric passages</h2>' + content + '</section>';
 }
 const THREAD_ROLE_DEFINITIONS = [
   ['lead','Opening'],['mechanism','Mechanism'],['evidence','Evidence'],
@@ -5294,10 +5294,10 @@ function threadComparisonMarkup(current,topic) {
   }).length;
   let exactMarkup;
   if (prior.brief) {
-    exactMarkup = '<div class="thread-passage-grid">' + threadExactPassageCard(prior,'Preceding indexed publication') + threadExactPassageCard(current,'Current dossier') + '</div><p class="thread-token-note">Opening-passage numeric tokens remain attached to the displayed source passage. They are not normalized, netted, or treated as comparable values.</p>';
+    exactMarkup = '<div class="thread-passage-grid">' + threadExactPassageCard(prior,'Preceding indexed publication') + threadExactPassageCard(current,'Current article record') + '</div><p class="thread-token-note">Opening-passage numeric tokens remain attached to the displayed source passage. They are not normalized, netted, or treated as comparable values.</p>';
   } else {
     const loading = Boolean(threadComparisonRequest && threadComparisonRequest.articleId === prior.id && threadComparisonRequest.selectedId === current.id && threadComparisonRequest.topic === state.threadTopic);
-    exactMarkup = '<div class="thread-load-boundary"' + (loading ? ' aria-busy="true"' : '') + '><div><strong>' + (loading ? 'Validating exact prior dossier…' : 'Exact prior passage is deferred') + '</strong><p>' + (loading ? 'The release-bound archive is loading and its checksum and record identities will be verified before display.' : 'Load the release-bound prior dossier only when you want a side-by-side passage and numeric-token comparison.') + '</p></div><button class="secondary-action" type="button" data-thread-load="' + prior.id + '"' + (loading ? ' disabled aria-busy="true"' : '') + '>' + (loading ? 'Loading exact comparison…' : prior._briefLoadFailed ? 'Retry exact prior dossier' : 'Load exact passage comparison') + '</button></div>';
+    exactMarkup = '<div class="thread-load-boundary"' + (loading ? ' aria-busy="true"' : '') + '><div><strong>' + (loading ? 'Validating exact prior article record…' : 'Exact prior passage is deferred') + '</strong><p>' + (loading ? 'The release-bound archive is loading and its checksum and record identities will be verified before display.' : 'Load the release-bound prior article record only when you want a side-by-side passage and numeric-token comparison.') + '</p></div><button class="secondary-action" type="button" data-thread-load="' + prior.id + '"' + (loading ? ' disabled aria-busy="true"' : '') + '>' + (loading ? 'Loading exact comparison…' : prior._briefLoadFailed ? 'Retry exact prior article record' : 'Load exact passage comparison') + '</button></div>';
   }
   return '<section class="thread-comparison" aria-labelledby="thread-comparison-title"><div class="thread-subhead"><div><span>Capture comparison with preceding indexed publication</span><h3 id="thread-comparison-title">' + escapeHtml(sameDayUnordered ? 'Adjacent same-day capture; order unavailable' : 'Prior-to-current capture comparison') + '</h3></div><b>' + number(changedCount) + ' role field' + (changedCount === 1 ? '' : 's') + ' differ</b></div><div class="thread-role-table" role="table" aria-label="Captured research roles in prior and current publications"><div class="thread-role-row head" role="row"><span role="columnheader">Research role</span><i role="columnheader">Prior</i><i role="columnheader">Current</i><b role="columnheader">Coverage comparison</b></div>' + roleRows + '</div>' + exactMarkup + '<p class="thread-boundary compact">A field difference means the extraction rules captured different research roles in two publications. It does not establish a changed view, contradiction, conviction, or portfolio action.</p></section>';
 }
@@ -5324,10 +5324,10 @@ function researchThreadMarkup(article) {
     const active = candidate.id === article.id;
     const roles = threadRoleLabels(candidate);
     const matchLabel = threadMatchLabel(topic,candidate.id);
-    const framing = candidate.brief && candidate.brief.lead && candidate.brief.lead.text || candidate.subtitle || 'Open this dossier to inspect its exact captured passages.';
-    return '<li class="thread-node' + (active ? ' active' : '') + '"><button type="button" data-thread-article="' + candidate.id + '"' + (active ? ' aria-current="true"' : '') + '><span class="thread-node-meta"><time datetime="' + escapeHtml(String(candidate.published_at || candidate.date)) + '">' + escapeHtml(threadPublishedLabel(candidate)) + '</time><i>' + sourceLabel(candidate.source) + (active ? ' · current dossier' : '') + '</i></span><strong>' + escapeHtml(candidate.title) + '</strong><span class="thread-node-match">Matched in: ' + escapeHtml(matchLabel) + '</span><span class="thread-node-framing">' + escapeHtml(framing) + '</span><span class="thread-node-roles">' + (roles.length ? roles.slice(0,5).map(function (label) { return '<i>' + escapeHtml(label) + '</i>'; }).join('') + (roles.length > 5 ? '<i>+' + number(roles.length - 5) + '</i>' : '') : '<i>No brief role captured</i>') + '</span></button></li>';
+    const framing = candidate.brief && candidate.brief.lead && candidate.brief.lead.text || candidate.subtitle || 'Open this article record to inspect its exact captured passages.';
+    return '<li class="thread-node' + (active ? ' active' : '') + '"><button type="button" data-thread-article="' + candidate.id + '"' + (active ? ' aria-current="true"' : '') + '><span class="thread-node-meta"><time datetime="' + escapeHtml(String(candidate.published_at || candidate.date)) + '">' + escapeHtml(threadPublishedLabel(candidate)) + '</time><i>' + sourceLabel(candidate.source) + (active ? ' · current article' : '') + '</i></span><strong>' + escapeHtml(candidate.title) + '</strong><span class="thread-node-match">Matched in: ' + escapeHtml(matchLabel) + '</span><span class="thread-node-framing">' + escapeHtml(framing) + '</span><span class="thread-node-roles">' + (roles.length ? roles.slice(0,5).map(function (label) { return '<i>' + escapeHtml(label) + '</i>'; }).join('') + (roles.length > 5 ? '<i>+' + number(roles.length - 5) + '</i>' : '') : '<i>No article-role passage captured</i>') + '</span></button></li>';
   }).join('');
-  return '<section class="research-thread" id="brief-thread" aria-labelledby="research-thread-title"><div class="thread-header"><div><div class="ic-topic">Research threads · exact topic history</div><h2 id="research-thread-title">Research history across related publications</h2><p>Trace the published record for <strong>' + escapeHtml(topic.label) + '</strong> after reviewing the current dossier’s evidence and decision boundaries.</p></div><span class="thread-kind">' + escapeHtml(topic.kind) + '</span></div><div class="thread-topic-list" role="group" aria-label="Repeated topics captured in this article">' + topicButtons + '</div><div class="thread-facts"><div><b>' + number(topic.article_count) + '</b><span>Indexed publications</span></div><div><b>' + escapeHtml(shortDate(firstArticle.date)) + ' — ' + escapeHtml(shortDate(lastArticle.date)) + '</b><span>Published span</span></div><div><b>' + number(fullCount) + ' full · ' + number(topic.article_count - fullCount) + ' excerpt</b><span>Indexed text coverage</span></div><div><b>' + number(sourceCount) + '</b><span>Publication channel' + (sourceCount === 1 ? '' : 's') + '</span></div></div>' +
+  return '<section class="research-thread" id="brief-thread" aria-labelledby="research-thread-title"><div class="thread-header"><div><div class="ic-topic">Related Research · exact topic history</div><h2 id="research-thread-title">Research history across related publications</h2><p>Trace the published record for <strong>' + escapeHtml(topic.label) + '</strong> after reviewing the current article record’s passages and source-defined challenges.</p></div><span class="thread-kind">' + escapeHtml(topic.kind) + '</span></div><div class="thread-topic-list" role="group" aria-label="Repeated topics captured in this article">' + topicButtons + '</div><div class="thread-facts"><div><b>' + number(topic.article_count) + '</b><span>Indexed publications</span></div><div><b>' + escapeHtml(shortDate(firstArticle.date)) + ' — ' + escapeHtml(shortDate(lastArticle.date)) + '</b><span>Published span</span></div><div><b>' + number(fullCount) + ' full · ' + number(topic.article_count - fullCount) + ' excerpt</b><span>Indexed text coverage</span></div><div><b>' + number(sourceCount) + '</b><span>Source' + (sourceCount === 1 ? '' : 's') + '</span></div></div>' +
     threadComparisonMarkup(article,topic) +
     '<section class="thread-timeline" aria-labelledby="thread-timeline-title"><div class="thread-subhead"><div><span>Publication chronology</span><h3 id="thread-timeline-title">' + escapeHtml(topic.label) + ' research history</h3></div><b>' + number(timelineIds.length) + ' shown' + (hiddenCount > 0 ? ' · ' + number(hiddenCount) + ' outside window' : '') + '</b></div><ol>' + timeline + '</ol></section><p class="thread-boundary">Thread membership is an exact match from the release’s high-precision topic index. Chronology and captured fields organize published evidence; they do not infer the author’s current position, consistency, conviction, accuracy, performance, or portfolio suitability.</p></section>';
 }
@@ -5350,14 +5350,14 @@ function briefRailMarkup(lenses,article) {
   const substackCount = Number(sourceSnapshot.substack && sourceSnapshot.substack.included_count || ARTICLES.filter(function (article) { return article.source === 'substack'; }).length);
   const mediumCount = Number(sourceSnapshot.medium && sourceSnapshot.medium.included_count || ARTICLES.filter(function (article) { return article.source === 'medium'; }).length);
   const facts = [
-    [number(Number(SNAPSHOT.article_count || ARTICLES.length)),'Published dossiers'],
+    [number(Number(SNAPSHOT.article_count || ARTICLES.length)),'Published articles'],
     [number(Number(SNAPSHOT.observation_count || 0)),'Parser observations'],
     [number(substackCount),'Substack'],[number(mediumCount),'Unique Medium']
   ];
   const views = [
-    ['01','structure','Evidence Desk'],['02','briefing','Latest Brief'],
-    ['03','ideas','Evidence Monitor'],['04','research','Research Library'],
-    ['05','queue','Research Tasks']
+    ['01','structure','Passage Search'],['02','briefing','Article Record'],
+    ['03','ideas','Parsed Passages'],['04','research','Article Index'],
+    ['05','queue','Local Review']
   ];
   let jumpMarkup = '';
   if (article) {
@@ -5366,15 +5366,15 @@ function briefRailMarkup(lenses,article) {
     const hasKind = function (kind) { return spans.some(function (row) { return row.kinds.includes(kind); }); };
     const hasThread = Boolean(threadArticleRow(article));
     const jumps = [
-      ['01','brief-thesis','Opening thesis',true],
+      ['01','brief-thesis','Opening passage',true],
       ['02','brief-key-evidence','Key figures',ledger.length > 0],
       ['03','brief-analysis','Mechanism & evidence',hasKind('mechanism') || hasKind('evidence')],
-      ['04','brief-dossier','Decision boundaries',hasKind('countercase') || hasKind('falsifier') || hasKind('implementation')],
+      ['04','brief-dossier','Source-defined challenges',hasKind('countercase') || hasKind('falsifier') || hasKind('implementation')],
       ['05','brief-evidence-ledger','Full evidence ledger',ledger.length > 0],
       ['06','brief-thread','Topic history',hasThread],
       ['07','brief-archive','Archive context',true]
     ];
-    jumpMarkup = '<div class="ic-rail-rule"></div><div class="ic-rail-heading">In this brief</div><div class="ic-jump-list">' + jumps.map(function (row) {
+    jumpMarkup = '<div class="ic-rail-rule"></div><div class="ic-rail-heading">In this article</div><div class="ic-jump-list">' + jumps.map(function (row) {
       return row[3]
         ? '<button class="ic-jump" type="button" data-brief-jump="' + row[1] + '"><span class="ic-nav-index">' + row[0] + '</span><span>' + row[2] + '</span><i>Captured</i></button>'
         : '<div class="ic-jump unavailable"><span class="ic-nav-index">' + row[0] + '</span><span>' + row[2] + '</span><i>Not captured</i></div>';
@@ -5382,23 +5382,23 @@ function briefRailMarkup(lenses,article) {
   }
   return '<aside class="ic-rail" aria-label="Research desk navigation"><div class="ic-rail-brand">Research desk</div><nav class="ic-nav">' +
     views.map(function (row) { return '<button class="ic-nav-button' + (row[1] === 'briefing' ? ' active' : '') + '" type="button" data-view="' + row[1] + '"' + (row[1] === 'briefing' ? ' aria-current="page"' : '') + '><span class="ic-nav-index">' + row[0] + '</span><span>' + row[2] + '</span></button>'; }).join('') +
-    '</nav>' + jumpMarkup + '<div class="ic-rail-rule"></div><div class="ic-rail-heading">Archive lens</div><div class="ic-lens-list">' +
+    '</nav>' + jumpMarkup + '<div class="ic-rail-rule"></div><div class="ic-rail-heading">Section filter</div><div class="ic-lens-list">' +
     lenses.map(function (row) { return '<button class="ic-lens' + (state.briefLens === row[0] ? ' active' : '') + '" type="button" data-brief-lens="' + row[0] + '" aria-pressed="' + String(state.briefLens === row[0]) + '">' + row[1] + '</button>'; }).join('') +
-    '</div><div class="ic-rail-rule"></div><div class="ic-rail-heading">Library facts</div><div class="ic-library-facts">' +
+    '</div><div class="ic-rail-rule"></div><div class="ic-rail-heading">Archive facts</div><div class="ic-library-facts">' +
     facts.map(function (row) { return '<div class="ic-library-fact"><span>' + row[1] + '</span><b>' + row[0] + '</b></div>'; }).join('') +
     '</div><p class="ic-standard">Exact published passages remain attached to dates, offsets, and hashes. Rules organize the source; they do not create a recommendation, confidence score, or live market view.</p></aside>';
 }
 function briefCompactNavMarkup(lenses) {
   const views = [
-    ['structure','Evidence Desk'],['briefing','Latest Brief'],
-    ['ideas','Evidence Monitor'],['research','Research Library'],
-    ['queue','Research Tasks']
+    ['structure','Passage Search'],['briefing','Article Record'],
+    ['ideas','Parsed Passages'],['research','Article Index'],
+    ['queue','Local Review']
   ];
-  return '<nav class="ic-compact-nav" aria-label="Briefing navigation"><div class="ic-compact-group" role="group" aria-label="Research views"><span class="ic-compact-label" aria-hidden="true">Views</span><div class="ic-compact-scroll">' +
+  return '<nav class="ic-compact-nav" aria-label="Article record navigation"><div class="ic-compact-group" role="group" aria-label="Archive views"><span class="ic-compact-label" aria-hidden="true">Views</span><div class="ic-compact-scroll">' +
     views.map(function (row) {
       const current = row[0] === 'briefing';
       return '<button class="ic-compact-button' + (current ? ' active' : '') + '" type="button" data-view="' + row[0] + '"' + (current ? ' aria-current="page"' : '') + '>' + row[1] + '</button>';
-    }).join('') + '</div></div><div class="ic-compact-group" role="group" aria-label="Archive lenses"><span class="ic-compact-label" aria-hidden="true">Lens</span><div class="ic-compact-scroll">' +
+    }).join('') + '</div></div><div class="ic-compact-group" role="group" aria-label="Section filters"><span class="ic-compact-label" aria-hidden="true">Section</span><div class="ic-compact-scroll">' +
     lenses.map(function (row) {
       const active = state.briefLens === row[0];
       return '<button class="ic-compact-button lens' + (active ? ' active' : '') + '" type="button" data-brief-lens="' + row[0] + '" aria-pressed="' + String(active) + '">' + row[1] + '</button>';
@@ -5445,13 +5445,13 @@ function renderIntelligenceBrief(records) {
   const lenses = BRIEF_LENSES;
   function renderBriefStatus(title,body,actionMarkup,preservePendingFocus,preferStatusFocus) {
     shell.innerHTML = '<div class="intel-wrap">' + briefRailMarkup(lenses) + briefCompactNavMarkup(lenses) +
-      '<article class="intel-lead"><div class="intel-lead-inner"><div class="ic-topic">Investment committee brief · source-backed</div><h1 class="intel-title" id="brief-status-title">' + escapeHtml(title) + '</h1><p class="ic-dek">' + escapeHtml(body) + '</p>' + (actionMarkup || '') + '</div></article>' +
-      '<aside class="intel-side ic-sheet"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">Evidence boundary</div><h2 class="ic-sheet-title">Release integrity first</h2><p class="ic-sheet-intro">The terminal will not mix source passages from a different release or treat an unavailable asset as evidence absence.</p></div></aside></div>';
+      '<article class="intel-lead"><div class="intel-lead-inner"><div class="ic-topic">Article record · source-linked</div><h1 class="intel-title" id="brief-status-title">' + escapeHtml(title) + '</h1><p class="ic-dek">' + escapeHtml(body) + '</p>' + (actionMarkup || '') + '</div></article>' +
+      '<aside class="intel-side ic-sheet"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">Evidence boundary</div><h2 class="ic-sheet-title">Release integrity first</h2><p class="ic-sheet-intro">The archive will not mix source passages from a different release or treat an unavailable asset as evidence absence.</p></div></aside></div>';
     shell.dataset.statusAnnouncement = title;
     restorePendingBriefFocus(!preservePendingFocus,preferStatusFocus);
   }
   if (state.briefLens !== 'all' && briefArchiveFailed && !briefArchiveReady) {
-    renderBriefStatus('Older dossiers could not be verified','The release-bound article asset did not load. The terminal will not mix passages from a different release.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>',false,true);
+    renderBriefStatus('Older article records could not be verified','The release-bound article asset did not load. The archive will not mix passages from a different release.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact article-record load</button></div>',false,true);
     return;
   }
   if (state.briefLens !== 'all' && !briefArchiveReady && !briefArchiveFailed) {
@@ -5472,7 +5472,7 @@ function renderIntelligenceBrief(records) {
   if (!selected || !records.some(function (article) { return article.id === selected.id; })) selected = records[0];
   state.selected = selected.id;
   if (!selected.brief && !selected._briefLoadFailed) {
-    renderBriefStatus('Loading the exact article dossier…','The older dossier is stored as a deferred release asset. Validating it against release ' + String(SNAPSHOT.data_checksum || '').slice(0,12) + ' before display.','',true);
+    renderBriefStatus('Loading the exact article record…','The older record is stored as a deferred release asset. Validating it against release ' + String(SNAPSHOT.data_checksum || '').slice(0,12) + ' before display.','',true);
     ensureArticleBrief(selected).then(function (briefValue) {
       if (briefValue && state.view === 'briefing' && state.selected === selected.id) render();
       else if (!briefValue && state.view === 'briefing' && state.selected === selected.id) renderIntelligenceBrief(records);
@@ -5480,7 +5480,7 @@ function renderIntelligenceBrief(records) {
     return;
   }
   if (!selected.brief && selected._briefLoadFailed) {
-    renderBriefStatus('This exact dossier could not be verified','The release-bound article asset did not load. No evidence-absence conclusion has been drawn.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>',false,true);
+    renderBriefStatus('This exact article record could not be verified','The release-bound article asset did not load. No evidence-absence conclusion has been drawn.','<div class="intel-actions"><button class="secondary-action" type="button" data-retry-briefs>Retry exact article-record load</button></div>',false,true);
     return;
   }
   const brief = selected.brief || {lead:null,sections:[],fallback_evidence:null,checkpoints:[]};
@@ -5529,34 +5529,34 @@ function renderIntelligenceBrief(records) {
   const packetComparison = observationsReady
     ? number(changedCurrentPackets) + ' source-changed · ' + number(missingCurrentPackets) + ' current observation absent · ' +
       number(changedDatasetPackets) + ' captured under another dataset revision.'
-    : number(changedDatasetPackets) + ' captured under another dataset revision; current-observation comparison is available after opening Research Tasks.';
+    : number(changedDatasetPackets) + ' captured under another dataset revision; current-observation comparison is available after opening Local Review.';
   const subtitleMarkup = selected.subtitle ? '<p class="ic-dek">' + escapeHtml(selected.subtitle) + '</p>' : '';
   const metadataOnlyMember = selected.publication_access === 'member' && !hasIndexedMemberPreview(selected);
   const openingText = leadRow && leadRow.span && leadRow.span.text || articleClaim(selected);
-  const openingLabel = leadRow ? 'Author’s opening thesis' : metadataOnlyMember ? 'Published metadata' : 'Published article framing';
+  const openingLabel = leadRow ? 'Opening authored passage' : metadataOnlyMember ? 'Published metadata' : 'Published article framing';
   const openingTail = leadRow ? exactPassageTail(leadRow.span) : metadataOnlyMember ? '<span class="source-tail">No anonymous article-body preview was available in this release</span>' : '<span class="source-tail">Captured article framing · open the original for full context</span>';
   const checkpointSection = '<section class="ic-sheet-section" id="brief-checkpoints"><div class="ic-sheet-label"><span>Public checkpoints</span><span class="ic-authored">Authored</span></div>' +
     (checkpointMarkup || '<p class="missing">No dated public checkpoint was identified by the high-precision rules.</p>') +
     '<p class="ic-boundary-note">Status is measured against the dataset check date. A passed cited date means verification is due; it does not assert that the event occurred.</p></section>';
   shell.innerHTML = '<div class="intel-wrap">' + briefRailMarkup(lenses,selected) + briefCompactNavMarkup(lenses) +
     '<article class="intel-lead" aria-labelledby="lead-article-title"><div class="intel-lead-inner">' +
-      '<div class="ic-document-meta"><div class="ic-document-meta-left"><span class="source-badge source-' + selected.source + '">' + sourceLabel(selected.source) + '</span>' + accessBadgeMarkup(selected) + '<time datetime="' + selected.date + '">' + escapeHtml(formatDate(selected.date)) + '</time><span>·</span><span>' + escapeHtml(readLabel) + '</span><span>·</span><span class="coverage-badge ' + (selected.body_revision_status === 'current' ? 'coverage-full' : 'coverage-revision') + '">' + escapeHtml(bodyRevisionLabel(selected)) + '</span><span>·</span><span>Dossier ' + number(articlePosition) + ' of ' + number(ARTICLES.length) + '</span><span>·</span><span class="ic-checked-at">Dataset assembled <time datetime="' + escapeHtml(String(SNAPSHOT.checked_at || '')) + '">' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '</time></span><span>·</span><span class="ic-source-health' + sourceHealthClass + '">' + escapeHtml(sourceCollectionSummary(selected.source)) + '</span></div>' + (isPaidSubstackArticle(selected) ? '' : '<a class="ic-open-source" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '</div>' +
-      '<div class="ic-topic">Investment committee brief · published information</div><h1 class="intel-title" id="lead-article-title">' + escapeHtml(selected.title) + '</h1>' + subtitleMarkup + bodyRevisionWarningMarkup(selected) +
+      '<div class="ic-document-meta"><div class="ic-document-meta-left"><span class="source-badge source-' + selected.source + '">' + sourceLabel(selected.source) + '</span>' + accessBadgeMarkup(selected) + '<time datetime="' + selected.date + '">' + escapeHtml(formatDate(selected.date)) + '</time><span>·</span><span>' + escapeHtml(readLabel) + '</span><span>·</span><span class="coverage-badge ' + (selected.body_revision_status === 'current' ? 'coverage-full' : 'coverage-revision') + '">' + escapeHtml(bodyRevisionLabel(selected)) + '</span><span>·</span><span>Article ' + number(articlePosition) + ' of ' + number(ARTICLES.length) + '</span><span>·</span><span class="ic-checked-at">Dataset assembled <time datetime="' + escapeHtml(String(SNAPSHOT.checked_at || '')) + '">' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '</time></span><span>·</span><span class="ic-source-health' + sourceHealthClass + '">' + escapeHtml(sourceCollectionSummary(selected.source)) + '</span></div>' + (isPaidSubstackArticle(selected) ? '' : '<a class="ic-open-source" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '</div>' +
+      '<div class="ic-topic">Article record · published information</div><h1 class="intel-title" id="lead-article-title">' + escapeHtml(selected.title) + '</h1>' + subtitleMarkup + bodyRevisionWarningMarkup(selected) +
       '<section class="ic-opening-claim" id="brief-thesis"><div class="ic-claim-label">' + openingLabel + '</div><p>' + highlightArticleNumbers(openingText) + '</p>' + openingTail + '</section>' + premiumAccessMarkup(selected,'brief') + '</div>' +
       evidenceSpotlightMarkup(selected) +
       '<section class="ic-analysis" id="brief-analysis" aria-labelledby="analysis-title"><div class="ic-section-header"><h2 id="analysis-title">How the argument works</h2><p>Exact authored passages, organized by research role. No analyst conclusion, score, or portfolio recommendation is inferred.</p></div><div class="ic-analysis-grid">' +
         analysisPanelMarkup(mechanismRow,'Mechanism','') + analysisPanelMarkup(evidenceRow,'Evidence','evidence') +
       '</div></section>' +
-      '<section class="ic-dossier" id="brief-dossier"><div class="ic-dossier-head"><div class="ic-topic">Audit trail</div><h2>Source dossier and decision boundaries</h2><p>The evidence ledger retains detected values with their original context. Section coverage records what the rules captured; it is not a judgment of research quality.</p></div>' +
+      '<section class="ic-dossier" id="brief-dossier"><div class="ic-dossier-head"><div class="ic-topic">Audit trail</div><h2>Source record and captured challenges</h2><p>The evidence ledger retains detected values with their original context. Section coverage records what the rules captured; it is not a judgment of research quality.</p></div>' +
         researchMapMarkup(selected) + evidenceLedgerMarkup(selected) +
         '<div class="intel-section-grid">' + (sectionMarkup || '<div class="intel-empty">No additional countercase, falsifier, or implementation passage was identified. Open the original article for full context.</div>') + '</div>' +
-      '</section>' + researchThreadMarkup(selected) + '<div class="intel-actions">' + (isPaidSubstackArticle(selected) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '<button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open source dossier</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy IC brief</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
-    '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">Research challenge sheet · source + local</span><span class="print-only">Research challenge sheet · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">What changes our mind</h2><p class="ic-sheet-intro"><span class="screen-only">The source-defined thesis, contrary case, falsifier, and public watch items remain separate from tab-session workflow.</span><span class="print-only">Source-defined thesis, contrary case, falsifier, and public watch items. Independent research remains required.</span></p>' +
-      decisionSheetSectionMarkup(leadRow,'Author’s thesis') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase') + decisionSheetSectionMarkup(falsifierRow,'What would change the view') + decisionSheetSectionMarkup(implementationRow,'What to watch') + checkpointSection +
-      '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Tab-session research overlay</span><span class="ic-authored">Local · this tab</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active retained source-passage task' + (activePackets === 1 ? '' : 's') + ' whose captured article identity matches this dossier. ' + escapeHtml(packetComparison) + ' The brief never treats them as current recommendations.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open research tasks</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy brief</button></div></section>' +
+      '</section>' + researchThreadMarkup(selected) + '<div class="intel-actions">' + (isPaidSubstackArticle(selected) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '<button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open article record</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy article record</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
+    '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">Source-defined challenges · source + local</span><span class="print-only">Source-defined challenges · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">Source-defined challenges</h2><p class="ic-sheet-intro"><span class="screen-only">The opening passage, countercase, falsifier, and implementation passages remain separate from tab-session workflow.</span><span class="print-only">Opening, countercase, falsifier, and implementation passages. Independent research remains required.</span></p>' +
+      decisionSheetSectionMarkup(leadRow,'Opening authored passage') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase passage') + decisionSheetSectionMarkup(falsifierRow,'Author’s falsifier passage') + decisionSheetSectionMarkup(implementationRow,'Implementation passage') + checkpointSection +
+      '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Tab-session local review</span><span class="ic-authored">Local · this tab</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active retained source-passage item' + (activePackets === 1 ? '' : 's') + ' whose captured article identity matches this article record. ' + escapeHtml(packetComparison) + ' The article record never treats them as current recommendations.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open local review</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy article record</button></div></section>' +
       '<p class="ic-boundary-note">Evidence boundary: exact published-source passages; not independently verified, not a live market as-of, and not a portfolio recommendation. Full source context remains controlling.</p></div></aside>' +
     '<section class="ic-archive-grid" id="brief-archive">' + archiveCoverageMarkup(records) + relatedResearchMarkup(selected) + premiumArchiveMarkup(selected) + '</section>' +
-    '<section class="intel-stream"><div class="intel-card-head"><h3>Recent article dossiers</h3><span>' + number(records.length) + ' in this lens</span></div><div class="intel-stream-list">' + (stream || '<div class="intel-empty">No additional articles in this lens.</div>') + '</div></section></div>';
+    '<section class="intel-stream"><div class="intel-card-head"><h3>Recent articles</h3><span>' + number(records.length) + ' in this filter</span></div><div class="intel-stream-list">' + (stream || '<div class="intel-empty">No additional articles in this filter.</div>') + '</div></section></div>';
   restorePendingBriefFocus();
 }
 
@@ -5635,7 +5635,7 @@ function filterLabel(facet,value) {
   }[value];
   if (facet === 'direction') return directionLabel(value);
   if (facet === 'instrument') return instrumentLabel(value);
-  if (facet === 'quality') return {quant:'Detected numeric phrase',thesis:'Parser candidate: thesis phrase',outcome:'Detected outcome / P&L phrase',manager:'Mentioned entity'}[value];
+  if (facet === 'quality') return {quant:'Detected numeric phrase',thesis:'Parser candidate: thesis phrase',outcome:'Detected outcome / P&L phrase',manager:'Organization or person'}[value];
   if (facet === 'access') return {public:'Public at source',member:'Member at source',unknown:'Access unverified'}[value];
   if (facet === 'content') return value === 'full' ? 'Full text' : 'Excerpt / metadata';
   if (facet === 'manager') return MANAGER_LABELS.get(value) || value;
@@ -5645,7 +5645,7 @@ function filterLabel(facet,value) {
     triage:'High-context triage',documented:'All tracked fields captured',strong:'Most tracked fields captured',
     'needs-context':'Sparse captured fields',review:'Extraction review flag'
   }[value];
-  if (facet === 'queue-status') return 'Queue: ' + value;
+  if (facet === 'queue-status') return 'Review status: ' + value;
   return value;
 }
 function renderActiveFilters() {
@@ -5767,10 +5767,10 @@ function renderIdeaInspector(idea) {
     return '<label class="workflow-gate"><input type="checkbox" data-workflow-id="' + idea.id + '" data-workflow-gate="' + row[0] + '"' + (checked ? ' checked' : '') + '><span>' + escapeHtml(row[1]) + attestedAt + '</span></label>';
   }).join('') : '';
   const workflowPanel = workflow ?
-    '<section class="workflow-panel"><div class="workflow-header"><h3>Local research task</h3><span class="workflow-coverage">Human-authored</span></div>' +
+    '<section class="workflow-panel"><div class="workflow-header"><h3>Local review item</h3><span class="workflow-coverage">Human-authored</span></div>' +
       '<p class="workflow-warning">This is a tab-session research scratchpad—not an approval, recommendation, investment record, or enterprise audit trail. Field presence never becomes a readiness score.</p>' +
       retainedSourceSnapshotMarkup(workflow,idea) +
-      '<div class="workflow-subhead">Research task control</div><div class="workflow-grid">' +
+      '<div class="workflow-subhead">Local review controls</div><div class="workflow-grid">' +
         '<label class="workflow-field">Status<select data-workflow-id="' + idea.id + '" data-workflow-select="status"><option value="review"' + (workflow.status === 'review' ? ' selected' : '') + '>New</option><option value="diligence"' + (workflow.status === 'diligence' ? ' selected' : '') + '>Verifying</option><option value="monitor"' + (workflow.status === 'monitor' ? ' selected' : '') + '>Monitoring</option><option value="archived"' + (workflow.status === 'archived' ? ' selected' : '') + '>Archived</option></select></label>' +
         '<label class="workflow-field">Priority<select data-workflow-id="' + idea.id + '" data-workflow-select="priority"><option value="low"' + (workflow.priority === 'low' ? ' selected' : '') + '>Low</option><option value="normal"' + (workflow.priority === 'normal' ? ' selected' : '') + '>Normal</option><option value="high"' + (workflow.priority === 'high' ? ' selected' : '') + '>High</option></select></label>' +
         '<label class="workflow-field">Research owner<input data-workflow-id="' + idea.id + '" data-workflow-field="owner" value="' + escapeHtml(workflow.owner) + '" maxlength="120" autocomplete="off" placeholder="Initials or role"></label>' +
@@ -5786,23 +5786,23 @@ function renderIdeaInspector(idea) {
       '<div class="workflow-grid"><label class="workflow-field">Public catalyst / checkpoint<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="catalyst" maxlength="1400" placeholder="What observable public event or evidence changes the review?">' + escapeHtml(workflow.catalyst) + '</textarea></label>' +
       '<label class="workflow-field">Horizon<input data-workflow-id="' + idea.id + '" data-workflow-field="horizon" value="' + escapeHtml(workflow.horizon) + '" maxlength="160" autocomplete="off" placeholder="Days, months, event window"></label></div>' +
       '<label class="workflow-field">Falsifier / observable checkpoint<textarea class="compact" data-workflow-id="' + idea.id + '" data-workflow-field="falsifier" maxlength="1800" placeholder="What public observation would falsify or materially weaken the hypothesis?">' + escapeHtml(workflow.falsifier) + '</textarea></label>' +
-      '<div class="workflow-subhead">Human research attestations</div><fieldset class="workflow-gates"><legend>Check only after recording the supporting public-source work in this task.</legend>' + gateControls + '</fieldset>' +
+      '<div class="workflow-subhead">Human research attestations</div><fieldset class="workflow-gates"><legend>Check only after recording the supporting public-source work in this item.</legend>' + gateControls + '</fieldset>' +
       '<label class="workflow-field">Research memo<textarea data-workflow-id="' + idea.id + '" data-workflow-field="note" maxlength="4000" placeholder="Public-source research context only…">' + escapeHtml(workflow.note) + '</textarea></label>' +
       '<p class="workflow-warning">Updated ' + escapeHtml(workflow.updated_at ? formatCheckedAt(workflow.updated_at) : 'not recorded') + '. No completion or confidence score is calculated.</p>' +
-      '<div class="workflow-actions"><button class="secondary-action" type="button" data-copy-packet="' + idea.id + '">Copy research task</button><button class="secondary-action" type="button" data-save-idea="' + idea.id + '">' + (workflow.status === 'archived' ? 'Return to new' : 'Archive task') + '</button></div>' +
+      '<div class="workflow-actions"><button class="secondary-action" type="button" data-copy-packet="' + idea.id + '">Copy local review</button><button class="secondary-action" type="button" data-save-idea="' + idea.id + '">' + (workflow.status === 'archived' ? 'Return to new' : 'Archive item') + '</button></div>' +
       '<p class="workflow-warning">Stored only in this tab session unless exported; closing the tab session discards it. Backups are plaintext. Not an enterprise audit record. Do not enter confidential, personal, client, position, or regulated information.</p></section>' : '';
   if (state.view === 'queue' && workflow && workflow.source_snapshot) {
     const source = workflow.source_snapshot;
     return '<div class="inspector-content">' +
       '<div class="record-eyebrow"><span class="source-badge source-' + source.source + '">' + sourceLabel(source.source) + '</span>' +
         (source.date ? '<time datetime="' + escapeHtml(source.date) + '">' + escapeHtml(formatDate(source.date)) + '</time>' : '<span>Date unavailable</span>') +
-        '<span class="record-id">' + idea.id.toUpperCase() + ' · RETAINED TASK SOURCE</span></div>' +
+        '<span class="record-id">' + idea.id.toUpperCase() + ' · RETAINED LOCAL-REVIEW SOURCE</span></div>' +
       '<h2 class="record-title">' + escapeHtml(source.title || 'Retained research source') + '</h2>' +
-      '<p class="record-subtitle">This task is bound to the retained source snapshot below. Current-release data is not substituted into the task, its citation, or its exports.</p>' +
+      '<p class="record-subtitle">This local-review item is bound to the retained source snapshot below. Current-release data is not substituted into the item, its citation, or its exports.</p>' +
       '<div class="record-actions"><a class="primary-action" href="' + escapeHtml(safeUrl(source.url)) + '" target="_blank" rel="noopener noreferrer">Open retained source ↗</a>' +
         '<button class="secondary-action" type="button" data-copy-retained-citation="' + idea.id + '">Copy retained citation</button></div>' +
       workflowPanel +
-      '<div class="provenance">Research Task provenance is frozen to retained dataset ' + escapeHtml(String(source.data_checksum || '').slice(0,12) || 'unknown') + '. The active release is used only to report explicit differences. This tab-session task is not an approval, recommendation, investment record, or enterprise audit trail.</div>' +
+      '<div class="provenance">Local Review provenance is frozen to retained dataset ' + escapeHtml(String(source.data_checksum || '').slice(0,12) || 'unknown') + '. The active release is used only to report explicit differences. This tab-session item is not an approval, recommendation, investment record, or enterprise audit trail.</div>' +
       '</div>';
   }
   return '<div class="inspector-content">' +
@@ -5867,10 +5867,10 @@ function renderArticleInspector(article) {
   const openingInspectorLabel = metadataOnlyMember ? 'Published metadata' : 'Opening authored passage';
   const observationBoundary = metadataOnlyMember
     ? '<section class="article-dossier-section"><h3>Parser-derived observations</h3><p class="missing">None captured because this release contains no anonymous article-body preview. Metadata is not treated as an investment observation.</p></section>'
-    : '<section class="article-dossier-section"><h3>Parser-derived observations</h3><p class="missing">None captured. The article dossier remains available because it is built from exact authored sections, not observation count.</p></section>';
+    : '<section class="article-dossier-section"><h3>Parser-derived observations</h3><p class="missing">None captured. The article record remains available because it is built from exact authored sections, not observation count.</p></section>';
   const provenanceBoundary = metadataOnlyMember
     ? 'This record contains published metadata only; it has no article-body span, inferred stance, holding, return, or recommendation.'
-    : 'Every dossier passage is stored with source offsets and a SHA-256 hash and was validated against the captured article body before publication.';
+    : 'Every article-record passage is stored with source offsets and a SHA-256 hash and was validated against the captured article body before publication.';
   return '<div class="inspector-content">' +
     '<div class="record-eyebrow"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span>' + accessBadgeMarkup(article) + '<time datetime="' + article.date + '">' + formatDate(article.date) + '</time><span class="record-id">' + article.id.toUpperCase() + '</span></div>' +
     '<h2 class="record-title">' + escapeHtml(article.title) + '</h2>' +
@@ -5878,7 +5878,7 @@ function renderArticleInspector(article) {
     '<div class="record-actions">' +
       (state.view === 'briefing' || isPaidSubstackArticle(article) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(article)) + '</a>') +
       (alternate ? '<a class="secondary-action" href="' + escapeHtml(safeUrl(alternate)) + '" target="_blank" rel="noopener noreferrer">Medium copy ↗</a>' : '') +
-      '<button class="secondary-action" type="button" data-copy-brief="' + article.id + '">Copy institutional brief</button>' +
+      '<button class="secondary-action" type="button" data-copy-brief="' + article.id + '">Copy article record</button>' +
       '<button class="secondary-action" type="button" data-copy-article="' + article.id + '">Copy citation</button>' +
     '</div>' +
     '<div class="intel-reasons">' + reasonChips(article,8) + '</div>' +
@@ -5889,7 +5889,7 @@ function renderArticleInspector(article) {
     (gaps.length ? '<section class="article-dossier-section"><h3>Evidence boundaries</h3><div class="review-notice">' + gaps.map(function (gap) { return '<div>• ' + escapeHtml(gap) + '</div>'; }).join('') + '</div></section>' : '') +
     articleExtractionMap(article) +
     (related ? '<details class="article-dossier-section"><summary>Parser-derived observations (' + number(article.trade_count) + ')</summary><div class="related-ideas" style="margin-top:9px">' + related + '</div></details>' : (observationsReady ? observationBoundary : '')) +
-    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; dataset assembled ' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '; ' + escapeHtml(sourceCollectionSummary(article.source)) + '; ' + escapeHtml(bodyRevisionSummary(article)) + ' ' + escapeHtml(provenanceBoundary) + ' Structured direction fields classify passage language only; they do not identify the actor, a verified position, or a current view. The brief does not infer holdings, conviction, expected return, portfolio fit, or a live market view.</div>' +
+    '<div class="provenance">Published ' + escapeHtml(formatDate(article.date)) + '; dataset assembled ' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '; ' + escapeHtml(sourceCollectionSummary(article.source)) + '; ' + escapeHtml(bodyRevisionSummary(article)) + ' ' + escapeHtml(provenanceBoundary) + ' Structured direction fields classify passage language only; they do not identify the actor, a verified position, or a current view. The article record does not infer holdings, conviction, expected return, portfolio fit, or a live market view.</div>' +
     '</div>';
 }
 let renderedInspectorKey = '';
@@ -5898,16 +5898,16 @@ function renderInspector() {
   const inspectorKey = state.view + ':' + state.selected;
   const shouldResetScroll = inspectorKey !== renderedInspectorKey;
   if (!state.selected) {
-    container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">N/R</div><h2>Select a record</h2><p>Inspect the complete idea, evidence, provenance, and source without losing your position in the monitor.</p></div>';
+    container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">NA</div><h2>Select a record</h2><p>Inspect the complete passage, evidence, provenance, and source without losing your position in the index.</p></div>';
   } else if (isArticleView()) {
     const article = ARTICLE_BY_ID.get(state.selected);
     if (article && !article.brief && !article._briefLoadFailed) {
-      container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">…</div><h2>Loading article dossier</h2><p>Checking the deferred dossier against this release.</p></div>';
+      container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">…</div><h2>Loading article record</h2><p>Checking the deferred article record against this release.</p></div>';
       ensureArticleBrief(article).then(function () {
         if (state.selected === article.id && isArticleView()) renderInspector();
       });
     } else if (article && article._briefLoadFailed && !article.brief) {
-      container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">!</div><h2>Exact dossier unavailable</h2><p>The same-release article asset could not be verified. This is a load failure, not evidence absence.</p><button class="secondary-action" type="button" data-retry-briefs>Retry exact dossier load</button></div>';
+      container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">!</div><h2>Exact article record unavailable</h2><p>The same-release article asset could not be verified. This is a load failure, not evidence absence.</p><button class="secondary-action" type="button" data-retry-briefs>Retry exact article-record load</button></div>';
       if (state.view !== 'briefing') restorePendingBriefFocus();
     } else {
       container.innerHTML = article ? renderArticleInspector(article) : '';
@@ -6008,7 +6008,7 @@ function requestQueueComparisonArchive() {
     queueComparisonPromise = null;
     if (state.view === 'queue') {
       render();
-      document.getElementById('announcer').textContent = 'Retained research tasks remain available; current-release comparison is unavailable';
+      document.getElementById('announcer').textContent = 'Retained local review items remain available; current-release comparison is unavailable';
     }
   });
 }
@@ -6017,13 +6017,13 @@ function renderObservationGate() {
   setPressedStates();
   const title = observationsFailed ? 'Evidence archive unavailable' : 'Loading release-bound evidence…';
   const copy = observationsFailed
-    ? 'The release-bound observation asset could not be verified against this release. Article dossiers remain available, and no evidence-absence conclusion has been drawn.'
+    ? 'The release-bound observation asset could not be verified against this release. Article records remain available, and no evidence-absence conclusion has been drawn.'
     : 'Validating observation identities, article ownership, and source fields before showing observation-dependent results.';
   const action = observationsFailed ? '<button class="secondary-action" type="button" data-retry-observations>Retry evidence archive</button>' : '';
   if (state.view === 'briefing') {
     document.getElementById('briefing-shell').innerHTML = '<div class="intel-wrap">' + briefRailMarkup(BRIEF_LENSES) + briefCompactNavMarkup(BRIEF_LENSES) +
       '<article class="intel-lead"><div class="intel-lead-inner"><div class="ic-topic">Release integrity check</div><h1 class="intel-title" id="observation-gate-title">' + escapeHtml(title) + '</h1><p class="ic-dek">' + escapeHtml(copy) + '</p>' + (action ? '<div class="intel-actions">' + action + '</div>' : '') + '</div></article>' +
-      '<aside class="intel-side ic-sheet"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">Evidence boundary</div><h2 class="ic-sheet-title">Fail closed</h2><p class="ic-sheet-intro">Article dossiers remain separate from the deferred parser archive. An unavailable asset is never presented as missing evidence.</p></div></aside></div>';
+      '<aside class="intel-side ic-sheet"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow">Evidence boundary</div><h2 class="ic-sheet-title">Fail closed</h2><p class="ic-sheet-intro">Article records remain separate from the deferred parser archive. An unavailable asset is never presented as missing evidence.</p></div></aside></div>';
   } else if (state.view === 'structure') {
     // The desk is the landing view, so it draws its full chrome from
     // build-time counts and reports the archive state inside the panels
@@ -6546,7 +6546,7 @@ function structurePassageMarkup(row,index) {
     '"' + (eligible ? '' : ' disabled') + ' aria-label="' +
     (eligible ? (selected ? 'Selected' : 'Use') : 'Context-only; cannot use') + ' passage ' + number(index) +
     ' from ' + escapeHtml(String((idea._article || {}).title || 'authored note')) +
-    ' as the local research task anchor">' +
+    ' as the local review anchor">' +
     (eligible ? (selected ? 'Anchored passage' : 'Anchor this passage') : 'Context-only passage') +
     '</button></div><blockquote class="structure-passage-text">' + escapeHtml(passageText(idea)) + '</blockquote>' +
     '<div class="structure-passage-fields">' +
@@ -6754,8 +6754,8 @@ function deskNoteMarkdown(pattern, rows) {
   const macro = state.structureMacro
     ? '\n\n## Optional macro provenance\n\n' + rateSourceText() : '';
   const question = structureDecisionQuestion()
-    ? '\n\n## Decision to test — analyst-authored\n\n' + structureDecisionQuestion()
-    : '\n\n## Decision to test\n\nNot entered. The evidence set is not an investment case.';
+    ? '\n\n## Research question — reader-authored\n\n' + structureDecisionQuestion()
+    : '\n\n## Research question\n\nNot entered. The evidence set is not an investment case.';
   return '# Research evidence memo — ' + deskReferenceClass() + question + '\n\n' + body +
     '\n\n## Primary retrieved authored notes\n\n' + cited + macro +
     '\n\n---\n\nGenerated from snapshot ' + String(SNAPSHOT.data_checksum || '') +
@@ -6864,11 +6864,11 @@ function renderStructureDesk(rows, gate) {
         'matching passages') + '. Repeated passages from one note never receive separate votes.</p>'
     : '<p class="structure-summary">No primary exact, headline, or structured-field evidence matches these inputs.</p>';
   const diligenceItems = [
-    ['Decision to test',questionEntered ? 'Captured' : 'Not entered',questionEntered
+    ['Research question',questionEntered ? 'Captured' : 'Not entered',questionEntered
       ? structureDecisionQuestion() : 'Enter a non-confidential analyst question. It does not affect retrieval.'],
     ['Evidence breadth',pattern.noteTotal ? countLabel(pattern.noteTotal,'authored note') : 'No set',pattern.noteTotal
       ? countLabel(pattern.total,'captured passage') + ' · one-author purposive archive, not independent corroboration.'
-      : 'Define an evidence subject or refinement.'],
+      : 'Define a search subject or refinement.'],
     ['Capture integrity',pattern.noteTotal
       ? number(pattern.withCurrent) + ' current · ' + number(pattern.withFull) + ' full' : 'Not assessed',pattern.noteTotal
       ? number(pattern.noteTotal - pattern.withFull) + ' excerpt-backed · ' + number(pattern.withReview) +
@@ -6878,8 +6878,8 @@ function renderStructureDesk(rows, gate) {
     ['Human research case','Unassessed','Hypothesis, contrary evidence, falsifier, catalyst, and next action remain analyst-authored.'],
     ['Live investment controls','Not connected','Holdings, prices, valuation, liquidity, funding, portfolio constraints, compliance, and execution are outside this static desk.']
   ];
-  const railPanel = '<aside class="structure-panel structure-diligence" aria-label="Research handoff status">' +
-    '<div class="structure-panel-head"><h3>Research handoff</h3><span class="structure-summary">no readiness score</span></div>' +
+  const railPanel = '<aside class="structure-panel structure-diligence" aria-label="Local review handoff status">' +
+    '<div class="structure-panel-head"><h3>Local review handoff</h3><span class="structure-summary">no readiness score</span></div>' +
     (gate ? '<p class="structure-none">' + escapeHtml(gate.title) + '</p>' : summary) + packetAnchor +
     '<ol class="desk-gates">' + diligenceItems.map(function (row,index) {
       return '<li><span class="desk-gate-index">0' + number(index + 1) + '</span><div><strong>' +
@@ -6888,22 +6888,22 @@ function renderStructureDesk(rows, gate) {
     }).join('') + '</ol>' +
     '<div class="desk-handoff-actions"><button class="primary-action" type="button" ' +
       'data-structure-open-packet="1"' + (canOpenPacket ? '' : ' disabled') + '>' +
-      (canOpenPacket ? (workflowItems.has(packetAnchorRow.idea.id) ? 'Open existing research task' : 'Open local research task') :
-        !questionEntered ? 'Enter decision question first' : 'Anchor an exact passage first') + '</button>' +
+      (canOpenPacket ? (workflowItems.has(packetAnchorRow.idea.id) ? 'Open existing local review' : 'Open local review item') :
+        !questionEntered ? 'Enter research question first' : 'Anchor an exact passage first') + '</button>' +
       '<button class="secondary-action" type="button" data-structure-copy-note="1"' +
         (pattern.noteTotal ? '' : ' disabled') + '>Copy evidence memo</button></div>' +
     (noteLines.length ? '<details class="desk-capture-details"><summary>Capture quality &amp; gaps</summary><dl>' +
       noteLines.map(function (row) {
         return '<div><dt>' + escapeHtml(row[0]) + '</dt><dd>' + escapeHtml(row[1]) + '</dd></div>';
       }).join('') + '</dl></details>' : '') +
-    '<div class="desk-corpus-boundary"><strong>Desk coverage</strong><p>' +
+    '<div class="desk-corpus-boundary"><strong>Search coverage</strong><p>' +
       countLabel(DESK_FACETS.source_note_count || 0,'authored note') + ' · ' +
       countLabel(deskUniverseTotal(),'extracted passage') + ' · ' +
       countLabel(DESK_FACETS.full_current_note_count || 0,'full/current note') + ' · ' +
       countLabel(outcomeTotal(),'detected outcome / P&amp;L phrase') +
-      '. The broader library contains ' + countLabel(ARTICLES.length,'body-backed dossier') +
+      '. The broader index contains ' + countLabel(ARTICLES.length,'body-backed article') +
       '; the public catalogue contains ' + countLabel(SNAPSHOT.catalog_count || ARTICLES.length,'record') + '.</p>' +
-      '<button class="secondary-action" type="button" data-view="research">Open broader Research Library</button></div>' +
+      '<button class="secondary-action" type="button" data-view="research">Open Article Index</button></div>' +
     (state.structureMacro && pattern.priced
       ? '<details class="desk-capture-details"><summary>Historical U.S. curve context</summary><p class="structure-macro-note">' +
         rateSourceNote() + '</p></details>' : '') + '</aside>';
@@ -6933,17 +6933,17 @@ function renderStructureDesk(rows, gate) {
       : '<p class="structure-none">No primary evidence set can be formed. Related article-text mentions, if any, remain separated below and do not enter the snapshot.</p>') +
     '</section>';
   const startState = !gate && !defined
-    ? '<section class="desk-start-state"><div class="desk-start-copy"><div class="structure-kicker">No evidence subject defined</div>' +
+    ? '<section class="desk-start-state"><div class="desk-start-copy"><div class="structure-kicker">No search subject defined</div>' +
       '<h3>Start with a published-research subject</h3><p>Enter a literal subject such as an underlying, firm, or strategy. The desk requires every material term, clusters captured passages by authored note, separates loose mentions, and exposes the exact source and missing context before any local handoff.</p></div>' +
       '<div class="desk-start-steps"><div class="desk-start-step"><b>01 Scope</b><span>Frame the analyst question separately from deterministic retrieval.</span></div><div class="desk-start-step"><b>02 Verify</b><span>Read exact passages, capture limits, and parser warnings.</span></div><div class="desk-start-step"><b>03 Hand off</b><span>Anchor one exact passage; human research fields remain blank.</span></div></div></section>'
     : '';
   shell.innerHTML = '<div class="structure-wrap">' +
-    '<header class="structure-head"><div class="structure-title-row"><div><div class="structure-kicker">Published-source discovery</div><h2>Research Evidence Desk</h2></div>' +
-    '<p class="structure-boundary">Builds a research task—not an investment recommendation or portfolio decision. No live holdings, prices, P&amp;L, sizing, exposure, liquidity, or compliance approval.</p></div>' +
-    '<div class="structure-scope-grid"><label class="structure-scope-field"><span>Decision to test · analyst input</span>' +
-      '<input id="structure-question-input" type="text" maxlength="180" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="Non-confidential question for the research task" value="' +
+    '<header class="structure-head"><div class="structure-title-row"><div><div class="structure-kicker">Published-source discovery</div><h2>Published Passage Search</h2></div>' +
+    '<p class="structure-boundary">Builds a local review item—not an investment recommendation or portfolio decision. No live holdings, prices, P&amp;L, sizing, exposure, liquidity, or compliance approval.</p></div>' +
+    '<div class="structure-scope-grid"><label class="structure-scope-field"><span>Research question · local input</span>' +
+      '<input id="structure-question-input" type="text" maxlength="180" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="Non-confidential question for local review" value="' +
       escapeHtml(state.structureQuestion) + '"></label>' +
-      '<label class="structure-scope-field"><span>Evidence subject · literal all-term retrieval</span>' +
+      '<label class="structure-scope-field"><span>Search subject · literal all-term retrieval</span>' +
       '<input id="structure-focus-input" type="search" maxlength="120" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Underlying, firm, or strategy — e.g. VIX, S&amp;P 500, JGB" value="' +
       escapeHtml(state.structureFocus) + '" autocomplete="off"></label></div>' +
     '<p class="structure-memory-note">Both fields stay in page memory. Copy view explicitly creates a bounded URL; do not enter confidential research or position information.' +
@@ -6952,16 +6952,16 @@ function renderStructureDesk(rows, gate) {
     startChips + '</header>' + refineBar +
     startState + (defined || gate ? '<div class="structure-workbench">' + comparablePanel + railPanel + '</div>' : '') +
     (!gate && defined ? structureRelatedPanel(sets.related) : '') +
-    '<p class="structure-disclosure"><strong>Evidence boundary.</strong> The Evidence Desk covers ' +
+    '<p class="structure-disclosure"><strong>Evidence boundary.</strong> Passage Search covers ' +
     number(deskUniverseTotal()) + ' extracted passages clustered into ' +
     number(DESK_FACETS.source_note_count || 0) + ' authored notes; the broader library contains ' +
-    number(ARTICLES.length) + ' body-backed dossiers and the public catalogue contains ' +
+    number(ARTICLES.length) + ' body-backed articles and the public catalogue contains ' +
     number(SNAPSHOT.catalog_count || ARTICLES.length) + ' records. Instrument fields are lexical source mentions, not validated legs. Related subsequent notes are article-topic links, not outcomes. Only ' +
     number(outcomeTotal()) + ' passages contain a detected outcome / P&amp;L phrase requiring source review. This is not a backtest, realised P&amp;L, or a recommendation.</p></div>';
   shell.dataset.statusAnnouncement = gate
     ? gate.title
     : !defined
-      ? 'Define an evidence subject to build a research evidence set'
+      ? 'Define a search subject to build a published passage set'
       : pattern.noteTotal
         ? countLabel(pattern.noteTotal,'authored note') + ' and ' +
           (sets.tier === 'subject'
@@ -7013,10 +7013,10 @@ function render() {
       ? document.getElementById('structure-shell').dataset.statusAnnouncement || ''
       : '';
   document.getElementById('result-summary').textContent = briefStatusAnnouncement ||
-    number(records.length) + ' ' + (isArticleView() ? 'article dossiers' : state.view === 'queue' ? 'retained-source research tasks' : 'research observations');
+    number(records.length) + ' ' + (isArticleView() ? 'article records' : state.view === 'queue' ? 'retained-source local review items' : 'parsed passages');
   updateHash();
   document.getElementById('announcer').textContent = briefStatusAnnouncement ||
-    number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Latest Brief' : state.view === 'research' ? 'Research Library' : state.view === 'queue' ? 'Research Tasks' : state.view === 'structure' ? 'Evidence Desk' : 'Evidence Monitor');
+    number(records.length) + ' results in ' + (state.view === 'briefing' ? 'Article Record' : state.view === 'research' ? 'Article Index' : state.view === 'queue' ? 'Local Review' : state.view === 'structure' ? 'Passage Search' : 'Parsed Passages');
   requestQueueComparisonArchive();
 }
 
@@ -7258,7 +7258,7 @@ function decisionPacketText(idea,item) {
     return '- [' + (item.checks[row[0]] ? 'x' : ' ') + '] ' + row[1] + timestamp;
   }).join('\n');
   return [
-    'NAVNOOR RESEARCH TERMINAL — LOCAL RESEARCH TASK',
+    'NAVNOOR RESEARCH ARCHIVE — LOCAL REVIEW',
     'Status: ' + workflowStatusLabel(item.status) + ' | Priority: ' + item.priority,
     'Research owner: ' + (item.owner || 'Not assigned') + ' | Next review: ' + (item.review_date || 'Not set'),
     'Next action: ' + (item.next_action || 'Not recorded'),
@@ -7275,7 +7275,7 @@ function decisionPacketText(idea,item) {
     'Retained review flags: ' + retainedReviewFlagSummary(snapshot),
     'Capture basis: ' + (snapshot.legacy_bookmark_migration
       ? 'Active-release snapshot created from a legacy ID-only bookmark during migration; not historical bookmark-date evidence.'
-      : 'Source snapshot captured when this research task was created or imported.'),
+      : 'Source snapshot captured when this local review item was created or imported.'),
     '',
     'ANALYST RESEARCH FRAMING',
     'Research hypothesis to test: ' + (item.thesis || 'Not recorded'),
@@ -7292,7 +7292,7 @@ function decisionPacketText(idea,item) {
     'Tags: ' + (item.tags || 'None'),
     'Research memo: ' + (item.note || 'Not recorded'),
     'Updated: ' + (item.updated_at || 'Not recorded'),
-    'Terminal boundary: no live positions, pricing, P&L, sizing, execution, portfolio risk, liquidity, counterparty, investor, or compliance data. This task is not an investment decision or enterprise audit record.'
+    'Archive boundary: no live positions, pricing, P&L, sizing, execution, portfolio risk, liquidity, counterparty, investor, or compliance data. This local review item is not an investment decision or enterprise audit record.'
   ].join('\n');
 }
 function confirmQueueStorageBoundary() {
@@ -7300,7 +7300,7 @@ function confirmQueueStorageBoundary() {
     if (sessionStorage.getItem(QUEUE_BOUNDARY_ACK_KEY) === 'acknowledged') return true;
   } catch (_error) {}
   const accepted = window.confirm(
-    'Tab-session research-task warning\n\nResearch tasks use plaintext storage scoped to this browser tab session and are discarded when the tab session closes. Do not enter confidential, personal, client, position, or regulated information. Exported backups are plaintext files.\n\nContinue and enable tab-session research tasks?'
+    'Tab-session local-review warning\n\nLocal review uses plaintext storage scoped to this browser tab session and is discarded when the tab session closes. Do not enter confidential, personal, client, position, or regulated information. Exported backups are plaintext files.\n\nContinue and enable tab-session local review?'
   );
   if (accepted) {
     try { sessionStorage.setItem(QUEUE_BOUNDARY_ACK_KEY,'acknowledged'); } catch (_error) {}
@@ -7314,7 +7314,7 @@ function toggleSaved(id) {
   const restoreRow = active && active.closest && active.closest('[data-record-id]');
   const previous = workflowItems.get(id);
   if (!previous && workflowItems.size >= MAX_QUEUE_ITEMS) {
-    showToast('Research task limit reached; back up and archive older tasks');
+    showToast('Local review limit reached; back up and archive older items');
     return;
   }
   if (!previous && !confirmQueueStorageBoundary()) return;
@@ -7335,7 +7335,7 @@ function toggleSaved(id) {
     render();
     return;
   }
-  showToast(previous ? (previous.status === 'archived' ? 'Research task archived' : 'Research task returned to verification') : 'Research task added in this tab session');
+  showToast(previous ? (previous.status === 'archived' ? 'Local review item archived' : 'Local review item returned to verification') : 'Local review item added in this tab session');
   render();
   if (restoreSave) {
     const replacement = document.querySelector('[data-save-idea="' + CSS.escape(id) + '"]');
@@ -7354,7 +7354,7 @@ function boundedPacketNote(head,middle,tail) {
   const limit = WORKFLOW_TEXT_LIMITS.note;
   const full = head + middle + tail;
   if (full.length <= limit) return full;
-  const marker = '\n\n[Additional retrieved-source detail omitted from this local packet; use the desk or CSV for the complete set.]';
+  const marker = '\n\n[Additional retrieved-source detail omitted from this local-review item; use Passage Search or CSV for the complete set.]';
   const room = Math.max(0,limit - head.length - tail.length - marker.length);
   return head + middle.slice(0,room).trimEnd() + marker + tail;
 }
@@ -7380,12 +7380,12 @@ function deskPreMortem(pattern) {
 }
 function openDecisionPacketFromDesk() {
   if (!structureDecisionQuestion()) {
-    showToast('Enter a non-confidential decision question before opening a local research task');
+    showToast('Enter a non-confidential research question before opening a local review item');
     return;
   }
   const ranked = structureMatches();
   if (!ranked.length) {
-    showToast('Define a setup with primary retrieved evidence before creating a packet');
+    showToast('Define a setup with primary retrieved evidence before opening Local Review');
     return;
   }
   const pattern = structurePattern(ranked);
@@ -7396,17 +7396,17 @@ function openDecisionPacketFromDesk() {
     return row.idea.id === state.structurePassage && structurePassageDirectMatch(row.idea);
   })[0];
   if (!selectedGroup || !selectedRow) {
-    showToast('Anchor the exact source passage that should open this local research task');
+    showToast('Anchor the exact source passage that should open this local review item');
     return;
   }
   const anchor = selectedRow.idea;
   const previous = workflowItems.get(anchor.id);
-  const expectedQuestionLine = 'Decision to test — analyst-authored: ' + structureDecisionQuestion();
-  const expectedScopeLine = 'RESEARCH EVIDENCE SET opened from Research Evidence Desk — ' + deskReferenceClass();
+  const expectedQuestionLine = 'Research question — local input: ' + structureDecisionQuestion();
+  const expectedScopeLine = 'PUBLISHED PASSAGE SET opened from Passage Search — ' + deskReferenceClass();
   const previousContextMatches = Boolean(previous && String(previous.note || '').includes(expectedQuestionLine) &&
     String(previous.note || '').includes(expectedScopeLine));
   if (!previous && workflowItems.size >= MAX_QUEUE_ITEMS) {
-    showToast('Research task limit reached; back up and archive older tasks');
+    showToast('Local review limit reached; back up and archive older items');
     return;
   }
   if (!previous && !confirmQueueStorageBoundary()) return;
@@ -7440,8 +7440,8 @@ function openDecisionPacketFromDesk() {
         ' — ' + safeUrl(article.url);
     }).join('\n');
     const packetHead =
-      'RESEARCH EVIDENCE SET opened from Research Evidence Desk — ' + deskReferenceClass() +
-      '\nDecision to test — analyst-authored: ' + structureDecisionQuestion() +
+      'PUBLISHED PASSAGE SET opened from Passage Search — ' + deskReferenceClass() +
+      '\nResearch question — local input: ' + structureDecisionQuestion() +
       '\nSnapshot checksum: ' + String(SNAPSHOT.data_checksum || '') +
       '\nSelected source anchor: ' + String(selectedGroup.article.title || '') +
       '\nSelected source URL: ' + safeUrl(selectedGroup.article.url) +
@@ -7461,7 +7461,7 @@ function openDecisionPacketFromDesk() {
       }).join('\n\n');
     const packetTail = (state.structureMacro
         ? '\n\nOPTIONAL MACRO PROVENANCE\n' + rateSourceText() : '') +
-      '\n\nPACKET EVIDENCE SCOPE\nThis packet cites ' + number(packetGroups.length) +
+      '\n\nLOCAL REVIEW EVIDENCE SCOPE\nThis local-review item cites ' + number(packetGroups.length) +
         ' of ' + number(pattern.noteTotal) +
         ' retrieved ' + (pattern.noteTotal === 1 ? 'authored note' : 'authored notes') +
         '; inspect the desk or CSV for the complete set.\n\n' +
@@ -7489,10 +7489,10 @@ function openDecisionPacketFromDesk() {
   state.limit = PAGE_SIZE.queue;
   render();
   showToast(previous && !previousContextMatches
-    ? 'Existing research task opened unchanged; its stored evidence belongs to an earlier Desk scope'
+    ? 'Existing local review opened unchanged; its stored evidence belongs to an earlier Passage Search scope'
     : seeded
-    ? 'Local research task opened with source evidence; analyst hypothesis and falsifier remain blank'
-    : 'Research task already open; existing entries were left untouched');
+    ? 'Local review opened with source evidence; analyst hypothesis and falsifier remain blank'
+    : 'Local review already open; existing entries were left untouched');
 }
 function csvCell(value) {
   let text = String(value ?? '');
@@ -7525,7 +7525,7 @@ function exportCsv() {
       'U.S. 2Y observation by publication date','U.S. 10Y observation by publication date',
       'U.S. 30Y observation by publication date','U.S. 10Y-2Y observation by publication date',
       'Curve as of','Macro source URL','Fixed-universe curve band','Fixed-universe 10Y band',
-      'Authored entity mentions','Included source passages','Article','Publication channel','URL'
+      'Organizations or people mentioned','Included source passages','Article','Source','URL'
     ]].concat(ranked.map(function (group, index) {
       const article = group.article;
       const facts = structureGroupFacts(group);
@@ -7578,11 +7578,11 @@ function exportCsv() {
       ];
     }));
   } else if (state.view === 'research') {
-    rows = [['Date','Publication channel','Article','Subtitle','Research observations','Publication access','Indexed coverage','Body revision','Body source revision','Observed source revision','URL']].concat(records.map(function (article) {
+    rows = [['Date','Source','Article','Subtitle','Parsed passages','Publication access','Indexed coverage','Source capture status','Body source revision','Observed source revision','URL']].concat(records.map(function (article) {
       return [article.date,sourceLabel(article.source),article.title,article.subtitle,article.trade_count,article.publication_access,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,article.url];
     }));
   } else if (state.view === 'queue') {
-    rows = [['Observation ID','Retained publication date','Retained publication channel','Retained article','Retained source passage','Retained parser candidate: directional language','Retained instrument mentions','Retained underlying mention','Retained publication access','Retained body revision','Retained body source revision','Retained observed source revision','Retained review flags','Snapshot capture basis','Retained dataset checksum','Current-release differences','Research task status','Priority','Research owner','Next review','Next action','Research hypothesis to test','Contrary evidence','Independent public source citation','Key numeric claim / cited context','Public catalyst / checkpoint','Horizon','Falsifier / observable checkpoint','Surrounding publication context reviewed','Independent public source recorded','Numeric phrase traced to cited context','Contrary evidence recorded','Falsifier / checkpoint recorded','Unsupported-claims / non-confidential review','Human attestation timestamps (UTC)','Local tags','Local memo','Task updated','Retained source URL']].concat(records.map(function (idea) {
+    rows = [['Observation ID','Retained publication date','Retained source','Retained article','Retained source passage','Retained parser candidate: directional language','Retained instrument mentions','Retained underlying mention','Retained publication access','Retained body revision','Retained body source revision','Retained observed source revision','Retained review flags','Snapshot capture basis','Retained dataset checksum','Current-release differences','Local review status','Priority','Review owner','Next review','Next action','Research hypothesis to test','Contrary evidence','Independent public source citation','Key numeric claim / cited context','Public catalyst / checkpoint','Horizon','Falsifier / observable checkpoint','Surrounding publication context reviewed','Independent public source recorded','Numeric phrase traced to cited context','Contrary evidence recorded','Falsifier / checkpoint recorded','Unsupported-claims / non-confidential review','Human attestation timestamps (UTC)','Local tags','Local memo','Item updated','Retained source URL']].concat(records.map(function (idea) {
       const workflow = workflowItems.get(idea.id);
       const source = workflow && workflow.source_snapshot;
       const checks = workflow ? workflow.checks || {} : {};
@@ -7599,7 +7599,7 @@ function exportCsv() {
         source ? source.underlying : '',source ? source.publication_access : '',
         source ? source.body_revision_status : '',source ? source.source_updated_at : '',
         source ? source.observed_source_updated_at : '',source ? retainedReviewFlagSummary(source) : '',
-        source ? (source.legacy_bookmark_migration ? 'active-release legacy ID-only bookmark migration' : 'task capture or import') : '',
+        source ? (source.legacy_bookmark_migration ? 'active-release legacy ID-only bookmark migration' : 'local-review capture or import') : '',
         source ? source.data_checksum : '',
         comparison.differences.length ? comparison.differences.join('; ') : 'none',
         workflow ? workflowStatusLabel(workflow.status) : '',workflow ? workflow.priority : '',
@@ -7615,7 +7615,7 @@ function exportCsv() {
       ];
     }));
   } else {
-    rows = [['Date','Parser candidate: directional language','Instrument mentions','Underlying mention','Mentioned entity','Original entity mention','Source passage','Parser candidate: thesis phrase','Detected numeric phrase','Detected outcome / P&L phrase','Review flags','Publication access','Indexed coverage','Body revision','Body source revision','Observed source revision','Article','Publication channel','URL']].concat(records.map(function (idea) {
+    rows = [['Date','Parser candidate: directional language','Instrument mentions','Underlying mention','Organization or person','Original entity mention','Source passage','Parser candidate: thesis phrase','Detected numeric phrase','Detected outcome / P&L phrase','Review flags','Publication access','Indexed coverage','Source capture status','Body source revision','Observed source revision','Article','Source','URL']].concat(records.map(function (idea) {
       const article = idea._article;
       const flags = [idea.negation_risk ? 'negation-risk' : '',idea.reference_line ? 'reference-line' : '',idea.description_truncated ? 'truncated' : '',article.body_revision_status === 'prior' ? 'prior-revision' : '',article.body_revision_status === 'unverified' ? 'unverified-revision' : ''].filter(Boolean).join('; ');
       return [article.date,directionLabel(idea.direction),idea.instruments.map(instrumentLabel).join('; '),idea.underlying,idea.manager,idea.manager_raw,passageText(idea),idea.thesis,idea.quant,idea.outcome,flags,article.publication_access,article.content_status,article.body_revision_status,article.source_updated_at,article.observed_source_updated_at,article.title,sourceLabel(article.source),article.url];
@@ -7692,14 +7692,14 @@ function downloadLocalFile(blob,filename) {
 }
 function backupUnreadableWorkflow() {
   if (!unreadableWorkflowRaw) {
-    showToast('No readable raw queue record is available to back up');
+    showToast('No readable raw local-review record is available to back up');
     return;
   }
   downloadLocalFile(
     new Blob([unreadableWorkflowRaw],{type:'text/plain;charset=utf-8'}),
-    'navnoor-unreadable-queue-' + new Date().toISOString().slice(0,10) + '.txt'
+    'navnoor-unreadable-local-review-' + new Date().toISOString().slice(0,10) + '.txt'
   );
-  showToast('Unreadable stored queue record backed up as plaintext');
+  showToast('Unreadable stored local-review record backed up as plaintext');
 }
 function clearQueueStorageKeys() {
   sessionStorage.removeItem(WORKFLOW_KEY);
@@ -7713,7 +7713,7 @@ function clearQueueStorageKeys() {
   }
 }
 function clearUnreadableWorkflow() {
-  if (!window.confirm('Discard the unreadable stored queue record? This cannot be undone unless you backed up the raw record first.')) return;
+  if (!window.confirm('Discard the unreadable stored local-review record? This cannot be undone unless you backed up the raw record first.')) return;
   try {
     if (unreadableWorkflowLocation === 'session') sessionStorage.removeItem(WORKFLOW_KEY);
     else clearLegacyLocalWorkflowKeys();
@@ -7729,13 +7729,13 @@ function clearUnreadableWorkflow() {
     syncWorkflowStorageAlert();
     dismissPersistentNotice();
     render();
-    showToast('Unreadable stored queue discarded');
+    showToast('Unreadable stored local-review record discarded');
   } catch (_error) {
-    showToast('Unreadable queue record could not be cleared');
+    showToast('Unreadable local-review record could not be cleared');
   }
 }
 function clearTabQueue() {
-  if (!window.confirm('Clear every research task in this tab session and any legacy persistent queue? Export a backup first if any record must be retained.')) return;
+  if (!window.confirm('Clear every local review item in this tab session and any legacy persistent storage? Export a backup first if any record must be retained.')) return;
   try {
     const legacyCleared = clearQueueStorageKeys();
     sessionStorage.removeItem(QUEUE_BOUNDARY_ACK_KEY);
@@ -7751,10 +7751,10 @@ function clearTabQueue() {
     persistWorkflow();
     syncWorkflowStorageAlert();
     render();
-    if (legacyCleared) showToast('Tab-session research tasks and legacy storage cleared');
-    else showPersistentNotice('The tab-session queue was cleared, but legacy origin-wide storage could not be accessed. Clear old site data in browser settings.');
+    if (legacyCleared) showToast('Tab-session Local Review and legacy storage cleared');
+    else showPersistentNotice('Tab-session Local Review was cleared, but legacy origin-wide storage could not be accessed. Clear old site data in browser settings.');
   } catch (_error) {
-    showToast('Tab-session research tasks could not be cleared');
+    showToast('Tab-session Local Review could not be cleared');
   }
 }
 function backupQueue() {
@@ -7769,9 +7769,9 @@ function backupQueue() {
   };
   downloadLocalFile(
     new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),
-    'navnoor-research-tasks-' + new Date().toISOString().slice(0,10) + '.json'
+    'navnoor-local-review-' + new Date().toISOString().slice(0,10) + '.json'
   );
-  showToast(number(workflowItems.size) + ' queue records backed up');
+  showToast(number(workflowItems.size) + ' local review records backed up');
 }
 function cloneWorkflowMap(source) {
   const clone = new Map();
@@ -7783,7 +7783,7 @@ function cloneWorkflowMap(source) {
 }
 function undoLastQueueRestore() {
   if (!lastRestoreWorkflowItems) {
-    showToast('No queue restore is available to undo');
+    showToast('No Local Review restore is available to undo');
     return;
   }
   const currentItems = workflowItems;
@@ -7797,10 +7797,10 @@ function undoLastQueueRestore() {
   try { sessionStorage.removeItem(RESTORE_ROLLBACK_KEY); } catch (_error) {}
   dismissPersistentNotice();
   render();
-  showToast('Queue restore undone');
+  showToast('Local Review restore undone');
 }
 function restoreQueueFile(file) {
-  if (!file || file.size > 2000000) { showToast('Queue backup is missing or too large'); return; }
+  if (!file || file.size > 2000000) { showToast('Local Review backup is missing or too large'); return; }
   if (!confirmQueueStorageBoundary()) return;
   const reader = new FileReader();
   reader.onload = function () {
@@ -7834,28 +7834,28 @@ function restoreQueueFile(file) {
         }
       });
       if (!added && !updated) {
-        showToast('Queue backup contains no newer records to import');
+        showToast('Local Review backup contains no newer records to import');
         return;
       }
       const snapshotDiffers = Boolean(payload.data_checksum && payload.data_checksum !== String(SNAPSHOT.data_checksum || ''));
       if (snapshotDiffers && !window.confirm(
         'Source snapshot mismatch\n\nThis backup was created against a different research dataset. Cancel is safest. Continue only if you intend to retain its bounded source snapshots.'
       )) {
-        showToast('Queue import cancelled because the source snapshot differs');
+        showToast('Local Review import cancelled because the source snapshot differs');
         return;
       }
       if (sourceConflicts && !window.confirm(
-        'Retained source conflicts\n\n' + sourceConflicts + ' newer imported task' + (sourceConflicts === 1 ? '' : 's') +
-        ' would replace an existing exact retained source anchor. Affected task IDs: ' + sourceConflictIds.slice(0,20).join(', ') +
+        'Retained source conflicts\n\n' + sourceConflicts + ' newer imported item' + (sourceConflicts === 1 ? '' : 's') +
+        ' would replace an existing exact retained source anchor. Affected item IDs: ' + sourceConflictIds.slice(0,20).join(', ') +
         (sourceConflictIds.length > 20 ? ', …' : '') +
-        '\n\nCancel is safest. Continue only if you intentionally want the imported retained evidence to replace the existing task snapshots.'
+        '\n\nCancel is safest. Continue only if you intentionally want the imported retained evidence to replace the existing item snapshots.'
       )) {
-        showToast('Queue import cancelled because retained source anchors conflict');
+        showToast('Local Review import cancelled because retained source anchors conflict');
         return;
       }
-      const preview = 'Queue import preview\n\nNew packets: ' + added + '\nUpdated packets: ' + updated + '\nSkipped or older packets: ' + skipped + '\nRetained-source conflicts approved: ' + sourceConflicts + (snapshotDiffers ? '\nBackup dataset: DIFFERENT' : '\nBackup dataset: matching') + '\n\nThe current queue will be retained as a tab-scoped rollback across reloads. Export a separate plaintext backup for long-term retention. Continue?';
+      const preview = 'Local Review import preview\n\nNew items: ' + added + '\nUpdated items: ' + updated + '\nSkipped or older items: ' + skipped + '\nRetained-source conflicts approved: ' + sourceConflicts + (snapshotDiffers ? '\nBackup dataset: DIFFERENT' : '\nBackup dataset: matching') + '\n\nThe current Local Review set will be retained as a tab-scoped rollback across reloads. Export a separate plaintext backup for long-term retention. Continue?';
       if (!window.confirm(preview)) {
-        showToast('Queue import cancelled after preview');
+        showToast('Local Review import cancelled after preview');
         return;
       }
       try {
@@ -7864,24 +7864,24 @@ function restoreQueueFile(file) {
           JSON.stringify(Array.from(previousItems.values()))
         );
       } catch (_error) {
-        showToast('Queue import stopped because a durable tab rollback could not be preserved');
+        showToast('Local Review import stopped because a durable tab rollback could not be preserved');
         return;
       }
       workflowItems = restored;
       lastRestoreWorkflowItems = previousItems;
       if (persistWorkflow()) {
         render();
-        showPersistentNotice(number(added + updated) + ' queue packets imported. The previous tab queue can be restored after reload until the next import or clear.','Undo import','undo-restore');
+        showPersistentNotice(number(added + updated) + ' local review items imported. The previous tab review set can be restored after reload until the next import or clear.','Undo import','undo-restore');
       } else {
         workflowItems = previousItems;
         lastRestoreWorkflowItems = null;
         savedIdeas = new Set(workflowItems.keys());
       }
     } catch (_error) {
-      showToast('Queue backup could not be validated');
+      showToast('Local Review backup could not be validated');
     }
   };
-  reader.onerror = function () { showToast('Queue backup could not be read'); };
+  reader.onerror = function () { showToast('Local Review backup could not be read'); };
   reader.readAsText(file);
 }
 
@@ -7957,7 +7957,7 @@ document.addEventListener('click',function (event) {
   const copyBrief = event.target.closest('[data-copy-brief]');
   if (copyBrief) {
     const article = ARTICLE_BY_ID.get(copyBrief.dataset.copyBrief);
-    if (article && article.brief) copyText(articleBriefText(article),'Institutional brief copied with source provenance');
+    if (article && article.brief) copyText(articleBriefText(article),'Article record copied with source provenance');
     return;
   }
   if (event.target.closest('[data-print-brief]')) {
@@ -7969,7 +7969,7 @@ document.addEventListener('click',function (event) {
     retryBriefs.disabled = true;
     pendingBriefFocus = {kind:state.view === 'briefing' && state.briefLens !== 'all' ? 'lens' : 'article',value:state.view === 'briefing' && state.briefLens !== 'all' ? state.briefLens : state.selected};
     retryBriefArchive().then(function () { render(); }).catch(function () {
-      showToast('Exact article dossiers are still unavailable');
+      showToast('Exact article records are still unavailable');
       render();
     });
     return;
@@ -7995,7 +7995,7 @@ document.addEventListener('click',function (event) {
     threadComparisonRequest = request;
     pendingBriefFocus = {kind:'thread-comparison',value:prior.id};
     render();
-    document.getElementById('announcer').textContent = 'Loading and verifying the exact prior article dossier';
+    document.getElementById('announcer').textContent = 'Loading and verifying the exact prior article record';
     ensureArticleBrief(prior).then(function (briefValue) {
       if (threadComparisonRequest !== request) return;
       threadComparisonRequest = null;
@@ -8006,9 +8006,9 @@ document.addEventListener('click',function (event) {
       render();
       const completion = briefValue
         ? 'Exact prior passage comparison loaded and verified'
-        : 'Exact prior dossier could not be verified; retry is available';
+        : 'Exact prior article record could not be verified; retry is available';
       document.getElementById('announcer').textContent = completion;
-      if (!briefValue) showToast('Exact prior dossier could not be verified');
+      if (!briefValue) showToast('Exact prior article record could not be verified');
     });
     return;
   }
@@ -8289,8 +8289,8 @@ document.addEventListener('click',function (event) {
   if (copyPacket) {
     const item = workflowItems.get(copyPacket.dataset.copyPacket);
     const packet = item ? decisionPacketText(null,item) : '';
-    if (packet) copyText(packet,'Research task copied');
-    else showToast('Research task copy stopped because retained source evidence is unavailable');
+    if (packet) copyText(packet,'Local review item copied');
+    else showToast('Local review copy stopped because retained source evidence is unavailable');
     return;
   }
   const copyIdea = event.target.closest('[data-copy-citation]');
@@ -8337,7 +8337,7 @@ document.addEventListener('click',function (event) {
     } else if (action.dataset.action === 'clear-queue') {
       clearTabQueue();
     } else if (action.dataset.action === 'retry-storage') {
-      if (persistWorkflow()) showToast('Research Tasks saved in this tab session');
+      if (persistWorkflow()) showToast('Local Review saved in this tab session');
     } else if (action.dataset.action === 'mark-reviewed') {
       markReviewedThroughLatest();
     } else if (action.dataset.action === 'inspector') {
@@ -8588,7 +8588,7 @@ document.getElementById('manual-copy-close').addEventListener('click',function (
 document.getElementById('manual-copy-done').addEventListener('click',function () { manualCopyDialog.close(); });
 
 // Command palette. Every entry delegates to the control that already owns the
-// behaviour, so the palette can never drift from the visible terminal actions.
+// behaviour, so the palette can never drift from the visible archive actions.
 const commandPalette = document.getElementById('command-palette');
 const paletteInput = document.getElementById('command-palette-input');
 const paletteList = document.getElementById('command-palette-list');
@@ -8613,9 +8613,9 @@ function gotoView(view) {
 }
 function buildPaletteCommands() {
   const commands = [
-    ['structure','Evidence Desk'],['briefing','Latest Brief'],
-    ['ideas','Evidence Monitor'],['research','Research Library'],
-    ['queue','Research Tasks']
+    ['structure','Passage Search'],['briefing','Article Record'],
+    ['ideas','Parsed Passages'],['research','Article Index'],
+    ['queue','Local Review']
   ].map(function (row) {
     return {kind:'View',label:'Go to ' + row[1],meta:'',run:function () { gotoView(row[0]); }};
   });
@@ -8633,7 +8633,7 @@ function buildPaletteCommands() {
     run:function () { shortcutDialog.showModal(); }});
   ARTICLES.forEach(function (article) {
     commands.push({
-      kind:'Dossier',
+      kind:'Article',
       label:article.title,
       meta:shortDate(article.date),
       run:function () {
@@ -8953,7 +8953,7 @@ function renderStaticStats() {
     number(provenanceObservations.unverified) + ' unverified observations';
   const provenanceSummary = document.getElementById('kpi-provenance');
   const provenanceText =
-    'Body revision provenance. Articles: ' +
+    'Source capture provenance. Articles: ' +
     number(provenanceArticles.current) + ' current, ' +
     number(provenanceArticles.prior) + ' prior, ' +
     number(provenanceArticles.unverified) + ' unverified. Observations: ' +
@@ -8996,13 +8996,13 @@ function renderStaticStats() {
 
 syncWorkflowStorageAlert();
 if (workflowLoadBlocked) {
-  showPersistentNotice('Stored research-task data could not be read. Saving is blocked until you back up or explicitly discard the unreadable record.');
+  showPersistentNotice('Stored local-review data could not be read. Saving is blocked until you back up or explicitly discard the unreadable record.');
 } else if (lastRestoreWorkflowItems) {
-  showPersistentNotice('Pre-import research tasks are available as a rollback from the most recent restore.','Undo import','undo-restore');
+  showPersistentNotice('Pre-import local review items are available as a rollback from the most recent restore.','Undo import','undo-restore');
 } else if (workflowLegacyMigrated) {
-  showPersistentNotice('Legacy ID-only bookmarks were moved into this safer tab session. Their source snapshots were captured from the active release during migration—not from the historical bookmark date. Export a plaintext backup before closing the tab if they must be retained.','Back up tasks','backup-queue');
+  showPersistentNotice('Legacy ID-only bookmarks were moved into this safer tab session. Their source snapshots were captured from the active release during migration—not from the historical bookmark date. Export a plaintext backup before closing the tab if they must be retained.','Back up local review','backup-queue');
 } else if (legacyCleanupPending || legacyStorageCheckUnavailable) {
-  showPersistentNotice('Legacy origin-wide task storage could not be checked or cleared. This tab remains session-scoped; clear old site data in browser settings if needed.');
+  showPersistentNotice('Legacy origin-wide local-review storage could not be checked or cleared. This tab remains session-scoped; clear old site data in browser settings if needed.');
 }
 hydrateFromHash();
 document.getElementById('search').value = state.query;
@@ -9115,12 +9115,9 @@ sitemap_xml = (
     + '\n</urlset>\n'
 )
 web_manifest = json.dumps({
-    'name': 'Navnoor Research Terminal',
-    'short_name': 'Navnoor Research',
-    'description': (
-        'Source-backed institutional research dossiers with exact passages, '
-        'evidence ledgers, checkpoints, and decision boundaries.'
-    ),
+    'name': 'Navnoor Research Archive',
+    'short_name': 'Navnoor Archive',
+    'description': 'Published research index with source-linked passages and capture provenance.',
     'start_url': './',
     'scope': './',
     'display': 'standalone',
@@ -9136,7 +9133,7 @@ web_manifest = json.dumps({
 favicon_svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 <rect width="64" height="64" rx="6" fill="{DARK_THEME_BG}"/>
 <rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#ffb000" stroke-width="2"/>
-<text x="32" y="39" fill="#f4f6f7" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">N/R</text>
+<text x="32" y="39" fill="#f4f6f7" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">NA</text>
 </svg>
 '''
 
@@ -9232,7 +9229,7 @@ data_summary = validate_data_layer(
 print(
     f'Built {out} ({len(HTML) // 1024} KB + '
     f'{article_catalog_out.stat().st_size // 1024} KB verified catalogue + '
-    f'{brief_out.stat().st_size // 1024} KB deferred dossiers + '
+    f'{brief_out.stat().st_size // 1024} KB deferred article records + '
     f'{observations_out.stat().st_size // 1024} KB deferred observations, '
     f'{len(support_assets) + 1} support assets, '
     f'{len(client_articles)} research notes, {len(client_ideas)} extracted ideas, '

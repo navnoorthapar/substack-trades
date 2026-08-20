@@ -1,8 +1,8 @@
 # Subscriber conversion playbook
 
-Navnoor Research Terminal promotes paid research as a source-completeness
+Navnoor Research Archive presents paid research as a source-completeness
 workflow, not as an advertisement and not as a simulated client-side paywall.
-The public terminal proves what it has captured, identifies what remains at the
+The public archive proves what it has captured, identifies what remains at the
 publication, and lets an interested reader continue to the exact source.
 
 ## Product contract
@@ -19,7 +19,7 @@ publication, and lets an interested reader continue to the exact source.
 3. **Use article evidence, not invented promises.** Promotion surfaces use only
    release-derived facts: the article's research framing, access state, preview
    availability, and deterministic related-topic matches. The surrounding
-   dossier may report captured research-role and observation coverage. Neither
+   article record may report captured research-role and observation coverage. Neither
    surface claims returns, alpha, holdings, conviction, recommendations, reader
    counts, scarcity, or professional endorsement.
 4. **Keep access and capture separate.** `publication_access` states whether the
@@ -41,14 +41,14 @@ publication, and lets an interested reader continue to the exact source.
 
 ## Public preview boundary
 
-`member_preview` is a publication proof, not a teaser invented by the terminal.
+`member_preview` is a publication proof, not a teaser invented by the archive.
 Every member-access Substack or Medium row carries exactly five fields:
 `schema_version`, `surface`, `text`, `character_count`, and `body_sha256`. The
 count must equal the exact text length, the digest must equal that exact text,
 and the article brief and any derived observation must bind to the same digest.
 
 - A non-empty paid Substack proof comes only from the anonymous Substack list
-  surface and is capped at 1,200 characters including any terminal ellipsis.
+  surface and is capped at 1,200 characters including any archive display ellipsis.
 - If no trustworthy anonymous preview exists, the proof is `metadata-only`, its
   text and count are empty/zero, and its brief contains no derived body spans.
 - A legacy locked Medium cache without the same proof is scrubbed to
@@ -85,21 +85,18 @@ Find relevant evidence
 The primary action answers the reader's immediate question: **Read full note on
 Substack**. The secondary action answers the broader archive question:
 **See subscription plans**. Subscription prices and trial claims are never
-hard-coded into the terminal because they can change; the current terms remain
+hard-coded into the archive because they can change; the current terms remain
 adjacent to checkout on Substack.
 
-## Institutional value hierarchy
+## Reader value hierarchy
 
-- **Owner / CIO:** quickly establish why a note belongs in human diligence,
-  which sources and research roles are documented, and where the complete
-  context lives.
-- **Portfolio manager:** connect thesis, catalyst, falsifier, risk, and
-  implementation passages without mistaking extraction coverage for
-  confidence.
-- **Trader:** scan markets, underlyings, publication dates, and source context
+- **Reader:** identify why a note is relevant and where the complete context lives.
+- **Practitioner:** connect source-defined challenges and implementation passages
+  without mistaking extraction coverage for confidence.
+- **Researcher:** scan markets, underlyings, publication dates, and source context
   before leaving for the full note; no live-price or execution claim is made.
-- **Quantitative researcher:** use deterministic IDs, source provenance,
-  bounded passages, revision status, and public versioned exports.
+- **Data consumer:** use deterministic IDs, source provenance, bounded passages,
+  revision status, and public versioned exports.
 
 The subscription promise should stay anchored to durable research utility: the
 full research archive and strategy teardowns; deep dives on volatility,
@@ -121,7 +118,7 @@ For every paid Substack note:
 3. Make the paid inclusion concrete in the source article; do not imply an
    unseen section unless it exists.
 4. Retain exact source title, subtitle, audience, revision provenance, and the
-   bounded preview in the next terminal refresh.
+   bounded preview in the next archive refresh.
 5. Let the release derive its coverage proof and related premium notes from the
    validated snapshot. Do not hand-author conversion counts in HTML.
 6. Keep at least one exemplary full public article available so a new reader can
@@ -216,7 +213,7 @@ Start in three steps:
 1. Open the full archive and choose the market, model, or manager closest to your current work:
 https://www.navnoorbawaresearch.com/archive
 
-2. Use the public research terminal to scan the catalogue, inspect source coverage, and find related work. Open the original Substack note while signed in to read anything reserved for subscribers:
+2. Use the public research archive to scan the catalogue, inspect source coverage, and find related work. Open the original Substack note while signed in to read anything reserved for subscribers:
 https://navnoorthapar.github.io/substack-trades/
 
 3. Comment on a post with the assumption, data point, or implementation risk you want examined. The subscription includes the ability to ask questions on every post.
@@ -230,11 +227,11 @@ Navnoor
 
 ## Measurement and privacy
 
-The terminal intentionally sends no search, filter, article-reading, selection,
-or decision-queue event to the author or a third party. Outbound article and
+The archive intentionally sends no search, filter, article-reading, selection,
+or local-review event to the author or a third party. Outbound article and
 subscription URLs contain no referral or workflow parameters. If the owner
 evaluates conversion, use Substack's own publication-level subscriber dashboard
-and retention measures; never join billing identity to terminal behavior.
+and retention measures; never join billing identity to archive behavior.
 
 Review retained value rather than clicks:
 
@@ -266,11 +263,11 @@ purge cannot guarantee recall of prior clones or third-party caches.
   not quality, recommendation, or suitability.
 - External links are HTTPS, open only after a reader action, disclose the new
   tab, and use `noopener noreferrer`.
-- Subscription URLs contain no query string, terminal state, referral tag, or
+- Subscription URLs contain no query string, archive state, referral tag, or
   local-workflow value.
 - Keyboard focus, text contrast, 200% zoom, and narrow-screen layout remain
   usable; conversion controls never cover source evidence.
-- No third-party request occurs on load, search, filter, read, or queue use.
+- No third-party request occurs on load, search, filter, read, or Local Review use.
 - Generated crawler stubs and public data expose no authenticated or cached
   member-only body beyond the validated anonymous preview boundary.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify that the public terminal serves the exact dataset just deployed."""
+"""Verify that the public archive serves the exact dataset just deployed."""
 
 import argparse
 import binascii
@@ -205,7 +205,7 @@ def validate_html(
     missing_ids = sorted(REQUIRED_ELEMENT_IDS - parser.element_ids)
     if missing_ids:
         raise ValueError(f'missing core interface elements: {", ".join(missing_ids)}')
-    if parser.title != 'Navnoor Research Terminal':
+    if parser.title != 'Navnoor Research Archive':
         raise ValueError(f'unexpected page title: {parser.title!r}')
     return embedded_asset_digests(html)
 
@@ -1144,7 +1144,7 @@ def smoke_test(
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Verify the exact Navnoor Research Terminal release is live.',
+        description='Verify the exact Navnoor Research Archive release is live.',
     )
     parser.add_argument('url', help='deployed GitHub Pages URL')
     parser.add_argument('--expected-revision', required=True)

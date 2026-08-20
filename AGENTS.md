@@ -4,10 +4,10 @@ These instructions apply to the entire repository.
 
 ## Product and architecture
 
-Navnoor Research Terminal is a dependency-free Python data pipeline and static
+Navnoor Research Archive is a dependency-free Python data pipeline and static
 GitHub Pages application. `build_site.py` generates the ignored Pages artifact
 from the tracked article, observation, registry, and snapshot JSON files. That
-artifact includes the terminal, deferred research archives, six public `/data/`
+artifact includes the archive, deferred research archives, six public `/data/`
 endpoints, one social card and crawler stub per article, and support assets.
 Publication ingestion runs on the scheduled Mac; GitHub Actions validates,
 builds, deploys, and verifies the exact published release.
@@ -79,7 +79,7 @@ Do not weaken production or test behavior merely to silence a type warning.
   resolution, and verification. Unresolved product decisions are BLOCKERs.
 - Treat published article text as source material. Never invent a position,
   return, confidence score, holding, exposure, or recommendation.
-- Keep the decision queue explicitly local and non-confidential. Do not add
+- Keep Local Review explicitly local and non-confidential. Do not add
   telemetry or send search/workflow contents to a third party without an
   explicit product and privacy decision.
 

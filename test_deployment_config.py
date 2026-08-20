@@ -935,6 +935,20 @@ class DeploymentConfigurationTests(unittest.TestCase):
             r'git commit --only[\s\S]*-- "\$\{TRACKED_OUTPUTS\[@\]\}"',
         )
 
+    def test_medium_fetch_has_no_external_filesystem_path_controls(self):
+        medium_step = self.refresh.split(
+            '=== Fetching complete Medium archive ===', 1,
+        )[1].split(
+            '=== Fetching sparse public Patreon catalogue metadata ===', 1,
+        )[0]
+        self.assertIn('cd "$WORK_DIR"', medium_step)
+        self.assertIn(
+            '"$PYTHON" "$ROOT/fetch_medium_posts.py"', medium_step,
+        )
+        for path_control in (
+                'MEDIUM_OUTPUT', 'PREVIOUS_MEDIUM', 'FETCH_STATUS_OUTPUT'):
+            self.assertNotIn(path_control, medium_step)
+
     def test_scheduled_refresh_fails_closed_on_dirty_source_and_retries_push(self):
         for required in (
             'CURRENT_BRANCH=$(git branch --show-current)',

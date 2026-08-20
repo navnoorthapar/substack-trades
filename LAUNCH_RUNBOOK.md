@@ -17,7 +17,7 @@ Production: <https://navnoorthapar.github.io/substack-trades/>
   `com.navnoor.substacktrades` in the background.
 - `git config --local --get core.hooksPath` returns `.githooks`; the installer
   refuses to overwrite a different existing hooks path.
-- No secrets, private datasets, or confidential decision packets are committed.
+- No secrets, private datasets, or confidential Local Review exports are committed.
 
 ## 2. Preflight gate
 
@@ -81,18 +81,18 @@ the scheduled refresh, pre-push gate, CI, and independent watchdog.
 4. Dispatch **Monitor Published Research** against the same `main` commit with
    `gh workflow run watchdog.yml --ref main`; require its exact-release and
    freshness checks to pass.
-5. Open production and manually verify the default workbench, a recent article,
-   an older deferred dossier, Research Thread topic switching, a timeline
+5. Open production and manually verify Passage Search, a recent article,
+   an older deferred article record, Related Research topic switching, a timeline
    deep-link, explicit prior-passage loading and its failure/retry focus,
    observation loading, mobile layout, light/dark themes, print preview, and
    source links. Open one recent and one registry-only
    `/a/<slug>.html` URL, confirm its title/preview/canonical URL, verify the
-   content-bearing stub enters the terminal while the registry-only stub opens
+   content-bearing stub enters the archive while the registry-only stub opens
    its original public source, and fetch each matching 1200×630
    `/cards/<slug>.png`. Execute the keyboard/focus and
    offline/deferred-asset recovery tests against the generated client. Do not
    enter confidential data during testing.
-6. Run Lighthouse against Latest, Evidence, Library, and Queue on the exact
+6. Run Lighthouse against Article Record, Parsed Passages, Article Index, and Local Review on the exact
    production release. Record performance plus Accessibility, Best Practices,
    and SEO results; inspect 375 px, 768 px, and desktop layouts for overflow and
    touch-target regressions.
@@ -160,6 +160,12 @@ gh run list --workflow update.yml --limit 5
   `trusted_history_rss_gap_quarantined`: the transaction consumes the unchanged
   trusted history while an explicitly untrusted diagnostic is isolated beside
   the temporary candidate. It cannot seed the next refresh.
+- The Medium collector accepts no CLI or environment filesystem paths. Its
+  trusted prior catalogue and reviewed bridge are fixed beside the collector;
+  `refresh.sh` supplies the private transaction directory as the working
+  directory, and the collector writes only `medium.candidate.json` and
+  `medium-status.json` there. Treat any request to restore arbitrary path
+  overrides as a security-boundary change requiring explicit review.
 - `operator_reviewed_profile_bridge_plus_current_rss` is a one-time recovery
   mode, not a reusable fallback. `medium_profile_sequence_bridge.json` must
   match its exact schema, remain within its three-day maximum lifetime, bind the
@@ -196,7 +202,7 @@ Severity guidance:
 - **Critical:** misleading/corrupt research data, private-analytics or other
   sensitive-data exposure, malicious content execution, cross-release API
   incoherence, or production serving an unverified artifact.
-- **High:** terminal unavailable, stale beyond policy, a missing/malformed public
+- **High:** archive unavailable, stale beyond policy, a missing/malformed public
   endpoint, incomplete catalogue-to-card/stub coverage, major navigation
   failure, or inability to inspect original evidence.
 - **Normal:** isolated presentation defects with a safe workaround.
@@ -265,7 +271,7 @@ Before certifying a release that changes the public archive or its contract:
 4. After deploy, fetch `/data/manifest.json` from production without a browser
    cache. Fetch every path it lists and compare the result to the tested
    artifact. Verify at least one content-bearing and one registry-only stub/card
-   pair, including its title, source, date, image dimensions, and terminal route.
+   pair, including its title, source, date, image dimensions, and archive route.
 5. Treat schema changes as an explicit compatibility release. Within a schema
    version, fields are additive-only; consumers must be able to ignore new
    fields. Record the schema version, dataset version, release SHA, workflow
@@ -339,6 +345,6 @@ surfaces; those require a new successful Section 7 record for the deployed SHA.
 
 Known platform boundaries at launch: GitHub Pages controls response headers and
 the origin-root robots file; inline styles require CSP `unsafe-inline`;
-workflow packets are plaintext but limited to a top-level tab session, while
-exports remain plaintext files; hash-selected views share canonical social
+Local Review data is plaintext but limited to a top-level tab session, while
+exported backups remain plaintext files; hash-selected views share canonical social
 metadata; and the project deliberately has no reader-level analytics.

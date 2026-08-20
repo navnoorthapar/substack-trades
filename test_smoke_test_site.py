@@ -77,7 +77,7 @@ def fixture_html(
     elements = ''.join(f'<div id="{element_id}"></div>' for element_id in sorted(ids))
     return f'''<!doctype html>
 <html><head>
-<title>Navnoor Research Terminal</title>
+<title>Navnoor Research Archive</title>
 <meta name="nrt-revision" content="{revision}">
 <meta name="nrt-article-count" content="{articles}">
 <meta name="nrt-observation-count" content="{observations}">

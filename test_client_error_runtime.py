@@ -259,7 +259,7 @@ for (const retained of ('RETAINED TITLE RETAINED EXACT PASSAGE ' +
 if (copied.includes('CURRENT MUTATED')) {
   throw new Error('copied task silently rebound to mutable current-source data');
 }
-if (!copied.includes('LOCAL RESEARCH TASK') || copied.includes('Analyst confidence')) {
+if (!copied.includes('NAVNOOR RESEARCH ARCHIVE — LOCAL REVIEW') || copied.includes('Analyst confidence')) {
   throw new Error('copied artifact regressed to a scored decision packet');
 }
 for (const required of ['BIS working paper','64.0%','attested 2026-01-01T01:02:03Z','Review flags unavailable at capture']) {
@@ -367,8 +367,8 @@ if (!comparison.differences.includes('captured passage') ||
   throw new Error('material retained-source drift was not detected');
 }
 const markup = retainedSourceSnapshotMarkup(item,idea);
-for (const required of ['Retained task source snapshot','RETAINED TITLE','RETAINED EXACT PASSAGE',
-    'The current release differs in','copied and exported tasks preserve it','noopener noreferrer']) {
+for (const required of ['Retained local-review source snapshot','RETAINED TITLE','RETAINED EXACT PASSAGE',
+    'The current release differs in','copied and exported items preserve it','noopener noreferrer']) {
   if (!markup.includes(required)) throw new Error('retained-source disclosure missing: ' + required);
 }
 if (markup.includes('CURRENT MUTATED PASSAGE')) {
@@ -845,8 +845,8 @@ handleThreadLoad(eventForPrior);
 resolver(null);
 await Promise.resolve();
 if (renderCount !== 4 ||
-    announcer.textContent !== 'Exact prior dossier could not be verified; retry is available' ||
-    messages.at(-1) !== 'Exact prior dossier could not be verified') {
+    announcer.textContent !== 'Exact prior article record could not be verified; retry is available' ||
+    messages.at(-1) !== 'Exact prior article record could not be verified') {
   throw new Error('failed comparison did not expose a bounded retry state');
 }
 
@@ -856,7 +856,7 @@ state.selected = 'a_other';
 resolver({lead:{text:'stale prior passage'}});
 await Promise.resolve();
 if (renderCount !== beforeStaleCompletion ||
-    announcer.textContent !== 'Loading and verifying the exact prior article dossier') {
+    announcer.textContent !== 'Loading and verifying the exact prior article record') {
   throw new Error('stale comparison completion changed the active context');
 }
 '''
@@ -945,11 +945,11 @@ globalThis.savedIdeas = new Set();
 globalThis.lastRestoreWorkflowItems = null;
 
 restoreQueueFile({size:2000001,text:'{}'});
-if (readerCount !== 0 || messages.at(-1) !== 'Queue backup is missing or too large') {
+if (readerCount !== 0 || messages.at(-1) !== 'Local Review backup is missing or too large') {
   throw new Error('oversized queue import did not fail before reading');
 }
 restoreQueueFile({size:12,text:'{"broken"'});
-if (readerCount !== 1 || messages.at(-1) !== 'Queue backup could not be validated') {
+if (readerCount !== 1 || messages.at(-1) !== 'Local Review backup could not be validated') {
   throw new Error('malformed queue import was not rejected safely');
 }
 '''
@@ -981,7 +981,7 @@ if (persistWorkflow() !== false) throw new Error('storage failure was accepted')
 if (!workflowStorageDirty || !workflowStorageUnavailable) {
   throw new Error('storage failure did not retain dirty in-memory state');
 }
-if (!workflowItems.has('i_test') || messages.at(-1) !== 'Queue could not be saved in this tab session') {
+if (!workflowItems.has('i_test') || messages.at(-1) !== 'Local Review could not be saved in this tab session') {
   throw new Error('storage failure lost the queue or its recovery message');
 }
 '''
@@ -1026,7 +1026,7 @@ if (workflowItems.get('i_same').source_snapshot.passage !== 'A') {
   throw new Error('conflicting import silently replaced the retained source anchor');
 }
 if (!confirmations.some((message) => message.startsWith('Retained source conflicts')) ||
-    messages.at(-1) !== 'Queue import cancelled because retained source anchors conflict') {
+    messages.at(-1) !== 'Local Review import cancelled because retained source anchors conflict') {
   throw new Error('retained-source conflict was not separately disclosed and rejected');
 }
 '''
@@ -1778,7 +1778,7 @@ class DeskToDecisionRuntimeTests(unittest.TestCase):
 openDecisionPacketFromDesk();
 const item = workflowItems.get('i1');
 if (!item) throw new Error('the explicitly anchored passage opened no packet');
-if (!item.note.includes('RESEARCH EVIDENCE SET') ||
+if (!item.note.includes('PUBLISHED PASSAGE SET') ||
     !item.note.includes('Selected exact passage: passage i1') ||
     !item.note.includes('EVIDENCE CHALLENGE')) {
   throw new Error('the packet did not retain its evidence boundary');
@@ -1822,8 +1822,8 @@ if (item.note.length > WORKFLOW_TEXT_LIMITS.note) {
   throw new Error('bounded packet exceeded its storage contract');
 }
 if (!item.note.includes('Selected exact passage: ') ||
-    !item.note.includes('PACKET EVIDENCE SCOPE') ||
-    !item.note.includes('This packet cites 5 of 7 retrieved authored notes')) {
+    !item.note.includes('LOCAL REVIEW EVIDENCE SCOPE') ||
+    !item.note.includes('This local-review item cites 5 of 7 retrieved authored notes')) {
   throw new Error('long packet lost its anchor or explicit source-count scope');
 }
 if (!item.note.includes('What evidence would distinguish a real analogue from a narrative resemblance?')) {
@@ -1839,7 +1839,7 @@ if (!item.note.includes('[Additional retrieved-source detail omitted')) {
 state.structureQuestion = '';
 openDecisionPacketFromDesk();
 if (workflowItems.size !== 0 ||
-    !toast.includes('Enter a non-confidential decision question')) {
+    !toast.includes('Enter a non-confidential research question')) {
   throw new Error('a local task opened without an explicit analyst question');
 }
 
@@ -1903,7 +1903,7 @@ if (item.note !== 'MY OWN NOTE' || item.falsifier !== 'MY OWN FALSIFIER' ||
     item.tags !== 'my tag') {
   throw new Error('re-opening overwrote entries the analyst had made');
 }
-if (!toast.includes('earlier Desk scope')) {
+if (!toast.includes('earlier Passage Search scope')) {
   throw new Error('the reader was not warned that the unchanged task has an earlier scope');
 }
 """)

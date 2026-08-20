@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate one complete, immutable Navnoor Research Terminal release.
+"""Validate one complete, immutable Navnoor Research Archive release.
 
 This module is the shared artifact policy for local release checks and GitHub
 Actions.  It validates a freshly built site against the exact tracked article,
@@ -903,12 +903,11 @@ def _expected_text_support_assets(
     )
     web_manifest = json.dumps(
         {
-            'name': 'Navnoor Research Terminal',
-            'short_name': 'Navnoor Research',
+            'name': 'Navnoor Research Archive',
+            'short_name': 'Navnoor Archive',
             'description': (
-                'Source-backed institutional research dossiers with exact '
-                'passages, evidence ledgers, checkpoints, and decision '
-                'boundaries.'
+                'Published research index with source-linked passages and '
+                'capture provenance.'
             ),
             'start_url': './',
             'scope': './',
@@ -928,7 +927,7 @@ def _expected_text_support_assets(
     favicon_svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 <rect width="64" height="64" rx="6" fill="{DARK_THEME_BG}"/>
 <rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#ffb000" stroke-width="2"/>
-<text x="32" y="39" fill="#f4f6f7" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">N/R</text>
+<text x="32" y="39" fill="#f4f6f7" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">NA</text>
 </svg>
 '''
     return {
@@ -1548,7 +1547,7 @@ def validate_release(
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description='Validate an exact built Navnoor Research Terminal release.',
+        description='Validate an exact built Navnoor Research Archive release.',
     )
     parser.add_argument('--site', required=True, type=Path)
     parser.add_argument('--articles', required=True, type=Path)
