@@ -254,6 +254,11 @@ if ! mkdir "$LOCK_DIR" 2>/dev/null; then
     fi
 fi
 initialize_owned_lock
+# The scheduler-only contention signal has served its purpose once this process
+# owns the lock. Do not leak it into the release gate's child processes: nested
+# refresh fixtures must retain the ordinary manual-run contract unless they
+# explicitly opt into the scheduler code themselves.
+unset REFRESH_BUSY_EXIT_CODE
 WORK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/substack-trades-refresh.XXXXXX")
 
 # Avoid only accidental rapid reruns. The old 20-hour gate defeated the 9am,

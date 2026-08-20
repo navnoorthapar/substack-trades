@@ -198,6 +198,9 @@ class RefreshTransactionTests(unittest.TestCase):
             self.before[name] = payload
 
         self.environment = os.environ.copy()
+        # Keep this harness independent of a parent scheduled refresh. Tests
+        # opt into the private scheduler contention code explicitly below.
+        self.environment.pop('REFRESH_BUSY_EXIT_CODE', None)
         self.environment.update({
             'PATH': str(self.fake_bin) + os.pathsep + self.environment.get('PATH', ''),
             'PYTHON_BIN': str(self.fake_python),

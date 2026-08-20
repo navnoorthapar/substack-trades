@@ -2747,7 +2747,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.assertIn(text, self.html)
 
     def test_synthetic_catalogue_growth_cannot_consume_html_budget(self):
-        growth_count = 140
+        growth_count = 150
         with tempfile.TemporaryDirectory(prefix='nrt-growth-') as directory:
             source_root = materialize_source_tree(
                 ROOT, Path(directory) / 'source',
