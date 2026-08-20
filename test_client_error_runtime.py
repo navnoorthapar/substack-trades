@@ -4,7 +4,8 @@ import unittest
 from pathlib import Path
 
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).resolve().parent
+NODE_CWD = Path('/tmp').resolve()
 SOURCE = (ROOT / 'build_site.py').read_text(encoding='utf-8')
 NODE = shutil.which('node')
 
@@ -20,7 +21,12 @@ def run_node(script):
         raise AssertionError('Node.js is required for client runtime tests')
     result = subprocess.run(
         [NODE, '--input-type=module', '--eval', script],
-        cwd=ROOT,
+        # LaunchAgents do not inherit Terminal's macOS privacy grant for the
+        # Downloads directory. Node asks the kernel for its working directory
+        # before evaluating the self-contained harness and otherwise exits with
+        # uv_cwd/EPERM. Run from the system temporary directory; the harness
+        # reads no files and all repository source was loaded above.
+        cwd=NODE_CWD,
         capture_output=True,
         text=True,
         # A cold Node process can briefly contend with the release suite's
@@ -88,6 +94,13 @@ const IDEAS = [observation('i1'), observation('i2', {direction:'unspecified'})];
 
 
 class ClientErrorRuntimeTests(unittest.TestCase):
+    def test_node_runtime_uses_a_launchagent_safe_working_directory(self):
+        expected = str(NODE_CWD)
+        run_node(
+            f"if (process.cwd() !== {expected!r}) "
+            "throw new Error('Node runtime cwd is not the fixed temporary directory');"
+        )
+
     def test_compact_dates_keep_the_full_year_across_centuries(self):
         run_node(
             "const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];\n"
