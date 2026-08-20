@@ -1,6 +1,8 @@
 import json
 import os
+import plistlib
 import re
+import stat
 import subprocess
 import tempfile
 import time
@@ -32,6 +34,15 @@ class DeploymentConfigurationTests(unittest.TestCase):
         cls.rollback = (ROOT / '.github/workflows/rollback.yml').read_text(encoding='utf-8')
         cls.dependabot = (ROOT / '.github/dependabot.yml').read_text(encoding='utf-8')
         cls.refresh = (ROOT / 'refresh.sh').read_text(encoding='utf-8')
+        cls.scheduled_refresh = (
+            ROOT / 'scheduled_refresh.sh'
+        ).read_text(encoding='utf-8')
+        cls.launchd_config = plistlib.loads((
+            ROOT / 'launchd/com.navnoor.substacktrades.plist'
+        ).read_bytes())
+        cls.install_automation = (
+            ROOT / 'install_automation.sh'
+        ).read_text(encoding='utf-8')
         cls.automation_status = (ROOT / 'automation_status.sh').read_text(encoding='utf-8')
         cls.ignore = (ROOT / '.gitignore').read_text(encoding='utf-8').splitlines()
 
@@ -210,7 +221,10 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'state = running\nruns = 4\nlast exit code = 0',
         )
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn('Updater activity: refresh in progress', result.stdout)
+        self.assertIn(
+            'Updater activity: scheduled refresh/retry cycle in progress',
+            result.stdout,
+        )
         self.assertIn('Updater last exit: deferred', result.stdout)
         self.assertIn('Wait for the active refresh to finish', result.stdout)
         self.assertNotIn('Inspect updater errors:', result.stdout)
@@ -287,8 +301,64 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn('Updater last exit: FAILED (code 78)', result.stdout)
         self.assertIn('Inspect updater errors:', result.stdout)
+        self.assertIn('bounded automatic retry cycle was exhausted', result.stdout)
         self.assertIn('launchctl kickstart -k', result.stdout)
         self.assertNotIn('Repair updater with:', result.stdout)
+
+    def test_launchagent_uses_a_bounded_foreground_retry_supervisor(self):
+        self.assertEqual(
+            stat.S_IMODE((ROOT / 'scheduled_refresh.sh').stat().st_mode),
+            0o755,
+        )
+        self.assertEqual(
+            self.launchd_config['ProgramArguments'],
+            ['/bin/bash', '/path/to/substack-trades/scheduled_refresh.sh'],
+        )
+        self.assertTrue(self.launchd_config['RunAtLoad'])
+        self.assertEqual(self.launchd_config['ThrottleInterval'], 300)
+        self.assertNotIn('KeepAlive', self.launchd_config)
+        self.assertNotIn('SuccessfulExit', self.launchd_config)
+        self.assertEqual(
+            self.launchd_config['StartCalendarInterval'],
+            [
+                {'Hour': 9, 'Minute': 0},
+                {'Hour': 13, 'Minute': 0},
+                {'Hour': 22, 'Minute': 0},
+            ],
+        )
+        for required in (
+            'MAX_ATTEMPTS=3',
+            'SCHEDULED_REFRESH_RETRY_DELAY_SECONDS:-900',
+            'while [ "$attempt" -le "$MAX_ATTEMPTS" ]',
+            'exit "$exit_code"',
+            'REFRESH_BUSY_EXIT_CODE=75 "$ROOT/refresh.sh"',
+        ):
+            self.assertIn(required, self.scheduled_refresh)
+        self.assertNotIn('launchctl', self.scheduled_refresh)
+        self.assertIn(
+            '[ ! -x "$ROOT/scheduled_refresh.sh" ]',
+            self.install_automation,
+        )
+        self.assertIn(
+            '-string "$ROOT/scheduled_refresh.sh"',
+            self.install_automation,
+        )
+        self.assertIn(
+            'plutil -remove ProgramArguments.1 "$TARGET"',
+            self.install_automation,
+        )
+        for exact_contract in (
+            'plutil -extract ProgramArguments.0 raw "$TARGET"',
+            'plutil -extract ProgramArguments.1 raw "$TARGET"',
+            'plutil -extract ProgramArguments.2 raw "$TARGET"',
+            '[ "$installed_program" != "/bin/bash" ]',
+            '[ "$installed_supervisor" != "$ROOT/scheduled_refresh.sh" ]',
+        ):
+            self.assertIn(exact_contract, self.install_automation)
+        self.assertNotIn(
+            '-string "$ROOT/refresh.sh" "$TARGET"',
+            self.install_automation,
+        )
 
     def test_automation_status_rejects_missing_latest_exit_evidence(self):
         result = self.run_automation_status('state = waiting\nruns = 0')
@@ -878,6 +948,18 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '--previous-manifest "$ROOT/snapshot_manifest.json"',
             'source_health.py',
             '--policy publish',
+            'REFRESH_BUSY_EXIT_CODE_VALUE=${REFRESH_BUSY_EXIT_CODE-0}',
+            'process_start_for_pid()',
+            'process_command_for_pid()',
+            'process_cwd_for_pid()',
+            'command_is_refresh_shell()',
+            'LOCK_REPOSITORY_ROOT=$(pwd -P)',
+            '"$LOCK_DIR/process-start"',
+            '"$LOCK_DIR/process-command"',
+            '"$LOCK_DIR/repository-root"',
+            'lock_matches_live_refresh',
+            'legacy_lock_matches_live_refresh',
+            'exit "$REFRESH_BUSY_EXIT_CODE_VALUE"',
         ):
             self.assertIn(required, self.refresh)
         self.assertNotIn('--autostash', self.refresh)

@@ -37,7 +37,7 @@ if [ "$launchctl_status" -eq 0 ]; then
         }
     ')
     if [ "$updater_state" = "running" ]; then
-        echo "Updater activity: refresh in progress"
+        echo "Updater activity: scheduled refresh/retry cycle in progress"
         ok=0
         updater_pending=1
     elif [ -n "$updater_state" ]; then
@@ -242,7 +242,8 @@ if [ "$updater_issue" -eq 1 ]; then
         echo "Repair updater with: $ROOT/install_automation.sh"
     elif [ "$updater_exit_issue" -eq 1 ]; then
         echo "Inspect updater errors: $HOME/Library/Logs/SubstackTrades/refresh-error.log"
-        echo "Run updater now with: launchctl kickstart -k $DOMAIN/$LABEL"
+        echo "The bounded automatic retry cycle was exhausted or could not start."
+        echo "Start a new three-attempt cycle with: launchctl kickstart -k $DOMAIN/$LABEL"
     fi
 fi
 if [ "$refresh_issue" -eq 1 ] && [ "$updater_pending" -eq 0 ]; then

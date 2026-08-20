@@ -207,10 +207,13 @@ class ReleaseGateTests(unittest.TestCase):
         source = INSTALL_AUTOMATION.read_text(encoding='utf-8')
         for required in (
             '[ ! -x "$ROOT/.githooks/pre-push" ]',
+            '[ ! -x "$ROOT/scheduled_refresh.sh" ]',
             'git config --local --get core.hooksPath',
             '[ "$EXISTING_HOOKS_PATH" != ".githooks" ]',
             'Refusing to replace existing Git hooks path',
             'git config --local core.hooksPath .githooks',
+            'plutil -insert ProgramArguments.1 -string "$ROOT/scheduled_refresh.sh"',
+            'Installed updater ProgramArguments do not match the bounded supervisor contract.',
         ):
             self.assertIn(required, source)
 

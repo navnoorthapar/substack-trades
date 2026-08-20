@@ -130,6 +130,20 @@ gh run list --workflow update.yml --limit 5
 ## 5. Routine monitoring
 
 - Local ingestion runs at 09:00, 13:00, and 22:00 Asia/Kolkata and after login.
+  Each launch stays in one foreground `scheduled_refresh.sh` process and gets
+  exactly three attempts, 15 minutes apart. The first success stops the cycle;
+  three failures stop retrying and preserve the final nonzero exit for
+  `launchctl` and `automation_status.sh`. The LaunchAgent intentionally omits
+  `KeepAlive/SuccessfulExit` because that policy has no attempt bound and would
+  restart forever on a persistent fail-closed condition. The refresh lock and
+  30-minute successful-run guard remain authoritative for scheduled/manual
+  overlap. Manual lock contention remains a clean no-op; scheduled contention
+  returns temporary-failure code 75 to the supervisor, which consumes one of
+  its bounded retries. The retry then either observes the incumbent's fresh
+  success marker or performs the refresh after an incumbent failure. Lock
+  metadata binds PID, process start time, command, and physical repository
+  working directory; a dead, reused, or unrelated live PID is stale rather
+  than a valid incumbent.
 - The production watchdog is scheduled every four hours. It warns when a
   snapshot is older than 16 hours and fails after 36 hours. A source adapter in
   validated fallback/degraded mode is immediately non-healthy in local status,
@@ -137,11 +151,32 @@ gh run list --workflow update.yml --limit 5
   warning while transient, and fails the watchdog after 48 continuous hours.
   `degraded_since` and `consecutive_degraded_checks` continue across manifests;
   recovery resets both fields.
+- Medium's `validated_history_plus_current_rss` mode is healthy incremental
+  discovery, not a complete-archive claim. It requires two identical RSS
+  windows of all ten official rows for established history, non-regressing
+  newest publication time, exact timestamps for known IDs, and a contiguous
+  overlap in the newest validated-history order. An incomplete or no-overlap
+  window, an in-window hole, or timestamp drift uses
+  `trusted_history_rss_gap_quarantined`: the transaction consumes the unchanged
+  trusted history while an explicitly untrusted diagnostic is isolated beside
+  the temporary candidate. It cannot seed the next refresh.
+- `operator_reviewed_profile_bridge_plus_current_rss` is a one-time recovery
+  mode, not a reusable fallback. `medium_profile_sequence_bridge.json` must
+  match its exact schema, remain within its three-day maximum lifetime, bind the
+  entire live RSS sequence to the newest trusted-history prefix, and retain the
+  direct public profile provenance. Any mismatch or expiry reverts to
+  quarantine. A successful first merge changes the history prefix and makes the
+  bridge unusable for a future gap. Do not extend, replace, or re-date the bridge
+  without a fresh direct-profile review and normal code review.
 - At least daily during launch week, inspect the latest updater log, deployment,
   watchdog, four source counts, per-source health, and published release
   timestamp. Fetch `/data/manifest.json` and verify its `dataset_version`,
   `generated_at`, endpoint list, and counts agree with the release; fetch
   `/data/latest.json` and open its newest canonical source link.
+- If the updater is active, `automation_status.sh` reports the entire bounded
+  refresh/retry cycle as pending. If its latest exit is nonzero, verify the log
+  contains no more than attempts `1/3`, `2/3`, and `3/3`; fix the underlying
+  error before using `launchctl kickstart -k` to start another bounded cycle.
 - Weekly, spot-check a recent, an old, and a registry-only article stub/card
   pair, and confirm the sitemap still exposes article stubs. A missing card,
   incorrect redirect, or mixed-version data response is a release failure, not

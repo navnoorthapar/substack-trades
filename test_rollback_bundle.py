@@ -2,8 +2,10 @@
 
 import io
 import json
+import sys
 import tarfile
 import tempfile
+import types
 import unittest
 import urllib.parse
 from pathlib import Path
@@ -89,6 +91,65 @@ class RollbackBundleTests(unittest.TestCase):
             )
         validator.assert_called_once()
         return output
+
+    @mock.patch('rollback_bundle.ssl.create_default_context')
+    def test_verified_ssl_context_uses_certifi_when_available(
+            self, create_context):
+        certifi = types.SimpleNamespace(
+            where=lambda: '/trusted/certifi-ca.pem',
+        )
+        with mock.patch.dict(sys.modules, {'certifi': certifi}):
+            context = rollback_bundle.verified_ssl_context()
+        self.assertIs(context, create_context.return_value)
+        create_context.assert_called_once_with(
+            cafile='/trusted/certifi-ca.pem',
+        )
+
+    @mock.patch('rollback_bundle.ssl.create_default_context')
+    def test_verified_ssl_context_falls_back_to_platform_store(
+            self, create_context):
+        real_import = __import__
+
+        def import_without_certifi(name, *args, **kwargs):
+            if name == 'certifi':
+                raise ImportError('certifi intentionally unavailable')
+            return real_import(name, *args, **kwargs)
+
+        with mock.patch(
+                'builtins.__import__', side_effect=import_without_certifi):
+            context = rollback_bundle.verified_ssl_context()
+        self.assertIs(context, create_context.return_value)
+        create_context.assert_called_once_with()
+
+    def test_same_origin_opener_uses_the_verified_ssl_context(self):
+        request = urllib.request.Request(
+            'https://example.test/terminal/index.html',
+        )
+        context = mock.Mock()
+        opener = mock.Mock()
+        response = mock.Mock()
+        opener.open.return_value = response
+
+        with mock.patch.object(
+                urllib.request, 'build_opener', return_value=opener,
+        ) as build_opener:
+            actual = rollback_bundle._open_same_origin(
+                request,
+                ('example.test', 443),
+                7,
+                context,
+            )
+
+        self.assertIs(actual, response)
+        https_handler, redirect_handler = build_opener.call_args.args
+        self.assertIsInstance(https_handler, urllib.request.HTTPSHandler)
+        self.assertIs(https_handler._context, context)
+        self.assertIsInstance(
+            redirect_handler,
+            rollback_bundle._SameOriginRedirectHandler,
+        )
+        self.assertEqual(redirect_handler.origin, ('example.test', 443))
+        opener.open.assert_called_once_with(request, timeout=7)
 
     def test_create_and_validate_bind_payload_revision_and_fingerprints(self):
         bundle = self.create()
@@ -251,7 +312,7 @@ class RollbackBundleTests(unittest.TestCase):
         current_validator.assert_not_called()
         self.assertEqual(verified, evolved_fingerprints)
 
-        def exact_response(request, _origin, _timeout):
+        def exact_response(request, _origin, _timeout, _context):
             expected = (bundle / 'site' / 'index.html').read_bytes()
             return FakeResponse(request.full_url, expected)
 
@@ -285,9 +346,12 @@ class RollbackBundleTests(unittest.TestCase):
         requested = []
         responses = []
 
-        def open_response(request, origin, timeout):
+        contexts = []
+
+        def open_response(request, origin, timeout, context):
             self.assertEqual(origin, ('example.test', 443))
             self.assertEqual(timeout, 7)
+            contexts.append(context)
             parts = urllib.parse.urlsplit(request.full_url)
             self.assertEqual(
                 urllib.parse.parse_qs(parts.query),
@@ -302,7 +366,12 @@ class RollbackBundleTests(unittest.TestCase):
             responses.append(response)
             return response
 
+        verified_context = mock.Mock()
         with mock.patch.object(
+            rollback_bundle,
+            'verified_ssl_context',
+            return_value=verified_context,
+        ) as context_factory, mock.patch.object(
             rollback_bundle,
             '_open_same_origin',
             side_effect=open_response,
@@ -321,6 +390,11 @@ class RollbackBundleTests(unittest.TestCase):
             set(requested),
             {'index.html', 'cards/research note.html'},
         )
+        context_factory.assert_called_once_with()
+        self.assertEqual(len(contexts), 2)
+        self.assertTrue(
+            all(context is verified_context for context in contexts),
+        )
         for relative, response in zip(requested, responses):
             expected_size = (bundle / 'site' / relative).stat().st_size
             self.assertEqual(response.read_sizes, [expected_size + 1])
@@ -328,7 +402,7 @@ class RollbackBundleTests(unittest.TestCase):
     def test_schema_neutral_smoke_rejects_wrong_bytes_and_redirect_path(self):
         bundle = self.create()
 
-        def wrong_bytes(request, _origin, _timeout):
+        def wrong_bytes(request, _origin, _timeout, _context):
             return FakeResponse(request.full_url, b'x' * len(
                 (bundle / 'site' / 'index.html').read_bytes()
             ))
@@ -348,7 +422,7 @@ class RollbackBundleTests(unittest.TestCase):
                     concurrency=1,
                 )
 
-        def wrong_path(request, _origin, _timeout):
+        def wrong_path(request, _origin, _timeout, _context):
             expected = (bundle / 'site' / 'index.html').read_bytes()
             final_url = request.full_url.replace(
                 '/index.html?',
@@ -379,7 +453,7 @@ class RollbackBundleTests(unittest.TestCase):
         bundle = self.create()
         attempts = []
 
-        def transient(request, _origin, _timeout):
+        def transient(request, _origin, _timeout, _context):
             attempts.append(request.full_url)
             if len(attempts) == 1:
                 raise OSError('temporary network failure')

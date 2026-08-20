@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Fetch the complete authored-post catalogue from Navnoor's Medium profile.
+"""Maintain Navnoor's Medium catalogue from fail-closed source evidence.
 
-Medium's RSS feed exposes only the newest ten posts.  The author subdomain's
-public profile GraphQL connection is paginated and currently exposes the full
-archive, including member-only article metadata and previews.  A previous good
-catalogue is preserved (and the RSS feed is merged into it) if that undocumented
-connection is temporarily unavailable.
+Medium's supported public RSS feed exposes the newest ten posts.  The legacy
+profile GraphQL archive is still attempted for complete-catalogue recovery, but
+it is not treated as an available or supported public interface.  RSS extends a
+previously validated catalogue only when its complete window proves contiguous
+lineage, or when one exact, expiring operator-reviewed public-profile sequence
+bridges a known gap.  Every other RSS merge is quarantined and cannot become
+trusted input for a later refresh.
 """
 import email.utils
 import hashlib
@@ -35,6 +37,7 @@ from fetch_all_posts import (
 ROOT = Path(__file__).parent
 OUTPUT_PATH = Path(os.environ.get('MEDIUM_OUTPUT', ROOT / 'medium_posts.json')).expanduser()
 PREVIOUS_PATH = Path(os.environ.get('PREVIOUS_MEDIUM', ROOT / 'medium_posts.json')).expanduser()
+PROFILE_BRIDGE_PATH = ROOT / 'medium_profile_sequence_bridge.json'
 _status_output = os.environ.get('FETCH_STATUS_OUTPUT')
 FETCH_STATUS_PATH = Path(_status_output).expanduser() if _status_output else None
 
@@ -44,10 +47,19 @@ RSS_URL = f'https://medium.com/feed/@{USERNAME}'
 PAGE_LIMIT = 25
 MAX_RSS_BYTES = 2_000_000
 MAX_GRAPHQL_BYTES = 12_000_000
+RSS_WINDOW_SIZE = 10
+PROFILE_HISTORY_PREFIX_SIZE = 2
+PROFILE_BRIDGE_MAX_LIFETIME_SECONDS = 3 * 24 * 60 * 60
 MEMBER_PREVIEW_MAX_CHARS = 1_200
 MEMBER_PREVIEW_KEYS = frozenset((
     'schema_version', 'surface', 'text', 'character_count', 'body_sha256',
 ))
+PROFILE_BRIDGE_KEYS = frozenset((
+    'schema_version', 'source', 'author_username', 'surface', 'profile_url',
+    'reviewed_at', 'expires_at', 'rss_window_ids',
+    'previous_history_prefix_ids',
+))
+PROFILE_BRIDGE_SURFACE = 'operator-reviewed-direct-public-profile-sequence'
 
 HEADERS = {
     'User-Agent': 'substack-trades/1.0 (+https://github.com/navnoorthapar/substack-trades)',
@@ -623,7 +635,9 @@ def newest_post_date(posts):
     )
 
 
-def write_fetch_status(status, mode, fetched_count, posts, error=None):
+def write_fetch_status(
+        status, mode, fetched_count, posts, error=None, provenance=None,
+):
     if FETCH_STATUS_PATH is None:
         return
     payload = {
@@ -638,6 +652,8 @@ def write_fetch_status(status, mode, fetched_count, posts, error=None):
     }
     if error:
         payload['error'] = str(error)
+    if provenance is not None:
+        payload['provenance'] = provenance
     atomic_write_json(FETCH_STATUS_PATH, payload)
 
 
@@ -720,6 +736,7 @@ def fetch_rss_posts(attempts=3):
                 })
             if not posts:
                 raise ValueError('Medium RSS returned no recognizable posts')
+            validate_rss_sequence(posts)
             return posts
         except (urllib.error.URLError, TimeoutError, ET.ParseError, ValueError) as exc:
             last_error = exc
@@ -728,6 +745,346 @@ def fetch_rss_posts(attempts=3):
     if last_error is None:
         raise ValueError('Medium RSS attempts must be at least one')
     raise last_error
+
+
+def _rss_publication_instant(value):
+    if not isinstance(value, str) or not value.endswith('Z'):
+        raise ValueError('Medium RSS post has a non-UTC publication timestamp')
+    try:
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    except ValueError:
+        raise ValueError(
+            'Medium RSS post has an invalid publication timestamp'
+        ) from None
+    if parsed.tzinfo is None:
+        raise ValueError('Medium RSS post has a timezone-free publication timestamp')
+    return parsed.astimezone(timezone.utc)
+
+
+def validate_rss_sequence(posts):
+    """Require one exact, duplicate-free newest-first RSS window."""
+    if not isinstance(posts, list) or not posts:
+        raise ValueError('Medium RSS returned no recognizable posts')
+    ids = []
+    urls = []
+    instants = []
+    for post in posts:
+        if not isinstance(post, dict):
+            raise ValueError('Medium RSS returned a malformed post row')
+        post_id = post.get('medium_id') or post.get('source_id')
+        url = post.get('url')
+        if not isinstance(post_id, str) or not post_id:
+            raise ValueError('Medium RSS post has no source identity')
+        if not isinstance(url, str) or not url:
+            raise ValueError('Medium RSS post has no canonical URL')
+        ids.append(post_id)
+        urls.append(url)
+        instants.append(_rss_publication_instant(post.get('post_date')))
+    if len(ids) != len(set(ids)):
+        raise ValueError('Medium RSS repeated a post ID')
+    if len(urls) != len(set(urls)):
+        raise ValueError('Medium RSS repeated a canonical URL')
+    if instants != sorted(instants, reverse=True):
+        raise ValueError('Medium RSS posts are not in newest-first order')
+    return instants
+
+
+def _rss_signature(posts):
+    payload = json.dumps(
+        posts,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(',', ':'),
+    ).encode('utf-8')
+    return hashlib.sha256(payload).hexdigest()
+
+
+def fetch_stable_rss_posts():
+    """Return RSS only after two exact normalized windows agree."""
+    print('  Medium RSS verification pass 1 of 2')
+    first = fetch_rss_posts()
+    print('  Medium RSS verification pass 2 of 2')
+    second = fetch_rss_posts()
+    if _rss_signature(first) != _rss_signature(second):
+        raise ValueError('Medium RSS changed between verification passes')
+    return second
+
+
+def _post_identity(post, label):
+    if not isinstance(post, dict):
+        raise ValueError(f'{label} has a malformed row')
+    post_id = post.get('medium_id') or post.get('source_id')
+    if (
+            not isinstance(post_id, str)
+            or re.fullmatch(r'[0-9a-f]{12}', post_id) is None):
+        raise ValueError(f'{label} has an invalid source identity')
+    return post_id
+
+
+def _history_by_recency(previous):
+    rows = []
+    seen_ids = set()
+    for post in previous:
+        post_id = _post_identity(post, 'previous Medium catalogue')
+        if post_id in seen_ids:
+            raise ValueError('previous Medium catalogue repeats a post ID')
+        seen_ids.add(post_id)
+        published = post.get('post_date')
+        rows.append((post_id, published, _rss_publication_instant(published)))
+    return sorted(rows, key=lambda row: row[2], reverse=True)
+
+
+def require_complete_rss_window(latest, previous):
+    """Require Medium's full ten-row public window for established history."""
+    if len(previous) >= RSS_WINDOW_SIZE and len(latest) != RSS_WINDOW_SIZE:
+        raise ValueError(
+            f'Medium RSS returned {len(latest)} rows for established history; '
+            f'exactly {RSS_WINDOW_SIZE} are required'
+        )
+
+
+def _bridge_instant(value, label):
+    if not isinstance(value, str) or not value.endswith('Z'):
+        raise ValueError(f'Medium profile bridge {label} is not a UTC instant')
+    try:
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    except ValueError:
+        raise ValueError(
+            f'Medium profile bridge {label} is not a valid instant'
+        ) from None
+    if parsed.tzinfo is None:
+        raise ValueError(f'Medium profile bridge {label} has no timezone')
+    parsed = parsed.astimezone(timezone.utc)
+    canonical = parsed.isoformat(timespec='seconds').replace('+00:00', 'Z')
+    if value != canonical:
+        raise ValueError(
+            f'Medium profile bridge {label} is not a canonical UTC instant'
+        )
+    return parsed
+
+
+def _strict_bridge_object(path):
+    def reject_constant(value):
+        raise ValueError(
+            f'Medium profile bridge contains invalid JSON value {value}'
+        )
+
+    def unique_object(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(
+                    f'Medium profile bridge repeats JSON key {key!r}'
+                )
+            result[key] = value
+        return result
+
+    try:
+        raw = path.read_bytes()
+    except OSError as exc:
+        raise ValueError(f'Medium profile bridge is unavailable: {exc}') from exc
+    try:
+        text = raw.decode('utf-8')
+    except UnicodeDecodeError:
+        raise ValueError('Medium profile bridge is not UTF-8 JSON') from None
+    try:
+        value = json.loads(
+            text,
+            parse_constant=reject_constant,
+            object_pairs_hook=unique_object,
+        )
+    except json.JSONDecodeError as exc:
+        raise ValueError(f'Medium profile bridge is invalid JSON: {exc}') from exc
+    if not isinstance(value, dict):
+        raise ValueError('Medium profile bridge must be a JSON object')
+    return value
+
+
+def load_profile_bridge(path=None, now=None):
+    """Load one exact, short-lived operator-reviewed profile sequence."""
+    bridge_path = PROFILE_BRIDGE_PATH if path is None else Path(path)
+    value = _strict_bridge_object(bridge_path)
+    if set(value) != PROFILE_BRIDGE_KEYS:
+        raise ValueError('Medium profile bridge does not match the exact schema')
+    if (
+            type(value.get('schema_version')) is not int
+            or value.get('schema_version') != 1
+            or value.get('source') != 'medium'
+            or value.get('author_username') != USERNAME
+            or value.get('surface') != PROFILE_BRIDGE_SURFACE
+            or value.get('profile_url') != f'https://medium.com/@{USERNAME}'):
+        raise ValueError('Medium profile bridge provenance is invalid')
+    reviewed_at = _bridge_instant(value.get('reviewed_at'), 'reviewed_at')
+    expires_at = _bridge_instant(value.get('expires_at'), 'expires_at')
+    if expires_at <= reviewed_at:
+        raise ValueError('Medium profile bridge expiry is not after its review')
+    lifetime = (expires_at - reviewed_at).total_seconds()
+    if lifetime > PROFILE_BRIDGE_MAX_LIFETIME_SECONDS:
+        raise ValueError('Medium profile bridge lifetime exceeds three days')
+    current = (
+        _bridge_instant(utc_now(), 'validation_time')
+        if now is None else now
+    )
+    if not isinstance(current, datetime) or current.tzinfo is None:
+        raise ValueError('Medium profile bridge validation time has no timezone')
+    current = current.astimezone(timezone.utc)
+    if current < reviewed_at:
+        raise ValueError('Medium profile bridge review is in the future')
+    if current > expires_at:
+        raise ValueError('Medium profile bridge has expired')
+
+    rss_ids = value.get('rss_window_ids')
+    history_ids = value.get('previous_history_prefix_ids')
+    for ids, expected_size, label in (
+            (rss_ids, RSS_WINDOW_SIZE, 'RSS window'),
+            (history_ids, PROFILE_HISTORY_PREFIX_SIZE, 'history prefix')):
+        if (
+                not isinstance(ids, list)
+                or len(ids) != expected_size
+                or any(
+                    not isinstance(post_id, str)
+                    or re.fullmatch(r'[0-9a-f]{12}', post_id) is None
+                    for post_id in ids
+                )
+                or len(ids) != len(set(ids))):
+            raise ValueError(f'Medium profile bridge {label} is invalid')
+    if set(rss_ids) & set(history_ids):
+        raise ValueError('Medium profile bridge sequences overlap')
+    return value
+
+
+def validate_profile_bridge(latest, previous, path=None, now=None):
+    """Validate the reviewed sequence against this exact RSS/history edge."""
+    validate_rss_sequence(latest)
+    require_complete_rss_window(latest, previous)
+    bridge = load_profile_bridge(path=path, now=now)
+    latest_ids = [
+        _post_identity(post, 'Medium RSS') for post in latest
+    ]
+    history_ids = [
+        row[0] for row in _history_by_recency(previous)
+    ]
+    if latest_ids != bridge['rss_window_ids']:
+        raise ValueError(
+            'Medium profile bridge does not match the complete live RSS window'
+        )
+    if (
+            history_ids[:PROFILE_HISTORY_PREFIX_SIZE]
+            != bridge['previous_history_prefix_ids']):
+        raise ValueError(
+            'Medium profile bridge does not match the newest trusted '
+            'history prefix'
+        )
+    if set(latest_ids) & set(history_ids):
+        raise ValueError(
+            'Medium profile bridge RSS window already overlaps trusted history'
+        )
+    return bridge
+
+
+def profile_bridge_provenance(bridge):
+    """Return the public, bounded provenance retained in fetch status."""
+    return {
+        'surface': bridge['surface'],
+        'profile_url': bridge['profile_url'],
+        'reviewed_at': bridge['reviewed_at'],
+        'expires_at': bridge['expires_at'],
+        'rss_window_ids': list(bridge['rss_window_ids']),
+        'previous_history_prefix_ids': list(
+            bridge['previous_history_prefix_ids']
+        ),
+    }
+
+
+def validate_incremental_rss(latest, previous):
+    """Prove that the live RSS window extends validated history without a gap.
+
+    RSS is a bounded current surface, not a complete archive.  A known-item
+    overlap proves that every item above the first overlap was observed, while
+    requiring all later rows to be known rejects a hole inside that window.
+    Historical rows remain explicitly unverified at the body-revision level.
+    """
+    rss_instants = validate_rss_sequence(latest)
+    if not isinstance(previous, list) or not previous:
+        raise ValueError('Medium RSS has no validated historical catalogue')
+    require_complete_rss_window(latest, previous)
+    history = _history_by_recency(previous)
+    previous_ids = [row[0] for row in history]
+    previous_instants = [row[2] for row in history]
+    previous_instants_by_id = {row[0]: row[2] for row in history}
+    if rss_instants[0] < max(previous_instants):
+        raise ValueError('Medium RSS newest publication regressed behind history')
+
+    known_ids = set(previous_ids)
+    overlap_seen = False
+    rss_ids = []
+    for post in latest:
+        post_id = _post_identity(post, 'Medium RSS')
+        rss_ids.append(post_id)
+        if post_id in known_ids:
+            if (
+                    _rss_publication_instant(post.get('post_date'))
+                    != previous_instants_by_id[post_id]):
+                raise ValueError(
+                    'Medium RSS changed the exact publication timestamp for '
+                    f'known post {post_id}'
+                )
+            overlap_seen = True
+        elif overlap_seen:
+            raise ValueError(
+                'Medium RSS contains an unknown item below a history overlap'
+            )
+    if not overlap_seen:
+        raise ValueError(
+            'Medium RSS window has no overlap with validated history'
+        )
+
+    first_known = next(
+        index for index, post_id in enumerate(rss_ids)
+        if post_id in known_ids
+    )
+    known_tail = rss_ids[first_known:]
+    if known_tail != previous_ids[:len(known_tail)]:
+        raise ValueError(
+            'Medium RSS overlap does not continue from the newest '
+            'validated history edge'
+        )
+
+
+def validate_archive_rss_edge(archive, latest):
+    """Bind a purported complete archive to the supported live RSS edge."""
+    rss_instants = validate_rss_sequence(latest)
+    if not isinstance(archive, list) or not archive:
+        raise ValueError('Medium archive has no rows for RSS verification')
+    expected_window = min(RSS_WINDOW_SIZE, len(archive))
+    if len(latest) != expected_window:
+        raise ValueError(
+            f'Medium RSS returned {len(latest)} rows for an archive of '
+            f'{len(archive)}; exactly {expected_window} are required'
+        )
+    archive_edge = sorted(
+        archive,
+        key=lambda post: _rss_publication_instant(post.get('post_date')),
+        reverse=True,
+    )[:expected_window]
+    archive_ids = [
+        _post_identity(post, 'Medium archive') for post in archive_edge
+    ]
+    rss_ids = [
+        _post_identity(post, 'Medium RSS') for post in latest
+    ]
+    if archive_ids != rss_ids:
+        raise ValueError(
+            'Medium archive newest edge does not match the stable RSS ID order'
+        )
+    archive_instants = [
+        _rss_publication_instant(post.get('post_date'))
+        for post in archive_edge
+    ]
+    if archive_instants != rss_instants:
+        raise ValueError(
+            'Medium archive newest edge does not match stable RSS timestamps'
+        )
 
 
 def carried_cached_record(post):
@@ -771,6 +1128,73 @@ def live_rss_record(post):
     return item
 
 
+def merge_rss_with_history(latest, previous):
+    """Merge only a separately validated RSS window into trusted history."""
+    previous_by_id = {
+        _post_identity(post, 'previous Medium catalogue'): post
+        for post in previous
+    }
+    by_id = {
+        post_id: carried_cached_record(post)
+        for post_id, post in previous_by_id.items()
+    }
+    for post in latest:
+        post_id = _post_identity(post, 'Medium RSS')
+        item = live_rss_record(post)
+        if post_id in previous_by_id:
+            # Incremental validation requires exact equality. Assigning the
+            # trusted value makes the retention invariant explicit rather than
+            # relying on an upstream row that merely compared equal.
+            item['post_date'] = previous_by_id[post_id]['post_date']
+        by_id[post_id] = item
+    return sorted(
+        by_id.values(),
+        key=lambda post: post.get('post_date') or '',
+        reverse=True,
+    )
+
+
+def _same_output_as_previous():
+    try:
+        return OUTPUT_PATH.resolve(strict=False) == PREVIOUS_PATH.resolve(strict=False)
+    except OSError:
+        return OUTPUT_PATH.absolute() == PREVIOUS_PATH.absolute()
+
+
+def preserve_trusted_history(previous):
+    """Supply the prior catalogue to a transaction without rewriting itself."""
+    if not _same_output_as_previous():
+        atomic_write_json(OUTPUT_PATH, previous)
+
+
+def quarantine_output_path():
+    if _same_output_as_previous():
+        return None
+    return OUTPUT_PATH.with_name(f'{OUTPUT_PATH.stem}.rss-quarantine.json')
+
+
+def quarantine_rss_candidate(latest, previous, reason):
+    """Write an explicitly untrusted diagnostic outside the candidate path."""
+    path = quarantine_output_path()
+    if path is None:
+        return None
+    candidate = merge_rss_with_history(latest, previous)
+    atomic_write_json(path, {
+        'schema_version': 1,
+        'source': 'medium',
+        'status': 'quarantined',
+        'checked_at': utc_now(),
+        'reason': str(reason),
+        'trusted_history_count': len(previous),
+        'untrusted_merged_count': len(candidate),
+        'rss_window_ids': [
+            _post_identity(post, 'Medium RSS') for post in latest
+        ],
+        'untrusted_posts': candidate,
+    })
+    return path
+
+
 def validate_catalogue(posts, previous):
     ids = [post.get('medium_id') for post in posts]
     urls = [post.get('url') for post in posts]
@@ -801,51 +1225,115 @@ def main():
         write_fetch_status('failed', 'previous_catalogue_invalid', 0, [], exc)
         return 1
     print(f'Fetching complete Medium archive for @{USERNAME}...')
+    archive_error = None
+    rss_error = None
+    latest = None
+    rss_attempted = False
     try:
         raw_posts = fetch_archive()
-        posts = [convert_post(post) for post in raw_posts]
-        posts.sort(key=lambda post: post.get('post_date') or '', reverse=True)
-        validate_catalogue(posts, previous)
-        mode = 'complete_archive'
-        status = 'ok'
-        fetched_count = len(raw_posts)
-    except Exception as archive_error:
+        archive_posts = [convert_post(post) for post in raw_posts]
+        archive_posts.sort(
+            key=lambda post: post.get('post_date') or '', reverse=True,
+        )
+        validate_catalogue(archive_posts, previous)
+    except Exception as exc:
+        archive_error = exc
+
+    if archive_error is None:
+        print('Verifying the complete archive against the stable RSS edge.')
+        rss_attempted = True
+        try:
+            latest = fetch_stable_rss_posts()
+            validate_archive_rss_edge(archive_posts, latest)
+        except Exception as exc:
+            rss_error = exc
+            archive_error = ValueError(
+                f'archive could not be bound to stable RSS: {exc}'
+            )
+        else:
+            posts = archive_posts
+            mode = 'complete_archive'
+            status = 'ok'
+            fetched_count = len(raw_posts)
+            provenance = None
+
+    if archive_error is not None:
         if not previous:
             print(f'Medium archive fetch failed with no previous catalogue: {archive_error}',
                   file=sys.stderr)
             write_fetch_status('failed', 'archive_failed', 0, [], archive_error)
             return 1
         print(f'Warning: complete Medium archive unavailable: {archive_error}', file=sys.stderr)
-        print('Merging the latest RSS items into the previous complete catalogue.')
-        try:
-            latest = fetch_rss_posts()
-        except Exception as rss_error:
+        print('Checking the latest RSS window against validated catalogue history.')
+        if not rss_attempted:
+            rss_attempted = True
+            try:
+                latest = fetch_stable_rss_posts()
+            except Exception as exc:
+                rss_error = exc
+        if latest is None:
             # A cached catalogue proves only what was known previously.  If
-            # both live discovery paths are down, publishing it as freshly
-            # checked would conceal a possible new article.
-            message = f'Medium archive and RSS fetches both failed: {rss_error}'
+            # supported discovery cannot verify either a failed legacy archive
+            # or an alleged successful one, publishing it would conceal a
+            # possible new article.
+            message = (
+                'Medium archive and stable RSS verification failed: '
+                f'{rss_error}'
+            )
             print(message, file=sys.stderr)
             write_fetch_status(
                 'failed', 'archive_and_rss_failed', 0, previous,
                 f'archive: {archive_error}; RSS: {rss_error}',
             )
             return 1
-        by_id = {
-            str(post.get('medium_id') or post.get('source_id')):
-                carried_cached_record(post)
-            for post in previous
-            if post.get('medium_id') or post.get('source_id')
-        }
-        new_count = 0
-        for post in latest:
-            post_id = post['medium_id']
-            if post_id not in by_id:
-                new_count += 1
-            # A live RSS row replaces any cached row with the exact excerpt
-            # visible in this refresh. Rows absent from RSS remain searchable
-            # but explicitly unverified.
-            by_id[post_id] = live_rss_record(post)
-        posts = sorted(by_id.values(), key=lambda post: post.get('post_date') or '', reverse=True)
+        bridge = None
+        try:
+            validate_incremental_rss(latest, previous)
+            mode = 'validated_history_plus_current_rss'
+            status = 'ok'
+            provenance = None
+        except ValueError as incremental_error:
+            print(
+                'Warning: Medium RSS could not prove a contiguous increment: '
+                f'{incremental_error}',
+                file=sys.stderr,
+            )
+            try:
+                bridge = validate_profile_bridge(latest, previous)
+            except ValueError as bridge_error:
+                reason = (
+                    f'incremental proof: {incremental_error}; '
+                    f'reviewed profile bridge: {bridge_error}'
+                )
+                quarantine_path = quarantine_rss_candidate(
+                    latest, previous, reason,
+                )
+                preserve_trusted_history(previous)
+                write_fetch_status(
+                    'degraded',
+                    'trusted_history_rss_gap_quarantined',
+                    len(latest),
+                    previous,
+                    reason,
+                )
+                if quarantine_path is None:
+                    message = (
+                        'Preserved trusted Medium history unchanged and did '
+                        'not write the unproven RSS merge.'
+                    )
+                else:
+                    message = (
+                        'Preserved trusted Medium history unchanged; wrote the '
+                        'unproven RSS merge only to quarantine at '
+                        f'{quarantine_path}.'
+                    )
+                print(message, file=sys.stderr)
+                return 0
+            mode = 'operator_reviewed_profile_bridge_plus_current_rss'
+            status = 'ok'
+            provenance = profile_bridge_provenance(bridge)
+
+        posts = merge_rss_with_history(latest, previous)
         try:
             validate_catalogue(posts, previous)
         except ValueError as catalogue_error:
@@ -855,18 +1343,16 @@ def main():
                 catalogue_error,
             )
             return 1
-        mode = 'cached_archive_plus_rss'
-        status = 'degraded'
         fetched_count = len(latest)
 
     atomic_write_json(OUTPUT_PATH, posts)
-    write_fetch_status(status, mode, fetched_count, posts)
+    write_fetch_status(
+        status, mode, fetched_count, posts, provenance=provenance,
+    )
     public_count = sum(post.get('visibility') == 'PUBLIC' for post in posts)
     locked_count = sum(post.get('visibility') == 'LOCKED' for post in posts)
     mirror_count = sum(bool(post.get('mirror_substack_slug')) for post in posts)
     mode_summary = mode.replace('_', ' ')
-    if status == 'degraded':
-        mode_summary += f' ({new_count} new)'
     print(f'Saved {len(posts)} Medium posts to {OUTPUT_PATH} via {mode_summary}.')
     print(f'  {public_count} public, {locked_count} member-only, '
           f'{mirror_count} explicit Substack mirrors')

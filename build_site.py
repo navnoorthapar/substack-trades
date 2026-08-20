@@ -3603,6 +3603,10 @@ function sourceModeLabel(value) {
     complete_api:'Complete API',
     complete_api_degraded_body_provenance:'Complete catalogue · body provenance limited',
     cached_archive_plus_rss:'Cached archive + RSS',
+    validated_history_plus_current_rss:'Validated history + current RSS',
+    cached_history_plus_rss_unverified_gap:'Cached history + unverified RSS gap',
+    trusted_history_rss_gap_quarantined:'Trusted history · RSS gap quarantined',
+    operator_reviewed_profile_bridge_plus_current_rss:'Operator-reviewed profile bridge + current RSS',
     rss:'RSS'
   };
   return labels[value] || String(value || 'Mode not recorded').replace(/_/g,' ');

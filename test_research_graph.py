@@ -203,40 +203,43 @@ class ResearchGraphTests(unittest.TestCase):
                     )
                     self.assertFalse(term.startswith(('family-', 'source-')))
 
-    def test_five_grounded_articles_have_sensible_related_membership(self):
+    def test_curated_topic_pairs_have_sensible_related_membership(self):
+        # Keep the ranking regression independent of the growing publication
+        # snapshot. A newly published, more relevant peer may legitimately
+        # displace every historical member of a live top-five result.
+        articles = [
+            fixture_article(0, 'Optiver Market Making Inventory Control'),
+            fixture_article(1, 'Optiver Market Making Engine'),
+            fixture_article(2, 'Gamma Scalping and the Volatility Risk Premium'),
+            fixture_article(3, 'Gamma Scalping Under the Volatility Risk Premium'),
+            fixture_article(4, 'Bridgewater Gold and Silver in Precious Metals'),
+            fixture_article(5, 'Gold Silver Precious Metals Relative Value'),
+            fixture_article(6, 'Hull-White Mean Reversion Model Calibration'),
+            fixture_article(7, 'Hull-White Mean Reversion Model Dynamics'),
+            fixture_article(8, 'D.E. Shaw and Renaissance Statistical Arbitrage'),
+            fixture_article(9, 'Citadel and D.E. Shaw Statistical Arbitrage'),
+        ]
+        search_index = build_search_index(articles)
+        related = build_related_graph(articles, search_index)
         checks = {
-            'substack:optiver-wrote-the-neutral-fix-for': {
-                'optivers-35b-market-making-engine',
-                'prediction-market-arbitrage-how-quants',
-            },
-            'medium:gamma-scalping-and-the-volatility-risk-premium-the-formula-behind-jane-streets-4-3b-india-trade-1c04cfbeaaf1': {
-                'gamma-scalping-and-the-volatility-risk-premium-citadels-alpha-engine-the-gamestop-squeeze-and-1d5360e67675',
-                'volatility-trading-strategies-used-by-capstone-citadel-variance-swaps-dispersion-trading-and-21931589df8b',
-                'delta-hedging-how-the-volatility-risk-premium-powers-institutional-finance-and-why-the-same-mec-f7216e40c3fe',
-            },
-            'substack:gold-65-silver-144-in-2025-how-bridgewater': {
-                'deconstructing-headlands-1b-algorithmic-trading-strategy-temporal-arbitrage-in-precious-metals-ff1109506e0b',
-                'how-deutsche-banks-precious-metals-desk-generated-systematic-alpha-through-market-manipulation-a7f0bc6b3edc',
-                'eight-banks-paid-13b-for-silver-manipulation',
-            },
-            'substack:hull-whites-mean-reversion-problem': {
-                'black-scholes-delta-is-wrong-hull',
-                'de-shaw-citadel-and-renaissance-run',
-                'statistical-arbitrage-the-quant-strategy',
-            },
-            'substack:de-shaw-citadel-and-renaissance-run': {
-                'statistical-arbitrage-the-quant-strategy',
-                'renaissance-technologies-the-100',
-                'de-shaws-1998-crisis-how-a-372-million',
-            },
+            'substack:fixture-0': ('fixture-1', 'optiver'),
+            'substack:fixture-2': ('fixture-3', 'gamma-scalping'),
+            'substack:fixture-4': ('fixture-5', 'precious-metals'),
+            'substack:fixture-6': ('fixture-7', 'hull-white'),
+            'substack:fixture-8': ('fixture-9', 'd-e-shaw'),
         }
-        for key, expected_slugs in checks.items():
+        article_entities = {
+            row['slug']: set(row['entities'])
+            for row in search_index['articles']
+        }
+        for key, (expected_slug, expected_reason) in checks.items():
             with self.subTest(article=key):
-                actual = {row['slug'] for row in self.related[key]}
-                self.assertTrue(
-                    actual & expected_slugs,
-                    'each curated article must retain a plausible related peer',
-                )
+                top_peer = related[key][0]
+                self.assertEqual(top_peer['slug'], expected_slug)
+                self.assertIn(f'shared: {expected_reason}', top_peer['why'])
+                anchor_slug = key.partition(':')[2]
+                self.assertIn(expected_reason, article_entities[anchor_slug])
+                self.assertIn(expected_reason, article_entities[expected_slug])
 
     def test_related_graph_is_deterministic_and_rejects_tiny_snapshots(self):
         self.assertEqual(

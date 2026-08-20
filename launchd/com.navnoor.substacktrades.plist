@@ -7,7 +7,7 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/path/to/substack-trades/refresh.sh</string>
+        <string>/path/to/substack-trades/scheduled_refresh.sh</string>
     </array>
     <key>EnvironmentVariables</key>
     <dict>
@@ -42,6 +42,6 @@
     <key>LowPriorityIO</key>
     <true/>
     <key>ThrottleInterval</key>
-    <integer>60</integer>
+    <integer>300</integer>
 </dict>
 </plist>

@@ -34,10 +34,12 @@ GitHub Actions
                                          -> atomic deployment + exact smoke test
 ```
 
-Medium's public author archive is paginated; its ten-item RSS feed can extend a
-previous complete catalogue when the archive is temporarily unavailable. A
-simultaneous archive and RSS outage fails closed and preserves the last good
-snapshot. Both feeds bind every item to the exact canonical Navnoor author URL;
+Medium's legacy profile GraphQL archive is attempted for recovery but is not a
+supported or currently dependable public interface. Its supported ten-item RSS
+feed can extend a previous validated catalogue only with complete-window
+lineage proof. A simultaneous archive and RSS outage fails closed and preserves
+the last good snapshot. Both feeds bind every item to the exact canonical
+Navnoor author URL;
 the RSS collector accepts only Medium's documented-shaped tracking query and
 stores the query-free canonical identity. GraphQL paragraph arrays have no
 independent declared-length proof, so even public captures remain exact
@@ -55,6 +57,13 @@ pages or a catalogue that changes between passes fail closed. A current body is
 labeled `full` only when the source explicitly marks it public, the detail
 revision exactly matches the list row, and the captured text covers at least
 97% of the list endpoint's declared word count.
+When a public list row exposes both a short preview and a longer HTML-derived
+preview, compatible prefix/subset variants collapse to the longest bounded
+exact surface deterministically. A changed surface replaces stale cached text
+and records one degraded observation; an identical later surface is a disclosed
+coverage limitation rather than a continuing discovery outage. Mutually
+inconsistent current list surfaces stay degraded while retaining the same
+deterministic bytes on every run.
 Paid rows never trigger a detail-body request. Their tracked body is either a
 deterministically bounded, hash-bound anonymous list preview of at most 1,200
 characters or empty metadata-only state; authenticated and legacy cached member
@@ -341,9 +350,25 @@ migration—not as historical evidence from the bookmark date.
 The installer copies the versioned LaunchAgent into
 `~/Library/LaunchAgents`, installs the repository's versioned pre-push gate
 without overwriting any conflicting hook setup, loads the updater, verifies it,
-and starts one refresh. It then
-runs at **9:00 AM, 1:00 PM, and 10:00 PM local time** (09:00, 13:00, and
-22:00) and once after login.
+and starts one bounded refresh cycle. It then runs at **9:00 AM, 1:00 PM, and
+10:00 PM local time** (09:00, 13:00, and 22:00) and once after login. Each
+cycle makes at most three attempts: immediately, then after 15 minutes, then
+after another 15 minutes. A success ends the cycle immediately. Three failures
+leave the final nonzero exit visible to `launchctl` and `automation_status.sh`.
+
+The retry budget lives in the foreground `scheduled_refresh.sh` supervisor;
+the LaunchAgent deliberately does not use `KeepAlive/SuccessfulExit`, which
+would relaunch a persistent fail-closed error forever. The existing
+`refresh.sh` process lock and 30-minute successful-run guard remain in force,
+so scheduled and manual runs cannot mutate the snapshot concurrently and a
+recently completed refresh is still a cheap no-op. A manual run that finds a
+live lock still exits cleanly. The scheduler alone asks that path to return the
+temporary-failure code 75, so it waits 15 minutes and checks again: an incumbent
+success then hits the recent-success guard, while an incumbent failure leaves
+the next attempt free to perform the refresh. Lock ownership binds the PID to
+its process start time, unchanged command, and physical repository working
+directory. A dead owner or reused/foreign live PID is cleared instead of
+blocking publication indefinitely.
 
 macOS may block a new background process. Open **System Settings -> General ->
 Login Items & Extensions -> Allow in Background**, enable the `bash`/Unknown
@@ -372,10 +397,11 @@ launchctl print "gui/$(id -u)/com.navnoor.substacktrades"
 ```
 
 The status command certifies only a settled current release. It exits nonzero
-with wait-and-rerun guidance while ingestion or deployment is still active, and
-it rejects a green workflow whose head SHA does not equal remote `main`. It also
-exits nonzero for any source in a validated degraded/fallback mode, naming the
-source, mode, streak start, and consecutive refresh count.
+with wait-and-rerun guidance while a scheduled refresh/retry cycle, ingestion,
+or deployment is still active, and it rejects a green workflow whose head SHA
+does not equal remote `main`. It also exits nonzero for any source whose
+validated status is explicitly degraded, naming the source, mode, streak start,
+and consecutive refresh count.
 
 Inspect scheduled-run logs:
 
@@ -383,6 +409,11 @@ Inspect scheduled-run logs:
 tail -n 100 "$HOME/Library/Logs/SubstackTrades/refresh.log"
 tail -n 100 "$HOME/Library/Logs/SubstackTrades/refresh-error.log"
 ```
+
+Scheduled log entries label attempts `1/3` through `3/3`. Do not repeatedly
+kickstart a permanently failing updater: first inspect the final error after
+the bounded cycle. After correcting it, start a new bounded cycle with
+`launchctl kickstart -k "gui/$(id -u)/com.navnoor.substacktrades"`.
 
 `refresh.sh` refuses to ingest from a dirty worktree and synchronizes with
 `origin/main` using fast-forward-only semantics. Its production push is retried
@@ -438,6 +469,38 @@ and then fails until that source recovers, while exact-live verification still
 runs independently. Snapshot age warns after 16 hours and fails after 36 hours,
 leaving margin above the longest scheduled refresh interval without silently
 accepting a stopped publisher.
+
+Medium's supported public RSS is a bounded current window, not a complete
+archive. `complete_archive` is emitted only after two matching legacy archive
+passes are also checked against two matching RSS passes: all ten RSS IDs must be
+the archive's newest edge in the same order and at the same publication
+instants. A stale or inconsistent archive is never published as complete; the
+already-fetched RSS window enters the same lineage-checked fallback used for an
+archive outage, without a second RSS fetch. When the profile archive is
+unavailable, the adapter reports healthy
+incremental collection only after two exact normalized ten-row RSS passes agree,
+the newest item does not regress, every known publication timestamp is exactly
+unchanged, and a known-history overlap preserves the newest history order. A
+missing overlap, an unknown item below the first overlap, an incomplete window,
+or a changing RSS window is quarantined: the unproven merge never enters
+`medium_posts.json`, and the prior trusted catalogue remains the next refresh's
+input.
+
+`medium_profile_sequence_bridge.json` is one transparent recovery exception for
+the exact public profile sequence reviewed on 2026-08-20. Its exact-key schema
+binds the complete ten-ID RSS window to the next two IDs observed on the direct
+public profile, the expected newest two IDs in trusted history, the author and
+profile URL, and a three-day maximum review lifetime. The adapter reports
+`operator_reviewed_profile_bridge_plus_current_rss` plus the reviewed surface,
+timestamps, and IDs when it is used. The manifest writer retains that exact
+object at `sources.medium.provenance`; both the writer and release validator
+reject missing/extra keys, invalid identity or time bounds, malformed ID
+windows, and provenance attached to any unrelated mode. Any changed RSS
+ID/order, changed trusted history prefix, future review, or expiry fails closed.
+After one accepted merge, the trusted-history prefix changes, so the same
+bridge cannot approve a later unrelated gap. Historical rows absent from RSS
+remain revision-unverified in every successful incremental mode. Do not
+hand-edit `medium_posts.json` to bypass these lineage checks.
 
 Manually redeploy the current `main` snapshot without fetching publications:
 

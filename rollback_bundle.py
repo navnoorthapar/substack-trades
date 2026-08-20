@@ -10,6 +10,7 @@ import json
 import os
 import re
 import shutil
+import ssl
 import tarfile
 import time
 import urllib.parse
@@ -462,11 +463,22 @@ class _SameOriginRedirectHandler(urllib.request.HTTPRedirectHandler):
         )
 
 
+def verified_ssl_context() -> ssl.SSLContext:
+    """Use the platform trust store, with certifi as a verified macOS fallback."""
+    try:
+        import certifi  # Optional; GitHub-hosted runners use the system store.
+    except ImportError:
+        return ssl.create_default_context()
+    return ssl.create_default_context(cafile=certifi.where())
+
+
 def _open_same_origin(
         request: urllib.request.Request,
         origin: HttpsOrigin,
-        timeout: float) -> Any:
+        timeout: float,
+        context: ssl.SSLContext) -> Any:
     opener = urllib.request.build_opener(
+        urllib.request.HTTPSHandler(context=context),
         _SameOriginRedirectHandler(origin),
     )
     return opener.open(request, timeout=timeout)
@@ -495,6 +507,7 @@ def _fetch_site_file(
         expected_bytes: bytes,
         expected_sha256: str,
         expected_revision: str,
+        context: ssl.SSLContext,
         *,
         retries: int,
         retry_delay: float,
@@ -520,7 +533,8 @@ def _fetch_site_file(
                     'User-Agent': 'NavnoorRollbackVerifier/2',
                 },
             )
-            with _open_same_origin(request, origin, timeout) as response:
+            with _open_same_origin(
+                    request, origin, timeout, context) as response:
                 status = getattr(response, 'status', None)
                 if status is None:
                     status = response.getcode()
@@ -603,6 +617,7 @@ def smoke_bundle(
     _, site_files = verify_attestation(bundle, expected_revision)
     site = bundle / 'site'
     failures = []
+    context = verified_ssl_context()
     with concurrent.futures.ThreadPoolExecutor(
             max_workers=min(concurrency, len(site_files))) as executor:
         futures = {
@@ -614,6 +629,7 @@ def smoke_bundle(
                 (site / Path(*PurePosixPath(relative).parts)).read_bytes(),
                 digest,
                 expected_revision,
+                context,
                 retries=retries,
                 retry_delay=retry_delay,
                 timeout=timeout,

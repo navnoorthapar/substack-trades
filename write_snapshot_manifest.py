@@ -5,9 +5,10 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from source_health import track_source_health
@@ -18,6 +19,16 @@ CONTENT_SOURCES = ('substack', 'medium')
 REGISTRY_SOURCES = ('patreon', 'fxempire')
 SOURCES = CONTENT_SOURCES + REGISTRY_SOURCES
 SUCCESS_STATUSES = {'ok', 'degraded'}
+MEDIUM_BRIDGE_MODE = 'operator_reviewed_profile_bridge_plus_current_rss'
+MEDIUM_BRIDGE_SURFACE = 'operator-reviewed-direct-public-profile-sequence'
+MEDIUM_BRIDGE_PROFILE_URL = 'https://medium.com/@navnoorbawa'
+MEDIUM_BRIDGE_PROVENANCE_KEYS = frozenset((
+    'surface', 'profile_url', 'reviewed_at', 'expires_at', 'rss_window_ids',
+    'previous_history_prefix_ids',
+))
+MEDIUM_BRIDGE_MAX_LIFETIME = timedelta(days=3)
+MEDIUM_ID_RE = re.compile(r'^[0-9a-f]{12}$')
+UTC_SECOND_RE = re.compile(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$')
 
 
 def load_json(path, label):
@@ -55,6 +66,91 @@ def _require(condition, message):
         raise ValueError(message)
 
 
+def _bridge_utc_second(value, label):
+    _require(
+        isinstance(value, str) and UTC_SECOND_RE.fullmatch(value),
+        f'{label} must be a canonical UTC-second instant',
+    )
+    try:
+        return datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ').replace(
+            tzinfo=timezone.utc,
+        )
+    except ValueError:
+        raise ValueError(f'{label} must be a valid UTC instant') from None
+
+
+def validated_medium_bridge_provenance(value, source_checked_at):
+    """Return an isolated exact copy of reviewed Medium bridge provenance."""
+    _require(
+        isinstance(value, dict)
+        and set(value) == MEDIUM_BRIDGE_PROVENANCE_KEYS,
+        'Medium reviewed-profile provenance does not match the exact schema',
+    )
+    _require(
+        value.get('surface') == MEDIUM_BRIDGE_SURFACE
+        and value.get('profile_url') == MEDIUM_BRIDGE_PROFILE_URL,
+        'Medium reviewed-profile provenance has the wrong source surface',
+    )
+    reviewed_at = _bridge_utc_second(
+        value.get('reviewed_at'),
+        'Medium reviewed-profile reviewed_at',
+    )
+    expires_at = _bridge_utc_second(
+        value.get('expires_at'),
+        'Medium reviewed-profile expires_at',
+    )
+    _require(
+        reviewed_at < expires_at
+        and expires_at - reviewed_at <= MEDIUM_BRIDGE_MAX_LIFETIME,
+        'Medium reviewed-profile provenance has an invalid review lifetime',
+    )
+    try:
+        source_checked = datetime.fromisoformat(
+            source_checked_at.replace('Z', '+00:00')
+        )
+    except (AttributeError, TypeError, ValueError):
+        raise ValueError(
+            'Medium reviewed-profile source checked_at is invalid'
+        ) from None
+    _require(
+        source_checked.tzinfo is not None,
+        'Medium reviewed-profile source checked_at has no timezone',
+    )
+    source_checked = source_checked.astimezone(timezone.utc)
+    _require(
+        reviewed_at <= source_checked <= expires_at,
+        'Medium reviewed-profile source check is outside the review window',
+    )
+
+    rss_ids = value.get('rss_window_ids')
+    history_ids = value.get('previous_history_prefix_ids')
+    for ids, expected_count, label in (
+            (rss_ids, 10, 'RSS window'),
+            (history_ids, 2, 'history prefix')):
+        _require(
+            isinstance(ids, list)
+            and len(ids) == expected_count
+            and all(
+                isinstance(post_id, str) and MEDIUM_ID_RE.fullmatch(post_id)
+                for post_id in ids
+            )
+            and len(ids) == len(set(ids)),
+            f'Medium reviewed-profile {label} IDs are invalid',
+        )
+    _require(
+        not set(rss_ids) & set(history_ids),
+        'Medium reviewed-profile RSS and history IDs overlap',
+    )
+    return {
+        'surface': value['surface'],
+        'profile_url': value['profile_url'],
+        'reviewed_at': value['reviewed_at'],
+        'expires_at': value['expires_at'],
+        'rss_window_ids': list(rss_ids),
+        'previous_history_prefix_ids': list(history_ids),
+    }
+
+
 def _source_manifest(source, status, included_count):
     _require(isinstance(status, dict), f'{source} fetch status must be an object')
     _require(status.get('source') == source,
@@ -84,7 +180,7 @@ def _source_manifest(source, status, included_count):
              f'{source} fetched_count must be a non-negative integer')
     _require(type(published_count) is int and published_count >= included_count,
              f'{source} published_count is smaller than its included article count')
-    return {
+    item = {
         'checked_at': checked_at,
         'status': normalized_status,
         'mode': mode,
@@ -93,6 +189,24 @@ def _source_manifest(source, status, included_count):
         'included_count': included_count,
         'newest': newest,
     }
+    if mode == MEDIUM_BRIDGE_MODE:
+        _require(
+            source == 'medium' and normalized_status == 'ok',
+            'reviewed-profile bridge mode is valid only for healthy Medium',
+        )
+        _require(
+            'provenance' in status,
+            'Medium reviewed-profile mode has no provenance',
+        )
+        item['provenance'] = validated_medium_bridge_provenance(
+            status['provenance'], checked_at,
+        )
+    else:
+        _require(
+            'provenance' not in status,
+            f'{source} fetch provenance is not valid for mode {mode}',
+        )
+    return item
 
 
 def _registry_status(source, articles, checked_at):

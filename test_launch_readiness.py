@@ -29,6 +29,8 @@ class LaunchReadinessTests(unittest.TestCase):
                 'git revert',
                 'sitemap.xml',
                 '09:00, 13:00, and 22:00',
+                'exactly three attempts, 15 minutes apart',
+                'intentionally omits',
             ),
         }
         for name, phrases in required.items():

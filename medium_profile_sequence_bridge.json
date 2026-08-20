@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "source": "medium",
+  "author_username": "navnoorbawa",
+  "surface": "operator-reviewed-direct-public-profile-sequence",
+  "profile_url": "https://medium.com/@navnoorbawa",
+  "reviewed_at": "2026-08-20T13:38:48Z",
+  "expires_at": "2026-08-23T13:38:48Z",
+  "rss_window_ids": [
+    "2c43ab51be6f",
+    "22c5145be448",
+    "81f251299b51",
+    "ffe184d9aac6",
+    "e420650f9cb3",
+    "b59e8c9dffe8",
+    "aef567d5f387",
+    "ec2cfdd830b6",
+    "2b210ad1a553",
+    "8a988fdacc1c"
+  ],
+  "previous_history_prefix_ids": [
+    "4912dfd9ee85",
+    "c4c340597a67"
+  ]
+}

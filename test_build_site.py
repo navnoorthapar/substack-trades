@@ -22,6 +22,7 @@ from validate_inline_scripts import extract_inline_scripts
 
 
 ROOT = Path(__file__).parent
+SYNTHETIC_GROWTH_BUILD_TIMEOUT_SECONDS = 240
 
 
 class InstitutionalTerminalBuildTests(unittest.TestCase):
@@ -1297,6 +1298,26 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.html,
         )
         self.assertIn("cached_archive_plus_rss:'Cached archive + RSS'", self.html)
+        self.assertIn(
+            "validated_history_plus_current_rss:"
+            "'Validated history + current RSS'",
+            self.html,
+        )
+        self.assertIn(
+            "cached_history_plus_rss_unverified_gap:"
+            "'Cached history + unverified RSS gap'",
+            self.html,
+        )
+        self.assertIn(
+            "trusted_history_rss_gap_quarantined:"
+            "'Trusted history · RSS gap quarantined'",
+            self.html,
+        )
+        self.assertIn(
+            "operator_reviewed_profile_bridge_plus_current_rss:"
+            "'Operator-reviewed profile bridge + current RSS'",
+            self.html,
+        )
         self.assertIn("statusLabels = {ok:'OK',degraded:'Degraded',error:'Unavailable'}", self.html)
         self.assertIn("return iso.slice(0,10) + ' ' + iso.slice(11,16) + ' UTC';", self.html)
 
@@ -1885,13 +1906,37 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertTrue(facets['instruments'])
         self.assertTrue(all(len(row) == 3 for row in facets['instruments']))
         self.assertTrue(all(row[2] <= row[1] for row in facets['instruments']))
-        crypto = [
-            row for row in facets['underlyings']
-            if str(row[0]).casefold() == 'crypto'
-        ]
+
+        underlying_rows = {}
+        for idea in self.ideas:
+            seen = set()
+            for raw_part in str(idea['underlying'] or '').split(';'):
+                part = raw_part.strip()
+                if not part or part in {'—', '-'}:
+                    continue
+                key = ' '.join(
+                    unicodedata.normalize('NFKC', part).split()
+                ).casefold()
+                if not key or key in seen:
+                    continue
+                seen.add(key)
+                row = underlying_rows.setdefault(
+                    key,
+                    {'label': part, 'count': 0, 'article_ids': set()},
+                )
+                row['count'] += 1
+                row['article_ids'].add(idea['article_id'])
+        expected_underlyings = sorted(
+            [
+                [row['label'], row['count'], len(row['article_ids'])]
+                for row in underlying_rows.values()
+                if row['count'] >= 2
+            ],
+            key=lambda row: (-row[2], -row[1], row[0].casefold()),
+        )
         self.assertEqual(
-            [(row[1], row[2]) for row in crypto],
-            [(3, 2)],
+            facets['underlyings'],
+            expected_underlyings,
             'build-time facets must normalize and deduplicate like runtime facets',
         )
         self.assertIn('if (!IDEAS.length) return (DESK_FACETS.instruments || [])', self.html)
@@ -2758,7 +2803,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
                 check=True,
                 capture_output=True,
                 text=True,
-                timeout=90,
+                timeout=SYNTHETIC_GROWTH_BUILD_TIMEOUT_SECONDS,
             )
             grown_html = (site_dir / 'index.html').read_bytes()
             grown_catalogue = (

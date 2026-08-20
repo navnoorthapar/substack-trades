@@ -257,6 +257,266 @@ class SubstackNullableBodyTests(unittest.TestCase):
         self.assertEqual(stored['body_text'], '')
         self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
 
+    def test_paid_and_stable_public_coverage_notices_remain_healthy(self):
+        stable = self.cached_record(slug='stable-public-gap')
+        stable.update({
+            'body_text': 'Exact stable public excerpt.',
+            'body_html_length': 0,
+            'body_source': 'source-excerpt',
+            'wordcount': 0,
+            'content_status': 'excerpt',
+        })
+        self.write_previous([stable])
+        public = self.list_post(
+            slug='stable-public-gap',
+            updated_at=stable['source_updated_at'],
+            truncated_body_text=stable['body_text'],
+        )
+        public['id'] = 1
+        paid = self.list_post(
+            slug='paid-coverage-notice',
+            truncated_body_text='Exact anonymous paid preview.',
+        )
+        paid['id'] = 2
+        paid['audience'] = 'only_paid'
+
+        detail_fetch = self.run_fetch(
+            [paid, public],
+            urllib.error.URLError('stable public detail limitation'),
+        )
+
+        self.assert_exact_detail_urls(detail_fetch, public['slug'])
+        self.assertEqual(detail_fetch.call_count, 1)
+        status = self.read_json(self.status_path)
+        self.assertEqual(status['status'], 'ok')
+        self.assertEqual(status['mode'], 'complete_api')
+        stored_by_slug = {
+            post['slug']: post for post in self.read_json(self.posts_path)
+        }
+        self.assertEqual(
+            stored_by_slug[public['slug']]['body_text'],
+            public['truncated_body_text'],
+        )
+        paid_article = next(
+            article for article in self.read_json(self.articles_path)
+            if article['slug'] == paid['slug']
+        )
+        self.assertEqual(
+            paid_article['member_preview']['text'],
+            paid['truncated_body_text'],
+        )
+
+    def test_compatible_list_surfaces_canonicalize_then_stabilize(self):
+        short_surface = (
+            'NEW exact public list excerpt begins here and continues…'
+        )
+        long_surface = (
+            'NEW exact public list excerpt begins here and continues into '
+            + ' '.join(
+                f'canonical-evidence-segment-{index}' for index in range(25)
+            )
+        )
+        canonical = fetch_all_posts.bounded_excerpt(long_surface)
+        previous = self.cached_record(slug='same-revision-surface-change')
+        previous.update({
+            'body_text': canonical + ' OLD cached tail is no longer exposed.',
+            'body_html_length': 0,
+            'body_source': 'cached-excerpt-fallback',
+            'wordcount': 0,
+            'content_status': 'excerpt',
+        })
+        self.write_previous([previous])
+        listed = self.list_post(
+            slug=previous['slug'],
+            updated_at=previous['source_updated_at'],
+            truncated_body_text=short_surface,
+            body_html=f'<p>{long_surface}</p>',
+        )
+        self.assertEqual(
+            fetch_all_posts.canonical_list_body_surface(listed),
+            (canonical, True),
+        )
+
+        detail_fetch = self.run_fetch(
+            [listed],
+            urllib.error.URLError('current detail unavailable'),
+        )
+
+        self.assert_exact_detail_urls(detail_fetch, listed['slug'])
+        stored = self.read_json(self.posts_path)[0]
+        self.assertEqual(stored['body_text'], canonical)
+        self.assertEqual(stored['body_source'], 'source-excerpt')
+        self.assertEqual(stored['content_status'], 'excerpt')
+        self.assertEqual(stored['body_revision_status'], 'current')
+        self.assertEqual(stored['source_updated_at'], listed['updated_at'])
+        article = self.read_json(self.articles_path)[0]
+        self.assertEqual(
+            article['brief']['body_sha256'],
+            hashlib.sha256(canonical.encode('utf-8')).hexdigest(),
+        )
+        self.assertNotIn(previous['body_text'], json.dumps(article))
+        status = self.read_json(self.status_path)
+        self.assertEqual(status['status'], 'degraded')
+        self.assertEqual(
+            status['mode'],
+            'complete_api_degraded_body_provenance',
+        )
+
+        # The degraded refresh persisted the exact NEW current surface. An
+        # identical second observation is stable coverage rather than a
+        # continuing source outage, even while full-body detail stays limited.
+        self.write_previous([stored])
+        stable_fetch = self.run_fetch(
+            [listed],
+            urllib.error.URLError('current detail still unavailable'),
+        )
+        self.assert_exact_detail_urls(stable_fetch, listed['slug'])
+        stable = self.read_json(self.posts_path)[0]
+        self.assertEqual(
+            stable['body_text'].encode('utf-8'),
+            canonical.encode('utf-8'),
+        )
+        self.assertEqual(stable['body_source'], 'cached-excerpt-fallback')
+        self.assertEqual(stable['content_status'], 'excerpt')
+        self.assertEqual(stable['body_revision_status'], 'current')
+        stable_status = self.read_json(self.status_path)
+        self.assertEqual(stable_status['status'], 'ok')
+        self.assertEqual(stable_status['mode'], 'complete_api')
+
+        self.write_previous([stable])
+        third_fetch = self.run_fetch(
+            [listed],
+            urllib.error.URLError('current detail remains unavailable'),
+        )
+        self.assert_exact_detail_urls(third_fetch, listed['slug'])
+        third = self.read_json(self.posts_path)[0]
+        self.assertEqual(
+            third['body_text'].encode('utf-8'),
+            canonical.encode('utf-8'),
+        )
+        third_status = self.read_json(self.status_path)
+        self.assertEqual(third_status['status'], 'ok')
+        self.assertEqual(third_status['mode'], 'complete_api')
+
+        # A later exact-surface change at the same nominal revision must open a
+        # fresh degraded observation and publish that latest source text.
+        self.write_previous([third])
+        changed_again = dict(listed)
+        changed_again['truncated_body_text'] = (
+            'NEWER exact public list excerpt begins here and continues…'
+        )
+        changed_long_surface = (
+            'NEWER exact public list excerpt begins here and continues into '
+            + ' '.join(
+                f'newer-canonical-evidence-{index}' for index in range(25)
+            )
+        )
+        changed_again['body_html'] = f'<p>{changed_long_surface}</p>'
+        changed_canonical = fetch_all_posts.bounded_excerpt(
+            changed_long_surface
+        )
+        changed_fetch = self.run_fetch(
+            [changed_again],
+            urllib.error.URLError('changed detail unavailable'),
+        )
+        self.assert_exact_detail_urls(changed_fetch, listed['slug'])
+        latest = self.read_json(self.posts_path)[0]
+        self.assertEqual(
+            latest['body_text'],
+            changed_canonical,
+        )
+        self.assertEqual(latest['body_source'], 'source-excerpt')
+        changed_status = self.read_json(self.status_path)
+        self.assertEqual(changed_status['status'], 'degraded')
+        self.assertEqual(
+            changed_status['mode'],
+            'complete_api_degraded_body_provenance',
+        )
+
+    def test_incompatible_list_surfaces_remain_degraded_without_oscillation(self):
+        previous = self.cached_record(slug='incompatible-list-surfaces')
+        previous.update({
+            'body_text': 'OLD exact public list excerpt.',
+            'body_html_length': 0,
+            'body_source': 'source-excerpt',
+            'wordcount': 0,
+            'content_status': 'excerpt',
+        })
+        self.write_previous([previous])
+        listed = self.list_post(
+            slug=previous['slug'],
+            updated_at=previous['source_updated_at'],
+            truncated_body_text='ALPHA source surface has no shared text…',
+            body_html=(
+                '<p>BETA independent source surface stays deterministic '
+                + ' '.join(f'bounded-segment-{index}' for index in range(20))
+                + '</p>'
+            ),
+        )
+        canonical, compatible = fetch_all_posts.canonical_list_body_surface(
+            listed
+        )
+        self.assertFalse(compatible)
+
+        first_fetch = self.run_fetch(
+            [listed],
+            urllib.error.URLError('incoherent detail unavailable'),
+        )
+
+        self.assert_exact_detail_urls(first_fetch, listed['slug'])
+        first = self.read_json(self.posts_path)[0]
+        self.assertEqual(first['body_text'], canonical)
+        self.assertEqual(first['body_source'], 'source-excerpt')
+        first_status = self.read_json(self.status_path)
+        self.assertEqual(first_status['status'], 'degraded')
+
+        self.write_previous([first])
+        second_fetch = self.run_fetch(
+            [listed],
+            urllib.error.URLError('incoherent detail still unavailable'),
+        )
+
+        self.assert_exact_detail_urls(second_fetch, listed['slug'])
+        second = self.read_json(self.posts_path)[0]
+        self.assertEqual(
+            second['body_text'].encode('utf-8'),
+            canonical.encode('utf-8'),
+        )
+        self.assertEqual(second['body_source'], 'source-excerpt')
+        second_status = self.read_json(self.status_path)
+        self.assertEqual(second_status['status'], 'degraded')
+        self.assertEqual(
+            second_status['mode'],
+            'complete_api_degraded_body_provenance',
+        )
+
+    def test_paid_notice_cannot_hide_a_new_public_body_failure(self):
+        paid = self.list_post(
+            slug='paid-coverage-notice',
+            truncated_body_text='Exact anonymous paid preview.',
+        )
+        paid['id'] = 1
+        paid['audience'] = 'only_paid'
+        public = self.list_post(
+            slug='new-public-body-failure',
+            truncated_body_text='Exact public fallback excerpt.',
+        )
+        public['id'] = 2
+
+        detail_fetch = self.run_fetch(
+            [paid, public],
+            urllib.error.URLError('new public detail unavailable'),
+        )
+
+        self.assert_exact_detail_urls(detail_fetch, public['slug'])
+        self.assertEqual(detail_fetch.call_count, 1)
+        status = self.read_json(self.status_path)
+        self.assertEqual(status['status'], 'degraded')
+        self.assertEqual(
+            status['mode'],
+            'complete_api_degraded_body_provenance',
+        )
+
     def test_paid_list_excerpt_never_requests_or_claims_full_content(self):
         listed = self.list_post(
             slug='paid-teaser',
@@ -292,7 +552,7 @@ class SubstackNullableBodyTests(unittest.TestCase):
             ).hexdigest(),
         })
         self.assertEqual(article['brief']['body_sha256'], preview['body_sha256'])
-        self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
+        self.assertEqual(self.read_json(self.status_path)['status'], 'ok')
 
     def test_paid_row_without_list_excerpt_never_requests_detail(self):
         listed = self.list_post(
@@ -321,14 +581,14 @@ class SubstackNullableBodyTests(unittest.TestCase):
             article['member_preview']['body_sha256'],
             hashlib.sha256(b'').hexdigest(),
         )
-        self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
+        self.assertEqual(self.read_json(self.status_path)['status'], 'ok')
 
     def test_matching_source_update_reuses_cached_body_without_detail_fetch(self):
         previous = self.cached_record()
         self.write_previous([previous])
         listed = self.list_post(
             updated_at=previous['source_updated_at'],
-            truncated_body_text='A list-response preview must not replace it.',
+            truncated_body_text=' '.join(previous['body_text'].split()[:5]),
         )
 
         detail_fetch = self.run_fetch(
@@ -375,10 +635,10 @@ class SubstackNullableBodyTests(unittest.TestCase):
 
         self.assert_exact_detail_urls(detail_fetch, listed['slug'])
         stored = self.read_json(self.posts_path)[0]
-        self.assertEqual(stored['body_text'], previous['body_text'])
+        self.assertEqual(stored['body_text'], listed['truncated_body_text'])
         self.assertEqual(stored['content_status'], 'excerpt')
         self.assertEqual(stored['wordcount'], 0)
-        self.assertEqual(stored['body_source'], 'cached-fallback')
+        self.assertEqual(stored['body_source'], 'source-excerpt')
         self.assertEqual(stored['body_revision_status'], 'current')
         self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
 
@@ -419,7 +679,7 @@ class SubstackNullableBodyTests(unittest.TestCase):
             article['brief']['body_sha256'],
             article['member_preview']['body_sha256'],
         )
-        self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
+        self.assertEqual(self.read_json(self.status_path)['status'], 'ok')
 
     def test_public_excerpt_cache_retries_detail_and_upgrades_after_recovery(self):
         previous = self.cached_record()
@@ -433,7 +693,7 @@ class SubstackNullableBodyTests(unittest.TestCase):
         self.write_previous([previous])
         listed = self.list_post(
             updated_at=previous['source_updated_at'],
-            truncated_body_text='A different list teaser must not replace it.',
+            truncated_body_text=previous['body_text'],
         )
 
         detail_fetch = self.run_fetch(
@@ -447,7 +707,7 @@ class SubstackNullableBodyTests(unittest.TestCase):
         self.assertEqual(stored['content_status'], 'excerpt')
         self.assertEqual(stored['wordcount'], 0)
         self.assertEqual(stored['body_source'], 'cached-excerpt-fallback')
-        self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
+        self.assertEqual(self.read_json(self.status_path)['status'], 'ok')
 
         self.write_previous([stored])
         detail = dict(listed)
@@ -460,6 +720,40 @@ class SubstackNullableBodyTests(unittest.TestCase):
         self.assertEqual(recovered['content_status'], 'full')
         self.assertEqual(recovered['body_source'], 'detail')
         self.assertEqual(recovered['body_revision_status'], 'current')
+
+    def test_unverified_public_excerpt_cannot_become_healthy_from_observation(self):
+        previous = self.cached_record(source_updated_at='')
+        previous.update({
+            'body_text': 'Exact but revision-unverified public excerpt.',
+            'body_html_length': 0,
+            'body_source': 'cached-excerpt-fallback',
+            'wordcount': 0,
+            'content_status': 'excerpt',
+            'observed_source_updated_at': '2026-07-27T12:00:00.000Z',
+            'body_revision_status': 'unverified',
+        })
+        self.write_previous([previous])
+        listed = self.list_post(
+            updated_at=previous['observed_source_updated_at'],
+            truncated_body_text=previous['body_text'],
+        )
+
+        detail_fetch = self.run_fetch(
+            [listed],
+            urllib.error.URLError('detail still unavailable'),
+        )
+
+        self.assert_exact_detail_urls(detail_fetch, listed['slug'])
+        stored = self.read_json(self.posts_path)[0]
+        self.assertEqual(stored['body_text'], previous['body_text'])
+        self.assertEqual(stored['source_updated_at'], '')
+        self.assertEqual(stored['body_revision_status'], 'unverified')
+        status = self.read_json(self.status_path)
+        self.assertEqual(status['status'], 'degraded')
+        self.assertEqual(
+            status['mode'],
+            'complete_api_degraded_body_provenance',
+        )
 
     def test_access_limited_excerpt_cache_can_avoid_public_detail_fetch(self):
         previous = self.cached_record()

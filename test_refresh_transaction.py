@@ -1,10 +1,12 @@
 import json
 import os
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
 import textwrap
+import time
 import unittest
 from pathlib import Path
 
@@ -113,6 +115,10 @@ if [ "${1:-}" = "branch" ] && [ "${2:-}" = "--show-current" ]; then
     exit 0
 fi
 if [ "${1:-}" = "status" ]; then
+    if [ -n "${FAKE_BLOCK_AT_STATUS_FILE:-}" ]; then
+        : > "$FAKE_BLOCK_AT_STATUS_FILE"
+        sleep 60
+    fi
     exit 0
 fi
 if [ "${1:-}" = "pull" ]; then
@@ -213,10 +219,12 @@ class RefreshTransactionTests(unittest.TestCase):
         path.write_text(textwrap.dedent(value), encoding='utf-8')
         path.chmod(0o755)
 
-    def run_refresh(self, failure, mv_fail_at=0):
+    def run_refresh(self, failure, mv_fail_at=0, busy_exit_code=None):
         environment = self.environment.copy()
         environment['FAKE_FAILURE'] = failure
         environment['FAKE_MV_FAIL_AT'] = str(mv_fail_at)
+        if busy_exit_code is not None:
+            environment['REFRESH_BUSY_EXIT_CODE'] = busy_exit_code
         return subprocess.run(
             ['/bin/bash', str(self.repo / 'refresh.sh')],
             cwd=self.repo,
@@ -241,6 +249,49 @@ class RefreshTransactionTests(unittest.TestCase):
         self.assertEqual(list(self.repo.glob('*.tmp')), [])
         self.assertEqual(list(self.tmp.glob('substack-trades-refresh.*')), [])
         self.assertFalse((self.tmp / 'com.navnoor.substacktrades.lock').exists())
+
+    def make_live_refresh_lock(self):
+        lock = self.tmp / 'com.navnoor.substacktrades.lock'
+        lock.mkdir()
+        return lock
+
+    @staticmethod
+    def process_field(pid, field):
+        result = subprocess.run(
+            ['/bin/ps', '-ww', '-p', str(pid), '-o', f'{field}='],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=True,
+        )
+        return result.stdout.strip()
+
+    def write_lock_identity(self, lock, pid, command=None):
+        (lock / 'pid').write_text(f'{pid}\n', encoding='utf-8')
+        (lock / 'process-start').write_text(
+            self.process_field(pid, 'lstart') + '\n', encoding='utf-8',
+        )
+        (lock / 'process-command').write_text(
+            (command or self.process_field(pid, 'command')) + '\n',
+            encoding='utf-8',
+        )
+        (lock / 'repository-root').write_text(
+            str(self.repo.resolve()) + '\n', encoding='utf-8',
+        )
+        (lock / 'ready').write_text('ready\n', encoding='utf-8')
+
+    @staticmethod
+    def stop_process(process):
+        if process.poll() is None:
+            os.killpg(process.pid, signal.SIGTERM)
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                os.killpg(process.pid, signal.SIGKILL)
+                process.wait(timeout=5)
+        for stream in (process.stdout, process.stderr):
+            if stream is not None and not stream.closed:
+                stream.close()
 
     def invocation_log(self):
         path = self.base / 'python.log'
@@ -270,6 +321,194 @@ class RefreshTransactionTests(unittest.TestCase):
         )
         self.assertEqual(list(self.tmp.glob('substack-trades-refresh.*')), [])
         self.assertFalse((self.tmp / 'com.navnoor.substacktrades.lock').exists())
+
+    def test_live_lock_is_clean_for_manual_runs_but_retryable_for_scheduler(self):
+        blocked = self.base / 'incumbent-blocked'
+        incumbent_environment = self.environment.copy()
+        incumbent_environment['FAKE_FAILURE'] = ''
+        incumbent_environment['FAKE_BLOCK_AT_STATUS_FILE'] = str(blocked)
+        incumbent = subprocess.Popen(
+            ['/bin/bash', str(self.repo.resolve() / 'refresh.sh')],
+            cwd=self.repo,
+            env=incumbent_environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+        )
+        try:
+            lock = self.tmp / 'com.navnoor.substacktrades.lock'
+            for _ in range(100):
+                if blocked.exists() and (lock / 'ready').is_file():
+                    break
+                if incumbent.poll() is not None:
+                    stdout, stderr = incumbent.communicate()
+                    self.fail(f'incumbent exited early:\n{stdout}\n{stderr}')
+                time.sleep(0.05)
+            else:
+                self.fail('incumbent refresh did not establish its live lock')
+
+            manual = self.run_refresh('')
+            self.assertEqual(manual.returncode, 0, manual.stdout + manual.stderr)
+            self.assertIn('exiting cleanly', manual.stdout)
+            self.assertTrue(lock.is_dir())
+
+            scheduled = self.run_refresh('', busy_exit_code='75')
+            self.assertEqual(
+                scheduled.returncode, 75, scheduled.stdout + scheduled.stderr,
+            )
+            self.assertIn(
+                'deferring this scheduled attempt for retry', scheduled.stderr,
+            )
+            self.assertTrue(lock.is_dir())
+            self.assertNotIn('fetch_all_posts.py', self.invocation_log())
+        finally:
+            self.stop_process(incumbent)
+
+    def test_live_lock_accepts_a_relative_refresh_script_path(self):
+        blocked = self.base / 'relative-path-incumbent-blocked'
+        incumbent_environment = self.environment.copy()
+        incumbent_environment['FAKE_FAILURE'] = ''
+        incumbent_environment['FAKE_BLOCK_AT_STATUS_FILE'] = str(blocked)
+        incumbent = subprocess.Popen(
+            ['/bin/bash', './refresh.sh'],
+            cwd=self.repo,
+            env=incumbent_environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+        )
+        try:
+            lock = self.tmp / 'com.navnoor.substacktrades.lock'
+            for _ in range(100):
+                if blocked.exists() and (lock / 'ready').is_file():
+                    break
+                if incumbent.poll() is not None:
+                    stdout, stderr = incumbent.communicate()
+                    self.fail(f'incumbent exited early:\n{stdout}\n{stderr}')
+                time.sleep(0.05)
+            else:
+                self.fail(
+                    'relative-path incumbent did not establish its live lock'
+                )
+
+            scheduled = self.run_refresh('', busy_exit_code='75')
+
+            self.assertEqual(
+                scheduled.returncode, 75,
+                scheduled.stdout + scheduled.stderr,
+            )
+            self.assertIn(
+                'deferring this scheduled attempt for retry',
+                scheduled.stderr,
+            )
+            self.assertTrue(lock.is_dir())
+            self.assertNotIn('\npush origin main', '\n' + self.git_log())
+            self.assertNotIn('fetch_all_posts.py', self.invocation_log())
+        finally:
+            self.stop_process(incumbent)
+
+    def test_live_lock_accepts_an_alternate_bash_executable_path(self):
+        alternate_bin = self.base / 'alternate-bash-bin'
+        alternate_bin.mkdir()
+        alternate_bash = alternate_bin / 'bash'
+        alternate_bash.symlink_to('/bin/bash')
+        blocked = self.base / 'alternate-bash-incumbent-blocked'
+        incumbent_environment = self.environment.copy()
+        incumbent_environment['FAKE_FAILURE'] = ''
+        incumbent_environment['FAKE_BLOCK_AT_STATUS_FILE'] = str(blocked)
+        incumbent = subprocess.Popen(
+            [str(alternate_bash), str(self.repo.resolve() / 'refresh.sh')],
+            cwd=self.repo,
+            env=incumbent_environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+        )
+        try:
+            lock = self.tmp / 'com.navnoor.substacktrades.lock'
+            for _ in range(100):
+                if blocked.exists() and (lock / 'ready').is_file():
+                    break
+                if incumbent.poll() is not None:
+                    stdout, stderr = incumbent.communicate()
+                    self.fail(f'incumbent exited early:\n{stdout}\n{stderr}')
+                time.sleep(0.05)
+            else:
+                self.fail(
+                    'alternate-Bash incumbent did not establish its live lock'
+                )
+
+            scheduled = self.run_refresh('', busy_exit_code='75')
+
+            self.assertEqual(
+                scheduled.returncode, 75,
+                scheduled.stdout + scheduled.stderr,
+            )
+            self.assertIn(
+                'deferring this scheduled attempt for retry',
+                scheduled.stderr,
+            )
+            self.assertTrue(lock.is_dir())
+            self.assertNotIn('\npush origin main', '\n' + self.git_log())
+            self.assertNotIn('fetch_all_posts.py', self.invocation_log())
+        finally:
+            self.stop_process(incumbent)
+
+    def test_unrelated_live_pid_cannot_hold_the_refresh_lock(self):
+        unrelated = subprocess.Popen(
+            ['/bin/sleep', '60'],
+            cwd=self.repo,
+            start_new_session=True,
+        )
+        try:
+            lock = self.make_live_refresh_lock()
+            self.write_lock_identity(lock, unrelated.pid)
+
+            result = self.run_refresh('')
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn('already running', result.stdout + result.stderr)
+            self.assertIn('\npush origin main', '\n' + self.git_log())
+            self.assertFalse(lock.exists())
+        finally:
+            self.stop_process(unrelated)
+
+    def test_reused_refresh_like_pid_with_wrong_start_token_is_stale(self):
+        reused = subprocess.Popen(
+            ['/bin/bash', '-c', 'sleep 60', 'refresh.sh'],
+            cwd=self.repo,
+            start_new_session=True,
+        )
+        try:
+            lock = self.make_live_refresh_lock()
+            self.write_lock_identity(lock, reused.pid)
+            (lock / 'process-start').write_text(
+                'Mon Jan  1 00:00:00 1900\n', encoding='utf-8',
+            )
+
+            result = self.run_refresh('')
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn('already running', result.stdout + result.stderr)
+            self.assertIn('\npush origin main', '\n' + self.git_log())
+            self.assertFalse(lock.exists())
+        finally:
+            self.stop_process(reused)
+
+    def test_busy_exit_override_rejects_values_outside_scheduler_contract(self):
+        for invalid in ('', '-1', '1', '74', '76', 'invalid'):
+            with self.subTest(invalid=invalid):
+                result = self.run_refresh('', busy_exit_code=invalid)
+                self.assertEqual(
+                    result.returncode, 64, result.stdout + result.stderr,
+                )
+                self.assertIn(
+                    'REFRESH_BUSY_EXIT_CODE must be unset, 0, or 75',
+                    result.stderr,
+                )
 
     def test_a_treasury_outage_keeps_the_tracked_curve_and_still_publishes(self):
         """A published rate series is not this pipeline's to produce.

@@ -1,6 +1,7 @@
 import json
 import unittest
 import hashlib
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest import mock
 
@@ -43,6 +44,19 @@ class MediumFetchTests(unittest.TestCase):
 <pubDate>Fri, 17 Jul 2026 12:00:00 GMT</pubDate>
 <description>Source-backed research evidence.</description>
 </item></channel></rss>'''
+
+    @staticmethod
+    def _rss_record(post_id, published):
+        return {
+            'source': 'medium',
+            'source_id': post_id,
+            'medium_id': post_id,
+            'post_date': published,
+            'url': (
+                'https://medium.com/@navnoorbawa/'
+                f'research-{post_id}'
+            ),
+        }
 
     def _post(self, paragraphs):
         return {
@@ -522,6 +536,225 @@ class MediumFetchTests(unittest.TestCase):
             posts[0]['observed_source_updated_at'], posts[0]['post_date'],
         )
         self.assertTrue(posts[0]['post_date'])
+
+    def test_rss_sequence_rejects_duplicate_identity_and_wrong_order(self):
+        newest = self._rss_record(
+            'aaaaaaaaaaaa', '2026-07-18T12:00:00Z',
+        )
+        older = self._rss_record(
+            'bbbbbbbbbbbb', '2026-07-17T12:00:00Z',
+        )
+        duplicate = dict(older, medium_id=newest['medium_id'])
+        duplicate['source_id'] = newest['source_id']
+        with self.assertRaisesRegex(ValueError, 'repeated a post ID'):
+            fetch_medium_posts.validate_rss_sequence([newest, duplicate])
+        with self.assertRaisesRegex(ValueError, 'newest-first order'):
+            fetch_medium_posts.validate_rss_sequence([older, newest])
+
+    def test_rss_requires_two_exact_normalized_windows(self):
+        posts = [self._rss_record(
+            'aaaaaaaaaaaa', '2026-07-18T12:00:00Z',
+        )]
+        with mock.patch.object(
+            fetch_medium_posts,
+            'fetch_rss_posts',
+            side_effect=[posts, [dict(posts[0])]],
+        ) as fetch_pass:
+            self.assertEqual(
+                fetch_medium_posts.fetch_stable_rss_posts(),
+                posts,
+            )
+        self.assertEqual(fetch_pass.call_count, 2)
+
+        changed = [dict(posts[0], post_date='2026-07-19T12:00:00Z')]
+        with mock.patch.object(
+            fetch_medium_posts,
+            'fetch_rss_posts',
+            side_effect=[posts, changed],
+        ):
+            with self.assertRaisesRegex(
+                ValueError, 'changed between verification passes',
+            ):
+                fetch_medium_posts.fetch_stable_rss_posts()
+
+    def test_incremental_rss_requires_contiguous_history_overlap(self):
+        history = [
+            self._rss_record('aaaaaaaaaaaa', '2026-07-17T12:00:00Z'),
+            self._rss_record('bbbbbbbbbbbb', '2026-07-16T12:00:00Z'),
+        ]
+        new = self._rss_record('cccccccccccc', '2026-07-18T12:00:00Z')
+        fetch_medium_posts.validate_incremental_rss(
+            [new, history[0], history[1]],
+            history,
+        )
+
+        with self.assertRaisesRegex(ValueError, 'no overlap'):
+            fetch_medium_posts.validate_incremental_rss([new], history)
+
+        with self.assertRaisesRegex(ValueError, 'newest validated history edge'):
+            fetch_medium_posts.validate_incremental_rss(
+                [new, history[1]],
+                history,
+            )
+
+        hole = self._rss_record('dddddddddddd', '2026-07-16T18:00:00Z')
+        with self.assertRaisesRegex(ValueError, 'unknown item below'):
+            fetch_medium_posts.validate_incremental_rss(
+                [new, history[0], hole, history[1]],
+                history,
+            )
+
+        regressed = self._rss_record(
+            history[1]['medium_id'], '2026-07-16T12:00:00Z',
+        )
+        with self.assertRaisesRegex(ValueError, 'regressed behind history'):
+            fetch_medium_posts.validate_incremental_rss(
+                [regressed],
+                history,
+            )
+
+        changed_timestamp = dict(
+            history[0], post_date='2026-07-17T12:00:01Z',
+        )
+        with self.assertRaisesRegex(
+            ValueError, 'changed the exact publication timestamp',
+        ):
+            fetch_medium_posts.validate_incremental_rss(
+                [changed_timestamp, history[1]], history,
+            )
+
+    def test_established_history_requires_the_full_ten_row_rss_window(self):
+        history = [
+            self._rss_record(
+                f'{index:012x}',
+                f'2026-07-{20 - index:02d}T12:00:00Z',
+            )
+            for index in range(10)
+        ]
+        with self.assertRaisesRegex(ValueError, 'exactly 10 are required'):
+            fetch_medium_posts.validate_incremental_rss(
+                [dict(history[0])], history,
+            )
+
+    def test_known_overlap_retains_exact_timestamp_and_history_order(self):
+        history = [
+            self._rss_record('aaaaaaaaaaaa', '2026-07-17T12:00:00Z'),
+            self._rss_record('bbbbbbbbbbbb', '2026-07-16T12:00:00Z'),
+        ]
+        newest = self._rss_record(
+            'cccccccccccc', '2026-07-18T12:00:00Z',
+        )
+        latest = [newest, dict(history[0]), dict(history[1])]
+        fetch_medium_posts.validate_incremental_rss(latest, history)
+        merged = fetch_medium_posts.merge_rss_with_history(latest, history)
+        self.assertEqual(
+            [row['medium_id'] for row in merged[:3]],
+            ['cccccccccccc', 'aaaaaaaaaaaa', 'bbbbbbbbbbbb'],
+        )
+        self.assertEqual(
+            [row['post_date'] for row in merged[1:3]],
+            ['2026-07-17T12:00:00Z', '2026-07-16T12:00:00Z'],
+        )
+
+        millisecond_history = [
+            dict(history[0], post_date='2026-07-17T12:00:00.000Z'),
+            dict(history[1], post_date='2026-07-16T12:00:00.000Z'),
+        ]
+        fetch_medium_posts.validate_incremental_rss(
+            latest, millisecond_history,
+        )
+        normalized_merge = fetch_medium_posts.merge_rss_with_history(
+            latest, millisecond_history,
+        )
+        self.assertEqual(
+            [row['post_date'] for row in normalized_merge[1:3]],
+            ['2026-07-17T12:00:00.000Z', '2026-07-16T12:00:00.000Z'],
+        )
+
+    def test_archive_rss_edge_rejects_publication_timestamp_drift(self):
+        latest = [
+            self._rss_record(
+                f'{index:012x}',
+                f'2026-07-{20 - index:02d}T12:00:00Z',
+            )
+            for index in range(10)
+        ]
+        archive = [dict(post) for post in latest]
+        archive[0]['post_date'] = '2026-07-20T12:00:01Z'
+        with self.assertRaisesRegex(ValueError, 'RSS timestamps'):
+            fetch_medium_posts.validate_archive_rss_edge(archive, latest)
+
+    def test_reviewed_profile_bridge_is_exact_expiring_and_one_time(self):
+        bridge = fetch_medium_posts.load_profile_bridge(
+            now=datetime(2026, 8, 20, 14, 0, tzinfo=timezone.utc),
+        )
+        published = (
+            '2026-08-19T17:01:27Z',
+            '2026-08-19T16:12:51Z',
+            '2026-08-18T15:46:22Z',
+            '2026-08-18T14:16:44Z',
+            '2026-08-17T15:38:09Z',
+            '2026-08-17T10:14:09Z',
+            '2026-08-16T13:01:24Z',
+            '2026-08-16T06:41:27Z',
+            '2026-08-15T09:37:43Z',
+            '2026-08-15T04:46:41Z',
+        )
+        latest = [
+            self._rss_record(post_id, stamp)
+            for post_id, stamp in zip(bridge['rss_window_ids'], published)
+        ]
+        previous = [
+            self._rss_record('4912dfd9ee85', '2026-08-14T06:29:10Z'),
+            self._rss_record('c4c340597a67', '2026-08-14T04:07:37Z'),
+        ]
+        self.assertEqual(
+            fetch_medium_posts.validate_profile_bridge(
+                latest,
+                previous,
+                now=datetime(2026, 8, 20, 14, 0, tzinfo=timezone.utc),
+            ),
+            bridge,
+        )
+
+        unrelated = [dict(post) for post in latest]
+        unrelated[0]['source_id'] = '111111111111'
+        unrelated[0]['medium_id'] = '111111111111'
+        unrelated[0]['url'] = (
+            'https://medium.com/@navnoorbawa/research-111111111111'
+        )
+        with self.assertRaisesRegex(ValueError, 'complete live RSS window'):
+            fetch_medium_posts.validate_profile_bridge(
+                unrelated,
+                previous,
+                now=datetime(2026, 8, 20, 14, 0, tzinfo=timezone.utc),
+            )
+
+        after_first_merge = fetch_medium_posts.merge_rss_with_history(
+            latest, previous,
+        )
+        with self.assertRaisesRegex(ValueError, 'newest trusted history prefix'):
+            fetch_medium_posts.validate_profile_bridge(
+                latest,
+                after_first_merge,
+                now=datetime(2026, 8, 20, 14, 0, tzinfo=timezone.utc),
+            )
+
+        with self.assertRaisesRegex(ValueError, 'has expired'):
+            fetch_medium_posts.load_profile_bridge(
+                now=datetime(2026, 8, 23, 13, 38, 49, tzinfo=timezone.utc),
+            )
+
+        invalid_schema = dict(bridge, unreviewed_extension=True)
+        with mock.patch.object(
+            fetch_medium_posts,
+            '_strict_bridge_object',
+            return_value=invalid_schema,
+        ):
+            with self.assertRaisesRegex(ValueError, 'exact schema'):
+                fetch_medium_posts.load_profile_bridge(
+                    now=datetime(2026, 8, 20, 14, 0, tzinfo=timezone.utc),
+                )
 
     def test_rss_accepts_only_its_tracking_query_and_canonicalizes_it(self):
         payload = self._rss_payload().replace(

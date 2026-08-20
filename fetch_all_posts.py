@@ -420,6 +420,105 @@ def previous_excerpt(previous):
     )
 
 
+def exact_list_body_surfaces(post):
+    """Return the distinct bounded text surfaces proven by the current list."""
+    surfaces = []
+    truncated = bounded_excerpt(post.get('truncated_body_text'))
+    if truncated:
+        surfaces.append(truncated)
+    body_html = post.get('body_html')
+    if isinstance(body_html, str) and body_html.strip():
+        html_excerpt = bounded_excerpt(strip_html(body_html))
+        if html_excerpt and html_excerpt not in surfaces:
+            surfaces.append(html_excerpt)
+    return tuple(surfaces)
+
+
+def comparable_list_surface(surface):
+    """Remove only a terminal truncation marker for compatibility checks."""
+    text = surface.rstrip()
+    if text.endswith('…'):
+        return text[:-1].rstrip()
+    if text.endswith('...'):
+        return text[:-3].rstrip()
+    return text
+
+
+def list_surfaces_are_compatible(left, right):
+    """Return whether two exact list surfaces are prefix/subset variants."""
+    left_comparable = comparable_list_surface(left)
+    right_comparable = comparable_list_surface(right)
+    if not left_comparable or not right_comparable:
+        return left_comparable == right_comparable
+    return (
+        left_comparable in right_comparable
+        or right_comparable in left_comparable
+    )
+
+
+def canonical_list_body_surface(post):
+    """Return the longest deterministic list surface and its coherence."""
+    surfaces = exact_list_body_surfaces(post)
+    if not surfaces:
+        return '', True
+    canonical = max(surfaces, key=lambda surface: (len(surface), surface))
+    compatible = all(
+        list_surfaces_are_compatible(left, right)
+        for index, left in enumerate(surfaces)
+        for right in surfaces[index + 1:]
+    )
+    return canonical, compatible
+
+
+def conflicting_current_list_surface(post, previous):
+    """Return a current list surface that disproves a same-revision cache.
+
+    Substack's ``updated_at`` is not a sufficient content identity signal: the
+    exact list preview can change while that timestamp remains fixed. A public
+    cache may be treated as current only while every exact list surface remains
+    consistent with it. Paid rows are deliberately excluded because their
+    anonymous preview is published separately from the author-owned body cache.
+    """
+    if not is_public_body(post):
+        return ''
+    canonical_surface, surfaces_compatible = canonical_list_body_surface(post)
+    # Disagreeing current source surfaces are themselves a live provenance
+    # conflict. Always select the same longest bounded surface so repeated
+    # refreshes cannot alternate between two exact captures.
+    if canonical_surface and not surfaces_compatible:
+        return canonical_surface
+    if not isinstance(previous, dict):
+        return ''
+    current_revision = post.get('updated_at')
+    previous_revision = previous.get('source_updated_at')
+    if (
+        not isinstance(current_revision, str)
+        or not current_revision
+        or not isinstance(previous_revision, str)
+        or current_revision != previous_revision
+    ):
+        return ''
+    previous_body = previous.get('body_text')
+    if not isinstance(previous_body, str) or not previous_body.strip():
+        return ''
+
+    if not canonical_surface:
+        return ''
+    if previous.get('content_status') == 'excerpt':
+        # An excerpt is covered only by the exact canonical surface. A longer
+        # cached capture can share the canonical prefix while containing text
+        # the current anonymous list no longer proves; collapse it once rather
+        # than continuing to label that stale tail current.
+        if canonical_surface != previous_body:
+            return canonical_surface
+        return ''
+    # A list excerpt can be a proper subset of a verified full body. Terminal
+    # ellipses are presentation markers rather than authored compatibility.
+    if not list_surfaces_are_compatible(canonical_surface, previous_body):
+        return canonical_surface
+    return ''
+
+
 def preserved_body_record(
         post, previous, body_source, content_status='excerpt'):
     """Combine current source metadata with a separately proven cached body."""
@@ -486,11 +585,16 @@ def resolve_post_body(post, previous=None, detail_fetcher=None):
         )
 
     source_updated_at = post.get('updated_at')
+    canonical_list_surface, list_surfaces_compatible = (
+        canonical_list_body_surface(post)
+    )
+    conflicting_list_surface = conflicting_current_list_surface(post, previous)
     matching_full_cache = (
         cached_body_covers_post(post, previous)
         and isinstance(source_updated_at, str)
         and source_updated_at
         and previous.get('source_updated_at') == source_updated_at
+        and not conflicting_list_surface
     )
     if matching_full_cache and is_public_body(post):
         return (
@@ -597,6 +701,32 @@ def resolve_post_body(post, previous=None, detail_fetcher=None):
                 'detail HTML does not cover the declared article word count'
             )
     except Exception as exc:
+        if conflicting_list_surface:
+            if list_surfaces_compatible:
+                warning = (
+                    f"{post.get('slug', '')}: the exact current list excerpt "
+                    'changed without a source revision signal; indexed that '
+                    f'current excerpt and could not verify the full body '
+                    f'({type(exc).__name__})'
+                )
+            else:
+                warning = (
+                    f"{post.get('slug', '')}: current list text surfaces "
+                    'disagreed; indexed the deterministic longest exact '
+                    f'bounded surface and could not verify the full body '
+                    f'({type(exc).__name__})'
+                )
+            return (
+                post_record(
+                    post,
+                    conflicting_list_surface,
+                    0,
+                    'excerpt',
+                    'source-excerpt',
+                ),
+                'excerpt',
+                warning,
+            )
         if previous_full_body(previous):
             return (
                 preserved_body_record(post, previous, 'cached-fallback'),
@@ -616,15 +746,9 @@ def resolve_post_body(post, previous=None, detail_fetcher=None):
                 'verified; preserved the prior exact excerpt '
                 f'({type(exc).__name__})',
             )
-        list_html_excerpt = (
-            strip_html(body_html)
-            if isinstance(body_html, str) and body_html.strip()
-            else ''
-        )
         excerpt_candidates = (
-            truncated if isinstance(truncated, str) else '',
+            canonical_list_surface,
             detail_excerpt,
-            list_html_excerpt,
         )
         excerpt = ''
         for candidate in excerpt_candidates:
@@ -656,6 +780,52 @@ def resolve_post_body(post, previous=None, detail_fetcher=None):
         ),
         'detail',
         '',
+    )
+
+
+BODY_HEALTH_STABILITY_FIELDS = (
+    'slug',
+    'title',
+    'subtitle',
+    'post_date',
+    'audience',
+    'meter_type',
+    'type',
+    'is_published',
+)
+
+
+def body_resolution_degrades_source(post, previous):
+    """Return whether a body-resolution notice is a live source failure.
+
+    Access-limited posts are expected to expose only an anonymous excerpt or
+    metadata, so their coverage notices must not make an otherwise complete,
+    stable catalogue permanently unhealthy.  Likewise, a previously disclosed
+    public excerpt gap is not a new outage while both its source revision and
+    publication metadata remain unchanged.  New or changed public rows still
+    fail closed until their current public body provenance can be verified.
+    """
+    if not is_public_body(post):
+        return False
+    if not isinstance(previous, dict):
+        return True
+    if previous.get('content_status') != 'excerpt':
+        return True
+    if conflicting_current_list_surface(post, previous):
+        return True
+
+    current_revision = post.get('updated_at')
+    previous_revision = previous.get('source_updated_at')
+    if (
+        not isinstance(current_revision, str)
+        or not current_revision
+        or not isinstance(previous_revision, str)
+        or current_revision != previous_revision
+    ):
+        return True
+    return any(
+        post.get(field) != previous.get(field)
+        for field in BODY_HEALTH_STABILITY_FIELDS
     )
 
 
@@ -858,6 +1028,7 @@ def main():
         'metadata': 0,
     }
     degraded_messages = []
+    coverage_notices = []
     detail_request_count = 0
     detail_attempted_slugs = set()
     detail_attempted_at = utc_now()
@@ -976,8 +1147,11 @@ def main():
             resolved['detail_attempted_at'] = previous['detail_attempted_at']
         resolution_counts[resolution] += 1
         if warning:
-            degraded_messages.append(warning)
             print(f'Warning: {warning}')
+            if body_resolution_degrades_source(post, previous):
+                degraded_messages.append(warning)
+            else:
+                coverage_notices.append(warning)
         resolved_by_index[index] = resolved
     all_posts = [
         resolved_by_index[index] for index in range(len(listed_posts))
@@ -1061,6 +1235,11 @@ def main():
         print(
             'Body detail requests: '
             f'{detail_request_count}/{MAX_DETAIL_REQUESTS_PER_RUN}'
+        )
+    if coverage_notices:
+        print(
+            'Body coverage notices (stable or access-limited): '
+            f'{len(coverage_notices)}'
         )
 
     # Print summary

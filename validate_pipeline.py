@@ -31,7 +31,11 @@ from source_health import (
     degradation_state,
     track_source_health,
 )
-from write_snapshot_manifest import data_checksum
+from write_snapshot_manifest import (
+    MEDIUM_BRIDGE_MODE,
+    data_checksum,
+    validated_medium_bridge_provenance,
+)
 
 
 VALID_DIRECTIONS = {
@@ -990,6 +994,24 @@ def validate_manifest(manifest, articles, trades, article_path, trade_path, now=
         degradation_state(source, item, allow_legacy=True)
         require(isinstance(item.get('mode'), str) and item['mode'].strip(),
                 f'manifest {source} has no fetch mode')
+        if item['mode'] == MEDIUM_BRIDGE_MODE:
+            require(
+                source == 'medium' and item.get('status') == 'ok',
+                'reviewed-profile bridge mode is valid only for healthy Medium',
+            )
+            require(
+                'provenance' in item,
+                'manifest Medium reviewed-profile mode has no provenance',
+            )
+            validated_medium_bridge_provenance(
+                item['provenance'], source_checked_value,
+            )
+        else:
+            require(
+                'provenance' not in item,
+                f'manifest {source} provenance is not valid for mode '
+                f'{item["mode"]}',
+            )
         for field in ('published_count', 'fetched_count', 'included_count'):
             require(type(item.get(field)) is int and item[field] >= 0,
                     f'manifest {source} {field} is not a non-negative integer')

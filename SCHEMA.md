@@ -123,6 +123,15 @@ positive declared word count, and a non-empty captured-body digest. These
 fields describe captured-source provenance, not whether the article's claims
 are correct or current in the market.
 
+If a public Substack list row exposes more than one exact preview surface,
+terminal truncation markers are ignored only for compatibility comparison.
+Compatible prefix/subset variants use the longest bounded exact surface;
+incompatible variants remain source-degraded but still select the same longest
+surface deterministically. A newly changed surface cannot reuse stale cached
+text. Once that exact current excerpt and its source revision are persisted, an
+identical later observation is an article-level coverage notice rather than a
+continuing source-discovery failure.
+
 The following other additive fields may be present:
 
 | Field | Type | Guarantee |
@@ -166,6 +175,47 @@ reject unrecognized enumeration values rather than guessing. The runtime
 `member_preview_chars` is the exact `member_preview.character_count`. Therefore
 `content_status: excerpt` alone does not prove that preview text exists;
 consumers must inspect the proof/count.
+
+Medium RSS is treated only as a bounded incremental surface. A healthy
+`complete_archive` mode requires two identical complete legacy-archive passes
+and two identical RSS passes, followed by an exact match between all ten RSS
+IDs/publication instants and the archive's newest ordered edge. A stable but
+stale archive therefore cannot conceal a newer supported-RSS head; its already
+fetched RSS window is evaluated by the fallback lineage rules instead of being
+fetched again. If RSS is unavailable, the alleged archive is not published.
+
+A healthy
+`validated_history_plus_current_rss` source status requires two identical
+normalized ten-row RSS windows for established history, a non-regressing newest
+timestamp, exact publication timestamps for known IDs, and a contiguous overlap
+in the newest validated-history order. It does not assert a newly enumerated
+complete archive: rows outside the RSS window remain `body_revision_status:
+unverified`. A missing overlap, an unknown row below the first overlap, an
+incomplete window, timestamp drift, or a changing window uses
+`trusted_history_rss_gap_quarantined`; the trusted catalogue remains byte-for-
+byte equivalent when it is already the output, or exactly equal as JSON data in
+an isolated transaction candidate, and the unproven merge cannot become a
+future lineage input.
+
+The tracked `medium_profile_sequence_bridge.json` object has exactly these
+fields: `schema_version`, `source`, `author_username`, `surface`, `profile_url`,
+`reviewed_at`, `expires_at`, `rss_window_ids`, and
+`previous_history_prefix_ids`. The two ID arrays contain exactly ten and two
+unique lowercase 12-hex Medium IDs, respectively, and must not overlap. The
+surface is `operator-reviewed-direct-public-profile-sequence`; author and URL
+are fixed to this catalogue. Review/expiry values are canonical UTC-second
+instants, expiry must follow review by no more than three days, the full live RSS
+order must equal `rss_window_ids`, and the newest trusted-history prefix must
+equal `previous_history_prefix_ids`. A successful bridge emits
+`operator_reviewed_profile_bridge_plus_current_rss` and carries those bounded
+review facts first in fetch-status `provenance`, then unchanged in
+`snapshot_manifest.json` at `sources.medium.provenance`. Both the manifest
+writer and validator require the exact provenance key set, fixed surface and
+profile URL, canonical UTC-second review/expiry instants, a source check inside
+that no-more-than-three-day window, and exactly ten plus two unique lowercase
+IDs with no overlap. Provenance is forbidden on every unrelated source mode. A
+different future edge cannot reuse the record because either the RSS sequence
+or the post-merge history prefix no longer matches.
 
 An observation derived from a member preview must carry
 `source_body_sha256` equal to that preview's digest; a non-member observation

@@ -8,8 +8,10 @@ set -Eeuo pipefail
 
 cd "$(dirname "$0")"
 ROOT=$PWD
+LOCK_REPOSITORY_ROOT=$(pwd -P)
 LAST_RUN_FILE="$HOME/.substack_trades_last_run"
 MIN_REFRESH_SECONDS=${MIN_REFRESH_SECONDS:-1800}
+REFRESH_BUSY_EXIT_CODE_VALUE=${REFRESH_BUSY_EXIT_CODE-0}
 LOCK_DIR="${TMPDIR:-/tmp}/com.navnoor.substacktrades.lock"
 LOCK_OWNED=0
 WORK_DIR=""
@@ -17,6 +19,17 @@ RELEASE_SITE_DIR=""
 PROMOTION_ACTIVE=0
 GIT_PUBLICATION_ACTIVE=0
 PROMOTED_OUTPUTS=()
+
+# Manual overlap remains a successful no-op. The bounded launchd supervisor
+# opts into EX_TEMPFAIL (75), allowing it to retry if the incumbent refresh
+# later fails instead of incorrectly treating lock contention as publication
+# success. Reject every other override so this private scheduler contract
+# cannot silently change the script's exit semantics.
+if [ "$REFRESH_BUSY_EXIT_CODE_VALUE" != "0" ] \
+    && [ "$REFRESH_BUSY_EXIT_CODE_VALUE" != "75" ]; then
+    echo "REFRESH_BUSY_EXIT_CODE must be unset, 0, or 75." >&2
+    exit 64
+fi
 
 if [ -n "${PYTHON_BIN:-}" ]; then
     PYTHON=$PYTHON_BIN
@@ -44,7 +57,12 @@ cleanup() {
         rmdir "$WORK_DIR" 2>/dev/null || true
     fi
     if [ "$LOCK_OWNED" -eq 1 ]; then
-        rm -f "$LOCK_DIR/pid"
+        rm -f \
+            "$LOCK_DIR/pid" \
+            "$LOCK_DIR/process-start" \
+            "$LOCK_DIR/process-command" \
+            "$LOCK_DIR/repository-root" \
+            "$LOCK_DIR/ready"
         rmdir "$LOCK_DIR" 2>/dev/null || true
     fi
     exit "$exit_code"
@@ -103,22 +121,139 @@ on_error() {
 trap 'cleanup $?' EXIT
 trap 'on_error $LINENO' ERR
 
+process_start_for_pid() {
+    LC_ALL=C /bin/ps -ww -p "$1" -o lstart= 2>/dev/null \
+        | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+
+process_command_for_pid() {
+    LC_ALL=C /bin/ps -ww -p "$1" -o command= 2>/dev/null \
+        | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+
+process_cwd_for_pid() {
+    if [ -L "/proc/$1/cwd" ]; then
+        readlink "/proc/$1/cwd" 2>/dev/null
+        return
+    fi
+    if [ -x /usr/sbin/lsof ]; then
+        /usr/sbin/lsof -a -p "$1" -d cwd -Fn 2>/dev/null \
+            | sed -n 's/^n//p' \
+            | sed -n '1p'
+        return
+    fi
+    return 1
+}
+
+command_is_refresh_shell() {
+    # launchd uses /bin/bash today, but an operator may legitimately invoke
+    # this script with another Bash installation. Authenticate the executable
+    # by its basename and allow only the three exact sole script forms operators
+    # use from the already-verified repo cwd. A command that merely contains
+    # "refresh.sh" (or adds shell options/code) is not an owner.
+    process_command=$1
+    shell_executable=${process_command%% *}
+    [ "$shell_executable" != "$process_command" ] || return 1
+    [ "${shell_executable##*/}" = "bash" ] || return 1
+    shell_arguments=${process_command#"$shell_executable "}
+    case "$shell_arguments" in
+        "$LOCK_REPOSITORY_ROOT/refresh.sh"|./refresh.sh|refresh.sh) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+lock_matches_live_refresh() {
+    [ -f "$LOCK_DIR/ready" ] \
+        && [ -f "$LOCK_DIR/pid" ] \
+        && [ -f "$LOCK_DIR/process-start" ] \
+        && [ -f "$LOCK_DIR/process-command" ] \
+        && [ -f "$LOCK_DIR/repository-root" ] || return 1
+
+    locked_pid=$(sed -n '1p' "$LOCK_DIR/pid")
+    locked_start=$(sed -n '1p' "$LOCK_DIR/process-start")
+    locked_command=$(sed -n '1p' "$LOCK_DIR/process-command")
+    locked_root=$(sed -n '1p' "$LOCK_DIR/repository-root")
+    [[ "$locked_pid" =~ ^[0-9]+$ ]] || return 1
+    [ "$locked_root" = "$LOCK_REPOSITORY_ROOT" ] || return 1
+    kill -0 "$locked_pid" 2>/dev/null || return 1
+
+    live_start=$(process_start_for_pid "$locked_pid")
+    live_command=$(process_command_for_pid "$locked_pid")
+    live_root=$(process_cwd_for_pid "$locked_pid")
+    [ -n "$live_start" ] && [ "$live_start" = "$locked_start" ] || return 1
+    [ -n "$live_command" ] && [ "$live_command" = "$locked_command" ] || return 1
+    [ "$live_root" = "$LOCK_REPOSITORY_ROOT" ] || return 1
+    command_is_refresh_shell "$live_command"
+}
+
+legacy_lock_matches_live_refresh() {
+    # During a rolling upgrade, an already-running pre-identity refresh may
+    # have written only `pid`. Never overlap that exact repo-rooted process;
+    # unlike the old implementation, an unrelated reused PID still fails the
+    # command and physical-working-directory checks.
+    [ -f "$LOCK_DIR/pid" ] || return 1
+    locked_pid=$(sed -n '1p' "$LOCK_DIR/pid")
+    [[ "$locked_pid" =~ ^[0-9]+$ ]] || return 1
+    kill -0 "$locked_pid" 2>/dev/null || return 1
+    live_command=$(process_command_for_pid "$locked_pid")
+    live_root=$(process_cwd_for_pid "$locked_pid")
+    [ "$live_root" = "$LOCK_REPOSITORY_ROOT" ] || return 1
+    command_is_refresh_shell "$live_command"
+}
+
+initialize_owned_lock() {
+    LOCK_OWNED=1
+    current_start=$(process_start_for_pid "$$")
+    current_command=$(process_command_for_pid "$$")
+    if [ -z "$current_start" ] || [ -z "$current_command" ]; then
+        echo "Could not establish the refresh process identity for its lock." >&2
+        return 1
+    fi
+    printf '%s\n' "$$" > "$LOCK_DIR/pid"
+    printf '%s\n' "$current_start" > "$LOCK_DIR/process-start"
+    printf '%s\n' "$current_command" > "$LOCK_DIR/process-command"
+    printf '%s\n' "$LOCK_REPOSITORY_ROOT" > "$LOCK_DIR/repository-root"
+    printf 'ready\n' > "$LOCK_DIR/ready"
+}
+
 # Prevent a manual run and a scheduled run from mutating the same files.
 if ! mkdir "$LOCK_DIR" 2>/dev/null; then
-    running_pid=""
-    if [ -f "$LOCK_DIR/pid" ]; then
-        running_pid=$(sed -n '1p' "$LOCK_DIR/pid")
+    # An owner writes `ready` last. Give a just-created lock one second to
+    # finish its identity record before deciding that it is stale or foreign.
+    if [ ! -f "$LOCK_DIR/ready" ]; then
+        sleep 1
     fi
-    if [[ "$running_pid" =~ ^[0-9]+$ ]] && kill -0 "$running_pid" 2>/dev/null; then
-        echo "A refresh is already running (PID $running_pid); exiting cleanly."
-        exit 0
+    lock_is_live=0
+    if lock_matches_live_refresh; then
+        lock_is_live=1
+    elif [ ! -f "$LOCK_DIR/ready" ] && legacy_lock_matches_live_refresh; then
+        lock_is_live=1
     fi
-    rm -f "$LOCK_DIR/pid"
-    rmdir "$LOCK_DIR" 2>/dev/null || true
-    mkdir "$LOCK_DIR"
+    if [ "$lock_is_live" -eq 1 ]; then
+        running_pid=$locked_pid
+        if [ "$REFRESH_BUSY_EXIT_CODE_VALUE" -eq 0 ]; then
+            echo "A refresh is already running (PID $running_pid); exiting cleanly."
+        else
+            echo "A refresh is already running (PID $running_pid); deferring this scheduled attempt for retry." >&2
+        fi
+        exit "$REFRESH_BUSY_EXIT_CODE_VALUE"
+    fi
+    rm -f \
+        "$LOCK_DIR/pid" \
+        "$LOCK_DIR/process-start" \
+        "$LOCK_DIR/process-command" \
+        "$LOCK_DIR/repository-root" \
+        "$LOCK_DIR/ready"
+    if ! rmdir "$LOCK_DIR" 2>/dev/null; then
+        echo "Refresh lock is foreign or malformed and could not be cleared safely." >&2
+        exit 74
+    fi
+    if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+        echo "Refresh lock ownership changed while stale state was being cleared; retry later." >&2
+        exit 74
+    fi
 fi
-LOCK_OWNED=1
-printf '%s\n' "$$" > "$LOCK_DIR/pid"
+initialize_owned_lock
 WORK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/substack-trades-refresh.XXXXXX")
 
 # Avoid only accidental rapid reruns. The old 20-hour gate defeated the 9am,
