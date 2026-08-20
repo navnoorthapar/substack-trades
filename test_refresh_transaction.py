@@ -29,6 +29,7 @@ FAKE_PYTHON = r'''#!/usr/bin/env python3
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 
@@ -48,6 +49,10 @@ with open(os.environ['FAKE_PYTHON_LOG'], 'a', encoding='utf-8') as handle:
 
 arguments = sys.argv[1:]
 if arguments[:3] == ['-m', 'unittest', '-q']:
+    block_path = os.environ.get('FAKE_BLOCK_AT_REGRESSION_FILE')
+    if block_path:
+        Path(block_path).write_text('blocked\n', encoding='utf-8')
+        time.sleep(60)
     raise SystemExit(42 if os.environ.get('FAKE_FAILURE') == 'regression' else 0)
 if arguments[:1] == ['-c']:
     print('1')
@@ -569,6 +574,62 @@ class RefreshTransactionTests(unittest.TestCase):
         self.assertIn('restoring the previous local snapshot', result.stderr)
         self.assertNotIn('\nadd ', '\n' + self.git_log())
         self.assert_previous_state_is_exact_and_temporary_state_is_gone()
+
+    def assert_signal_during_regression_restores_snapshot(
+        self, signal_number, expected_exit,
+    ):
+        signal_name = signal.Signals(signal_number).name
+        blocked = self.base / f'regression-blocked-{signal_name.lower()}'
+        environment = self.environment.copy()
+        environment.update({
+            'FAKE_FAILURE': '',
+            'FAKE_BLOCK_AT_REGRESSION_FILE': str(blocked),
+        })
+        process = subprocess.Popen(
+            ['/bin/bash', str(self.repo / 'refresh.sh')],
+            cwd=self.repo,
+            env=environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+        )
+        try:
+            for _ in range(200):
+                if blocked.exists():
+                    break
+                if process.poll() is not None:
+                    stdout, stderr = process.communicate()
+                    self.fail(f'refresh exited before regression block:\n{stdout}\n{stderr}')
+                time.sleep(0.05)
+            else:
+                self.fail('refresh did not reach the blocked regression stage')
+
+            self.assertTrue(
+                all(
+                    (self.repo / name).read_bytes() != self.before[name]
+                    for name in PROMOTED_OUTPUTS
+                ),
+                'the signal fixture did not reach the fully promoted boundary',
+            )
+            os.killpg(process.pid, signal_number)
+            stdout, stderr = process.communicate(timeout=10)
+
+            self.assertEqual(process.returncode, expected_exit, stdout + stderr)
+            self.assertIn('restoring the previous local snapshot', stderr)
+            self.assertIn(
+                f'interrupted by {signal_name} (exit {expected_exit})', stderr,
+            )
+            self.assertNotIn('\nadd ', '\n' + self.git_log())
+            self.assert_previous_state_is_exact_and_temporary_state_is_gone()
+        finally:
+            self.stop_process(process)
+
+    def test_interrupt_during_regression_restores_promoted_snapshot(self):
+        self.assert_signal_during_regression_restores_snapshot(signal.SIGINT, 130)
+
+    def test_termination_during_regression_restores_promoted_snapshot(self):
+        self.assert_signal_during_regression_restores_snapshot(signal.SIGTERM, 143)
 
     def test_release_artifact_failure_restores_snapshot_before_staging(self):
         result = self.run_refresh('release')

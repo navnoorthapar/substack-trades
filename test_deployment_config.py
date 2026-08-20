@@ -983,9 +983,10 @@ class DeploymentConfigurationTests(unittest.TestCase):
             '"$WORK_DIR/promoted-$index.previous-missing"',
             'PROMOTION_ACTIVE=1',
             'restore_promoted_outputs()',
+            'rollback_active_promotion()',
+            "trap '' INT TERM",
             'if [ "$PROMOTION_ACTIVE" -eq 1 ]',
             'if ! "$PYTHON" -m unittest -q; then',
-            'Regression suite failed; restoring the previous local snapshot.',
             'SITE_REVISION=scheduled-refresh-candidate',
             '"$PYTHON" validate_release.py',
             'GIT_PUBLICATION_ACTIVE=1',
@@ -1002,6 +1003,9 @@ class DeploymentConfigurationTests(unittest.TestCase):
         backup_at = self.refresh.index('PROMOTED_OUTPUTS=(', validate_at)
         promote_at = self.refresh.index('PROMOTION_ACTIVE=1', backup_at)
         regression_at = self.refresh.index('if ! "$PYTHON" -m unittest -q; then')
+        regression_rollback_at = self.refresh.index(
+            'rollback_active_promotion', regression_at,
+        )
         release_at = self.refresh.index(
             '"$PYTHON" validate_release.py', regression_at,
         )
@@ -1013,6 +1017,8 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertLess(validate_at, backup_at)
         self.assertLess(backup_at, promote_at)
         self.assertLess(promote_at, regression_at)
+        self.assertLess(regression_at, regression_rollback_at)
+        self.assertLess(regression_rollback_at, release_at)
         self.assertLess(regression_at, release_at)
         self.assertLess(release_at, git_stage_at)
         self.assertLess(git_stage_at, git_commit_at)

@@ -97,9 +97,12 @@ restore_promoted_outputs() {
     return "$rollback_failed"
 }
 
-on_error() {
-    exit_code=$?
+rollback_active_promotion() {
+    # Rollback is a single-entry critical section. Ignore further termination
+    # signals before the first backup move so both this shell and its mv/reset
+    # children finish restoring the complete snapshot byte-for-byte.
     trap - ERR
+    trap '' INT TERM
     if [ "$PROMOTION_ACTIVE" -eq 1 ]; then
         echo "Refresh failed before the validated snapshot was committed; restoring the previous local snapshot." >&2
         if ! restore_promoted_outputs; then
@@ -114,12 +117,33 @@ on_error() {
             fi
         fi
     fi
+}
+
+on_error() {
+    exit_code=$?
+    trap - ERR
+    rollback_active_promotion
     echo "Refresh failed at line $1 (exit $exit_code). Previous published data was preserved." >&2
+    exit "$exit_code"
+}
+
+on_signal() {
+    signal_name=$1
+    exit_code=$2
+    # A second operator signal must not interrupt the bounded byte-exact
+    # rollback. EXIT remains armed so the transaction directory and owned lock
+    # are removed after restoration.
+    trap - ERR
+    trap '' INT TERM
+    rollback_active_promotion
+    echo "Refresh interrupted by $signal_name (exit $exit_code). Previous published data was preserved." >&2
     exit "$exit_code"
 }
 
 trap 'cleanup $?' EXIT
 trap 'on_error $LINENO' ERR
+trap 'on_signal SIGINT 130' INT
+trap 'on_signal SIGTERM 143' TERM
 
 process_start_for_pid() {
     LC_ALL=C /bin/ps -ww -p "$1" -o lstart= 2>/dev/null \
@@ -460,10 +484,7 @@ done
 echo
 echo "=== Running regression suite ==="
 if ! "$PYTHON" -m unittest -q; then
-    echo "Regression suite failed; restoring the previous local snapshot." >&2
-    if ! restore_promoted_outputs; then
-        echo "Refresh rollback was incomplete; manual recovery is required before another run." >&2
-    fi
+    rollback_active_promotion
     exit 1
 fi
 
