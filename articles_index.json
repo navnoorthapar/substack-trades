@@ -1,6 +1,141 @@
 [
   {
     "source": "substack",
+    "source_id": "moderna-and-merck-disclosed-no-data",
+    "slug": "moderna-and-merck-disclosed-no-data",
+    "title": "Moderna and Merck Disclosed No Data. The Stock Moved 177% Anyway.",
+    "subtitle": "The most crowded short in the S&P 500 met a binary catalyst with zero efficacy data, and two mechanical amplifiers, not the trial, explain most of the 177%.",
+    "post_date": "2026-08-21T14:03:34.403Z",
+    "url": "https://navnoorbawa.substack.com/p/moderna-and-merck-disclosed-no-data",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "6691b286004c094855f42e6a1257bd3e43ca045a304fe147c896065fa36e5801",
+      "lead": {
+        "text": "I want to open with the number most of Wednesday’s coverage buried. Moderna fell more than 25% on Thursday, giving back over $18 billion of the new market value it had gained a day earlier, a decline that runs closer to 40% measured against the whole dollar gain instead of the closing price alone. That’s the number that matters.",
+        "start": 0,
+        "end": 330,
+        "sha256": "6691b286004c094855f42e6a1257bd3e43ca045a304fe147c896065fa36e5801",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-21T16:17:48.365Z",
+    "observed_source_updated_at": "2026-08-21T16:17:48.365Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "I want to open with the number most of Wednesday’s coverage buried. Moderna fell more than 25% on Thursday, giving back over $18 billion of the new market value it had gained a day earlier, a decline that runs closer to 40% measured against the whole dollar gain instead of the closing price alone. That’s the number that matters.",
+      "character_count": 330,
+      "body_sha256": "6691b286004c094855f42e6a1257bd3e43ca045a304fe147c896065fa36e5801"
+    }
+  },
+  {
+    "source": "medium",
+    "source_id": "36cb035edbac",
+    "slug": "merrill-lynch-built-svi-in-1999-factsets-surface-fits-3x-worse-on-purpose-36cb035edbac",
+    "title": "Merrill Lynch Built SVI in 1999. FactSet’s Surface Fits 3x Worse on Purpose.",
+    "subtitle": "The claim: The implied volatility surface your risk system publishes is smoothed by a sufficient no-arbitrage condition, which is a…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-21T09:29:18Z",
+    "url": "https://medium.com/@navnoorbawa/merrill-lynch-built-svi-in-1999-factsets-surface-fits-3x-worse-on-purpose-36cb035edbac",
+    "audience": "unknown",
+    "wordcount": 24,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "96732ac25912f19e4e8dc1c3f45d176e7579e650029a899b370604cbae692030",
+      "lead": {
+        "text": "The claim: The implied volatility surface your risk system publishes is smoothed by a sufficient no-arbitrage condition, which is a…",
+        "start": 0,
+        "end": 132,
+        "sha256": "e30c8c3cb485371bf8064cdb7e28a2f2f19579c6fa1328d8e991f7b49b75fe38",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-21T09:29:18Z",
+    "observed_source_updated_at": "2026-08-21T09:29:18Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "32270c943477",
+    "slug": "quantlib-reports-implied-vol-to-a-basis-point-a-cboe-tick-moves-it-5-4-points-32270c943477",
+    "title": "QuantLib Reports Implied Vol to a Basis Point. A Cboe Tick Moves It 5.4 Points.",
+    "subtitle": "The consensus, in a form a solver author would sign\n\nContinue reading on Medium »",
+    "post_date": "2026-08-21T09:01:13Z",
+    "url": "https://medium.com/@navnoorbawa/quantlib-reports-implied-vol-to-a-basis-point-a-cboe-tick-moves-it-5-4-points-32270c943477",
+    "audience": "unknown",
+    "wordcount": 14,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "3657380810994b994ec78a027afb140729d0b5363f51e157c1d80dfc1fd28b88",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-21T09:01:13Z",
+    "observed_source_updated_at": "2026-08-21T09:01:13Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167287780",
+    "slug": "modernas-5-desks-167287780",
+    "title": "Moderna's $5 Billion Squeeze: The Crowding Premium Options Desks Missed",
+    "subtitle": "",
+    "post_date": "2026-08-21",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/modernas-5-desks-167287780",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167301110",
+    "slug": "imf-measured-at-167301110",
+    "title": "The IMF Measured Bessent's Buyback at 0.2 Basis Points. Here's the 5.5 to 1 Screen That Tells You If That Changes",
+    "subtitle": "",
+    "post_date": "2026-08-21",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/imf-measured-at-167301110",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "substack",
     "source_id": "the-bank-of-england-warned-about",
     "slug": "the-bank-of-england-warned-about",
     "title": "The Bank of England warned about this crowding. Citadel and Millennium's size tier took $6.5 billion anyway.",
