@@ -1,5 +1,118 @@
 [
   {
+    "source": "medium",
+    "source_id": "1d5d8931d38b",
+    "slug": "quantlib-wont-guess-at-a-bad-quote-ferdinando-ametrano-showed-why-in-2013-1d5d8931d38b",
+    "title": "QuantLib Won’t Guess at a Bad Quote. Ferdinando Ametrano Showed Why in 2013.",
+    "subtitle": "The consensus, in a form Numerical Recipes would sign\n\nContinue reading on Medium »",
+    "post_date": "2026-08-22T13:39:42Z",
+    "url": "https://medium.com/@navnoorbawa/quantlib-wont-guess-at-a-bad-quote-ferdinando-ametrano-showed-why-in-2013-1d5d8931d38b",
+    "audience": "unknown",
+    "wordcount": 13,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "c2ff3a21e8b2cac09335e97d3036f5d7bbdb49a5e92e12adc4e4c5a1f2eb4516",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-22T13:39:42Z",
+    "observed_source_updated_at": "2026-08-22T13:39:42Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "1ed9e36675c5",
+    "slug": "spotgamma-ships-a-1988-formula-cboes-actual-vix-formula-isn-t-it-1ed9e36675c5",
+    "title": "SpotGamma Ships a 1988 Formula. Cboe’s Actual VIX Formula Isn’t It.",
+    "subtitle": "SpotGamma’s own 2026 subscriber documentation still teaches Brenner and Subrahmanyam’s 1988 at the money implied volatility formula…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-22T13:35:37Z",
+    "url": "https://medium.com/@navnoorbawa/spotgamma-ships-a-1988-formula-cboes-actual-vix-formula-isn-t-it-1ed9e36675c5",
+    "audience": "unknown",
+    "wordcount": 21,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "a4b94d05a44579a941176eb6dbb9719ebc879e09d1a02799f4dd714659cee6d8",
+      "lead": {
+        "text": "SpotGamma’s own 2026 subscriber documentation still teaches Brenner and Subrahmanyam’s 1988 at the money implied volatility formula…",
+        "start": 0,
+        "end": 132,
+        "sha256": "83974747b4f8fd3494fc5c900bcce07a1c78ff6327e05a74e78d6d5cf1d43f23",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-22T13:35:37Z",
+    "observed_source_updated_at": "2026-08-22T13:35:37Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "carried-interest-hong-kongs-legco",
+    "slug": "carried-interest-hong-kongs-legco",
+    "title": "Carried Interest: Hong Kong's LegCo Has a Bill Number. MAS Has a Paragraph.",
+    "subtitle": "A nine month gap between two effective dates, the break even bill passage probability for booking carry this quarter, and two dates that would prove this wrong.",
+    "post_date": "2026-08-22T13:02:55.751Z",
+    "url": "https://navnoorbawa.substack.com/p/carried-interest-hong-kongs-legco",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "7a4b3f919b2e9cddfbaaf5336a10cd5579079ebd5c0637f589fdf160d595d25f",
+      "lead": {
+        "text": "Hong Kong’s carried interest tax expansion is a gazetted bill with a retrospective tax date already written into its text. Singapore’s competing pledge is a press release with no rate, no draft legislation, and a Year of Assessment that doesn’t start until 2027. Those are not the same kind of event.",
+        "start": 0,
+        "end": 300,
+        "sha256": "7a4b3f919b2e9cddfbaaf5336a10cd5579079ebd5c0637f589fdf160d595d25f",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-22T13:06:49.594Z",
+    "observed_source_updated_at": "2026-08-22T13:06:49.594Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Hong Kong’s carried interest tax expansion is a gazetted bill with a retrospective tax date already written into its text. Singapore’s competing pledge is a press release with no rate, no draft legislation, and a Year of Assessment that doesn’t start until 2027. Those are not the same kind of event.",
+      "character_count": 300,
+      "body_sha256": "7a4b3f919b2e9cddfbaaf5336a10cd5579079ebd5c0637f589fdf160d595d25f"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "167382093",
+    "slug": "citadel-shed-80-167382093",
+    "title": "Citadel Shed 80% in Three Weeks: The Warehousing Signature, Sized",
+    "subtitle": "",
+    "post_date": "2026-08-22",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/citadel-shed-80-167382093",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "substack",
     "source_id": "moderna-and-merck-disclosed-no-data",
     "slug": "moderna-and-merck-disclosed-no-data",
@@ -888,9 +1001,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-16T06:41:27Z",
-    "observed_source_updated_at": "2026-08-16T06:41:27Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
