@@ -5497,12 +5497,12 @@
     "subtitle": "The talent arbitrage, the surveillance blind spot Nomura admitted in writing, and the post-YCC JGB steepener thesis behind Michael Platt's most counterintuitive hire",
     "post_date": "2026-05-23T04:19:05.514Z",
     "url": "https://navnoorbawa.substack.com/p/a-nomura-trader-made-10284-spoofing",
-    "audience": "everyone",
-    "wordcount": 2987,
-    "content_status": "full",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "3c96c664f4d969cbbae997246ca164e497e4f31b4ffb1b8f0af98fa26594abdd",
+      "body_sha256": "e62bec05d53806f4298d2efb48876fb26d4114007c9a6ac11572a29de563534d",
       "lead": {
         "text": "A Nomura managing director spent five hours manufacturing order book pressure with more than ¥400 billion in phantom JGB futures orders. Regulators caught it three years later. Hedge funds spent the better part of two years trying and failing to hire him. Then BlueCrest did — and the regulatory filings explain exactly why.",
         "start": 0,
@@ -5511,19 +5511,20 @@
         "truncated": false
       },
       "sections": [],
-      "fallback_evidence": {
-        "text": "Each unit carries a face value of ¥100 million. At peak, Nomura’s orders dominated approximately 70% of the top bids and offers in the JGB futures market. Total profit from five hours of operation: ¥1.48 million, approximately $10,284.",
-        "start": 2450,
-        "end": 2685,
-        "sha256": "57dcff97130d2b0fba810ec47ceb6e2f2ff5be0d2fb7b5469b24b94b4a1e9960",
-        "truncated": false
-      },
+      "fallback_evidence": null,
       "checkpoints": []
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-05-23T04:20:15.930Z",
-    "observed_source_updated_at": "2026-05-23T04:20:15.930Z",
+    "source_updated_at": "2026-08-22T06:51:00.879Z",
+    "observed_source_updated_at": "2026-08-22T06:51:00.879Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "A Nomura managing director spent five hours manufacturing order book pressure with more than ¥400 billion in phantom JGB futures orders. Regulators caught it three years later. Hedge funds spent the better part of two years trying and failing to hire him. Then BlueCrest did — and the regulatory filings explain exactly why.",
+      "character_count": 324,
+      "body_sha256": "e62bec05d53806f4298d2efb48876fb26d4114007c9a6ac11572a29de563534d"
+    },
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/a-nomura-trader-made-10-284-spoofing-400-billion-in-jgb-orders-e93d7312537c"
     }
