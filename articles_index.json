@@ -1,5 +1,68 @@
 [
   {
+    "source": "substack",
+    "source_id": "bessent-doubled-the-buyback-treasurys",
+    "slug": "bessent-doubled-the-buyback-treasurys",
+    "title": "Bessent Doubled the Buyback. Treasury's Budget Didn't Grow. JPMorgan Isn't Buying It.",
+    "subtitle": "The $38 billion quarterly envelope never moved. Only the per operation size and count did, and Thursday's reversal already tested whether that is enough.",
+    "post_date": "2026-08-22T18:00:58.586Z",
+    "url": "https://navnoorbawa.substack.com/p/bessent-doubled-the-buyback-treasurys",
+    "audience": "everyone",
+    "wordcount": 3502,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "1cb413ed8491c692c8ed04fbed47dc2703a9c80e62eef3bb5ad54c1181b782bc",
+      "lead": {
+        "text": "Treasury doubled the per operation buyback ceiling this week, and the total quarterly dollars it actually budgeted for these buybacks never moved.",
+        "start": 0,
+        "end": 146,
+        "sha256": "eccd72d64be767c52d0a3ca462266b4c35968fc15cc3ecd92a405cbb914bbe86",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "falsifier",
+          "source_order": 25,
+          "heading": "What would change this view",
+          "heading_start": 16410,
+          "heading_end": 16437,
+          "heading_sha256": "b5ed5c090c00a4317c273608df8e05fcfe20a375b0560ee2200480eef4b02676",
+          "text": "I want a falsifier a reader could check without me. If the 30 year holds durably under roughly 5.10%, sustained for two weeks or more, once the doubled operations actually start executing on September 9 rather than just on the announcement date, that beats what a liquidity premium mechanism this size should deliver on its own. I’d need to revisit whether Bessent’s tool carries more structural weight than the IMF’s effect size estimate suggests. I’d also update if Treasury’s own operation results, published after each buyback, show spread compression meaningfully larger than the roughly 0.2 basis point the smaller program produced.",
+          "start": 16439,
+          "end": 17077,
+          "sha256": "0e35a351c366999255fc770e504d3af04e5ba836b12f112211adf73bc9f83880",
+          "truncated": true
+        },
+        {
+          "kind": "implementation",
+          "source_order": 27,
+          "heading": "What to watch instead of the headline number",
+          "heading_start": 17585,
+          "heading_end": 17629,
+          "heading_sha256": "ce1b46dd994df882992a6f33bfff67563e0ff9bbc333c4468fb51d2342b7f572",
+          "text": "Here’s what I’d actually do with this, for a desk that has to underwrite a view on long end rates over the next quarter and survive well past one week’s headlines. Don’t trade the announcement itself. That edge, if it ever existed, decayed inside one session, visible on the public tape with no proprietary data required. I’d watch the September 9 operation results first, directly. Treasury publishes accepted amounts and the securities purchased after each buyback, and a widening offered to accepted ratio would be the first real sign the tool is losing potency instead of compounding it. I turn that ratio into an actual screen, with the bands and the worked example, in the companion research note: The IMF Measured Bessent’s Buyback at 0.2 Basis Points.",
+          "start": 17631,
+          "end": 18390,
+          "sha256": "5eb3f0c291fcb26ab89b4467bb1eeb1390e345a0597ba1c31405420452d305f1",
+          "truncated": true
+        }
+      ],
+      "fallback_evidence": {
+        "text": "I want to start with the number most of this week’s coverage never printed. I went looking for the extra firepower everyone assumed came with “doubled.” It wasn’t there. Everyone caught that the 30 year hit a 19-year high above 5.33% on Tuesday. Everyone caught that Treasury “doubled” its buyback the next day.",
+        "start": 216,
+        "end": 527,
+        "sha256": "7ecf9567d1724a625304b3a528b0fa60d8527612bd3603fba322b7a287639e8f",
+        "truncated": true
+      },
+      "checkpoints": []
+    },
+    "family": "event-reaction",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-22T18:06:31.803Z",
+    "observed_source_updated_at": "2026-08-22T18:06:31.803Z"
+  },
+  {
     "source": "medium",
     "source_id": "1d5d8931d38b",
     "slug": "quantlib-wont-guess-at-a-bad-quote-ferdinando-ametrano-showed-why-in-2013-1d5d8931d38b",

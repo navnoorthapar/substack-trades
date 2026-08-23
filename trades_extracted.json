@@ -1,5 +1,54 @@
 [
   {
+    "article_title": "Bessent Doubled the Buyback. Treasury's Budget Didn't Grow. JPMorgan Isn't Buying It.",
+    "article_url": "https://navnoorbawa.substack.com/p/bessent-doubled-the-buyback-treasurys",
+    "article_date": "2026-08-22",
+    "trade_description": "I think its strongest believers would sign every line of the dominant read. Scott Bessent, a former Soros hedge fund manager who made his name on high stakes currency bets, is running Treasury debt management the way he ran a trading book: watching the tape, sizing up, stepping in when the market gets disorderly (Fortune). He told reporters plainly that “we believe that the yields don’t reflect the underlying fundamentals,” and he doubled the long end buyback ceiling from $2 billion to $4 billion per operation, covering the 10 to 30 year sector, effective September 9 through November 4 (Treasury SB0607). He has since said the real number “could be more than the $4 billion per issue” (Yahoo Finance). One strategist called it going against “regular and predictable, but that’s the world we",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "said the real number “could be more than the $4 billion per issue” (Yahoo Finance).",
+    "any_quant_detail": "$2 billion, $4 billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Soros",
+    "description_truncated": true
+  },
+  {
+    "article_title": "Bessent Doubled the Buyback. Treasury's Budget Didn't Grow. JPMorgan Isn't Buying It.",
+    "article_url": "https://navnoorbawa.substack.com/p/bessent-doubled-the-buyback-treasurys",
+    "article_date": "2026-08-22",
+    "trade_description": "The 2000 to 2002 version of this same tool moved yields by more than fractions of a basis point, and I want to name that directly before a sharp reader finds it first. A Journal of Banking and Finance paper on that earlier program found a cumulative effect closer to 95 basis points, roughly 7.8 basis points for every $10 billion purchased, an order of magnitude larger than what the IMF measures on the version running today (Connolly and Struby, Journal of Banking and Finance, 2024). The mechanism explains the gap. It doesn’t undercut my point. That earlier program was funded out of budget surpluses. Retiring debt with surplus cash is a genuine reduction in the stock of Treasuries outstanding. Today’s program is revenue neutral by design, funded by issuing elsewhere on the same calendar, so",
+    "instruments": [
+      "bond",
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$10 billion, 95 basis points, 8 basis points",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
+    "article_title": "Bessent Doubled the Buyback. Treasury's Budget Didn't Grow. JPMorgan Isn't Buying It.",
+    "article_url": "https://navnoorbawa.substack.com/p/bessent-doubled-the-buyback-treasurys",
+    "article_date": "2026-08-22",
+    "trade_description": "Here’s what I’d actually do with this, for a desk that has to underwrite a view on long end rates over the next quarter and survive well past one week’s headlines. Don’t trade the announcement itself. That edge, if it ever existed, decayed inside one session, visible on the public tape with no proprietary data required. I’d watch the September 9 operation results first, directly. Treasury publishes accepted amounts and the securities purchased after each buyback, and a widening offered to accepted ratio would be the first real sign the tool is losing potency instead of compounding it. I turn that ratio into an actual screen, with the bands and the worked example, in the companion research note: The IMF Measured Bessent’s Buyback at 0.2 Basis Points. Watch auction tails and bid to cover",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "2 Basis Points, at 0.2",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
     "article_title": "The Bank of England warned about this crowding. Citadel and Millennium's size tier took $6.5 billion anyway.",
     "article_url": "https://navnoorbawa.substack.com/p/the-bank-of-england-warned-about",
     "article_date": "2026-08-20",
