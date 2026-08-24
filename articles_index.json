@@ -1,6 +1,43 @@
 [
   {
     "source": "substack",
+    "source_id": "citadel-bought-situational-awarenesss",
+    "slug": "citadel-bought-situational-awarenesss",
+    "title": "Citadel Bought Situational Awareness's Book \"With Conviction.\" It Sold 80% of the Risk in Three Weeks.",
+    "subtitle": "Griffin's own letter names the exit. The trade was never the conviction call the market read it as.",
+    "post_date": "2026-08-23T13:01:49.754Z",
+    "url": "https://navnoorbawa.substack.com/p/citadel-bought-situational-awarenesss",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "fe7a8994f46e69154663e2d50443b7399463526c8eea06cede1309fcdcd74d86",
+      "lead": {
+        "text": "Griffin’s own letter proves the market misread the July 30 trade. My read: distributing the risk was the plan from day one. Citadel says so itself. The receipt is public: more than 80% of the risk gone in three weeks, while the stocks Citadel exited kept rallying without it.",
+        "start": 0,
+        "end": 275,
+        "sha256": "fe7a8994f46e69154663e2d50443b7399463526c8eea06cede1309fcdcd74d86",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-23T13:06:02.287Z",
+    "observed_source_updated_at": "2026-08-23T13:06:02.287Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Griffin’s own letter proves the market misread the July 30 trade. My read: distributing the risk was the plan from day one. Citadel says so itself. The receipt is public: more than 80% of the risk gone in three weeks, while the stocks Citadel exited kept rallying without it.",
+      "character_count": 275,
+      "body_sha256": "fe7a8994f46e69154663e2d50443b7399463526c8eea06cede1309fcdcd74d86"
+    }
+  },
+  {
+    "source": "substack",
     "source_id": "bessent-doubled-the-buyback-treasurys",
     "slug": "bessent-doubled-the-buyback-treasurys",
     "title": "Bessent Doubled the Buyback. Treasury's Budget Didn't Grow. JPMorgan Isn't Buying It.",
@@ -60,7 +97,10 @@
     "family": "event-reaction",
     "body_revision_status": "current",
     "source_updated_at": "2026-08-22T18:06:31.803Z",
-    "observed_source_updated_at": "2026-08-22T18:06:31.803Z"
+    "observed_source_updated_at": "2026-08-22T18:06:31.803Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/bessent-doubled-the-buyback-treasurys-budget-didn-t-grow-jpmorgan-isn-t-buying-it-50993d0dca16"
+    }
   },
   {
     "source": "medium",

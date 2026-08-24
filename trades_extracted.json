@@ -1,5 +1,22 @@
 [
   {
+    "article_title": "Citadel Bought Situational Awareness's Book \"With Conviction.\" It Sold 80% of the Risk in Three Weeks.",
+    "article_url": "https://navnoorbawa.substack.com/p/citadel-bought-situational-awarenesss",
+    "article_date": "2026-08-23",
+    "trade_description": "Griffin’s own letter proves the market misread the July 30 trade. My read: distributing the risk was the plan from day one. Citadel says so itself. The receipt is public: more than 80% of the risk gone in three weeks, while the stocks Citadel exited kept rallying without it.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "80%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Griffin",
+    "description_truncated": false,
+    "source_body_sha256": "fe7a8994f46e69154663e2d50443b7399463526c8eea06cede1309fcdcd74d86"
+  },
+  {
     "article_title": "Bessent Doubled the Buyback. Treasury's Budget Didn't Grow. JPMorgan Isn't Buying It.",
     "article_url": "https://navnoorbawa.substack.com/p/bessent-doubled-the-buyback-treasurys",
     "article_date": "2026-08-22",
