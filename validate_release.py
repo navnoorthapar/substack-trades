@@ -73,8 +73,8 @@ ARTICLE_WIRE_SCHEMA_RE = re.compile(
 )
 SHA256_RE = re.compile(r'^[0-9a-f]{64}$')
 SITE_URL = 'https://navnoorthapar.github.io/substack-trades/'
-LIGHT_THEME_BG = '#f2e8dd'
-DARK_THEME_BG = '#050607'
+LIGHT_THEME_BG = '#f4f6f8'
+DARK_THEME_BG = '#090e15'
 INLINE_BRIEF_COUNT = 12
 MANAGER_ALIAS_LABELS = {
     'citadel': 'Citadel / Ken Griffin',
@@ -926,8 +926,8 @@ def _expected_text_support_assets(
     ) + '\n'
     favicon_svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 <rect width="64" height="64" rx="6" fill="{DARK_THEME_BG}"/>
-<rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#ffb000" stroke-width="2"/>
-<text x="32" y="39" fill="#f4f6f7" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">NA</text>
+<rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#78a9ff" stroke-width="2"/>
+<text x="32" y="39" fill="#eef3f8" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">NA</text>
 </svg>
 '''
     return {

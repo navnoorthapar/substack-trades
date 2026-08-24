@@ -653,74 +653,238 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.html,
         )
 
-    def test_editorial_light_and_terminal_dark_system_is_light_first_and_responsive(self):
+    def test_unified_allocator_workspace_honors_system_theme_and_is_responsive(self):
         for text in (
-            '--serif:"Iowan Old Style"',
-            '--bg:#f2e8dd',
-            '--surface-1:#fffaf4',
-            '--text:#28221f',
-            '--accent:#075c63',
-            '--bg:#050607',
-            '--surface-1:#0b0d0e',
-            '--selected-line:#ffb000',
+            '--serif:ui-serif,"Iowan Old Style"',
+            '--bg:#f4f6f8',
+            '--surface-1:#ffffff',
+            '--text:#142033',
+            '--accent:#174ea6',
+            '--bg:#090e15',
+            '--surface-1:#0f1620',
+            '--selected-line:#78a9ff',
+            'One allocator-grade system. Theme changes color and elevation, never geometry.',
+            '.desk-landing-hero{',
+            '.desk-owner-metrics{',
             '.intel-title{',
             'var(--serif)',
             '.ic-rail{',
             '.intel-side.ic-sheet{',
-            '@media(max-width:1439px)',
-            '@media(max-width:1023px)',
+            '@media(max-width:1180px)',
+            '@media(max-width:1020px)',
+            '@media(max-width:899px)',
             '@media(max-width:759px)',
+            '@media(max-width:480px)',
         ):
             self.assertIn(text, self.html)
-        self.assertIn("var theme = stored || 'light'", self.html)
-        self.assertIn("var themeRevision = 'editorial-terminal-2026-07'", self.html)
+        self.assertIn("var themeRevision = 'allocator-workspace-2026-08'", self.html)
+        self.assertIn("window.matchMedia('(prefers-color-scheme: dark)').matches", self.html)
         self.assertIn(
-            "storedRevision === themeRevision || storedRevision === 'editorial-brief-2026-07'",
+            "var theme = stored || (systemDark ? 'dark' : 'light')",
             self.html,
         )
         self.assertIn(
-            'id="theme-button" type="button" aria-label="Switch to dark theme">Dark</button>',
+            'id="theme-button" type="button" aria-label="Switch to dark theme">Dark mode</button>',
             self.html,
         )
-        self.assertIn('html[data-theme="light"] .app-header{', self.html)
-        self.assertIn('html[data-theme="dark"] .app-header{', self.html)
-        self.assertIn('html[data-theme="dark"] #search{', self.html)
-        self.assertIn('html[data-theme="dark"] .brand-name{', self.html)
+        self.assertNotRegex(
+            self.html,
+            r'html\[data-theme="(?:light|dark)"\]\s+\.(?:app-header|brand-name|global-search)',
+            'theme selection must not swap product geometry or typography',
+        )
         self.assertLess(
-            self.html.index("var themeRevision = 'editorial-terminal-2026-07'"),
+            self.html.index("var themeRevision = 'allocator-workspace-2026-08'"),
             self.html.index('<style>'),
             'theme bootstrap must run before styles to prevent a wrong-theme first paint',
         )
-        narrow_brand_start = self.html.rindex('@media(max-width:520px)')
-        narrow_brand_end = self.html.index('@media print{', narrow_brand_start)
-        self.assertIn('.brand-name{display:none}', self.html[narrow_brand_start:narrow_brand_end])
         self.assertRegex(
             self.html,
             r'body\[data-view="briefing"\] \.kpi-strip,\s*body\[data-view="briefing"\] \.command-bar',
         )
         self.assertRegex(self.html, r'\.intel-wrap\{[^}]*grid-template-columns:220px minmax\(620px,1fr\) 360px')
         self.assertNotIn('min-width:1180px', self.html)
+        for text in (
+            ':root{--header-h:104px}',
+            ':root{--header-h:104px;--kpi-h:42px}',
+            'grid-template-rows:52px 52px',
+            '.header-library,#method-button{display:none}',
+            '.global-search{grid-column:1/-1;grid-row:2}',
+            '.utility-button{min-height:44px}',
+            '.brand-name{display:none}',
+            '.freshness{width:18px;max-width:18px;gap:0;justify-content:center}',
+            '#palette-button{font-size:0}',
+            '#theme-button::before{content:"◐";font-size:15px;line-height:1}',
+            'body[data-view="structure"] #mobile-filter-button{display:none!important}',
+        ):
+            self.assertIn(text, self.html)
+        self.assertRegex(
+            self.html,
+            r'body\[data-view="structure"\] \.workspace\{\s*height:calc\(100vh - var\(--header-h\)\)',
+        )
 
-        compact_header_start = self.html.index('@media(max-width:899px)')
-        compact_header_end = self.html.index('@media(max-width:759px)', compact_header_start)
-        compact_header = self.html[compact_header_start:compact_header_end]
-        self.assertIn(':root{--header-h:104px}', compact_header)
-        self.assertIn('grid-template-rows:52px 52px', compact_header)
-        self.assertIn('.header-library,#method-button{display:none}', compact_header)
-        self.assertNotIn('.freshness{display:none}', compact_header)
-        self.assertIn('.global-search{grid-column:1/-1;grid-row:2}', compact_header)
-        self.assertIn('.utility-button{min-height:44px}', compact_header)
-        mobile_header_start = self.html.index('@media(max-width:759px)', compact_header_end)
-        mobile_header_end = self.html.index('@media(max-width:430px)', mobile_header_start)
-        mobile_header = self.html[mobile_header_start:mobile_header_end]
-        self.assertIn(':root{--header-h:104px;--kpi-h:42px}', mobile_header)
-        self.assertIn('grid-template-rows:52px 52px', mobile_header)
-        self.assertIn('.brand{grid-column:1;grid-row:1;min-width:auto}', mobile_header)
-        self.assertIn('.global-search{grid-column:1/-1;grid-row:2}', mobile_header)
-        self.assertIn('.header-right{grid-column:2/4;grid-row:1;gap:5px}', mobile_header)
-        tiny_start = self.html.rindex('@media(max-width:430px)')
-        tiny_end = self.html.index('@media print{', tiny_start)
-        self.assertIn('.brand-name{display:none}', self.html[tiny_start:tiny_end])
+    def test_principal_landing_surfaces_exact_release_review_and_source_state(self):
+        for text in (
+            'Principal research brief',
+            'The archive, organized for a decision that must survive scrutiny.',
+            'Recent authored records',
+            'Local research follow-ups',
+            'Mark loaded research records reviewed',
+            'All publication sources',
+            'Open release manifest',
+            'No position, performance, or confidence claim is inferred.',
+            "const newResearchLabel = reviewBaselineExists ? 'New since review' : 'Recent · 7 days';",
+            "const newFilterLabel = reviewBaselineExists ? 'New since last review' : 'Recent · 7 days';",
+            "const freshness = snapshotFreshness();",
+            'source adapters healthy',
+            'No classified research role captured',
+            'data-desk-article=',
+            'data-action="mark-reviewed"',
+            'data-action="undo-mark-reviewed"',
+            '}).slice(0,5);',
+        ):
+            self.assertIn(text, self.html)
+
+        match = re.search(r'const CATALOGUE_SOURCES = (.*?);\n', self.html)
+        self.assertIsNotNone(match)
+        catalogue_sources = json.loads(match.group(1))
+        self.assertEqual(
+            [row['source'] for row in catalogue_sources],
+            ['substack', 'medium', 'patreon', 'fxempire'],
+        )
+
+        def has_captured_text(row):
+            try:
+                if int(row.get('wordcount') or 0) > 0:
+                    return True
+            except (TypeError, ValueError):
+                pass
+            preview = row.get('member_preview') or {}
+            try:
+                if isinstance(preview, dict) and int(preview.get('character_count') or 0) > 0:
+                    return True
+            except (TypeError, ValueError):
+                pass
+            brief = row.get('brief') or {}
+            if not isinstance(brief, dict):
+                return False
+            spans = [brief.get('lead'), brief.get('fallback_evidence')]
+            spans.extend(brief.get('sections') or [])
+            spans.extend(brief.get('checkpoints') or [])
+            return any(
+                isinstance(span, dict) and bool(str(span.get('text') or '').strip())
+                for span in spans
+            )
+
+        for summary in catalogue_sources:
+            source_rows = [
+                row for row in self.source_articles
+                if row.get('source') == summary['source']
+            ]
+            captured = sum(has_captured_text(row) for row in source_rows)
+            self.assertEqual(summary['count'], len(source_rows))
+            self.assertEqual(
+                summary['article_count'],
+                sum(row.get('content_status') != 'registry' for row in source_rows),
+            )
+            self.assertEqual(summary['captured_text_count'], captured)
+            self.assertEqual(summary['metadata_only_count'], len(source_rows) - captured)
+        landing_start = self.html.index('function deskLandingMarkup()')
+        landing_end = self.html.index('\nfunction renderStructureDesk', landing_start)
+        landing = self.html[landing_start:landing_end]
+        self.assertNotIn('body-backed', landing)
+
+    def test_all_source_links_use_a_strict_source_specific_allowlist(self):
+        match = re.search(r'const CATALOGUE_SOURCES = (.*?);\n', self.html)
+        self.assertIsNotNone(match)
+        catalogue_sources = json.loads(match.group(1))
+        cases = [
+            [row['latest']['url'], row['source']]
+            for row in catalogue_sources
+            if row.get('latest')
+        ]
+        function_start = self.html.index('function safeUrl(value)')
+        function_end = self.html.index('\nconst MONTHS', function_start)
+        functions = self.html[function_start:function_end]
+        script = functions + '\nconst cases = ' + json.dumps(cases) + ''';
+for (const [url,source] of cases) {
+  if (safeCatalogueUrl(url,source) !== url) throw new Error('rejected ' + source);
+}
+const bySource = new Map(cases.map(function (entry) { return [entry[1],entry[0]]; }));
+const rejected = [
+  [bySource.get('medium'),'substack'],
+  [bySource.get('substack'),'medium'],
+  [bySource.get('substack'),'unknown'],
+  ['https://www.patreon.com/SomeoneElse/posts/test-1','patreon'],
+  ['https://www.patreon.com/NavnoorBawa/posts/test-1?redirect=1','patreon'],
+  ['https://www.fxempire.com/news/article/test-1','fxempire'],
+  ['https://evil.example/forecasts/article/test-1','fxempire'],
+  ['javascript:alert(1)','patreon']
+];
+for (const [url,source] of rejected) {
+  if (safeCatalogueUrl(url,source) !== '#') throw new Error('accepted hostile URL');
+}
+'''
+        subprocess.run(
+            ['node', '-e', script],
+            cwd='/tmp',
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertIn('safeCatalogueUrl(latest.url,row.source)', self.html)
+        self.assertNotIn('safeUrl(latest.url)', self.html)
+
+    def test_article_record_shows_every_exact_passage_before_local_review_handoff(self):
+        launcher_start = self.html.index('function articleReviewLauncherMarkup(article)')
+        launcher_end = self.html.index('\nfunction briefRailMarkup', launcher_start)
+        launcher = self.html[launcher_start:launcher_end]
+        self.assertIn('const candidates = article._ideas || [];', launcher)
+        self.assertIn('escapeHtml(passageText(idea))', launcher)
+        self.assertNotIn('.slice(0,8)', launcher)
+        self.assertNotIn('boundedPromotionText', launcher)
+        per_article = Counter(idea['article_id'] for idea in self.ideas)
+        self.assertGreater(max(per_article.values()), 8, 'fixture must exercise the old eight-passage cap')
+        self.assertGreater(
+            max(len(str(idea.get('description') or '')) for idea in self.ideas),
+            190,
+            'fixture must exercise the old preview-only anchor',
+        )
+
+        handoff_start = self.html.index('function startArticlePassageReview(id,articleId)')
+        handoff_end = self.html.index('\nfunction clampWorkflowText', handoff_start)
+        handoff = self.html[handoff_start:handoff_end]
+        self.assertIn("idea.article_id !== articleId", handoff)
+        self.assertIn("state.view !== 'briefing' || state.selected !== articleId", handoff)
+        self.assertIn('retained.article_id !== articleId', handoff)
+        self.assertIn('retained.url !== current.url || retained.passage !== current.passage', handoff)
+        self.assertIn('workflowItems.size >= MAX_QUEUE_ITEMS', handoff)
+        self.assertIn('if (!persistWorkflow())', handoff)
+        self.assertIn('workflowItems.delete(id)', handoff)
+
+    def test_hidden_mobile_drawers_cannot_inert_the_visible_workspace(self):
+        sync_start = self.html.index('function syncOverlayAccessibility()')
+        sync_end = self.html.index('\nfunction closeDrawers()', sync_start)
+        sync = self.html[sync_start:sync_end]
+        self.assertIn('const filtersAvailable = viewHasResearchDrawers();', sync)
+        self.assertIn('const inspectorAvailable = viewHasResearchDrawers();', sync)
+        self.assertIn("if (!filtersAvailable) document.body.classList.remove('filters-open')", sync)
+        self.assertIn("if (!inspectorAvailable) document.body.classList.remove('inspector-open')", sync)
+        self.assertIn('const inspectorOpen = inspectorAvailable && inspectorNarrow', sync)
+
+        toggle_start = self.html.index('function toggleResearchFilters(invoker)')
+        toggle_end = self.html.index("document.getElementById('filter-close')", toggle_start)
+        toggle = self.html[toggle_start:toggle_end]
+        self.assertIn('if (!viewHasResearchDrawers())', toggle)
+        self.assertIn('Research filters are not used in this view', toggle)
+        self.assertIn("document.getElementById('manager-search').focus()", toggle)
+        self.assertIn('toggleResearchFilters(this);', self.html)
+        self.assertIn('toggleResearchFilters(document.activeElement);', self.html)
+        self.assertIn('body[data-view="structure"] #mobile-filter-button{display:none!important}', self.html)
+        self.assertGreaterEqual(
+            self.html.count('body[data-view="structure"]{--header-h:52px}'),
+            2,
+            'Structure must keep a one-row header in tablet and phone media rules',
+        )
 
     def test_hidden_brief_rail_has_complete_compact_navigation(self):
         start = self.html.index('function briefCompactNavMarkup(lenses)')
@@ -812,7 +976,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             ':root,html[data-theme="light"],html[data-theme="dark"]',
             '--bg:#ffffff!important',
             '--surface-1:#ffffff!important',
-            '--text:#28221f!important',
+            '--text:#142033!important',
             '.thread-topic-list,.thread-load-boundary .secondary-action',
             '.intel-side.ic-sheet{',
             'display:block!important',
@@ -1595,8 +1759,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_new_since_review_requires_an_explicit_acknowledgement(self):
         initialization_start = self.html.index('let reviewedArticleIds = new Set()')
-        acknowledgement_start = self.html.index('function markReviewedThroughLatest()', initialization_start)
-        initialization = self.html[initialization_start:acknowledgement_start]
+        storage_commit_start = self.html.index(
+            'function commitReviewBaselineStorage(ids,at)', initialization_start
+        )
+        initialization = self.html[initialization_start:storage_commit_start]
         self.assertIn('localStorage.getItem(REVIEWED_ARTICLE_IDS_KEY)', initialization)
         self.assertIn('localStorage.getItem(LEGACY_LAST_SEEN_KEY)', initialization)
         self.assertIn('reviewedArticleIds = new Set(ARTICLES.filter', initialization)
@@ -1606,16 +1772,42 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'loading or rendering the terminal must not silently acknowledge new research',
         )
 
-        acknowledgement_end = self.html.index('\nfunction downloadLocalFile', acknowledgement_start)
-        acknowledgement = self.html[acknowledgement_start:acknowledgement_end]
+        acknowledgement_end = self.html.index('\nfunction downloadLocalFile', storage_commit_start)
+        acknowledgement = self.html[storage_commit_start:acknowledgement_end]
         self.assertIn('ARTICLES.map(function (article) { return article.id; })', acknowledgement)
-        self.assertIn('localStorage.setItem(REVIEWED_ARTICLE_IDS_KEY,JSON.stringify(currentIds))', acknowledgement)
+        self.assertIn('localStorage.setItem(REVIEWED_ARTICLE_IDS_KEY,JSON.stringify(ids))', acknowledgement)
+        self.assertIn('localStorage.setItem(REVIEWED_AT_KEY,at)', acknowledgement)
+        self.assertIn('if (priorCaptured)', acknowledgement)
+        self.assertIn('localStorage.setItem(REVIEWED_ARTICLE_IDS_KEY,priorIds)', acknowledgement)
+        storage_commit_end = acknowledgement.index('\nfunction renderCommittedReviewBaseline')
+        self.assertNotIn('render()', acknowledgement[:storage_commit_end])
+        self.assertIn('if (!commitReviewBaselineStorage(currentIds,nextAt))', acknowledgement)
+        self.assertLess(
+            acknowledgement.index('if (!commitReviewBaselineStorage(currentIds,nextAt))'),
+            acknowledgement.index('reviewedArticleIds = new Set(currentIds)'),
+        )
+        self.assertIn('function undoReviewedThroughLatest()', acknowledgement)
+        self.assertIn(
+            'if (!commitReviewBaselineStorage(target.exists ? target.ids : null,target.at))',
+            acknowledgement,
+        )
+        self.assertIn('function renderCommittedReviewBaseline(successMessage)', acknowledgement)
         self.assertIn('reviewedArticleIds = new Set(currentIds)', acknowledgement)
         new_helper_start = self.html.index('function isNewArticle(article)')
         new_helper_end = self.html.index('\nfunction reviewFlagged', new_helper_start)
         new_helper = self.html[new_helper_start:new_helper_end]
         self.assertIn('!reviewedArticleIds.has(article.id)', new_helper)
         self.assertIn('reviewBaselineExists', new_helper)
+        active_filters_start = self.html.index('function renderActiveFilters()')
+        active_filters_end = self.html.index('\nfunction setPressedStates()', active_filters_start)
+        active_filters = self.html[active_filters_start:active_filters_end]
+        self.assertIn(
+            "const newFilterLabel = reviewBaselineExists ? 'New since last review' : 'Recent · 7 days';",
+            active_filters,
+        )
+        self.assertIn("newPreset.textContent = newFilterLabel", active_filters)
+        self.assertIn("escapeHtml(newFilterLabel)", active_filters)
+        self.assertIn('data-preset="new">Recent · 7 days</button>', self.html)
         self.assertNotIn('article.date > NEW_SINCE_DATE', self.html)
         self.assertIn("action.dataset.action === 'mark-reviewed'", self.html)
         self.assertIn('markReviewedThroughLatest();', self.html)
@@ -1943,7 +2135,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_structure_desk_is_wired_as_a_first_class_view(self):
         for text in (
-            'Published Passage Search',
+            'Passage Search',
             '<section class="structure-shell" id="structure-shell"',
             "'briefing','ideas','research','queue','structure'",
             'structure:8',
@@ -1957,7 +2149,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'data-structure-focus="',
             'data-structure-passage="',
             'data-structure-more="1"',
-            'No search subject defined',
+            'Principal research brief',
             'Retrieved authored notes',
             'Local review handoff',
             'Related mentions — excluded from the evidence set',
@@ -2114,8 +2306,9 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         layout = render.index("startChips + '</header>' + refineBar +")
         self.assertGreater(layout, 0)
         self.assertIn("const startState = !gate && !defined", render)
-        self.assertIn('No search subject defined', render)
-        self.assertIn('Start with a published-research subject', render)
+        self.assertIn('deskLandingMarkup()', render)
+        self.assertIn('Principal research brief', self.html)
+        self.assertIn('Recent authored records', self.html)
         self.assertIn("'<div class=\"structure-workbench\">' + comparablePanel + railPanel", render)
         self.assertIn('Verbatim evidence first', render)
 
@@ -2173,7 +2366,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'this test assumes outcomes are not universally recorded',
         )
         for text in (
-            'Builds a local review item—not an investment recommendation or portfolio decision. No live holdings, prices, P&amp;L, sizing, exposure, liquidity, or compliance approval.',
+            'Build an evidence packet from exact published passages. Portfolio data, live markets, performance, sizing, and approvals are not connected.',
             'Instrument fields are lexical source mentions, not validated legs.',
             'Related subsequent notes are article-topic links, not outcomes.',
             'passages contain a detected outcome / P&amp;L phrase requiring source review.',
@@ -2562,7 +2755,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         actual_script_hashes = set(re.findall(r"'sha256-([^']+)'", csp))
         self.assertEqual(actual_script_hashes, expected_script_hashes)
 
-        freshness_start = self.html.index('function renderStaticStats()')
+        freshness_start = self.html.index('function snapshotFreshness()')
         freshness = self.html[freshness_start:]
         self.assertIn('SNAPSHOT.checked_at', freshness)
         self.assertIn('SNAPSHOT.latest_publication', freshness)
@@ -2617,8 +2810,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertEqual(manifest['start_url'], './')
         self.assertEqual(manifest['scope'], './')
         self.assertEqual(manifest['icons'][0]['src'], 'favicon.svg')
-        self.assertEqual(manifest['background_color'], '#f2e8dd')
-        self.assertEqual(manifest['theme_color'], '#f2e8dd')
+        self.assertEqual(manifest['background_color'], '#f4f6f8')
+        self.assertEqual(manifest['theme_color'], '#f4f6f8')
         social = (self.site_dir / 'og.jpg').read_bytes()
         self.assertTrue(social.startswith(b'\xff\xd8') and social.rstrip().endswith(b'\xff\xd9'))
         self.assertLessEqual(len(social), 500_000)
@@ -3014,45 +3207,40 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         def channels(color):
             return [int(color[index:index + 2], 16) for index in (1, 3, 5)]
 
-        self.assertLessEqual(
-            sum(channels(dark['bg'])), 24,
-            'terminal canvas should remain visibly near-black',
-        )
+        self.assertLessEqual(sum(channels(dark['bg'])), 60, 'dark canvas should remain near-black')
         for surface in ('bg', 'surface-1', 'surface-2', 'surface-3', 'surface-raised'):
             dark_channels = channels(dark[surface])
-            self.assertLessEqual(
-                max(dark_channels) - min(dark_channels), 12,
-                f'{surface} should remain neutral terminal graphite',
-            )
-            self.assertLessEqual(dark_channels[0], dark_channels[1], f'{surface} should not carry a warm cast')
-            self.assertLessEqual(dark_channels[1], dark_channels[2], f'{surface} should not carry a warm cast')
+            self.assertLessEqual(dark_channels[0], dark_channels[1], f'{surface} should use cool slate')
+            self.assertLessEqual(dark_channels[1], dark_channels[2], f'{surface} should use cool slate')
 
             light_channels = channels(light[surface])
-            self.assertGreaterEqual(light_channels[0], light_channels[1], f'{surface} should read as warm paper')
-            self.assertGreaterEqual(light_channels[1], light_channels[2], f'{surface} should read as warm paper')
-            self.assertGreaterEqual(
-                light_channels[0] - light_channels[2], 4,
-                f'{surface} should remain visibly warmer than neutral white',
-            )
+            self.assertLessEqual(light_channels[0], light_channels[1], f'{surface} should use cool neutral slate')
+            self.assertLessEqual(light_channels[1], light_channels[2], f'{surface} should use cool neutral slate')
 
         dark_accent = channels(dark['accent'])
         dark_action = channels(dark['accent-strong'])
         dark_selection = channels(dark['selected-line'])
-        self.assertGreater(dark_accent[2], dark_accent[0], 'terminal links should retain a cyan information cue')
-        for amber in (dark_action, dark_selection):
-            self.assertGreater(amber[0], amber[1], 'terminal actions should retain an amber cue')
-            self.assertGreater(amber[1], amber[2], 'terminal actions should retain an amber cue')
+        self.assertGreater(dark_accent[2], dark_accent[0], 'dark interactions should retain a blue information cue')
+        self.assertEqual(dark_action, dark_accent)
+        self.assertEqual(dark_selection, dark_accent)
 
         light_accent = channels(light['accent'])
         light_brick = channels(light['brick'])
-        self.assertGreater(light_accent[1], light_accent[0], 'editorial interactions should retain a restrained teal cue')
-        self.assertGreater(light_brick[0], light_brick[1], 'editorial hierarchy should retain a claret cue')
+        self.assertGreater(light_accent[2], light_accent[0], 'light interactions should retain a blue information cue')
+        self.assertEqual(light_brick, light_accent)
         self.assertGreaterEqual(contrast(light['text-muted'], light['selected']), 4.5)
         self.assertIn('background:var(--accent-strong);color:var(--on-accent)', self.html)
         self.assertIn('.primary-action:hover{background:var(--accent-hover);border-color:var(--accent-hover)}', self.html)
         self.assertIn('.primary-action:active{background:var(--accent-active);border-color:var(--accent-active)}', self.html)
         self.assertIn('#search:focus{border-color:var(--control-line)', self.html)
         self.assertIn('::selection{background:var(--selection-bg);color:var(--selection-text)}', self.html)
+        self.assertRegex(self.html, r'\.desk-start\{[^}]*border:1px solid var\(--control-line\)')
+        self.assertRegex(self.html, r'\.structure-chip\{[^}]*border:1px solid var\(--control-line\)')
+        self.assertIn('.utility-button{border-color:var(--control-line);background:var(--surface-1)}', self.html)
+        self.assertRegex(
+            self.html,
+            r'\.view-tab\.active\{[^}]*border-bottom:3px solid var\(--selected-line\)',
+        )
         self.assertNotEqual(dark['quant'], dark['relative'])
 
     def test_interactive_boundaries_patterns_and_forced_colors_are_accessible(self):
@@ -3120,15 +3308,20 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn(f"theme === 'light' ? '{light_bg}' : '{dark_bg}'", self.html)
         self.assertIn(f"next === 'light' ? '{light_bg}' : '{dark_bg}'", self.html)
         self.assertIn("candidate === 'light' || candidate === 'dark'", self.html)
-        self.assertIn("var theme = stored || 'light'", self.html)
+        self.assertIn("var theme = stored || (systemDark ? 'dark' : 'light')", self.html)
+        self.assertIn("window.matchMedia('(prefers-color-scheme: dark)')", self.html)
         self.assertIn("localStorage.setItem('nrt-theme-revision',themeRevision)", self.html)
-        self.assertGreaterEqual(self.html.count("getElementById('theme-color').content"), 3)
-        self.assertIn("this.setAttribute('aria-label','Switch to '", self.html)
+        self.assertGreaterEqual(self.html.count("getElementById('theme-color').content"), 2)
+        self.assertIn("button.setAttribute('aria-label','Switch to '", self.html)
+        self.assertIn("explicit !== 'light' && explicit !== 'dark'", self.html)
         self.assertIn('id="freshness-dot" aria-hidden="true"', self.html)
         self.assertIn('id="freshness-state">Unknown</span>', self.html)
-        self.assertIn("const freshnessStatus = freshnessClass === 'stale' ? 'Stale'", self.html)
-        self.assertIn("freshnessClass === 'fresh' ? 'Current'", self.html)
-        self.assertIn("freshnessClass === 'degraded' ? 'Degraded'", self.html)
+        self.assertIn('function snapshotFreshness()', self.html)
+        self.assertIn("status:className === 'stale' ? 'Stale'", self.html)
+        self.assertIn("className === 'fresh' ? 'Current'", self.html)
+        self.assertIn("className === 'degraded' ? 'Degraded'", self.html)
+        self.assertIn('const freshness = snapshotFreshness();', self.html)
+        self.assertIn('const freshnessStatus = freshness.status;', self.html)
         self.assertIn("document.getElementById('freshness-state').textContent = freshnessStatus", self.html)
         self.assertIn("freshnessSummary.setAttribute('aria-label',freshnessStatus", self.html)
         mobile_start = self.html.index('@media(max-width:1020px)')

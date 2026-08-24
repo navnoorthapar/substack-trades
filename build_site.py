@@ -36,9 +36,9 @@ SITE_URL = 'https://navnoorthapar.github.io/substack-trades/'
 SOCIAL_IMAGE_URL = f'{SITE_URL}og.jpg'
 SOCIAL_IMAGE_SOURCE = ROOT / 'assets' / 'og.jpg'
 SUBSCRIPTION_URL = 'https://www.navnoorbawaresearch.com/subscribe'
-THEME_REVISION = 'editorial-terminal-2026-07'
-LIGHT_THEME_BG = '#f2e8dd'
-DARK_THEME_BG = '#050607'
+THEME_REVISION = 'allocator-workspace-2026-08'
+LIGHT_THEME_BG = '#f4f6f8'
+DARK_THEME_BG = '#090e15'
 ARTICLE_CATALOG_SCHEMA_VERSION = 1
 
 with open(ROOT / 'trades_extracted.json', encoding='utf-8') as handle:
@@ -101,6 +101,18 @@ def publication_sort_key(article):
         instant = datetime.fromisoformat(value.replace('Z', '+00:00'))
         instant = instant.astimezone(timezone.utc)
     return instant, canonical_url_identity(article['url'])
+
+
+def catalogue_publication_sort_key(article):
+    """Return UTC chronology for an unprojected public-catalogue row."""
+    published_at, publication_precision = clean_publication_time(
+        article.get('post_date')
+    )
+    return publication_sort_key({
+        'published_at': published_at,
+        'publication_precision': publication_precision,
+        'url': str(article.get('url') or ''),
+    })
 
 
 def clean_source(value, url=''):
@@ -727,6 +739,75 @@ share_articles = [
 
 site_revision = str(os.environ.get('SITE_REVISION') or 'local')
 snapshot_json = json_for_script(snapshot_manifest)
+
+
+def catalogue_row_has_captured_text(row):
+    """Return whether a catalogue row proves any retained published text."""
+    try:
+        if int(row.get('wordcount') or 0) > 0:
+            return True
+    except (TypeError, ValueError):
+        pass
+    member_preview = row.get('member_preview')
+    if isinstance(member_preview, dict):
+        try:
+            if int(member_preview.get('character_count') or 0) > 0:
+                return True
+        except (TypeError, ValueError):
+            pass
+    brief = row.get('brief')
+    if not isinstance(brief, dict):
+        return False
+    direct_spans = (brief.get('lead'), brief.get('fallback_evidence'))
+    if any(
+            isinstance(span, dict) and bool(str(span.get('text') or '').strip())
+            for span in direct_spans):
+        return True
+    return any(
+        isinstance(span, dict) and bool(str(span.get('text') or '').strip())
+        for field in ('sections', 'checkpoints')
+        for span in (brief.get(field) or [])
+    )
+
+
+catalogue_sources = []
+for source_name in ('substack', 'medium', 'patreon', 'fxempire'):
+    source_rows = [
+        row for row in catalog_index if row.get('source') == source_name
+    ]
+    latest_row: dict[str, object] = max(
+        source_rows,
+        key=lambda row: (
+            catalogue_publication_sort_key(row),
+            str(row.get('title') or '').casefold(),
+            str(row.get('slug') or ''),
+        ),
+        default={},
+    )
+    catalogue_sources.append({
+        'source': source_name,
+        'count': len(source_rows),
+        'article_count': sum(
+            1 for row in source_rows if row.get('content_status') != 'registry'
+        ),
+        'captured_text_count': sum(
+            1 for row in source_rows if catalogue_row_has_captured_text(row)
+        ),
+        'metadata_only_count': sum(
+            1 for row in source_rows if not catalogue_row_has_captured_text(row)
+        ),
+        'registry_count': sum(
+            1 for row in source_rows if row.get('content_status') == 'registry'
+        ),
+        'latest': {
+            'title': str(latest_row.get('title') or ''),
+            'date': str(latest_row.get('post_date') or ''),
+            'url': str(latest_row.get('url') or ''),
+            'content_status': str(latest_row.get('content_status') or ''),
+            'audience': str(latest_row.get('audience') or ''),
+        } if latest_row else None,
+    })
+catalogue_sources_json = json_for_script(catalogue_sources)
 revision_meta = html_lib.escape(site_revision, quote=True)
 checksum_meta = html_lib.escape(
     str(snapshot_manifest.get('data_checksum') or ''), quote=True,
@@ -817,20 +898,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     try { window.top.location.replace(window.self.location.href); } catch (_error) {}
     throw new Error('Navnoor Research Archive cannot run inside a frame');
   }
-  try {
-    var themeRevision = '__THEME_REVISION__';
-    var storedRevision = localStorage.getItem('nrt-theme-revision');
-    var sameRevision = storedRevision === themeRevision || storedRevision === 'editorial-brief-2026-07';
-    var candidate = sameRevision ? localStorage.getItem('nrt-theme') : '';
-    var stored = candidate === 'light' || candidate === 'dark' ? candidate : '';
-    var theme = stored || 'light';
-    localStorage.setItem('nrt-theme-revision',themeRevision);
-    document.documentElement.dataset.theme = theme;
-    document.getElementById('theme-color').content = theme === 'light' ? '__LIGHT_THEME_BG__' : '__DARK_THEME_BG__';
-  } catch (_error) {
-    document.documentElement.dataset.theme = 'light';
-    document.getElementById('theme-color').content = '__LIGHT_THEME_BG__';
-  }
+  var themeRevision = '__THEME_REVISION__';
+  var candidate = '';
+  try { candidate = localStorage.getItem('nrt-theme') || ''; } catch (_error) {}
+  var stored = candidate === 'light' || candidate === 'dark' ? candidate : '';
+  var systemDark = Boolean(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  var theme = stored || (systemDark ? 'dark' : 'light');
+  document.documentElement.dataset.theme = theme;
+  document.getElementById('theme-color').content = theme === 'light' ? '__LIGHT_THEME_BG__' : '__DARK_THEME_BG__';
+  try { localStorage.setItem('nrt-theme-revision',themeRevision); } catch (_error) {}
 })();
 </script>
 <style>
@@ -838,143 +914,150 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 html,body,h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}
 button,input,select,textarea{font:inherit}
 :root{
-  --header-h:72px;
-  --kpi-h:46px;
+  --header-h:68px;
+  --kpi-h:56px;
   --brief-compact-nav-h:89px;
-  --rail-w:224px;
-  --inspector-w:384px;
+  --rail-w:240px;
+  --inspector-w:408px;
   --bg:__DARK_THEME_BG__;
-  --surface-1:#0b0d0e;
-  --surface-2:#101315;
-  --surface-3:#171b1e;
-  --surface-raised:#1d2226;
-  --line:#2c3439;
-  --line-strong:#4e5b62;
-  --control-line:#6c7b83;
-  --control-line-hover:#91a1aa;
-  --text:#f4f6f7;
-  --text-secondary:#c6ced3;
-  --text-muted:#98a4ab;
-  --accent:#62c8ff;
-  --accent-strong:#d88900;
-  --accent-hover:#f0a000;
-  --accent-active:#bd7800;
-  --accent-soft:#102936;
-  --on-accent:#080909;
-  --positive:#29d391;
-  --positive-soft:#0c2a20;
-  --positive-line:#238f65;
-  --negative:#ff756e;
-  --negative-soft:#321514;
-  --negative-line:#a84542;
-  --warning:#ffbe3d;
-  --warning-soft:#2d220b;
-  --warning-line:#9a6e11;
-  --relative:#c39bff;
-  --relative-soft:#251a38;
-  --relative-line:#7053a5;
-  --long-short:#e48bd2;
-  --long-short-soft:#30172d;
-  --long-short-line:#8f4f83;
-  --long:#4cc9f0;
-  --long-soft:#0c2831;
-  --long-line:#2d809a;
-  --short:#ff7aa2;
-  --short-soft:#321824;
-  --short-line:#a84464;
-  --quant:#28d7e5;
-  --quant-soft:#0b292c;
-  --quant-line:#18818a;
-  --number:#ffc857;
-  --number-soft:#2d230d;
-  --number-line:#9b7424;
-  --checkpoint:#b7a7ff;
-  --source-substack:#ff8b48;
-  --source-medium:#a6b2b8;
-  --brick:#ffb000;
-  --brick-soft:#2a210d;
-  --brick-line:#8f6500;
-  --ochre:#ffbe3d;
-  --ochre-soft:#2d220b;
-  --green:#29d391;
-  --green-soft:#0c2a20;
-  --focus:#54c8ff;
-  --selected:#2a210d;
-  --selected-line:#ffb000;
-  --selection-bg:#775600;
+  --surface-1:#0f1620;
+  --surface-2:#151e2a;
+  --surface-3:#1d2937;
+  --surface-raised:#223043;
+  --line:#2a394b;
+  --line-strong:#43566c;
+  --control-line:#687b92;
+  --control-line-hover:#8ea1b7;
+  --text:#eef3f8;
+  --text-secondary:#b8c4d0;
+  --text-muted:#8fa0b3;
+  --accent:#78a9ff;
+  --accent-strong:#78a9ff;
+  --accent-hover:#94bbff;
+  --accent-active:#5f95ef;
+  --accent-soft:#172b49;
+  --on-accent:#08111d;
+  --positive:#5dd6a0;
+  --positive-soft:#123126;
+  --positive-line:#3c9c73;
+  --negative:#ff8a85;
+  --negative-soft:#3a2022;
+  --negative-line:#bc625f;
+  --warning:#f4bf60;
+  --warning-soft:#332814;
+  --warning-line:#9f7935;
+  --relative:#b3a7ff;
+  --relative-soft:#282442;
+  --relative-line:#756bb2;
+  --long-short:#e2a0d8;
+  --long-short-soft:#352238;
+  --long-short-line:#98668f;
+  --long:#72c7e8;
+  --long-soft:#16303a;
+  --long-line:#4b8ba3;
+  --short:#ff9bb6;
+  --short-soft:#3b222c;
+  --short-line:#b86780;
+  --quant:#67d1dc;
+  --quant-soft:#153238;
+  --quant-line:#438e96;
+  --number:#f1c76e;
+  --number-soft:#342b19;
+  --number-line:#9f803e;
+  --checkpoint:#b3bde0;
+  --source-substack:#e89c63;
+  --source-medium:#9eacba;
+  --source-patreon:#d0a3ff;
+  --source-fxempire:#f0c16e;
+  --brick:#78a9ff;
+  --brick-soft:#172b49;
+  --brick-line:#4d75ae;
+  --ochre:#f4bf60;
+  --ochre-soft:#332814;
+  --green:#5dd6a0;
+  --green-soft:#123126;
+  --focus:#9bc1ff;
+  --selected:#172b49;
+  --selected-line:#78a9ff;
+  --selection-bg:#315d9f;
   --selection-text:#ffffff;
-  --backdrop:rgba(0,0,0,.84);
-  --shadow:0 24px 68px rgba(0,0,0,.72);
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
-  --serif:"Helvetica Neue",Arial,Helvetica,sans-serif;
+  --backdrop:rgba(3,8,14,.76);
+  --shadow:0 24px 64px rgba(0,0,0,.42);
+  --shadow-soft:0 8px 24px rgba(0,0,0,.18);
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:14px;
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  --serif:ui-serif,"Iowan Old Style",Charter,Baskerville,Georgia,"Times New Roman",serif;
   --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
 }
 html[data-theme="light"]{
   color-scheme:light;
   --bg:__LIGHT_THEME_BG__;
-  --surface-1:#fffaf4;
-  --surface-2:#f7eee5;
-  --surface-3:#e9ddd1;
-  --surface-raised:#fffdf9;
-  --line:#d4c6b8;
-  --line-strong:#9b8775;
-  --control-line:#6a5a4f;
-  --control-line-hover:#443931;
-  --text:#28221f;
-  --text-secondary:#514741;
-  --text-muted:#665a52;
-  --accent:#075c63;
-  --accent-strong:#075c63;
-  --accent-hover:#034b52;
-  --accent-active:#003c43;
-  --accent-soft:#dcebea;
+  --surface-1:#ffffff;
+  --surface-2:#eef2f6;
+  --surface-3:#e3e9f0;
+  --surface-raised:#ffffff;
+  --line:#d7dde6;
+  --line-strong:#aeb8c5;
+  --control-line:#748296;
+  --control-line-hover:#526276;
+  --text:#142033;
+  --text-secondary:#405066;
+  --text-muted:#5b6a7c;
+  --accent:#174ea6;
+  --accent-strong:#174ea6;
+  --accent-hover:#123e84;
+  --accent-active:#0d326b;
+  --accent-soft:#e7eefb;
   --on-accent:#ffffff;
-  --positive:#28604b;
-  --positive-soft:#e1eee8;
-  --positive-line:#7fa393;
-  --negative:#96342d;
-  --negative-soft:#f4e3df;
-  --negative-line:#bd7d75;
-  --warning:#78500c;
-  --warning-soft:#f3ead5;
-  --warning-line:#a98b54;
-  --relative:#5c4f86;
-  --relative-soft:#eae6f2;
-  --relative-line:#968daf;
-  --long-short:#6d3f75;
-  --long-short-soft:#eee3f0;
-  --long-short-line:#a58aa9;
-  --long:#285e73;
-  --long-soft:#e1edf0;
-  --long-line:#789eaa;
-  --short:#7b4157;
-  --short-soft:#f1e4e9;
-  --short-line:#aa8292;
-  --quant:#075f69;
-  --quant-soft:#dfecee;
-  --quant-line:#739aa0;
-  --number:#6f5016;
-  --number-soft:#f2ead7;
-  --number-line:#aa9360;
-  --checkpoint:#4d5867;
-  --source-substack:#963d21;
-  --source-medium:#50595d;
-  --brick:#8b2f3d;
-  --brick-soft:#f1dfe3;
-  --brick-line:#b87a84;
-  --ochre:#78500c;
-  --ochre-soft:#f3ead5;
-  --green:#28604b;
-  --green-soft:#e1eee8;
-  --focus:#005f73;
-  --selected:#d8e5e3;
-  --selected-line:#075c63;
-  --selection-bg:#bdd8d1;
-  --selection-text:#28221f;
-  --backdrop:rgba(40,34,31,.38);
-  --shadow:0 18px 46px rgba(67,47,36,.18);
-  --sans:"Helvetica Neue",Arial,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --serif:"Iowan Old Style",IowanOldStyle,Baskerville,Georgia,"Times New Roman",Times,serif;
+  --positive:#14734b;
+  --positive-soft:#e7f3ed;
+  --positive-line:#76a58f;
+  --negative:#b33a36;
+  --negative-soft:#f8e9e7;
+  --negative-line:#c88783;
+  --warning:#815600;
+  --warning-soft:#f7efdc;
+  --warning-line:#b69a61;
+  --relative:#5d52a8;
+  --relative-soft:#eceaf7;
+  --relative-line:#9891c4;
+  --long-short:#754b78;
+  --long-short-soft:#f1e8f2;
+  --long-short-line:#ad8aaf;
+  --long:#29677d;
+  --long-soft:#e5f0f3;
+  --long-line:#82a8b5;
+  --short:#87465e;
+  --short-soft:#f4e8ed;
+  --short-line:#b78c9c;
+  --quant:#17656f;
+  --quant-soft:#e3f0f1;
+  --quant-line:#82a9ad;
+  --number:#73510f;
+  --number-soft:#f6eedb;
+  --number-line:#b29a63;
+  --checkpoint:#4f5e75;
+  --source-substack:#9a4a23;
+  --source-medium:#4e5b68;
+  --source-patreon:#7449a6;
+  --source-fxempire:#7e5a13;
+  --brick:#174ea6;
+  --brick-soft:#e7eefb;
+  --brick-line:#7d9cc9;
+  --ochre:#815600;
+  --ochre-soft:#f7efdc;
+  --green:#14734b;
+  --green-soft:#e7f3ed;
+  --focus:#174ea6;
+  --selected:#e7eefb;
+  --selected-line:#174ea6;
+  --selection-bg:#174ea6;
+  --selection-text:#ffffff;
+  --backdrop:rgba(20,32,51,.42);
+  --shadow:0 20px 52px rgba(20,32,51,.16);
+  --shadow-soft:0 6px 18px rgba(20,32,51,.10);
 }
 html[data-theme="dark"]{color-scheme:dark}
 html{background:var(--bg);color:var(--text);font:13px/1.45 var(--sans);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;accent-color:var(--accent-strong)}
@@ -1211,10 +1294,14 @@ body[data-view="structure"] .active-filters,
 body[data-view="structure"] .orphaned-queue,
 body[data-view="structure"] .table-command,
 body[data-view="structure"] .command-button[data-action="inspector"]{display:none}
-body[data-view="structure"] .workspace{grid-template-columns:minmax(0,1fr)}
+body[data-view="structure"] .workspace{
+  height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h));
+  grid-template-columns:minmax(0,1fr)
+}
 body[data-view="structure"] .filter-rail,body[data-view="structure"] .inspector{display:none}
 body[data-view="structure"] .main-panel{grid-column:1/-1}
 body[data-view="structure"] .global-search{display:none}
+body[data-view="structure"] #mobile-filter-button{display:none!important}
 body[data-view="structure"] .app-header{grid-template-columns:minmax(250px,330px) minmax(0,1fr)}
 body[data-view="structure"] .header-right{grid-column:2}
 .structure-wrap{max-width:1560px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
@@ -1237,7 +1324,7 @@ body[data-view="structure"] .header-right{grid-column:2}
 .desk-starts-label{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;
   color:var(--text-muted);margin-right:2px}
 .desk-start{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 9px;border-radius:0;
-  border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text);
+  border:1px solid var(--control-line);background:var(--surface-2);color:var(--text);
   font-size:11px;cursor:pointer}
 .desk-start:hover{border-color:var(--accent);color:var(--text)}
 .desk-start.active{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
@@ -1268,7 +1355,7 @@ body[data-view="structure"] .header-right{grid-column:2}
   color:var(--text-muted);min-width:150px}
 .structure-chips{display:flex;flex-wrap:wrap;gap:6px}
 .structure-chip{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 8px;border-radius:0;
-  border:1px solid var(--line-strong);background:var(--surface-2);color:var(--text-secondary);
+  border:1px solid var(--control-line);background:var(--surface-2);color:var(--text-secondary);
   font-size:11px;cursor:pointer}
 .structure-chip:hover{border-color:var(--control-line-hover);color:var(--text)}
 .structure-chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--text)}
@@ -1951,6 +2038,8 @@ body[data-view="briefing"] .briefing-shell{
 .source-badge::before{content:"";width:4px;height:4px;border-radius:50%;flex:0 0 auto}
 .source-substack::before{background:var(--source-substack)}
 .source-medium::before{background:var(--source-medium)}
+.source-patreon::before{background:var(--source-patreon)}
+.source-fxempire::before{background:var(--source-fxempire)}
 .instrument-primary{font:600 10px var(--mono);color:var(--text);text-transform:capitalize}
 .instrument-secondary{font-size:10px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .manager-name{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -2144,69 +2233,222 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .kpi-strip{background:var(--surface-2)}
 .kpi-item{border-right-color:var(--line)}
 
-/* Two purposeful visual modes: warm editorial paper and high-density terminal */
-html[data-theme="light"] .app-header{
-  border-top:3px solid var(--brick);border-bottom-color:var(--line-strong)
+/* One allocator-grade system. Theme changes color and elevation, never geometry. */
+.app-header{
+  border-top:3px solid var(--accent);border-bottom-color:var(--line);
+  box-shadow:var(--shadow-soft)
 }
-html[data-theme="light"] .brand-mark{
-  border-color:var(--brick);background:var(--brick);color:var(--surface-1)
+.brand-mark{
+  border-color:var(--accent);border-radius:var(--radius-md);background:var(--accent);
+  color:var(--on-accent);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)
 }
-html[data-theme="light"] .brand-name{font-weight:700;letter-spacing:-.02em}
-html[data-theme="light"] .brand-sub{color:var(--brick);font-family:var(--sans);font-weight:700}
-html[data-theme="light"] .kpi-strip{border-bottom:2px solid var(--text)}
-html[data-theme="light"] .table-head{border-top:1px solid var(--text);border-bottom-color:var(--text)}
-html[data-theme="light"] .intel-title,
-html[data-theme="light"] .ic-section-header h2,
-html[data-theme="light"] .ic-dossier-head h2,
-html[data-theme="light"] .ic-sheet-title,
-html[data-theme="light"] .record-title{font-family:var(--serif)}
-html[data-theme="light"] .intel-lead-inner{box-shadow:inset 0 3px var(--brick)}
+.brand-name{font-family:var(--sans);font-size:17px;font-weight:720;letter-spacing:-.025em}
+.brand-sub{color:var(--text-muted);font-family:var(--sans);font-size:10.5px;font-weight:650;letter-spacing:.08em}
+.global-search{
+  min-height:42px;border:1px solid var(--control-line);border-radius:var(--radius-md);
+  background:var(--surface-2);transition:border-color .15s,box-shadow .15s,background .15s
+}
+.global-search:focus-within{border-color:var(--accent);background:var(--surface-1);box-shadow:0 0 0 3px var(--accent-soft)}
+.search-glyph{left:12px;color:var(--accent)}
+#search{height:40px;border:0;background:transparent;padding-left:36px;font-size:13px}
+#search:focus,#search:focus-visible{border:0;background:transparent;box-shadow:none}
+.search-key{right:8px;border-color:var(--line-strong);border-radius:4px;background:var(--surface-1)}
+.utility-button,.command-button,.select-control,.load-more,.secondary-action{
+  border-radius:var(--radius-sm);font-family:var(--sans);font-size:11.5px
+}
+.utility-button{border-color:var(--control-line);background:var(--surface-1)}
+.command-bar{background:var(--surface-1);border-bottom-color:var(--line);padding-left:16px;padding-right:16px}
+.view-tabs{border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:3px;gap:2px}
+.view-tab{border-radius:5px;border:1px solid transparent;background:transparent;font-size:11.5px}
+.view-tab.active{border-bottom:3px solid var(--selected-line);background:var(--surface-raised);box-shadow:0 1px 3px rgba(0,0,0,.14);color:var(--text);font-weight:700}
+.facet-option,.facet-clear,.date-option,.manager-search,.preset-button,
+.select-control,.command-button,.filter-chip,.load-more,.row-open,.direction-badge,.source-badge,
+.coverage-badge,.evidence-flag,.workflow-badge,.related-idea,
+.workflow-panel,.workflow-field select,.workflow-field input,.workflow-field textarea,
+.workflow-gate,.orphaned-item,.provenance,.quant-block,.review-notice{border-radius:var(--radius-sm)}
+.facet-option.active,.facet-clear.active{box-shadow:inset 3px 0 var(--selected-line)}
+.record-title{font:700 21px/1.24 var(--sans);letter-spacing:-.02em}
+.inspector-section h3,.inspector-label{font-size:11px;letter-spacing:.08em}
+.kpi-strip{background:var(--surface-1);border-bottom-color:var(--line);box-shadow:inset 0 -1px var(--line)}
+.intel-title,.ic-section-header h2,.ic-dossier-head h2,.ic-sheet-title{font-family:var(--sans);font-weight:720}
+.intel-title{max-width:32ch;font-size:clamp(30px,2.25vw,39px);line-height:1.07;letter-spacing:-.035em}
+.ic-evidence-values span{font-family:var(--mono);color:var(--number)}
+.intel-side.ic-sheet{background:var(--surface-2)}
+.primary-action{border-radius:var(--radius-sm);font-family:var(--sans);font-size:11.5px;letter-spacing:0}
+.toast,.persistent-notice,dialog,.method-card{border-radius:var(--radius-md)}
+::-webkit-scrollbar-thumb{border-radius:999px}
 
-html[data-theme="dark"] .app-header{
-  border-top:3px solid var(--selected-line);border-bottom-color:var(--line-strong)
+/* Compact, never miniature. Mono remains limited to aligned data and provenance. */
+.freshness,.kpi-label,.kpi-detail,.rail-title,.filter-heading h2,.result-summary,
+.active-label,.context-metric span,.mix-legend,.structure-kicker,.structure-scope-field>span,
+.structure-memory-note,.desk-starts-label,.structure-control-label,.structure-panel h3,
+.structure-panel h4,.structure-tier,.structure-evidence-flag,.structure-passage-head,
+.ic-nav-index,.ic-sheet-label,.ic-authored,.source-tail,.cell-date,.record-id,
+.inspector-section h3,.workflow-field,.workflow-gate,.workflow-gate small,
+.table-head,.head-sort,.direction-badge,.source-badge,.coverage-badge,.evidence-flag{font-size:11px}
+.facet-option,.facet-clear,.date-option,.manager-search,.preset-button,.structure-summary,
+.structure-none,.structure-note,.structure-bars li,.structure-managers,.structure-evidence-row,
+.structure-related-row,.idea-context,.instrument-secondary,.manager-name,.article-subtitle,
+.inspector-section p,.brief-record-context,.ic-sheet-section .missing{font-size:11.5px}
+.structure-head h2{font-size:clamp(26px,2.2vw,34px);letter-spacing:-.035em}
+.structure-boundary{font-family:var(--sans);font-size:11.5px;line-height:1.55}
+.structure-scope-field input{font-size:14px}
+.structure-shell{padding:22px 24px 52px;background:var(--bg)}
+.structure-wrap{gap:16px}
+.structure-scope-grid{gap:12px;margin-top:16px}
+.structure-scope-field{gap:7px}
+.structure-scope-field input{min-height:48px;border-radius:var(--radius-md);background:var(--surface-1);box-shadow:var(--shadow-soft)}
+.desk-start,.desk-refine-toggle,.desk-active-filter,.structure-chip{border-radius:var(--radius-sm)}
+.structure-controls,.structure-panel,.structure-related,.structure-disclosure{border-radius:var(--radius-md)}
+.structure-panel{box-shadow:var(--shadow-soft)}
+.structure-workbench{gap:16px}
+.structure-panel-head{padding:14px 16px}
+.structure-diligence{top:16px}
+.brief-metric,.brief-card,.intel-side-card,.ic-evidence-card,.thread-passage-card,
+.research-map,.evidence-ledger-section,.ic-opening-claim,.ic-analysis-card,.ic-sheet-section{
+  border-radius:var(--radius-md)
 }
-html[data-theme="dark"] .brand-mark{
-  border-color:var(--selected-line);background:var(--selected-line);color:var(--on-accent)
+.bootstrap-card{border-radius:var(--radius-lg)}
+.bootstrap-status[data-state="error"] .bootstrap-card{border-color:var(--negative-line)}
+.bootstrap-status[data-state="error"] .bootstrap-kicker{color:var(--negative)}
+
+/* Principal landing brief */
+.desk-landing{display:grid;gap:16px}
+.desk-landing-hero{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end;
+  padding:24px 26px;border:1px solid var(--line);border-radius:var(--radius-lg);
+  background:linear-gradient(135deg,var(--surface-raised),var(--surface-1));box-shadow:var(--shadow-soft)
 }
-html[data-theme="dark"] .brand-name{
-  font:700 13px/1 var(--mono);letter-spacing:.045em;text-transform:uppercase
+.desk-landing-hero h3{max-width:880px;font-size:clamp(24px,2.3vw,36px);line-height:1.08;letter-spacing:-.038em}
+.desk-landing-hero p{max-width:78ch;margin-top:10px;color:var(--text-secondary);font-size:13px;line-height:1.6}
+.desk-release-pill{
+  min-width:220px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius-md);
+  background:var(--surface-2)
 }
-html[data-theme="dark"] .brand-sub{color:var(--accent);letter-spacing:.14em}
-html[data-theme="dark"] #search{
-  border:1px solid var(--line-strong);background:var(--surface-2);padding-left:34px
+.desk-release-pill span,.desk-release-pill small{display:block;color:var(--text-muted);font-size:11px}
+.desk-release-pill span{text-transform:uppercase;letter-spacing:.07em;font-weight:700}
+.desk-release-pill strong{display:block;margin:5px 0 3px;font-size:18px;letter-spacing:-.02em}
+.desk-owner-metrics{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;overflow:hidden;
+  border:1px solid var(--line);border-radius:var(--radius-md);background:var(--line);box-shadow:var(--shadow-soft)
 }
-html[data-theme="dark"] #search:focus{border-color:var(--selected-line);background:var(--surface-2)}
-html[data-theme="dark"] #search:focus-visible{box-shadow:inset 0 0 0 1px var(--selected-line)}
-html[data-theme="dark"] .search-glyph{left:11px;color:var(--accent)}
-html[data-theme="dark"] .search-key{right:8px;border-color:var(--control-line)}
-html[data-theme="dark"] .utility-button,
-html[data-theme="dark"] .view-tab,
-html[data-theme="dark"] .command-button,
-html[data-theme="dark"] .select-control{font-family:var(--mono);letter-spacing:.025em}
-html[data-theme="dark"] .kpi-strip{border-bottom:2px solid var(--selected-line)}
-html[data-theme="dark"] .kpi-value{color:var(--selected-line)}
-html[data-theme="dark"] .view-tab.active{color:var(--selected-line)}
-html[data-theme="dark"] .table-head{
-  border-bottom-color:var(--selected-line);box-shadow:inset 0 -1px var(--selected-line)
+.desk-owner-metrics>div{min-width:0;padding:15px 17px;background:var(--surface-1)}
+.desk-owner-metrics b{display:block;font:700 21px/1 var(--mono);letter-spacing:-.025em;color:var(--text)}
+.desk-owner-metrics span{display:block;margin-top:7px;font-size:11px;font-weight:700;color:var(--text-secondary)}
+.desk-owner-metrics small{display:block;margin-top:3px;overflow:hidden;text-overflow:ellipsis;color:var(--text-muted);font-size:10.5px;white-space:nowrap}
+.desk-landing-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(320px,.8fr);gap:16px;align-items:start}
+.desk-latest-panel,.desk-review-panel,.desk-source-panel{
+  overflow:hidden;border:1px solid var(--line);border-radius:var(--radius-lg);
+  background:var(--surface-1);box-shadow:var(--shadow-soft)
 }
-html[data-theme="dark"] .intel-title{
-  max-width:30ch;font-family:var(--sans);font-size:clamp(28px,2.1vw,36px);font-weight:700;
-  line-height:1.08;letter-spacing:-.024em
+.desk-landing-section-head{
+  min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:10px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)
 }
-html[data-theme="dark"] .ic-section-header h2,
-html[data-theme="dark"] .ic-dossier-head h2,
-html[data-theme="dark"] .ic-sheet-title,
-html[data-theme="dark"] .record-title{font-family:var(--sans);font-weight:700}
-html[data-theme="dark"] .ic-evidence-values span{font-family:var(--mono);color:var(--number)}
-html[data-theme="dark"] .intel-side.ic-sheet{background:var(--surface-2)}
-html[data-theme="dark"] .workflow-panel{border-top-color:var(--selected-line)}
-html[data-theme="dark"] .primary-action{font-family:var(--mono);letter-spacing:.025em}
-html[data-theme="dark"] .toast,
-html[data-theme="dark"] .persistent-notice,
-html[data-theme="dark"] dialog,
-html[data-theme="dark"] kbd,
-html[data-theme="dark"] .method-card{border-radius:0}
-html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-radius:0}
+.desk-landing-section-head span{display:block;color:var(--text-muted);font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.desk-landing-section-head h4{margin-top:2px;font-size:14px;letter-spacing:-.01em}
+.desk-latest-list{display:grid;grid-template-columns:1fr 1fr}
+.desk-latest-card{
+  min-width:0;min-height:168px;padding:16px;border:0;border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);background:var(--surface-1);color:var(--text);
+  text-align:left;cursor:pointer
+}
+.desk-latest-card:nth-child(2n+1):not(.featured){border-right:0}
+.desk-latest-card.featured{
+  grid-column:1/-1;min-height:210px;padding:22px 24px;
+  background:linear-gradient(135deg,var(--surface-1),var(--accent-soft))
+}
+.desk-latest-card:hover{background:var(--surface-2);box-shadow:inset 3px 0 var(--accent)}
+.desk-latest-meta{display:flex;flex-wrap:wrap;gap:5px 10px;color:var(--text-muted);font-size:10.5px}
+.desk-latest-meta span+span{padding-left:10px;border-left:1px solid var(--line)}
+.desk-latest-card h4{margin-top:11px;font-size:15px;line-height:1.28;letter-spacing:-.015em}
+.desk-latest-card.featured h4{max-width:30ch;font-size:24px;line-height:1.12;letter-spacing:-.035em}
+.desk-latest-card p{
+  display:-webkit-box;margin-top:8px;overflow:hidden;color:var(--text-secondary);font-family:var(--serif);
+  font-size:12.5px;line-height:1.55;-webkit-box-orient:vertical;-webkit-line-clamp:2
+}
+.desk-latest-card.featured p{max-width:80ch;font-size:13.5px;-webkit-line-clamp:3}
+.desk-latest-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:14px}
+.desk-latest-foot>b{flex:0 0 auto;color:var(--accent);font-size:11.5px}
+.desk-role-tags{display:flex;flex-wrap:wrap;gap:5px}
+.desk-role-tags span{
+  min-height:23px;display:inline-flex;align-items:center;padding:0 7px;border:1px solid var(--line-strong);
+  border-radius:999px;background:var(--surface-1);color:var(--text-secondary);font-size:10px
+}
+.desk-review-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+.desk-review-stats>div{padding:14px 15px;background:var(--surface-1)}
+.desk-review-stats dt{color:var(--text-muted);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.desk-review-stats dd{margin-top:5px;font:700 20px var(--mono);color:var(--text)}
+.desk-review-baseline{padding:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface-2)}
+.desk-review-baseline>strong{font-size:12px}
+.desk-review-baseline p{margin:5px 0 12px;color:var(--text-muted);font-size:11.5px;line-height:1.5}
+.desk-review-baseline>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.desk-operating-loop{list-style:none;display:grid;gap:0;margin:0;padding:0}
+.desk-operating-loop li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;padding:13px 16px;border-bottom:1px solid var(--line)}
+.desk-operating-loop li:last-child{border-bottom:0}
+.desk-operating-loop b{font:700 10.5px var(--mono);color:var(--accent)}
+.desk-operating-loop span{color:var(--text-muted);font-size:11.5px;line-height:1.45}
+.desk-operating-loop span strong{display:block;margin-bottom:2px;color:var(--text);font-size:12px}
+.desk-source-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.desk-source-card{min-width:0;padding:15px 16px;border-right:1px solid var(--line);background:var(--surface-1)}
+.desk-source-card:last-child{border-right:0}
+.desk-source-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.desk-source-status{font-size:10.5px;color:var(--negative)}
+.desk-source-status.ok{color:var(--positive)}
+.desk-source-status.degraded{color:var(--warning)}
+.desk-source-card>strong{display:block;margin-top:13px;font-size:14px}
+.desk-source-card>p{margin-top:3px;color:var(--text-muted);font-size:11px}
+.desk-source-card>.desk-source-provenance{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:10.5px;line-height:1.45}
+.desk-source-card>a{display:block;margin-top:12px;overflow:hidden;color:var(--text-secondary);font-size:11.5px;line-height:1.4;text-decoration:none}
+.desk-source-card>a:hover{color:var(--accent)}
+.desk-source-card>a span{display:block;margin-bottom:3px;color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+.ic-review-launcher{
+  margin-top:14px;padding:14px;border:1px solid var(--line-strong);
+  border-radius:var(--radius-md);background:var(--surface-1)
+}
+.ic-review-launcher>p{margin-top:8px;color:var(--text-secondary);font-size:11.5px;line-height:1.5}
+.ic-review-launcher>.secondary-action{width:100%;margin-top:12px}
+.ic-review-launcher>summary{
+  min-height:42px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  cursor:pointer;list-style:none
+}
+.ic-review-launcher>summary::-webkit-details-marker{display:none}
+.ic-review-launcher>summary strong,.ic-review-launcher>summary small{display:block}
+.ic-review-launcher>summary strong{font-size:12px}
+.ic-review-launcher>summary small{margin-top:2px;color:var(--text-muted);font-size:10.5px}
+.ic-review-launcher>summary>b{color:var(--accent);font:700 11px var(--mono)}
+.ic-review-passages{display:grid;gap:7px;margin-top:12px}
+.ic-review-passages>button{
+  width:100%;padding:11px;border:1px solid var(--line);border-radius:var(--radius-sm);
+  background:var(--surface-2);color:var(--text);text-align:left;cursor:pointer
+}
+.ic-review-passages>button:hover{border-color:var(--accent);background:var(--accent-soft)}
+.ic-review-passages>button>span{display:block;color:var(--text-muted);font-size:10px}
+.ic-review-passages>button>p{margin-top:5px;font-family:var(--serif);font-size:11.5px;line-height:1.48}
+.ic-review-passages>button>b{display:block;margin-top:7px;color:var(--accent);font-size:10.5px}
+.ic-review-boundary{padding-top:10px;border-top:1px solid var(--line);color:var(--text-muted)!important;font-size:10.5px!important}
+
+@media(max-width:1180px){
+  .desk-landing-grid{grid-template-columns:1fr}
+  .desk-source-grid{grid-template-columns:1fr 1fr}
+  .desk-source-card:nth-child(2){border-right:0}
+  .desk-source-card:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+@media(max-width:759px){
+  .desk-landing-hero{grid-template-columns:1fr;padding:18px}
+  .desk-release-pill{min-width:0}
+  .desk-owner-metrics{grid-template-columns:1fr 1fr}
+  .desk-latest-list{grid-template-columns:1fr}
+  .desk-latest-card,.desk-latest-card:nth-child(2n+1):not(.featured){border-right:0}
+  .desk-latest-card.featured{padding:18px}
+  .desk-latest-card.featured h4{font-size:21px}
+}
+@media(max-width:480px){
+  .desk-owner-metrics,.desk-source-grid{grid-template-columns:1fr}
+  .desk-source-card{border-right:0;border-bottom:1px solid var(--line)}
+  .desk-source-card:last-child{border-bottom:0}
+  .desk-landing-section-head{align-items:flex-start;flex-direction:column}
+}
 
 /* Overlays and feedback */
 .bootstrap-status{
@@ -2228,8 +2470,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-radius:0}
 .bootstrap-actions[hidden]{display:none}
 .bootstrap-actions a{display:inline-flex;align-items:center;min-height:38px}
 .bootstrap-no-js .bootstrap-actions a{min-height:44px}
-.bootstrap-status[data-state="error"] .bootstrap-card{border-color:var(--warning-line)}
-.bootstrap-status[data-state="error"] .bootstrap-kicker{color:var(--warning)}
+.bootstrap-status[data-state="error"] .bootstrap-card{border-color:var(--negative-line)}
+.bootstrap-status[data-state="error"] .bootstrap-kicker{color:var(--negative)}
 #application-shell[inert]{display:none}
 .drawer-backdrop{display:none}
 .toast{
@@ -2358,6 +2600,10 @@ noscript{display:block}
   .global-search{grid-column:1/-1;grid-row:2}
   #search{height:44px;padding-left:27px;font-size:16px}
   .utility-button{min-height:44px}
+  body[data-view="structure"]{--header-h:52px}
+  body[data-view="structure"] .app-header{height:52px;grid-template-columns:auto minmax(0,1fr);grid-template-rows:52px}
+  body[data-view="structure"] .brand{grid-column:1;grid-row:1}
+  body[data-view="structure"] .header-right{grid-column:2;grid-row:1}
 }
 @media(max-width:759px){
   :root{--header-h:104px;--kpi-h:42px}
@@ -2373,6 +2619,10 @@ noscript{display:block}
   #search{height:44px;padding-right:9px;font-size:16px}
   .header-right{grid-column:2/4;grid-row:1;gap:5px}
   .utility-button{min-width:44px;min-height:44px;padding:0 8px}
+  body[data-view="structure"]{--header-h:52px}
+  body[data-view="structure"] .app-header{height:52px;grid-template-columns:auto minmax(0,1fr);grid-template-rows:52px}
+  body[data-view="structure"] .brand{grid-column:1;grid-row:1}
+  body[data-view="structure"] .header-right{grid-column:2;grid-row:1}
   .facet-option,.facet-clear,.date-option,.manager-search,.preset-button{min-height:44px}
   .manager-search,.select-control,.workflow-field select,.workflow-field input,.workflow-field textarea{font-size:16px}
   .kpi-item{min-width:128px;padding:0 11px}
@@ -2492,6 +2742,12 @@ noscript{display:block}
   .orphaned-item{grid-template-columns:1fr}
 }
 @media(max-width:430px){
+  .freshness{width:18px;max-width:18px;gap:0;justify-content:center}
+  #freshness-state{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  #palette-button{font-size:0}
+  #palette-button .utility-key{margin-left:0;font-size:10px}
+  #theme-button{font-size:0}
+  #theme-button::before{content:"◐";font-size:15px;line-height:1}
   .command-button[data-action="copy-view"],.command-button[data-action="density"]{display:none}
   .view-tab{font-size:10px}
   .context-metric:nth-child(n+3){display:none}
@@ -2595,21 +2851,20 @@ noscript{display:block}
   @page{size:auto;margin:14mm}
   :root,html[data-theme="light"],html[data-theme="dark"]{
     color-scheme:light;
-    --bg:#ffffff!important;--surface-1:#ffffff!important;--surface-2:#f7eee5!important;
-    --surface-3:#e9ddd1!important;--surface-raised:#ffffff!important;
-    --line:#d4c6b8!important;--line-strong:#8f7c6c!important;--control-line:#6a5a4f!important;
-    --control-line-hover:#443931!important;--text:#28221f!important;--text-secondary:#514741!important;
-    --text-muted:#665a52!important;--accent:#075c63!important;--accent-strong:#075c63!important;
-    --brick:#8b2f3d!important;--brick-soft:#f1dfe3!important;--brick-line:#b87a84!important;
-    --positive:#28604b!important;--warning:#78500c!important;
-    --ochre:#78500c!important;--number:#6f5016!important;--number-soft:#f2ead7!important;
-    --number-line:#aa9360!important;--checkpoint:#4d5867!important;--selected:#d8e5e3!important;
-    --selected-line:#075c63!important;--shadow:none!important;
-    --serif:"Iowan Old Style",IowanOldStyle,Baskerville,Georgia,"Times New Roman",Times,serif!important
+    --bg:#ffffff!important;--surface-1:#ffffff!important;--surface-2:#eef2f6!important;
+    --surface-3:#e3e9f0!important;--surface-raised:#ffffff!important;
+    --line:#d7dde6!important;--line-strong:#aeb8c5!important;--control-line:#748296!important;
+    --control-line-hover:#526276!important;--text:#142033!important;--text-secondary:#405066!important;
+    --text-muted:#5b6a7c!important;--accent:#174ea6!important;--accent-strong:#174ea6!important;
+    --brick:#174ea6!important;--brick-soft:#e7eefb!important;--brick-line:#7d9cc9!important;
+    --positive:#14734b!important;--warning:#815600!important;
+    --ochre:#815600!important;--number:#73510f!important;--number-soft:#f6eedb!important;
+    --number-line:#b29a63!important;--checkpoint:#4f5e75!important;--selected:#e7eefb!important;
+    --selected-line:#174ea6!important;--shadow:none!important;--shadow-soft:none!important
   }
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#111!important}
   .skip-link,.app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar,.active-filters,.context-bar,.inspector,
-  .drawer-backdrop,.intel-head,.ic-compact-nav,.ic-archive-grid,.intel-stream,.intel-actions,.ic-sheet-local,.ic-sheet-actions,.thread-topic-list,.thread-load-boundary .secondary-action,.premium-access,.toast,.persistent-notice,.storage-alert{display:none!important}
+  .drawer-backdrop,.intel-head,.ic-compact-nav,.ic-archive-grid,.intel-stream,.intel-actions,.ic-sheet-local,.ic-sheet-actions,.ic-review-launcher,.thread-topic-list,.thread-load-boundary .secondary-action,.premium-access,.toast,.persistent-notice,.storage-alert{display:none!important}
   .workspace,.main-panel,.briefing-shell{display:block!important;height:auto!important;overflow:visible!important;background:#fff!important}
   .briefing-shell{padding:0!important}
   .intel-wrap{display:flex!important;flex-direction:column!important;width:100%;min-height:0;padding:0}
@@ -2643,7 +2898,7 @@ noscript{display:block}
   .ic-sheet-section h3,.ic-sheet-section>p,.ic-sheet-section>.source-tail,.ic-sheet-section>.ic-sheet-checkpoint{grid-column:auto!important}
   .ic-sheet-checkpoint{display:block!important;break-inside:avoid;border-color:#bbb!important}
   .ic-sheet-checkpoint time{color:#4d5867!important}
-  .ic-sheet-title,.ic-sheet-section h3{color:#28221f!important}
+  .ic-sheet-title,.ic-sheet-section h3{color:#142033!important}
   mark{background:transparent!important;color:#111!important;font-weight:700}
 }
 @media(prefers-contrast:more){
@@ -2707,14 +2962,14 @@ noscript{display:block}
     <div class="brand-mark" aria-hidden="true">NA</div>
     <div>
       <div class="brand-name">Navnoor Research Archive</div>
-      <div class="brand-sub">Published research index</div>
+      <div class="brand-sub">Source-bound research intelligence</div>
     </div>
   </div>
   <div class="global-search">
     <label class="sr-only" for="search">Search passage, organization, person, market, or article</label>
     <span class="search-glyph" aria-hidden="true">⌕</span>
     <input id="search" type="search" autocomplete="off" spellcheck="false" maxlength="300"
-      placeholder="Search passage, organization, person, market…" aria-keyshortcuts="Alt+/">
+      placeholder="Search by subject, entity, passage, or article…" aria-keyshortcuts="Alt+/">
     <span class="search-key" aria-hidden="true">Alt /</span>
   </div>
   <div class="header-right">
@@ -2722,7 +2977,7 @@ noscript{display:block}
     <button class="utility-button header-library" type="button" data-view="research">Index</button>
     <button class="utility-button" id="palette-button" type="button" aria-label="Open command palette" aria-keyshortcuts="Control+K Meta+K">Command <span class="utility-key" aria-hidden="true">⌘K</span></button>
     <button class="utility-button" id="method-button" type="button" aria-label="Show data methodology">Method</button>
-    <button class="utility-button" id="theme-button" type="button" aria-label="Switch to dark theme">Dark</button>
+    <button class="utility-button" id="theme-button" type="button" aria-label="Switch to dark theme">Dark mode</button>
     <button class="utility-button" id="shortcut-button" type="button" aria-label="Show keyboard shortcuts" aria-keyshortcuts="Alt+Shift+?">?</button>
     <button class="utility-button" id="mobile-filter-button" type="button" aria-expanded="false" aria-controls="filter-rail">Filters</button>
   </div>
@@ -2766,7 +3021,7 @@ noscript{display:block}
       <div class="filter-heading"><h2 id="preset-filter-label">Research triage</h2></div>
       <div class="preset-list">
         <button class="preset-button" type="button" data-preset="recent">Recent high-context passages</button>
-        <button class="preset-button" type="button" data-preset="new">New since last review</button>
+        <button class="preset-button" type="button" data-preset="new">Recent · 7 days</button>
         <button class="preset-button" type="button" data-preset="rv">Numeric relative value</button>
         <button class="preset-button" type="button" data-preset="entity">Organization or person</button>
       </div>
@@ -3274,6 +3529,7 @@ ARTICLES.forEach(hydrateEmbeddedArticle);
 const THREADS = __THREADS_JSON__;
 const RATE_CONTEXT = __RATE_CONTEXT_JSON__;
 const DESK_FACETS = __DESK_FACETS_JSON__;
+const CATALOGUE_SOURCES = __CATALOGUE_SOURCES_JSON__;
 const THREAD_ARTICLES = (function () {
   const rows = Object.create(null);
   Object.keys(THREADS.topics || {}).forEach(function (topicKey) {
@@ -3540,6 +3796,7 @@ const RESTORE_ROLLBACK_KEY = 'nrt-decision-queue-restore-rollback-v1';
 const LEGACY_LOCAL_WORKFLOW_KEYS = ['nrt-decision-queue-v2','nrt-decision-queue-v1','nrt-saved-ideas'];
 const QUEUE_BOUNDARY_ACK_KEY = 'nrt-queue-session-boundary-v2';
 const REVIEWED_ARTICLE_IDS_KEY = 'nrt-reviewed-article-ids-v1';
+const REVIEWED_AT_KEY = 'nrt-reviewed-through-at-v1';
 const LEGACY_LAST_SEEN_KEY = 'nrt-last-seen-publication';
 
 function normalize(value) {
@@ -3596,7 +3853,12 @@ function directionClass(value) {
   return 'dir-unspecified';
 }
 function sourceLabel(value) {
-  return value === 'medium' ? 'Medium' : 'Substack';
+  return ({
+    substack:'Substack',
+    medium:'Medium',
+    patreon:'Patreon',
+    fxempire:'FX Empire'
+  })[value] || 'Unknown source';
 }
 function sourceModeLabel(value) {
   const labels = {
@@ -3678,6 +3940,35 @@ function safeUrl(value) {
     }
     const ownedPath = validSubstackPath || validMediumPath;
     return ownedPath ? url.href : '#';
+  } catch (_error) {
+    return '#';
+  }
+}
+function safeCatalogueUrl(value,source) {
+  if (source === 'substack' || source === 'medium') {
+    const ownedUrl = safeUrl(value);
+    if (ownedUrl === '#') return '#';
+    const url = new URL(ownedUrl);
+    const host = url.hostname.toLowerCase();
+    const isSubstack = (host === 'navnoorbawa.substack.com' ||
+      host === 'www.navnoorbawaresearch.com') && url.pathname.startsWith('/p/');
+    const isMedium = host === 'medium.com' && url.pathname.startsWith('/@navnoorbawa/');
+    return source === 'substack'
+      ? (isSubstack ? ownedUrl : '#')
+      : (isMedium ? ownedUrl : '#');
+  }
+  try {
+    const original = String(value || '');
+    const url = new URL(original);
+    const host = url.hostname.toLowerCase();
+    if (url.href !== original || url.protocol !== 'https:' ||
+        url.username || url.password || url.port || url.search || url.hash ||
+        /%(?:2f|5c)/i.test(url.pathname)) return '#';
+    const patreonPath = source === 'patreon' && host === 'www.patreon.com' &&
+      /^\/NavnoorBawa\/posts\/[A-Za-z0-9][A-Za-z0-9-]*-[0-9]+$/.test(url.pathname);
+    const fxEmpirePath = source === 'fxempire' && host === 'www.fxempire.com' &&
+      /^\/forecasts\/article\/[a-z0-9][a-z0-9-]*-[0-9]+$/.test(url.pathname);
+    return patreonPath || fxEmpirePath ? url.href : '#';
   } catch (_error) {
     return '#';
   }
@@ -4244,11 +4535,15 @@ const firstVisitCutoff = (function () {
 })();
 let reviewedArticleIds = new Set();
 let reviewBaselineExists = false;
+let reviewBaselineAt = '';
+let reviewBaselineUndo = null;
 try {
   const reviewedIds = JSON.parse(localStorage.getItem(REVIEWED_ARTICLE_IDS_KEY) || 'null');
   if (Array.isArray(reviewedIds)) {
     reviewedArticleIds = new Set(reviewedIds.map(String).filter(function (id) { return ARTICLE_BY_ID.has(id); }));
     reviewBaselineExists = true;
+    const storedReviewedAt = localStorage.getItem(REVIEWED_AT_KEY) || '';
+    if (storedReviewedAt && !Number.isNaN(new Date(storedReviewedAt).getTime())) reviewBaselineAt = storedReviewedAt;
   } else {
     const legacyLastSeen = localStorage.getItem(LEGACY_LAST_SEEN_KEY) || '';
     if (legacyLastSeen) {
@@ -5345,6 +5640,30 @@ function decisionSheetSectionMarkup(row,label) {
   return '<section class="ic-sheet-section"><div class="ic-sheet-label"><span>' + escapeHtml(label) + '</span><span class="ic-authored">Authored</span></div>' +
     (row.heading ? '<h3>' + escapeHtml(row.heading) + '</h3>' : '') + '<p>' + highlightArticleNumbers(row.span.text) + '</p>' + exactPassageTail(row.span) + '</section>';
 }
+function articleReviewLauncherMarkup(article) {
+  if (!article || !Number(article.trade_count || 0)) {
+    return '<section class="ic-review-launcher"><div class="ic-sheet-label"><span>Start local review</span><span class="ic-authored">Exact passage required</span></div><p class="missing">No parser-derived passage is attached to this article record. Use Passage Search to find a source-bound review anchor; no substitute passage is inferred.</p></section>';
+  }
+  if (!observationsReady) {
+    return '<section class="ic-review-launcher"><div class="ic-sheet-label"><span>Start local review</span><span class="ic-authored">Exact passage required</span></div><p>Load this release’s verified passage archive, then choose the exact published passage that should anchor the local review item.</p><button class="secondary-action" type="button" data-load-article-review="' +
+      escapeHtml(article.id) + '">' + (observationsFailed ? 'Retry passage archive' : 'Choose exact passage') + '</button></section>';
+  }
+  const candidates = article._ideas || [];
+  if (!candidates.length) {
+    return '<section class="ic-review-launcher"><div class="ic-sheet-label"><span>Start local review</span><span class="ic-authored">Exact passage required</span></div><p class="missing">The verified passage archive contains no reviewable passage for this article. No local item was created.</p></section>';
+  }
+  return '<details class="ic-review-launcher"><summary><span><strong>Start local review</strong><small>Choose one exact published passage</small></span><b>' +
+    number(candidates.length) + ' passage' + (candidates.length === 1 ? '' : 's') + '</b></summary><div class="ic-review-passages">' +
+    candidates.map(function (idea,index) {
+      const item = workflowItems.get(idea.id);
+      const active = item && item.status !== 'archived';
+      return '<button type="button" data-start-article-review="' + escapeHtml(idea.id) +
+        '" data-review-article="' + escapeHtml(article.id) + '"><span>Passage ' + number(index + 1) +
+        ' · parsed language: ' + escapeHtml(directionLabel(idea.direction)) + '</span><p>' +
+        escapeHtml(passageText(idea)) + '</p><b>' +
+        (active ? 'Open existing review' : 'Use as exact anchor') + ' →</b></button>';
+    }).join('') + '</div><p class="ic-review-boundary">Selecting a passage retains its exact source snapshot in this tab session. Hypothesis, contrary evidence, falsifier, ownership, and next action remain blank until entered by the analyst.</p></details>';
+}
 function briefRailMarkup(lenses,article) {
   const sourceSnapshot = SNAPSHOT.sources || {};
   const substackCount = Number(sourceSnapshot.substack && sourceSnapshot.substack.included_count || ARTICLES.filter(function (article) { return article.source === 'substack'; }).length);
@@ -5554,6 +5873,7 @@ function renderIntelligenceBrief(records) {
     '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">Source-defined challenges · source + local</span><span class="print-only">Source-defined challenges · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">Source-defined challenges</h2><p class="ic-sheet-intro"><span class="screen-only">The opening passage, countercase, falsifier, and implementation passages remain separate from tab-session workflow.</span><span class="print-only">Opening, countercase, falsifier, and implementation passages. Independent research remains required.</span></p>' +
       decisionSheetSectionMarkup(leadRow,'Opening authored passage') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase passage') + decisionSheetSectionMarkup(falsifierRow,'Author’s falsifier passage') + decisionSheetSectionMarkup(implementationRow,'Implementation passage') + checkpointSection +
       '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Tab-session local review</span><span class="ic-authored">Local · this tab</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active retained source-passage item' + (activePackets === 1 ? '' : 's') + ' whose captured article identity matches this article record. ' + escapeHtml(packetComparison) + ' The article record never treats them as current recommendations.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open local review</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy article record</button></div></section>' +
+      articleReviewLauncherMarkup(selected) +
       '<p class="ic-boundary-note">Evidence boundary: exact published-source passages; not independently verified, not a live market as-of, and not a portfolio recommendation. Full source context remains controlling.</p></div></aside>' +
     '<section class="ic-archive-grid" id="brief-archive">' + archiveCoverageMarkup(records) + relatedResearchMarkup(selected) + premiumArchiveMarkup(selected) + '</section>' +
     '<section class="intel-stream"><div class="intel-card-head"><h3>Recent articles</h3><span>' + number(records.length) + ' in this filter</span></div><div class="intel-stream-list">' + (stream || '<div class="intel-empty">No additional articles in this filter.</div>') + '</div></section></div>';
@@ -5650,6 +5970,9 @@ function filterLabel(facet,value) {
 }
 function renderActiveFilters() {
   const container = document.getElementById('active-filters');
+  const newFilterLabel = reviewBaselineExists ? 'New since last review' : 'Recent · 7 days';
+  const newPreset = document.querySelector('[data-preset="new"]');
+  if (newPreset) newPreset.textContent = newFilterLabel;
   const chips = [];
   [
     ['source',state.sources],['revision',state.revisions],['access',state.publicationAccess],['direction',state.directions],['instrument',state.instruments],
@@ -5663,7 +5986,7 @@ function renderActiveFilters() {
   if (state.range !== 'all') chips.push('<button class="filter-chip" type="button" data-remove-filter="range" data-value="' + state.range + '">' + filterLabel('range',state.range) + '<span class="chip-x">×</span></button>');
   if (state.view === 'research' && state.coverage !== 'all') chips.push('<button class="filter-chip" type="button" data-remove-filter="coverage" data-value="' + state.coverage + '">' + filterLabel('coverage',state.coverage) + '<span class="chip-x">×</span></button>');
   if (state.documentation !== 'all') chips.push('<button class="filter-chip" type="button" data-remove-filter="documentation" data-value="' + state.documentation + '">' + filterLabel('documentation',state.documentation) + '<span class="chip-x">×</span></button>');
-  if (state.newOnly) chips.push('<button class="filter-chip" type="button" data-remove-filter="new" data-value="1">New since last review<span class="chip-x">×</span></button>');
+  if (state.newOnly) chips.push('<button class="filter-chip" type="button" data-remove-filter="new" data-value="1">' + escapeHtml(newFilterLabel) + '<span class="chip-x">×</span></button>');
   state.queueStatuses.forEach(function (value) {
     chips.push('<button class="filter-chip" type="button" data-remove-filter="queue-status" data-value="' + value + '">' + filterLabel('queue-status',value) + '<span class="chip-x">×</span></button>');
   });
@@ -6761,6 +7084,149 @@ function deskNoteMarkdown(pattern, rows) {
     '\n\n---\n\nGenerated from snapshot ' + String(SNAPSHOT.data_checksum || '') +
     '. Published-research evidence only; no live holdings, pricing, sizing, P&L, or recommendation.\n';
 }
+function deskLatestArticleMarkup(article,index) {
+  const roles = [
+    ['evidence','Evidence passage'],
+    ['countercase','Countercase'],
+    ['falsifier','Falsifier'],
+    ['implementation','Implementation'],
+    ['checkpoint','Public checkpoint']
+  ].filter(function (row) {
+    return row[0] === 'checkpoint'
+      ? Number(article.brief_features && article.brief_features.checkpoint_count || 0) > 0
+      : articleHasBriefKind(article,row[0]);
+  }).map(function (row) {
+    return '<span>' + escapeHtml(row[1]) + '</span>';
+  }).join('');
+  const opening = boundedPromotionText(articleClaim(article),index === 0 ? 300 : 150);
+  return '<button class="desk-latest-card' + (index === 0 ? ' featured' : '') +
+    '" type="button" data-desk-article="' + escapeHtml(article.id) + '" aria-label="Open article record: ' +
+    escapeHtml(article.title) + '"><div class="desk-latest-meta"><time datetime="' +
+    escapeHtml(article.date) + '">' + escapeHtml(formatDate(article.date)) + '</time><span>' +
+    escapeHtml(sourceLabel(article.source)) + '</span><span>' + escapeHtml(sourceAccessLabel(article)) +
+    '</span></div><h4>' + escapeHtml(article.title) + '</h4>' +
+    (opening ? '<p>' + escapeHtml(opening) + '</p>' : '') +
+    '<div class="desk-latest-foot"><div class="desk-role-tags">' +
+    (roles || '<span>No classified research role captured</span>') + '</div><b>Open record <span aria-hidden="true">→</span></b></div></button>';
+}
+function snapshotFreshness() {
+  const sourceHealth = Object.values(SNAPSHOT.sources || {});
+  const checked = new Date(String(SNAPSHOT.checked_at || ''));
+  const nowMs = Date.now();
+  const futureToleranceMs = 10 * 60 * 1000;
+  const checkedMs = checked.getTime();
+  const manifestClockInvalid = Number.isNaN(checkedMs) || checkedMs > nowMs + futureToleranceMs;
+  const sourceClockInvalid = sourceHealth.some(function (source) {
+    const sourceCheckedMs = new Date(String(source && source.checked_at || '')).getTime();
+    return Number.isNaN(sourceCheckedMs) || sourceCheckedMs > nowMs + futureToleranceMs;
+  });
+  const ageHours = manifestClockInvalid ? Infinity : (nowMs - checkedMs) / 3600000;
+  const allHealthy = sourceHealth.length >= 2 && sourceHealth.every(function (source) {
+    return source.status === 'ok';
+  });
+  const className = manifestClockInvalid || sourceClockInvalid || ageHours > 16
+    ? 'stale' : allHealthy ? 'fresh' : sourceHealth.length ? 'degraded' : '';
+  return {
+    sourceHealth:sourceHealth,
+    manifestClockInvalid:manifestClockInvalid,
+    sourceClockInvalid:sourceClockInvalid,
+    className:className,
+    status:className === 'stale' ? 'Stale' : className === 'fresh' ? 'Current' :
+      className === 'degraded' ? 'Degraded' : 'Unknown'
+  };
+}
+function deskSourceCoverageMarkup(row) {
+  const health = SNAPSHOT.sources && SNAPSHOT.sources[row.source] || {};
+  const status = health.status === 'ok' ? 'Healthy' : health.status === 'degraded' ? 'Degraded' : 'Unavailable';
+  const latest = row.latest || null;
+  const latestUrl = latest ? safeCatalogueUrl(latest.url,row.source) : '#';
+  const coverage = [
+    row.captured_text_count ? countLabel(
+      row.captured_text_count,
+      'record with captured published text',
+      'records with captured published text'
+    ) : '',
+    row.metadata_only_count ? countLabel(
+      row.metadata_only_count,
+      'metadata-only record',
+      'metadata-only records'
+    ) : ''
+  ].filter(Boolean).join(' · ');
+  return '<article class="desk-source-card"><div class="desk-source-head"><span class="source-badge source-' +
+    escapeHtml(row.source) + '">' + escapeHtml(sourceLabel(row.source)) + '</span><b class="desk-source-status ' +
+    escapeHtml(health.status || 'error') + '">' + escapeHtml(status) + '</b></div><strong>' +
+    countLabel(row.count,'catalogue record') + '</strong><p>' + escapeHtml(coverage) + '</p>' +
+    '<p class="desk-source-provenance">Checked ' + escapeHtml(formatCheckedAt(health.checked_at)) +
+    ' · ' + escapeHtml(String(health.mode || 'mode unavailable').replace(/_/g,' ')) + '</p>' +
+    (latest && latestUrl !== '#' ? '<a href="' + escapeHtml(latestUrl) +
+      '" target="_blank" rel="noopener noreferrer"><span>Latest · ' +
+      escapeHtml(formatDate(String(latest.date || '').slice(0,10))) + '</span>' +
+      escapeHtml(latest.title || 'Open latest source record') + ' ↗</a>' : '') + '</article>';
+}
+function deskLandingMarkup() {
+  const latestArticles = ARTICLES.slice().sort(function (left,right) {
+    return String(right.published_at || right.date).localeCompare(String(left.published_at || left.date)) ||
+      left.title.localeCompare(right.title);
+  }).slice(0,5);
+  const activeReview = Array.from(workflowItems.values()).filter(function (item) {
+    return item.status !== 'archived';
+  });
+  const overdue = activeReview.filter(reviewIsOverdue).length;
+  const highPriority = activeReview.filter(function (item) { return item.priority === 'high'; }).length;
+  const unassigned = activeReview.filter(function (item) { return !String(item.owner || '').trim(); }).length;
+  const newResearch = ARTICLES.filter(isNewArticle).length;
+  const newResearchLabel = reviewBaselineExists ? 'New since review' : 'Recent · 7 days';
+  const baselineLabel = reviewBaselineAt
+    ? 'Baseline set ' + formatCheckedAt(reviewBaselineAt)
+    : reviewBaselineExists ? 'Review baseline active' : 'No explicit review baseline';
+  const healthySources = CATALOGUE_SOURCES.filter(function (row) {
+    const source = SNAPSHOT.sources && SNAPSHOT.sources[row.source] || {};
+    return source.status === 'ok';
+  }).length;
+  const freshness = snapshotFreshness();
+  const capturedTextRecords = CATALOGUE_SOURCES.reduce(function (total,row) {
+    return total + Number(row.captured_text_count || 0);
+  },0);
+  return '<section class="desk-landing" aria-labelledby="desk-landing-title">' +
+    '<header class="desk-landing-hero"><div><div class="structure-kicker">Principal research brief</div>' +
+    '<h3 id="desk-landing-title">The archive, organized for a decision that must survive scrutiny.</h3>' +
+    '<p>Start with what is new, verify what the source actually says, and move only an exact published passage into local review. No position, performance, or confidence claim is inferred.</p></div>' +
+    '<div class="desk-release-pill"><span>Research through</span><strong>' +
+    escapeHtml(formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10))) +
+    '</strong><small>' + escapeHtml(freshness.status) + ' snapshot · ' + number(healthySources) + ' of ' +
+    number(CATALOGUE_SOURCES.length) + ' source adapters healthy</small><small>Checked ' +
+    escapeHtml(formatCheckedAt(SNAPSHOT.checked_at)) + '</small></div></header>' +
+    '<div class="desk-owner-metrics">' +
+      '<div><b>' + number(SNAPSHOT.catalog_count || ARTICLES.length) + '</b><span>Catalogue records</span><small>' +
+      number(capturedTextRecords) + ' with captured published text · ' + number(ARTICLES.length) + ' research records loaded</small></div>' +
+      '<div><b>' + number(DESK_FACETS.observation_count || 0) + '</b><span>Extracted passages</span><small>' +
+      number(DESK_FACETS.source_note_count || 0) + ' authored notes</small></div>' +
+      '<div><b>' + number(newResearch) + '</b><span>' + escapeHtml(newResearchLabel) + '</span><small>' +
+      escapeHtml(baselineLabel) + '</small></div>' +
+      '<div><b>' + number(activeReview.length) + '</b><span>Active local reviews</span><small>' +
+      number(overdue) + ' overdue · ' + number(highPriority) + ' high priority</small></div>' +
+    '</div>' +
+    '<div class="desk-landing-grid"><section class="desk-latest-panel"><div class="desk-landing-section-head">' +
+      '<div><span>Latest research</span><h4>Recent authored records</h4></div>' +
+      '<button class="text-button" type="button" data-view="research">Open Article Index</button></div>' +
+      '<div class="desk-latest-list">' + latestArticles.map(deskLatestArticleMarkup).join('') + '</div></section>' +
+      '<aside class="desk-review-panel"><div class="desk-landing-section-head"><div><span>Local research follow-ups</span>' +
+      '<h4>Local diligence state</h4></div><button class="text-button" type="button" data-view="queue">Open Local Review</button></div>' +
+      '<dl class="desk-review-stats"><div><dt>Active</dt><dd>' + number(activeReview.length) +
+      '</dd></div><div><dt>Overdue</dt><dd>' + number(overdue) + '</dd></div><div><dt>High priority</dt><dd>' +
+      number(highPriority) + '</dd></div><div><dt>Unassigned</dt><dd>' + number(unassigned) + '</dd></div></dl>' +
+      '<div class="desk-review-baseline"><strong>Research intake baseline</strong><p>' +
+      escapeHtml(baselineLabel) + '. Acknowledgement is device-local and never changes the published record.</p>' +
+      '<div><button class="secondary-action" type="button" data-action="mark-reviewed">Mark loaded research records reviewed</button>' +
+      (reviewBaselineUndo ? '<button class="text-button" type="button" data-action="undo-mark-reviewed">Undo</button>' : '') +
+      '</div></div><ol class="desk-operating-loop"><li><b>01</b><span><strong>Frame</strong>Keep the human research question separate from literal retrieval.</span></li>' +
+      '<li><b>02</b><span><strong>Verify</strong>Read exact passages, capture limits, and contrary material.</span></li>' +
+      '<li><b>03</b><span><strong>Retain</strong>Anchor one passage and keep all judgment analyst-authored.</span></li></ol></aside></div>' +
+    '<section class="desk-source-panel"><div class="desk-landing-section-head"><div><span>Catalogue coverage</span>' +
+      '<h4>All publication sources</h4></div><a class="text-button" href="data/manifest.json">Open release manifest</a></div>' +
+      '<div class="desk-source-grid">' + CATALOGUE_SOURCES.map(deskSourceCoverageMarkup).join('') + '</div></section>' +
+    '</section>';
+}
 function renderStructureDesk(rows, gate) {
   const shell = document.getElementById('structure-shell');
   const defined = structureSetupDefined();
@@ -6901,7 +7367,7 @@ function renderStructureDesk(rows, gate) {
       countLabel(deskUniverseTotal(),'extracted passage') + ' · ' +
       countLabel(DESK_FACETS.full_current_note_count || 0,'full/current note') + ' · ' +
       countLabel(outcomeTotal(),'detected outcome / P&amp;L phrase') +
-      '. The broader index contains ' + countLabel(ARTICLES.length,'body-backed article') +
+      '. The broader index contains ' + countLabel(ARTICLES.length,'loaded research record') +
       '; the public catalogue contains ' + countLabel(SNAPSHOT.catalog_count || ARTICLES.length,'record') + '.</p>' +
       '<button class="secondary-action" type="button" data-view="research">Open Article Index</button></div>' +
     (state.structureMacro && pattern.priced
@@ -6933,20 +7399,18 @@ function renderStructureDesk(rows, gate) {
       : '<p class="structure-none">No primary evidence set can be formed. Related article-text mentions, if any, remain separated below and do not enter the snapshot.</p>') +
     '</section>';
   const startState = !gate && !defined
-    ? '<section class="desk-start-state"><div class="desk-start-copy"><div class="structure-kicker">No search subject defined</div>' +
-      '<h3>Start with a published-research subject</h3><p>Enter a literal subject such as an underlying, firm, or strategy. The desk requires every material term, clusters captured passages by authored note, separates loose mentions, and exposes the exact source and missing context before any local handoff.</p></div>' +
-      '<div class="desk-start-steps"><div class="desk-start-step"><b>01 Scope</b><span>Frame the analyst question separately from deterministic retrieval.</span></div><div class="desk-start-step"><b>02 Verify</b><span>Read exact passages, capture limits, and parser warnings.</span></div><div class="desk-start-step"><b>03 Hand off</b><span>Anchor one exact passage; human research fields remain blank.</span></div></div></section>'
+    ? deskLandingMarkup()
     : '';
   shell.innerHTML = '<div class="structure-wrap">' +
-    '<header class="structure-head"><div class="structure-title-row"><div><div class="structure-kicker">Published-source discovery</div><h2>Published Passage Search</h2></div>' +
-    '<p class="structure-boundary">Builds a local review item—not an investment recommendation or portfolio decision. No live holdings, prices, P&amp;L, sizing, exposure, liquidity, or compliance approval.</p></div>' +
+    '<header class="structure-head"><div class="structure-title-row"><div><div class="structure-kicker">Source-bound decision support</div><h2>Passage Search</h2></div>' +
+    '<p class="structure-boundary">Build an evidence packet from exact published passages. Portfolio data, live markets, performance, sizing, and approvals are not connected.</p></div>' +
     '<div class="structure-scope-grid"><label class="structure-scope-field"><span>Research question · local input</span>' +
       '<input id="structure-question-input" type="text" maxlength="180" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="Non-confidential question for local review" value="' +
       escapeHtml(state.structureQuestion) + '"></label>' +
       '<label class="structure-scope-field"><span>Search subject · literal all-term retrieval</span>' +
       '<input id="structure-focus-input" type="search" maxlength="120" spellcheck="false" autocorrect="off" autocapitalize="off" placeholder="Underlying, firm, or strategy — e.g. VIX, S&amp;P 500, JGB" value="' +
       escapeHtml(state.structureFocus) + '" autocomplete="off"></label></div>' +
-    '<p class="structure-memory-note">Both fields stay in page memory. Copy view explicitly creates a bounded URL; do not enter confidential research or position information.' +
+    '<p class="structure-memory-note">Private working state · both fields stay in page memory. Copy view is the only action that creates a bounded URL. Do not enter confidential or position information.' +
       (state.structureFocus ? ' Required retrieval terms: ' +
         escapeHtml(structureFocusTokens().join(' + ')) + '.' : '') + '</p>' +
     startChips + '</header>' + refineBar +
@@ -6955,7 +7419,7 @@ function renderStructureDesk(rows, gate) {
     '<p class="structure-disclosure"><strong>Evidence boundary.</strong> Passage Search covers ' +
     number(deskUniverseTotal()) + ' extracted passages clustered into ' +
     number(DESK_FACETS.source_note_count || 0) + ' authored notes; the broader library contains ' +
-    number(ARTICLES.length) + ' body-backed articles and the public catalogue contains ' +
+    number(ARTICLES.length) + ' loaded research records and the public catalogue contains ' +
     number(SNAPSHOT.catalog_count || ARTICLES.length) + ' records. Instrument fields are lexical source mentions, not validated legs. Related subsequent notes are article-topic links, not outcomes. Only ' +
     number(outcomeTotal()) + ' passages contain a detected outcome / P&amp;L phrase requiring source review. This is not a backtest, realised P&amp;L, or a recommendation.</p></div>';
   shell.dataset.statusAnnouncement = gate
@@ -7064,11 +7528,18 @@ function setInertState(element,hidden) {
   if (hidden) element.setAttribute('aria-hidden','true');
   else element.removeAttribute('aria-hidden');
 }
+function viewHasResearchDrawers() {
+  return state.view !== 'structure' && state.view !== 'briefing';
+}
 function syncOverlayAccessibility() {
   const filtersNarrow = window.innerWidth <= 1020;
   const inspectorNarrow = window.innerWidth <= 1240;
-  const filtersOpen = filtersNarrow && document.body.classList.contains('filters-open');
-  const inspectorOpen = inspectorNarrow && document.body.classList.contains('inspector-open');
+  const filtersAvailable = viewHasResearchDrawers();
+  const inspectorAvailable = viewHasResearchDrawers();
+  if (!filtersAvailable) document.body.classList.remove('filters-open');
+  if (!inspectorAvailable) document.body.classList.remove('inspector-open');
+  const filtersOpen = filtersAvailable && filtersNarrow && document.body.classList.contains('filters-open');
+  const inspectorOpen = inspectorAvailable && inspectorNarrow && document.body.classList.contains('inspector-open');
   const overlayOpen = filtersOpen || inspectorOpen;
   setInertState(document.querySelector('.app-header'),overlayOpen);
   setInertState(document.querySelector('.kpi-strip'),overlayOpen);
@@ -7079,7 +7550,7 @@ function syncOverlayAccessibility() {
   );
   setInertState(
     document.getElementById('inspector'),
-    inspectorOpen ? false : inspectorNarrow || !state.inspector || filtersOpen
+    inspectorOpen ? false : !inspectorAvailable || inspectorNarrow || !state.inspector || filtersOpen
   );
   const filterRail = document.getElementById('filter-rail');
   const inspector = document.getElementById('inspector');
@@ -7344,6 +7815,56 @@ function toggleSaved(id) {
   } else if (restoreRow) {
     focusSelectedRow();
   }
+}
+function startArticlePassageReview(id,articleId) {
+  const idea = IDEA_BY_ID.get(id);
+  if (!idea || idea.article_id !== articleId || state.view !== 'briefing' || state.selected !== articleId) {
+    showToast('Exact article-passage ownership could not be verified');
+    return;
+  }
+  const existing = workflowItems.get(id);
+  if (existing) {
+    const retained = existing.source_snapshot;
+    const current = sourceSnapshotForIdea(id,false);
+    if (!retained || !current || retained.article_id !== articleId ||
+        retained.url !== current.url || retained.passage !== current.passage) {
+      showToast('Existing local review uses a different retained anchor; open it from Local Review');
+      return;
+    }
+  }
+  if (!existing && workflowItems.size >= MAX_QUEUE_ITEMS) {
+    showToast('Local review limit reached; back up and archive older items');
+    return;
+  }
+  if (!existing && !confirmQueueStorageBoundary()) return;
+  const restore = existing ? {status:existing.status,updated_at:existing.updated_at} : null;
+  if (existing) {
+    existing.status = existing.status === 'archived' ? 'review' : existing.status;
+    existing.updated_at = new Date().toISOString();
+  } else {
+    const item = newWorkflowItem(id);
+    if (!item) return;
+    workflowItems.set(id,item);
+  }
+  if (!persistWorkflow()) {
+    if (existing && restore) {
+      existing.status = restore.status;
+      existing.updated_at = restore.updated_at;
+    } else {
+      workflowItems.delete(id);
+    }
+    savedIdeas = new Set(workflowItems.keys());
+    render();
+    return;
+  }
+  savedIdeas = new Set(workflowItems.keys());
+  markMeaningfulNavigation();
+  state.view = 'queue';
+  state.selected = id;
+  state.sort = 'newest';
+  state.limit = PAGE_SIZE.queue;
+  renderObservationAwareNavigation('inspector');
+  showToast(existing ? 'Existing local review opened' : 'Exact passage retained for local review');
 }
 function clampWorkflowText(field,value) {
   const limit = WORKFLOW_TEXT_LIMITS[field] || 1000;
@@ -7667,18 +8188,71 @@ function applyPreset(name) {
   document.getElementById('search').value = '';
   renderObservationAwareNavigation('entry');
 }
-function markReviewedThroughLatest() {
+function commitReviewBaselineStorage(ids,at) {
+  let priorIds = null;
+  let priorAt = null;
+  let priorCaptured = false;
   try {
-    const currentIds = ARTICLES.map(function (article) { return article.id; });
-    localStorage.setItem(REVIEWED_ARTICLE_IDS_KEY,JSON.stringify(currentIds));
-    reviewedArticleIds = new Set(currentIds);
-    reviewBaselineExists = true;
-    state.newOnly = false;
-    render();
-    showToast(number(currentIds.length) + ' current research notes marked reviewed');
+    priorIds = localStorage.getItem(REVIEWED_ARTICLE_IDS_KEY);
+    priorAt = localStorage.getItem(REVIEWED_AT_KEY);
+    priorCaptured = true;
+    if (ids === null) localStorage.removeItem(REVIEWED_ARTICLE_IDS_KEY);
+    else localStorage.setItem(REVIEWED_ARTICLE_IDS_KEY,JSON.stringify(ids));
+    if (at) localStorage.setItem(REVIEWED_AT_KEY,at);
+    else localStorage.removeItem(REVIEWED_AT_KEY);
+    return true;
   } catch (_error) {
-    showToast('Review baseline could not be saved in this browser');
+    if (priorCaptured) {
+      try {
+        if (priorIds === null) localStorage.removeItem(REVIEWED_ARTICLE_IDS_KEY);
+        else localStorage.setItem(REVIEWED_ARTICLE_IDS_KEY,priorIds);
+        if (priorAt === null) localStorage.removeItem(REVIEWED_AT_KEY);
+        else localStorage.setItem(REVIEWED_AT_KEY,priorAt);
+      } catch (_rollbackError) {}
+    }
+    return false;
   }
+}
+function renderCommittedReviewBaseline(successMessage) {
+  try {
+    render();
+  } catch (_error) {
+    showToast('Review baseline saved. Reload this page to refresh the visible intake state.');
+    return;
+  }
+  showToast(successMessage);
+}
+function markReviewedThroughLatest() {
+  const currentIds = ARTICLES.map(function (article) { return article.id; });
+  const nextUndo = {
+    ids:Array.from(reviewedArticleIds),
+    exists:reviewBaselineExists,
+    at:reviewBaselineAt
+  };
+  const nextAt = new Date().toISOString();
+  if (!commitReviewBaselineStorage(currentIds,nextAt)) {
+    showToast('Review baseline could not be saved in this browser');
+    return;
+  }
+  reviewBaselineUndo = nextUndo;
+  reviewBaselineAt = nextAt;
+  reviewedArticleIds = new Set(currentIds);
+  reviewBaselineExists = true;
+  state.newOnly = false;
+  renderCommittedReviewBaseline(number(currentIds.length) + ' current research notes marked reviewed');
+}
+function undoReviewedThroughLatest() {
+  if (!reviewBaselineUndo) return;
+  const target = reviewBaselineUndo;
+  if (!commitReviewBaselineStorage(target.exists ? target.ids : null,target.at)) {
+    showToast('Previous review baseline could not be restored');
+    return;
+  }
+  reviewedArticleIds = new Set(target.ids);
+  reviewBaselineExists = target.exists;
+  reviewBaselineAt = target.at;
+  reviewBaselineUndo = null;
+  renderCommittedReviewBaseline('Previous research-review baseline restored');
 }
 function downloadLocalFile(blob,filename) {
   const url = URL.createObjectURL(blob);
@@ -7933,6 +8507,44 @@ document.addEventListener('click',function (event) {
   }
   if (noticeAction && noticeAction.dataset.noticeAction === 'backup-queue') {
     backupQueue();
+    return;
+  }
+  const deskArticle = event.target.closest('[data-desk-article]');
+  if (deskArticle) {
+    const article = ARTICLE_BY_ID.get(deskArticle.dataset.deskArticle);
+    if (!article) return;
+    markMeaningfulNavigation();
+    state.view = 'briefing';
+    state.selected = article.id;
+    state.threadTopic = '';
+    state.limit = PAGE_SIZE.briefing;
+    renderObservationAwareNavigation('entry');
+    return;
+  }
+  const loadArticleReview = event.target.closest('[data-load-article-review]');
+  if (loadArticleReview) {
+    const articleId = loadArticleReview.dataset.loadArticleReview;
+    if (state.view !== 'briefing' || state.selected !== articleId || !ARTICLE_BY_ID.has(articleId)) return;
+    loadArticleReview.disabled = true;
+    loadArticleReview.setAttribute('aria-busy','true');
+    const request = observationsFailed ? retryObservations() : loadObservations();
+    request.then(function () {
+      if (state.view !== 'briefing' || state.selected !== articleId) return;
+      render();
+      const firstPassage = document.querySelector('[data-review-article="' + CSS.escape(articleId) + '"]');
+      if (firstPassage) firstPassage.focus();
+    }).catch(function () {
+      if (state.view === 'briefing' && state.selected === articleId) render();
+      showToast('Verified passage archive could not be loaded');
+    });
+    return;
+  }
+  const startArticleReview = event.target.closest('[data-start-article-review]');
+  if (startArticleReview) {
+    startArticlePassageReview(
+      startArticleReview.dataset.startArticleReview,
+      startArticleReview.dataset.reviewArticle
+    );
     return;
   }
   const retryObservationButton = event.target.closest('[data-retry-observations]');
@@ -8340,6 +8952,8 @@ document.addEventListener('click',function (event) {
       if (persistWorkflow()) showToast('Local Review saved in this tab session');
     } else if (action.dataset.action === 'mark-reviewed') {
       markReviewedThroughLatest();
+    } else if (action.dataset.action === 'undo-mark-reviewed') {
+      undoReviewedThroughLatest();
     } else if (action.dataset.action === 'inspector') {
       if (window.innerWidth <= 1240) {
         const wasOpen = document.body.classList.contains('inspector-open');
@@ -8536,13 +9150,27 @@ document.getElementById('load-more').addEventListener('click',function () {
   state.limit += PAGE_SIZE[state.view];
   renderRows(filteredRecords());
 });
-document.getElementById('mobile-filter-button').addEventListener('click',function () {
+function toggleResearchFilters(invoker) {
+  if (!viewHasResearchDrawers()) {
+    closeDrawers();
+    document.getElementById('announcer').textContent = 'Research filters are not used in this view';
+    if (invoker && typeof invoker.focus === 'function') invoker.focus();
+    return;
+  }
+  if (window.innerWidth > 1020) {
+    closeDrawers();
+    document.getElementById('manager-search').focus();
+    return;
+  }
   const open = !document.body.classList.contains('filters-open');
   document.body.classList.toggle('filters-open',open);
   document.body.classList.remove('inspector-open');
   syncOverlayAccessibility();
   if (open) document.getElementById('filter-close').focus();
-  else this.focus();
+  else if (invoker && typeof invoker.focus === 'function') invoker.focus();
+}
+document.getElementById('mobile-filter-button').addEventListener('click',function () {
+  toggleResearchFilters(this);
 });
 document.getElementById('filter-close').addEventListener('click',function () {
   closeDrawers();
@@ -8566,14 +9194,35 @@ document.getElementById('inspector-close').addEventListener('click',function () 
     document.querySelector('[data-action="inspector"]').focus();
   }
 });
-document.getElementById('theme-button').addEventListener('click',function () {
-  const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+function syncThemeButton(theme) {
+  const button = document.getElementById('theme-button');
+  const target = theme === 'light' ? 'dark' : 'light';
+  button.textContent = target === 'dark' ? 'Dark mode' : 'Light mode';
+  button.setAttribute('aria-label','Switch to ' + target + ' theme');
+  button.dataset.activeTheme = theme;
+}
+function applyTheme(next,persist) {
+  if (next !== 'light' && next !== 'dark') return;
   document.documentElement.dataset.theme = next;
   document.getElementById('theme-color').content = next === 'light' ? '__LIGHT_THEME_BG__' : '__DARK_THEME_BG__';
-  try { localStorage.setItem('nrt-theme',next); } catch (_error) {}
-  this.textContent = next === 'light' ? 'Dark' : 'Light';
-  this.setAttribute('aria-label','Switch to ' + (next === 'light' ? 'dark' : 'light') + ' theme');
+  if (persist) {
+    try { localStorage.setItem('nrt-theme',next); } catch (_error) {}
+  }
+  syncThemeButton(next);
+}
+document.getElementById('theme-button').addEventListener('click',function () {
+  const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+  applyTheme(next,true);
+  document.getElementById('announcer').textContent = (next === 'light' ? 'Light' : 'Dark') + ' theme active';
 });
+const systemThemeQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+if (systemThemeQuery && typeof systemThemeQuery.addEventListener === 'function') {
+  systemThemeQuery.addEventListener('change',function (event) {
+    let explicit = '';
+    try { explicit = localStorage.getItem('nrt-theme') || ''; } catch (_error) {}
+    if (explicit !== 'light' && explicit !== 'dark') applyTheme(event.matches ? 'dark' : 'light',false);
+  });
+}
 const shortcutDialog = document.getElementById('shortcut-dialog');
 const manualCopyDialog = document.getElementById('manual-copy-dialog');
 document.getElementById('shortcut-button').addEventListener('click',function () { shortcutDialog.showModal(); });
@@ -8860,17 +9509,7 @@ document.addEventListener('keydown',function (event) {
     }
   } else if (event.code === 'KeyF') {
     event.preventDefault();
-    if (window.innerWidth > 1020) {
-      document.getElementById('manager-search').focus();
-    } else {
-      const button = document.getElementById('mobile-filter-button');
-      const open = !document.body.classList.contains('filters-open');
-      document.body.classList.toggle('filters-open',open);
-      document.body.classList.remove('inspector-open');
-      syncOverlayAccessibility();
-      if (open) document.getElementById('filter-close').focus();
-      else button.focus();
-    }
+    toggleResearchFilters(document.activeElement);
   } else if (['Digit1','Digit2','Digit3','Digit4','Digit5'].includes(event.code)) {
     event.preventDefault();
     const viewNumber = event.code.slice(-1);
@@ -8962,26 +9601,15 @@ function renderStaticStats() {
     number(provenanceObservations.unverified) + ' unverified.';
   provenanceSummary.title = provenanceText;
   provenanceSummary.setAttribute('aria-label',provenanceText);
-  const sourceHealth = Object.values(SNAPSHOT.sources || {});
-  const checked = new Date(String(SNAPSHOT.checked_at || ''));
-  const nowMs = Date.now();
-  const futureToleranceMs = 10 * 60 * 1000;
-  const checkedMs = checked.getTime();
-  const manifestClockInvalid = Number.isNaN(checkedMs) || checkedMs > nowMs + futureToleranceMs;
-  const sourceClockInvalid = sourceHealth.some(function (source) {
-    const sourceCheckedMs = new Date(String(source && source.checked_at || '')).getTime();
-    return Number.isNaN(sourceCheckedMs) || sourceCheckedMs > nowMs + futureToleranceMs;
-  });
-  const ageHours = manifestClockInvalid ? Infinity : (nowMs - checkedMs) / 3600000;
-  const allHealthy = sourceHealth.length >= 2 && sourceHealth.every(function (source) { return source.status === 'ok'; });
-  const freshnessClass = manifestClockInvalid || sourceClockInvalid || ageHours > 16 ? 'stale' : allHealthy ? 'fresh' : sourceHealth.length ? 'degraded' : '';
-  const freshnessStatus = freshnessClass === 'stale' ? 'Stale' : freshnessClass === 'fresh' ? 'Current' : freshnessClass === 'degraded' ? 'Degraded' : 'Unknown';
+  const freshness = snapshotFreshness();
+  const freshnessClass = freshness.className;
+  const freshnessStatus = freshness.status;
   const dot = document.getElementById('freshness-dot');
   dot.className = 'status-dot' + (freshnessClass ? ' ' + freshnessClass : '');
   document.getElementById('freshness-state').textContent = freshnessStatus;
   const label = document.getElementById('freshness-label');
-  label.textContent = (manifestClockInvalid || sourceClockInvalid ? 'Refresh clock invalid · ' : '') + 'Research through ' + formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10)) + ' · checked ' + formatCheckedAt(SNAPSHOT.checked_at);
-  const healthDetail = ['substack','medium'].map(function (source) {
+  label.textContent = (freshness.manifestClockInvalid || freshness.sourceClockInvalid ? 'Refresh clock invalid · ' : '') + 'Research through ' + formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10)) + ' · checked ' + formatCheckedAt(SNAPSHOT.checked_at);
+  const healthDetail = ['substack','medium','patreon','fxempire'].map(function (source) {
     const info = SNAPSHOT.sources && SNAPSHOT.sources[source] || {};
     return sourceLabel(source) + ': ' + (info.status || 'unknown') + ', ' + number(info.included_count || 0) + ' included, ' + (info.mode || 'mode unknown');
   }).join(' | ');
@@ -8989,9 +9617,7 @@ function renderStaticStats() {
   freshnessSummary.title = healthDetail + ' | Next scheduled checks: 9 AM, 1 PM, and 10 PM Asia/Kolkata';
   freshnessSummary.setAttribute('aria-label',freshnessStatus + '. ' + label.textContent + '. ' + healthDetail);
   const theme = document.documentElement.dataset.theme || 'light';
-  const themeButton = document.getElementById('theme-button');
-  themeButton.textContent = theme === 'light' ? 'Dark' : 'Light';
-  themeButton.setAttribute('aria-label','Switch to ' + (theme === 'light' ? 'dark' : 'light') + ' theme');
+  syncThemeButton(theme);
 }
 
 syncWorkflowStorageAlert();
@@ -9038,6 +9664,7 @@ HTML = (HTML_TEMPLATE
         .replace('__THREADS_JSON__', threads_json)
         .replace('__RATE_CONTEXT_JSON__', rate_context_json)
         .replace('__DESK_FACETS_JSON__', desk_facets_json)
+        .replace('__CATALOGUE_SOURCES_JSON__', catalogue_sources_json)
         .replace('__MANAGER_LABELS_JSON__', manager_labels_json)
         .replace('__SNAPSHOT_JSON__', snapshot_json)
         .replace('__MANAGER_BUTTONS__', manager_html)
@@ -9132,8 +9759,8 @@ web_manifest = json.dumps({
 }, ensure_ascii=False, indent=2) + '\n'
 favicon_svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 <rect width="64" height="64" rx="6" fill="{DARK_THEME_BG}"/>
-<rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#ffb000" stroke-width="2"/>
-<text x="32" y="39" fill="#f4f6f7" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">NA</text>
+<rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#78a9ff" stroke-width="2"/>
+<text x="32" y="39" fill="#eef3f8" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">NA</text>
 </svg>
 '''
 

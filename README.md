@@ -191,9 +191,18 @@ metrics without the connected books and records required to calculate them.
 
 ### Passage Search
 
-Passage Search starts empty and does not fetch the deferred observation archive
-until the reader defines a search subject or an explicit
-retrieval refinement. It separates two inputs with different responsibilities:
+Passage Search opens with a principal research brief assembled only from the
+validated release and local browser state: the latest authored records, exact
+catalogue and captured-text coverage, snapshot freshness, all four publication
+sources, and tab-local follow-ups. Before an explicit review baseline exists,
+the intake metric is labeled as the recent seven-day window; only a real
+baseline permits the label "New since review." Source-adapter health is kept
+separate from clock-aware snapshot freshness, so an old release cannot present
+itself as current merely because every adapter was healthy when checked.
+
+The principal brief does not fetch the deferred observation archive. Passage
+retrieval begins only when the reader defines a search subject or an explicit
+refinement. The desk separates two inputs with different responsibilities:
 **Research question** is local framing that stays in page memory during ordinary
 use and never changes retrieval; **Search subject** is a deterministic literal
 all-material-term search over the published corpus. Passage Search organizes
@@ -277,14 +286,15 @@ The article-record navigation remains complete when the desktop rail collapses,
 and the print/PDF layout preserves authored passages and public checkpoints
 while removing tab-session Local Review fields.
 
-The default Light theme uses a Financial Times-inspired editorial grammar:
-warm paper surfaces, dark ink, serif research headlines, claret hierarchy, and
-restrained teal interaction cues. Dark mode uses a high-density graphite
-grammar: near-black panes, square geometry, compact sans/monospace controls,
-amber command states, and cyan information cues. These are independent visual
-references only; the project does not copy either product or imply affiliation.
-Both modes use the same semantic data colors, text labels, focus treatment, and
-contrast gates.
+Light and dark modes are two palettes of one allocator-grade interface system.
+They share the same information architecture, typography, spacing, control
+geometry, selected-state indicators, semantic labels, focus treatment, and
+contrast gates; only color and elevation change. A first visit follows the
+operating-system preference before paint, while an explicit in-app choice is
+retained across releases. Light uses cool white and slate surfaces with navy
+actions; dark uses near-black navy and layered slate with the same action and
+semantic hierarchy. Print/PDF output always resolves to the tested light
+palette.
 
 Parsed Passages and the Article Index provide fast passage-level review.
 Directional labels describe parsed language, not an actor, verified position,
@@ -297,6 +307,13 @@ checkpoint, horizon, falsifier, owner, next action, review date, tags, memo, and
 timestamped research attestations. It deliberately omits analyst-confidence scoring,
 position or entry terms, payoff, execution/borrow/funding, portfolio-fit, and
 live risk fields.
+
+Article Record can begin that workflow without a detour: after the verified
+observation archive loads, it displays every eligible passage in full and asks
+the analyst to select one exact source anchor. The handoff validates article
+ownership, refuses a conflicting imported retained anchor, and rolls back a
+failed tab-session save. No passage is selected or truncated on the analyst's
+behalf.
 
 If a later extraction changes or removes the observation ID, the Local Review item
 remains visible with its retained source snapshot instead of silently

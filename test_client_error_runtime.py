@@ -153,6 +153,137 @@ for (const value of rejected) {
 '''
         )
 
+    def test_review_baseline_storage_and_memory_remain_coherent_on_failures(self):
+        functions = javascript_between(
+            'function commitReviewBaselineStorage(ids,at) {',
+            '\nfunction downloadLocalFile',
+        )
+        run_node(
+            r'''
+const REVIEWED_ARTICLE_IDS_KEY = 'reviewed-ids';
+const REVIEWED_AT_KEY = 'reviewed-at';
+const ARTICLES = [{id:'a1'},{id:'a2'}];
+const state = {newOnly:true};
+let reviewedArticleIds = new Set();
+let reviewBaselineExists = false;
+let reviewBaselineAt = '';
+let reviewBaselineUndo = null;
+let failure = '';
+let renderThrows = false;
+let toast = '';
+const stored = new Map();
+function maybeFail(operation,key) {
+  const label = operation + ':' + key;
+  if (failure === label) {
+    failure = '';
+    throw new Error('injected ' + label);
+  }
+}
+const localStorage = {
+  getItem:function (key) {
+    maybeFail('get',key);
+    return stored.has(key) ? stored.get(key) : null;
+  },
+  setItem:function (key,value) {
+    maybeFail('set',key);
+    stored.set(key,String(value));
+  },
+  removeItem:function (key) {
+    maybeFail('remove',key);
+    stored.delete(key);
+  }
+};
+function render() {
+  if (renderThrows) throw new Error('injected render failure');
+}
+function showToast(value) { toast = String(value); }
+function number(value) { return String(value); }
+function seed(ids,at,exists) {
+  stored.clear();
+  if (exists) stored.set(REVIEWED_ARTICLE_IDS_KEY,JSON.stringify(ids));
+  if (at) stored.set(REVIEWED_AT_KEY,at);
+  reviewedArticleIds = new Set(ids);
+  reviewBaselineExists = exists;
+  reviewBaselineAt = at;
+  reviewBaselineUndo = null;
+  state.newOnly = true;
+  failure = '';
+  renderThrows = false;
+  toast = '';
+}
+function assertIds(actual,expected,label) {
+  if (JSON.stringify(Array.from(actual)) !== JSON.stringify(expected)) {
+    throw new Error(label + ' memory IDs drifted');
+  }
+}
+function assertStored(ids,at,label) {
+  const storedIds = stored.has(REVIEWED_ARTICLE_IDS_KEY)
+    ? JSON.parse(stored.get(REVIEWED_ARTICLE_IDS_KEY)) : null;
+  const storedAt = stored.has(REVIEWED_AT_KEY) ? stored.get(REVIEWED_AT_KEY) : null;
+  if (JSON.stringify(storedIds) !== JSON.stringify(ids) || storedAt !== at) {
+    throw new Error(label + ' storage drifted');
+  }
+}
+'''
+            + functions
+            + r'''
+const oldIds = ['old'];
+const oldAt = '2026-08-20T00:00:00.000Z';
+for (const injected of [
+  'get:' + REVIEWED_ARTICLE_IDS_KEY,
+  'get:' + REVIEWED_AT_KEY,
+  'set:' + REVIEWED_ARTICLE_IDS_KEY,
+  'set:' + REVIEWED_AT_KEY
+]) {
+  seed(oldIds,oldAt,true);
+  failure = injected;
+  markReviewedThroughLatest();
+  assertStored(oldIds,oldAt,'mark ' + injected);
+  assertIds(reviewedArticleIds,oldIds,'mark ' + injected);
+  if (!reviewBaselineExists || reviewBaselineAt !== oldAt || reviewBaselineUndo !== null || !state.newOnly) {
+    throw new Error('mark ' + injected + ' changed in-memory baseline state');
+  }
+}
+
+for (const injected of [
+  'remove:' + REVIEWED_ARTICLE_IDS_KEY,
+  'remove:' + REVIEWED_AT_KEY
+]) {
+  seed(['a1','a2'],'2026-08-24T00:00:00.000Z',true);
+  reviewBaselineUndo = {ids:[],exists:false,at:''};
+  const pendingUndo = reviewBaselineUndo;
+  failure = injected;
+  undoReviewedThroughLatest();
+  assertStored(['a1','a2'],'2026-08-24T00:00:00.000Z','undo ' + injected);
+  assertIds(reviewedArticleIds,['a1','a2'],'undo ' + injected);
+  if (!reviewBaselineExists || reviewBaselineUndo !== pendingUndo) {
+    throw new Error('undo ' + injected + ' changed in-memory baseline state');
+  }
+}
+
+seed(oldIds,oldAt,true);
+renderThrows = true;
+markReviewedThroughLatest();
+assertStored(['a1','a2'],reviewBaselineAt,'mark render failure');
+assertIds(reviewedArticleIds,['a1','a2'],'mark render failure');
+if (!reviewBaselineExists || !reviewBaselineUndo || state.newOnly ||
+    !toast.startsWith('Review baseline saved.')) {
+  throw new Error('mark render failure split committed state');
+}
+
+seed(['a1','a2'],'2026-08-24T00:00:00.000Z',true);
+reviewBaselineUndo = {ids:oldIds,exists:true,at:oldAt};
+renderThrows = true;
+undoReviewedThroughLatest();
+assertStored(oldIds,oldAt,'undo render failure');
+assertIds(reviewedArticleIds,oldIds,'undo render failure');
+if (!reviewBaselineExists || reviewBaselineAt !== oldAt || reviewBaselineUndo !== null ||
+    !toast.startsWith('Review baseline saved.')) {
+  throw new Error('undo render failure split committed state');
+}
+'''
+        )
+
     def test_subscriber_conversion_is_source_exact_and_state_honest(self):
         functions = javascript_between(
             'function hasIndexedMemberPreview(article) {',

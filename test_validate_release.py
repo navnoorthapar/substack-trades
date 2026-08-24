@@ -330,7 +330,7 @@ class ReleaseValidatorTests(unittest.TestCase):
             )
 
         def mutate_manifest(payload):
-            expected = b'"theme_color": "#f2e8dd"'
+            expected = b'"theme_color": "#f4f6f8"'
             self.assertEqual(payload.count(expected), 1)
             return payload.replace(
                 expected,
@@ -339,9 +339,9 @@ class ReleaseValidatorTests(unittest.TestCase):
             )
 
         def mutate_favicon(payload):
-            expected = b'stroke="#ffb000"'
+            expected = b'stroke="#78a9ff"'
             self.assertEqual(payload.count(expected), 1)
-            return payload.replace(expected, b'stroke="#ffb001"', 1)
+            return payload.replace(expected, b'stroke="#78a9fe"', 1)
 
         for asset_name, transform in (
             ('robots.txt', mutate_robots),
