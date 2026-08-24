@@ -442,9 +442,10 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Article record · published information',
             'Opening authored passage',
             'Exact authored passage',
-            'How the argument works',
+            'Exact authored passages, organized by research role.',
+            'id="analysis-title">Evidence</h2>',
             'No analyst conclusion, score, or portfolio recommendation is inferred.',
-            'Source record and captured challenges',
+            'Risks, countercase &amp; checkpoints',
             'Captured section map',
             'Evidence ledger',
             'Detected numbers with their authored context',
@@ -665,12 +666,14 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             '--selected-line:#78a9ff',
             'One allocator-grade system. Theme changes color and elevation, never geometry.',
             '.desk-landing-hero{',
-            '.desk-owner-metrics{',
+            '.desk-proof-strip{',
+            '.desk-source-footer a{min-height:44px;display:inline-flex;align-items:center',
+            '.text-button,.filter-chip,.primary-action,.secondary-action,.inspector-close,.load-more{min-height:44px}',
             '.intel-title{',
             'var(--serif)',
             '.ic-rail{',
             '.intel-side.ic-sheet{',
-            '@media(max-width:1180px)',
+            '@media(max-width:1040px)',
             '@media(max-width:1020px)',
             '@media(max-width:899px)',
             '@media(max-width:759px)',
@@ -724,23 +727,30 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_principal_landing_surfaces_exact_release_review_and_source_state(self):
         for text in (
-            'Principal research brief',
-            'The archive, organized for a decision that must survive scrutiny.',
-            'Recent authored records',
-            'Local research follow-ups',
-            'Mark loaded research records reviewed',
-            'All publication sources',
-            'Open release manifest',
-            'No position, performance, or confidence claim is inferred.',
+            'Original markets research with the source trail attached.',
+            'Read the latest note',
+            'Get full research access',
+            'Latest research',
+            'What needs attention',
+            'Open local reviews',
+            'Mark current research reviewed',
+            'Search the archive',
+            'Company, market, strategy, or theme',
+            'Data health &amp; coverage',
+            'Coverage across Substack, Medium, Patreon, and FX Empire',
+            'Open verification record',
+            'Published-source research, not a recommendation or live portfolio view.',
             "const newResearchLabel = reviewBaselineExists ? 'New since review' : 'Recent · 7 days';",
             "const newFilterLabel = reviewBaselineExists ? 'New since last review' : 'Recent · 7 days';",
             "const freshness = snapshotFreshness();",
-            'source adapters healthy',
-            'No classified research role captured',
+            "const sourceRollupClass = healthySources === CATALOGUE_SOURCES.length",
+            'Sources healthy',
             'data-desk-article=',
+            'data-owner-search-form',
+            'data-owner-new-research',
             'data-action="mark-reviewed"',
             'data-action="undo-mark-reviewed"',
-            '}).slice(0,5);',
+            '}).slice(0,4);',
         ):
             self.assertIn(text, self.html)
 
@@ -792,6 +802,177 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         landing_end = self.html.index('\nfunction renderStructureDesk', landing_start)
         landing = self.html[landing_start:landing_end]
         self.assertNotIn('body-backed', landing)
+        self.assertEqual(landing.count('<input'), 1)
+        self.assertIn('id="owner-search-input"', landing)
+        self.assertIn('escapeHtml(SUBSCRIPTION_URL)', landing)
+        self.assertIn(
+            '<h1 id="desk-landing-title">Original markets research with the source trail attached.</h1>',
+            landing,
+        )
+        self.assertIn('<h2>Latest notes</h2>', landing)
+        self.assertIn('<h2>What needs attention</h2>', landing)
+        self.assertIn('target="_blank" rel="noopener noreferrer"', landing)
+        self.assertIn(
+            'aria-label="Get full Navnoor Research access (opens in a new tab)"',
+            landing,
+        )
+        self.assertNotIn('id="structure-question-input"', landing)
+        self.assertNotIn('id="structure-focus-input"', landing)
+        self.assertNotIn('desk-role-tags', landing)
+        self.assertNotIn('desk-operating-loop', landing)
+        self.assertIn('<details class="desk-source-panel">', landing)
+        self.assertIn("escapeHtml(sourceRollupClass)", landing)
+        self.assertIn('.desk-source-panel>summary>b.ok{color:var(--positive)}', self.html)
+        self.assertIn('.desk-source-panel>summary>b.degraded{color:var(--warning)}', self.html)
+        self.assertLess(
+            landing.index('Original markets research with the source trail attached.'),
+            landing.index('Search the archive'),
+        )
+        self.assertLess(
+            landing.index('Search the archive'),
+            landing.index('Data health &amp; coverage'),
+        )
+
+    def test_owner_search_progressively_opens_the_local_evidence_workspace(self):
+        handler_start = self.html.index("document.addEventListener('submit',function (event) {")
+        handler_end = self.html.index(
+            "\ndocument.addEventListener('click',function (event) {",
+            handler_start,
+        )
+        handler = self.html[handler_start:handler_end]
+        for text in (
+            "event.target.closest('[data-owner-search-form]')",
+            'event.preventDefault()',
+            ".replace(/\\s+/g,' ').trim().slice(0,120)",
+            'state.structureFocus = value',
+            "state.structureQuestion = ''",
+            'state.structureControlsOpen = false',
+            'state.structureShareable = false',
+            "state.structureAnchor = ''",
+            "state.structurePassage = ''",
+            "renderObservationAwareNavigation('entry')",
+            "document.getElementById('structure-focus-input')",
+        ):
+            self.assertIn(text, handler)
+        for forbidden in ('fetch(', 'localStorage', 'updateHash('):
+            self.assertNotIn(forbidden, handler)
+        self.assertGreaterEqual(
+            self.html.count(
+                "document.getElementById('structure-focus-input') || "
+                "document.getElementById('owner-search-input')"
+            ),
+            2,
+        )
+
+    def test_owner_navigation_clears_stale_workspace_and_archive_filters(self):
+        clear_start = self.html.index('function clearArchiveScope()')
+        clear_end = self.html.index('\nfunction resetFilters()', clear_start)
+        clear_scope = self.html[clear_start:clear_end]
+        for text in (
+            "state.query = ''",
+            'state.sources.clear()',
+            'state.revisions.clear()',
+            'state.publicationAccess.clear()',
+            'state.newOnly = false',
+            "state.briefLens = 'all'",
+            "state.structureQuestion = ''",
+            "state.structureFocus = ''",
+            "state.structureAnchor = ''",
+            "state.structurePassage = ''",
+            'state.structureShareable = false',
+        ):
+            self.assertIn(text, clear_scope)
+
+        latest_start = self.html.index(
+            "const deskArticle = event.target.closest('[data-desk-article]')"
+        )
+        latest_end = self.html.index(
+            "\n  const loadArticleReview = event.target.closest('[data-load-article-review]')",
+            latest_start,
+        )
+        latest_handler = self.html[latest_start:latest_end]
+        self.assertLess(
+            latest_handler.index('clearArchiveScope()'),
+            latest_handler.index("state.view = 'briefing'"),
+        )
+        self.assertLess(
+            latest_handler.index('state.selected = article.id'),
+            latest_handler.index("renderObservationAwareNavigation('entry')"),
+        )
+
+        view_start = self.html.index(
+            "const view = event.target.closest('button[data-view]')"
+        )
+        view_end = self.html.index(
+            "\n  const kpiView = event.target.closest('[data-kpi-view]')",
+            view_start,
+        )
+        view_handler = self.html[view_start:view_end]
+        self.assertIn(
+            "view.dataset.view === 'structure' || view.hasAttribute('data-owner-research')",
+            view_handler,
+        )
+        self.assertIn('clearArchiveScope()', view_handler)
+        self.assertIn('data-owner-research', self.html)
+        self.assertIn(
+            "document.getElementById('structure-focus-input') || "
+            "document.getElementById('owner-search-input') || "
+            "document.getElementById('search')",
+            self.html,
+        )
+
+        new_start = self.html.index('function openOwnerNewResearch()')
+        new_end = self.html.index('\nfunction openOwnerReview()', new_start)
+        new_handler = self.html[new_start:new_end]
+        for text in (
+            'const hasNewResearch = ARTICLES.some(isNewArticle)',
+            'clearArchiveScope()',
+            "state.view = 'research'",
+            'state.newOnly = hasNewResearch',
+            "state.sort = 'newest'",
+            "renderObservationAwareNavigation('entry')",
+        ):
+            self.assertIn(text, new_handler)
+        self.assertIn("newResearch ? 'Review' : 'Browse all'", self.html)
+
+        review_start = self.html.index('function openOwnerReview()')
+        review_end = self.html.index('\nfunction applyPreset', review_start)
+        review_handler = self.html[review_start:review_end]
+        for text in (
+            'clearArchiveScope()',
+            "state.view = 'queue'",
+            "new Set(['review','diligence','monitor'])",
+            "state.sort = 'newest'",
+            'state.limit = PAGE_SIZE.queue',
+            "renderObservationAwareNavigation('entry')",
+        ):
+            self.assertIn(text, review_handler)
+        self.assertNotIn("'archived'", review_handler)
+        self.assertIn('data-owner-review', self.html)
+
+    def test_owner_home_hides_workstation_chrome_until_a_search_is_submitted(self):
+        render_start = self.html.index('function renderStructureDesk(rows, gate)')
+        render_end = self.html.index('\nfunction render()', render_start)
+        render = self.html[render_start:render_end]
+        home_guard = render.index('if (!gate && !defined) {')
+        home_return = render.index('return;', home_guard)
+        self.assertIn(
+            "document.body.dataset.structureReady = 'false'",
+            render[home_guard:home_return],
+        )
+        self.assertIn(
+            "document.body.dataset.structureReady = 'true'",
+            render[home_return:],
+        )
+        for text in (
+            'body[data-view="structure"] .header-library,',
+            'body[data-view="structure"] #method-button,',
+            'body[data-view="structure"] #shortcut-button{display:none}',
+            'body[data-view="structure"][data-structure-ready="false"] .result-summary,',
+            'body[data-view="structure"][data-structure-ready="false"] .command-button[data-action="copy-view"],',
+            'body[data-view="structure"][data-structure-ready="false"] .command-button[data-action="export"]{display:none}',
+        ):
+            self.assertIn(text, self.html)
 
     def test_all_source_links_use_a_strict_source_specific_allowlist(self):
         match = re.search(r'const CATALOGUE_SOURCES = (.*?);\n', self.html)
@@ -831,7 +1012,11 @@ for (const [url,source] of rejected) {
             capture_output=True,
             text=True,
         )
-        self.assertIn('safeCatalogueUrl(latest.url,row.source)', self.html)
+        coverage_start = self.html.index('function deskSourceCoverageMarkup(row)')
+        coverage_end = self.html.index('\nfunction deskLandingMarkup()', coverage_start)
+        coverage = self.html[coverage_start:coverage_end]
+        self.assertNotIn('href=', coverage)
+        self.assertNotIn('latest.url', coverage)
         self.assertNotIn('safeUrl(latest.url)', self.html)
 
     def test_article_record_shows_every_exact_passage_before_local_review_handoff(self):
@@ -1727,10 +1912,12 @@ for (const [url,source] of rejected) {
             "if (facet === 'access') return [record._article.publication_access]",
             'Subscriber source · public preview indexed',
             'Subscriber source · metadata only · no anonymous body preview',
-            'Continue the complete research note',
+            'Unlock the full research',
             'Read full note on Substack ↗',
-            'See subscription plans ↗',
+            'Get full research access ↗',
+            'Already subscribed? Read the note ↗',
             'Related subscriber research',
+            'Pricing and terms are shown on Substack.',
             'This archive sends no search, filter, or local-review data.',
             'https://www.navnoorbawaresearch.com/subscribe',
             'rel="noopener noreferrer"',
@@ -1745,6 +1932,11 @@ for (const [url,source] of rejected) {
         self.assertIn('SUBSCRIPTION_URL', promotion)
         self.assertIn('hasIndexedMemberPreview(article)', promotion)
         self.assertIn('Published metadata', promotion)
+        self.assertLess(
+            promotion.index('SUBSCRIPTION_URL'),
+            promotion.index('safeUrl(article.url)'),
+            'the buying action should precede the returning-subscriber action',
+        )
         self.assertNotIn('utm_', promotion.lower())
         self.assertNotIn('trial', promotion.lower().split('review current price', 1)[0])
         self.assertIn(
@@ -2046,15 +2238,26 @@ for (const [url,source] of rejected) {
             self.html,
         )
 
-        # It leads every place a view is offered, not just the default state:
-        # a reader who sees it fifth reads it as an afterthought.
+        # The acquisition surface exposes only the three destinations an owner
+        # needs. The five internal routes remain stable for old links and
+        # keyboard users.
         order = re.findall(
             r'data-view="([a-z]+)" aria-keyshortcuts="Alt\+Shift\+(\d)"', self.html)
         self.assertEqual(
             order,
-            [('structure', '1'), ('briefing', '2'), ('ideas', '3'),
-             ('research', '4'), ('queue', '5')],
+            [('structure', '1'), ('research', '4'), ('queue', '5')],
         )
+        nav_start = self.html.index('<nav class="view-tabs"')
+        nav_end = self.html.index('</nav>', nav_start)
+        primary_nav = self.html[nav_start:nav_end]
+        self.assertEqual(
+            len(re.findall(r'<button class="view-tab(?: active)?"', primary_nav)),
+            3,
+        )
+        for label in ('>Home</button>', '>Research</button>', '>Review <span'):
+            self.assertIn(label, primary_nav)
+        self.assertNotIn('data-view="briefing"', primary_nav)
+        self.assertNotIn('data-view="ideas"', primary_nav)
         self.assertIn(
             "state.view = viewNumber === '1' ? 'structure'", self.html)
         for leading in (
@@ -2068,6 +2271,10 @@ for (const [url,source] of rejected) {
             "].includes(hashView) ? hashView : 'structure';", self.html)
         self.assertIn(
             "if (state.view !== 'structure') params.set('view',state.view);",
+            self.html,
+        )
+        self.assertIn(
+            "['briefing','ideas','research'].includes(state.view)",
             self.html,
         )
 
@@ -2149,7 +2356,10 @@ for (const [url,source] of rejected) {
             'data-structure-focus="',
             'data-structure-passage="',
             'data-structure-more="1"',
-            'Principal research brief',
+            'Original markets research with the source trail attached.',
+            'id="owner-search-input"',
+            'data-owner-search-form',
+            'Data health &amp; coverage',
             'Retrieved authored notes',
             'Local review handoff',
             'Related mentions — excluded from the evidence set',
@@ -2301,14 +2511,25 @@ for (const [url,source] of rejected) {
         render_end = self.html.index('\nfunction render()', render_start)
         render = self.html[render_start:render_end]
 
-        # Scope inputs and refinements precede a verbatim-evidence-first
-        # workbench; an undefined setup gets an explicit start state.
-        layout = render.index("startChips + '</header>' + refineBar +")
-        self.assertGreater(layout, 0)
-        self.assertIn("const startState = !gate && !defined", render)
+        # An undefined setup gets a concise owner landing and returns before
+        # the analyst controls are built. Only a submitted search opens the
+        # full evidence workspace.
+        home_guard = render.index('if (!gate && !defined) {')
+        home_return = render.index('return;', home_guard)
+        active_workspace = render.index('const sets = gate ?', home_return)
+        self.assertLess(home_guard, home_return)
+        self.assertLess(home_return, active_workspace)
         self.assertIn('deskLandingMarkup()', render)
-        self.assertIn('Principal research brief', self.html)
-        self.assertIn('Recent authored records', self.html)
+        landing_start = self.html.index('function deskLandingMarkup()')
+        landing_end = self.html.index('\nfunction renderStructureDesk', landing_start)
+        landing = self.html[landing_start:landing_end]
+        self.assertEqual(landing.count('<input'), 1)
+        self.assertIn('Original markets research with the source trail attached.', landing)
+        self.assertIn('Latest notes', landing)
+        self.assertIn('data-owner-search-form', landing)
+        self.assertIn('<details class="desk-source-panel">', landing)
+        self.assertNotIn('structure-question-input', landing)
+        self.assertNotIn('desk-starts', landing)
         self.assertIn("'<div class=\"structure-workbench\">' + comparablePanel + railPanel", render)
         self.assertIn('Verbatim evidence first', render)
 
@@ -2346,8 +2567,8 @@ for (const [url,source] of rejected) {
         self.assertRegex(
             self.html, r'body\[data-view="structure"\] \.kpi-strip')
 
-        # The recurring underlyings are how most readers begin, so they sit
-        # with the question rather than inside the refinements.
+        # Recurring underlyings remain available after a reader enters the
+        # evidence workspace, without crowding the acquisition landing.
         self.assertIn('desk-starts', render)
         self.assertIn('class="desk-start', render)
         self.assertIn("countLabel(row.notes,'authored note')", render)
@@ -2366,7 +2587,7 @@ for (const [url,source] of rejected) {
             'this test assumes outcomes are not universally recorded',
         )
         for text in (
-            'Build an evidence packet from exact published passages. Portfolio data, live markets, performance, sizing, and approvals are not connected.',
+            'Holdings, prices, valuation, liquidity, funding, portfolio constraints, compliance, and execution are outside this static desk.',
             'Instrument fields are lexical source mentions, not validated legs.',
             'Related subsequent notes are article-topic links, not outcomes.',
             'passages contain a detected outcome / P&amp;L phrase requiring source review.',

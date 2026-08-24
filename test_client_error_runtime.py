@@ -153,6 +153,80 @@ for (const value of rejected) {
 '''
         )
 
+    def test_owner_agenda_opens_only_real_new_and_active_review_sets(self):
+        is_new = javascript_between(
+            'function isNewArticle(article) {',
+            '\nfunction reviewFlagged',
+        )
+        clear_scope = javascript_between(
+            'function clearArchiveScope() {',
+            '\nfunction resetFilters()',
+        )
+        open_new = javascript_between(
+            'function openOwnerNewResearch() {',
+            '\nfunction openOwnerReview()',
+        )
+        open_review = javascript_between(
+            'function openOwnerReview() {',
+            '\nfunction applyPreset',
+        )
+        run_node(
+            r'''
+const ARTICLES = [
+  {id:'a1',date:'2026-08-23'},
+  {id:'a2',date:'2026-08-22'}
+];
+let reviewedArticleIds = new Set(['a1','a2']);
+let reviewBaselineExists = true;
+const firstVisitCutoff = '2026-08-01';
+const PAGE_SIZE = {research:100,queue:100};
+const state = {
+  view:'structure',sources:new Set(['substack']),revisions:new Set(['prior']),
+  directions:new Set(['long']),instruments:new Set(['equity']),
+  managers:new Set(['manager']),quality:new Set(['review']),
+  publicationAccess:new Set(['member']),content:new Set(['full']),
+  queueStatuses:new Set(['archived']),query:'stale',range:'30d',coverage:'ideas',
+  documentation:'triage',newOnly:true,sort:'oldest',selected:'stale',
+  threadTopic:'stale',limit:1
+};
+const fields = new Map([
+  ['search',{value:'stale'}],
+  ['manager-search',{value:'stale'}]
+]);
+const document = {
+  getElementById:function (id) { return fields.get(id); },
+  querySelectorAll:function () { return []; }
+};
+let renders = [];
+function renderObservationAwareNavigation(kind) { renders.push(kind); }
+'''
+            + is_new
+            + clear_scope
+            + open_new
+            + open_review
+            + r'''
+openOwnerNewResearch();
+if (state.view !== 'research' || state.newOnly || state.sort !== 'newest') {
+  throw new Error('zero-new owner agenda did not fall back to the full archive');
+}
+if (state.sources.size || state.revisions.size || state.query ||
+    fields.get('search').value || renders.at(-1) !== 'entry') {
+  throw new Error('owner research entry retained stale browse state');
+}
+
+reviewedArticleIds.delete('a2');
+openOwnerNewResearch();
+if (!state.newOnly) throw new Error('real new research was not isolated');
+
+state.queueStatuses = new Set(['archived']);
+openOwnerReview();
+if (state.view !== 'queue' || state.queueStatuses.has('archived') ||
+    JSON.stringify(Array.from(state.queueStatuses)) !== JSON.stringify(['review','diligence','monitor'])) {
+  throw new Error('owner review entry did not match the active-review count');
+}
+'''
+        )
+
     def test_review_baseline_storage_and_memory_remain_coherent_on_failures(self):
         functions = javascript_between(
             'function commitReviewBaselineStorage(ids,at) {',

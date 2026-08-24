@@ -145,11 +145,13 @@ contracts are in [SCHEMA.md](SCHEMA.md).
 ## Subscriber conversion
 
 Member-access research is promoted as source completeness, never as a simulated
-browser paywall. The archive keeps public research usable, distinguishes what
-the source permits from how much this release captured, and presents a
-contextual continuation panel only for a canonical paid Substack record. In the
-Passage Search, the same boundary appears once inside an expanded paid
-source note, at the point where the analyst has inspected its captured passage.
+browser paywall. The owner-first home links directly to the current Substack
+subscription terms and makes the latest published note the primary reading
+path. The archive keeps public research usable, distinguishes what the source
+permits from how much this release captured, and presents a contextual
+continuation panel only for a canonical paid Substack record. In the evidence
+workspace, the same boundary appears once inside an expanded paid source note,
+at the point where the analyst has inspected its captured passage.
 A non-empty panel passage is the exact anonymous source preview proven by the
 snapshot; a row without such a preview is labeled metadata-only. Each panel
 links to the exact article page and offers a separate no-tracking path to current
@@ -191,23 +193,24 @@ metrics without the connected books and records required to calculate them.
 
 ### Passage Search
 
-Passage Search opens with a principal research brief assembled only from the
-validated release and local browser state: the latest authored records, exact
-catalogue and captured-text coverage, snapshot freshness, all four publication
-sources, and tab-local follow-ups. Before an explicit review baseline exists,
-the intake metric is labeled as the recent seven-day window; only a real
-baseline permits the label "New since review." Source-adapter health is kept
-separate from clock-aware snapshot freshness, so an old release cannot present
-itself as current merely because every adapter was healthy when checked.
+Passage Search opens with an owner-first research home assembled only from the
+validated release and local browser state: one product promise, one featured
+note plus three compact recent rows, one archive search, a short review agenda,
+and collapsed coverage for all four publication sources. Before an explicit
+review baseline exists, the intake metric is labeled as the recent seven-day
+window; only a real baseline permits the label "New since review."
+Source-adapter health is kept separate from clock-aware snapshot freshness, so
+an old release cannot present itself as current merely because every adapter
+was healthy when checked.
 
-The principal brief does not fetch the deferred observation archive. Passage
-retrieval begins only when the reader defines a search subject or an explicit
-refinement. The desk separates two inputs with different responsibilities:
-**Research question** is local framing that stays in page memory during ordinary
-use and never changes retrieval; **Search subject** is a deterministic literal
-all-material-term search over the published corpus. Passage Search organizes
-that corpus for diligence; it does not infer a house view or turn a passage into
-a trade.
+The owner home does not fetch the deferred observation archive. Passage
+retrieval begins only when the reader submits its single search field. The
+expanded evidence workspace then separates two responsibilities: **Search the
+archive** is a deterministic literal all-material-term retrieval over the
+published corpus, while the optional **Local review question** is browser-local
+framing that never changes retrieval. Refinements remain closed until requested.
+Passage Search organizes the corpus for diligence; it does not infer a house
+view or turn a passage into a trade.
 
 Primary evidence is clustered by source note, so repeated captured passages
 from one article are not counted as independent sources. Every result reports
