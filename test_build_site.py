@@ -212,20 +212,28 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'nextMap.size !== expectedArticleById.size',
             'relevanceScoreCache = new WeakMap()',
             'Observation archive does not match this release',
-            'function fetchReleaseText(url,unavailableMessage)',
+            'async function fetchReleaseText(url,unavailableMessage)',
             'const controller = new AbortController()',
             'controller.abort()',
             'signal:controller.signal',
             "error.name === 'AbortError'",
             'request timed out',
             'clearTimeout(timeoutId)',
+            'const maximumAttempts = 3',
+            'status === 404 || status === 408 || status === 409',
+            'status === 425 || status === 429 || status >= 500',
+            'if (attempt < maximumAttempts) await releaseRetryDelay(attempt)',
             'function releaseMismatchError(message)',
             'function recoverFromStaleReleaseShell()',
+            'function releaseNavigationNonce()',
+            'function clearReleaseRecoveryMarkers()',
+            "'nrt_release','nrt_site_revision','nrt_catalog_recovery','nrt_reload'",
+            'function reloadLatestRelease()',
             "current.searchParams.get('nrt_catalog_recovery') === '1'",
-            "current.searchParams.set('nrt_release',token)",
+            "current.searchParams.set('nrt_site_revision',revision)",
             "current.searchParams.set('nrt_catalog_recovery','1')",
             'window.location.replace(current.href)',
-            'if (error && error.releaseMismatch) recoverFromStaleReleaseShell()',
+            'if (error && error.releaseMismatch && recoverFromStaleReleaseShell()) return',
         ):
             self.assertIn(required, self.html)
 
@@ -3044,6 +3052,20 @@ for (const [url,source] of rejected) {
         self.assertEqual(manifest['icons'][0]['src'], 'favicon.svg')
         self.assertEqual(manifest['background_color'], '#f5f3ee')
         self.assertEqual(manifest['theme_color'], '#f5f3ee')
+        not_found = (self.site_dir / '404.html').read_text(encoding='utf-8')
+        for token in (
+            '<meta name="robots" content="noindex,nofollow">',
+            '<title>Page not found — Navnoor Research Archive</title>',
+            'This page is not in the archive.',
+            'href="https://navnoorthapar.github.io/substack-trades/"',
+            'Return to the archive',
+            '@media (prefers-color-scheme:dark)',
+            'min-height:48px',
+            "default-src 'none'",
+        ):
+            self.assertIn(token, not_found)
+        self.assertNotIn('<script', not_found.casefold())
+        self.assertNotIn('GitHub', not_found)
         self.assertEqual(
             manifest['description'],
             'Original markets research with source-linked passages, publication '
@@ -3058,6 +3080,7 @@ for (const [url,source] of rejected) {
             self.site_dir / 'og-private-research-2026-08.jpg'
         ).read_bytes()
         self.assertTrue(social.startswith(b'\xff\xd8') and social.rstrip().endswith(b'\xff\xd9'))
+        self.assertEqual((self.site_dir / 'og.jpg').read_bytes(), social)
         self.assertLessEqual(len(social), 500_000)
         self.assertIn('no advertising, cookies, third-party analytics, session replay', self.html)
         self.assertIn('if (window.top !== window.self)', self.html)
@@ -3180,6 +3203,8 @@ for (const [url,source] of rejected) {
             'The release could not be verified. No partial or mismatched catalogue has been displayed.',
             "status.setAttribute('role','alert')",
             "document.getElementById('bootstrap-retry').addEventListener('click',startApplication)",
+            "document.getElementById('bootstrap-reload').addEventListener('click',reloadLatestRelease)",
+            'clearReleaseRecoveryMarkers()',
         ):
             self.assertIn(text, self.html)
 
@@ -3301,10 +3326,10 @@ for (const [url,source] of rejected) {
         artifact_files = [path for path in self.site_dir.rglob('*') if path.is_file()]
         slugs = {str(article['slug']) for article in self.source_articles}
         expected_files = {
-            'index.html', 'article_catalog.json', 'article_briefs.json',
+            'index.html', '404.html', 'article_catalog.json', 'article_briefs.json',
             'observations.json',
             'robots.txt', 'sitemap.xml', 'site.webmanifest',
-            'favicon.svg', 'og-private-research-2026-08.jpg',
+            'favicon.svg', 'og-private-research-2026-08.jpg', 'og.jpg',
             'data/articles_index.json', 'data/latest.json',
             'data/manifest.json', 'data/search_index.json',
             'data/related.json', 'data/families.json',

@@ -471,8 +471,17 @@ then publishes the exact tested artifact atomically and the post-deploy smoke
 test verifies HTTPS, revision, counts, snapshot checksum, the verified catalogue,
 the two independently recorded deferred-asset hashes, the exact HTML hash, the complete six-endpoint
 data bundle, and the discovery/social support assets before declaring it
-healthy. Artifact validation separately proves complete catalogue-to-card/stub
+healthy. That support proof includes the deterministic archive-owned
+`404.html`, an exact request to a nonexistent route that must retain HTTP 404
+semantics without exposing GitHub's generic error UI, and the legacy `og.jpg`
+compatibility alias. Artifact validation separately proves complete catalogue-to-card/stub
 coverage; the release checklist spot-checks representative pairs in production.
+Browser release-asset reads automatically retry only bounded transient network,
+timeout, required-asset 404, 408/409/425/429, and 5xx failures. Invalid-request
+or authorization responses and all integrity failures stay fail-closed. A
+failed side-effect-free catalogue read can be retried in place;
+once initialization begins, recovery requires the separate cache-busted clean
+document reload so listeners and local state cannot be installed twice.
 Deployable artifacts are retained for seven days. Each successful release also
 retains a separately attested rollback bundle for 90 days: exact site bytes,
 source JSON, tracked social image, release revision, all six fingerprints, and

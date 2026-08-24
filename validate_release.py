@@ -47,8 +47,10 @@ from validate_inline_scripts import validate_inline_scripts
 
 
 SOCIAL_IMAGE_NAME = 'og-private-research-2026-08.jpg'
+LEGACY_SOCIAL_IMAGE_NAME = 'og.jpg'
 CORE_ASSETS = frozenset((
     'index.html',
+    '404.html',
     'article_catalog.json',
     'article_briefs.json',
     'observations.json',
@@ -57,6 +59,7 @@ CORE_ASSETS = frozenset((
     'site.webmanifest',
     'favicon.svg',
     SOCIAL_IMAGE_NAME,
+    LEGACY_SOCIAL_IMAGE_NAME,
 ))
 EXPECTED_DIRECTORIES = frozenset(('a', 'cards', 'data'))
 FINGERPRINT_KEYS = (
@@ -684,7 +687,7 @@ def _validate_artifact_tree(
         'artifact directory set does not match a/, cards/, and data/',
     )
     _require(
-        len(files) == 15 + 2 * len(articles),
+        len(files) == 17 + 2 * len(articles),
         'artifact file count does not match its catalogue',
     )
     return files
@@ -860,6 +863,148 @@ def _sitemap_date(value: Any) -> str:
     return date
 
 
+def _expected_not_found_page() -> bytes:
+    """Independently render the exact archive-owned Pages recovery page."""
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="{LIGHT_THEME_BG}">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="{DARK_THEME_BG}">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests">
+<title>Page not found — Navnoor Research Archive</title>
+<link rel="icon" type="image/svg+xml" href="{SITE_URL}favicon.svg">
+<style>
+:root {{
+  color-scheme:light dark;
+  --paper:#f5f3ee;
+  --surface:#fffdf8;
+  --ink:#101a22;
+  --muted:#5e6870;
+  --navy:#0b1d2a;
+  --line:#d8d2c5;
+  --brass:#9b742b;
+}}
+* {{ box-sizing:border-box; }}
+html {{ background:var(--paper); }}
+body {{
+  margin:0;
+  min-width:320px;
+  background:
+    radial-gradient(circle at 78% 12%,rgba(155,116,43,.10),transparent 27rem),
+    var(--paper);
+  color:var(--ink);
+  font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}}
+.shell {{
+  width:min(1120px,calc(100% - 40px));
+  min-height:100vh;
+  min-height:100svh;
+  margin:0 auto;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+}}
+header {{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  border-bottom:1px solid var(--line);
+}}
+.brand {{ display:flex;align-items:center;gap:13px;color:inherit;text-decoration:none; }}
+.mark {{
+  width:38px;height:38px;border:1px solid var(--brass);border-radius:3px;
+  display:grid;place-items:center;background:var(--navy);color:#f7f1e4;
+  font:700 13px/1 Georgia,serif;letter-spacing:.08em;
+}}
+.brand-copy {{ display:grid;gap:2px; }}
+.brand-name {{ font:700 16px/1.1 Georgia,"Times New Roman",serif;letter-spacing:.01em; }}
+.brand-note {{ color:var(--muted);font-size:11px;letter-spacing:.13em;text-transform:uppercase; }}
+main {{ display:grid;align-items:center;padding:64px 0; }}
+.card {{
+  width:min(720px,100%);
+  padding:clamp(34px,7vw,72px);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-top:3px solid var(--brass);
+  box-shadow:0 24px 70px rgba(11,29,42,.09);
+}}
+.eyebrow {{
+  margin:0 0 22px;color:var(--brass);font-size:11px;font-weight:750;
+  letter-spacing:.17em;text-transform:uppercase;
+}}
+h1 {{
+  max-width:610px;margin:0;color:var(--navy);
+  font:700 clamp(42px,8vw,72px)/.98 Georgia,"Times New Roman",serif;
+  letter-spacing:-.035em;
+}}
+.lede {{
+  max-width:550px;margin:25px 0 0;color:var(--muted);
+  font:400 clamp(17px,2vw,20px)/1.65 Georgia,"Times New Roman",serif;
+}}
+.action {{
+  width:fit-content;min-height:48px;margin-top:34px;padding:0 22px;
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;
+  border:1px solid var(--navy);border-radius:2px;background:var(--navy);
+  color:#fffdf8;text-decoration:none;font-size:13px;font-weight:760;
+  letter-spacing:.035em;transition:transform .16s ease,box-shadow .16s ease;
+}}
+.action::after {{ content:"→";font-size:17px; }}
+.action:hover {{ transform:translateY(-1px);box-shadow:0 9px 22px rgba(11,29,42,.16); }}
+.action:focus-visible {{ outline:3px solid var(--brass);outline-offset:4px; }}
+footer {{
+  min-height:72px;display:flex;align-items:center;justify-content:space-between;
+  gap:20px;border-top:1px solid var(--line);color:var(--muted);
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+}}
+.rule {{ width:48px;height:1px;background:var(--brass); }}
+@media (max-width:560px) {{
+  .shell {{ width:min(100% - 28px,1120px); }}
+  header {{ min-height:70px; }}
+  .brand-note {{ display:none; }}
+  main {{ padding:34px 0; }}
+  .card {{ padding:34px 25px 38px; }}
+  footer {{ min-height:62px; }}
+}}
+@media (prefers-reduced-motion:reduce) {{ .action {{ transition:none; }} }}
+@media (prefers-color-scheme:dark) {{
+  :root {{ --paper:#08131c;--surface:#0d1c27;--ink:#f2f0e9;--muted:#aeb7bd;--navy:#f2f0e9;--line:#2b3942;--brass:#d1ad62; }}
+  body {{ background:radial-gradient(circle at 78% 12%,rgba(209,173,98,.09),transparent 27rem),var(--paper); }}
+  .mark {{ background:#f2f0e9;color:#08131c; }}
+  .card {{ box-shadow:0 24px 70px rgba(0,0,0,.24); }}
+  .action {{ background:#f2f0e9;color:#08131c;border-color:#f2f0e9; }}
+}}
+@media (forced-colors:active) {{
+  .card,.mark,.action {{ border:2px solid CanvasText; }}
+  .action:focus-visible {{ outline:3px solid Highlight; }}
+}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <a class="brand" href="{SITE_URL}" aria-label="Navnoor Research Archive home">
+      <span class="mark" aria-hidden="true">NR</span>
+      <span class="brand-copy"><span class="brand-name">Navnoor Research Archive</span><span class="brand-note">Original markets research</span></span>
+    </a>
+  </header>
+  <main>
+    <section class="card" aria-labelledby="not-found-title">
+      <p class="eyebrow">Archive notice · 404</p>
+      <h1 id="not-found-title">This page is not in the archive.</h1>
+      <p class="lede">The address may be old, incomplete, or no longer published. The complete research archive is still available.</p>
+      <a class="action" href="{SITE_URL}">Return to the archive</a>
+    </section>
+  </main>
+  <footer><span>Published research · Source-linked</span><span class="rule" aria-hidden="true"></span></footer>
+</div>
+</body>
+</html>
+'''.encode('utf-8')
+
+
 def _expected_text_support_assets(
         source_articles: Sequence[Mapping[str, Any]],
         snapshot: Mapping[str, Any],
@@ -933,6 +1078,7 @@ def _expected_text_support_assets(
 </svg>
 '''
     return {
+        '404.html': _expected_not_found_page(),
         'robots.txt': robots_text.encode('utf-8'),
         'sitemap.xml': sitemap_xml.encode('utf-8'),
         'site.webmanifest': web_manifest.encode('utf-8'),
@@ -998,31 +1144,29 @@ def _validate_support_assets(
             f'{asset_name} differs from its deterministic source rendering',
         )
 
-    actual_og = _read_bytes(
-        site / SOCIAL_IMAGE_NAME,
-        SOCIAL_IMAGE_NAME,
-    )
-    valid_jpeg = (
-        10_000 <= len(actual_og) <= 500_000
-        and actual_og.startswith(b'\xff\xd8')
-        and actual_og.rstrip().endswith(b'\xff\xd9')
-    )
-    _require(
-        valid_jpeg,
-        f'{SOCIAL_IMAGE_NAME} must be a valid, optimized 10-500 KB JPEG',
-    )
-    _require(
-        _jpeg_dimensions(actual_og) == (1200, 630),
-        f'{SOCIAL_IMAGE_NAME} JPEG must be exactly 1200x630 pixels',
-    )
     tracked_og = _read_bytes(
         social_image_source,
         'tracked assets/og.jpg',
     )
-    _require(
-        actual_og == tracked_og,
-        f'{SOCIAL_IMAGE_NAME} differs from tracked assets/og.jpg',
-    )
+    for asset_name in (SOCIAL_IMAGE_NAME, LEGACY_SOCIAL_IMAGE_NAME):
+        actual_og = _read_bytes(site / asset_name, asset_name)
+        valid_jpeg = (
+            10_000 <= len(actual_og) <= 500_000
+            and actual_og.startswith(b'\xff\xd8')
+            and actual_og.rstrip().endswith(b'\xff\xd9')
+        )
+        _require(
+            valid_jpeg,
+            f'{asset_name} must be a valid, optimized 10-500 KB JPEG',
+        )
+        _require(
+            _jpeg_dimensions(actual_og) == (1200, 630),
+            f'{asset_name} JPEG must be exactly 1200x630 pixels',
+        )
+        _require(
+            actual_og == tracked_og,
+            f'{asset_name} differs from tracked assets/og.jpg',
+        )
 
 
 def _extract_catalog_articles(

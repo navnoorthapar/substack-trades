@@ -15,6 +15,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
@@ -42,16 +43,19 @@ DATA_ENDPOINT_MAX_BYTES = {
     'families.json': 512 * 1024,
 }
 HTML_ASSET_NAME = 'index.html'
+CUSTOM_404_ASSET_NAME = '404.html'
 ARTICLE_CATALOG_ASSET_NAME = 'article_catalog.json'
 DEFERRED_ASSET_NAME = 'article_briefs.json'
 OBSERVATION_ASSET_NAME = 'observations.json'
 SUPPORT_ASSET_NAMES = (
-    'favicon.svg', 'og-private-research-2026-08.jpg', 'robots.txt',
-    'site.webmanifest', 'sitemap.xml',
+    CUSTOM_404_ASSET_NAME, 'favicon.svg', 'og-private-research-2026-08.jpg',
+    'og.jpg', 'robots.txt', 'site.webmanifest', 'sitemap.xml',
 )
 SUPPORT_CONTENT_TYPES = {
+    CUSTOM_404_ASSET_NAME: {'text/html'},
     'favicon.svg': {'image/svg+xml'},
     'og-private-research-2026-08.jpg': {'image/jpeg'},
+    'og.jpg': {'image/jpeg'},
     'robots.txt': {'text/plain'},
     'site.webmanifest': {'application/manifest+json', 'application/json', 'text/plain'},
     'sitemap.xml': {'application/xml', 'text/xml', 'text/plain'},
@@ -886,6 +890,79 @@ def fetch_deferred_observations(
     )
 
 
+def custom_404_probe_url(page_url, revision):
+    """Return a deterministic nonexistent route beside the deployed page."""
+    token = hashlib.sha256(str(revision).encode('utf-8')).hexdigest()[:16]
+    return sibling_asset_url(page_url, f'__nrt_missing_{token}.html')
+
+
+def fetch_custom_404(page_url, expected_payload, revision, attempt, timeout):
+    """Prove an unknown path returns the exact archive-owned page as HTTP 404."""
+    if (
+            not isinstance(expected_payload, bytes)
+            or not expected_payload
+            or len(expected_payload) > MAX_SUPPORT_ASSET_BYTES):
+        raise ValueError('trusted custom 404 payload is empty, invalid, or oversized')
+    probe_url = custom_404_probe_url(page_url, revision)
+    if not same_origin(page_url, probe_url):
+        raise ValueError('custom 404 probe URL is not same-origin')
+    requested_url = cache_busted_url(probe_url, revision, attempt)
+    request = Request(
+        requested_url,
+        headers={
+            'Accept': 'text/html',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'User-Agent': 'navnoor-terminal-deployment-smoke/1.0',
+        },
+    )
+    context = verified_ssl_context()
+
+    def validate_response(response):
+        final_url = response.geturl()
+        if urlsplit(final_url).scheme != 'https':
+            raise ValueError(
+                f'custom 404 probe redirected away from HTTPS: {final_url}'
+            )
+        if not same_origin(page_url, final_url):
+            raise ValueError(
+                f'custom 404 probe redirected off-origin: {final_url}'
+            )
+        if urlsplit(final_url).path != urlsplit(probe_url).path:
+            raise ValueError('custom 404 probe redirected to another path')
+        status = getattr(response, 'status', None)
+        if status is None:
+            status = response.getcode()
+        if status != 404:
+            raise ValueError(f'custom 404 probe returned HTTP {status}, not 404')
+        content_type = response.headers.get_content_type()
+        if content_type != 'text/html':
+            raise ValueError(
+                f'custom 404 probe returned {content_type}, not text/html'
+            )
+        payload = response.read(MAX_SUPPORT_ASSET_BYTES + 1)
+        if not payload or len(payload) > MAX_SUPPORT_ASSET_BYTES:
+            raise ValueError(
+                'custom 404 response is empty or exceeds '
+                f'{MAX_SUPPORT_ASSET_BYTES} bytes'
+            )
+        if payload != expected_payload:
+            raise ValueError(
+                'unknown route did not serve the exact archive-owned 404 page'
+            )
+
+    try:
+        response = urlopen(request, timeout=timeout, context=context)
+    except HTTPError as error:
+        try:
+            validate_response(error)
+        finally:
+            error.close()
+    else:
+        with response:
+            validate_response(response)
+
+
 def fetch_support_bundle(page_url, revision, attempt, timeout):
     """Fetch and validate every same-origin discovery/social support asset."""
     def fetch_one(asset_name):
@@ -923,9 +1000,16 @@ def fetch_support_bundle(page_url, revision, attempt, timeout):
         return asset_name, payload
 
     # These independent, small files are fetched concurrently so one retry has
-    # a single timeout budget rather than five sequential timeout budgets.
+    # a single timeout budget rather than sequential per-file timeout budgets.
     with ThreadPoolExecutor(max_workers=len(SUPPORT_ASSET_NAMES)) as executor:
         payloads = dict(executor.map(fetch_one, SUPPORT_ASSET_NAMES))
+    fetch_custom_404(
+        page_url,
+        payloads[CUSTOM_404_ASSET_NAME],
+        revision,
+        attempt,
+        timeout,
+    )
     return support_payload_checksum(payloads)
 
 

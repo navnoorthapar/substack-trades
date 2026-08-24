@@ -59,8 +59,9 @@ cache. Confirm the generated artifact contains `index.html`, the verified
 `article_catalog.json` bootstrap asset, both deferred research JSON assets, all
 six contract files under `data/`, exactly one PNG under `cards/` and
 one HTML stub under `a/` for every catalogue slug, plus `robots.txt`,
-`sitemap.xml`, `site.webmanifest`, `favicon.svg`, and the fingerprinted
-`og-private-research-2026-08.jpg`. Inspect the
+`sitemap.xml`, `site.webmanifest`, `favicon.svg`, the archive-owned
+`404.html`, the fingerprinted `og-private-research-2026-08.jpg`, and its
+legacy `og.jpg` compatibility alias. Inspect the
 reported six release fingerprints, public-data digest, size budgets, and
 article/card/stub counts. This shared validator is the same executable used by
 the scheduled refresh, pre-push gate, CI, and independent watchdog.
@@ -74,7 +75,10 @@ the scheduled refresh, pre-push gate, CI, and independent watchdog.
 3. Require the post-deploy smoke step to confirm HTTPS, exact Git revision,
    snapshot checksum/counts, exact HTML, the verified article catalogue, both deferred JSON files, every file in
    the six-endpoint public-data bundle, and the combined discovery/social
-   support bundle. A fresh post-smoke authority step must still prove that the
+   support bundle. The same smoke must request a deterministic nonexistent
+   route, require an honest HTTP 404, and prove that its response is the exact
+   archive-owned `404.html` rather than GitHub's generic error page. A fresh
+   post-smoke authority step must still prove that the
    release SHA owns remote `main`, and the reconciliation step must succeed. A
    late Pages completion is healthy only when these exact-byte and authority
    proofs both pass. Complete card/stub coverage is proved against the built
@@ -93,6 +97,15 @@ the scheduled refresh, pre-push gate, CI, and independent watchdog.
    `/cards/<slug>.png`. Execute the keyboard/focus and
    offline/deferred-asset recovery tests against the generated client. Do not
    enter confidential data during testing.
+   Request one unique nonexistent project route and confirm it returns HTTP 404
+   with the archive-owned recovery UI and working home action. Confirm the
+   formerly advertised `/og.jpg` compatibility URL returns HTTP 200 with bytes
+   identical to the fingerprinted social image.
+   Inject one transient release-asset failure and confirm the browser recovers
+   within three attempts. Confirm a repeated required-asset 404 exhausts exactly
+   that bounded budget, an invalid-request 4xx fails immediately, the visible
+   Retry remains available only before initialization, and **Reload latest
+   release** issues a clean cache-busted document request after any later fault.
 6. Run Lighthouse against Article Record, Parsed Passages, Article Index, and Local Review on the exact
    production release. Record performance plus Accessibility, Best Practices,
    and SEO results; inspect 375 px, 768 px, and desktop layouts for overflow and

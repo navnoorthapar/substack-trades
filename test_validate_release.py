@@ -343,7 +343,13 @@ class ReleaseValidatorTests(unittest.TestCase):
             self.assertEqual(payload.count(expected), 1)
             return payload.replace(expected, b'stroke="#e3ca89"', 1)
 
+        def mutate_not_found(payload):
+            expected = b'Return to the archive'
+            self.assertEqual(payload.count(expected), 1)
+            return payload.replace(expected, b'Return to GitHub Pages', 1)
+
         for asset_name, transform in (
+            ('404.html', mutate_not_found),
             ('robots.txt', mutate_robots),
             ('sitemap.xml', mutate_sitemap),
             ('site.webmanifest', mutate_manifest),
@@ -384,6 +390,15 @@ class ReleaseValidatorTests(unittest.TestCase):
             )
             self.rewrite(path, bytes(payload))
             with self.assertRaisesRegex(ValueError, 'exactly 1200x630'):
+                self.validate(site)
+
+        with self.cloned_site() as site:
+            path = site / validate_release.LEGACY_SOCIAL_IMAGE_NAME
+            payload = bytearray(path.read_bytes())
+            payload[-3] ^= 0x01
+            self.rewrite(path, bytes(payload))
+            with self.assertRaisesRegex(
+                    ValueError, 'og.jpg differs from tracked assets/og.jpg'):
                 self.validate(site)
 
     def test_non_header_share_asset_mutations_fail_exact_rendering(self):

@@ -34,6 +34,7 @@ DOCS_DIR = Path(os.environ.get('SITE_OUTPUT_DIR', ROOT / 'docs')).expanduser()
 DOCS_DIR.mkdir(parents=True, exist_ok=True)
 SITE_URL = 'https://navnoorthapar.github.io/substack-trades/'
 SOCIAL_IMAGE_NAME = 'og-private-research-2026-08.jpg'
+LEGACY_SOCIAL_IMAGE_NAME = 'og.jpg'
 SOCIAL_IMAGE_URL = f'{SITE_URL}{SOCIAL_IMAGE_NAME}'
 SOCIAL_IMAGE_SOURCE = ROOT / 'assets' / 'og.jpg'
 SUBSCRIPTION_URL = 'https://www.navnoorbawaresearch.com/subscribe'
@@ -41,6 +42,148 @@ THEME_REVISION = 'private-research-2026-08'
 LIGHT_THEME_BG = '#f5f3ee'
 DARK_THEME_BG = '#08131c'
 ARTICLE_CATALOG_SCHEMA_VERSION = 1
+
+
+def render_not_found_page():
+    """Render the archive-owned recovery page used by GitHub Pages."""
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="{LIGHT_THEME_BG}">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="{DARK_THEME_BG}">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests">
+<title>Page not found — Navnoor Research Archive</title>
+<link rel="icon" type="image/svg+xml" href="{SITE_URL}favicon.svg">
+<style>
+:root {{
+  color-scheme:light dark;
+  --paper:#f5f3ee;
+  --surface:#fffdf8;
+  --ink:#101a22;
+  --muted:#5e6870;
+  --navy:#0b1d2a;
+  --line:#d8d2c5;
+  --brass:#9b742b;
+}}
+* {{ box-sizing:border-box; }}
+html {{ background:var(--paper); }}
+body {{
+  margin:0;
+  min-width:320px;
+  background:
+    radial-gradient(circle at 78% 12%,rgba(155,116,43,.10),transparent 27rem),
+    var(--paper);
+  color:var(--ink);
+  font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}}
+.shell {{
+  width:min(1120px,calc(100% - 40px));
+  min-height:100vh;
+  min-height:100svh;
+  margin:0 auto;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+}}
+header {{
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  border-bottom:1px solid var(--line);
+}}
+.brand {{ display:flex;align-items:center;gap:13px;color:inherit;text-decoration:none; }}
+.mark {{
+  width:38px;height:38px;border:1px solid var(--brass);border-radius:3px;
+  display:grid;place-items:center;background:var(--navy);color:#f7f1e4;
+  font:700 13px/1 Georgia,serif;letter-spacing:.08em;
+}}
+.brand-copy {{ display:grid;gap:2px; }}
+.brand-name {{ font:700 16px/1.1 Georgia,"Times New Roman",serif;letter-spacing:.01em; }}
+.brand-note {{ color:var(--muted);font-size:11px;letter-spacing:.13em;text-transform:uppercase; }}
+main {{ display:grid;align-items:center;padding:64px 0; }}
+.card {{
+  width:min(720px,100%);
+  padding:clamp(34px,7vw,72px);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-top:3px solid var(--brass);
+  box-shadow:0 24px 70px rgba(11,29,42,.09);
+}}
+.eyebrow {{
+  margin:0 0 22px;color:var(--brass);font-size:11px;font-weight:750;
+  letter-spacing:.17em;text-transform:uppercase;
+}}
+h1 {{
+  max-width:610px;margin:0;color:var(--navy);
+  font:700 clamp(42px,8vw,72px)/.98 Georgia,"Times New Roman",serif;
+  letter-spacing:-.035em;
+}}
+.lede {{
+  max-width:550px;margin:25px 0 0;color:var(--muted);
+  font:400 clamp(17px,2vw,20px)/1.65 Georgia,"Times New Roman",serif;
+}}
+.action {{
+  width:fit-content;min-height:48px;margin-top:34px;padding:0 22px;
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;
+  border:1px solid var(--navy);border-radius:2px;background:var(--navy);
+  color:#fffdf8;text-decoration:none;font-size:13px;font-weight:760;
+  letter-spacing:.035em;transition:transform .16s ease,box-shadow .16s ease;
+}}
+.action::after {{ content:"→";font-size:17px; }}
+.action:hover {{ transform:translateY(-1px);box-shadow:0 9px 22px rgba(11,29,42,.16); }}
+.action:focus-visible {{ outline:3px solid var(--brass);outline-offset:4px; }}
+footer {{
+  min-height:72px;display:flex;align-items:center;justify-content:space-between;
+  gap:20px;border-top:1px solid var(--line);color:var(--muted);
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+}}
+.rule {{ width:48px;height:1px;background:var(--brass); }}
+@media (max-width:560px) {{
+  .shell {{ width:min(100% - 28px,1120px); }}
+  header {{ min-height:70px; }}
+  .brand-note {{ display:none; }}
+  main {{ padding:34px 0; }}
+  .card {{ padding:34px 25px 38px; }}
+  footer {{ min-height:62px; }}
+}}
+@media (prefers-reduced-motion:reduce) {{ .action {{ transition:none; }} }}
+@media (prefers-color-scheme:dark) {{
+  :root {{ --paper:#08131c;--surface:#0d1c27;--ink:#f2f0e9;--muted:#aeb7bd;--navy:#f2f0e9;--line:#2b3942;--brass:#d1ad62; }}
+  body {{ background:radial-gradient(circle at 78% 12%,rgba(209,173,98,.09),transparent 27rem),var(--paper); }}
+  .mark {{ background:#f2f0e9;color:#08131c; }}
+  .card {{ box-shadow:0 24px 70px rgba(0,0,0,.24); }}
+  .action {{ background:#f2f0e9;color:#08131c;border-color:#f2f0e9; }}
+}}
+@media (forced-colors:active) {{
+  .card,.mark,.action {{ border:2px solid CanvasText; }}
+  .action:focus-visible {{ outline:3px solid Highlight; }}
+}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <a class="brand" href="{SITE_URL}" aria-label="Navnoor Research Archive home">
+      <span class="mark" aria-hidden="true">NR</span>
+      <span class="brand-copy"><span class="brand-name">Navnoor Research Archive</span><span class="brand-note">Original markets research</span></span>
+    </a>
+  </header>
+  <main>
+    <section class="card" aria-labelledby="not-found-title">
+      <p class="eyebrow">Archive notice · 404</p>
+      <h1 id="not-found-title">This page is not in the archive.</h1>
+      <p class="lede">The address may be old, incomplete, or no longer published. The complete research archive is still available.</p>
+      <a class="action" href="{SITE_URL}">Return to the archive</a>
+    </section>
+  </main>
+  <footer><span>Published research · Source-linked</span><span class="rule" aria-hidden="true"></span></footer>
+</div>
+</body>
+</html>
+'''
 
 with open(ROOT / 'trades_extracted.json', encoding='utf-8') as handle:
     trades = json.load(handle)
@@ -3017,6 +3160,7 @@ noscript{display:block}
       <p class="bootstrap-detail" id="bootstrap-detail">Checking the exact same-origin catalogue before the archive starts.</p>
       <div class="bootstrap-actions" id="bootstrap-actions" hidden>
         <button class="primary-action" id="bootstrap-retry" type="button">Retry verified load</button>
+        <button class="secondary-action" id="bootstrap-reload" type="button">Reload latest release</button>
         <a class="secondary-action" href="data/latest.json">View release status</a>
       </div>
     </div>
@@ -3434,6 +3578,7 @@ __MANAGER_BUTTONS__
 const ARTICLE_WIRE_SCHEMA_VERSION = __ARTICLE_WIRE_SCHEMA_VERSION__;
 const SUBSCRIPTION_URL = __SUBSCRIPTION_URL_JSON__;
 const SNAPSHOT = __SNAPSHOT_JSON__;
+const SITE_REVISION = document.querySelector('meta[name="nrt-revision"]').content;
 const ARTICLE_CATALOG_SHA256 = document.querySelector('meta[name="nrt-article-catalog-sha256"]').content;
 function hasExactObjectKeys(value,expectedKeys) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
@@ -3453,30 +3598,99 @@ function releaseMismatchError(message) {
   error.releaseMismatch = true;
   return error;
 }
+let releaseNavigationSequence = 0;
+function releaseNavigationNonce() {
+  releaseNavigationSequence++;
+  let random = '';
+  try {
+    if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+      const value = new Uint32Array(1);
+      window.crypto.getRandomValues(value);
+      random = value[0].toString(36);
+    }
+  } catch (_error) {}
+  return Date.now().toString(36) + '-' + releaseNavigationSequence.toString(36) + (random ? '-' + random : '');
+}
 function recoverFromStaleReleaseShell() {
-  const token = String(SNAPSHOT.data_checksum || '').slice(0,16);
-  if (!token) return false;
+  const revision = String(SITE_REVISION || '').slice(0,128);
+  if (!revision) return false;
   const current = new URL(window.location.href);
   if (current.searchParams.get('nrt_catalog_recovery') === '1') return false;
-  current.searchParams.set('nrt_release',token);
+  current.searchParams.set('nrt_site_revision',revision);
   current.searchParams.set('nrt_catalog_recovery','1');
+  current.searchParams.set('nrt_reload',releaseNavigationNonce());
   window.location.replace(current.href);
   return true;
 }
-function fetchReleaseText(url,unavailableMessage) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(function () { controller.abort(); },20_000);
-  return fetch(url,{
-    credentials:'same-origin',cache:'no-cache',signal:controller.signal
-  }).then(function (response) {
-    if (!response.ok) throw new Error(unavailableMessage);
-    return response.text();
-  }).catch(function (error) {
-    if (error && error.name === 'AbortError') throw new Error(unavailableMessage + ' (request timed out)');
-    throw error;
-  }).finally(function () {
-    clearTimeout(timeoutId);
+function clearReleaseRecoveryMarkers() {
+  try {
+    const current = new URL(window.location.href);
+    const internalKeys = [
+      'nrt_release','nrt_site_revision','nrt_catalog_recovery','nrt_reload'
+    ];
+    let changed = false;
+    internalKeys.forEach(function (key) {
+      if (!current.searchParams.has(key)) return;
+      current.searchParams.delete(key);
+      changed = true;
+    });
+    if (changed && window.history && typeof window.history.replaceState === 'function') {
+      window.history.replaceState(window.history.state,'',current.href);
+    }
+  } catch (_error) {}
+}
+function reloadLatestRelease() {
+  const current = new URL(window.location.href);
+  const revision = String(SITE_REVISION || '').slice(0,128);
+  if (revision) current.searchParams.set('nrt_site_revision',revision);
+  current.searchParams.delete('nrt_release');
+  current.searchParams.delete('nrt_catalog_recovery');
+  current.searchParams.set('nrt_reload',releaseNavigationNonce());
+  window.location.replace(current.href);
+}
+function releaseFetchError(message,retryable) {
+  const error = new Error(message);
+  error.releaseRetryable = retryable;
+  return error;
+}
+function releaseRetryDelay(attempt) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve,250 * Math.pow(2,attempt - 1));
   });
+}
+async function fetchReleaseText(url,unavailableMessage) {
+  const maximumAttempts = 3;
+  let lastError = releaseFetchError(unavailableMessage,true);
+  for (let attempt = 1; attempt <= maximumAttempts; attempt++) {
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      throw releaseFetchError(unavailableMessage + ' (device is offline)',false);
+    }
+    const controller = new AbortController();
+    const timeoutId = setTimeout(function () { controller.abort(); },20_000);
+    try {
+      const response = await fetch(url,{
+        credentials:'same-origin',cache:'no-cache',signal:controller.signal
+      });
+      if (!response.ok) {
+        const status = Number(response.status);
+        const retryable = (
+          status === 404 || status === 408 || status === 409 ||
+          status === 425 || status === 429 || status >= 500
+        );
+        throw releaseFetchError(unavailableMessage,retryable);
+      }
+      return await response.text();
+    } catch (error) {
+      if (error && error.releaseRetryable === false) throw error;
+      lastError = error && error.name === 'AbortError'
+        ? releaseFetchError(unavailableMessage + ' (request timed out)',true)
+        : releaseFetchError(unavailableMessage,true);
+    } finally {
+      clearTimeout(timeoutId);
+    }
+    if (attempt < maximumAttempts) await releaseRetryDelay(attempt);
+  }
+  throw lastError;
 }
 async function loadArticleCatalog() {
   const catalogUrl = 'article_catalog.json?v=' + encodeURIComponent(String(SNAPSHOT.data_checksum || ''));
@@ -3522,24 +3736,37 @@ function setBootstrapLoading() {
   document.getElementById('bootstrap-title').textContent = 'Loading verified research catalogue';
   document.getElementById('bootstrap-detail').textContent = 'Checking the exact same-origin catalogue before the archive starts.';
   document.getElementById('bootstrap-actions').hidden = true;
+  document.getElementById('bootstrap-retry').hidden = false;
   document.getElementById('bootstrap-retry').disabled = true;
+  document.getElementById('bootstrap-reload').disabled = true;
 }
+let applicationInitializationStarted = false;
 function handleArticleCatalogFailure(error) {
   if (error && error.releaseMismatch && recoverFromStaleReleaseShell()) return;
+  const retryAllowed = !applicationInitializationStarted;
   const status = document.getElementById('bootstrap-status');
   status.hidden = false;
   status.dataset.state = 'error';
   status.setAttribute('role','alert');
   status.setAttribute('aria-live','assertive');
   status.setAttribute('aria-busy','false');
-  document.getElementById('bootstrap-kicker').textContent = 'Catalogue unavailable';
-  document.getElementById('bootstrap-title').textContent = 'The archive stopped before showing research';
-  document.getElementById('bootstrap-detail').textContent = 'The release could not be verified. No partial or mismatched catalogue has been displayed.';
+  document.getElementById('bootstrap-kicker').textContent = retryAllowed ? 'Catalogue unavailable' : 'Clean reload required';
+  document.getElementById('bootstrap-title').textContent = retryAllowed
+    ? 'The archive stopped before showing research'
+    : 'The archive needs a clean document reload';
+  document.getElementById('bootstrap-detail').textContent = retryAllowed
+    ? 'The release could not be verified. No partial or mismatched catalogue has been displayed.'
+    : 'Initialization stopped before the archive opened. Reload the latest release to start again without repeating partial setup.';
   document.getElementById('bootstrap-actions').hidden = false;
-  document.getElementById('bootstrap-retry').disabled = false;
+  document.getElementById('bootstrap-retry').hidden = !retryAllowed;
+  document.getElementById('bootstrap-retry').disabled = !retryAllowed;
+  const reloadButton = document.getElementById('bootstrap-reload');
+  reloadButton.disabled = false;
+  if (!retryAllowed && typeof reloadButton.focus === 'function') reloadButton.focus();
 }
 async function bootstrapApplication(retryingCatalogLoad) {
 const ARTICLES = await loadArticleCatalog();
+applicationInitializationStarted = true;
 function hydrateEmbeddedArticle(article) {
   const publishedAt = String(article.published_at || '');
   const wordcount = Number(article.wordcount || 0);
@@ -9756,6 +9983,7 @@ if (retryingCatalogLoad) {
   const recoveryFocus = document.getElementById('structure-focus-input') || document.getElementById('owner-search-input') || document.getElementById('search');
   if (recoveryFocus) recoveryFocus.focus();
 }
+clearReleaseRecoveryMarkers();
 }
 function startApplication() {
   const retryingCatalogLoad = document.activeElement === document.getElementById('bootstrap-retry');
@@ -9763,6 +9991,7 @@ function startApplication() {
   return bootstrapApplication(retryingCatalogLoad).catch(handleArticleCatalogFailure);
 }
 document.getElementById('bootstrap-retry').addEventListener('click',startApplication);
+document.getElementById('bootstrap-reload').addEventListener('click',reloadLatestRelease);
 startApplication();
 </script>
 </body>
@@ -9944,6 +10173,7 @@ with open(observations_out, 'w', encoding='utf-8') as handle:
     handle.write(observation_archive_json)
 
 support_assets = {
+    '404.html': render_not_found_page(),
     'robots.txt': robots_text,
     'sitemap.xml': sitemap_xml,
     'site.webmanifest': web_manifest,
@@ -9952,6 +10182,7 @@ support_assets = {
 for asset_name, asset_text in support_assets.items():
     (DOCS_DIR / asset_name).write_text(asset_text, encoding='utf-8')
 shutil.copyfile(SOCIAL_IMAGE_SOURCE, DOCS_DIR / SOCIAL_IMAGE_NAME)
+shutil.copyfile(SOCIAL_IMAGE_SOURCE, DOCS_DIR / LEGACY_SOCIAL_IMAGE_NAME)
 
 share_summary = emit_share_assets(share_articles, DOCS_DIR, SITE_URL)
 write_data_layer(
@@ -9973,7 +10204,7 @@ print(
     f'{article_catalog_out.stat().st_size // 1024} KB verified catalogue + '
     f'{brief_out.stat().st_size // 1024} KB deferred article records + '
     f'{observations_out.stat().st_size // 1024} KB deferred observations, '
-    f'{len(support_assets) + 1} support assets, '
+    f'{len(support_assets) + 2} support assets, '
     f'{len(client_articles)} research notes, {len(client_ideas)} extracted ideas, '
     f'{data_summary["article_count"]} public catalogue records, '
     f'{share_summary["count"]} share cards/stubs)'

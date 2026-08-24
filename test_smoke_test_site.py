@@ -6,8 +6,10 @@ import types
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime, timezone
+from email.message import Message
 from pathlib import Path
 from unittest.mock import MagicMock, call, patch
+from urllib.error import HTTPError
 from urllib.parse import urlsplit
 
 import smoke_test_site
@@ -785,6 +787,16 @@ class SmokeTestSiteTests(unittest.TestCase):
 
         def response_for_request(request, **_kwargs):
             name = Path(request.full_url.split('?', 1)[0]).name
+            if name.startswith('__nrt_missing_'):
+                headers = Message()
+                headers['Content-Type'] = 'text/html; charset=utf-8'
+                raise HTTPError(
+                    request.full_url,
+                    404,
+                    'Not Found',
+                    headers,
+                    io.BytesIO(payloads[smoke_test_site.CUSTOM_404_ASSET_NAME]),
+                )
             return responses[name]
 
         urlopen.side_effect = response_for_request
@@ -794,16 +806,80 @@ class SmokeTestSiteTests(unittest.TestCase):
             ),
             smoke_test_site.support_payload_checksum(payloads),
         )
-        self.assertEqual(urlopen.call_count, len(smoke_test_site.SUPPORT_ASSET_NAMES))
-        self.assertEqual(ssl_context.call_count, len(smoke_test_site.SUPPORT_ASSET_NAMES))
+        self.assertEqual(
+            urlopen.call_count,
+            len(smoke_test_site.SUPPORT_ASSET_NAMES) + 1,
+        )
+        self.assertEqual(
+            ssl_context.call_count,
+            len(smoke_test_site.SUPPORT_ASSET_NAMES) + 1,
+        )
         self.assertEqual(
             {request_call.args[0].full_url for request_call in urlopen.call_args_list},
             {
                 f'https://example.test/research/{name}?'
                 f'nrt_smoke_revision={REVISION}&nrt_smoke_attempt=2'
                 for name in smoke_test_site.SUPPORT_ASSET_NAMES
+            } | {
+                smoke_test_site.cache_busted_url(
+                    smoke_test_site.custom_404_probe_url(
+                        'https://example.test/research/', REVISION,
+                    ),
+                    REVISION,
+                    2,
+                ),
             },
         )
+
+    @patch('smoke_test_site.verified_ssl_context')
+    @patch('smoke_test_site.urlopen')
+    def test_custom_404_requires_honest_status_and_exact_owned_bytes(
+        self, urlopen, _ssl_context,
+    ):
+        expected = b'<!doctype html><title>Archive-owned recovery</title>'
+        headers = Message()
+        headers['Content-Type'] = 'text/html; charset=utf-8'
+
+        def missing_response(request, **_kwargs):
+            raise HTTPError(
+                request.full_url,
+                404,
+                'Not Found',
+                headers,
+                io.BytesIO(expected),
+            )
+
+        urlopen.side_effect = missing_response
+        smoke_test_site.fetch_custom_404(
+            'https://example.test/research/', expected, REVISION, 3, 20,
+        )
+
+        urlopen.side_effect = lambda request, **_kwargs: HTTPError(
+            request.full_url,
+            404,
+            'Not Found',
+            headers,
+            io.BytesIO(b'<title>Page not found - GitHub Pages</title>'),
+        )
+        with self.assertRaisesRegex(ValueError, 'exact archive-owned 404'):
+            smoke_test_site.fetch_custom_404(
+                'https://example.test/research/', expected, REVISION, 4, 20,
+            )
+
+        response = MagicMock()
+        response.__enter__.return_value = response
+        response.geturl.return_value = smoke_test_site.custom_404_probe_url(
+            'https://example.test/research/', REVISION,
+        )
+        response.status = 200
+        response.headers.get_content_type.return_value = 'text/html'
+        response.read.return_value = expected
+        urlopen.side_effect = None
+        urlopen.return_value = response
+        with self.assertRaisesRegex(ValueError, 'HTTP 200, not 404'):
+            smoke_test_site.fetch_custom_404(
+                'https://example.test/research/', expected, REVISION, 5, 20,
+            )
 
     @patch('smoke_test_site.verified_ssl_context')
     @patch('smoke_test_site.urlopen')

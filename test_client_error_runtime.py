@@ -1236,7 +1236,7 @@ if (!confirmations.some((message) => message.startsWith('Retained source conflic
 
     def test_deferred_network_failure_and_timeout_use_safe_messages(self):
         function = javascript_between(
-            'function fetchReleaseText(url,unavailableMessage) {',
+            'function releaseFetchError(message,retryable) {',
             '\nasync function loadArticleCatalog()',
         )
         run_node(
@@ -1255,6 +1255,77 @@ try { await fetchReleaseText('/slow.json','Observation archive is unavailable');
 catch (error) { second = error.message; }
 if (second !== 'Observation archive is unavailable (request timed out)') {
   throw new Error('timeout did not produce a safe recovery message');
+}
+'''
+        )
+
+    def test_release_fetch_retries_only_transient_failures_with_clean_attempts(self):
+        function = javascript_between(
+            'function releaseFetchError(message,retryable) {',
+            '\nasync function loadArticleCatalog()',
+        )
+        run_node(
+            function
+            + r'''
+let timeoutSequence = 0;
+let fetchTimeoutsCleared = 0;
+let retryDelays = 0;
+globalThis.setTimeout = function (callback,delay) {
+  const id = ++timeoutSequence;
+  if (delay === 20_000) return id;
+  retryDelays++;
+  callback();
+  return id;
+};
+globalThis.clearTimeout = function () { fetchTimeoutsCleared++; };
+let controllers = 0;
+globalThis.AbortController = class {
+  constructor() { controllers++; this.signal = {}; }
+  abort() {}
+};
+let attempts = 0;
+globalThis.fetch = async function () {
+  attempts++;
+  if (attempts === 1) throw new Error('connection reset');
+  if (attempts === 2) return {ok:false,status:503};
+  return {ok:true,status:200,text:async function () { return 'verified'; }};
+};
+const recovered = await fetchReleaseText('/release.json','Release unavailable');
+if (recovered !== 'verified' || attempts !== 3 || controllers !== 3 ||
+    fetchTimeoutsCleared !== 3 || retryDelays !== 2) {
+  throw new Error('transient retry attempts or cleanup were not exact');
+}
+
+attempts = 0;
+controllers = 0;
+fetchTimeoutsCleared = 0;
+retryDelays = 0;
+globalThis.fetch = async function () {
+  attempts++;
+  return {ok:false,status:400};
+};
+let permanent = '';
+try { await fetchReleaseText('/missing.json','Release unavailable'); }
+catch (error) { permanent = error.message; }
+if (permanent !== 'Release unavailable' || attempts !== 1 || controllers !== 1 ||
+    fetchTimeoutsCleared !== 1 || retryDelays !== 0) {
+  throw new Error('permanent HTTP failure was retried or leaked an attempt');
+}
+
+attempts = 0;
+controllers = 0;
+fetchTimeoutsCleared = 0;
+retryDelays = 0;
+globalThis.fetch = async function () {
+  attempts++;
+  return {ok:false,status:404};
+};
+let propagated404 = '';
+try { await fetchReleaseText('/deploying.json','Release unavailable'); }
+catch (error) { propagated404 = error.message; }
+if (propagated404 !== 'Release unavailable' || attempts !== 3 ||
+    controllers !== 3 || fetchTimeoutsCleared !== 3 || retryDelays !== 2) {
+  throw new Error('required-asset 404 did not use the bounded propagation retry');
 }
 '''
         )
@@ -1299,11 +1370,13 @@ if (second !== 'Observation archive is unavailable (request timed out)') {
 const ARTICLE_WIRE_SCHEMA_VERSION = 3;
 const ARTICLE_CATALOG_SHA256 = 'a'.repeat(64);
 const SNAPSHOT = {data_checksum:'b'.repeat(64)};
+const SITE_REVISION = 'c'.repeat(40);
 const nodes = new Map();
 function node(id) {
   if (!nodes.has(id)) nodes.set(id,{
     id,hidden:false,disabled:false,textContent:'',dataset:{},attributes:{},
-    setAttribute(name,value) { this.attributes[name] = value; }
+    setAttribute(name,value) { this.attributes[name] = value; },
+    focus() { document.activeElement = this; }
   });
   return nodes.get(id);
 }
@@ -1365,26 +1438,101 @@ if (JSON.stringify(retryFlags) !== '[false,true]') {
 }
 '''
                 )
+
+    def test_partial_initialization_failure_requires_clean_document_reload(self):
+        helpers = javascript_between(
+            'function setBootstrapLoading() {',
+            '\nasync function bootstrapApplication(',
+        )
+        starter = javascript_between(
+            'function startApplication() {',
+            "\ndocument.getElementById('bootstrap-retry')",
+        )
+        run_node(
+            r'''
+const nodes = new Map();
+function node(id) {
+  if (!nodes.has(id)) nodes.set(id,{
+    id,hidden:false,disabled:false,textContent:'',dataset:{},attributes:{},
+    setAttribute(name,value) { this.attributes[name] = value; },
+    focus() { document.activeElement = this; }
+  });
+  return nodes.get(id);
+}
+globalThis.document = {activeElement:null,getElementById:node};
+let installedListeners = 0;
+async function bootstrapApplication() {
+  applicationInitializationStarted = true;
+  installedListeners++;
+  throw new Error('injected initialization failure');
+}
+'''
+            + helpers
+            + starter
+            + r'''
+await startApplication();
+if (installedListeners !== 1 || node('bootstrap-status').attributes.role !== 'alert') {
+  throw new Error('initialization failure was not contained');
+}
+if (!node('bootstrap-retry').hidden || !node('bootstrap-retry').disabled ||
+    node('bootstrap-reload').disabled ||
+    document.activeElement !== node('bootstrap-reload') ||
+    node('bootstrap-kicker').textContent !== 'Clean reload required' ||
+    !node('bootstrap-detail').textContent.includes('without repeating partial setup')) {
+  throw new Error('partial initialization exposed an unsafe in-page retry');
+}
+'''
+        )
+
     def test_stale_shell_recovery_is_bounded_to_one_release_reload(self):
         function = javascript_between(
-            'function recoverFromStaleReleaseShell() {',
-            '\nfunction fetchReleaseText',
+            'let releaseNavigationSequence = 0;',
+            '\nasync function fetchReleaseText',
         )
         run_node(
             function
             + r'''
-globalThis.SNAPSHOT = {data_checksum:'abcdef0123456789fedcba'};
+globalThis.SNAPSHOT = {data_checksum:'shared-data-checksum'};
+let SITE_REVISION = '1111111111111111111111111111111111111111';
 let replaced = '';
-globalThis.window = {location:{
-  href:'https://example.test/research/#view=ideas',
-  replace(value) { replaced = value; }
-}};
+globalThis.window = {
+  location:{
+    href:'https://example.test/research/?reader=owner#view=ideas',
+    replace(value) { replaced = value; }
+  },
+  history:{
+    state:{kept:true},
+    replaceState(_state,_title,value) { window.location.href = value; }
+  }
+};
 if (!recoverFromStaleReleaseShell()) throw new Error('stale shell did not request recovery');
-if (!replaced.includes('nrt_release=abcdef0123456789')) throw new Error('release token was not bounded');
+if (!replaced.includes('nrt_site_revision=' + SITE_REVISION)) throw new Error('site revision was omitted');
 if (!replaced.includes('nrt_catalog_recovery=1')) throw new Error('one-shot recovery marker was omitted');
+if (!replaced.includes('nrt_reload=')) throw new Error('recovery navigation nonce was omitted');
 window.location.href = replaced;
-SNAPSHOT.data_checksum = '0123456789abcdeffedcba';
 if (recoverFromStaleReleaseShell()) throw new Error('alternating stale shells could reload repeatedly');
+clearReleaseRecoveryMarkers();
+if (window.location.href.includes('nrt_site_revision=') ||
+    window.location.href.includes('nrt_catalog_recovery=') ||
+    !window.location.href.includes('reader=owner') ||
+    !window.location.href.endsWith('#view=ideas')) {
+  throw new Error('successful recovery did not clean only internal parameters');
+}
+SITE_REVISION = '2222222222222222222222222222222222222222';
+if (!recoverFromStaleReleaseShell()) {
+  throw new Error('a later release could not reuse bounded shell recovery');
+}
+if (!replaced.includes('nrt_site_revision=' + SITE_REVISION)) {
+  throw new Error('same-data UI release reused the stale site revision token');
+}
+
+window.location.href = replaced;
+reloadLatestRelease();
+if (!replaced.includes('nrt_site_revision=' + SITE_REVISION) ||
+    !replaced.includes('nrt_reload=') ||
+    replaced.includes('nrt_catalog_recovery=')) {
+  throw new Error('explicit latest-release reload was not independently cache busted');
+}
 '''
         )
 
