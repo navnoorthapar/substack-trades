@@ -654,17 +654,19 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.html,
         )
 
-    def test_unified_allocator_workspace_honors_system_theme_and_is_responsive(self):
+    def test_unified_private_research_workspace_honors_system_theme_and_is_responsive(self):
         for text in (
             '--serif:ui-serif,"Iowan Old Style"',
-            '--bg:#f4f6f8',
-            '--surface-1:#ffffff',
-            '--text:#142033',
-            '--accent:#174ea6',
-            '--bg:#090e15',
-            '--surface-1:#0f1620',
-            '--selected-line:#78a9ff',
-            'One allocator-grade system. Theme changes color and elevation, never geometry.',
+            '--bg:#f5f3ee',
+            '--surface-1:#fffefb',
+            '--text:#131c24',
+            '--accent:#153f5f',
+            '--premium:#775113',
+            '--bg:#08131c',
+            '--surface-1:#0e1b25',
+            '--selected-line:#b6d1e1',
+            '--premium:#e3ca8a',
+            'One private-research system. Theme changes color and elevation, never geometry.',
             '.desk-landing-hero{',
             '.desk-proof-strip{',
             '.desk-source-footer a{min-height:44px;display:inline-flex;align-items:center',
@@ -680,7 +682,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             '@media(max-width:480px)',
         ):
             self.assertIn(text, self.html)
-        self.assertIn("var themeRevision = 'allocator-workspace-2026-08'", self.html)
+        self.assertIn("var themeRevision = 'private-research-2026-08'", self.html)
         self.assertIn("window.matchMedia('(prefers-color-scheme: dark)').matches", self.html)
         self.assertIn(
             "var theme = stored || (systemDark ? 'dark' : 'light')",
@@ -696,7 +698,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'theme selection must not swap product geometry or typography',
         )
         self.assertLess(
-            self.html.index("var themeRevision = 'allocator-workspace-2026-08'"),
+            self.html.index("var themeRevision = 'private-research-2026-08'"),
             self.html.index('<style>'),
             'theme bootstrap must run before styles to prevent a wrong-theme first paint',
         )
@@ -714,6 +716,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             '.global-search{grid-column:1/-1;grid-row:2}',
             '.utility-button{min-height:44px}',
             '.brand-name{display:none}',
+            'body[data-view="structure"] .brand-name{display:block;font-size:13px}',
+            'body[data-view="structure"] .view-tabs{box-shadow:none}',
             '.freshness{width:18px;max-width:18px;gap:0;justify-content:center}',
             '#palette-button{font-size:0}',
             '#theme-button::before{content:"◐";font-size:15px;line-height:1}',
@@ -728,11 +732,18 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
     def test_principal_landing_surfaces_exact_release_review_and_source_state(self):
         for text in (
             'Original markets research with the source trail attached.',
-            'Read the latest note',
+            'Independent markets research · Navnoor Bawa',
+            'Preview the latest note',
             'Get full research access',
             'Latest research',
-            'What needs attention',
-            'Open local reviews',
+            'Published archive',
+            'Published records',
+            'With captured source text',
+            'Publication channels',
+            'Explore the archive',
+            'Find a company, market, or strategy',
+            'Continue private diligence in this browser',
+            'Review baseline tools',
             'Mark current research reviewed',
             'Search the archive',
             'Company, market, strategy, or theme',
@@ -740,14 +751,12 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'Coverage across Substack, Medium, Patreon, and FX Empire',
             'Open verification record',
             'Published-source research, not a recommendation or live portfolio view.',
-            "const newResearchLabel = reviewBaselineExists ? 'New since review' : 'Recent · 7 days';",
             "const newFilterLabel = reviewBaselineExists ? 'New since last review' : 'Recent · 7 days';",
             "const freshness = snapshotFreshness();",
             "const sourceRollupClass = healthySources === CATALOGUE_SOURCES.length",
-            'Sources healthy',
             'data-desk-article=',
             'data-owner-search-form',
-            'data-owner-new-research',
+            'data-view="research" data-owner-research',
             'data-action="mark-reviewed"',
             'data-action="undo-mark-reviewed"',
             '}).slice(0,4);',
@@ -810,7 +819,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             landing,
         )
         self.assertIn('<h2>Latest notes</h2>', landing)
-        self.assertIn('<h2>What needs attention</h2>', landing)
+        self.assertIn('<h2>Find a company, market, or strategy</h2>', landing)
         self.assertIn('target="_blank" rel="noopener noreferrer"', landing)
         self.assertIn(
             'aria-label="Get full Navnoor Research access (opens in a new tab)"',
@@ -824,6 +833,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn("escapeHtml(sourceRollupClass)", landing)
         self.assertIn('.desk-source-panel>summary>b.ok{color:var(--positive)}', self.html)
         self.assertIn('.desk-source-panel>summary>b.degraded{color:var(--warning)}', self.html)
+        self.assertIn('.desk-source-panel>summary::after{content:"";', self.html)
         self.assertLess(
             landing.index('Original markets research with the source trail attached.'),
             landing.index('Search the archive'),
@@ -908,10 +918,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             view_start,
         )
         view_handler = self.html[view_start:view_end]
-        self.assertIn(
-            "view.dataset.view === 'structure' || view.hasAttribute('data-owner-research')",
-            view_handler,
-        )
+        self.assertIn("view.dataset.view === 'structure'", view_handler)
         self.assertIn('clearArchiveScope()', view_handler)
         self.assertIn('data-owner-research', self.html)
         self.assertIn(
@@ -921,19 +928,18 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.html,
         )
 
-        new_start = self.html.index('function openOwnerNewResearch()')
-        new_end = self.html.index('\nfunction openOwnerReview()', new_start)
-        new_handler = self.html[new_start:new_end]
+        research_start = self.html.index('function openOwnerResearch()')
+        research_end = self.html.index('\nfunction openOwnerReview()', research_start)
+        research_handler = self.html[research_start:research_end]
         for text in (
-            'const hasNewResearch = ARTICLES.some(isNewArticle)',
             'clearArchiveScope()',
             "state.view = 'research'",
-            'state.newOnly = hasNewResearch',
             "state.sort = 'newest'",
+            'state.limit = PAGE_SIZE.research',
             "renderObservationAwareNavigation('entry')",
         ):
-            self.assertIn(text, new_handler)
-        self.assertIn("newResearch ? 'Review' : 'Browse all'", self.html)
+            self.assertIn(text, research_handler)
+        self.assertIn("event.target.closest('[data-owner-research]')", self.html)
 
         review_start = self.html.index('function openOwnerReview()')
         review_end = self.html.index('\nfunction applyPreset', review_start)
@@ -1161,7 +1167,8 @@ for (const [url,source] of rejected) {
             ':root,html[data-theme="light"],html[data-theme="dark"]',
             '--bg:#ffffff!important',
             '--surface-1:#ffffff!important',
-            '--text:#142033!important',
+            '--text:#131c24!important',
+            '--premium:#775113!important',
             '.thread-topic-list,.thread-load-boundary .secondary-action',
             '.intel-side.ic-sheet{',
             'display:block!important',
@@ -1404,10 +1411,14 @@ for (const [url,source] of rejected) {
         self.assertIn('<noscript><div class="bootstrap-no-js" role="status">', overlay)
         self.assertIn('The research archive cannot verify its catalogue', overlay)
         self.assertIn('href="data/latest.json">View release status</a>', overlay)
-        self.assertIn('<div id="bootstrap-js" hidden>', overlay)
+        self.assertIn('<div id="bootstrap-js">', overlay)
+        self.assertNotIn('<div id="bootstrap-js" hidden>', overlay)
         self.assertLess(overlay.index('<noscript>'), overlay.index('id="bootstrap-js"'))
         self.assertIn('noscript{display:block}', self.html)
         self.assertNotIn('noscript{position:fixed', self.html)
+        self.assertIn("document.documentElement.classList.add('js')", self.html)
+        self.assertIn('#bootstrap-js{display:none}', self.html)
+        self.assertIn('html.js #bootstrap-js{display:block}', self.html)
         self.assertIn(
             "document.getElementById('bootstrap-js').hidden = false",
             self.html,
@@ -2997,7 +3008,7 @@ for (const [url,source] of rejected) {
         for text in (
             '<meta name="robots" content="index,follow,max-image-preview:large">',
             '<meta property="og:site_name" content="Navnoor Research Archive">',
-            '<meta property="og:image" content="https://navnoorthapar.github.io/substack-trades/og.jpg">',
+            '<meta property="og:image" content="https://navnoorthapar.github.io/substack-trades/og-private-research-2026-08.jpg">',
             '<meta property="og:image:width" content="1200">',
             '<meta property="og:image:height" content="630">',
             '<meta name="twitter:card" content="summary_large_image">',
@@ -3031,9 +3042,21 @@ for (const [url,source] of rejected) {
         self.assertEqual(manifest['start_url'], './')
         self.assertEqual(manifest['scope'], './')
         self.assertEqual(manifest['icons'][0]['src'], 'favicon.svg')
-        self.assertEqual(manifest['background_color'], '#f4f6f8')
-        self.assertEqual(manifest['theme_color'], '#f4f6f8')
-        social = (self.site_dir / 'og.jpg').read_bytes()
+        self.assertEqual(manifest['background_color'], '#f5f3ee')
+        self.assertEqual(manifest['theme_color'], '#f5f3ee')
+        self.assertEqual(
+            manifest['description'],
+            'Original markets research with source-linked passages, publication '
+            'provenance, and direct access to complete subscriber notes.',
+        )
+        self.assertIn(
+            '<meta property="og:title" content="Navnoor Research Archive — Original Markets Research">',
+            self.html,
+        )
+        self.assertIn('original markets research with the source trail attached', self.html)
+        social = (
+            self.site_dir / 'og-private-research-2026-08.jpg'
+        ).read_bytes()
         self.assertTrue(social.startswith(b'\xff\xd8') and social.rstrip().endswith(b'\xff\xd9'))
         self.assertLessEqual(len(social), 500_000)
         self.assertIn('no advertising, cookies, third-party analytics, session replay', self.html)
@@ -3281,7 +3304,7 @@ for (const [url,source] of rejected) {
             'index.html', 'article_catalog.json', 'article_briefs.json',
             'observations.json',
             'robots.txt', 'sitemap.xml', 'site.webmanifest',
-            'favicon.svg', 'og.jpg',
+            'favicon.svg', 'og-private-research-2026-08.jpg',
             'data/articles_index.json', 'data/latest.json',
             'data/manifest.json', 'data/search_index.json',
             'data/related.json', 'data/families.json',
@@ -3363,6 +3386,7 @@ for (const [url,source] of rejected) {
             'selected', 'selected-line', 'selection-bg', 'selection-text',
             'text', 'text-secondary', 'text-muted',
             'accent', 'accent-strong', 'accent-hover', 'accent-active', 'accent-soft',
+            'premium', 'premium-soft', 'premium-line',
             'focus', 'on-accent',
             'positive', 'positive-soft', 'negative', 'negative-soft',
             'warning', 'warning-soft', 'warning-line',
@@ -3384,6 +3408,12 @@ for (const [url,source] of rejected) {
                         4.5,
                         f'{foreground} on {surface}',
                     )
+            for surface in ('bg', 'surface-1', 'surface-2', 'surface-3', 'surface-raised'):
+                self.assertGreaterEqual(
+                    contrast(palette['premium'], palette[surface]),
+                    4.5,
+                    f'premium detail on {surface}',
+                )
             for semantic in (
                 'positive', 'negative', 'warning',
                 'long', 'short', 'relative', 'long-short',
@@ -3435,8 +3465,8 @@ for (const [url,source] of rejected) {
             self.assertLessEqual(dark_channels[1], dark_channels[2], f'{surface} should use cool slate')
 
             light_channels = channels(light[surface])
-            self.assertLessEqual(light_channels[0], light_channels[1], f'{surface} should use cool neutral slate')
-            self.assertLessEqual(light_channels[1], light_channels[2], f'{surface} should use cool neutral slate')
+            self.assertGreaterEqual(light_channels[0], light_channels[1], f'{surface} should use warm paper')
+            self.assertGreaterEqual(light_channels[1], light_channels[2], f'{surface} should use warm paper')
 
         dark_accent = channels(dark['accent'])
         dark_action = channels(dark['accent-strong'])
@@ -3447,13 +3477,17 @@ for (const [url,source] of rejected) {
 
         light_accent = channels(light['accent'])
         light_brick = channels(light['brick'])
+        light_premium = channels(light['premium'])
         self.assertGreater(light_accent[2], light_accent[0], 'light interactions should retain a blue information cue')
-        self.assertEqual(light_brick, light_accent)
+        self.assertEqual(light_brick, light_premium)
+        self.assertNotEqual(light_brick, light_accent)
+        self.assertGreaterEqual(color_distance(light['premium'], light['accent']), 30)
         self.assertGreaterEqual(contrast(light['text-muted'], light['selected']), 4.5)
         self.assertIn('background:var(--accent-strong);color:var(--on-accent)', self.html)
         self.assertIn('.primary-action:hover{background:var(--accent-hover);border-color:var(--accent-hover)}', self.html)
         self.assertIn('.primary-action:active{background:var(--accent-active);border-color:var(--accent-active)}', self.html)
         self.assertIn('#search:focus{border-color:var(--control-line)', self.html)
+        self.assertIn('.global-search:focus-within{border-color:var(--focus)', self.html)
         self.assertIn('::selection{background:var(--selection-bg);color:var(--selection-text)}', self.html)
         self.assertRegex(self.html, r'\.desk-start\{[^}]*border:1px solid var\(--control-line\)')
         self.assertRegex(self.html, r'\.structure-chip\{[^}]*border:1px solid var\(--control-line\)')
@@ -3496,7 +3530,10 @@ for (const [url,source] of rejected) {
         self.assertNotIn('forced-color-adjust:none', self.html)
         self.assertIn('background-image:none!important', self.html)
         self.assertIn('.mix-legend{display:inline!important;white-space:normal}', self.html)
-        self.assertIn('.command-button.active,.intel-lens.active,.data-row.selected,.next-item.selected{', self.html)
+        self.assertIn('.command-button.active,.intel-lens.active,.data-row.selected,.next-item.selected,', self.html)
+        self.assertIn('.desk-start.active,.structure-chip.active,.structure-anchor.active,', self.html)
+        self.assertIn('.ic-nav-button.active,.ic-lens.active,.ic-compact-button.active,', self.html)
+        self.assertIn('.ic-compact-button[aria-current="page"],.thread-topic.active,.thread-node.active button{', self.html)
         self.assertIn('@media(prefers-contrast:more)', self.html)
         self.assertIn('::-webkit-scrollbar-thumb{background:var(--control-line)', self.html)
         self.assertIn('::-webkit-scrollbar-thumb:hover{background:var(--control-line-hover)}', self.html)

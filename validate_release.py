@@ -46,6 +46,7 @@ from smoke_test_site import (
 from validate_inline_scripts import validate_inline_scripts
 
 
+SOCIAL_IMAGE_NAME = 'og-private-research-2026-08.jpg'
 CORE_ASSETS = frozenset((
     'index.html',
     'article_catalog.json',
@@ -55,7 +56,7 @@ CORE_ASSETS = frozenset((
     'sitemap.xml',
     'site.webmanifest',
     'favicon.svg',
-    'og.jpg',
+    SOCIAL_IMAGE_NAME,
 ))
 EXPECTED_DIRECTORIES = frozenset(('a', 'cards', 'data'))
 FINGERPRINT_KEYS = (
@@ -73,8 +74,8 @@ ARTICLE_WIRE_SCHEMA_RE = re.compile(
 )
 SHA256_RE = re.compile(r'^[0-9a-f]{64}$')
 SITE_URL = 'https://navnoorthapar.github.io/substack-trades/'
-LIGHT_THEME_BG = '#f4f6f8'
-DARK_THEME_BG = '#090e15'
+LIGHT_THEME_BG = '#f5f3ee'
+DARK_THEME_BG = '#08131c'
 INLINE_BRIEF_COUNT = 12
 MANAGER_ALIAS_LABELS = {
     'citadel': 'Citadel / Ken Griffin',
@@ -906,8 +907,9 @@ def _expected_text_support_assets(
             'name': 'Navnoor Research Archive',
             'short_name': 'Navnoor Archive',
             'description': (
-                'Published research index with source-linked passages and '
-                'capture provenance.'
+                'Original markets research with source-linked passages, '
+                'publication provenance, and direct access to complete '
+                'subscriber notes.'
             ),
             'start_url': './',
             'scope': './',
@@ -926,8 +928,8 @@ def _expected_text_support_assets(
     ) + '\n'
     favicon_svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 <rect width="64" height="64" rx="6" fill="{DARK_THEME_BG}"/>
-<rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#78a9ff" stroke-width="2"/>
-<text x="32" y="39" fill="#eef3f8" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">NA</text>
+<rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#e3ca8a" stroke-width="2"/>
+<text x="32" y="39" fill="#f2f0e9" font-family="Georgia,serif" font-size="18" font-weight="700" text-anchor="middle">NR</text>
 </svg>
 '''
     return {
@@ -975,7 +977,7 @@ def _jpeg_dimensions(payload: bytes) -> Tuple[int, int]:
             )
             return width, height
         offset += segment_length
-    raise ValueError('og.jpg JPEG dimensions could not be read')
+    raise ValueError('social preview JPEG dimensions could not be read')
 
 
 def _validate_support_assets(
@@ -996,7 +998,10 @@ def _validate_support_assets(
             f'{asset_name} differs from its deterministic source rendering',
         )
 
-    actual_og = _read_bytes(site / 'og.jpg', 'og.jpg')
+    actual_og = _read_bytes(
+        site / SOCIAL_IMAGE_NAME,
+        SOCIAL_IMAGE_NAME,
+    )
     valid_jpeg = (
         10_000 <= len(actual_og) <= 500_000
         and actual_og.startswith(b'\xff\xd8')
@@ -1004,11 +1009,11 @@ def _validate_support_assets(
     )
     _require(
         valid_jpeg,
-        'og.jpg must be a valid, optimized 10-500 KB JPEG',
+        f'{SOCIAL_IMAGE_NAME} must be a valid, optimized 10-500 KB JPEG',
     )
     _require(
         _jpeg_dimensions(actual_og) == (1200, 630),
-        'og.jpg JPEG must be exactly 1200x630 pixels',
+        f'{SOCIAL_IMAGE_NAME} JPEG must be exactly 1200x630 pixels',
     )
     tracked_og = _read_bytes(
         social_image_source,
@@ -1016,7 +1021,7 @@ def _validate_support_assets(
     )
     _require(
         actual_og == tracked_og,
-        'og.jpg differs from tracked assets/og.jpg',
+        f'{SOCIAL_IMAGE_NAME} differs from tracked assets/og.jpg',
     )
 
 

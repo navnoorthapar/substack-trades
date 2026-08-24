@@ -145,9 +145,9 @@ contracts are in [SCHEMA.md](SCHEMA.md).
 ## Subscriber conversion
 
 Member-access research is promoted as source completeness, never as a simulated
-browser paywall. The owner-first home links directly to the current Substack
-subscription terms and makes the latest published note the primary reading
-path. The archive keeps public research usable, distinguishes what the source
+browser paywall. The owner-first home gives the current Substack subscription
+terms the primary action and keeps the latest published note as a clearly
+labelled preview path. The archive keeps public research usable, distinguishes what the source
 permits from how much this release captured, and presents a contextual
 continuation panel only for a canonical paid Substack record. In the evidence
 workspace, the same boundary appears once inside an expanded paid source note,
@@ -194,11 +194,13 @@ metrics without the connected books and records required to calculate them.
 ### Passage Search
 
 Passage Search opens with an owner-first research home assembled only from the
-validated release and local browser state: one product promise, one featured
-note plus three compact recent rows, one archive search, a short review agenda,
-and collapsed coverage for all four publication sources. Before an explicit
-review baseline exists, the intake metric is labeled as the recent seven-day
-window; only a real baseline permits the label "New since review."
+validated release and local browser state: one product promise, one primary
+subscriber path, one featured note plus three compact recent rows, buyer-facing
+archive proof, one local archive search, progressively disclosed review tools,
+and collapsed coverage for all four publication sources. Review-baseline state
+stays inside progressively disclosed local tools; the expanded research preset
+uses "Recent · 7 days" until an explicit baseline permits "New since last
+review."
 Source-adapter health is kept separate from clock-aware snapshot freshness, so
 an old release cannot present itself as current merely because every adapter
 was healthy when checked.
@@ -289,15 +291,16 @@ The article-record navigation remains complete when the desktop rail collapses,
 and the print/PDF layout preserves authored passages and public checkpoints
 while removing tab-session Local Review fields.
 
-Light and dark modes are two palettes of one allocator-grade interface system.
+Light and dark modes are two palettes of one private-research interface system.
 They share the same information architecture, typography, spacing, control
 geometry, selected-state indicators, semantic labels, focus treatment, and
 contrast gates; only color and elevation change. A first visit follows the
 operating-system preference before paint, while an explicit in-app choice is
-retained across releases. Light uses cool white and slate surfaces with navy
-actions; dark uses near-black navy and layered slate with the same action and
-semantic hierarchy. Print/PDF output always resolves to the tested light
-palette.
+retained across releases. Light uses warm paper and ink surfaces with midnight
+navy actions; dark uses midnight navy and layered slate with pale institutional
+blue actions. Restrained brass is reserved for editorial and premium detail,
+while semantic states retain separate role-bound colors. Print/PDF output
+always resolves to the tested light palette.
 
 Parsed Passages and the Article Index provide fast passage-level review.
 Directional labels describe parsed language, not an actor, verified position,

@@ -153,17 +153,13 @@ for (const value of rejected) {
 '''
         )
 
-    def test_owner_agenda_opens_only_real_new_and_active_review_sets(self):
-        is_new = javascript_between(
-            'function isNewArticle(article) {',
-            '\nfunction reviewFlagged',
-        )
+    def test_owner_archive_and_review_paths_clear_stale_state(self):
         clear_scope = javascript_between(
             'function clearArchiveScope() {',
             '\nfunction resetFilters()',
         )
-        open_new = javascript_between(
-            'function openOwnerNewResearch() {',
+        open_research = javascript_between(
+            'function openOwnerResearch() {',
             '\nfunction openOwnerReview()',
         )
         open_review = javascript_between(
@@ -172,13 +168,6 @@ for (const value of rejected) {
         )
         run_node(
             r'''
-const ARTICLES = [
-  {id:'a1',date:'2026-08-23'},
-  {id:'a2',date:'2026-08-22'}
-];
-let reviewedArticleIds = new Set(['a1','a2']);
-let reviewBaselineExists = true;
-const firstVisitCutoff = '2026-08-01';
 const PAGE_SIZE = {research:100,queue:100};
 const state = {
   view:'structure',sources:new Set(['substack']),revisions:new Set(['prior']),
@@ -200,23 +189,18 @@ const document = {
 let renders = [];
 function renderObservationAwareNavigation(kind) { renders.push(kind); }
 '''
-            + is_new
             + clear_scope
-            + open_new
+            + open_research
             + open_review
             + r'''
-openOwnerNewResearch();
+openOwnerResearch();
 if (state.view !== 'research' || state.newOnly || state.sort !== 'newest') {
-  throw new Error('zero-new owner agenda did not fall back to the full archive');
+  throw new Error('owner archive path did not open the full archive');
 }
 if (state.sources.size || state.revisions.size || state.query ||
     fields.get('search').value || renders.at(-1) !== 'entry') {
   throw new Error('owner research entry retained stale browse state');
 }
-
-reviewedArticleIds.delete('a2');
-openOwnerNewResearch();
-if (!state.newOnly) throw new Error('real new research was not isolated');
 
 state.queueStatuses = new Set(['archived']);
 openOwnerReview();

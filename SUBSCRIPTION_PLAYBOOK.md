@@ -82,11 +82,15 @@ Find relevant evidence
   -> review price, trial, renewal, and cancellation terms on Substack
 ```
 
-The primary action answers the reader's immediate question: **Read full note on
-Substack**. The secondary action answers the broader archive question:
-**See subscription plans**. Subscription prices and trial claims are never
-hard-coded into the archive because they can change; the current terms remain
-adjacent to checkout on Substack.
+On the owner home, the primary action is **Get full research access** and the
+latest note is explicitly presented as a preview. The Article Record and
+Parsed Passages subscriber boundary keeps **Get full research access** primary
+and gives existing subscribers a secondary **Read the note** path. Only the
+expanded paid-note boundary inside the Research Evidence Desk reverses that
+order: **Read complete research note** answers the active research context and
+**See subscription plans** remains secondary. Subscription prices and trial
+claims are never hard-coded into the archive because they can change; the
+current terms remain adjacent to checkout on Substack.
 
 ## Reader value hierarchy
 

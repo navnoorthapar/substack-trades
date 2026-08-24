@@ -59,7 +59,8 @@ cache. Confirm the generated artifact contains `index.html`, the verified
 `article_catalog.json` bootstrap asset, both deferred research JSON assets, all
 six contract files under `data/`, exactly one PNG under `cards/` and
 one HTML stub under `a/` for every catalogue slug, plus `robots.txt`,
-`sitemap.xml`, `site.webmanifest`, `favicon.svg`, and `og.jpg`. Inspect the
+`sitemap.xml`, `site.webmanifest`, `favicon.svg`, and the fingerprinted
+`og-private-research-2026-08.jpg`. Inspect the
 reported six release fingerprints, public-data digest, size budgets, and
 article/card/stub counts. This shared validator is the same executable used by
 the scheduled refresh, pre-push gate, CI, and independent watchdog.

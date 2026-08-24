@@ -330,7 +330,7 @@ class ReleaseValidatorTests(unittest.TestCase):
             )
 
         def mutate_manifest(payload):
-            expected = b'"theme_color": "#f4f6f8"'
+            expected = b'"theme_color": "#f5f3ee"'
             self.assertEqual(payload.count(expected), 1)
             return payload.replace(
                 expected,
@@ -339,9 +339,9 @@ class ReleaseValidatorTests(unittest.TestCase):
             )
 
         def mutate_favicon(payload):
-            expected = b'stroke="#78a9ff"'
+            expected = b'stroke="#e3ca8a"'
             self.assertEqual(payload.count(expected), 1)
-            return payload.replace(expected, b'stroke="#78a9fe"', 1)
+            return payload.replace(expected, b'stroke="#e3ca89"', 1)
 
         for asset_name, transform in (
             ('robots.txt', mutate_robots),
@@ -360,7 +360,7 @@ class ReleaseValidatorTests(unittest.TestCase):
 
     def test_og_image_requires_exact_bytes_and_dimensions(self):
         with self.cloned_site() as site:
-            path = site / 'og.jpg'
+            path = site / validate_release.SOCIAL_IMAGE_NAME
             payload = bytearray(path.read_bytes())
             payload[-3] ^= 0x01
             self.rewrite(path, bytes(payload))
@@ -369,7 +369,7 @@ class ReleaseValidatorTests(unittest.TestCase):
                 self.validate(site)
 
         with self.cloned_site() as site:
-            path = site / 'og.jpg'
+            path = site / validate_release.SOCIAL_IMAGE_NAME
             payload = bytearray(path.read_bytes())
             dimensions = (
                 (630).to_bytes(2, 'big')

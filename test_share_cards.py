@@ -1,6 +1,7 @@
 import base64
 import binascii
 import hashlib
+import inspect
 import json
 import re
 import struct
@@ -49,6 +50,26 @@ def parse_png(payload):
 
 
 class ShareCardTests(unittest.TestCase):
+    def test_card_branding_matches_the_public_archive(self):
+        source = inspect.getsource(share_cards.render_share_card)
+        self.assertIn("'NR'", source)
+        self.assertIn("'ORIGINAL MARKETS RESEARCH'", source)
+        self.assertNotIn("'NA'", source)
+        self.assertNotIn("'PUBLISHED RESEARCH INDEX'", source)
+
+    def test_card_palette_matches_the_premium_editorial_system(self):
+        self.assertEqual(
+            share_cards.PALETTE,
+            (
+                (8, 19, 28),
+                (242, 240, 233),
+                (227, 202, 138),
+                (170, 181, 185),
+                (20, 36, 47),
+                (182, 209, 225),
+            ),
+        )
+
     def test_indexed_png_is_valid_deterministic_and_bounded(self):
         args = (
             'Black–Scholes Delta Is Wrong: Hull–White’s Fix Beats It',

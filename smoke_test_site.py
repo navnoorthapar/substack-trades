@@ -46,11 +46,12 @@ ARTICLE_CATALOG_ASSET_NAME = 'article_catalog.json'
 DEFERRED_ASSET_NAME = 'article_briefs.json'
 OBSERVATION_ASSET_NAME = 'observations.json'
 SUPPORT_ASSET_NAMES = (
-    'favicon.svg', 'og.jpg', 'robots.txt', 'site.webmanifest', 'sitemap.xml',
+    'favicon.svg', 'og-private-research-2026-08.jpg', 'robots.txt',
+    'site.webmanifest', 'sitemap.xml',
 )
 SUPPORT_CONTENT_TYPES = {
     'favicon.svg': {'image/svg+xml'},
-    'og.jpg': {'image/jpeg'},
+    'og-private-research-2026-08.jpg': {'image/jpeg'},
     'robots.txt': {'text/plain'},
     'site.webmanifest': {'application/manifest+json', 'application/json', 'text/plain'},
     'sitemap.xml': {'application/xml', 'text/xml', 'text/plain'},
@@ -205,7 +206,7 @@ def validate_html(
     missing_ids = sorted(REQUIRED_ELEMENT_IDS - parser.element_ids)
     if missing_ids:
         raise ValueError(f'missing core interface elements: {", ".join(missing_ids)}')
-    if parser.title != 'Navnoor Research Archive':
+    if parser.title != 'Navnoor Research Archive — Original Markets Research':
         raise ValueError(f'unexpected page title: {parser.title!r}')
     return embedded_asset_digests(html)
 

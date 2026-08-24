@@ -25,12 +25,12 @@ WIDTH = 1200
 HEIGHT = 630
 MAX_CARD_BYTES = 100_000
 PALETTE = (
-    (7, 15, 23),       # terminal black
-    (243, 246, 248),   # primary text
-    (242, 169, 59),    # institutional amber
-    (118, 139, 157),   # secondary text
-    (19, 34, 47),      # panel
-    (61, 123, 184),    # restrained blue
+    (8, 19, 28),       # midnight navy
+    (242, 240, 233),   # warm paper text
+    (227, 202, 138),   # restrained brass
+    (170, 181, 185),   # secondary text
+    (20, 36, 47),      # layered navy panel
+    (182, 209, 225),   # institutional blue
 )
 SOURCE_LABELS = {
     'substack': 'SUBSTACK',
@@ -226,9 +226,9 @@ def render_share_card(title: object, source: object, post_date: object) -> bytes
     _rectangle(pixels, 80, 516, 1120, 518, 5)
 
     _rectangle(pixels, 80, 67, 128, 115, 5)
-    _draw_text(pixels, 'NA', 86, 80, 3, 1)
+    _draw_text(pixels, 'NR', 86, 80, 3, 1)
     _draw_text(pixels, 'NAVNOOR RESEARCH ARCHIVE', 152, 73, 4, 1)
-    _draw_text(pixels, 'PUBLISHED RESEARCH INDEX', 153, 108, 2, 3)
+    _draw_text(pixels, 'ORIGINAL MARKETS RESEARCH', 153, 108, 2, 3)
 
     source_key = str(source or '').strip().casefold()
     source_label = SOURCE_LABELS.get(source_key, normalize_card_text(source))

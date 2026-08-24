@@ -33,12 +33,13 @@ ROOT = Path(__file__).parent
 DOCS_DIR = Path(os.environ.get('SITE_OUTPUT_DIR', ROOT / 'docs')).expanduser()
 DOCS_DIR.mkdir(parents=True, exist_ok=True)
 SITE_URL = 'https://navnoorthapar.github.io/substack-trades/'
-SOCIAL_IMAGE_URL = f'{SITE_URL}og.jpg'
+SOCIAL_IMAGE_NAME = 'og-private-research-2026-08.jpg'
+SOCIAL_IMAGE_URL = f'{SITE_URL}{SOCIAL_IMAGE_NAME}'
 SOCIAL_IMAGE_SOURCE = ROOT / 'assets' / 'og.jpg'
 SUBSCRIPTION_URL = 'https://www.navnoorbawaresearch.com/subscribe'
-THEME_REVISION = 'allocator-workspace-2026-08'
-LIGHT_THEME_BG = '#f4f6f8'
-DARK_THEME_BG = '#090e15'
+THEME_REVISION = 'private-research-2026-08'
+LIGHT_THEME_BG = '#f5f3ee'
+DARK_THEME_BG = '#08131c'
 ARTICLE_CATALOG_SCHEMA_VERSION = 1
 
 with open(ROOT / 'trades_extracted.json', encoding='utf-8') as handle:
@@ -852,7 +853,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Published research index with source-linked passages and capture provenance.">
+<meta name="description" content="Original markets research with source-linked passages, publication provenance, and direct access to complete subscriber notes.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="color-scheme" content="light dark">
 <meta name="application-name" content="Navnoor Research Archive">
@@ -860,20 +861,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Navnoor Research Archive">
-<meta property="og:title" content="Navnoor Research Archive">
-<meta property="og:description" content="Published research index with source-linked passages and capture provenance.">
+<meta property="og:title" content="Navnoor Research Archive — Original Markets Research">
+<meta property="og:description" content="Original markets research with source-linked passages and direct access to complete subscriber notes.">
 <meta property="og:url" content="https://navnoorthapar.github.io/substack-trades/">
-<meta property="og:image" content="https://navnoorthapar.github.io/substack-trades/og.jpg">
-<meta property="og:image:secure_url" content="https://navnoorthapar.github.io/substack-trades/og.jpg">
+<meta property="og:image" content="__SOCIAL_IMAGE_URL__">
+<meta property="og:image:secure_url" content="__SOCIAL_IMAGE_URL__">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Navnoor Research Archive published research preview">
+<meta property="og:image:alt" content="Navnoor Research Archive — original markets research with the source trail attached">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Navnoor Research Archive">
-<meta name="twitter:description" content="Published research index with source-linked passages and capture provenance.">
-<meta name="twitter:image" content="https://navnoorthapar.github.io/substack-trades/og.jpg">
-<meta name="twitter:image:alt" content="Navnoor Research Archive published research preview">
+<meta name="twitter:title" content="Navnoor Research Archive — Original Markets Research">
+<meta name="twitter:description" content="Original markets research with source-linked passages and direct access to complete subscriber notes.">
+<meta name="twitter:image" content="__SOCIAL_IMAGE_URL__">
+<meta name="twitter:image:alt" content="Navnoor Research Archive — original markets research with the source trail attached">
 <link rel="canonical" href="https://navnoorthapar.github.io/substack-trades/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="manifest" href="site.webmanifest">
@@ -887,9 +888,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="nrt-article-catalog-sha256" content="__ARTICLE_CATALOG_SHA256__">
 <meta name="nrt-brief-archive-sha256" content="__BRIEF_ARCHIVE_SHA256__">
 <meta name="nrt-observation-archive-sha256" content="__OBSERVATION_ARCHIVE_SHA256__">
-<title>Navnoor Research Archive</title>
+<title>Navnoor Research Archive — Original Markets Research</title>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Navnoor Research Archive","url":"https://navnoorthapar.github.io/substack-trades/","description":"Published research index with source-linked passages and capture provenance.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"author":{"@type":"Person","name":"Navnoor Bawa","url":"https://medium.com/@navnoorbawa"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Navnoor Research Archive","url":"https://navnoorthapar.github.io/substack-trades/","description":"Original markets research with source-linked passages, publication provenance, and direct access to complete subscriber notes.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"author":{"@type":"Person","name":"Navnoor Bawa","url":"https://medium.com/@navnoorbawa"}}
 </script>
 <script>
 (function () {
@@ -898,6 +899,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     try { window.top.location.replace(window.self.location.href); } catch (_error) {}
     throw new Error('Navnoor Research Archive cannot run inside a frame');
   }
+  document.documentElement.classList.add('js');
   var themeRevision = '__THEME_REVISION__';
   var candidate = '';
   try { candidate = localStorage.getItem('nrt-theme') || ''; } catch (_error) {}
@@ -920,67 +922,70 @@ button,input,select,textarea{font:inherit}
   --rail-w:240px;
   --inspector-w:408px;
   --bg:__DARK_THEME_BG__;
-  --surface-1:#0f1620;
-  --surface-2:#151e2a;
-  --surface-3:#1d2937;
-  --surface-raised:#223043;
-  --line:#2a394b;
-  --line-strong:#43566c;
-  --control-line:#687b92;
-  --control-line-hover:#8ea1b7;
-  --text:#eef3f8;
-  --text-secondary:#b8c4d0;
-  --text-muted:#8fa0b3;
-  --accent:#78a9ff;
-  --accent-strong:#78a9ff;
-  --accent-hover:#94bbff;
-  --accent-active:#5f95ef;
-  --accent-soft:#172b49;
-  --on-accent:#08111d;
-  --positive:#5dd6a0;
-  --positive-soft:#123126;
-  --positive-line:#3c9c73;
-  --negative:#ff8a85;
-  --negative-soft:#3a2022;
-  --negative-line:#bc625f;
-  --warning:#f4bf60;
-  --warning-soft:#332814;
-  --warning-line:#9f7935;
-  --relative:#b3a7ff;
-  --relative-soft:#282442;
-  --relative-line:#756bb2;
-  --long-short:#e2a0d8;
-  --long-short-soft:#352238;
-  --long-short-line:#98668f;
-  --long:#72c7e8;
+  --surface-1:#0e1b25;
+  --surface-2:#14242f;
+  --surface-3:#1b2e3a;
+  --surface-raised:#203541;
+  --line:#2a3d48;
+  --line-strong:#526873;
+  --control-line:#71838c;
+  --control-line-hover:#95a5ad;
+  --text:#f2f0e9;
+  --text-secondary:#c6cecf;
+  --text-muted:#aab5b9;
+  --accent:#b6d1e1;
+  --accent-strong:#b6d1e1;
+  --accent-hover:#c9dfec;
+  --accent-active:#9fc3d8;
+  --accent-soft:#163247;
+  --on-accent:#07131b;
+  --premium:#e3ca8a;
+  --premium-soft:#30291a;
+  --premium-line:#927b46;
+  --positive:#82c9a9;
+  --positive-soft:#102c22;
+  --positive-line:#4f8d73;
+  --negative:#e49a95;
+  --negative-soft:#351d1e;
+  --negative-line:#9b6260;
+  --warning:#e3ca8a;
+  --warning-soft:#30291a;
+  --warning-line:#927b46;
+  --relative:#b7a9ee;
+  --relative-soft:#292540;
+  --relative-line:#776ca8;
+  --long-short:#dca4d0;
+  --long-short-soft:#352438;
+  --long-short-line:#8e6686;
+  --long:#79bfd8;
   --long-soft:#16303a;
-  --long-line:#4b8ba3;
-  --short:#ff9bb6;
+  --long-line:#4c8193;
+  --short:#f49ab3;
   --short-soft:#3b222c;
-  --short-line:#b86780;
-  --quant:#67d1dc;
+  --short-line:#9d6374;
+  --quant:#72c9ce;
   --quant-soft:#153238;
-  --quant-line:#438e96;
-  --number:#f1c76e;
+  --quant-line:#46878b;
+  --number:#e3c276;
   --number-soft:#342b19;
-  --number-line:#9f803e;
-  --checkpoint:#b3bde0;
-  --source-substack:#e89c63;
-  --source-medium:#9eacba;
-  --source-patreon:#d0a3ff;
-  --source-fxempire:#f0c16e;
-  --brick:#78a9ff;
-  --brick-soft:#172b49;
-  --brick-line:#4d75ae;
-  --ochre:#f4bf60;
-  --ochre-soft:#332814;
-  --green:#5dd6a0;
-  --green-soft:#123126;
-  --focus:#9bc1ff;
-  --selected:#172b49;
-  --selected-line:#78a9ff;
-  --selection-bg:#315d9f;
-  --selection-text:#ffffff;
+  --number-line:#907738;
+  --checkpoint:#cbb6cf;
+  --source-substack:#e5ad80;
+  --source-medium:#b7c1c5;
+  --source-patreon:#c5afe5;
+  --source-fxempire:#e3ca8a;
+  --brick:#e3ca8a;
+  --brick-soft:#30291a;
+  --brick-line:#927b46;
+  --ochre:#e3ca8a;
+  --ochre-soft:#30291a;
+  --green:#82c9a9;
+  --green-soft:#102c22;
+  --focus:#e3ca8a;
+  --selected:#17364a;
+  --selected-line:#b6d1e1;
+  --selection-bg:#e3ca8a;
+  --selection-text:#07131b;
   --backdrop:rgba(3,8,14,.76);
   --shadow:0 24px 64px rgba(0,0,0,.42);
   --shadow-soft:0 8px 24px rgba(0,0,0,.18);
@@ -994,66 +999,69 @@ button,input,select,textarea{font:inherit}
 html[data-theme="light"]{
   color-scheme:light;
   --bg:__LIGHT_THEME_BG__;
-  --surface-1:#ffffff;
-  --surface-2:#eef2f6;
-  --surface-3:#e3e9f0;
+  --surface-1:#fffefb;
+  --surface-2:#ece9e2;
+  --surface-3:#e2ded5;
   --surface-raised:#ffffff;
-  --line:#d7dde6;
-  --line-strong:#aeb8c5;
-  --control-line:#748296;
-  --control-line-hover:#526276;
-  --text:#142033;
-  --text-secondary:#405066;
-  --text-muted:#5b6a7c;
-  --accent:#174ea6;
-  --accent-strong:#174ea6;
-  --accent-hover:#123e84;
-  --accent-active:#0d326b;
-  --accent-soft:#e7eefb;
+  --line:#d4cfc4;
+  --line-strong:#918c84;
+  --control-line:#747d85;
+  --control-line-hover:#535f68;
+  --text:#131c24;
+  --text-secondary:#43505a;
+  --text-muted:#58646e;
+  --accent:#153f5f;
+  --accent-strong:#153f5f;
+  --accent-hover:#0f324c;
+  --accent-active:#0a273d;
+  --accent-soft:#e2eaf0;
   --on-accent:#ffffff;
-  --positive:#14734b;
-  --positive-soft:#e7f3ed;
-  --positive-line:#76a58f;
-  --negative:#b33a36;
-  --negative-soft:#f8e9e7;
-  --negative-line:#c88783;
-  --warning:#815600;
-  --warning-soft:#f7efdc;
-  --warning-line:#b69a61;
-  --relative:#5d52a8;
-  --relative-soft:#eceaf7;
-  --relative-line:#9891c4;
-  --long-short:#754b78;
-  --long-short-soft:#f1e8f2;
-  --long-short-line:#ad8aaf;
-  --long:#29677d;
-  --long-soft:#e5f0f3;
-  --long-line:#82a8b5;
-  --short:#87465e;
-  --short-soft:#f4e8ed;
-  --short-line:#b78c9c;
-  --quant:#17656f;
-  --quant-soft:#e3f0f1;
-  --quant-line:#82a9ad;
-  --number:#73510f;
-  --number-soft:#f6eedb;
-  --number-line:#b29a63;
-  --checkpoint:#4f5e75;
+  --premium:#775113;
+  --premium-soft:#f2e8d4;
+  --premium-line:#b89c65;
+  --positive:#17664a;
+  --positive-soft:#e7f1ec;
+  --positive-line:#7a9d8e;
+  --negative:#9b3c39;
+  --negative-soft:#f5e8e6;
+  --negative-line:#c28a87;
+  --warning:#795000;
+  --warning-soft:#f3e9d4;
+  --warning-line:#b89c65;
+  --relative:#5a4994;
+  --relative-soft:#ece8f4;
+  --relative-line:#9b94bc;
+  --long-short:#74466a;
+  --long-short-soft:#f1e7ed;
+  --long-short-line:#ad8ea8;
+  --long:#275d70;
+  --long-soft:#e2edf0;
+  --long-line:#87a6b0;
+  --short:#814355;
+  --short-soft:#f3e7ea;
+  --short-line:#b58e9a;
+  --quant:#1c6265;
+  --quant-soft:#e0eceb;
+  --quant-line:#82a6a7;
+  --number:#705110;
+  --number-soft:#f3ead3;
+  --number-line:#b89c65;
+  --checkpoint:#48576a;
   --source-substack:#9a4a23;
   --source-medium:#4e5b68;
   --source-patreon:#7449a6;
   --source-fxempire:#7e5a13;
-  --brick:#174ea6;
-  --brick-soft:#e7eefb;
-  --brick-line:#7d9cc9;
-  --ochre:#815600;
-  --ochre-soft:#f7efdc;
-  --green:#14734b;
-  --green-soft:#e7f3ed;
-  --focus:#174ea6;
-  --selected:#e7eefb;
-  --selected-line:#174ea6;
-  --selection-bg:#174ea6;
+  --brick:#775113;
+  --brick-soft:#f2e8d4;
+  --brick-line:#b89c65;
+  --ochre:#795000;
+  --ochre-soft:#f3e9d4;
+  --green:#17664a;
+  --green-soft:#e7f1ec;
+  --focus:#775113;
+  --selected:#e2eaf0;
+  --selected-line:#153f5f;
+  --selection-bg:#153f5f;
   --selection-text:#ffffff;
   --backdrop:rgba(20,32,51,.42);
   --shadow:0 20px 52px rgba(20,32,51,.16);
@@ -2239,22 +2247,23 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .kpi-strip{background:var(--surface-2)}
 .kpi-item{border-right-color:var(--line)}
 
-/* One allocator-grade system. Theme changes color and elevation, never geometry. */
+/* One private-research system. Theme changes color and elevation, never geometry. */
 .app-header{
-  border-top:3px solid var(--accent);border-bottom-color:var(--line);
+  border-top:3px solid var(--premium);border-bottom-color:var(--line);
   box-shadow:var(--shadow-soft)
 }
 .brand-mark{
-  border-color:var(--accent);border-radius:var(--radius-md);background:var(--accent);
-  color:var(--on-accent);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)
+  border-color:var(--premium-line);border-radius:var(--radius-md);background:var(--premium-soft);
+  color:var(--premium);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)
 }
-.brand-name{font-family:var(--sans);font-size:17px;font-weight:720;letter-spacing:-.025em}
+.brand-name{font-family:var(--serif);font-size:17px;font-weight:650;letter-spacing:-.018em}
+.brand-name-short{display:none}
 .brand-sub{color:var(--text-muted);font-family:var(--sans);font-size:10.5px;font-weight:650;letter-spacing:.08em}
 .global-search{
   min-height:42px;border:1px solid var(--control-line);border-radius:var(--radius-md);
   background:var(--surface-2);transition:border-color .15s,box-shadow .15s,background .15s
 }
-.global-search:focus-within{border-color:var(--accent);background:var(--surface-1);box-shadow:0 0 0 3px var(--accent-soft)}
+.global-search:focus-within{border-color:var(--focus);background:var(--surface-1);box-shadow:0 0 0 2px var(--focus)}
 .search-glyph{left:12px;color:var(--accent)}
 #search{height:40px;border:0;background:transparent;padding-left:36px;font-size:13px}
 #search:focus,#search:focus-visible{border:0;background:transparent;box-shadow:none}
@@ -2273,10 +2282,10 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .workflow-panel,.workflow-field select,.workflow-field input,.workflow-field textarea,
 .workflow-gate,.orphaned-item,.provenance,.quant-block,.review-notice{border-radius:var(--radius-sm)}
 .facet-option.active,.facet-clear.active{box-shadow:inset 3px 0 var(--selected-line)}
-.record-title{font:700 21px/1.24 var(--sans);letter-spacing:-.02em}
+.record-title{font:650 21px/1.24 var(--serif);letter-spacing:-.018em}
 .inspector-section h3,.inspector-label{font-size:11px;letter-spacing:.08em}
 .kpi-strip{background:var(--surface-1);border-bottom-color:var(--line);box-shadow:inset 0 -1px var(--line)}
-.intel-title,.ic-section-header h2,.ic-dossier-head h2,.ic-sheet-title{font-family:var(--sans);font-weight:720}
+.intel-title,.ic-section-header h2,.ic-dossier-head h2,.ic-sheet-title{font-family:var(--serif);font-weight:650}
 .intel-title{max-width:32ch;font-size:clamp(30px,2.25vw,39px);line-height:1.07;letter-spacing:-.035em}
 .ic-evidence-values span{font-family:var(--mono);color:var(--number)}
 .intel-side.ic-sheet{background:var(--surface-2)}
@@ -2318,27 +2327,30 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .bootstrap-status[data-state="error"] .bootstrap-card{border-color:var(--negative-line)}
 .bootstrap-status[data-state="error"] .bootstrap-kicker{color:var(--negative)}
 
-/* Owner-first research home: product promise before workstation controls. */
+/* Owner-first research home: an editorial front door before workstation controls. */
 .desk-landing{width:min(1280px,100%);margin:0 auto;display:grid;gap:16px}
 .desk-landing-hero{
-  padding:32px;border:1px solid var(--line);border-top:3px solid var(--accent);
-  border-radius:var(--radius-lg);background:var(--surface-1)
+  display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.65fr);align-items:end;gap:44px;
+  padding:38px 40px;border:1px solid var(--line);border-top:3px solid var(--premium);
+  border-radius:var(--radius-lg);background:var(--surface-1);box-shadow:var(--shadow-soft)
 }
-.desk-hero-copy{max-width:900px}
-.desk-hero-status{display:flex;align-items:center;gap:8px;margin-bottom:22px;color:var(--text-muted);font-size:12px}
+.desk-hero-copy{max-width:780px}
+.desk-hero-status{display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:11.5px;line-height:1.45}
 .desk-hero-status strong{color:var(--text);font-weight:700}
-.desk-landing-hero h1{max-width:20ch;font-size:clamp(34px,4.1vw,58px);line-height:1.01;letter-spacing:-.052em;text-wrap:balance}
-.desk-landing-hero .desk-hero-copy>p{max-width:66ch;margin-top:16px;color:var(--text-secondary);font-size:15px;line-height:1.6}
-.desk-hero-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:24px}
-.desk-hero-actions .primary-action,.desk-hero-actions .secondary-action{min-height:44px;padding:0 17px}
+.desk-landing-hero .structure-kicker{margin-bottom:15px;color:var(--premium);letter-spacing:.12em}
+.desk-landing-hero h1{max-width:18ch;font:600 clamp(38px,4.1vw,56px)/1.02 var(--serif);letter-spacing:-.038em;text-wrap:balance}
+.desk-landing-hero .desk-hero-copy>p{max-width:62ch;margin-top:16px;color:var(--text-secondary);font-size:15px;line-height:1.62}
+.desk-hero-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:23px}
+.desk-hero-actions .primary-action,.desk-hero-actions .secondary-action{min-height:44px;padding:0 18px;font-size:12.5px}
+.desk-proof-panel{min-width:0;padding-left:28px;border-left:1px solid var(--line)}
+.desk-proof-label{display:block;margin-bottom:5px;color:var(--premium);font-size:10.5px;font-weight:750;letter-spacing:.11em;text-transform:uppercase}
 .desk-proof-strip{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:30px;
-  border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--line)
+  display:grid;border-top:1px solid var(--line)
 }
-.desk-proof-strip>div{min-width:0;padding:14px 16px;background:var(--surface-2)}
-.desk-proof-strip b{display:block;font:700 22px/1 var(--mono);color:var(--text)}
-.desk-proof-strip span{display:block;margin-top:6px;color:var(--text-secondary);font-size:12px}
-.desk-proof-note{margin-top:11px!important;color:var(--text-muted)!important;font-size:11px!important;line-height:1.45!important}
+.desk-proof-strip>div{min-width:0;display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.desk-proof-strip b{display:block;font:650 22px/1 var(--serif);color:var(--text)}
+.desk-proof-strip span{display:block;color:var(--text-secondary);font-size:11.5px;text-align:right}
+.desk-proof-note{margin-top:11px!important;color:var(--text-muted)!important;font-size:11px!important;line-height:1.5!important}
 .desk-landing-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,.72fr);gap:16px;align-items:start}
 .desk-latest-panel,.desk-review-panel,.desk-source-panel{
   overflow:hidden;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-1)
@@ -2348,7 +2360,7 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
   padding:12px 18px;border-bottom:1px solid var(--line);background:var(--surface-2)
 }
 .desk-landing-section-head span{display:block;color:var(--text-muted);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
-.desk-landing-section-head h2{margin-top:3px;font-size:15px;letter-spacing:-.012em}
+.desk-landing-section-head h2{margin-top:3px;font:650 17px/1.2 var(--serif);letter-spacing:-.012em}
 .desk-latest-list{display:grid}
 .desk-latest-card{
   min-width:0;min-height:92px;display:grid;grid-template-columns:112px minmax(0,1fr) auto;align-items:center;
@@ -2360,8 +2372,8 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .desk-latest-card:hover{background:var(--surface-2);box-shadow:inset 3px 0 var(--accent)}
 .desk-latest-meta{display:grid;gap:5px;color:var(--text-muted);font-size:11px}
 .desk-latest-copy{min-width:0}
-.desk-latest-card h3{font-size:14px;line-height:1.35;letter-spacing:-.012em}
-.desk-latest-card.featured h3{max-width:30ch;font-size:26px;line-height:1.08;letter-spacing:-.038em}
+.desk-latest-card h3{font:650 15px/1.35 var(--serif);letter-spacing:-.012em}
+.desk-latest-card.featured h3{max-width:30ch;font-size:28px;line-height:1.08;letter-spacing:-.03em}
 .desk-latest-card p{
   display:-webkit-box;max-width:74ch;margin-top:10px;overflow:hidden;color:var(--text-secondary);
   font-family:var(--serif);font-size:13.5px;line-height:1.55;-webkit-box-orient:vertical;-webkit-line-clamp:3
@@ -2378,20 +2390,33 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .desk-agenda strong{color:var(--accent);font-size:12px;white-space:nowrap}
 .desk-review-baseline{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:11px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
 .desk-review-baseline p{flex:1 1 100%;margin:0 4px;color:var(--text-muted);font-size:11px;line-height:1.45}
-.desk-home-search{padding:18px}
+.desk-home-search{padding:20px 18px 16px}
 .desk-home-search>label{display:block;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text)}
 .desk-home-search>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}
 .desk-home-search input{
   min-width:0;height:44px;border:1px solid var(--control-line);border-radius:var(--radius-sm);
   background:var(--surface-2);color:var(--text);padding:0 12px;font-size:13px
 }
-.desk-home-search input:focus-visible{border-color:var(--accent);outline:2px solid var(--accent);outline-offset:2px}
-.desk-home-search p{margin-top:8px;color:var(--text-muted);font-size:10.5px;line-height:1.45}
+.desk-home-search input:focus-visible{border-color:var(--focus);outline:2px solid var(--focus);outline-offset:2px}
+.desk-home-search p{margin-top:8px;color:var(--text-muted);font-size:11px;line-height:1.45}
+.desk-paths{display:grid;border-top:1px solid var(--line)}
+.desk-paths>button{min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 18px;border:0;border-bottom:1px solid var(--line);background:var(--surface-1);color:var(--text);text-align:left;cursor:pointer}
+.desk-paths>button:hover{background:var(--surface-2);box-shadow:inset 3px 0 var(--accent)}
+.desk-paths span{color:var(--text-secondary);font-size:12px}
+.desk-paths strong{color:var(--accent);font-size:12px;white-space:nowrap}
+.desk-review-tools{background:var(--surface-2)}
+.desk-review-tools>summary{min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 16px;list-style:none;cursor:pointer;color:var(--text-muted);font-size:11px}
+.desk-review-tools>summary::-webkit-details-marker{display:none}
+.desk-review-tools>summary::after{content:"+";color:var(--premium);font-size:17px;font-weight:500}
+.desk-review-tools[open]>summary::after{content:"−"}
+.desk-review-tools .desk-review-baseline{border-top:1px solid var(--line);border-bottom:0}
 .desk-source-panel>summary{
   min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;
   list-style:none;cursor:pointer;background:var(--surface-1)
 }
 .desk-source-panel>summary::-webkit-details-marker{display:none}
+.desk-source-panel>summary::after{content:"";width:8px;height:8px;flex:0 0 auto;border-right:1.5px solid var(--text-muted);border-bottom:1.5px solid var(--text-muted);transform:rotate(45deg);transition:transform .15s}
+.desk-source-panel[open]>summary::after{transform:rotate(225deg)}
 .desk-source-panel>summary strong,.desk-source-panel>summary small{display:block}
 .desk-source-panel>summary strong{font-size:13px}
 .desk-source-panel>summary small{margin-top:4px;color:var(--text-muted);font-size:11px}
@@ -2437,26 +2462,44 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .ic-review-boundary{padding-top:10px;border-top:1px solid var(--line);color:var(--text-muted)!important;font-size:10.5px!important}
 
 @media(max-width:1040px){
+  .desk-landing-hero{grid-template-columns:minmax(0,1fr) minmax(260px,.68fr);gap:30px}
   .desk-landing-grid{grid-template-columns:1fr}
   .desk-source-grid{grid-template-columns:1fr 1fr}
   .desk-source-card:nth-child(2){border-right:0}
   .desk-source-card:nth-child(-n+2){border-bottom:1px solid var(--line)}
 }
 @media(max-width:759px){
-  .desk-landing-hero{padding:24px 18px}
-  .desk-landing-hero h1{font-size:clamp(31px,10vw,42px)}
-  .desk-landing-hero .desk-hero-copy>p{font-size:14px}
+  body[data-view="structure"] .structure-shell{padding:12px 12px 32px}
+  body[data-view="structure"] .view-tabs{box-shadow:none}
+  body[data-view="structure"] .brand-name{display:block;font-size:13px}
+  body[data-view="structure"] .brand-name-full{display:none}
+  body[data-view="structure"] .brand-name-short{display:inline}
+  .desk-landing-hero{grid-template-columns:1fr;gap:16px;padding:20px 18px}
+  .desk-landing-hero .structure-kicker{margin-bottom:11px}
+  .desk-landing-hero h1{font-size:clamp(30px,9.4vw,38px);line-height:1}
+  .desk-landing-hero .desk-hero-copy>p{margin-top:12px;font-size:14px;line-height:1.52}
+  .desk-hero-actions{gap:7px;margin-top:18px}
+  .desk-proof-panel{padding:12px 0 0;border-left:0;border-top:1px solid var(--line)}
+  .desk-proof-label{margin-bottom:3px}
+  .desk-proof-strip{grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--line)}
+  .desk-proof-strip>div{display:block;padding:8px;border-right:1px solid var(--line);border-bottom:0}
+  .desk-proof-strip>div:first-child{padding-left:0}
+  .desk-proof-strip>div:last-child{padding-right:0;border-right:0}
+  .desk-proof-strip b{font-size:19px}
+  .desk-proof-strip span{margin-top:4px;font-size:10.5px;line-height:1.3;text-align:left}
+  .desk-proof-note{margin-top:8px!important}
+  .desk-checked{display:none}
   .desk-latest-card,.desk-latest-card.featured{min-height:96px;grid-template-columns:minmax(0,1fr) auto;gap:7px 12px;padding:14px 16px}
   .desk-latest-meta{grid-column:1;display:flex;gap:8px}
   .desk-latest-copy{grid-column:1}
   .desk-latest-card>b{grid-column:2;grid-row:1/3}
   .desk-latest-card.featured h3{font-size:20px}
   .desk-latest-card p{font-size:12px;-webkit-line-clamp:2}
-  .desk-source-panel>summary{align-items:flex-start;flex-direction:column}
+  .desk-source-panel>summary{display:grid;grid-template-columns:minmax(0,1fr) auto}
+  .desk-source-panel>summary>b{grid-column:1}
+  .desk-source-panel>summary::after{grid-column:2;grid-row:1/3}
 }
 @media(max-width:480px){
-  .desk-proof-strip{grid-template-columns:1fr 1fr}
-  .desk-proof-strip>div:last-child{grid-column:1/-1}
   .desk-hero-actions{align-items:stretch;flex-direction:column}
   .desk-hero-actions .primary-action,.desk-hero-actions .secondary-action{width:100%;justify-content:center}
   .desk-home-search>div{grid-template-columns:1fr}
@@ -2474,6 +2517,8 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
   background:var(--bg);color:var(--text)
 }
 .bootstrap-status[hidden]{display:none}
+#bootstrap-js{display:none}
+html.js #bootstrap-js{display:block}
 .bootstrap-card{
   width:min(520px,100%);padding:24px;border:1px solid var(--line-strong);
   background:var(--surface-raised);box-shadow:var(--shadow)
@@ -2864,21 +2909,23 @@ noscript{display:block}
 }
 @media(max-width:520px){
   .brand-name{display:none}
+  body[data-view="structure"] .brand-name{display:block;font-size:13px}
 }
 @media print{
   @page{size:auto;margin:14mm}
   :root,html[data-theme="light"],html[data-theme="dark"]{
     color-scheme:light;
-    --bg:#ffffff!important;--surface-1:#ffffff!important;--surface-2:#eef2f6!important;
-    --surface-3:#e3e9f0!important;--surface-raised:#ffffff!important;
-    --line:#d7dde6!important;--line-strong:#aeb8c5!important;--control-line:#748296!important;
-    --control-line-hover:#526276!important;--text:#142033!important;--text-secondary:#405066!important;
-    --text-muted:#5b6a7c!important;--accent:#174ea6!important;--accent-strong:#174ea6!important;
-    --brick:#174ea6!important;--brick-soft:#e7eefb!important;--brick-line:#7d9cc9!important;
-    --positive:#14734b!important;--warning:#815600!important;
-    --ochre:#815600!important;--number:#73510f!important;--number-soft:#f6eedb!important;
-    --number-line:#b29a63!important;--checkpoint:#4f5e75!important;--selected:#e7eefb!important;
-    --selected-line:#174ea6!important;--shadow:none!important;--shadow-soft:none!important
+    --bg:#ffffff!important;--surface-1:#ffffff!important;--surface-2:#f3f1ec!important;
+    --surface-3:#e8e4dc!important;--surface-raised:#ffffff!important;
+    --line:#d4cfc4!important;--line-strong:#918c84!important;--control-line:#747d85!important;
+    --control-line-hover:#535f68!important;--text:#131c24!important;--text-secondary:#43505a!important;
+    --text-muted:#58646e!important;--accent:#153f5f!important;--accent-strong:#153f5f!important;
+    --premium:#775113!important;--premium-soft:#f2e8d4!important;--premium-line:#b89c65!important;
+    --brick:#775113!important;--brick-soft:#f2e8d4!important;--brick-line:#b89c65!important;
+    --positive:#17664a!important;--warning:#795000!important;
+    --ochre:#795000!important;--number:#705110!important;--number-soft:#f3ead3!important;
+    --number-line:#b89c65!important;--checkpoint:#48576a!important;--selected:#e2eaf0!important;
+    --selected-line:#153f5f!important;--shadow:none!important;--shadow-soft:none!important
   }
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#111!important}
   .skip-link,.app-header,.kpi-strip,.filter-rail,.ic-rail,.command-bar,.active-filters,.context-bar,.inspector,
@@ -2916,7 +2963,7 @@ noscript{display:block}
   .ic-sheet-section h3,.ic-sheet-section>p,.ic-sheet-section>.source-tail,.ic-sheet-section>.ic-sheet-checkpoint{grid-column:auto!important}
   .ic-sheet-checkpoint{display:block!important;break-inside:avoid;border-color:#bbb!important}
   .ic-sheet-checkpoint time{color:#4d5867!important}
-  .ic-sheet-title,.ic-sheet-section h3{color:#142033!important}
+  .ic-sheet-title,.ic-sheet-section h3{color:#131c24!important}
   mark{background:transparent!important;color:#111!important;font-weight:700}
 }
 @media(prefers-contrast:more){
@@ -2945,7 +2992,11 @@ noscript{display:block}
   .direction-mix{border:1px solid CanvasText}
   .mix-legend{display:inline!important;white-space:normal}
   .facet-option.active,.facet-clear.active,.date-option.active,.view-tab.active,
-  .command-button.active,.intel-lens.active,.data-row.selected,.next-item.selected{
+  .command-button.active,.intel-lens.active,.data-row.selected,.next-item.selected,
+  .desk-start.active,.structure-chip.active,.structure-anchor.active,
+  .structure-anchor-status.active,.structure-use-passage.active,.structure-evidence-group.selected,
+  .ic-nav-button.active,.ic-lens.active,.ic-compact-button.active,
+  .ic-compact-button[aria-current="page"],.thread-topic.active,.thread-node.active button{
     outline:2px solid Highlight!important;outline-offset:-2px;box-shadow:none
   }
 }
@@ -2960,7 +3011,7 @@ noscript{display:block}
       <p class="bootstrap-detail">Enable JavaScript to use the archive, or inspect the public release status directly.</p>
       <div class="bootstrap-actions"><a class="secondary-action" href="data/latest.json">View release status</a></div>
     </div></noscript>
-    <div id="bootstrap-js" hidden>
+    <div id="bootstrap-js">
       <p class="bootstrap-kicker" id="bootstrap-kicker">Release verification</p>
       <h1 id="bootstrap-title">Loading verified research catalogue</h1>
       <p class="bootstrap-detail" id="bootstrap-detail">Checking the exact same-origin catalogue before the archive starts.</p>
@@ -2977,9 +3028,9 @@ noscript{display:block}
 
 <header class="app-header">
   <div class="brand">
-    <div class="brand-mark" aria-hidden="true">NA</div>
+    <div class="brand-mark" aria-hidden="true">NR</div>
     <div>
-      <div class="brand-name">Navnoor Research Archive</div>
+      <div class="brand-name"><span class="brand-name-full">Navnoor Research Archive</span><span class="brand-name-short">Navnoor Archive</span></div>
       <div class="brand-sub">Published research. Sources attached.</div>
     </div>
   </div>
@@ -3262,7 +3313,7 @@ __MANAGER_BUTTONS__
     </div>
     <div id="inspector-content">
       <div class="inspector-empty">
-        <div class="inspector-empty-mark">NA</div>
+        <div class="inspector-empty-mark">NR</div>
         <h2>Select a record</h2>
         <p>Inspect the complete passage, evidence, provenance, and source without losing your position in the index.</p>
       </div>
@@ -6239,7 +6290,7 @@ function renderInspector() {
   const inspectorKey = state.view + ':' + state.selected;
   const shouldResetScroll = inspectorKey !== renderedInspectorKey;
   if (!state.selected) {
-    container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">NA</div><h2>Select a record</h2><p>Inspect the complete passage, evidence, provenance, and source without losing your position in the index.</p></div>';
+    container.innerHTML = '<div class="inspector-empty"><div class="inspector-empty-mark">NR</div><h2>Select a record</h2><p>Inspect the complete passage, evidence, provenance, and source without losing your position in the index.</p></div>';
   } else if (isArticleView()) {
     const article = ARTICLE_BY_ID.get(state.selected);
     if (article && !article.brief && !article._briefLoadFailed) {
@@ -7164,12 +7215,6 @@ function deskLandingMarkup() {
     return String(right.published_at || right.date).localeCompare(String(left.published_at || left.date)) ||
       left.title.localeCompare(right.title);
   }).slice(0,4);
-  const activeReview = Array.from(workflowItems.values()).filter(function (item) {
-    return item.status !== 'archived';
-  });
-  const overdue = activeReview.filter(reviewIsOverdue).length;
-  const newResearch = ARTICLES.filter(isNewArticle).length;
-  const newResearchLabel = reviewBaselineExists ? 'New since review' : 'Recent · 7 days';
   const baselineLabel = reviewBaselineAt
     ? 'Baseline set ' + formatCheckedAt(reviewBaselineAt)
     : reviewBaselineExists ? 'Review baseline active' : 'No explicit review baseline';
@@ -7185,38 +7230,37 @@ function deskLandingMarkup() {
   },0);
   const latest = latestArticles[0];
   return '<section class="desk-landing" aria-labelledby="desk-landing-title">' +
-    '<header class="desk-landing-hero"><div class="desk-hero-copy"><div class="desk-hero-status"><span class="status-dot ' +
-    escapeHtml(freshness.className) + '" aria-hidden="true"></span><strong>' + escapeHtml(freshness.status) +
-    '</strong><span>Research through ' + escapeHtml(formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10))) +
-    '</span></div><div class="structure-kicker">Navnoor Research</div>' +
+    '<header class="desk-landing-hero"><div class="desk-hero-copy">' +
+    '<div class="structure-kicker">Independent markets research · Navnoor Bawa</div>' +
     '<h1 id="desk-landing-title">Original markets research with the source trail attached.</h1>' +
-    '<p>Read the latest note, inspect the published evidence behind it, and continue to the complete subscriber research.</p>' +
-    '<div class="desk-hero-actions">' + (latest ? '<button class="primary-action" type="button" data-desk-article="' +
-    escapeHtml(latest.id) + '">Read the latest note</button>' : '') +
-    '<a class="secondary-action" href="' + escapeHtml(SUBSCRIPTION_URL) +
-    '" target="_blank" rel="noopener noreferrer" aria-label="Get full Navnoor Research access (opens in a new tab)">Get full research access <span aria-hidden="true">↗</span></a></div></div>' +
-    '<div class="desk-proof-strip"><div><b>' + number(newResearch) + '</b><span>' + escapeHtml(newResearchLabel) +
-    '</span></div><div><b>' + number(activeReview.length) + '</b><span>Open reviews' +
-    (overdue ? ' · ' + number(overdue) + ' overdue' : '') + '</span></div><div><b>' + number(healthySources) +
-    '/' + number(CATALOGUE_SOURCES.length) + '</b><span>Sources healthy</span></div></div>' +
-    '<p class="desk-proof-note">' + number(SNAPSHOT.catalog_count || ARTICLES.length) + ' published records · ' +
-    number(capturedTextRecords) + ' with captured text · checked ' + escapeHtml(formatCheckedAt(SNAPSHOT.checked_at)) +
-    '</p></header>' +
+    '<p>Read original analysis, inspect the published source passages behind it, and continue to complete subscriber notes when the work is relevant.</p>' +
+    '<div class="desk-hero-actions"><a class="primary-action" href="' + escapeHtml(SUBSCRIPTION_URL) +
+    '" target="_blank" rel="noopener noreferrer" aria-label="Get full Navnoor Research access (opens in a new tab)">Get full research access <span aria-hidden="true">↗</span></a>' +
+    (latest ? '<button class="secondary-action" type="button" data-desk-article="' +
+    escapeHtml(latest.id) + '">Preview the latest note</button>' : '') + '</div></div>' +
+    '<aside class="desk-proof-panel" aria-label="Published archive coverage"><span class="desk-proof-label">Published archive</span>' +
+    '<div class="desk-proof-strip"><div><b>' + number(SNAPSHOT.catalog_count || ARTICLES.length) + '</b><span>Published records</span></div>' +
+    '<div><b>' + number(capturedTextRecords) + '</b><span>With captured source text</span></div>' +
+    '<div><b>' + number(CATALOGUE_SOURCES.length) + '</b><span>Publication channels</span></div></div>' +
+    '<p class="desk-proof-note desk-hero-status"><span class="status-dot ' + escapeHtml(freshness.className) +
+    '" aria-hidden="true"></span><strong>' + escapeHtml(freshness.status) + '</strong><span class="desk-research-date">Research through ' +
+    escapeHtml(formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10))) + '</span><span class="desk-checked">· Checked ' +
+    escapeHtml(formatCheckedAt(SNAPSHOT.checked_at)) + '</span></p></aside></header>' +
     '<div class="desk-landing-grid"><section class="desk-latest-panel"><div class="desk-landing-section-head">' +
       '<div><span>Latest research</span><h2>Latest notes</h2></div>' +
       '<button class="text-button" type="button" data-view="research" data-owner-research>View all research</button></div>' +
       '<div class="desk-latest-list">' + latestArticles.map(deskLatestArticleMarkup).join('') + '</div></section>' +
-      '<aside class="desk-review-panel"><div class="desk-landing-section-head"><div><span>Your desk</span>' +
-      '<h2>What needs attention</h2></div></div>' +
-      '<div class="desk-agenda"><button type="button" data-owner-new-research><span><b>' + number(newResearch) +
-      '</b>' + escapeHtml(newResearchLabel) + '</span><strong>' + (newResearch ? 'Review' : 'Browse all') + ' <span aria-hidden="true">→</span></strong></button>' +
-      '<button type="button" data-owner-review><span><b>' + number(activeReview.length) + '</b>Open local reviews' +
-      (overdue ? ' · ' + number(overdue) + ' overdue' : '') + '</span><strong>Open <span aria-hidden="true">→</span></strong></button></div>' +
-      '<div class="desk-review-baseline"><p>' + escapeHtml(baselineLabel) + '</p><button class="text-button" type="button" data-action="mark-reviewed">Mark current research reviewed</button>' +
-      (reviewBaselineUndo ? '<button class="text-button" type="button" data-action="undo-mark-reviewed">Undo</button>' : '') +
-      '</div><form class="desk-home-search" data-owner-search-form><label for="owner-search-input">Search the archive</label>' +
+      '<aside class="desk-review-panel"><div class="desk-landing-section-head"><div><span>Explore the archive</span>' +
+      '<h2>Find a company, market, or strategy</h2></div></div>' +
+      '<form class="desk-home-search" data-owner-search-form><label for="owner-search-input">Search the archive</label>' +
       '<div><input id="owner-search-input" name="owner-search" type="search" maxlength="120" autocomplete="off" spellcheck="false" placeholder="Company, market, strategy, or theme"><button class="primary-action" type="submit">Search</button></div>' +
-      '<p>Search stays in this browser. Add a local review question only after you open the evidence workspace.</p></form></aside></div>' +
+      '<p>Search stays in this browser. Local review notes never leave this device.</p></form>' +
+      '<div class="desk-paths"><button type="button" data-view="research" data-owner-research><span>Browse every published record</span><strong>Open archive <span aria-hidden="true">→</span></strong></button>' +
+      '<button type="button" data-owner-review><span>Continue private diligence in this browser</span><strong>Local review <span aria-hidden="true">→</span></strong></button></div>' +
+      '<details class="desk-review-tools"><summary>Review baseline tools</summary><div class="desk-review-baseline"><p>' +
+      escapeHtml(baselineLabel) + '</p><button class="text-button" type="button" data-action="mark-reviewed">Mark current research reviewed</button>' +
+      (reviewBaselineUndo ? '<button class="text-button" type="button" data-action="undo-mark-reviewed">Undo</button>' : '') +
+      '</div></details></aside></div>' +
     '<details class="desk-source-panel"><summary><span><strong>Data health &amp; coverage</strong><small>Coverage across Substack, Medium, Patreon, and FX Empire</small></span><b class="' +
       escapeHtml(sourceRollupClass) + '">' +
       number(healthySources) + ' of ' + number(CATALOGUE_SOURCES.length) + ' healthy</b></summary>' +
@@ -8159,11 +8203,9 @@ function exportCsv() {
   showToast(number(records.length) + ' records exported');
 }
 
-function openOwnerNewResearch() {
-  const hasNewResearch = ARTICLES.some(isNewArticle);
+function openOwnerResearch() {
   clearArchiveScope();
   state.view = 'research';
-  state.newOnly = hasNewResearch;
   state.sort = 'newest';
   state.selected = '';
   state.threadTopic = '';
@@ -8558,9 +8600,9 @@ document.addEventListener('click',function (event) {
     backupQueue();
     return;
   }
-  if (event.target.closest('[data-owner-new-research]')) {
+  if (event.target.closest('[data-owner-research]')) {
     markMeaningfulNavigation();
-    openOwnerNewResearch();
+    openOwnerResearch();
     return;
   }
   if (event.target.closest('[data-owner-review]')) {
@@ -8819,7 +8861,7 @@ document.addEventListener('click',function (event) {
   const view = event.target.closest('button[data-view]');
   if (view) {
     markMeaningfulNavigation();
-    if (view.dataset.view === 'structure' || view.hasAttribute('data-owner-research')) {
+    if (view.dataset.view === 'structure') {
       clearArchiveScope();
     }
     state.view = view.dataset.view;
@@ -9740,6 +9782,7 @@ HTML = (HTML_TEMPLATE
         .replace('__THEME_REVISION__', THEME_REVISION)
         .replace('__LIGHT_THEME_BG__', LIGHT_THEME_BG)
         .replace('__DARK_THEME_BG__', DARK_THEME_BG)
+        .replace('__SOCIAL_IMAGE_URL__', SOCIAL_IMAGE_URL)
         .replace('__ARTICLE_CATALOG_SHA256__', article_catalog_sha256)
         .replace('__BRIEF_ARCHIVE_SHA256__', brief_archive_sha256)
         .replace('__OBSERVATION_ARCHIVE_SHA256__', observation_archive_sha256)
@@ -9813,7 +9856,10 @@ sitemap_xml = (
 web_manifest = json.dumps({
     'name': 'Navnoor Research Archive',
     'short_name': 'Navnoor Archive',
-    'description': 'Published research index with source-linked passages and capture provenance.',
+    'description': (
+        'Original markets research with source-linked passages, publication '
+        'provenance, and direct access to complete subscriber notes.'
+    ),
     'start_url': './',
     'scope': './',
     'display': 'standalone',
@@ -9828,8 +9874,8 @@ web_manifest = json.dumps({
 }, ensure_ascii=False, indent=2) + '\n'
 favicon_svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 <rect width="64" height="64" rx="6" fill="{DARK_THEME_BG}"/>
-<rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#78a9ff" stroke-width="2"/>
-<text x="32" y="39" fill="#eef3f8" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">NA</text>
+<rect x="2" y="2" width="60" height="60" rx="4" fill="none" stroke="#e3ca8a" stroke-width="2"/>
+<text x="32" y="39" fill="#f2f0e9" font-family="Georgia,serif" font-size="18" font-weight="700" text-anchor="middle">NR</text>
 </svg>
 '''
 
@@ -9905,7 +9951,7 @@ support_assets = {
 }
 for asset_name, asset_text in support_assets.items():
     (DOCS_DIR / asset_name).write_text(asset_text, encoding='utf-8')
-shutil.copyfile(SOCIAL_IMAGE_SOURCE, DOCS_DIR / 'og.jpg')
+shutil.copyfile(SOCIAL_IMAGE_SOURCE, DOCS_DIR / SOCIAL_IMAGE_NAME)
 
 share_summary = emit_share_assets(share_articles, DOCS_DIR, SITE_URL)
 write_data_layer(
