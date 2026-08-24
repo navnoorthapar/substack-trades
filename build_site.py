@@ -2166,7 +2166,7 @@ body[data-view="briefing"] .briefing-shell{
 .research-grid{grid-template-columns:82px 78px minmax(360px,1fr) 76px 110px 90px 34px}
 .head-cell{height:100%;display:flex;align-items:center;padding:0 9px;min-width:0}
 .head-sort{
-  width:100%;height:100%;display:flex;align-items:center;border:0;background:transparent;color:inherit;
+  width:100%;height:100%;min-height:34px;display:flex;align-items:center;border:0;background:transparent;color:inherit;
   padding:0;text-align:left;text-transform:inherit;letter-spacing:inherit;font:inherit;cursor:pointer
 }
 .head-sort:hover{color:var(--text)}
@@ -2856,7 +2856,7 @@ noscript{display:block}
     overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0
   }
   .data-row{min-width:0}
-  .idea-grid{
+  .data-row.idea-grid{
     grid-template-columns:74px 1fr auto;
     grid-template-areas:
       "date bias source"
@@ -2865,7 +2865,7 @@ noscript{display:block}
       "open open open";
     gap:0;padding:9px 8px
   }
-  .research-grid{
+  .data-row.research-grid{
     grid-template-columns:74px 1fr auto;
     grid-template-areas:
       "date source open"

@@ -3756,6 +3756,28 @@ for (const [url,source] of rejected) {
             r'''key\s*===\s*["']newest["']\s*&&\s*state\.sort\s*===\s*["']oldest["'].*return\s*["']ascending["']''',
         )
 
+    def test_visible_table_sort_targets_keep_compact_accessible_height(self):
+        self.assertRegex(
+            self.html,
+            r'\.head-sort\{[^}]*min-height:34px',
+        )
+        mobile_start = self.html.index('@media(max-width:759px){', self.html.index('/* Dense master tables */'))
+        mobile_end = self.html.index('@media print{', mobile_start)
+        mobile = self.html[mobile_start:mobile_end]
+        self.assertRegex(
+            mobile,
+            r'\.table-head\{[^}]*width:1px;height:1px;min-height:1px[^}]*clip-path:inset\(50%\)',
+        )
+        self.assertIn('.data-row.idea-grid{', mobile)
+        self.assertIn('.data-row.research-grid{', mobile)
+        self.assertNotIn('\n  .idea-grid{', mobile)
+        self.assertNotIn('\n  .research-grid{', mobile)
+        render_start = self.html.index('function renderTableHead()')
+        render_end = self.html.index('\nfunction evidenceMarkup', render_start)
+        render = self.html[render_start:render_end]
+        self.assertIn('button.tabIndex = window.innerWidth < 760 ? -1 : 0;', render)
+        self.assertRegex(mobile, r'\.select-control,\.command-button\{min-height:44px\}')
+
 
 if __name__ == '__main__':
     unittest.main()
