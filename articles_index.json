@@ -1,6 +1,37 @@
 [
   {
     "source": "substack",
+    "source_id": "qrts-own-filing-undercuts-the-exoduspoint",
+    "slug": "qrts-own-filing-undercuts-the-exoduspoint",
+    "title": "QRT's own filing undercuts the ExodusPoint reciprocity story, until the last two hires",
+    "subtitle": "ExodusPoint's last two Dubai hires landed closer to its record $2 billion raise than anything in the four years before. QRT's own Gulf-free desk complicates the easy read.",
+    "post_date": "2026-08-25T13:31:30.617Z",
+    "url": "https://navnoorbawa.substack.com/p/qrts-own-filing-undercuts-the-exoduspoint",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-25T13:34:25.366Z",
+    "observed_source_updated_at": "2026-08-25T13:34:25.366Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "metadata-only",
+      "text": "",
+      "character_count": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "source": "substack",
     "source_id": "the-federal-reserve-split-9-3-on",
     "slug": "the-federal-reserve-split-9-3-on",
     "title": "The Federal Reserve Split 9-3 on a Hike in July. Archegos Is What a 2nd-Percentile Correlation Reading Costs When It Breaks.",
@@ -110,7 +141,10 @@
     "family": "other",
     "body_revision_status": "current",
     "source_updated_at": "2026-08-24T21:15:09.793Z",
-    "observed_source_updated_at": "2026-08-24T21:15:09.793Z"
+    "observed_source_updated_at": "2026-08-24T21:15:09.793Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/rbi-blindsided-bond-markets-and-goldman-sachs-now-sees-hikes-coming-f59dc830a6dd"
+    }
   },
   {
     "source": "substack",
@@ -900,9 +934,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-18T15:46:22Z",
-    "observed_source_updated_at": "2026-08-18T15:46:22Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
