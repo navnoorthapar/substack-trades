@@ -1,5 +1,104 @@
 [
   {
+    "article_title": "RBI Blindsided Bond Markets, and Goldman Sachs Now Sees Hikes Coming.",
+    "article_url": "https://navnoorbawa.substack.com/p/rbi-blindsided-bond-markets-and-goldman",
+    "article_date": "2026-08-24",
+    "trade_description": "Here is the sequence I would actually run. Hedge the beta first, with index futures or options, the most liquid leg, adjustable in minutes, not days. Liquidate the most crowded, highest participation cash positions next, while depth is still real, using a volume weighted or capped participation algorithm rather than an aggressive market order. Almgren and Chriss say the temporary impact cost compounds fast once a seller becomes a meaningful share of the day’s volume. Route anything above ₹25 crore into the two block windows where possible; the price improvement beats working a large clip through the open book. Leave the hardest to model legs for last, small and mid cap positions, sized against a fund’s own liquidation day disclosure where SEBI’s framework applies. Unwind the hedge only",
+    "instruments": [
+      "option",
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "₹25 crore, 25 crore",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
+    "article_title": "Goldman warned Kevin Warsh's silence would backfire. The Treasury just proved it.",
+    "article_url": "https://navnoorbawa.substack.com/p/goldman-warned-kevin-warshs-silence",
+    "article_date": "2026-08-24",
+    "trade_description": "Bank of America’s August fund manager survey states it plainly (Investing.com). 53% expect a neutral tone from Warsh at Jackson Hole, 31% expect hawkish, and 7% expect dovish. Cash balances sit at 3.5%, near a record low. Global equity allocation runs a net 56% overweight, the highest since November 2021. A record 56% of respondents call for a “no landing” outcome, and 43% call for an outright “boom,” the most since February 2022. Seventy-two percent do not expect a rate increase before the November midterms.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "53%, 31%, 7%, 3.5%, 56%, at 3.5",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Goldman warned Kevin Warsh's silence would backfire. The Treasury just proved it.",
+    "article_url": "https://navnoorbawa.substack.com/p/goldman-warned-kevin-warshs-silence",
+    "article_date": "2026-08-24",
+    "trade_description": "The Bank of England’s gilt intervention worked because it was structured as unlimited. The Bank said it would buy whatever scale of long gilts was necessary to restore order, capped operationally at £5 billion a day but framed as open ended, running from September 28 to October 14, 2022 (Bank of England). It ended up buying only £19.3 billion of a possible £65 billion. Thirteen days. Under a third spent. The number that mattered was never the amount purchased. It was the absence of a stated ceiling, which let the market stop testing the position because there was no edge left to find.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "it was structured as unlimited.",
+    "any_quant_detail": "£5 billion, £19.3 billion, £65 billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Goldman warned Kevin Warsh's silence would backfire. The Treasury just proved it.",
+    "article_url": "https://navnoorbawa.substack.com/p/goldman-warned-kevin-warshs-silence",
+    "article_date": "2026-08-24",
+    "trade_description": "If the last four weeks are a fair sample, the long end of the curve isn’t taking instruction from anyone in Washington anymore. It’s pricing a deficit and a shrinking pool of foreign buyers, and no podium changes either number. I wouldn’t size a bet on Jackson Hole compressing the 30-year yield on communication alone. My trade fits the opposite way: fade any relief rally in long duration Treasuries or rate sensitive equities that shows up purely on Warsh’s tone, and treat a durable move as real only once it survives the next 30-year auction, October 8, without a fresh Treasury intervention holding the yield down first. Watch the size of the next buyback operation before you watch the transcript of the speech. Bessent’s checkbook is a cleaner tell than Warsh’s podium, and it’s already told",
+    "instruments": [
+      "bond",
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "real only once it survives the next 30-year auction, October 8, without a fresh Treasury intervention holding the yield down first.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
+    "article_title": "Goldman warned Kevin Warsh's silence would backfire. The Treasury just proved it.",
+    "article_url": "https://navnoorbawa.substack.com/p/goldman-warned-kevin-warshs-silence",
+    "article_date": "2026-08-24",
+    "trade_description": "The implication splits by mandate, and I’d size it differently depending on which desk I sat at. A rates desk running duration should treat any Jackson Hole rally in the 30-year as a fade unless it survives the next 10-year and 30-year auctions without fresh buyback support underneath it. A fund running several strategies at once, sitting inside the BofA survey’s crowded long equity, low cash positioning, should note that the same forces pressuring the long end, an unabsorbed deficit and a thinning foreign bid, are the ones the FOMC’s own minutes just flagged as consistent with the valuation era it named outright. Those aren’t two separate risks to hedge. They’re one risk, priced twice, in two markets currently pretending not to notice each other. I wouldn’t hedge them separately if I ran",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "a fade unless it survives the next 10-year and 30-year auctions without fresh buyback support underneath it.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
+    "article_title": "Goldman warned Kevin Warsh's silence would backfire. The Treasury just proved it.",
+    "article_url": "https://navnoorbawa.substack.com/p/goldman-warned-kevin-warshs-silence",
+    "article_date": "2026-08-24",
+    "trade_description": "Here’s the specific question worth arguing about, because reasonable people land on both sides of it: if Treasury’s own $2 billion increase in real purchasing power couldn’t hold the 30-year yield down for one full session, what size operation, or what actual change in the policy rate, would you need to see before you’d trust a rally in long duration paper to hold?",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$2 billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
     "article_title": "Citadel Bought Situational Awareness's Book \"With Conviction.\" It Sold 80% of the Risk in Three Weeks.",
     "article_url": "https://navnoorbawa.substack.com/p/citadel-bought-situational-awarenesss",
     "article_date": "2026-08-23",

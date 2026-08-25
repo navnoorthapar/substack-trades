@@ -1,5 +1,148 @@
 [
   {
+    "source": "substack",
+    "source_id": "rbi-blindsided-bond-markets-and-goldman",
+    "slug": "rbi-blindsided-bond-markets-and-goldman",
+    "title": "RBI Blindsided Bond Markets, and Goldman Sachs Now Sees Hikes Coming.",
+    "subtitle": "Deputy Governor Gupta's own minutes flagged a hike case fourteen days after Malhotra's patient press conference, and the bond market is still catching up.",
+    "post_date": "2026-08-24T21:14:01.874Z",
+    "url": "https://navnoorbawa.substack.com/p/rbi-blindsided-bond-markets-and-goldman",
+    "audience": "everyone",
+    "wordcount": 3547,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "4637de47065d01f43b9a5052ba08c7b3419b58b6e4dd61be3c19344a5050ad1a",
+      "lead": {
+        "text": "RBI’s August 5 press conference primed the market for a patient, extended hold, but the MPC’s own minutes, released two weeks later, show Deputy Governor Poonam Gupta already telling her own colleagues that a hike case “may emerge during the course of the year,” a signal her governor’s press conference never gave.",
+        "start": 0,
+        "end": 315,
+        "sha256": "f12a4f67e7608d8df275aa9608854cb545f9aa9ad510e435b0e6227a7f94839e",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "falsifier",
+          "source_order": 22,
+          "heading": "What would change this view",
+          "heading_start": 12361,
+          "heading_end": 12388,
+          "heading_sha256": "b5ed5c090c00a4317c273608df8e05fcfe20a375b0560ee2200480eef4b02676",
+          "text": "The cleanest falsifier I can name sits before October even convenes, and it turns on one print.",
+          "start": 12390,
+          "end": 12485,
+          "sha256": "d5ca7bd18741cff37b8789bd979523bfbb1e702933ea242ea7f7df009b2ead8f",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "The bond market’s own reaction is my proof this was a real information event, not a stale rehash. The 10-year G-sec eased toward roughly 6.76% on the dovish August 5 announcement. It climbed to the highest level in eight weeks, near 6.85 to 6.87%, after the minutes landed on August 19. Press coverage tied that move specifically to Gupta’s hike language, not to the crude price move happening at the same time. Had the market already priced the committee’s true reasoning on decision day, the minutes would have moved nothing. They moved yields. I read that gap as the trade. Fourteen days, one repricing.",
+        "start": 3216,
+        "end": 3822,
+        "sha256": "049a931798d9cde859378fc1663a042e16bceef4e09b855013d404626a71cb33",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-24T21:15:09.793Z",
+    "observed_source_updated_at": "2026-08-24T21:15:09.793Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "goldman-warned-kevin-warshs-silence",
+    "slug": "goldman-warned-kevin-warshs-silence",
+    "title": "Goldman warned Kevin Warsh's silence would backfire. The Treasury just proved it.",
+    "subtitle": "Treasury doubled its bond buybacks to hold the 30-year yield down before Warsh even speaks. The relief lasted about a day. Here is what that tells you about the speech.",
+    "post_date": "2026-08-24T18:41:03.394Z",
+    "url": "https://navnoorbawa.substack.com/p/goldman-warned-kevin-warshs-silence",
+    "audience": "everyone",
+    "wordcount": 3402,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "77ca26df044b9e6f284a925a74c014662f8c2c1351e5600741157c8f1d9b7469",
+      "lead": {
+        "text": "Bank of America’s August fund manager survey states it plainly (Investing.com). 53% expect a neutral tone from Warsh at Jackson Hole, 31% expect hawkish, and 7% expect dovish. Cash balances sit at 3.5%, near a record low. Global equity allocation runs a net 56% overweight, the highest since November 2021. A record 56% of respondents call for a “no landing” outcome, and 43% call for an outright “boom,” the most since February 2022. Seventy-two percent do not expect a rate increase before the November midterms.",
+        "start": 51,
+        "end": 565,
+        "sha256": "420e530a553340b403e4dc716542793a31fbf7cb344e673df0c2243e7c810ab9",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "mechanism",
+          "source_order": 10,
+          "heading": "The mechanism: why dollars failed where only more dollars can work",
+          "heading_start": 5391,
+          "heading_end": 5457,
+          "heading_sha256": "0af209ab019291c4a124690a57cdbcd9c64a084ed0a507cee84e7df7b0a8279e",
+          "text": "A liquidity support buyback is Treasury repurchasing older, less liquid bonds to smooth market function. I don’t think it was ever meant as a policy tool for bending the yield curve. Using it to fight the term premium is a bit like pointing a fire extinguisher at the weather. It can put out a single flare up. It cannot touch the humidity.",
+          "start": 5459,
+          "end": 5799,
+          "sha256": "b00ff9de85dcefd000470e6e845b22d2b56c26c50c32d546153927d5de4b2f35",
+          "truncated": false
+        },
+        {
+          "kind": "falsifier",
+          "source_order": 29,
+          "heading": "What would change this view",
+          "heading_start": 15119,
+          "heading_end": 15146,
+          "heading_sha256": "b5ed5c090c00a4317c273608df8e05fcfe20a375b0560ee2200480eef4b02676",
+          "text": "If it happens on Warsh’s words alone, my read on communication versus term premium is backward, and I’d rather say so in three weeks than defend a thesis the tape has already killed.",
+          "start": 15148,
+          "end": 15330,
+          "sha256": "bb6d8ede18d6671dfa623f2ec0aff935f5975ef6a3a0cbda3bb72eecc58d8c67",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "Here’s the observation that forces a different read. On August 19, three weeks before anyone was scheduled to hear from Warsh, the U.S. Treasury tried to do with dollars what the market is hoping Warsh will do with words. Scott Bessent announced Treasury would at least double the size of its long end liquidity support buybacks, covering the 10 to 20 year and 20 to 30 year sectors, from a $2 billion cap to a $4 billion cap per operation, running September 9 through November 4 (Treasury press release, reported; personally led by Bessent per CNBC).",
+        "start": 3033,
+        "end": 3584,
+        "sha256": "96a32eb602cd2cc672379ae31206bb05f5e03788da4bc35f60a7753f6284cb57",
+        "truncated": true
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-24T18:42:10.572Z",
+    "observed_source_updated_at": "2026-08-24T18:42:10.572Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "5ad32416f119",
+    "slug": "renaissance-keeps-medallion-aqrs-founder-calls-the-rest-regular-quants-5ad32416f119",
+    "title": "Renaissance Keeps Medallion. AQR’s Founder Calls the Rest Regular Quants.",
+    "subtitle": "Renaissance’s outside investor funds have round tripped through the same drawdown shape in three separate policy shocks since 2020.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-24T16:39:05Z",
+    "url": "https://medium.com/@navnoorbawa/renaissance-keeps-medallion-aqrs-founder-calls-the-rest-regular-quants-5ad32416f119",
+    "audience": "unknown",
+    "wordcount": 23,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "77d31013f0f199402625c7a652c07bbc7ca649d29ae729031948ba2a87048f42",
+      "lead": {
+        "text": "Renaissance’s outside investor funds have round tripped through the same drawdown shape in three separate policy shocks since 2020.",
+        "start": 0,
+        "end": 131,
+        "sha256": "63a424a195adb10e2e4c5722648c1f9772963ddd094adea97a343c988246ee96",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-24T16:39:05Z",
+    "observed_source_updated_at": "2026-08-24T16:39:05Z"
+  },
+  {
     "source": "medium",
     "source_id": "db4656fff1b7",
     "slug": "ljm-lost-80-in-two-days-the-formula-behind-vix-has-the-same-blind-spot-db4656fff1b7",
@@ -28,6 +171,94 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-08-24T09:49:19Z",
     "observed_source_updated_at": "2026-08-24T09:49:19Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167569843",
+    "slug": "treasury-already-167569843",
+    "title": "The Treasury Already Tested Kevin Warsh's Jackson Hole. It Failed in One Session.",
+    "subtitle": "",
+    "post_date": "2026-08-24",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/treasury-already-167569843",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167573774",
+    "slug": "rbis-committee-167573774",
+    "title": "RBI's Committee Is More Hawkish Than Its Governor. The Front End Hasn't Fully Priced It.",
+    "subtitle": "",
+    "post_date": "2026-08-24",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/rbis-committee-167573774",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167570561",
+    "slug": "financing-hedge-167570561",
+    "title": "Financing the Hedge Out of the Vol Surface's Own Mispricing",
+    "subtitle": "",
+    "post_date": "2026-08-24",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/financing-hedge-167570561",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167568553",
+    "slug": "exoduspoints-8-167568553",
+    "title": "ExodusPoint's Dubai Desk: 8 Days Is the Tempo Tell for When Presence Becomes Payback",
+    "subtitle": "",
+    "post_date": "2026-08-24",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/exoduspoints-8-167568553",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
