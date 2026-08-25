@@ -1,6 +1,69 @@
 [
   {
     "source": "substack",
+    "source_id": "the-federal-reserve-split-9-3-on",
+    "slug": "the-federal-reserve-split-9-3-on",
+    "title": "The Federal Reserve Split 9-3 on a Hike in July. Archegos Is What a 2nd-Percentile Correlation Reading Costs When It Breaks.",
+    "subtitle": "A correlation reading at the 2nd percentile of two decades, the Fed's own hawkish dissent, and the redemption playbook if the two collide inside 30 days.",
+    "post_date": "2026-08-25T05:13:01.711Z",
+    "url": "https://navnoorbawa.substack.com/p/the-federal-reserve-split-9-3-on",
+    "audience": "everyone",
+    "wordcount": 4081,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "9ad706afc88dd63c7b14c25f0e6b5850b4da262d7d7836369a8a6bf1685ea178",
+      "lead": {
+        "text": "The S&P 500’s calm is not real risk absence. It is one compressed number, implied correlation, sitting near its lowest reading in twenty years, while the Fed’s own July minutes compare current equity valuations to the dot com top.",
+        "start": 0,
+        "end": 230,
+        "sha256": "1576c4b6ae54be8ca90294578fb32886f1ed0e0f9f19ed44c7458f978d747a43",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "mechanism",
+          "source_order": 11,
+          "heading": "The mechanism: how a compressed number breaks",
+          "heading_start": 4136,
+          "heading_end": 4181,
+          "heading_sha256": "4d5c38142b9361d4b8287addc06605c34fbc223c93101d24b8cef509bc987cf6",
+          "text": "This is not a hypothetical. It already ran once this year, on this exact index, five months ago. Between 27 February and 27 March 2026, COR1M went from 15.01 to 41.68 while single stock volatility rose only 8%. Most of the VIX move, from 19.86 to 31.05, came through the correlation channel rather than through individual names actually getting scarier. The index fell 9.07% peak to trough, from 6,976.44 on 2 February to 6,343.72 on 30 March. I make that 632.72 points, priced by one term. Eight weeks.",
+          "start": 4183,
+          "end": 4686,
+          "sha256": "02648e217ee18b1bc8228326fd647e66c02f7039f913c028c51dc2c09ed6487e",
+          "truncated": false
+        },
+        {
+          "kind": "falsifier",
+          "source_order": 48,
+          "heading": "What would change this view",
+          "heading_start": 22407,
+          "heading_end": 22434,
+          "heading_sha256": "b5ed5c090c00a4317c273608df8e05fcfe20a375b0560ee2200480eef4b02676",
+          "text": "The thesis dies cleanly on one condition, and I would drop it the moment that condition is met rather than defend it.",
+          "start": 22436,
+          "end": 22553,
+          "sha256": "1d7ab5f3045c2cc41b507497e905c67b986abd6144bd81be6a66fda8bc8ebbff",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "The bull case for calm isn’t lazy. It has real evidence, and I want to state it the way its own believers would. The S&P 500 is up 12.11% in 2026 and sits within two percent of an all time high. NVIDIA has beaten estimates for 13 straight quarters. ISM Manufacturing just posted 55.6% in July, the strongest reading since May 2022, with Services at 54.1%, a 25th straight month above 50. Credit markets agree: high yield spreads sit near 275 basis points and investment grade sits near 25 year tights. A market with real systemic fear does not price credit this way. Three data sets. One story.",
+        "start": 460,
+        "end": 1054,
+        "sha256": "36375734fbddf008283d7c0661ba2bea8aaf7592ecc2c1396d392f519f56c09f",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-25T05:15:49.085Z",
+    "observed_source_updated_at": "2026-08-25T05:15:49.085Z"
+  },
+  {
+    "source": "substack",
     "source_id": "rbi-blindsided-bond-markets-and-goldman",
     "slug": "rbi-blindsided-bond-markets-and-goldman",
     "title": "RBI Blindsided Bond Markets, and Goldman Sachs Now Sees Hikes Coming.",
@@ -109,8 +172,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-24T18:42:10.572Z",
-    "observed_source_updated_at": "2026-08-24T18:42:10.572Z"
+    "source_updated_at": "2026-08-25T05:32:34.913Z",
+    "observed_source_updated_at": "2026-08-25T05:32:34.913Z"
   },
   {
     "source": "medium",

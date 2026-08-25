@@ -1,5 +1,55 @@
 [
   {
+    "article_title": "The Federal Reserve Split 9-3 on a Hike in July. Archegos Is What a 2nd-Percentile Correlation Reading Costs When It Breaks.",
+    "article_url": "https://navnoorbawa.substack.com/p/the-federal-reserve-split-9-3-on",
+    "article_date": "2026-08-25",
+    "trade_description": "My index level call, published on 24 August, gets restated here with its full evidence trail. Base case: 7,540 by the 16 September FOMC. That level sits one point under the 50-day moving average, roughly where the index traded on 3 August. It’s a 1.75% move from Friday’s close, comfortably inside one standard deviation of realized volatility. This call doesn’t need drama to work. If correlation reaches its March average near 31, short of its March peak, 7,380 comes into range. A tail case, which I don’t expect but put on the record so it stays visible, lands near 7,091, within six points of the 200-day moving average. That is a smaller percentage move than March’s own peak to trough drawdown, since it is anchored to a technical level rather than a literal replay of March’s arithmetic. I",
+    "instruments": [
+      "volatility"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "it is anchored to a technical level rather than a literal replay of March’s arithmetic.",
+    "any_quant_detail": "1.75%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
+    "article_title": "The Federal Reserve Split 9-3 on a Hike in July. Archegos Is What a 2nd-Percentile Correlation Reading Costs When It Breaks.",
+    "article_url": "https://navnoorbawa.substack.com/p/the-federal-reserve-split-9-3-on",
+    "article_date": "2026-08-25",
+    "trade_description": "A skeptical reader’s obvious objection: isn’t this just “the Fed might surprise markets” dressed up in options vocabulary? No. The standard Fed-surprise trade bets on the decision, long or short duration into the meeting. My claim is about transmission. I called a pullback to 7,150 in June, when correlation sat at a similarly low 8.02, and the index ran to a record 7,798.99 instead, because correlation fell another 57% over the following three weeks and absorbed the shock I was pricing. Wrong call, right mechanism. The lesson from getting that call wrong once isn’t “the Fed doesn’t move this index.” It’s that the Fed moves it through correlation, and in June that term still had room to fall before it could transmit anything. It doesn’t have that room now, which is a falsifiable, mechanism",
+    "instruments": [
+      "option"
+    ],
+    "direction": "long/short",
+    "underlying": null,
+    "edge_or_thesis": "correlation fell another 57% over the following three weeks and absorbed the shock I was pricing.",
+    "any_quant_detail": "57%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
+    "article_title": "The Federal Reserve Split 9-3 on a Hike in July. Archegos Is What a 2nd-Percentile Correlation Reading Costs When It Breaks.",
+    "article_url": "https://navnoorbawa.substack.com/p/the-federal-reserve-split-9-3-on",
+    "article_date": "2026-08-25",
+    "trade_description": "Hedge the sleeve you can’t liquidate today with futures or index puts, and expect that hedge to cost more precisely when you need it, since VIXEQ still sits at the 81st percentile even after falling 22.5% since July. Normal and stressed markets aren’t two points on a spectrum. They’re a regime switch. March 2020 is the reference case, even in the asset everyone assumes is safe: hedge funds sold $173 billion of Treasuries net and cut $232 billion of short derivatives as the basis trade unwound, and NY Fed research shows 10 year order book depth plunged that same window, from a multiyear average near $33 million to a fraction of that. The safest asset in the portfolio isn’t immune to the same mechanics driving the equity thesis above. It’s just a later stop on the same train.",
+    "instruments": [
+      "bond",
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "VIXEQ still sits at the 81st percentile even after falling 22.",
+    "any_quant_detail": "$173 billion, $232 billion, $33 million, 22.5%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
     "article_title": "RBI Blindsided Bond Markets, and Goldman Sachs Now Sees Hikes Coming.",
     "article_url": "https://navnoorbawa.substack.com/p/rbi-blindsided-bond-markets-and-goldman",
     "article_date": "2026-08-24",
