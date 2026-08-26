@@ -1,5 +1,71 @@
 [
   {
+    "source": "patreon",
+    "source_id": "167710172",
+    "slug": "treasury-buyback-167710172",
+    "title": "The Treasury Buyback Offer Stack, and the Measurement Trap Waiting on 10 September",
+    "subtitle": "",
+    "post_date": "2026-08-26",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/treasury-buyback-167710172",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167711079",
+    "slug": "six-advisers-one-167711079",
+    "title": "Six Advisers, One Form: Reading a Fund's Lenders Out of Form ADV Question 24",
+    "subtitle": "",
+    "post_date": "2026-08-26",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/six-advisers-one-167711079",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167710722",
+    "slug": "1-42m-per-print-167710722",
+    "title": "The $1.42m Per Megawatt Print: What Musk's Turbine Purchase Tells You About the AI Power Trade",
+    "subtitle": "",
+    "post_date": "2026-08-26",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/1-42m-per-print-167710722",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "substack",
     "source_id": "qrts-own-filing-undercuts-the-exoduspoint",
     "slug": "qrts-own-filing-undercuts-the-exoduspoint",
