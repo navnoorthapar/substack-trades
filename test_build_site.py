@@ -676,7 +676,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             '--premium:#e3ca8a',
             'One private-research system. Theme changes color and elevation, never geometry.',
             '.desk-landing-hero{',
-            '.desk-proof-strip{',
+            '.desk-pulse-grid{',
             '.desk-source-footer a{min-height:44px;display:inline-flex;align-items:center',
             '.text-button,.filter-chip,.primary-action,.secondary-action,.inspector-close,.load-more{min-height:44px}',
             '.intel-title{',
@@ -739,22 +739,27 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_principal_landing_surfaces_exact_release_review_and_source_state(self):
         for text in (
-            'Original markets research with the source trail attached.',
-            'Independent markets research · Navnoor Bawa',
-            'Preview the latest note',
+            'Research that gets you to the decision faster.',
+            'Independent markets intelligence · Navnoor Bawa',
+            'Open the latest note',
             'Get full research access',
+            'Source-linked passages',
+            'Release-bound provenance',
+            'Private review handoff',
+            'Research pulse',
+            'New since review',
+            'Dated public checkpoints',
+            'Countercase / falsifier',
+            'Healthy publication channels',
             'Latest research',
-            'Published archive',
-            'Published records',
-            'With captured source text',
-            'Publication channels',
-            'Explore the archive',
-            'Find a company, market, or strategy',
-            'Continue private diligence in this browser',
+            'What changed',
+            'Research workspace',
+            'Find, verify, carry forward',
+            'Continue private diligence',
             'Review baseline tools',
             'Mark current research reviewed',
-            'Search the archive',
-            'Company, market, strategy, or theme',
+            'published records',
+            'Company, market, strategy, catalyst',
             'Data health &amp; coverage',
             'Coverage across Substack, Medium, Patreon, and FX Empire',
             'Open verification record',
@@ -764,6 +769,8 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             "const sourceRollupClass = healthySources === CATALOGUE_SOURCES.length",
             'data-desk-article=',
             'data-owner-search-form',
+            'data-owner-new',
+            'data-home-lens',
             'data-view="research" data-owner-research',
             'data-action="mark-reviewed"',
             'data-action="undo-mark-reviewed"',
@@ -823,11 +830,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('id="owner-search-input"', landing)
         self.assertIn('escapeHtml(SUBSCRIPTION_URL)', landing)
         self.assertIn(
-            '<h1 id="desk-landing-title">Original markets research with the source trail attached.</h1>',
+            '<h1 id="desk-landing-title">Research that gets you to the decision faster.</h1>',
             landing,
         )
-        self.assertIn('<h2>Latest notes</h2>', landing)
-        self.assertIn('<h2>Find a company, market, or strategy</h2>', landing)
+        self.assertIn('<h2>What changed</h2>', landing)
+        self.assertIn('<h2>Find, verify, carry forward</h2>', landing)
         self.assertIn('target="_blank" rel="noopener noreferrer"', landing)
         self.assertIn(
             'aria-label="Get full Navnoor Research access (opens in a new tab)"',
@@ -843,11 +850,11 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('.desk-source-panel>summary>b.degraded{color:var(--warning)}', self.html)
         self.assertIn('.desk-source-panel>summary::after{content:"";', self.html)
         self.assertLess(
-            landing.index('Original markets research with the source trail attached.'),
-            landing.index('Search the archive'),
+            landing.index('Research that gets you to the decision faster.'),
+            landing.index('published records'),
         )
         self.assertLess(
-            landing.index('Search the archive'),
+            landing.index('published records'),
             landing.index('Data health &amp; coverage'),
         )
 
@@ -948,6 +955,31 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         ):
             self.assertIn(text, research_handler)
         self.assertIn("event.target.closest('[data-owner-research]')", self.html)
+
+        new_start = self.html.index('function openOwnerNewResearch()')
+        new_end = self.html.index('\nfunction openOwnerReview()', new_start)
+        new_handler = self.html[new_start:new_end]
+        for text in (
+            'clearArchiveScope()',
+            "state.view = 'research'",
+            'state.newOnly = true',
+            "state.sort = 'newest'",
+            'state.limit = PAGE_SIZE.research',
+            "renderObservationAwareNavigation('entry')",
+        ):
+            self.assertIn(text, new_handler)
+        self.assertIn("event.target.closest('[data-owner-new]')", self.html)
+
+        lens_start = self.html.index(
+            "const briefLens = event.target.closest('[data-brief-lens]')"
+        )
+        lens_end = self.html.index(
+            "\n  const briefArticle = event.target.closest('[data-brief-article]')",
+            lens_start,
+        )
+        lens_handler = self.html[lens_start:lens_end]
+        self.assertIn("briefLens.hasAttribute('data-home-lens')", lens_handler)
+        self.assertIn('clearArchiveScope()', lens_handler)
 
         review_start = self.html.index('function openOwnerReview()')
         review_end = self.html.index('\nfunction applyPreset', review_start)
@@ -2375,7 +2407,7 @@ for (const [url,source] of rejected) {
             'data-structure-focus="',
             'data-structure-passage="',
             'data-structure-more="1"',
-            'Original markets research with the source trail attached.',
+            'Research that gets you to the decision faster.',
             'id="owner-search-input"',
             'data-owner-search-form',
             'Data health &amp; coverage',
@@ -2543,8 +2575,8 @@ for (const [url,source] of rejected) {
         landing_end = self.html.index('\nfunction renderStructureDesk', landing_start)
         landing = self.html[landing_start:landing_end]
         self.assertEqual(landing.count('<input'), 1)
-        self.assertIn('Original markets research with the source trail attached.', landing)
-        self.assertIn('Latest notes', landing)
+        self.assertIn('Research that gets you to the decision faster.', landing)
+        self.assertIn('What changed', landing)
         self.assertIn('data-owner-search-form', landing)
         self.assertIn('<details class="desk-source-panel">', landing)
         self.assertNotIn('structure-question-input', landing)

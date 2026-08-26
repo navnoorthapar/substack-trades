@@ -39,6 +39,34 @@ publication, and lets an interested reader continue to the exact source.
    cached, or otherwise private body. Access to the complete article is
    enforced by the source publication, not hidden with browser code.
 
+## Institutional buyer evidence
+
+The 2026-08-26 product review uses four current market signals. They describe
+the category and buyer workflow; they do not prove that any specific fund will
+purchase this publication.
+
+- [AIMA's 2025 alternative-investment AI study](https://www.aima.org/article/press-release-front-office-gen-ai-adoption-shifts-from-if-to-when-for-leading-fund-managers-aima-research-finds.html)
+  reports that 58% of surveyed managers expected more GenAI use in investment
+  processes and that 60% of institutional investors would be more likely to
+  invest in a manager making a meaningful GenAI research investment. The same
+  study emphasizes explainability, privacy, oversight, and compliance.
+- [EY's Global Alternative Fund Survey](https://www.ey.com/en_in/insights/wealth-asset-management/how-can-alternative-fund-managers-shape-new-horizons-of-opportunity)
+  frames trust, transparency, joined-up data, and robust technology as core
+  capabilities; 63% of surveyed firms had begun integrating AI or planned to.
+- [Bloomberg's hedge-fund workflow](https://professional.bloomberg.com/institutions/hedge-funds/)
+  is sold around reducing the gap from research to implementation, unifying
+  fragmented data, and preserving transparent pricing and risk controls.
+- [AlphaSense's market-intelligence workflow](https://www.alpha-sense.com/solutions/market-intelligence-platform/)
+  leads with portfolio monitoring, real-time alerts, rapid ramp-up on new
+  names, and traceable source attribution. Its public
+  [pricing page](https://www.alpha-sense.com/pricing/) confirms that research
+  workflow depth and premium content are packaged as paid tiers.
+
+The archive therefore sells a narrow, defensible value proposition: faster
+discovery of differentiated research, proactive review cues, exact source
+verification, and a private handoff into human diligence. It does not imitate
+an OMS, PMS, risk engine, execution system, or enterprise compliance record.
+
 ## Public preview boundary
 
 `member_preview` is a publication proof, not a teaser invented by the archive.
@@ -83,8 +111,10 @@ Find relevant evidence
 ```
 
 On the owner home, the primary action is **Get full research access** and the
-latest note is explicitly presented as a preview. The Article Record and
-Parsed Passages subscriber boundary keeps **Get full research access** primary
+latest-note action opens its source-linked Article Record. The research pulse
+surfaces release-derived new-since-review, cited-checkpoint, countercase, and
+source-health counts without inventing a live signal or portfolio state. The
+Article Record and Parsed Passages subscriber boundary keeps **Get full research access** primary
 and gives existing subscribers a secondary **Read the note** path. Only the
 expanded paid-note boundary inside the Research Evidence Desk reverses that
 order: **Read complete research note** answers the active research context and

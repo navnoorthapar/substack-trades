@@ -2470,30 +2470,43 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .bootstrap-status[data-state="error"] .bootstrap-card{border-color:var(--negative-line)}
 .bootstrap-status[data-state="error"] .bootstrap-kicker{color:var(--negative)}
 
-/* Owner-first research home: an editorial front door before workstation controls. */
-.desk-landing{width:min(1280px,100%);margin:0 auto;display:grid;gap:16px}
+/* Owner-first research home: a PM-speed decision surface before workstation controls. */
+.desk-landing{width:min(1280px,100%);margin:0 auto;display:grid;gap:14px}
 .desk-landing-hero{
-  display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.65fr);align-items:end;gap:44px;
-  padding:38px 40px;border:1px solid var(--line);border-top:3px solid var(--premium);
-  border-radius:var(--radius-lg);background:var(--surface-1);box-shadow:var(--shadow-soft)
+  display:grid;grid-template-columns:minmax(0,1.28fr) minmax(340px,.72fr);align-items:stretch;gap:32px;
+  padding:30px 32px;border:1px solid #294557;border-top:3px solid #d4b66f;
+  border-radius:var(--radius-lg);background:
+    radial-gradient(circle at 8% 0,rgba(57,104,133,.3),transparent 34%),
+    linear-gradient(135deg,#0a1721 0%,#102534 62%,#132b3d 100%);
+  color:#f8f5ec;box-shadow:0 18px 50px rgba(8,18,27,.2)
 }
-.desk-hero-copy{max-width:780px}
-.desk-hero-status{display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:11.5px;line-height:1.45}
-.desk-hero-status strong{color:var(--text);font-weight:700}
-.desk-landing-hero .structure-kicker{margin-bottom:15px;color:var(--premium);letter-spacing:.12em}
-.desk-landing-hero h1{max-width:18ch;font:600 clamp(38px,4.1vw,56px)/1.02 var(--serif);letter-spacing:-.038em;text-wrap:balance}
-.desk-landing-hero .desk-hero-copy>p{max-width:62ch;margin-top:16px;color:var(--text-secondary);font-size:15px;line-height:1.62}
-.desk-hero-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:23px}
+.desk-hero-copy{max-width:760px;display:flex;flex-direction:column;justify-content:center}
+.desk-hero-status{display:flex;align-items:center;gap:8px;color:#b9c6ce;font-size:11px;line-height:1.45}
+.desk-hero-status strong{color:#f8f5ec;font-weight:700}
+.desk-landing-hero .structure-kicker{margin-bottom:13px;color:#e4ca8d;letter-spacing:.12em}
+.desk-landing-hero h1{max-width:17ch;font:600 clamp(38px,3.7vw,50px)/1.01 var(--serif);letter-spacing:-.04em;text-wrap:balance}
+.desk-landing-hero .desk-hero-copy>p{max-width:64ch;margin-top:14px;color:#c9d3d9;font-size:14.5px;line-height:1.58}
+.desk-hero-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px}
 .desk-hero-actions .primary-action,.desk-hero-actions .secondary-action{min-height:44px;padding:0 18px;font-size:12.5px}
-.desk-proof-panel{min-width:0;padding-left:28px;border-left:1px solid var(--line)}
-.desk-proof-label{display:block;margin-bottom:5px;color:var(--premium);font-size:10.5px;font-weight:750;letter-spacing:.11em;text-transform:uppercase}
-.desk-proof-strip{
-  display:grid;border-top:1px solid var(--line)
-}
-.desk-proof-strip>div{min-width:0;display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
-.desk-proof-strip b{display:block;font:650 22px/1 var(--serif);color:var(--text)}
-.desk-proof-strip span{display:block;color:var(--text-secondary);font-size:11.5px;text-align:right}
-.desk-proof-note{margin-top:11px!important;color:var(--text-muted)!important;font-size:11px!important;line-height:1.5!important}
+.desk-landing-hero .primary-action{border-color:#e4ca8d;background:#e4ca8d;color:#10202b}
+.desk-landing-hero .primary-action:hover{border-color:#f0ddae;background:#f0ddae;color:#0a1721}
+.desk-landing-hero .secondary-action{border-color:#708391;background:rgba(255,255,255,.04);color:#f8f5ec}
+.desk-landing-hero .secondary-action:hover{border-color:#b9c6ce;background:rgba(255,255,255,.09)}
+.desk-value-strip{display:flex;gap:7px 18px;flex-wrap:wrap;margin-top:17px;padding:0;list-style:none;color:#aebdc6;font-size:10.5px}
+.desk-value-strip li{display:flex;align-items:center;gap:6px}
+.desk-value-strip li::before{content:"";width:5px;height:5px;border-radius:50%;background:#d4b66f;box-shadow:0 0 0 3px rgba(212,182,111,.12)}
+.desk-pulse-panel{min-width:0;display:flex;flex-direction:column;padding:17px;border:1px solid rgba(214,226,233,.18);border-radius:10px;background:rgba(3,12,19,.28);box-shadow:inset 0 1px rgba(255,255,255,.04)}
+.desk-pulse-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:0 2px 12px}
+.desk-pulse-head>span{display:block;color:#e4ca8d;font-size:10px;font-weight:750;letter-spacing:.11em;text-transform:uppercase}
+.desk-pulse-head>small{color:#9fb0ba;font-size:9.5px;text-align:right}
+.desk-pulse-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(214,226,233,.16);border-left:1px solid rgba(214,226,233,.16)}
+.desk-pulse-card{min-width:0;min-height:98px;display:flex;flex-direction:column;align-items:flex-start;padding:13px;border:0;border-right:1px solid rgba(214,226,233,.16);border-bottom:1px solid rgba(214,226,233,.16);background:transparent;color:#f8f5ec;text-align:left}
+button.desk-pulse-card{cursor:pointer}
+button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
+.desk-pulse-card>span{color:#aebdc6;font-size:10px;line-height:1.3}
+.desk-pulse-card>b{margin-top:auto;font:650 24px/1 var(--serif);color:#f8f5ec}
+.desk-pulse-card>small{margin-top:7px;color:#e4ca8d;font-size:9.5px}
+.desk-pulse-note{margin-top:12px!important;color:#aebdc6!important;font-size:10.5px!important;line-height:1.45!important}
 .desk-landing-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,.72fr);gap:16px;align-items:start}
 .desk-latest-panel,.desk-review-panel,.desk-source-panel{
   overflow:hidden;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-1)
@@ -2511,7 +2524,7 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
   color:var(--text);text-align:left;cursor:pointer
 }
 .desk-latest-card:last-child{border-bottom:0}
-.desk-latest-card.featured{min-height:190px;padding:24px;background:var(--surface-1)}
+.desk-latest-card.featured{min-height:202px;padding:24px;background:linear-gradient(135deg,var(--surface-1),var(--surface-2))}
 .desk-latest-card:hover{background:var(--surface-2);box-shadow:inset 3px 0 var(--accent)}
 .desk-latest-meta{display:grid;gap:5px;color:var(--text-muted);font-size:11px}
 .desk-latest-copy{min-width:0}
@@ -2522,6 +2535,8 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
   font-family:var(--serif);font-size:13.5px;line-height:1.55;-webkit-box-orient:vertical;-webkit-line-clamp:3
 }
 .desk-latest-card>b{color:var(--accent);font-size:12px;white-space:nowrap}
+.desk-latest-signals{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
+.desk-latest-signals span{padding:4px 7px;border:1px solid var(--line);border-radius:999px;background:var(--surface-1);color:var(--text-muted);font-size:9.5px;font-weight:650;letter-spacing:.02em}
 .desk-agenda{display:grid}
 .desk-agenda>button{
   min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;
@@ -2543,9 +2558,11 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .desk-home-search input:focus-visible{border-color:var(--focus);outline:2px solid var(--focus);outline-offset:2px}
 .desk-home-search p{margin-top:8px;color:var(--text-muted);font-size:11px;line-height:1.45}
 .desk-paths{display:grid;border-top:1px solid var(--line)}
-.desk-paths>button{min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 18px;border:0;border-bottom:1px solid var(--line);background:var(--surface-1);color:var(--text);text-align:left;cursor:pointer}
+.desk-paths>button{min-height:72px;display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 18px;border:0;border-bottom:1px solid var(--line);background:var(--surface-1);color:var(--text);text-align:left;cursor:pointer}
 .desk-paths>button:hover{background:var(--surface-2);box-shadow:inset 3px 0 var(--accent)}
-.desk-paths span{color:var(--text-secondary);font-size:12px}
+.desk-paths i{width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:50%;color:var(--premium);font:700 9px var(--mono);font-style:normal}
+.desk-paths span{color:var(--text);font-size:12px;font-weight:700}
+.desk-paths span small{display:block;margin-top:3px;color:var(--text-muted);font-size:10.5px;font-weight:400;line-height:1.35}
 .desk-paths strong{color:var(--accent);font-size:12px;white-space:nowrap}
 .desk-review-tools{background:var(--surface-2)}
 .desk-review-tools>summary{min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 16px;list-style:none;cursor:pointer;color:var(--text-muted);font-size:11px}
@@ -2605,7 +2622,7 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .ic-review-boundary{padding-top:10px;border-top:1px solid var(--line);color:var(--text-muted)!important;font-size:10.5px!important}
 
 @media(max-width:1040px){
-  .desk-landing-hero{grid-template-columns:minmax(0,1fr) minmax(260px,.68fr);gap:30px}
+  .desk-landing-hero{grid-template-columns:minmax(0,1fr) minmax(320px,.78fr);gap:24px}
   .desk-landing-grid{grid-template-columns:1fr}
   .desk-source-grid{grid-template-columns:1fr 1fr}
   .desk-source-card:nth-child(2){border-right:0}
@@ -2617,20 +2634,18 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
   body[data-view="structure"] .brand-name{display:block;font-size:13px}
   body[data-view="structure"] .brand-name-full{display:none}
   body[data-view="structure"] .brand-name-short{display:inline}
-  .desk-landing-hero{grid-template-columns:1fr;gap:16px;padding:20px 18px}
-  .desk-landing-hero .structure-kicker{margin-bottom:11px}
-  .desk-landing-hero h1{font-size:clamp(30px,9.4vw,38px);line-height:1}
-  .desk-landing-hero .desk-hero-copy>p{margin-top:12px;font-size:14px;line-height:1.52}
-  .desk-hero-actions{gap:7px;margin-top:18px}
-  .desk-proof-panel{padding:12px 0 0;border-left:0;border-top:1px solid var(--line)}
-  .desk-proof-label{margin-bottom:3px}
-  .desk-proof-strip{grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--line)}
-  .desk-proof-strip>div{display:block;padding:8px;border-right:1px solid var(--line);border-bottom:0}
-  .desk-proof-strip>div:first-child{padding-left:0}
-  .desk-proof-strip>div:last-child{padding-right:0;border-right:0}
-  .desk-proof-strip b{font-size:19px}
-  .desk-proof-strip span{margin-top:4px;font-size:10.5px;line-height:1.3;text-align:left}
-  .desk-proof-note{margin-top:8px!important}
+  .desk-landing-hero{grid-template-columns:1fr;gap:12px;padding:18px 16px}
+  .desk-landing-hero .structure-kicker{margin-bottom:9px;font-size:9.5px;letter-spacing:.08em}
+  .desk-landing-hero h1{max-width:none;font-size:clamp(29px,8.6vw,34px);line-height:1.01}
+  .desk-landing-hero .desk-hero-copy>p{margin-top:10px;font-size:13px;line-height:1.45}
+  .desk-hero-actions{gap:7px;margin-top:14px}
+  .desk-value-strip{display:none}
+  .desk-pulse-panel{padding:10px}
+  .desk-pulse-head{padding-bottom:8px}
+  .desk-pulse-card{min-height:72px;padding:9px 10px}
+  .desk-pulse-card>b{font-size:20px}
+  .desk-pulse-card>small{margin-top:5px;font-size:8.5px}
+  .desk-pulse-note{margin-top:7px!important;font-size:9.5px!important}
   .desk-checked{display:none}
   .desk-latest-card,.desk-latest-card.featured{min-height:96px;grid-template-columns:minmax(0,1fr) auto;gap:7px 12px;padding:14px 16px}
   .desk-latest-meta{grid-column:1;display:flex;gap:8px}
@@ -2648,6 +2663,8 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
   .desk-home-search>div{grid-template-columns:1fr}
   .desk-home-search input{font-size:16px}
   .desk-home-search .primary-action{width:100%;justify-content:center}
+  .desk-pulse-grid{grid-template-columns:1fr 1fr}
+  .desk-pulse-card{min-height:72px;padding:9px 10px}
   .desk-source-grid{grid-template-columns:1fr}
   .desk-source-card{border-right:0;border-bottom:1px solid var(--line)}
   .desk-source-card:last-child{border-bottom:0}
@@ -7382,6 +7399,11 @@ function deskNoteMarkdown(pattern, rows) {
 }
 function deskLatestArticleMarkup(article,index) {
   const opening = boundedPromotionText(articleClaim(article),280);
+  const signals = [];
+  if (articleHasEvidence(article)) signals.push('Evidence passage');
+  if (articleHasBriefKind(article,'countercase') || articleHasBriefKind(article,'falsifier')) signals.push('Countercase captured');
+  const checkpointCount = Number(article.brief_features && article.brief_features.checkpoint_count || 0);
+  if (checkpointCount) signals.push(number(checkpointCount) + ' cited checkpoint' + (checkpointCount === 1 ? '' : 's'));
   return '<button class="desk-latest-card' + (index === 0 ? ' featured' : '') +
     '" type="button" data-desk-article="' + escapeHtml(article.id) + '" aria-label="Open article record: ' +
     escapeHtml(article.title) + '"><div class="desk-latest-meta"><time datetime="' +
@@ -7389,6 +7411,9 @@ function deskLatestArticleMarkup(article,index) {
     escapeHtml(sourceLabel(article.source)) + '</span></div><div class="desk-latest-copy"><h3>' +
     escapeHtml(article.title) + '</h3>' +
     (index === 0 && opening ? '<p>' + escapeHtml(opening) + '</p>' : '') +
+    (index === 0 && signals.length ? '<div class="desk-latest-signals">' + signals.slice(0,3).map(function (signal) {
+      return '<span>' + escapeHtml(signal) + '</span>';
+    }).join('') + '</div>' : '') +
     '</div><b>Open <span aria-hidden="true">→</span></b></button>';
 }
 function snapshotFreshness() {
@@ -7455,35 +7480,49 @@ function deskLandingMarkup() {
   const capturedTextRecords = CATALOGUE_SOURCES.reduce(function (total,row) {
     return total + Number(row.captured_text_count || 0);
   },0);
+  const newResearchCount = ARTICLES.filter(isNewArticle).length;
+  const newResearchLabel = reviewBaselineExists ? 'New since review' : 'Last 7 days';
+  const checkpointCount = ARTICLES.reduce(function (total,article) {
+    return total + Number(article.brief_features && article.brief_features.checkpoint_count || 0);
+  },0);
+  const boundaryArticleCount = ARTICLES.filter(function (article) {
+    return articleHasBriefKind(article,'countercase') || articleHasBriefKind(article,'falsifier');
+  }).length;
   const latest = latestArticles[0];
   return '<section class="desk-landing" aria-labelledby="desk-landing-title">' +
     '<header class="desk-landing-hero"><div class="desk-hero-copy">' +
-    '<div class="structure-kicker">Independent markets research · Navnoor Bawa</div>' +
-    '<h1 id="desk-landing-title">Original markets research with the source trail attached.</h1>' +
-    '<p>Read original analysis, inspect the published source passages behind it, and continue to complete subscriber notes when the work is relevant.</p>' +
+    '<div class="structure-kicker">Independent markets intelligence · Navnoor Bawa</div>' +
+    '<h1 id="desk-landing-title">Research that gets you to the decision faster.</h1>' +
+    '<p>Search the thesis, verify exact published passages, track cited checkpoints, and carry the work into a private review.</p>' +
     '<div class="desk-hero-actions"><a class="primary-action" href="' + escapeHtml(SUBSCRIPTION_URL) +
     '" target="_blank" rel="noopener noreferrer" aria-label="Get full Navnoor Research access (opens in a new tab)">Get full research access <span aria-hidden="true">↗</span></a>' +
     (latest ? '<button class="secondary-action" type="button" data-desk-article="' +
-    escapeHtml(latest.id) + '">Preview the latest note</button>' : '') + '</div></div>' +
-    '<aside class="desk-proof-panel" aria-label="Published archive coverage"><span class="desk-proof-label">Published archive</span>' +
-    '<div class="desk-proof-strip"><div><b>' + number(SNAPSHOT.catalog_count || ARTICLES.length) + '</b><span>Published records</span></div>' +
-    '<div><b>' + number(capturedTextRecords) + '</b><span>With captured source text</span></div>' +
-    '<div><b>' + number(CATALOGUE_SOURCES.length) + '</b><span>Publication channels</span></div></div>' +
-    '<p class="desk-proof-note desk-hero-status"><span class="status-dot ' + escapeHtml(freshness.className) +
+    escapeHtml(latest.id) + '">Open the latest note</button>' : '') + '</div>' +
+    '<ul class="desk-value-strip" aria-label="Research workflow strengths"><li>Source-linked passages</li><li>Release-bound provenance</li><li>Private review handoff</li></ul></div>' +
+    '<aside class="desk-pulse-panel" aria-label="Research pulse"><div class="desk-pulse-head"><span>Research pulse</span><small>' +
+    number(SNAPSHOT.catalog_count || ARTICLES.length) + ' records · ' + number(capturedTextRecords) + ' with captured text</small></div>' +
+    '<div class="desk-pulse-grid"><button class="desk-pulse-card" type="button" data-owner-new><span>' +
+    escapeHtml(newResearchLabel) + '</span><b>' + number(newResearchCount) + '</b><small>Open changes →</small></button>' +
+    '<button class="desk-pulse-card" type="button" data-brief-lens="checkpoint" data-home-lens><span>Dated public checkpoints</span><b>' +
+    number(checkpointCount) + '</b><small>Review cited dates →</small></button>' +
+    '<button class="desk-pulse-card" type="button" data-brief-lens="countercase" data-home-lens><span>Countercase / falsifier</span><b>' +
+    number(boundaryArticleCount) + '</b><small>Inspect risk sections →</small></button>' +
+    '<div class="desk-pulse-card"><span>Healthy publication channels</span><b>' + number(healthySources) + '/' + number(CATALOGUE_SOURCES.length) + '</b><small>Verified source state</small></div></div>' +
+    '<p class="desk-pulse-note desk-hero-status"><span class="status-dot ' + escapeHtml(freshness.className) +
     '" aria-hidden="true"></span><strong>' + escapeHtml(freshness.status) + '</strong><span class="desk-research-date">Research through ' +
     escapeHtml(formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10))) + '</span><span class="desk-checked">· Checked ' +
     escapeHtml(formatCheckedAt(SNAPSHOT.checked_at)) + '</span></p></aside></header>' +
     '<div class="desk-landing-grid"><section class="desk-latest-panel"><div class="desk-landing-section-head">' +
-      '<div><span>Latest research</span><h2>Latest notes</h2></div>' +
+      '<div><span>Latest research</span><h2>What changed</h2></div>' +
       '<button class="text-button" type="button" data-view="research" data-owner-research>View all research</button></div>' +
       '<div class="desk-latest-list">' + latestArticles.map(deskLatestArticleMarkup).join('') + '</div></section>' +
-      '<aside class="desk-review-panel"><div class="desk-landing-section-head"><div><span>Explore the archive</span>' +
-      '<h2>Find a company, market, or strategy</h2></div></div>' +
-      '<form class="desk-home-search" data-owner-search-form><label for="owner-search-input">Search the archive</label>' +
-      '<div><input id="owner-search-input" name="owner-search" type="search" maxlength="120" autocomplete="off" spellcheck="false" placeholder="Company, market, strategy, or theme"><button class="primary-action" type="submit">Search</button></div>' +
+      '<aside class="desk-review-panel"><div class="desk-landing-section-head"><div><span>Research workspace</span>' +
+      '<h2>Find, verify, carry forward</h2></div></div>' +
+      '<form class="desk-home-search" data-owner-search-form><label for="owner-search-input">Search ' + number(SNAPSHOT.catalog_count || ARTICLES.length) + ' published records</label>' +
+      '<div><input id="owner-search-input" name="owner-search" type="search" maxlength="120" autocomplete="off" spellcheck="false" placeholder="Company, market, strategy, catalyst"><button class="primary-action" type="submit">Search</button></div>' +
       '<p>Search stays in this browser. Local review notes never leave this device.</p></form>' +
-      '<div class="desk-paths"><button type="button" data-view="research" data-owner-research><span>Browse every published record</span><strong>Open archive <span aria-hidden="true">→</span></strong></button>' +
-      '<button type="button" data-owner-review><span>Continue private diligence in this browser</span><strong>Local review <span aria-hidden="true">→</span></strong></button></div>' +
+      '<div class="desk-paths"><button type="button" data-view="research" data-owner-research><i aria-hidden="true">01</i><span>Scan the article index<small>Filter every note by source, date, access, and captured evidence.</small></span><strong>Open <span aria-hidden="true">→</span></strong></button>' +
+      '<button type="button" data-owner-review><i aria-hidden="true">02</i><span>Continue private diligence<small>Return to exact passages saved for human review in this tab.</small></span><strong>Review <span aria-hidden="true">→</span></strong></button></div>' +
       '<details class="desk-review-tools"><summary>Review baseline tools</summary><div class="desk-review-baseline"><p>' +
       escapeHtml(baselineLabel) + '</p><button class="text-button" type="button" data-action="mark-reviewed">Mark current research reviewed</button>' +
       (reviewBaselineUndo ? '<button class="text-button" type="button" data-action="undo-mark-reviewed">Undo</button>' : '') +
@@ -8440,6 +8479,17 @@ function openOwnerResearch() {
   document.getElementById('search').value = '';
   renderObservationAwareNavigation('entry');
 }
+function openOwnerNewResearch() {
+  clearArchiveScope();
+  state.view = 'research';
+  state.newOnly = true;
+  state.sort = 'newest';
+  state.selected = '';
+  state.threadTopic = '';
+  state.limit = PAGE_SIZE.research;
+  document.getElementById('search').value = '';
+  renderObservationAwareNavigation('entry');
+}
 function openOwnerReview() {
   clearArchiveScope();
   state.view = 'queue';
@@ -8832,6 +8882,11 @@ document.addEventListener('click',function (event) {
     openOwnerResearch();
     return;
   }
+  if (event.target.closest('[data-owner-new]')) {
+    markMeaningfulNavigation();
+    openOwnerNewResearch();
+    return;
+  }
   if (event.target.closest('[data-owner-review]')) {
     markMeaningfulNavigation();
     openOwnerReview();
@@ -8969,6 +9024,7 @@ document.addEventListener('click',function (event) {
   const briefLens = event.target.closest('[data-brief-lens]');
   if (briefLens) {
     markMeaningfulNavigation();
+    if (briefLens.hasAttribute('data-home-lens')) clearArchiveScope();
     state.view = 'briefing';
     state.briefLens = VALID_BRIEF_LENSES.has(briefLens.dataset.briefLens) ? briefLens.dataset.briefLens : 'all';
     pendingBriefFocus = {kind:'lens',value:state.briefLens};

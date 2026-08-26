@@ -146,9 +146,9 @@ contracts are in [SCHEMA.md](SCHEMA.md).
 
 Member-access research is promoted as source completeness, never as a simulated
 browser paywall. The owner-first home gives the current Substack subscription
-terms the primary action and keeps the latest published note as a clearly
-labelled preview path. The archive keeps public research usable, distinguishes what the source
-permits from how much this release captured, and presents a contextual
+terms the primary action and keeps the latest published note as a source-linked
+Article Record path. The archive keeps public research usable, distinguishes
+what the source permits from how much this release captured, and presents a contextual
 continuation panel only for a canonical paid Substack record. In the evidence
 workspace, the same boundary appears once inside an expanded paid source note,
 at the point where the analyst has inspected its captured passage.
@@ -195,9 +195,10 @@ metrics without the connected books and records required to calculate them.
 
 Passage Search opens with an owner-first research home assembled only from the
 validated release and local browser state: one product promise, one primary
-subscriber path, one featured note plus three compact recent rows, buyer-facing
-archive proof, one local archive search, progressively disclosed review tools,
-and collapsed coverage for all four publication sources. Review-baseline state
+subscriber path, one featured note plus three compact recent rows, a research
+pulse for new-since-review, cited checkpoints, captured countercase, and source
+health, one local archive search, progressively disclosed review tools, and
+collapsed coverage for all four publication sources. Review-baseline state
 stays inside progressively disclosed local tools; the expanded research preset
 uses "Recent · 7 days" until an explicit baseline permits "New since last
 review."
