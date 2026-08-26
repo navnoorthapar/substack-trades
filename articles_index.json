@@ -1,5 +1,58 @@
 [
   {
+    "source": "substack",
+    "source_id": "spacex-is-hiring-a-gas-trader-with",
+    "slug": "spacex-is-hiring-a-gas-trader-with",
+    "title": "SpaceX Is Hiring a Gas Trader With a P&L. Meta, Amazon and Google Got There First.",
+    "subtitle": "The job description asks for pricing inefficiencies, storage optimisation and CFTC compliance. A microcap's filing prices the hardware behind it at $1.21bn, and the reported figure dropped the escrow.",
+    "post_date": "2026-08-26T13:30:57.757Z",
+    "url": "https://navnoorbawa.substack.com/p/spacex-is-hiring-a-gas-trader-with",
+    "audience": "everyone",
+    "wordcount": 3843,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "fa1b767ad3b2263f33c65d76f27b2cd317a684ccca37bd98faef1658bd3d4900",
+      "lead": {
+        "text": "The claim: The SpaceX job posting everyone read as fuel procurement asks for profit and loss generation, pricing inefficiencies and CFTC compliance, which is a merchant desk specification, and it makes SpaceX the fourth buyer of this size to become an energy trader after Amazon, Google, Microsoft and Meta. The hardware that made it necessary is already paid for: a 5% stake carried at $7.2m paid out $60.4m in under seventeen months, pricing the mobile turbine fleet at $1.21bn against the $1bn that got reported.",
+        "start": 0,
+        "end": 515,
+        "sha256": "0c205e95804284f01f93ce9ccb5296768f3705fe536093f7888d1996ff01debd",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "countercase",
+          "source_order": 11,
+          "heading": "The obvious objection, and it is the right one: why is a job ad news when every large buyer is doing this?",
+          "heading_start": 3886,
+          "heading_end": 3992,
+          "heading_sha256": "2a9bb7d2455efa072cb13c3aa14907a518a23c5e84afb2ece7cc59549959a549",
+          "text": "It’s a fair hit. Amazon, Google and Microsoft are already active power traders on their own regulatory filings. I looked at how a dedicated commodity desk actually generates that edge in InCommodities and Danske Commodities, which is the shape SpaceX is hiring toward. In September 2025 Meta went further, filing a market-based rate tariff at FERC through a wholly owned subsidiary, Atem Energy LLC, formed in the application’s words to act as a power marketer selling “energy, capacity, and certain ancillary services” at wholesale across six ISOs.",
+          "start": 3994,
+          "end": 4543,
+          "sha256": "7e6e4077dc635fc4c54183229c6987ad5a444e4c9daf4284d9154142c16f238c",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "A Jacksonville microcap called Duos Technologies Group is how that first date is readable. (I have used SpaceX’s own filings this way before, on its first AI profit and the depreciation add-back underneath it.) It helped Fortress buy, in the filing’s words, “approximately 850 megawatts of electrical generation capacity (consisting of 30 mobile gas turbine generators)” plus balance-of-plant from Atlas Corporation and APR Energy Holdings, through a vehicle later renamed New APR Energy, LLC. Duos took an asset management agreement and a 5% non-voting interest in the parent, carried at $7,233,000.",
+        "start": 6200,
+        "end": 6800,
+        "sha256": "11935922816ea56b63d9eddf8efcce9f546cc8f4f5f9f4607044c83a62b12b76",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "career-structure",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-26T13:34:42.853Z",
+    "observed_source_updated_at": "2026-08-26T13:34:42.853Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/spacex-is-hiring-a-gas-trader-with-a-p-l-meta-amazon-and-google-got-there-first-47e69e64eb72"
+    }
+  },
+  {
     "source": "patreon",
     "source_id": "167710172",
     "slug": "treasury-buyback-167710172",
@@ -273,7 +326,10 @@
     "family": "other",
     "body_revision_status": "current",
     "source_updated_at": "2026-08-25T05:32:34.913Z",
-    "observed_source_updated_at": "2026-08-25T05:32:34.913Z"
+    "observed_source_updated_at": "2026-08-25T05:32:34.913Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/goldman-warned-kevin-warshs-silence-would-backfire-the-treasury-just-proved-it-13d33f4fba18"
+    }
   },
   {
     "source": "medium",
@@ -836,9 +892,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-19T16:12:51Z",
-    "observed_source_updated_at": "2026-08-19T16:12:51Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",

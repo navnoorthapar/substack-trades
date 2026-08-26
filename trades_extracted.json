@@ -1,5 +1,37 @@
 [
   {
+    "article_title": "SpaceX Is Hiring a Gas Trader With a P&L. Meta, Amazon and Google Got There First.",
+    "article_url": "https://navnoorbawa.substack.com/p/spacex-is-hiring-a-gas-trader-with",
+    "article_date": "2026-08-26",
+    "trade_description": "So the world stock of fast deployable thermal capacity sits in the low tens of gigawatts against one grid’s queue of over two hundred. Nobody publishes that stock figure and I should say so: I built it from a dated fleet number and an industry revenue line, and it’s the least evidenced thing here. It would have to be wrong by an order of magnitude to change the conclusion.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "SpaceX Is Hiring a Gas Trader With a P&L. Meta, Amazon and Google Got There First.",
+    "article_url": "https://navnoorbawa.substack.com/p/spacex-is-hiring-a-gas-trader-with",
+    "article_date": "2026-08-26",
+    "trade_description": "This was an inventory arbitrage on a fixed stock, available once, to a buyer who could write a cheque with no board process and knew which yard the turbines sat in. A fund can’t replicate it. I have written the desk-level version of this section as a separate note: the capacity bound sized, the regime conditions that hold it, and the three risks with probabilities and early warning signs attached. The decay is visible too: GE Vernova is taking annualised production from roughly 20 GW toward 24 GW by 2028, and when OEM throughput catches the queue the immediacy premium compresses and the $1.42m print goes with it. Two to four years, and it closes from the supply side. I’d not bet on demand cooling. Size the other half in the same units: if used mobile capacity reprices toward refurbishment",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "a separate note: the capacity bound sized, the regime conditions that hold it, and the three risks with probabilities and early warning signs attached.",
+    "any_quant_detail": "$1.42m",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
     "article_title": "The Federal Reserve Split 9-3 on a Hike in July. Archegos Is What a 2nd-Percentile Correlation Reading Costs When It Breaks.",
     "article_url": "https://navnoorbawa.substack.com/p/the-federal-reserve-split-9-3-on",
     "article_date": "2026-08-25",
