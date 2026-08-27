@@ -1,6 +1,65 @@
 [
   {
     "source": "substack",
+    "source_id": "treasurys-own-buyback-file-answers",
+    "slug": "treasurys-own-buyback-file-answers",
+    "title": "Treasury's Own Buyback File Answers Druckenmiller and Citadel Securities",
+    "subtitle": "Dealers offered $520.4bn of ten to thirty year paper in 2026 and Treasury's cap let it buy $42.2bn. The offer column answers the question Druckenmiller and Citadel Securities are arguing about.",
+    "post_date": "2026-08-27T13:30:36.710Z",
+    "url": "https://navnoorbawa.substack.com/p/treasurys-own-buyback-file-answers",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "a7963c0a968f90e810e550c89a11f8e44c6234947dedd727cede8ff29e29b6d8",
+      "lead": {
+        "text": "On 19 August the Treasury said it would increase, “by at least double,” the size of its liquidity support buybacks in the ten to twenty and twenty to thirty year sectors, from $2 billion per operation to “at least $4 billion.” A liquidity support buyback is Treasury paying cash to dealers for old, illiquid bonds it already owes on, at prices the dealers name and Treasury can refuse. The change is effective 9 September and runs through the 4 November refunding (",
+        "start": 0,
+        "end": 465,
+        "sha256": "a7963c0a968f90e810e550c89a11f8e44c6234947dedd727cede8ff29e29b6d8",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-27T15:02:36.841Z",
+    "observed_source_updated_at": "2026-08-27T15:02:36.841Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "On 19 August the Treasury said it would increase, “by at least double,” the size of its liquidity support buybacks in the ten to twenty and twenty to thirty year sectors, from $2 billion per operation to “at least $4 billion.” A liquidity support buyback is Treasury paying cash to dealers for old, illiquid bonds it already owes on, at prices the dealers name and Treasury can refuse. The change is effective 9 September and runs through the 4 November refunding (",
+      "character_count": 465,
+      "body_sha256": "a7963c0a968f90e810e550c89a11f8e44c6234947dedd727cede8ff29e29b6d8"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "167822188",
+    "slug": "how-guaranteed-167822188",
+    "title": "How a Guaranteed Lease Escapes a Rating Trigger: Jane Street, Moody's, and $289m a Year",
+    "subtitle": "",
+    "post_date": "2026-08-27",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/how-guaranteed-167822188",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "access": "paid"
+  },
+  {
+    "source": "substack",
     "source_id": "the-fed-bought-342-billion-of-treasury",
     "slug": "the-fed-bought-342-billion-of-treasury",
     "title": "The Fed Bought $342 Billion of Treasury Bills While Bessent's $14 Billion Got the Argument",
@@ -26,8 +85,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-26T21:52:36.829Z",
-    "observed_source_updated_at": "2026-08-26T21:52:36.829Z",
+    "source_updated_at": "2026-08-27T13:15:48.981Z",
+    "observed_source_updated_at": "2026-08-27T13:15:48.981Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -83,8 +142,8 @@
     },
     "family": "career-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-26T13:34:42.853Z",
-    "observed_source_updated_at": "2026-08-26T13:34:42.853Z",
+    "source_updated_at": "2026-08-27T11:41:29.884Z",
+    "observed_source_updated_at": "2026-08-27T11:41:29.884Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/spacex-is-hiring-a-gas-trader-with-a-p-l-meta-amazon-and-google-got-there-first-47e69e64eb72"
     }
@@ -198,8 +257,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-25T13:34:25.366Z",
-    "observed_source_updated_at": "2026-08-25T13:34:25.366Z",
+    "source_updated_at": "2026-08-27T11:41:35.988Z",
+    "observed_source_updated_at": "2026-08-27T11:41:35.988Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -268,8 +327,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-25T05:15:49.085Z",
-    "observed_source_updated_at": "2026-08-25T05:15:49.085Z"
+    "source_updated_at": "2026-08-27T12:02:07.450Z",
+    "observed_source_updated_at": "2026-08-27T12:02:07.450Z"
   },
   {
     "source": "substack",
@@ -318,8 +377,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-24T21:15:09.793Z",
-    "observed_source_updated_at": "2026-08-24T21:15:09.793Z",
+    "source_updated_at": "2026-08-27T12:02:22.407Z",
+    "observed_source_updated_at": "2026-08-27T12:02:22.407Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/rbi-blindsided-bond-markets-and-goldman-sachs-now-sees-hikes-coming-f59dc830a6dd"
     }
@@ -384,8 +443,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-25T05:32:34.913Z",
-    "observed_source_updated_at": "2026-08-25T05:32:34.913Z",
+    "source_updated_at": "2026-08-27T12:02:41.263Z",
+    "observed_source_updated_at": "2026-08-27T12:02:41.263Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/goldman-warned-kevin-warshs-silence-would-backfire-the-treasury-just-proved-it-13d33f4fba18"
     }
@@ -565,8 +624,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-23T13:06:02.287Z",
-    "observed_source_updated_at": "2026-08-23T13:06:02.287Z",
+    "source_updated_at": "2026-08-27T12:03:04.350Z",
+    "observed_source_updated_at": "2026-08-27T12:03:04.350Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -635,8 +694,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-22T18:06:31.803Z",
-    "observed_source_updated_at": "2026-08-22T18:06:31.803Z",
+    "source_updated_at": "2026-08-27T12:03:26.623Z",
+    "observed_source_updated_at": "2026-08-27T12:03:26.623Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bessent-doubled-the-buyback-treasurys-budget-didn-t-grow-jpmorgan-isn-t-buying-it-50993d0dca16"
     }
@@ -781,8 +840,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-21T16:17:48.365Z",
-    "observed_source_updated_at": "2026-08-21T16:17:48.365Z",
+    "source_updated_at": "2026-08-27T12:03:48.416Z",
+    "observed_source_updated_at": "2026-08-27T12:03:48.416Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -922,8 +981,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-20T13:33:39.059Z",
-    "observed_source_updated_at": "2026-08-20T13:33:39.059Z"
+    "source_updated_at": "2026-08-27T12:05:29.283Z",
+    "observed_source_updated_at": "2026-08-27T12:05:29.283Z"
   },
   {
     "source": "medium",
@@ -1179,8 +1238,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-18T15:33:51.224Z",
-    "observed_source_updated_at": "2026-08-18T15:33:51.224Z",
+    "source_updated_at": "2026-08-27T12:09:52.985Z",
+    "observed_source_updated_at": "2026-08-27T12:09:52.985Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/jpmorgan-warned-of-a-fertilizer-crisis-in-april-urea-is-already-10-cheaper-than-a-year-ago-e420650f9cb3"
     }
@@ -1212,8 +1271,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-18T10:10:50.691Z",
-    "observed_source_updated_at": "2026-08-18T10:10:50.691Z",
+    "source_updated_at": "2026-08-27T12:10:48.941Z",
+    "observed_source_updated_at": "2026-08-27T12:10:48.941Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1293,8 +1352,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-17T17:07:25.334Z",
-    "observed_source_updated_at": "2026-08-17T17:07:25.334Z",
+    "source_updated_at": "2026-08-27T12:12:12.668Z",
+    "observed_source_updated_at": "2026-08-27T12:12:12.668Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1387,8 +1446,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-17T13:33:19.038Z",
-    "observed_source_updated_at": "2026-08-17T13:33:19.038Z",
+    "source_updated_at": "2026-08-27T12:13:21.042Z",
+    "observed_source_updated_at": "2026-08-27T12:13:21.042Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/nvidias-credit-book-outgrew-its-cash-pile-goldman-sachs-wants-to-trade-it-aef567d5f387"
     }
@@ -1502,8 +1561,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-16T13:06:46.707Z",
-    "observed_source_updated_at": "2026-08-16T13:06:46.707Z",
+    "source_updated_at": "2026-08-27T12:13:49.153Z",
+    "observed_source_updated_at": "2026-08-27T12:13:49.153Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -1768,8 +1827,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-15T13:27:29.370Z",
-    "observed_source_updated_at": "2026-08-15T13:27:29.370Z"
+    "source_updated_at": "2026-08-27T12:12:56.886Z",
+    "observed_source_updated_at": "2026-08-27T12:12:56.886Z"
   },
   {
     "source": "substack",
@@ -1798,8 +1857,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-15T11:09:54.341Z",
-    "observed_source_updated_at": "2026-08-15T11:09:54.341Z",
+    "source_updated_at": "2026-08-27T12:13:58.811Z",
+    "observed_source_updated_at": "2026-08-27T12:13:58.811Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1878,8 +1937,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-15T03:37:13.189Z",
-    "observed_source_updated_at": "2026-08-15T03:37:13.189Z",
+    "source_updated_at": "2026-08-27T12:14:13.616Z",
+    "observed_source_updated_at": "2026-08-27T12:14:13.616Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-cftc-rejected-fias-special-call-plan-in-2011-in-2026-it-adopted-it-ffe184d9aac6"
     }
@@ -2058,8 +2117,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-14T20:41:10.116Z",
-    "observed_source_updated_at": "2026-08-14T20:41:10.116Z",
+    "source_updated_at": "2026-08-27T12:14:28.659Z",
+    "observed_source_updated_at": "2026-08-27T12:14:28.659Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/kalshi-publishes-one-liquidity-subsidy-and-seals-the-other-polymarket-too-b59e8c9dffe8"
     }
@@ -2124,8 +2183,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-14T14:29:59.470Z",
-    "observed_source_updated_at": "2026-08-14T14:29:59.470Z",
+    "source_updated_at": "2026-08-27T12:14:36.444Z",
+    "observed_source_updated_at": "2026-08-27T12:14:36.444Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/citadel-filed-570-billion-with-the-sec-everyone-prints-71-billion-2b210ad1a553"
     }
@@ -2157,8 +2216,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-14T08:53:58.673Z",
-    "observed_source_updated_at": "2026-08-14T08:53:58.673Z",
+    "source_updated_at": "2026-08-27T12:14:39.676Z",
+    "observed_source_updated_at": "2026-08-27T12:14:39.676Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2188,8 +2247,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-14T08:38:30.386Z",
-    "observed_source_updated_at": "2026-08-14T08:38:30.386Z",
+    "source_updated_at": "2026-08-27T12:14:55.832Z",
+    "observed_source_updated_at": "2026-08-27T12:14:55.832Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -2531,7 +2590,7 @@
     "source_id": "millenniums-7208bn-has-no-route-into",
     "slug": "millenniums-7208bn-has-no-route-into",
     "title": "Millennium's $720.8bn Has No Route Into FINRA's New Cyber Channel",
-    "subtitle": "FINRA's new intelligence channel is keyed to broker-dealer registration. 84.4% of private fund advisers report none, and the largest of them is Millennium.",
+    "subtitle": "FINRA's new intelligence channel is keyed to broker-dealer registration. 84.4% of private fund advisers report none, and the largest of them is Millennium",
     "post_date": "2026-08-11T15:29:27.534Z",
     "url": "https://navnoorbawa.substack.com/p/millenniums-7208bn-has-no-route-into",
     "audience": "only_paid",
@@ -2553,8 +2612,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-13T16:24:31.031Z",
-    "observed_source_updated_at": "2026-08-13T16:24:31.031Z",
+    "source_updated_at": "2026-08-27T12:15:01.596Z",
+    "observed_source_updated_at": "2026-08-27T12:15:01.596Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2620,8 +2679,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-11T02:56:35.506Z",
-    "observed_source_updated_at": "2026-08-11T02:56:35.506Z",
+    "source_updated_at": "2026-08-27T12:15:07.127Z",
+    "observed_source_updated_at": "2026-08-27T12:15:07.127Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2791,8 +2850,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-09T07:55:33.406Z",
-    "observed_source_updated_at": "2026-08-09T07:55:33.406Z",
+    "source_updated_at": "2026-08-27T12:16:16.382Z",
+    "observed_source_updated_at": "2026-08-27T12:16:16.382Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2993,8 +3052,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-06T13:56:02.552Z",
-    "observed_source_updated_at": "2026-08-06T13:56:02.552Z",
+    "source_updated_at": "2026-08-27T12:16:44.161Z",
+    "observed_source_updated_at": "2026-08-27T12:16:44.161Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -3112,8 +3171,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-05T17:01:04.268Z",
-    "observed_source_updated_at": "2026-08-05T17:01:04.268Z",
+    "source_updated_at": "2026-08-27T12:17:53.681Z",
+    "observed_source_updated_at": "2026-08-27T12:17:53.681Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3149,8 +3208,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-04T21:05:55.258Z",
-    "observed_source_updated_at": "2026-08-04T21:05:55.258Z",
+    "source_updated_at": "2026-08-27T12:18:17.020Z",
+    "observed_source_updated_at": "2026-08-27T12:18:17.020Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3186,8 +3245,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-04T20:03:03.536Z",
-    "observed_source_updated_at": "2026-08-04T20:03:03.536Z",
+    "source_updated_at": "2026-08-27T12:23:23.180Z",
+    "observed_source_updated_at": "2026-08-27T12:23:23.180Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3247,8 +3306,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-04T01:59:54.106Z",
-    "observed_source_updated_at": "2026-08-04T01:59:54.106Z",
+    "source_updated_at": "2026-08-27T12:28:42.568Z",
+    "observed_source_updated_at": "2026-08-27T12:28:42.568Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -3370,8 +3429,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-03T21:53:07.273Z",
-    "observed_source_updated_at": "2026-08-03T21:53:07.273Z",
+    "source_updated_at": "2026-08-27T12:28:57.810Z",
+    "observed_source_updated_at": "2026-08-27T12:28:57.810Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/blue-owls-credit-fundraising-fell-69-in-a-quarter-then-it-hired-a-tokyo-banker-19b21ebcd860"
     }
@@ -3477,8 +3536,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-02T22:05:21.129Z",
-    "observed_source_updated_at": "2026-08-02T22:05:21.129Z",
+    "source_updated_at": "2026-08-27T12:29:31.541Z",
+    "observed_source_updated_at": "2026-08-27T12:29:31.541Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3655,8 +3714,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-31T15:58:13.561Z",
-    "observed_source_updated_at": "2026-07-31T15:58:13.561Z",
+    "source_updated_at": "2026-08-27T12:30:06.387Z",
+    "observed_source_updated_at": "2026-08-27T12:30:06.387Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3714,8 +3773,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-29T20:38:17.348Z",
-    "observed_source_updated_at": "2026-07-29T20:38:17.348Z",
+    "source_updated_at": "2026-08-27T12:29:51.982Z",
+    "observed_source_updated_at": "2026-08-27T12:29:51.982Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3781,8 +3840,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-29T06:38:20.156Z",
-    "observed_source_updated_at": "2026-07-29T06:38:20.156Z",
+    "source_updated_at": "2026-08-27T12:30:59.415Z",
+    "observed_source_updated_at": "2026-08-27T12:30:59.415Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3892,8 +3951,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T17:50:30.867Z",
-    "observed_source_updated_at": "2026-07-27T17:50:30.867Z",
+    "source_updated_at": "2026-08-27T12:31:41.487Z",
+    "observed_source_updated_at": "2026-08-27T12:31:41.487Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -7050,8 +7109,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T12:47:43.829Z",
+    "observed_source_updated_at": "2026-08-27T12:47:43.829Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -7137,8 +7196,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T12:48:38.223Z",
+    "observed_source_updated_at": "2026-08-27T12:48:38.223Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -7199,8 +7258,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T12:48:32.692Z",
+    "observed_source_updated_at": "2026-08-27T12:48:32.692Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -7556,8 +7615,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T12:50:15.877Z",
+    "observed_source_updated_at": "2026-08-27T12:50:15.877Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -7798,8 +7857,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T12:51:05.660Z",
+    "observed_source_updated_at": "2026-08-27T12:51:05.660Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -7854,8 +7913,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T12:51:15.444Z",
+    "observed_source_updated_at": "2026-08-27T12:51:15.444Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -7950,8 +8009,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T12:52:03.244Z",
+    "observed_source_updated_at": "2026-08-27T12:52:03.244Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -10878,8 +10937,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.073Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.073Z",
+    "source_updated_at": "2026-08-27T12:52:46.097Z",
+    "observed_source_updated_at": "2026-08-27T12:52:46.097Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -13452,8 +13511,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.160Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.160Z",
+    "source_updated_at": "2026-08-27T15:24:22.134Z",
+    "observed_source_updated_at": "2026-08-27T15:24:22.134Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
