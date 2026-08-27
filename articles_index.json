@@ -1,6 +1,43 @@
 [
   {
     "source": "substack",
+    "source_id": "the-fed-bought-342-billion-of-treasury",
+    "slug": "the-fed-bought-342-billion-of-treasury",
+    "title": "The Fed Bought $342 Billion of Treasury Bills While Bessent's $14 Billion Got the Argument",
+    "subtitle": "Treasury's buyback doubling buys $14 billion over eight weeks. The Fed added $342 billion of Treasury bills in a year, about a third of all net new supply, on a directive issued before Warsh arrived.",
+    "post_date": "2026-08-26T21:49:34.469Z",
+    "url": "https://navnoorbawa.substack.com/p/the-fed-bought-342-billion-of-treasury",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "7a3fe1832dbe4754ed9cdb7bc2a63258520ead686a9e6fecf7bccc7421d920ce",
+      "lead": {
+        "text": "Scott Bessent doubled the ceiling on Treasury’s long end buyback operations on 19 August, and within a day the framing settled: Treasury is suppressing long yields, Kevin Warsh is fighting inflation and shrinking the balance sheet, and the two are colliding.",
+        "start": 0,
+        "end": 258,
+        "sha256": "7a3fe1832dbe4754ed9cdb7bc2a63258520ead686a9e6fecf7bccc7421d920ce",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-26T21:52:36.829Z",
+    "observed_source_updated_at": "2026-08-26T21:52:36.829Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Scott Bessent doubled the ceiling on Treasury’s long end buyback operations on 19 August, and within a day the framing settled: Treasury is suppressing long yields, Kevin Warsh is fighting inflation and shrinking the balance sheet, and the two are colliding.",
+      "character_count": 258,
+      "body_sha256": "7a3fe1832dbe4754ed9cdb7bc2a63258520ead686a9e6fecf7bccc7421d920ce"
+    }
+  },
+  {
+    "source": "substack",
     "source_id": "spacex-is-hiring-a-gas-trader-with",
     "slug": "spacex-is-hiring-a-gas-trader-with",
     "title": "SpaceX Is Hiring a Gas Trader With a P&L. Meta, Amazon and Google Got There First.",
@@ -82,6 +119,28 @@
     "subtitle": "",
     "post_date": "2026-08-26",
     "url": "https://www.patreon.com/NavnoorBawa/posts/six-advisers-one-167711079",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167764273",
+    "slug": "consolidated-two-167764273",
+    "title": "The Consolidated Balance Sheet Loop: Working TBAC's Two 2026 Bill Scenarios End to End",
+    "subtitle": "",
+    "post_date": "2026-08-26",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/consolidated-two-167764273",
     "audience": "paid",
     "wordcount": 0,
     "content_status": "registry",
