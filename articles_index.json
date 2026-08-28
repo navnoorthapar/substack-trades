@@ -1,5 +1,102 @@
 [
   {
+    "source": "substack",
+    "source_id": "the-sec-subpoenaed-four-banks-situational",
+    "slug": "the-sec-subpoenaed-four-banks-situational",
+    "title": "The SEC Subpoenaed Four Banks. Situational Awareness Had Named Them on Form ADV.",
+    "subtitle": "Question 24 of Schedule D makes every private fund adviser list its prime brokers publicly. Situational Awareness listed four. Two of the three subpoena asks needed no subpoena.",
+    "post_date": "2026-08-28T13:30:58.014Z",
+    "url": "https://navnoorbawa.substack.com/p/the-sec-subpoenaed-four-banks-situational",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "5f21e5b19912292b0fcc84d5a0cfeb28f909cffec5df07ef886b9ccdd4a114d7",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-28T13:33:31.522Z",
+    "observed_source_updated_at": "2026-08-28T13:33:31.522Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Below the paid line:",
+      "character_count": 20,
+      "body_sha256": "5f21e5b19912292b0fcc84d5a0cfeb28f909cffec5df07ef886b9ccdd4a114d7"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "167941375",
+    "slug": "sovereign-for-167941375",
+    "title": "The Sovereign Concession Discount: A Framework for Pricing Chevron's Venezuela Optionality Before Feb 2027",
+    "subtitle": "",
+    "post_date": "2026-08-28",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/sovereign-for-167941375",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167939529",
+    "slug": "alphabet-spent-7-167939529",
+    "title": "Alphabet Spent $439.7 Million Buying Back the Option It Just Sold: The Capped Call Table",
+    "subtitle": "",
+    "post_date": "2026-08-28",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/alphabet-spent-7-167939529",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "167939504",
+    "slug": "3-field-form-d-167939504",
+    "title": "The 3-Field Form D Screen, Worked End to End on Nvidia's $12.9bn Hugging Face Deal",
+    "subtitle": "",
+    "post_date": "2026-08-28",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/3-field-form-d-167939504",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "medium",
     "source_id": "43c86f6c54ce",
     "slug": "millennium-sued-a-trader-who-never-started-man-group-at-253-6bn-has-no-gazumping-suit-43c86f6c54ce",
