@@ -1256,7 +1256,7 @@
     "instruments": [
       "option"
     ],
-    "direction": "unspecified",
+    "direction": "long/short",
     "underlying": "Nasdaq",
     "edge_or_thesis": "valuation convergence.",
     "any_quant_detail": "$2.22B, $1.2B, 60%",
@@ -1881,7 +1881,7 @@
     "instruments": [
       "equity"
     ],
-    "direction": "unspecified",
+    "direction": "long",
     "underlying": "Elliott Management",
     "edge_or_thesis": null,
     "any_quant_detail": "$1.9 billion, $475 million",
