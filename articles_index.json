@@ -1,5 +1,96 @@
 [
   {
+    "source": "medium",
+    "source_id": "43c86f6c54ce",
+    "slug": "millennium-sued-a-trader-who-never-started-man-group-at-253-6bn-has-no-gazumping-suit-43c86f6c54ce",
+    "title": "Millennium Sued a Trader Who Never Started. Man Group, at $253.6bn, Has No Gazumping Suit.",
+    "subtitle": "Of four reneged Millennium hires in 2026, only one had already cost real money to build. That one got sued.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-27T21:16:46Z",
+    "url": "https://medium.com/@navnoorbawa/millennium-sued-a-trader-who-never-started-man-group-at-253-6bn-has-no-gazumping-suit-43c86f6c54ce",
+    "audience": "unknown",
+    "wordcount": 24,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "81ebfec7eacdfaecb4c9ee6c21ff8425609f36e50dd04e45b4124579924fc844",
+      "lead": {
+        "text": "Of four reneged Millennium hires in 2026, only one had already cost real money to build. That one got sued.",
+        "start": 0,
+        "end": 107,
+        "sha256": "efd80004e40c2731ed9625230fa3935205186b66833eccb92e9f74052f57b389",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-27T21:16:46Z",
+    "observed_source_updated_at": "2026-08-27T21:16:46Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "e01e370b68c7",
+    "slug": "bridgewater-lost-2-8-in-chinas-quant-quake-deepseek-s-funds-lost-20-that-gap-is-a-formula-e01e370b68c7",
+    "title": "Bridgewater Lost 2.8% in China’s Quant Quake. DeepSeek’s Funds Lost 20%. That Gap Is a Formula.",
+    "subtitle": "The consensus, stated at its strongest\n\nContinue reading on Medium »",
+    "post_date": "2026-08-27T19:00:54Z",
+    "url": "https://medium.com/@navnoorbawa/bridgewater-lost-2-8-in-chinas-quant-quake-deepseek-s-funds-lost-20-that-gap-is-a-formula-e01e370b68c7",
+    "audience": "unknown",
+    "wordcount": 10,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "564b5ee20cae2486ff78ac7bd4089d18b2d787cb4b50e54c1786cc1b6eb46a0f",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-27T19:00:54Z",
+    "observed_source_updated_at": "2026-08-27T19:00:54Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "jane-streets-lease-guaranty-adds",
+    "slug": "jane-streets-lease-guaranty-adds",
+    "title": "Jane Street's Lease Guaranty Adds $289m a Year. Moody's 30% Trigger Never Names It.",
+    "subtitle": "A fifteen-year absolute triple net lease behind $2.25bn of Zenith Arc notes, guaranteed by the parent, sitting outside the one ratio Moody's says would downgrade it.",
+    "post_date": "2026-08-27T18:31:01.808Z",
+    "url": "https://navnoorbawa.substack.com/p/jane-streets-lease-guaranty-adds",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "2fa1c89bf598ffb8607d6cda146fcf557e63511b53ba05f551b8e78a8e74b053",
+      "lead": {
+        "text": "The $14.6bn refinancing everyone priced in August was not Jane Street’s largest new fixed charge of 2026. A fifteen year absolute triple net lease on an Oklahoma data centre, signed the next day and parent-guaranteed, commits it to $289m to $311m a year against roughly $175m of incremental interest on the notes. The notes are counted, rated and public. The lease is none of those.",
+        "start": 0,
+        "end": 382,
+        "sha256": "2fa1c89bf598ffb8607d6cda146fcf557e63511b53ba05f551b8e78a8e74b053",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-27T18:32:51.211Z",
+    "observed_source_updated_at": "2026-08-27T18:32:51.211Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "The $14.6bn refinancing everyone priced in August was not Jane Street’s largest new fixed charge of 2026. A fifteen year absolute triple net lease on an Oklahoma data centre, signed the next day and parent-guaranteed, commits it to $289m to $311m a year against roughly $175m of incremental interest on the notes. The notes are counted, rated and public. The lease is none of those.",
+      "character_count": 382,
+      "body_sha256": "2fa1c89bf598ffb8607d6cda146fcf557e63511b53ba05f551b8e78a8e74b053"
+    }
+  },
+  {
     "source": "substack",
     "source_id": "treasurys-own-buyback-file-answers",
     "slug": "treasurys-own-buyback-file-answers",
@@ -876,9 +967,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-21T09:29:18Z",
-    "observed_source_updated_at": "2026-08-21T09:29:18Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -900,9 +991,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-21T09:01:13Z",
-    "observed_source_updated_at": "2026-08-21T09:01:13Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -4091,8 +4182,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-21T20:00:08.635Z",
-    "observed_source_updated_at": "2026-07-21T20:00:08.635Z",
+    "source_updated_at": "2026-08-27T16:55:38.499Z",
+    "observed_source_updated_at": "2026-08-27T16:55:38.499Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/susquehanna-citadels-137m-insider-trading-suit-won-t-make-them-whole-bb1d94ba503a"
     }
@@ -6727,8 +6818,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T16:57:11.742Z",
+    "observed_source_updated_at": "2026-08-27T16:57:11.742Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -8009,8 +8100,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:52:03.244Z",
-    "observed_source_updated_at": "2026-08-27T12:52:03.244Z",
+    "source_updated_at": "2026-08-27T16:58:56.131Z",
+    "observed_source_updated_at": "2026-08-27T16:58:56.131Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -8102,8 +8193,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T17:02:23.250Z",
+    "observed_source_updated_at": "2026-08-27T17:02:23.250Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -9402,8 +9493,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T17:05:11.480Z",
+    "observed_source_updated_at": "2026-08-27T17:05:11.480Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -9657,8 +9748,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T17:04:47.861Z",
+    "observed_source_updated_at": "2026-08-27T17:04:47.861Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -9778,8 +9869,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.002Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.002Z",
+    "source_updated_at": "2026-08-27T17:06:04.491Z",
+    "observed_source_updated_at": "2026-08-27T17:06:04.491Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -10529,8 +10620,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.073Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.073Z",
+    "source_updated_at": "2026-08-27T17:09:36.319Z",
+    "observed_source_updated_at": "2026-08-27T17:09:36.319Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -10699,8 +10790,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.073Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.073Z",
+    "source_updated_at": "2026-08-27T17:10:16.767Z",
+    "observed_source_updated_at": "2026-08-27T17:10:16.767Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -10779,8 +10870,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.073Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.073Z",
+    "source_updated_at": "2026-08-27T17:10:40.114Z",
+    "observed_source_updated_at": "2026-08-27T17:10:40.114Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -10971,8 +11062,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.073Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.073Z",
+    "source_updated_at": "2026-08-27T17:11:23.625Z",
+    "observed_source_updated_at": "2026-08-27T17:11:23.625Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -11095,8 +11186,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.073Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.073Z",
+    "source_updated_at": "2026-08-27T17:11:31.239Z",
+    "observed_source_updated_at": "2026-08-27T17:11:31.239Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "metadata-only",
@@ -13834,8 +13925,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-27T16:13:39.160Z",
-    "observed_source_updated_at": "2026-07-27T16:13:39.160Z",
+    "source_updated_at": "2026-08-27T17:13:18.357Z",
+    "observed_source_updated_at": "2026-08-27T17:13:18.357Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
