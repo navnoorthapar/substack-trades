@@ -1,5 +1,53 @@
 [
   {
+    "article_title": "Chevron Books Zero Reserves in Venezuela. A 100-Year Lease Won't Change That Before 2027",
+    "article_url": "https://navnoorbawa.substack.com/p/chevron-books-zero-reserves-in-venezuela",
+    "article_date": "2026-08-29",
+    "trade_description": "The claim: Venezuela’s reported 100-year oil lease is being priced by the market as a durable commitment built to outlast any one government. I’d price it as the opposite signal. At any discount rate a Venezuelan sovereign risk deserves, the back eighty years of a 100-year lease are worth almost nothing today.",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "a durable commitment built to outlast any one government.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Chevron Books Zero Reserves in Venezuela. A 100-Year Lease Won't Change That Before 2027",
+    "article_url": "https://navnoorbawa.substack.com/p/chevron-books-zero-reserves-in-venezuela",
+    "article_date": "2026-08-29",
+    "trade_description": "None of this is unique to Venezuelan crude, as far as I can tell. It is the same math every long duration concession runs into, and the historical record backs the arithmetic instead of complicating it. William Knox D’Arcy’s 1901 concession in Persia ran 60 years on paper; Britain lost it in 1951, at year 50, when Iran nationalized the Anglo-Iranian Oil Company. Kuwait Oil Company, founded in 1934 on a concession commonly put at 75 years, was fully nationalized by the state in 1975, at year 41. Both companies held, on paper, some of the strongest legal protection a foreign concessionaire could get in their era. Both lost control decades before their contractual term ran out: D’Arcy’s grant had ten years left on paper, Kuwait’s had thirty four. Neither one made it.",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "at 75",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Chevron Books Zero Reserves in Venezuela. A 100-Year Lease Won't Change That Before 2027",
+    "article_url": "https://navnoorbawa.substack.com/p/chevron-books-zero-reserves-in-venezuela",
+    "article_date": "2026-08-29",
+    "trade_description": "The current arrangement inverts that structure completely. It follows a foreign military operation that captured a sitting head of state, installed an interim government whose own constitutional 90-day mandate lapsed in early April with no confirmed extension vote from the National Assembly, and routes oil sale proceeds through accounts the US Energy Department’s own fact sheet describes as disbursed “at the discretion of the U.S. government.” A State Department official told Congress in April that only about $3 billion of the $13 billion collected has been accounted for, and a congressional watchdog has since opened a formal review. I don’t read any of that as a stronger foundation for a hundred years of commitment than 1976 or 2007 had. I read it as weaker, because it carries no domestic",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "disbursed “at the discretion of the U.",
+    "any_quant_detail": "$3 billion, $13 billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
     "article_title": "SpaceX Is Hiring a Gas Trader With a P&L. Meta, Amazon and Google Got There First.",
     "article_url": "https://navnoorbawa.substack.com/p/spacex-is-hiring-a-gas-trader-with",
     "article_date": "2026-08-26",

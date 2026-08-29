@@ -1,5 +1,68 @@
 [
   {
+    "source": "substack",
+    "source_id": "chevron-books-zero-reserves-in-venezuela",
+    "slug": "chevron-books-zero-reserves-in-venezuela",
+    "title": "Chevron Books Zero Reserves in Venezuela. A 100-Year Lease Won't Change That Before 2027",
+    "subtitle": "The reserve line traces to Washington, not Caracas — and the annuity math says a 100-year lease is worth what its first 17 to 40 years produce.",
+    "post_date": "2026-08-29T13:01:08.827Z",
+    "url": "https://navnoorbawa.substack.com/p/chevron-books-zero-reserves-in-venezuela",
+    "audience": "everyone",
+    "wordcount": 3499,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "06a0349d7abe43711afddacc05d374409f297fd47c89d183c4458d92f04bcff7",
+      "lead": {
+        "text": "The claim: Venezuela’s reported 100-year oil lease is being priced by the market as a durable commitment built to outlast any one government. I’d price it as the opposite signal. At any discount rate a Venezuelan sovereign risk deserves, the back eighty years of a 100-year lease are worth almost nothing today.",
+        "start": 0,
+        "end": 311,
+        "sha256": "0dd4a063fd1bf0096b385413b023f6be9d19d72af38db08853c6a9ca64f433e2",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "mechanism",
+          "source_order": 13,
+          "heading": "The mechanism: why 100 years is not worth what it sounds like",
+          "heading_start": 6572,
+          "heading_end": 6633,
+          "heading_sha256": "c36f5dc3039537b5133be48eacd04fd2d31fd667c7ce3c00d9c73eda7281f9f2",
+          "text": "Start with the arithmetic, because it is the whole case. A lease’s value is the sum of its future cash flows discounted back to today, and the discount rate does almost all the work in a story this long. Venezuelan sovereign risk, even under the current arrangement, sits in the 8-to-12% range a frontier energy asset typically carries, in my judgment. Nothing exotic about that number.",
+          "start": 6635,
+          "end": 7021,
+          "sha256": "00f434887e103d30eb50f3d1b7eb5a9ad42b8bfec457865b7c212f42a1a9d184",
+          "truncated": false
+        },
+        {
+          "kind": "falsifier",
+          "source_order": 41,
+          "heading": "What would change this view",
+          "heading_start": 18345,
+          "heading_end": 18372,
+          "heading_sha256": "b5ed5c090c00a4317c273608df8e05fcfe20a375b0560ee2200480eef4b02676",
+          "text": "Three things would move me off this read, and all three are dated and checkable, which is the point of writing them down now.",
+          "start": 18374,
+          "end": 18499,
+          "sha256": "86a2d147207aeac9307cd797f8ac3f9e9e401a71b9da14e4302032e1c8ff3d9e",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "The UAE left OPEC+ in May for capacity reasons of its own. It was producing 3.4 million b/d against an estimated 4.2 million of effective capacity, and it wants 5 million by 2027, which the quota it just left would never have allowed. That exit barely moved the strip. Venezuela’s, on this reading, is a smaller version of the same story: paperwork catching up to a relationship that’s already public, one confirmed departure and one live deliberation raising a legitimate but slower moving question about how much pricing power Saudi Arabia and Russia have left.",
+        "start": 986,
+        "end": 1549,
+        "sha256": "39f90de5355164509e66367eba8ce84938ff2bf7f4695d7bcdae97c22d8dc669",
+        "truncated": true
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-29T13:03:53.740Z",
+    "observed_source_updated_at": "2026-08-29T13:03:53.740Z"
+  },
+  {
     "source": "medium",
     "source_id": "bb592c4767aa",
     "slug": "aqrs-fund-to-sell-this-died-in-2020-jane-street-s-13f-says-the-trade-is-real-bb592c4767aa",
