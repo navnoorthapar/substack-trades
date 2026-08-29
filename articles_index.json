@@ -6252,12 +6252,12 @@
     "subtitle": "The Avellaneda-Stoikov and Cartea-Wang models, the SEBI order that froze $564M, and the lawsuit that exposed the strategy. ",
     "post_date": "2026-05-29T06:50:15.910Z",
     "url": "https://navnoorbawa.substack.com/p/how-hrt-and-jane-street-made-225b",
-    "audience": "everyone",
-    "wordcount": 4533,
-    "content_status": "full",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "f1a2c31e63c45b011512bf6cb0042f7082ddd413806254d047a11585d91c4df8",
+      "body_sha256": "db8b340946d67335b753f369aed8ac7a4079736003bc089931e857103755530a",
       "lead": {
         "text": "When the Strait of Hormuz closed in early 2026, two private trading firms posted Q1 trading revenue that topped the trading desks of JPMorgan, Goldman Sachs, and Bank of America. This is a reconstruction of exactly how they did it, sourced to primary records.",
         "start": 0,
@@ -6266,19 +6266,20 @@
         "truncated": false
       },
       "sections": [],
-      "fallback_evidence": {
-        "text": "The Q1 2026 figures are not a gradual step up. They represent a structural break. Bloomberg first reported on May 11, 2026 that Hudson River Trading recorded $6.4 billion in trading revenue in Q1 — more than half the firm’s total haul across all of 2025 — and that HRT’s profit climbed approximately 175% to $4.2 billion, with EBITDA of $4.5 billion and $20 billion in net trading capital at quarter-end. The Financial Times confirmed the figures and reported that HRT’s net trading revenue in Q1 exceeded that of Bank of America or Wells Fargo in the same period.",
-        "start": 519,
-        "end": 1083,
-        "sha256": "c2b0892407028b19367a1cc638d7a9d955116a85db57876f79846418080e37bf",
-        "truncated": true
-      },
+      "fallback_evidence": null,
       "checkpoints": []
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-05-31T15:33:30.047Z",
-    "observed_source_updated_at": "2026-05-31T15:33:30.047Z",
+    "source_updated_at": "2026-08-29T06:52:26.738Z",
+    "observed_source_updated_at": "2026-08-29T06:52:26.738Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "When the Strait of Hormuz closed in early 2026, two private trading firms posted Q1 trading revenue that topped the trading desks of JPMorgan, Goldman Sachs, and Bank of America. This is a reconstruction of exactly how they did it, sourced to primary records.",
+      "character_count": 259,
+      "body_sha256": "db8b340946d67335b753f369aed8ac7a4079736003bc089931e857103755530a"
+    },
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hrt-and-jane-street-made-22-5b-in-one-quarter-the-models-the-50-1-edge-and-the-sebi-order-82fcbcedbef9"
     }
