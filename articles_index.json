@@ -1,5 +1,139 @@
 [
   {
+    "source": "medium",
+    "source_id": "2243b64d8c3e",
+    "slug": "morgan-stanley-sold-archegos-blocks-first-and-avoided-the-loss-two-banks-that-waited-lost-8-4b-2243b64d8c3e",
+    "title": "Morgan Stanley Sold Archegos Blocks First and Avoided the Loss. Two Banks That Waited Lost $8.4B.",
+    "subtitle": "The S&P 500’s calm is not real risk absence. It is one compressed number, implied correlation, sitting near its lowest reading in twenty…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-30T13:11:14Z",
+    "url": "https://medium.com/@navnoorbawa/morgan-stanley-sold-archegos-blocks-first-and-avoided-the-loss-two-banks-that-waited-lost-8-4b-2243b64d8c3e",
+    "audience": "unknown",
+    "wordcount": 28,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "73291bad31ca4665b3ecc704f4887dcd78be751c319545c7bf8c975ae1650a75",
+      "lead": {
+        "text": "The S&P 500’s calm is not real risk absence. It is one compressed number, implied correlation, sitting near its lowest reading in twenty…",
+        "start": 0,
+        "end": 137,
+        "sha256": "9261b49be2d5374a1b2bd46fd3d13a87e9565b9eb39ed66529b93c29f10cbf75",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-30T13:11:14Z",
+    "observed_source_updated_at": "2026-08-30T13:11:14Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "df928806dce0",
+    "slug": "aqr-says-tail-hedging-is-a-bad-trade-universa-runs-20-billion-doing-it-anyway-df928806dce0",
+    "title": "AQR Says Tail Hedging Is a Bad Trade. Universa Runs $20 Billion Doing It Anyway.",
+    "subtitle": "The formula that prices that insurance can’t see the one date that matters until October 4.\n\nContinue reading on Medium »",
+    "post_date": "2026-08-30T13:10:41Z",
+    "url": "https://medium.com/@navnoorbawa/aqr-says-tail-hedging-is-a-bad-trade-universa-runs-20-billion-doing-it-anyway-df928806dce0",
+    "audience": "unknown",
+    "wordcount": 20,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "b28e92e6956befba234c032ac3e83380144c7500bd19a8f003d3237fe16800cc",
+      "lead": {
+        "text": "The formula that prices that insurance can’t see the one date that matters until October 4.",
+        "start": 0,
+        "end": 91,
+        "sha256": "1ea8d611eaabf6cf4d0cb3e714de3d2bae73094505ba6aa0a39790d87902ffd9",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-30T13:10:41Z",
+    "observed_source_updated_at": "2026-08-30T13:10:41Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "kevin-durants-60m-hugging-face-payout",
+    "slug": "kevin-durants-60m-hugging-face-payout",
+    "title": "Kevin Durant's $60M Hugging Face Payout Needs a 0.465% Stake Nobody Has Disclosed",
+    "subtitle": "Three Form D fields bound any private return claim. Here: a seed that bought debt, a Series A that counts $3,315,000 twice, and four rounds where the 240x uses two.",
+    "post_date": "2026-08-30T13:03:11.332Z",
+    "url": "https://navnoorbawa.substack.com/p/kevin-durants-60m-hugging-face-payout",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "684aad0a02fd8d9c02598e13a6aafef2eeb4c17daafa27c2068dc000931dd3fb",
+      "lead": {
+        "text": "The claim: The number every outlet ran this week, $250,000 into $60 million, a 240x gross return, requires Thirty Five Ventures to hold 0.465% of Hugging Face at closing. No filing, no company statement and no spokesperson has disclosed a percentage. The two documents Hugging Face did file with the SEC, plus its own funding announcements, put Kevin Durant in",
+        "start": 0,
+        "end": 360,
+        "sha256": "684aad0a02fd8d9c02598e13a6aafef2eeb4c17daafa27c2068dc000931dd3fb",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-30T13:08:15.749Z",
+    "observed_source_updated_at": "2026-08-30T13:08:15.749Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "The claim: The number every outlet ran this week, $250,000 into $60 million, a 240x gross return, requires Thirty Five Ventures to hold 0.465% of Hugging Face at closing. No filing, no company statement and no spokesperson has disclosed a percentage. The two documents Hugging Face did file with the SEC, plus its own funding announcements, put Kevin Durant in",
+      "character_count": 360,
+      "body_sha256": "684aad0a02fd8d9c02598e13a6aafef2eeb4c17daafa27c2068dc000931dd3fb"
+    }
+  },
+  {
+    "source": "substack",
+    "source_id": "alphabets-1925b-record-convertible",
+    "slug": "alphabets-1925b-record-convertible",
+    "title": "Alphabet's $19.25B \"Record\" Convertible Isn't a Zero Coupon Bond",
+    "subtitle": "Four 2026 issuers' own SEC filings show a 5% to 9% cash cost that never makes the coupon line",
+    "post_date": "2026-08-29T18:00:39.588Z",
+    "url": "https://navnoorbawa.substack.com/p/alphabets-1925b-record-convertible",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "4334d8f01c5c61a8b1b398e47880ee1b5124ce6a03e081353ab29b4e4b809cde",
+      "lead": {
+        "text": "Zero coupon convertible issuance is being reported as free financing that AI-era stock volatility has made possible. The primary filings show issuers paying real, quantifiable cash for it, and the single deal every tracker cites as proof of the record year carries a 6.25% coupon.",
+        "start": 0,
+        "end": 280,
+        "sha256": "4334d8f01c5c61a8b1b398e47880ee1b5124ce6a03e081353ab29b4e4b809cde",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-29T18:04:41.141Z",
+    "observed_source_updated_at": "2026-08-29T18:04:41.141Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Zero coupon convertible issuance is being reported as free financing that AI-era stock volatility has made possible. The primary filings show issuers paying real, quantifiable cash for it, and the single deal every tracker cites as proof of the record year carries a 6.25% coupon.",
+      "character_count": 280,
+      "body_sha256": "4334d8f01c5c61a8b1b398e47880ee1b5124ce6a03e081353ab29b4e4b809cde"
+    }
+  },
+  {
     "source": "substack",
     "source_id": "chevron-books-zero-reserves-in-venezuela",
     "slug": "chevron-books-zero-reserves-in-venezuela",
@@ -1001,9 +1135,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-22T13:39:42Z",
-    "observed_source_updated_at": "2026-08-22T13:39:42Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
