@@ -1,6 +1,36 @@
 [
   {
     "source": "medium",
+    "source_id": "0e1f233207b1",
+    "slug": "millennium-discloses-52-sec-advisers-balyasny-29-point72s-newest-brand-isn-t-one-of-its-14-0e1f233207b1",
+    "title": "Millennium Discloses 52 SEC Advisers, Balyasny 29. Point72’s Newest Brand Isn’t One of Its 14.",
+    "subtitle": "Point72’s own SEC filing draws a hard legal line between the business lines it registers as separate advisers and the ones it doesn’t…\n\nContinue reading on Medium »",
+    "post_date": "2026-08-31T15:02:21Z",
+    "url": "https://medium.com/@navnoorbawa/millennium-discloses-52-sec-advisers-balyasny-29-point72s-newest-brand-isn-t-one-of-its-14-0e1f233207b1",
+    "audience": "unknown",
+    "wordcount": 27,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "24f2f4ce9ac9ef3bf7d5528798747523d18ec24592edc881752d4e0c4ef4badb",
+      "lead": {
+        "text": "Point72’s own SEC filing draws a hard legal line between the business lines it registers as separate advisers and the ones it doesn’t…",
+        "start": 0,
+        "end": 134,
+        "sha256": "b9cd1caf6ff76395708477b36b23748e0c38c496f242c56b2321c4c17ec25b65",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-08-31T15:02:21Z",
+    "observed_source_updated_at": "2026-08-31T15:02:21Z"
+  },
+  {
+    "source": "medium",
     "source_id": "2243b64d8c3e",
     "slug": "morgan-stanley-sold-archegos-blocks-first-and-avoided-the-loss-two-banks-that-waited-lost-8-4b-2243b64d8c3e",
     "title": "Morgan Stanley Sold Archegos Blocks First and Avoided the Loss. Two Banks That Waited Lost $8.4B.",
@@ -86,8 +116,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-30T13:08:15.749Z",
-    "observed_source_updated_at": "2026-08-30T13:08:15.749Z",
+    "source_updated_at": "2026-08-31T10:59:01.569Z",
+    "observed_source_updated_at": "2026-08-31T10:59:01.569Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -920,9 +950,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-24T09:49:19Z",
-    "observed_source_updated_at": "2026-08-24T09:49:19Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
