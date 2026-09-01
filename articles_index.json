@@ -1,5 +1,64 @@
 [
   {
+    "source": "substack",
+    "source_id": "the-cftc-delayed-the-hedge-fund-leverage",
+    "slug": "the-cftc-delayed-the-hedge-fund-leverage",
+    "title": "The CFTC Delayed the Hedge Fund Leverage Form to 2027. Its Own File Already Shows $823 Billion Short.",
+    "subtitle": "The five public dials that separate a duration repricing from a basis trade unwind, and where every one of them sits while the 30-year prints 5.25%.",
+    "post_date": "2026-09-01T14:31:15.034Z",
+    "url": "https://navnoorbawa.substack.com/p/the-cftc-delayed-the-hedge-fund-leverage",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "b816510a3d11eeac2163d7d4af58dbb9a55b07714d0b7327482544bd4b83e246",
+      "lead": {
+        "text": "The claim: The consensus is watching the wrong number. A basis book dies when its financing dies, never because the bond it holds fell in price, and financing is published every morning, free, at T+1.",
+        "start": 0,
+        "end": 200,
+        "sha256": "b816510a3d11eeac2163d7d4af58dbb9a55b07714d0b7327482544bd4b83e246",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-01T14:39:48.950Z",
+    "observed_source_updated_at": "2026-09-01T14:39:48.950Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "The claim: The consensus is watching the wrong number. A basis book dies when its financing dies, never because the bond it holds fell in price, and financing is published every morning, free, at T+1.",
+      "character_count": 200,
+      "body_sha256": "b816510a3d11eeac2163d7d4af58dbb9a55b07714d0b7327482544bd4b83e246"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "168301914",
+    "slug": "five-dial-four-i-168301914",
+    "title": "The Five-Dial Funding Monitor: Four Endpoints, the Exact Field on Each, and What I Do When One Fires",
+    "subtitle": "",
+    "post_date": "2026-09-01",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/five-dial-four-i-168301914",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "medium",
     "source_id": "0e1f233207b1",
     "slug": "millennium-discloses-52-sec-advisers-balyasny-29-point72s-newest-brand-isn-t-one-of-its-14-0e1f233207b1",
