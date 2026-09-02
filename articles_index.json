@@ -1,5 +1,35 @@
 [
   {
+    "source": "medium",
+    "source_id": "1596750b3144",
+    "slug": "cfms-chairman-proved-94-of-your-correlation-matrix-is-noise-aqr-lost-the-expert-in-seven-months-1596750b3144",
+    "title": "CFM’s Chairman Proved 94% of Your Correlation Matrix Is Noise. AQR Lost the Expert in Seven Months.",
+    "subtitle": "Bun, Bouchaud, and Potters’ own formula shows a raw backtest can overstate portfolio safety by 4x once assets crowd the sample.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-02T15:03:20Z",
+    "url": "https://medium.com/@navnoorbawa/cfms-chairman-proved-94-of-your-correlation-matrix-is-noise-aqr-lost-the-expert-in-seven-months-1596750b3144",
+    "audience": "unknown",
+    "wordcount": 25,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "a82b198d81c96a63fcaa043487fe6e4fa81e2822e58c7d0979de6963f3d467ef",
+      "lead": {
+        "text": "Bun, Bouchaud, and Potters’ own formula shows a raw backtest can overstate portfolio safety by 4x once assets crowd the sample.",
+        "start": 0,
+        "end": 127,
+        "sha256": "35d641540a0fed0bd0d6bbc2be095e008b1318c35f8fdcf8cbeab0f76a8ce3c3",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-02T15:03:20Z",
+    "observed_source_updated_at": "2026-09-02T15:03:20Z"
+  },
+  {
     "source": "substack",
     "source_id": "the-cftc-delayed-the-hedge-fund-leverage",
     "slug": "the-cftc-delayed-the-hedge-fund-leverage",
@@ -985,9 +1015,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-24T16:39:05Z",
-    "observed_source_updated_at": "2026-08-24T16:39:05Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
