@@ -1,6 +1,56 @@
 [
   {
     "source": "substack",
+    "source_id": "two-sigmas-co-ceo-collapse-hit-bloomberg",
+    "slug": "two-sigmas-co-ceo-collapse-hit-bloomberg",
+    "title": "Two Sigma's Co-CEO Collapse Hit Bloomberg in a Day. New Mexico's Pension Still Took Nine Weeks.",
+    "subtitle": "Public disclosure and institutional redemption run on two different clocks, and only one of them is fast.",
+    "post_date": "2026-09-03T13:31:18.881Z",
+    "url": "https://navnoorbawa.substack.com/p/two-sigmas-co-ceo-collapse-hit-bloomberg",
+    "audience": "everyone",
+    "wordcount": 3258,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "2611175aa92bdd57d237f9f82cf42f70a343bab8101fdbeaa3dee4148a6822a7",
+      "lead": {
+        "text": "Two Sigma’s Absolute Return Enhanced Fund gained 15% in 2025 and is up 12.4% this year. In June, New Mexico’s Public Employees Retirement Association pulled roughly $100 million out of it anyway.",
+        "start": 0,
+        "end": 195,
+        "sha256": "dc34086a511e333eed96db78c8f26576d407c5acd5535aa638b6471ab60d3065",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "mechanism",
+          "source_order": 19,
+          "heading": "The mechanism: public disclosure has one clock, institutional redemption has another",
+          "heading_start": 6948,
+          "heading_end": 7032,
+          "heading_sha256": "0189cdd1b4b0d97e0aff68fbe41c5c0b9e6dc3e23320f4e3bdb5a31e85241161",
+          "text": "A governance blowup moving through an allocator’s process runs on two separate clocks, and conflating them is what made my first read of this story wrong.",
+          "start": 7034,
+          "end": 7188,
+          "sha256": "db9f6f9bb3fd6b1cf9f36349eb58b996f7ddd8e41d1767282cea11881f4e0b3a",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "PERA’s own explanation, as reported by Hedgeweek, was that organizational issues at the firm had created “too much uncertainty, with no clear timetable for resolving the internal conflict.” The pension said this. It said so even as it acknowledged the strategy had “outperformed both the pension’s benchmark and comparable funds.” That’s a $100 million redemption from a fund that was working, on grounds that had nothing to do with the fund working.",
+        "start": 197,
+        "end": 647,
+        "sha256": "855517754625010c2de1b3dfb9b520375317c73177dee3f6917092e9b1180077",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-03T13:34:58.521Z",
+    "observed_source_updated_at": "2026-09-03T13:34:58.521Z"
+  },
+  {
+    "source": "substack",
     "source_id": "jain-global-made-18-billion-millennium",
     "slug": "jain-global-made-18-billion-millennium",
     "title": "Jain Global Made $1.8 Billion. Millennium Is Buying Out the Investors Who Funded It.",
@@ -35,6 +85,28 @@
       "character_count": 360,
       "body_sha256": "78062381818d0fc149c3a68177f5f00a0aa5b2340f50ae94ecafa51f21ed0e4f"
     }
+  },
+  {
+    "source": "patreon",
+    "source_id": "168495262",
+    "slug": "three-test-run-4-168495262",
+    "title": "The Three-Test Holdco Screen, Run Live on Deutsche Telekom's 4.7x Stub",
+    "subtitle": "",
+    "post_date": "2026-09-03",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/three-test-run-4-168495262",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
