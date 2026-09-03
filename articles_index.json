@@ -1,6 +1,36 @@
 [
   {
     "source": "medium",
+    "source_id": "7ec0a5498ab8",
+    "slug": "the-gaussian-copula-never-left-bbva-marks-its-key-input-from-19-to-92-7ec0a5498ab8",
+    "title": "The Gaussian copula never left: BBVA marks its key input from 19% to 92%.",
+    "subtitle": "Two banks price the same instrument with the same model and mark the input five times apart\n\nContinue reading on Medium »",
+    "post_date": "2026-09-02T17:44:12Z",
+    "url": "https://medium.com/@navnoorbawa/the-gaussian-copula-never-left-bbva-marks-its-key-input-from-19-to-92-7ec0a5498ab8",
+    "audience": "unknown",
+    "wordcount": 21,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "99dc861ebac7b8c6e9310c893b16cb9dc7c3cddc20564acfb27353274fd39a13",
+      "lead": {
+        "text": "Two banks price the same instrument with the same model and mark the input five times apart",
+        "start": 0,
+        "end": 91,
+        "sha256": "824f866ae42cf4b1a91357cf06a1fc751caf06d2131fc21ac9dc728434218966",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-02T17:44:12Z",
+    "observed_source_updated_at": "2026-09-02T17:44:12Z"
+  },
+  {
+    "source": "medium",
     "source_id": "1596750b3144",
     "slug": "cfms-chairman-proved-94-of-your-correlation-matrix-is-noise-aqr-lost-the-expert-in-seven-months-1596750b3144",
     "title": "CFM’s Chairman Proved 94% of Your Correlation Matrix Is Noise. AQR Lost the Expert in Seven Months.",
@@ -28,6 +58,50 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-09-02T15:03:20Z",
     "observed_source_updated_at": "2026-09-02T15:03:20Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "168440642",
+    "slug": "two-sigmas-nine-168440642",
+    "title": "Two Sigma's Nine Week Gap: A Redemption Latency Audit Any Allocator Can Run",
+    "subtitle": "",
+    "post_date": "2026-09-02",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/two-sigmas-nine-168440642",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "168439611",
+    "slug": "pass-through-168439611",
+    "title": "The Pass-Through Screen: Rebuilding Millennium's Jain Global Playbook From Public Filings",
+    "subtitle": "",
+    "post_date": "2026-09-02",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/pass-through-168439611",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "access": "paid"
   },
   {
     "source": "substack",
