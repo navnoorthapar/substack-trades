@@ -1,5 +1,42 @@
 [
   {
+    "source": "substack",
+    "source_id": "jain-global-made-18-billion-millennium",
+    "slug": "jain-global-made-18-billion-millennium",
+    "title": "Jain Global Made $1.8 Billion. Millennium Is Buying Out the Investors Who Funded It.",
+    "subtitle": "A $250 million sovereign redemption, an uncapped pass-through fee structure, and the option Millennium has now exercised three times.",
+    "post_date": "2026-09-03T06:02:32.423Z",
+    "url": "https://navnoorbawa.substack.com/p/jain-global-made-18-billion-millennium",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "78062381818d0fc149c3a68177f5f00a0aa5b2340f50ae94ecafa51f21ed0e4f",
+      "lead": {
+        "text": "Millennium isn’t harvesting a clean success story when it absorbs Jain Global’s outside capital. It’s converting real redemption pressure, a $250 million sovereign-fund withdrawal and a fund’s own admission that it couldn’t reach scale alone, into a deal that captures the fee economics for itself. The trading was never broken. The vehicle that housed it was.",
+        "start": 0,
+        "end": 360,
+        "sha256": "78062381818d0fc149c3a68177f5f00a0aa5b2340f50ae94ecafa51f21ed0e4f",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-03T06:09:53.143Z",
+    "observed_source_updated_at": "2026-09-03T06:09:53.143Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Millennium isn’t harvesting a clean success story when it absorbs Jain Global’s outside capital. It’s converting real redemption pressure, a $250 million sovereign-fund withdrawal and a fund’s own admission that it couldn’t reach scale alone, into a deal that captures the fee economics for itself. The trading was never broken. The vehicle that housed it was.",
+      "character_count": 360,
+      "body_sha256": "78062381818d0fc149c3a68177f5f00a0aa5b2340f50ae94ecafa51f21ed0e4f"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "7ec0a5498ab8",
     "slug": "the-gaussian-copula-never-left-bbva-marks-its-key-input-from-19-to-92-7ec0a5498ab8",
