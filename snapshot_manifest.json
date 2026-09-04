@@ -1,16 +1,16 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-09-03T16:31:42Z",
+  "checked_at": "2026-09-04T03:31:27Z",
   "latest_publication": "2026-09-03T13:31:18.881Z",
   "catalog_latest_publication": "2026-09-03T13:31:18.881Z",
   "article_count": 459,
-  "catalog_count": 611,
-  "registry_count": 152,
+  "catalog_count": 613,
+  "registry_count": 154,
   "observation_count": 126,
-  "data_checksum": "23aeeb8f6445b57a234c49afdaaea5d39e8ffb13c2f06537eaa2042067ec1ef3",
+  "data_checksum": "aff004aa0a915746c46a99ab5aa264dfe00a2df98df1e154b41ba1b158299a5a",
   "sources": {
     "substack": {
-      "checked_at": "2026-09-03T16:30:50Z",
+      "checked_at": "2026-09-04T03:30:45Z",
       "status": "ok",
       "mode": "complete_api",
       "published_count": 288,
@@ -21,7 +21,7 @@
       "consecutive_degraded_checks": 0
     },
     "medium": {
-      "checked_at": "2026-09-03T16:30:57Z",
+      "checked_at": "2026-09-04T03:30:52Z",
       "status": "ok",
       "mode": "validated_history_plus_current_rss",
       "published_count": 411,
@@ -32,18 +32,18 @@
       "consecutive_degraded_checks": 0
     },
     "patreon": {
-      "checked_at": "2026-09-03T16:31:01Z",
+      "checked_at": "2026-09-04T03:30:56Z",
       "status": "ok",
       "mode": "public_metadata_api",
-      "published_count": 162,
-      "fetched_count": 162,
-      "included_count": 141,
+      "published_count": 164,
+      "fetched_count": 164,
+      "included_count": 143,
       "newest": "2026-09-03",
       "degraded_since": null,
       "consecutive_degraded_checks": 0
     },
     "fxempire": {
-      "checked_at": "2026-09-03T16:31:42Z",
+      "checked_at": "2026-09-04T03:31:27Z",
       "status": "ok",
       "mode": "manual_registry",
       "published_count": 11,
