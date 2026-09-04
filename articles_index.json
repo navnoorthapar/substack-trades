@@ -1,5 +1,122 @@
 [
   {
+    "source": "medium",
+    "source_id": "c51d1c84bacd",
+    "slug": "two-goldman-quants-fixed-markowitzs-formula-few-funds-check-which-half-works-c51d1c84bacd",
+    "title": "Two Goldman Quants Fixed Markowitz’s Formula. Few Funds Check Which Half Works.",
+    "subtitle": "Goldman’s reverse-optimization anchor tames a 1,144% bond weight. The view-blending everyone studies adds just 1.6% more Sharpe.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-04T15:04:19Z",
+    "url": "https://medium.com/@navnoorbawa/two-goldman-quants-fixed-markowitzs-formula-few-funds-check-which-half-works-c51d1c84bacd",
+    "audience": "unknown",
+    "wordcount": 23,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "8ab49f1c5b7aed855445fb1d5c2d35fe88f214b61d707e7a3a238a80ed0663d3",
+      "lead": {
+        "text": "Goldman’s reverse-optimization anchor tames a 1,144% bond weight. The view-blending everyone studies adds just 1.6% more Sharpe.",
+        "start": 0,
+        "end": 128,
+        "sha256": "4364e8cb61e2576f2f83f3e2babd74bb8fa8299eab3709e929b04e1507f6a0d3",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-04T15:04:19Z",
+    "observed_source_updated_at": "2026-09-04T15:04:19Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "two-sigmas-2023-sec-warning-just",
+    "slug": "two-sigmas-2023-sec-warning-just",
+    "title": "Two Sigma's 2023 SEC Warning Just Became Overdeck's $4.9B Divorce Problem",
+    "subtitle": "Inside the Ownership Trust built to survive any one founder's life event, and the SEC filing showing it hasn't",
+    "post_date": "2026-09-04T13:31:07.967Z",
+    "url": "https://navnoorbawa.substack.com/p/two-sigmas-2023-sec-warning-just",
+    "audience": "everyone",
+    "wordcount": 3710,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "3337b039d01820a235efd3fa2eb3f5bec9e4c97d9c0cf470cd5c2e8aaa561331",
+      "lead": {
+        "text": "Two Sigma’s Ownership Trusts were built so that no single life event at either founder could touch who controls the $75 billion firm, and John Overdeck’s own sworn testimony in his New Jersey divorce trial is now the evidence a court would need to treat that same trust interest as illiquid enough to discount, under a legal standard that otherwise forbids exactly that discount.",
+        "start": 0,
+        "end": 379,
+        "sha256": "0323b6c3f7e55be458bbd954bc1f5568d56bc3d41d039699258d9c9ba165bbea",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "mechanism",
+          "source_order": 14,
+          "heading": "The mechanism: a trust built to protect control becomes the exhibit that explains why it might not",
+          "heading_start": 3996,
+          "heading_end": 4094,
+          "heading_sha256": "113c17c513d30744b1be29b986a583138b04e3b687ad1151abe451274828dd60",
+          "text": "Start with what Two Sigma actually built. Per Two Sigma Investor Solutions LP’s own Form ADV Part 2A brochure, an SEC-registered Two Sigma affiliate, public and current as of the March 2025 update, trusts established by Overdeck and Siegel, called the Ownership Trusts in the filing, are “the principal owners of the Adviser.” Those Ownership Trusts “indirectly effectively control” TSM, the general partner, and the advisory business itself.",
+          "start": 4096,
+          "end": 4538,
+          "sha256": "c07f81bcff2702424262b79f53afa3f2ceca214c2b19ec9e3f2356adafb627db",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "One. A New Jersey court values Overdeck’s trust interest for equitable distribution, somewhere between his $4.9bn and her $6.2bn.",
+        "start": 6247,
+        "end": 6376,
+        "sha256": "216373f13bc40645527c16f302b720c55c93b426a8fe84e0c7d5cc202772167e",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-04T13:34:28.581Z",
+    "observed_source_updated_at": "2026-09-04T13:34:28.581Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "exoduspoint-filed-atlas-capital-with",
+    "slug": "exoduspoint-filed-atlas-capital-with",
+    "title": "ExodusPoint Filed 'Atlas Capital' With the SEC Two Weeks Before Its $1 Billion Pod Made the Trade Press",
+    "subtitle": "How a federal filing deadline nobody watches ran fifteen days ahead of Bloomberg's own scoop.",
+    "post_date": "2026-09-04T06:02:06.780Z",
+    "url": "https://navnoorbawa.substack.com/p/exoduspoint-filed-atlas-capital-with",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "a727a2fbb4a114ef8bebf07aa86c0e6145054756c332c8045bfccd163e8abc5a",
+      "lead": {
+        "text": "A hedge fund’s own compliance paperwork disclosed a new pod’s brand and website before any press outlet reported the hire.",
+        "start": 0,
+        "end": 122,
+        "sha256": "a727a2fbb4a114ef8bebf07aa86c0e6145054756c332c8045bfccd163e8abc5a",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-04T06:10:11.553Z",
+    "observed_source_updated_at": "2026-09-04T06:10:11.553Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "A hedge fund’s own compliance paperwork disclosed a new pod’s brand and website before any press outlet reported the hire.",
+      "character_count": 122,
+      "body_sha256": "a727a2fbb4a114ef8bebf07aa86c0e6145054756c332c8045bfccd163e8abc5a"
+    }
+  },
+  {
     "source": "substack",
     "source_id": "two-sigmas-co-ceo-collapse-hit-bloomberg",
     "slug": "two-sigmas-co-ceo-collapse-hit-bloomberg",
