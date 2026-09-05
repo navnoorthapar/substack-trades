@@ -198,7 +198,11 @@ validated release and local browser state: one product promise, one primary
 subscriber path, one featured note plus three compact recent rows, a research
 pulse for new-since-review, cited checkpoints, captured countercase, and source
 health, one local archive search, progressively disclosed review tools, and
-collapsed coverage for all four publication sources. Review-baseline state
+collapsed coverage for all four publication sources. A coverage monitor shows
+the four most recently published recurring subjects, with exact note counts,
+captured countercase/falsifier coverage, cited checkpoint counts, and direct
+entry to each subject's source history. These counts describe the archive;
+the panel is not a live market alert or portfolio monitor. Review-baseline state
 stays inside progressively disclosed local tools; the expanded research preset
 uses "Recent · 7 days" until an explicit baseline permits "New since last
 review."

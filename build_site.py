@@ -2508,7 +2508,7 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
 .desk-pulse-card>small{margin-top:7px;color:#e4ca8d;font-size:9.5px}
 .desk-pulse-note{margin-top:12px!important;color:#aebdc6!important;font-size:10.5px!important;line-height:1.45!important}
 .desk-landing-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,.72fr);gap:16px;align-items:start}
-.desk-latest-panel,.desk-review-panel,.desk-source-panel{
+.desk-latest-panel,.desk-review-panel,.desk-source-panel,.desk-monitor-panel{
   overflow:hidden;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-1)
 }
 .desk-landing-section-head{
@@ -2537,6 +2537,17 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
 .desk-latest-card>b{color:var(--accent);font-size:12px;white-space:nowrap}
 .desk-latest-signals{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
 .desk-latest-signals span{padding:4px 7px;border:1px solid var(--line);border-radius:999px;background:var(--surface-1);color:var(--text-muted);font-size:9.5px;font-weight:650;letter-spacing:.02em}
+.desk-monitor-note{max-width:46ch;color:var(--text-muted);font-size:11px;line-height:1.5}
+.desk-monitor-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.desk-monitor-card{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:20px;border:0;border-right:1px solid var(--line);background:var(--surface-1);color:var(--text);text-align:left;cursor:pointer}
+.desk-monitor-card:last-child{border-right:0}
+.desk-monitor-card:hover{background:var(--surface-2);box-shadow:inset 0 3px var(--accent)}
+.desk-monitor-kind{color:var(--text-muted);font-size:9px;letter-spacing:.07em;text-transform:uppercase}
+.desk-monitor-card h3{font:650 21px/1.2 var(--serif);letter-spacing:-.025em}
+.desk-monitor-card time{color:var(--premium);font:600 10px var(--mono)}
+.desk-monitor-card p{font-size:12px;line-height:1.5;color:var(--text-secondary)}
+.desk-monitor-facts{display:grid;gap:3px;margin-top:auto;padding-top:5px;color:var(--text-muted);font-size:10px;line-height:1.5}
+.desk-monitor-card>b{margin-top:4px;color:var(--accent);font-size:11px}
 .desk-agenda{display:grid}
 .desk-agenda>button{
   min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;
@@ -2622,6 +2633,9 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
 .ic-review-boundary{padding-top:10px;border-top:1px solid var(--line);color:var(--text-muted)!important;font-size:10.5px!important}
 
 @media(max-width:1040px){
+  .desk-monitor-grid{grid-template-columns:1fr 1fr}
+  .desk-monitor-card:nth-child(2){border-right:0}
+  .desk-monitor-card:nth-child(-n+2){border-bottom:1px solid var(--line)}
   .desk-landing-hero{grid-template-columns:minmax(0,1fr) minmax(320px,.78fr);gap:24px}
   .desk-landing-grid{grid-template-columns:1fr}
   .desk-source-grid{grid-template-columns:1fr 1fr}
@@ -2629,6 +2643,7 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
   .desk-source-card:nth-child(-n+2){border-bottom:1px solid var(--line)}
 }
 @media(max-width:759px){
+  .desk-monitor-panel .desk-landing-section-head{align-items:flex-start;flex-direction:column;gap:7px}
   body[data-view="structure"] .structure-shell{padding:12px 12px 32px}
   body[data-view="structure"] .view-tabs{box-shadow:none}
   body[data-view="structure"] .brand-name{display:block;font-size:13px}
@@ -2658,6 +2673,9 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
   .desk-source-panel>summary::after{grid-column:2;grid-row:1/3}
 }
 @media(max-width:480px){
+  .desk-monitor-grid{grid-template-columns:1fr}
+  .desk-monitor-card{padding:16px;border-right:0;border-bottom:1px solid var(--line)}
+  .desk-monitor-card:last-child{border-bottom:0}
   .desk-hero-actions{align-items:stretch;flex-direction:column}
   .desk-hero-actions .primary-action,.desk-hero-actions .secondary-action{width:100%;justify-content:center}
   .desk-home-search>div{grid-template-columns:1fr}
@@ -7416,6 +7434,52 @@ function deskLatestArticleMarkup(article,index) {
     }).join('') + '</div>' : '') +
     '</div><b>Open <span aria-hidden="true">→</span></b></button>';
 }
+function ownerCoverageRows() {
+  return Object.keys(THREADS.topics || {}).map(function (key) {
+    const topic = THREADS.topics[key];
+    const articles = (topic.article_ids || []).map(function (id) {
+      return ARTICLE_BY_ID.get(id);
+    }).filter(Boolean).sort(function (left,right) {
+      return String(right.published_at || right.date).localeCompare(String(left.published_at || left.date)) ||
+        left.id.localeCompare(right.id);
+    });
+    if (articles.length < 2) return null;
+    return {key:key,topic:topic,articles:articles,latest:articles[0],
+      boundaryCount:articles.filter(function (article) {
+        return articleHasBriefKind(article,'countercase') || articleHasBriefKind(article,'falsifier');
+      }).length,
+      checkpointCount:articles.reduce(function (total,article) {
+        return total + Number(article.brief_features && article.brief_features.checkpoint_count || 0);
+      },0)};
+  }).filter(Boolean).sort(function (left,right) {
+    return String(right.latest.published_at || right.latest.date).localeCompare(String(left.latest.published_at || left.latest.date)) ||
+      left.articles.length - right.articles.length || left.topic.label.localeCompare(right.topic.label);
+  }).slice(0,4);
+}
+function deskCoverageMarkup(row) {
+  return '<button class="desk-monitor-card" type="button" data-owner-thread="' + escapeHtml(row.key) +
+    '" aria-label="Open ' + escapeHtml(row.topic.label) + ' source history"><span class="desk-monitor-kind">' +
+    escapeHtml(row.topic.kind) + '</span><h3>' + escapeHtml(row.topic.label) + '</h3><time datetime="' +
+    escapeHtml(row.latest.date) + '">Latest · ' + escapeHtml(formatDate(row.latest.date)) + '</time><p>' +
+    escapeHtml(row.latest.title) + '</p><div class="desk-monitor-facts"><span>' +
+    countLabel(row.articles.length,'published note') + '</span><span>' +
+    countLabel(row.boundaryCount,'captured countercase / falsifier note') +
+    '</span><span>' + countLabel(row.checkpointCount,'cited checkpoint') +
+    '</span></div><b>Open source history <span aria-hidden="true">→</span></b></button>';
+}
+function openOwnerCoverageThread(key) {
+  const row = ownerCoverageRows().find(function (entry) { return entry.key === key; });
+  if (!row) return;
+  markMeaningfulNavigation();
+  clearArchiveScope();
+  state.view = 'briefing';
+  state.selected = row.latest.id;
+  state.threadTopic = key;
+  state.limit = PAGE_SIZE.briefing;
+  pendingBriefFocus = {kind:'thread',value:key};
+  render();
+  document.getElementById('briefing-shell').scrollTop = 0;
+}
 function snapshotFreshness() {
   const sourceHealth = Object.values(SNAPSHOT.sources || {});
   const checked = new Date(String(SNAPSHOT.checked_at || ''));
@@ -7489,6 +7553,7 @@ function deskLandingMarkup() {
     return articleHasBriefKind(article,'countercase') || articleHasBriefKind(article,'falsifier');
   }).length;
   const latest = latestArticles[0];
+  const coverageRows = ownerCoverageRows();
   return '<section class="desk-landing" aria-labelledby="desk-landing-title">' +
     '<header class="desk-landing-hero"><div class="desk-hero-copy">' +
     '<div class="structure-kicker">Independent markets intelligence · Navnoor Bawa</div>' +
@@ -7527,6 +7592,10 @@ function deskLandingMarkup() {
       escapeHtml(baselineLabel) + '</p><button class="text-button" type="button" data-action="mark-reviewed">Mark current research reviewed</button>' +
       (reviewBaselineUndo ? '<button class="text-button" type="button" data-action="undo-mark-reviewed">Undo</button>' : '') +
       '</div></details></aside></div>' +
+    (coverageRows.length ? '<section class="desk-monitor-panel" aria-labelledby="desk-monitor-title"><div class="desk-landing-section-head">' +
+      '<div><span>Coverage monitor</span><h2 id="desk-monitor-title">Recurring subjects, latest first</h2></div>' +
+      '<p class="desk-monitor-note">Follow the published history of a subject. Dates and counts reflect this research archive.</p></div>' +
+      '<div class="desk-monitor-grid">' + coverageRows.map(deskCoverageMarkup).join('') + '</div></section>' : '') +
     '<details class="desk-source-panel"><summary><span><strong>Data health &amp; coverage</strong><small>Coverage across Substack, Medium, Patreon, and FX Empire</small></span><b class="' +
       escapeHtml(sourceRollupClass) + '">' +
       number(healthySources) + ' of ' + number(CATALOGUE_SOURCES.length) + ' healthy</b></summary>' +
@@ -8890,6 +8959,11 @@ document.addEventListener('click',function (event) {
   if (event.target.closest('[data-owner-review]')) {
     markMeaningfulNavigation();
     openOwnerReview();
+    return;
+  }
+  const ownerThread = event.target.closest('[data-owner-thread]');
+  if (ownerThread) {
+    openOwnerCoverageThread(ownerThread.dataset.ownerThread);
     return;
   }
   const deskArticle = event.target.closest('[data-desk-article]');

@@ -67,6 +67,29 @@ discovery of differentiated research, proactive review cues, exact source
 verification, and a private handoff into human diligence. It does not imitate
 an OMS, PMS, risk engine, execution system, or enterprise compliance record.
 
+The 2026-09-05 follow-up review adds two signals:
+
+- [AIMA and Marex's 2026 emerging-manager survey](https://www.aima.org/article/press-release-emerging-managers-secure-earlier-investor-backing-by-raising-their-institutional-game.html)
+  finds continued emphasis on operational robustness and strategy discipline,
+  even as investors become more willing to back smaller and newer managers.
+  Only a small minority of investors view AI adoption itself as decisive.
+- [FactSet's research-workflow analysis](https://insight.factset.com/unifying-investment-research-workflows-for-centralized-collaboration-and-compliance)
+  describes the need for curated interim updates on covered names, accessible
+  source history, and consistent research recall within the investment process.
+
+Product implication: surface recurring coverage on the home screen so a reader
+can move from the latest note to the exact subject history in one action.
+The coverage monitor ranks existing high-precision topics by latest publication,
+then by narrower coverage and label for deterministic ties. Every count comes
+from release-validated records. It requires no watchlist, new data collection,
+runtime service, or deferred observation download.
+
+Willingness to pay remains a customer-validation question. A paid pilot should
+measure whether target readers can find relevant new research, verify its source,
+and retrieve the earlier thesis faster than their current process. Ask them to
+complete those tasks with actual work and compare time, errors, and repeat use;
+do not infer demand or choose a price from vendor marketing alone.
+
 ## Public preview boundary
 
 `member_preview` is a publication proof, not a teaser invented by the archive.

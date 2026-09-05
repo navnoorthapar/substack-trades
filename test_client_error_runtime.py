@@ -94,6 +94,59 @@ const IDEAS = [observation('i1'), observation('i2', {direction:'unspecified'})];
 
 
 class ClientErrorRuntimeTests(unittest.TestCase):
+    def test_home_coverage_orders_sources_counts_evidence_and_opens_exact_thread(self):
+        script = javascript_between('function ownerCoverageRows()', 'function snapshotFreshness()')
+        run_node(r"""
+import assert from 'node:assert/strict';
+const articles = [
+  {id:'old',date:'2026-01-01',brief_features:{countercase:true,falsifier:true,checkpoint_count:2}},
+  {id:'new',date:'2026-09-05',title:'Latest <source>',brief_features:{falsifier:true,checkpoint_count:1}},
+  {id:'other',date:'2026-09-04',brief_features:{}}
+];
+const ARTICLE_BY_ID = new Map(articles.map(article => [article.id,article]));
+const THREADS = {topics:{
+  older:{label:'Earlier',kind:'market',article_ids:['old','other']},
+  current:{label:'Current <topic>',kind:'market',article_ids:['new','missing','old']},
+  singleton:{label:'Single',article_ids:['new','missing']}
+}};
+function articleHasBriefKind(article,kind) { return Boolean(article.brief_features[kind]); }
+function escapeHtml(value) { return String(value).replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function formatDate(value) { return value; }
+function countLabel(value,singular,plural) { return value + ' ' + (value === 1 ? singular : plural || singular + 's'); }
+const state = {view:'structure',selected:'old',briefLens:'countercase',q:'stale filter'};
+const PAGE_SIZE = {briefing:24};
+let pendingBriefFocus = null;
+let navigated = false;
+let rendered = false;
+const shell = {scrollTop:123};
+const document = {getElementById: id => { assert.equal(id,'briefing-shell'); return shell; }};
+function markMeaningfulNavigation() { navigated = true; }
+function clearArchiveScope() { state.q = ''; state.briefLens = 'all'; }
+function render() { rendered = true; }
+""" + script + r"""
+const rows = ownerCoverageRows();
+assert.deepEqual(rows.map(row => row.key),['current','older']);
+assert.equal(rows[0].latest.id,'new');
+assert.equal(rows[0].articles.length,2);
+assert.equal(rows[0].boundaryCount,2); // A note with both roles counts once.
+assert.equal(rows[0].checkpointCount,3);
+assert.deepEqual(THREADS.topics.current.article_ids,['new','missing','old']);
+const markup = deskCoverageMarkup(rows[0]);
+assert.ok(markup.includes('Current &lt;topic&gt;'));
+assert.ok(markup.includes('Latest &lt;source&gt;'));
+openOwnerCoverageThread('unknown');
+assert.equal(navigated,false);
+openOwnerCoverageThread('current');
+assert.equal(state.selected,'new');
+assert.equal(state.threadTopic,'current');
+assert.equal(state.view,'briefing');
+assert.equal(state.briefLens,'all');
+assert.equal(state.q,'');
+assert.deepEqual(pendingBriefFocus,{kind:'thread',value:'current'});
+assert.equal(rendered,true);
+assert.equal(shell.scrollTop,0);
+""")
+
     def test_node_runtime_uses_a_launchagent_safe_working_directory(self):
         expected = str(NODE_CWD)
         run_node(
