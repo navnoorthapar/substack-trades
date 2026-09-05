@@ -1,5 +1,42 @@
 [
   {
+    "source": "substack",
+    "source_id": "deutsche-telekoms-german-business",
+    "slug": "deutsche-telekoms-german-business",
+    "title": "Deutsche Telekom's German Business Trades at 4.7x. Elliott Just Bought the Stub.",
+    "subtitle": "The popular arithmetic sets a 54% equity claim against 100% of consolidated debt. Correcting that halves the gap, and then a harder problem shows up underneath.",
+    "post_date": "2026-09-05T13:02:35.931Z",
+    "url": "https://navnoorbawa.substack.com/p/deutsche-telekoms-german-business",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "194e3af4ed5a4a8255258c1d1d8bab6c09ad1dc2386cbfbfd530af7e8e0b7f9a",
+      "lead": {
+        "text": "The popular arithmetic sets a 54% equity claim against 100% of consolidated debt. Correcting that halves the gap, and then a harder problem shows up underneath.",
+        "start": 0,
+        "end": 160,
+        "sha256": "194e3af4ed5a4a8255258c1d1d8bab6c09ad1dc2386cbfbfd530af7e8e0b7f9a",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-05T13:07:16.208Z",
+    "observed_source_updated_at": "2026-09-05T13:07:16.208Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "The popular arithmetic sets a 54% equity claim against 100% of consolidated debt. Correcting that halves the gap, and then a harder problem shows up underneath.",
+      "character_count": 160,
+      "body_sha256": "194e3af4ed5a4a8255258c1d1d8bab6c09ad1dc2386cbfbfd530af7e8e0b7f9a"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "c51d1c84bacd",
     "slug": "two-goldman-quants-fixed-markowitzs-formula-few-funds-check-which-half-works-c51d1c84bacd",
