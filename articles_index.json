@@ -6782,33 +6782,34 @@
     "subtitle": "Two federal indictments, $143M in flagged insider profit, and the three structural edges that hold up — verified from primary sources",
     "post_date": "2026-06-06T10:49:07.280Z",
     "url": "https://navnoorbawa.substack.com/p/prediction-market-alpha-the-314-who",
-    "audience": "everyone",
-    "wordcount": 2795,
-    "content_status": "full",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "f355aebd777f002c91dad736928bbd059c534922a157c2c41ffca075aacf7150",
+      "body_sha256": "3fa65b8020450a17bbad99a9c59cbb7a0cb549d3790cadc22cb42b7807baf1f5",
       "lead": {
-        "text": "A Google software engineer made $1.2 million on Polymarket in seven weeks by trading on an internal marketing publication he previewed through a confidential company tool. A Special Forces master sergeant converted $33,000 in seven days of bets into $409,000 in profits by trading on a classified operation he was helping to plan. Both made the same tactical error: they assumed a blockchain venue’s pseudonymous wallet structure provided cover. Both were wrong. For a sophisticated desk, the interesting question is not about the defendants.",
+        "text": "A Google software engineer made $1.2 million on Polymarket in seven weeks by trading on an internal marketing publication he previewed through a confidential company tool. A Special Forces master sergeant converted $33,000 in seven days of bets into $409,000 in profits by trading on a classified operation he was helping to plan. Both made the same tacti…",
         "start": 0,
-        "end": 542,
-        "sha256": "3d3ac95e117330d2d3437abf02e23d7483ce63f4f6329f36024e725a246183b1",
-        "truncated": true
-      },
-      "sections": [],
-      "fallback_evidence": {
-        "text": "The result: 3.14% of accounts qualify as “skilled winners.” These roughly 54,000 accounts consistently positioned in the direction of final outcomes, carried that classification to out-of-sample markets at 44% persistence, compared to just 10% for skilled mutual funds, and traded across an average of 79 markets each. Together with market makers, they captured more than 30% of all platform gains while comprising under 3.5% of accounts. The remaining 96% either broke even by luck or lost money, effectively financing the informed minority.",
-        "start": 1967,
-        "end": 2509,
-        "sha256": "7d2de8210f13d59e218ef52d61889c20e9c64a2557729712763dc69644dff207",
+        "end": 356,
+        "sha256": "3fa65b8020450a17bbad99a9c59cbb7a0cb549d3790cadc22cb42b7807baf1f5",
         "truncated": false
       },
+      "sections": [],
+      "fallback_evidence": null,
       "checkpoints": []
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-06-06T10:52:02.854Z",
-    "observed_source_updated_at": "2026-06-06T10:52:02.854Z",
+    "source_updated_at": "2026-09-06T06:57:27.663Z",
+    "observed_source_updated_at": "2026-09-06T06:57:27.663Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "A Google software engineer made $1.2 million on Polymarket in seven weeks by trading on an internal marketing publication he previewed through a confidential company tool. A Special Forces master sergeant converted $33,000 in seven days of bets into $409,000 in profits by trading on a classified operation he was helping to plan. Both made the same tacti…",
+      "character_count": 356,
+      "body_sha256": "3fa65b8020450a17bbad99a9c59cbb7a0cb549d3790cadc22cb42b7807baf1f5"
+    },
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/prediction-market-alpha-the-3-14-who-win-the-federal-cases-and-the-hedge-funds-moving-in-947c6df94e33"
     }
