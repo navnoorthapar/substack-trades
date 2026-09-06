@@ -1,5 +1,35 @@
 [
   {
+    "source": "medium",
+    "source_id": "6833ba48f5ca",
+    "slug": "morgan-stanley-beat-the-model-credit-suisse-trusted-it-and-lost-5-5-billion-6833ba48f5ca",
+    "title": "Morgan Stanley Beat the Model. Credit Suisse Trusted It and Lost $5.5 Billion.",
+    "subtitle": "Almgren-Chriss prices speed against risk for one trader. It has no term for seven other banks racing the same swap unwind.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-06T08:27:49Z",
+    "url": "https://medium.com/@navnoorbawa/morgan-stanley-beat-the-model-credit-suisse-trusted-it-and-lost-5-5-billion-6833ba48f5ca",
+    "audience": "unknown",
+    "wordcount": 25,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "423fbabcdb7082e3263fcbee132c6694af66b06377823bb9f7c7c71f945301ec",
+      "lead": {
+        "text": "Almgren-Chriss prices speed against risk for one trader. It has no term for seven other banks racing the same swap unwind.",
+        "start": 0,
+        "end": 122,
+        "sha256": "c8a090b68ab37649f48972f419714220ea4c70fdfd05053eadfdba307dcd4fc8",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-06T08:27:49Z",
+    "observed_source_updated_at": "2026-09-06T08:27:49Z"
+  },
+  {
     "source": "patreon",
     "source_id": "168735382",
     "slug": "secs-15-margin-168735382",
@@ -158,7 +188,10 @@
     "family": "other",
     "body_revision_status": "current",
     "source_updated_at": "2026-09-04T13:34:28.581Z",
-    "observed_source_updated_at": "2026-09-04T13:34:28.581Z"
+    "observed_source_updated_at": "2026-09-04T13:34:28.581Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/two-sigmas-2023-sec-warning-just-became-overdeck-s-4-9b-divorce-problem-24ee8281c01c"
+    }
   },
   {
     "source": "substack",
@@ -923,9 +956,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-27T19:00:54Z",
-    "observed_source_updated_at": "2026-08-27T19:00:54Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
