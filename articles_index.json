@@ -1,5 +1,49 @@
 [
   {
+    "source": "patreon",
+    "source_id": "168735382",
+    "slug": "secs-15-margin-168735382",
+    "title": "The SEC's 15% Margin Floor Decides This Filing. The RIN Tracker That Watches It Move.",
+    "subtitle": "",
+    "post_date": "2026-09-06",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/secs-15-margin-168735382",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "168734873",
+    "slug": "bojs-september-168734873",
+    "title": "The BOJ's September 18 Decision: the VIX Call Structure, Sized, With a 13.80 Stop",
+    "subtitle": "",
+    "post_date": "2026-09-06",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/bojs-september-168734873",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "substack",
     "source_id": "deutsche-telekoms-german-business",
     "slug": "deutsche-telekoms-german-business",
