@@ -1,6 +1,162 @@
 [
   {
     "source": "medium",
+    "source_id": "052befc03ac5",
+    "slug": "ltcm-bet-1998-was-a-10-sigma-fluke-bridgewater-hedged-it-and-still-lost-052befc03ac5",
+    "title": "LTCM Bet 1998 Was a 10-Sigma Fluke. Bridgewater Hedged It and Still Lost.",
+    "subtitle": "One fund mispriced the tail. The other priced it correctly and still lost on positioning.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-08T15:03:41Z",
+    "url": "https://medium.com/@navnoorbawa/ltcm-bet-1998-was-a-10-sigma-fluke-bridgewater-hedged-it-and-still-lost-052befc03ac5",
+    "audience": "unknown",
+    "wordcount": 19,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "ffba2fa0ef6fa62be5de1270b115d45ba2ed623d5ba8f52d5be57db761fff43c",
+      "lead": {
+        "text": "One fund mispriced the tail. The other priced it correctly and still lost on positioning.",
+        "start": 0,
+        "end": 89,
+        "sha256": "b6d13c5ef5f625fa932c892180d11865e003f62185a9655d477e5e7cda70652c",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-08T15:03:41Z",
+    "observed_source_updated_at": "2026-09-08T15:03:41Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "mscis-310-million-bid-broke-on-adani",
+    "slug": "mscis-310-million-bid-broke-on-adani",
+    "title": "MSCI's $310 Million Bid Broke on Adani Energy While Reliance Absorbed a Bigger One",
+    "subtitle": "MSCI's rebalance, priced to $310m. India's new 20-minute auction, priced to nothing.",
+    "post_date": "2026-09-07T13:31:40.982Z",
+    "url": "https://navnoorbawa.substack.com/p/mscis-310-million-bid-broke-on-adani",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "402d4835430ad672606f074990ed805b5a7e8c88297d4e468b03d26f6828667f",
+      "lead": {
+        "text": "MSCI modeled a $310 million passive bid for Adani Energy Solutions. The 31 August closing auction needed $569 million to clear, and the stock fell 10.4% and stayed there.",
+        "start": 0,
+        "end": 170,
+        "sha256": "402d4835430ad672606f074990ed805b5a7e8c88297d4e468b03d26f6828667f",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-07T13:35:47.847Z",
+    "observed_source_updated_at": "2026-09-07T13:35:47.847Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "MSCI modeled a $310 million passive bid for Adani Energy Solutions. The 31 August closing auction needed $569 million to clear, and the stock fell 10.4% and stayed there.",
+      "character_count": 170,
+      "body_sha256": "402d4835430ad672606f074990ed805b5a7e8c88297d4e468b03d26f6828667f"
+    }
+  },
+  {
+    "source": "medium",
+    "source_id": "feab4e4358d4",
+    "slug": "citadel-and-millennium-run-this-trade-kerkorians-gm-bid-shows-its-blind-spot-feab4e4358d4",
+    "title": "Citadel and Millennium Run This Trade. Kerkorian’s GM Bid Shows Its Blind Spot.",
+    "subtitle": "A control premium is filed with the SEC before it moves the tape. Ordinary basis risk never is.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-07T11:54:03Z",
+    "url": "https://medium.com/@navnoorbawa/citadel-and-millennium-run-this-trade-kerkorians-gm-bid-shows-its-blind-spot-feab4e4358d4",
+    "audience": "unknown",
+    "wordcount": 22,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "8f98a208ecdb1548cf7bc3cc45da1948b6c85a4a81ea2b377cb7d98678a2fdef",
+      "lead": {
+        "text": "A control premium is filed with the SEC before it moves the tape. Ordinary basis risk never is.",
+        "start": 0,
+        "end": 95,
+        "sha256": "724d97fc32ce3876d90eaccda6b35ba29f922845bfad6bf1f25e4a38ed08c336",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-07T11:54:03Z",
+    "observed_source_updated_at": "2026-09-07T11:54:03Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "168847890",
+    "slug": "1-84x-screen-for-168847890",
+    "title": "The 1.84x Screen: What GQG's Adani Energy Trade Means for the Next MSCI Rebalance",
+    "subtitle": "",
+    "post_date": "2026-09-07",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/1-84x-screen-for-168847890",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "substack",
+    "source_id": "dealer-vanna-just-hit-a-two-year",
+    "slug": "dealer-vanna-just-hit-a-two-year",
+    "title": "Dealer Vanna Just Hit a Two Year Extreme. The BOJ Meets September 18. Here's the Level Where It Flips",
+    "subtitle": "The Black Scholes flip level for September 18, worked from six live inputs",
+    "post_date": "2026-09-06T18:01:41.874Z",
+    "url": "https://navnoorbawa.substack.com/p/dealer-vanna-just-hit-a-two-year",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "3ade2df966cacb4cd0e75b3871fd10da6654a1b75b19d7cbf682f3c0c5087716",
+      "lead": {
+        "text": "Market maker vanna exposure, the Greek that decides whether dealer hedging dampens a selloff or force feeds it, just printed its steepest negative reading in two years, from a VIX nine points lower than the one that preceded the biggest one day volatility spike ever recorded.",
+        "start": 0,
+        "end": 276,
+        "sha256": "3ade2df966cacb4cd0e75b3871fd10da6654a1b75b19d7cbf682f3c0c5087716",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-06T18:05:51.869Z",
+    "observed_source_updated_at": "2026-09-06T18:05:51.869Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Market maker vanna exposure, the Greek that decides whether dealer hedging dampens a selloff or force feeds it, just printed its steepest negative reading in two years, from a VIX nine points lower than the one that preceded the biggest one day volatility spike ever recorded.",
+      "character_count": 276,
+      "body_sha256": "3ade2df966cacb4cd0e75b3871fd10da6654a1b75b19d7cbf682f3c0c5087716"
+    }
+  },
+  {
+    "source": "medium",
     "source_id": "6833ba48f5ca",
     "slug": "morgan-stanley-beat-the-model-credit-suisse-trusted-it-and-lost-5-5-billion-6833ba48f5ca",
     "title": "Morgan Stanley Beat the Model. Credit Suisse Trusted It and Lost $5.5 Billion.",
@@ -799,9 +955,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-29T10:03:08Z",
-    "observed_source_updated_at": "2026-08-29T10:03:08Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -926,9 +1082,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-27T21:16:46Z",
-    "observed_source_updated_at": "2026-08-27T21:16:46Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
