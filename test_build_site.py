@@ -3241,6 +3241,12 @@ for (const [url,source] of rejected) {
             self.assertIn(text, self.html)
 
     def test_synthetic_catalogue_growth_cannot_consume_html_budget(self):
+        # The fixture must grow the catalogue by MORE than 80,000 bytes to
+        # reproduce the former HTML failure. A fixed clone count drifted under
+        # that bar as the real base article got shorter (150 clones = 79,359
+        # bytes on 2026-09-08, failing every scheduled refresh for a day), so
+        # the count is now derived from the base article's own serialised size,
+        # with the old 150 kept as a floor.
         growth_count = 150
         with tempfile.TemporaryDirectory(prefix='nrt-growth-') as directory:
             source_root = materialize_source_tree(
@@ -3259,13 +3265,22 @@ for (const [url,source] of rejected) {
                 if article.get('source') == 'substack'
                 and article.get('content_status') != 'registry'
             )
+            base_bytes = len(json.dumps(base, ensure_ascii=False, indent=2))
+            growth_count = max(growth_count, -(-120_000 // max(base_bytes, 1)))
             for index in range(growth_count):
                 clone = json.loads(json.dumps(base))
                 slug = f'catalogue-growth-fixture-{index:04d}'
+                # The latest real article may be arbitrarily short. Supply
+                # enough test-owned wire text to exercise growth regardless
+                # of which publication becomes the clone template next.
+                fixture_title = (
+                    f'Catalogue growth fixture {index:04d} '
+                    + 'Synthetic catalogue payload. ' * 32
+                ).strip()
                 clone.update({
                     'source_id': slug,
                     'slug': slug,
-                    'title': f'Catalogue growth fixture {index:04d}',
+                    'title': fixture_title,
                     'url': f'https://navnoorbawa.substack.com/p/{slug}',
                 })
                 rows.append(clone)
