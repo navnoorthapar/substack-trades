@@ -2528,7 +2528,7 @@ button.desk-pulse-card:hover{background:var(--surface-2)}
 }
 .desk-landing-section-head span{display:block;color:var(--text-muted);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
 .desk-landing-section-head h2{margin-top:5px;font:500 24px/1.2 var(--serif);letter-spacing:-.02em}
-.desk-landing .text-button{font-size:14px}
+.desk-landing .text-button{min-height:44px;font-size:14px}
 .desk-latest-list{display:grid}
 .desk-latest-card{
   min-width:0;min-height:92px;display:grid;grid-template-columns:112px minmax(0,1fr) auto;align-items:center;
