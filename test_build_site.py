@@ -739,22 +739,22 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
 
     def test_principal_landing_surfaces_exact_release_review_and_source_state(self):
         for text in (
-            'Research that gets you to the decision faster.',
+            'Independent research.<br>Built for closer scrutiny.',
             'Independent markets intelligence · Navnoor Bawa',
             'Open the latest note',
             'Get full research access',
             'Source-linked passages',
-            'Release-bound provenance',
-            'Private review handoff',
+            'Publication history',
+            'Local review',
             'Research pulse',
             'New since review',
             'Dated public checkpoints',
             'Countercase / falsifier',
             'Healthy publication channels',
             'Latest research',
-            'What changed',
-            'Research workspace',
-            'Find, verify, carry forward',
+            'From the research desk',
+            'The publication',
+            'Read the complete argument',
             'Continue private diligence',
             'Review baseline tools',
             'Mark current research reviewed',
@@ -830,11 +830,14 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('id="owner-search-input"', landing)
         self.assertIn('escapeHtml(SUBSCRIPTION_URL)', landing)
         self.assertIn(
-            '<h1 id="desk-landing-title">Research that gets you to the decision faster.</h1>',
+            '<h1 id="desk-landing-title">Independent research.<br>Built for closer scrutiny.</h1>',
             landing,
         )
-        self.assertIn('<h2>What changed</h2>', landing)
-        self.assertIn('<h2>Find, verify, carry forward</h2>', landing)
+        self.assertIn('<h2>From the research desk</h2>', landing)
+        self.assertIn('<h2>Read the complete argument</h2>', landing)
+        self.assertIn('Medium and Patreon access are separate.', landing)
+        self.assertLess(landing.index('owner-search-input'), landing.index('desk-latest-panel'))
+        self.assertLess(landing.index('desk-latest-panel'), landing.index('desk-pulse-panel'))
         self.assertIn('target="_blank" rel="noopener noreferrer"', landing)
         self.assertIn(
             'aria-label="Get full Navnoor Research access (opens in a new tab)"',
@@ -850,7 +853,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertIn('.desk-source-panel>summary>b.degraded{color:var(--warning)}', self.html)
         self.assertIn('.desk-source-panel>summary::after{content:"";', self.html)
         self.assertLess(
-            landing.index('Research that gets you to the decision faster.'),
+            landing.index('Independent research.<br>Built for closer scrutiny.'),
             landing.index('published records'),
         )
         self.assertLess(
@@ -2407,7 +2410,7 @@ for (const [url,source] of rejected) {
             'data-structure-focus="',
             'data-structure-passage="',
             'data-structure-more="1"',
-            'Research that gets you to the decision faster.',
+            'Independent research.<br>Built for closer scrutiny.',
             'id="owner-search-input"',
             'data-owner-search-form',
             'Data health &amp; coverage',
@@ -2575,8 +2578,8 @@ for (const [url,source] of rejected) {
         landing_end = self.html.index('\nfunction renderStructureDesk', landing_start)
         landing = self.html[landing_start:landing_end]
         self.assertEqual(landing.count('<input'), 1)
-        self.assertIn('Research that gets you to the decision faster.', landing)
-        self.assertIn('What changed', landing)
+        self.assertIn('Independent research.<br>Built for closer scrutiny.', landing)
+        self.assertIn('From the research desk', landing)
         self.assertIn('data-owner-search-form', landing)
         self.assertIn('<details class="desk-source-panel">', landing)
         self.assertNotIn('structure-question-input', landing)

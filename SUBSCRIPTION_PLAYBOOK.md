@@ -90,6 +90,37 @@ and retrieve the earlier thesis faster than their current process. Ask them to
 complete those tasks with actual work and compare time, errors, and repeat use;
 do not infer demand or choose a price from vendor marketing alone.
 
+## Owner-facing design review, 2026-09-09
+
+The home now leads with the research itself: an editorial introduction, archive
+search, a dated featured note, and a clear route to the original publication.
+The release-derived pulse and coverage monitor remain available below the
+research. Larger reading text and compact mobile actions make the first note
+visible without navigating past a dashboard of counts.
+
+Every home article distinguishes source access from the material actually
+captured. Sparse article records keep the available opening passage visible
+and put empty extraction diagnostics in an expandable capture-details section.
+Any structured research passage, numeric ledger entry, or cited checkpoint
+keeps the full evidence view expanded. No source evidence is discarded.
+The subscription explanation explicitly separates Substack from Medium and
+Patreon access.
+
+Commercial judgment: this is a clearer research storefront, but there is no
+evidence here that a hedge fund will pay for it. A prospective reader's wealth
+is not evidence of demand. The differentiated value of the research, its
+relevance to that reader's coverage, and repeated usefulness must earn the
+purchase. Visual quality supports evaluation; it cannot establish those facts.
+
+The next customer-validation step is a proposed paid pilot, not a claim of
+existing demand: recruit three to five relevant research users with permission,
+have each inspect a real note and trace its sources, and ask what it adds to
+their existing process. Agree a price and review period before the pilot.
+Record task completion and qualitative feedback with consent; renewal at the
+agreed price and repeat use are stronger evidence than compliments about the
+site. Do not add analytics, fabricated endorsements, or enterprise-security
+claims to obtain that evidence.
+
 ## Public preview boundary
 
 `member_preview` is a publication proof, not a teaser invented by the archive.

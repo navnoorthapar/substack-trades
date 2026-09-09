@@ -2432,6 +2432,18 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .intel-title{max-width:32ch;font-size:clamp(30px,2.25vw,39px);line-height:1.07;letter-spacing:-.035em}
 .ic-evidence-values span{font-family:var(--mono);color:var(--number)}
 .intel-side.ic-sheet{background:var(--surface-2)}
+.ic-capture-details{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ic-capture-details>summary{min-height:58px;display:flex;align-items:center;gap:14px;padding:16px 32px;color:var(--text);font-size:14px;font-weight:600;cursor:pointer}
+.ic-capture-details>summary::before{content:"+";font-size:20px;color:var(--accent)}
+.ic-capture-details[open]>summary::before{content:"−"}
+.ic-capture-details>summary>span{margin-left:auto;color:var(--text-muted);font-size:12px;font-weight:400}
+.ic-capture-intro{padding:0 32px 22px;max-width:80ch;color:var(--text-secondary);font-size:14px;line-height:1.6}
+.ic-source-reading{padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ic-source-reading>p{font-size:16px;line-height:1.6;color:var(--text-secondary)}
+.ic-source-reading>.primary-action{margin-top:16px;min-height:46px;font-size:14px}
+.ic-opening-claim p,.ic-analysis-card p,.intel-passage,.thread-passage-card>p{font-size:16px;line-height:1.65}
+.ic-sheet-section p,.ic-sheet-intro{font-size:14px;line-height:1.6}
+.ic-sheet-title{font-weight:500}
 .primary-action{border-radius:var(--radius-sm);font-family:var(--sans);font-size:11.5px;letter-spacing:0}
 .toast,.persistent-notice,dialog,.method-card{border-radius:var(--radius-md)}
 ::-webkit-scrollbar-thumb{border-radius:999px}
@@ -2470,53 +2482,53 @@ body:not([data-view="briefing"]) .rail-header{background:var(--surface-2);border
 .bootstrap-status[data-state="error"] .bootstrap-card{border-color:var(--negative-line)}
 .bootstrap-status[data-state="error"] .bootstrap-kicker{color:var(--negative)}
 
-/* Owner-first research home: a PM-speed decision surface before workstation controls. */
-.desk-landing{width:min(1280px,100%);margin:0 auto;display:grid;gap:14px}
+/* Research-house home: readable source work before secondary operating metrics. */
+.desk-landing{width:min(1320px,100%);margin:0 auto;display:grid;gap:28px}
 .desk-landing-hero{
-  display:grid;grid-template-columns:minmax(0,1.28fr) minmax(340px,.72fr);align-items:stretch;gap:32px;
-  padding:30px 32px;border:1px solid #294557;border-top:3px solid #d4b66f;
-  border-radius:var(--radius-lg);background:
-    radial-gradient(circle at 8% 0,rgba(57,104,133,.3),transparent 34%),
-    linear-gradient(135deg,#0a1721 0%,#102534 62%,#132b3d 100%);
-  color:#f8f5ec;box-shadow:0 18px 50px rgba(8,18,27,.2)
+  display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.75fr);align-items:center;gap:48px;
+  padding:22px 0 30px;border:0;border-bottom:1px solid var(--line-strong);
+  border-radius:0;background:transparent;color:var(--text);box-shadow:none
 }
 .desk-hero-copy{max-width:760px;display:flex;flex-direction:column;justify-content:center}
-.desk-hero-status{display:flex;align-items:center;gap:8px;color:#b9c6ce;font-size:11px;line-height:1.45}
-.desk-hero-status strong{color:#f8f5ec;font-weight:700}
-.desk-landing-hero .structure-kicker{margin-bottom:13px;color:#e4ca8d;letter-spacing:.12em}
-.desk-landing-hero h1{max-width:17ch;font:600 clamp(38px,3.7vw,50px)/1.01 var(--serif);letter-spacing:-.04em;text-wrap:balance}
-.desk-landing-hero .desk-hero-copy>p{max-width:64ch;margin-top:14px;color:#c9d3d9;font-size:14.5px;line-height:1.58}
+.desk-hero-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--text-muted);font-size:12px;line-height:1.5}
+.desk-hero-status strong{color:var(--text);font-weight:700}
+.desk-landing-hero .structure-kicker{margin-bottom:16px;color:var(--premium);font-size:12px;letter-spacing:.11em}
+.desk-landing-hero h1{max-width:23ch;font:500 clamp(36px,3.9vw,54px)/1.04 var(--serif);letter-spacing:-.035em;text-wrap:balance}
+.desk-landing-hero .desk-hero-copy>p{max-width:55ch;margin-top:16px;color:var(--text-secondary);font-size:16px;line-height:1.6}
 .desk-hero-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:20px}
-.desk-hero-actions .primary-action,.desk-hero-actions .secondary-action{min-height:44px;padding:0 18px;font-size:12.5px}
-.desk-landing-hero .primary-action{border-color:#e4ca8d;background:#e4ca8d;color:#10202b}
-.desk-landing-hero .primary-action:hover{border-color:#f0ddae;background:#f0ddae;color:#0a1721}
-.desk-landing-hero .secondary-action{border-color:#708391;background:rgba(255,255,255,.04);color:#f8f5ec}
-.desk-landing-hero .secondary-action:hover{border-color:#b9c6ce;background:rgba(255,255,255,.09)}
-.desk-value-strip{display:flex;gap:7px 18px;flex-wrap:wrap;margin-top:17px;padding:0;list-style:none;color:#aebdc6;font-size:10.5px}
+.desk-hero-actions .primary-action,.desk-hero-actions .secondary-action{min-height:46px;padding:0 18px;font-size:14px;border-radius:4px}
+.desk-cta-short{display:none}
+.desk-landing-hero .primary-action{border-color:var(--accent-strong);background:var(--accent-strong);color:var(--on-accent)}
+.desk-landing-hero .primary-action:hover{background:var(--accent-hover)}
+.desk-landing-hero .secondary-action{border-color:var(--control-line);background:transparent;color:var(--text)}
+.desk-landing-hero .secondary-action:hover{background:var(--surface-2)}
+.desk-value-strip{display:flex;gap:7px 18px;flex-wrap:wrap;margin-top:18px;padding:0;list-style:none;color:var(--text-muted);font-size:12px}
 .desk-value-strip li{display:flex;align-items:center;gap:6px}
-.desk-value-strip li::before{content:"";width:5px;height:5px;border-radius:50%;background:#d4b66f;box-shadow:0 0 0 3px rgba(212,182,111,.12)}
-.desk-pulse-panel{min-width:0;display:flex;flex-direction:column;padding:17px;border:1px solid rgba(214,226,233,.18);border-radius:10px;background:rgba(3,12,19,.28);box-shadow:inset 0 1px rgba(255,255,255,.04)}
+.desk-value-strip li::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--premium)}
+.desk-pulse-panel{min-width:0;display:flex;flex-direction:column;padding:20px;border:1px solid var(--line);border-radius:4px;background:var(--surface-1);box-shadow:none}
 .desk-pulse-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:0 2px 12px}
-.desk-pulse-head>span{display:block;color:#e4ca8d;font-size:10px;font-weight:750;letter-spacing:.11em;text-transform:uppercase}
-.desk-pulse-head>small{color:#9fb0ba;font-size:9.5px;text-align:right}
-.desk-pulse-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(214,226,233,.16);border-left:1px solid rgba(214,226,233,.16)}
-.desk-pulse-card{min-width:0;min-height:98px;display:flex;flex-direction:column;align-items:flex-start;padding:13px;border:0;border-right:1px solid rgba(214,226,233,.16);border-bottom:1px solid rgba(214,226,233,.16);background:transparent;color:#f8f5ec;text-align:left}
+.desk-pulse-head>span{display:block;color:var(--text);font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.desk-pulse-head>small{color:var(--text-muted);font-size:12px;text-align:right}
+.desk-pulse-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line)}
+.desk-pulse-card{min-width:0;min-height:110px;display:flex;flex-direction:column;align-items:flex-start;padding:16px;border:0;border-right:1px solid var(--line);background:transparent;color:var(--text);text-align:left}
+.desk-pulse-card:last-child{border-right:0}
 button.desk-pulse-card{cursor:pointer}
-button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
-.desk-pulse-card>span{color:#aebdc6;font-size:10px;line-height:1.3}
-.desk-pulse-card>b{margin-top:auto;font:650 24px/1 var(--serif);color:#f8f5ec}
-.desk-pulse-card>small{margin-top:7px;color:#e4ca8d;font-size:9.5px}
-.desk-pulse-note{margin-top:12px!important;color:#aebdc6!important;font-size:10.5px!important;line-height:1.45!important}
+button.desk-pulse-card:hover{background:var(--surface-2)}
+.desk-pulse-card>span{color:var(--text-secondary);font-size:14px;line-height:1.4}
+.desk-pulse-card>b{margin-top:10px;font:500 28px/1 var(--serif);color:var(--text)}
+.desk-pulse-card>small{margin-top:8px;color:var(--accent);font-size:12px}
+.desk-pulse-note{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .desk-landing-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,.72fr);gap:16px;align-items:start}
 .desk-latest-panel,.desk-review-panel,.desk-source-panel,.desk-monitor-panel{
-  overflow:hidden;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-1)
+  overflow:hidden;border:1px solid var(--line);border-radius:4px;background:var(--surface-1)
 }
 .desk-landing-section-head{
   min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:12px 18px;border-bottom:1px solid var(--line);background:var(--surface-2)
+  padding:16px 22px;border-bottom:1px solid var(--line);background:var(--surface-1)
 }
 .desk-landing-section-head span{display:block;color:var(--text-muted);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
-.desk-landing-section-head h2{margin-top:3px;font:650 17px/1.2 var(--serif);letter-spacing:-.012em}
+.desk-landing-section-head h2{margin-top:5px;font:500 24px/1.2 var(--serif);letter-spacing:-.02em}
+.desk-landing .text-button{font-size:14px}
 .desk-latest-list{display:grid}
 .desk-latest-card{
   min-width:0;min-height:92px;display:grid;grid-template-columns:112px minmax(0,1fr) auto;align-items:center;
@@ -2524,30 +2536,32 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
   color:var(--text);text-align:left;cursor:pointer
 }
 .desk-latest-card:last-child{border-bottom:0}
-.desk-latest-card.featured{min-height:202px;padding:24px;background:linear-gradient(135deg,var(--surface-1),var(--surface-2))}
+.desk-latest-card.featured{min-height:238px;padding:26px;background:var(--surface-1)}
 .desk-latest-card:hover{background:var(--surface-2);box-shadow:inset 3px 0 var(--accent)}
-.desk-latest-meta{display:grid;gap:5px;color:var(--text-muted);font-size:11px}
+.desk-latest-meta{display:grid;gap:7px;color:var(--text-muted);font-size:12px;line-height:1.4}
 .desk-latest-copy{min-width:0}
-.desk-latest-card h3{font:650 15px/1.35 var(--serif);letter-spacing:-.012em}
-.desk-latest-card.featured h3{max-width:30ch;font-size:28px;line-height:1.08;letter-spacing:-.03em}
+.desk-latest-card h3{font:600 18px/1.35 var(--serif);letter-spacing:-.012em}
+.desk-latest-card.featured h3{max-width:30ch;font-size:30px;line-height:1.12;letter-spacing:-.025em}
 .desk-latest-card p{
   display:-webkit-box;max-width:74ch;margin-top:10px;overflow:hidden;color:var(--text-secondary);
-  font-family:var(--serif);font-size:13.5px;line-height:1.55;-webkit-box-orient:vertical;-webkit-line-clamp:3
+  font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-box-orient:vertical;-webkit-line-clamp:3
 }
-.desk-latest-card>b{color:var(--accent);font-size:12px;white-space:nowrap}
+.desk-latest-card>b{color:var(--accent);font-size:14px;white-space:nowrap}
+.desk-access-label{color:var(--accent);font-size:12px}
+.desk-latest-boundary{display:block;margin-top:12px;color:var(--text-muted);font-size:12px;line-height:1.5}
 .desk-latest-signals{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
-.desk-latest-signals span{padding:4px 7px;border:1px solid var(--line);border-radius:999px;background:var(--surface-1);color:var(--text-muted);font-size:9.5px;font-weight:650;letter-spacing:.02em}
-.desk-monitor-note{max-width:46ch;color:var(--text-muted);font-size:11px;line-height:1.5}
+.desk-latest-signals span{padding:4px 7px;border:1px solid var(--line);border-radius:3px;background:var(--surface-2);color:var(--text-muted);font-size:12px;font-weight:600}
+.desk-monitor-note{max-width:46ch;color:var(--text-muted);font-size:14px;line-height:1.5}
 .desk-monitor-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
 .desk-monitor-card{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:20px;border:0;border-right:1px solid var(--line);background:var(--surface-1);color:var(--text);text-align:left;cursor:pointer}
 .desk-monitor-card:last-child{border-right:0}
 .desk-monitor-card:hover{background:var(--surface-2);box-shadow:inset 0 3px var(--accent)}
-.desk-monitor-kind{color:var(--text-muted);font-size:9px;letter-spacing:.07em;text-transform:uppercase}
+.desk-monitor-kind{color:var(--text-muted);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
 .desk-monitor-card h3{font:650 21px/1.2 var(--serif);letter-spacing:-.025em}
-.desk-monitor-card time{color:var(--premium);font:600 10px var(--mono)}
-.desk-monitor-card p{font-size:12px;line-height:1.5;color:var(--text-secondary)}
-.desk-monitor-facts{display:grid;gap:3px;margin-top:auto;padding-top:5px;color:var(--text-muted);font-size:10px;line-height:1.5}
-.desk-monitor-card>b{margin-top:4px;color:var(--accent);font-size:11px}
+.desk-monitor-card time{color:var(--premium);font:500 12px var(--sans)}
+.desk-monitor-card p{font-size:14px;line-height:1.55;color:var(--text-secondary)}
+.desk-monitor-facts{display:grid;gap:4px;margin-top:auto;padding-top:5px;color:var(--text-muted);font-size:12px;line-height:1.5}
+.desk-monitor-card>b{margin-top:4px;color:var(--accent);font-size:14px}
 .desk-agenda{display:grid}
 .desk-agenda>button{
   min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;
@@ -2559,21 +2573,29 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
 .desk-agenda strong{color:var(--accent);font-size:12px;white-space:nowrap}
 .desk-review-baseline{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:11px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
 .desk-review-baseline p{flex:1 1 100%;margin:0 4px;color:var(--text-muted);font-size:11px;line-height:1.45}
-.desk-home-search{padding:20px 18px 16px}
-.desk-home-search>label{display:block;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text)}
+.desk-home-search{padding:24px;border:1px solid var(--line);border-radius:4px;background:var(--surface-1)}
+.desk-home-search>label{display:block;margin-bottom:12px;font-size:14px;font-weight:600;color:var(--text)}
 .desk-home-search>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}
 .desk-home-search input{
-  min-width:0;height:44px;border:1px solid var(--control-line);border-radius:var(--radius-sm);
-  background:var(--surface-2);color:var(--text);padding:0 12px;font-size:13px
+  min-width:0;height:48px;border:1px solid var(--control-line);border-radius:4px;
+  background:var(--surface-1);color:var(--text);padding:0 12px;font-size:16px
 }
 .desk-home-search input:focus-visible{border-color:var(--focus);outline:2px solid var(--focus);outline-offset:2px}
-.desk-home-search p{margin-top:8px;color:var(--text-muted);font-size:11px;line-height:1.45}
+.desk-home-search p{margin-top:12px;color:var(--text-muted);font-size:12px;line-height:1.55}
+.desk-home-search .primary-action{font-size:14px;min-height:48px}
+.desk-offer{padding:22px}
+.desk-offer>p{font-size:16px;line-height:1.6;color:var(--text-secondary)}
+.desk-offer ul{display:grid;gap:14px;list-style:none;padding:20px 0}
+.desk-offer li{padding-left:14px;border-left:2px solid var(--premium);font-size:14px;line-height:1.5;color:var(--text-secondary)}
+.desk-offer li strong{display:block;margin-bottom:3px;color:var(--text);font-weight:600}
+.desk-offer>a{min-height:44px;display:flex;align-items:center;font-size:14px;color:var(--accent);text-underline-offset:4px}
+.desk-offer>small{display:block;color:var(--text-muted);font-size:12px;line-height:1.5}
 .desk-paths{display:grid;border-top:1px solid var(--line)}
 .desk-paths>button{min-height:72px;display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 18px;border:0;border-bottom:1px solid var(--line);background:var(--surface-1);color:var(--text);text-align:left;cursor:pointer}
 .desk-paths>button:hover{background:var(--surface-2);box-shadow:inset 3px 0 var(--accent)}
 .desk-paths i{width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:50%;color:var(--premium);font:700 9px var(--mono);font-style:normal}
-.desk-paths span{color:var(--text);font-size:12px;font-weight:700}
-.desk-paths span small{display:block;margin-top:3px;color:var(--text-muted);font-size:10.5px;font-weight:400;line-height:1.35}
+.desk-paths span{color:var(--text);font-size:14px;font-weight:600}
+.desk-paths span small{display:block;margin-top:5px;color:var(--text-muted);font-size:12px;font-weight:400;line-height:1.5}
 .desk-paths strong{color:var(--accent);font-size:12px;white-space:nowrap}
 .desk-review-tools{background:var(--surface-2)}
 .desk-review-tools>summary{min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 16px;list-style:none;cursor:pointer;color:var(--text-muted);font-size:11px}
@@ -2636,7 +2658,7 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
   .desk-monitor-grid{grid-template-columns:1fr 1fr}
   .desk-monitor-card:nth-child(2){border-right:0}
   .desk-monitor-card:nth-child(-n+2){border-bottom:1px solid var(--line)}
-  .desk-landing-hero{grid-template-columns:minmax(0,1fr) minmax(320px,.78fr);gap:24px}
+  .desk-landing-hero{grid-template-columns:minmax(0,1fr) minmax(280px,.78fr);gap:24px}
   .desk-landing-grid{grid-template-columns:1fr}
   .desk-source-grid{grid-template-columns:1fr 1fr}
   .desk-source-card:nth-child(2){border-right:0}
@@ -2649,25 +2671,36 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
   body[data-view="structure"] .brand-name{display:block;font-size:13px}
   body[data-view="structure"] .brand-name-full{display:none}
   body[data-view="structure"] .brand-name-short{display:inline}
-  .desk-landing-hero{grid-template-columns:1fr;gap:12px;padding:18px 16px}
-  .desk-landing-hero .structure-kicker{margin-bottom:9px;font-size:9.5px;letter-spacing:.08em}
-  .desk-landing-hero h1{max-width:none;font-size:clamp(29px,8.6vw,34px);line-height:1.01}
-  .desk-landing-hero .desk-hero-copy>p{margin-top:10px;font-size:13px;line-height:1.45}
+  .desk-landing{gap:20px}
+  .ic-capture-details>summary{padding:16px 18px;flex-wrap:wrap;gap:6px 12px}
+  .ic-capture-details>summary>span{margin-left:24px;flex-basis:100%}
+  .ic-capture-intro{padding:0 18px 20px}
+  .desk-landing-hero{grid-template-columns:1fr;gap:20px;padding:12px 4px 24px}
+  .desk-landing-hero .structure-kicker{margin-bottom:12px;font-size:12px;letter-spacing:.04em}
+  .desk-landing-hero h1{max-width:none;font-size:clamp(32px,8vw,42px);line-height:1.08}
+  .desk-landing-hero .desk-hero-copy>p{margin-top:12px;font-size:16px;line-height:1.5}
   .desk-hero-actions{gap:7px;margin-top:14px}
   .desk-value-strip{display:none}
-  .desk-pulse-panel{padding:10px}
+  .desk-home-search{padding:16px}
+  .desk-home-search p{display:none}
+  .desk-pulse-panel{padding:14px}
   .desk-pulse-head{padding-bottom:8px}
-  .desk-pulse-card{min-height:72px;padding:9px 10px}
-  .desk-pulse-card>b{font-size:20px}
-  .desk-pulse-card>small{margin-top:5px;font-size:8.5px}
-  .desk-pulse-note{margin-top:7px!important;font-size:9.5px!important}
+  .desk-pulse-grid{grid-template-columns:1fr 1fr}
+  .desk-pulse-card{min-height:112px;padding:14px 10px;border-bottom:1px solid var(--line)}
+  .desk-pulse-card:nth-child(2){border-right:0}
+  .desk-pulse-card>b{font-size:26px}
+  .desk-pulse-card>small{margin-top:8px;font-size:12px}
+  .desk-pulse-note{margin-top:12px;font-size:12px}
   .desk-checked{display:none}
   .desk-latest-card,.desk-latest-card.featured{min-height:96px;grid-template-columns:minmax(0,1fr) auto;gap:7px 12px;padding:14px 16px}
-  .desk-latest-meta{grid-column:1;display:flex;gap:8px}
+  .desk-latest-meta{grid-column:1;display:flex;gap:8px;flex-wrap:wrap}
   .desk-latest-copy{grid-column:1}
   .desk-latest-card>b{grid-column:2;grid-row:1/3}
-  .desk-latest-card.featured h3{font-size:20px}
-  .desk-latest-card p{font-size:12px;-webkit-line-clamp:2}
+  .desk-latest-card.featured h3{font-size:26px}
+  .desk-latest-card p{font-size:16px;-webkit-line-clamp:3}
+  .desk-landing-section-head{padding:14px 16px;gap:8px}
+  .desk-landing-section-head h2{font-size:22px}
+  .desk-landing-section-head .text-button{max-width:100px;text-align:right;line-height:1.4}
   .desk-source-panel>summary{display:grid;grid-template-columns:minmax(0,1fr) auto}
   .desk-source-panel>summary>b{grid-column:1}
   .desk-source-panel>summary::after{grid-column:2;grid-row:1/3}
@@ -2676,13 +2709,16 @@ button.desk-pulse-card:hover{background:rgba(255,255,255,.07)}
   .desk-monitor-grid{grid-template-columns:1fr}
   .desk-monitor-card{padding:16px;border-right:0;border-bottom:1px solid var(--line)}
   .desk-monitor-card:last-child{border-bottom:0}
-  .desk-hero-actions{align-items:stretch;flex-direction:column}
-  .desk-hero-actions .primary-action,.desk-hero-actions .secondary-action{width:100%;justify-content:center}
-  .desk-home-search>div{grid-template-columns:1fr}
+  .desk-hero-actions{display:grid;grid-template-columns:1.2fr 1fr;align-items:stretch}
+  .desk-hero-actions .primary-action,.desk-hero-actions .secondary-action{width:100%;justify-content:center;padding:0 8px;font-size:14px}
+  .desk-cta-full{display:none}
+  .desk-cta-short{display:inline}
+  .desk-landing-hero h1{font-size:clamp(28px,8.5vw,32px)}
+  .desk-home-search>div{grid-template-columns:minmax(0,1fr) auto}
   .desk-home-search input{font-size:16px}
   .desk-home-search .primary-action{width:100%;justify-content:center}
   .desk-pulse-grid{grid-template-columns:1fr 1fr}
-  .desk-pulse-card{min-height:72px;padding:9px 10px}
+  .desk-pulse-card{min-height:112px;padding:14px 10px}
   .desk-source-grid{grid-template-columns:1fr}
   .desk-source-card{border-right:0;border-bottom:1px solid var(--line)}
   .desk-source-card:last-child{border-bottom:0}
@@ -6087,6 +6123,10 @@ function restorePendingBriefFocus(consumePending,preferStatusFocus) {
     }
   });
 }
+function briefNeedsCaptureDisclosure(spans,checkpoints,ledger) {
+  return !spans.some(function (row) { return row.kinds.some(function (kind) { return kind !== 'lead'; }); }) &&
+    !checkpoints.length && !ledger.length;
+}
 function renderIntelligenceBrief(records) {
   const shell = document.getElementById('briefing-shell');
   delete shell.dataset.statusAnnouncement;
@@ -6178,7 +6218,10 @@ function renderIntelligenceBrief(records) {
     ? number(changedCurrentPackets) + ' source-changed · ' + number(missingCurrentPackets) + ' current observation absent · ' +
       number(changedDatasetPackets) + ' captured under another dataset revision.'
     : number(changedDatasetPackets) + ' captured under another dataset revision; current-observation comparison is available after opening Local Review.';
-  const subtitleMarkup = selected.subtitle ? '<p class="ic-dek">' + escapeHtml(selected.subtitle) + '</p>' : '';
+  const subtitleText = String(selected.subtitle || '').replace(/\s*Continue reading on Medium\s*»\s*$/,'').trim();
+  const subtitleDuplicatesLead = leadRow && subtitleText === String(leadRow.span.text || '').trim();
+  const subtitleMarkup = subtitleText && !subtitleDuplicatesLead ? '<p class="ic-dek">' + escapeHtml(subtitleText) + '</p>' : '';
+  const sparseRecord = briefNeedsCaptureDisclosure(sourceSpans,checkpoints,ledger);
   const metadataOnlyMember = selected.publication_access === 'member' && !hasIndexedMemberPreview(selected);
   const openingText = leadRow && leadRow.span && leadRow.span.text || articleClaim(selected);
   const openingLabel = leadRow ? 'Opening authored passage' : metadataOnlyMember ? 'Published metadata' : 'Published article framing';
@@ -6191,6 +6234,7 @@ function renderIntelligenceBrief(records) {
       '<div class="ic-document-meta"><div class="ic-document-meta-left"><span class="source-badge source-' + selected.source + '">' + sourceLabel(selected.source) + '</span>' + accessBadgeMarkup(selected) + '<time datetime="' + selected.date + '">' + escapeHtml(formatDate(selected.date)) + '</time><span>·</span><span>' + escapeHtml(readLabel) + '</span><span>·</span><span class="coverage-badge ' + (selected.body_revision_status === 'current' ? 'coverage-full' : 'coverage-revision') + '">' + escapeHtml(bodyRevisionLabel(selected)) + '</span><span>·</span><span>Article ' + number(articlePosition) + ' of ' + number(ARTICLES.length) + '</span><span>·</span><span class="ic-checked-at">Dataset assembled <time datetime="' + escapeHtml(String(SNAPSHOT.checked_at || '')) + '">' + escapeHtml(formatReleaseCheckedAt(SNAPSHOT.checked_at)) + '</time></span><span>·</span><span class="ic-source-health' + sourceHealthClass + '">' + escapeHtml(sourceCollectionSummary(selected.source)) + '</span></div>' + (isPaidSubstackArticle(selected) ? '' : '<a class="ic-open-source" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '</div>' +
       '<div class="ic-topic">Article record · published information</div><h1 class="intel-title" id="lead-article-title">' + escapeHtml(selected.title) + '</h1>' + subtitleMarkup + bodyRevisionWarningMarkup(selected) +
       '<section class="ic-opening-claim" id="brief-thesis"><div class="ic-claim-label">' + openingLabel + '</div><p>' + highlightArticleNumbers(openingText) + '</p>' + openingTail + '</section>' + premiumAccessMarkup(selected,'brief') + '</div>' +
+      (sparseRecord ? '<details class="ic-capture-details"><summary>Capture details <span>What is available in this record</span></summary><p class="ic-capture-intro">Only the published material shown above is available here. Uncaptured sections below do not establish that the full article lacks those arguments. Read the original for complete context.</p>' : '') +
       evidenceSpotlightMarkup(selected) +
       '<section class="ic-analysis" id="brief-analysis" aria-labelledby="analysis-title"><div class="ic-section-header"><h2 id="analysis-title">Evidence</h2><p>Exact authored passages, organized by research role. No analyst conclusion, score, or portfolio recommendation is inferred.</p></div><div class="ic-analysis-grid">' +
         analysisPanelMarkup(mechanismRow,'Mechanism','') + analysisPanelMarkup(evidenceRow,'Evidence','evidence') +
@@ -6198,9 +6242,11 @@ function renderIntelligenceBrief(records) {
       '<section class="ic-dossier" id="brief-dossier"><div class="ic-dossier-head"><div class="ic-topic">Source trail</div><h2>Risks, countercase &amp; checkpoints</h2><p>The evidence ledger retains detected values with their original context. Section coverage records what the rules captured; it is not a judgment of research quality.</p></div>' +
         researchMapMarkup(selected) + evidenceLedgerMarkup(selected) +
         '<div class="intel-section-grid">' + (sectionMarkup || '<div class="intel-empty">No additional countercase, falsifier, or implementation passage was identified. Open the original article for full context.</div>') + '</div>' +
-      '</section>' + researchThreadMarkup(selected) + '<div class="intel-actions">' + (isPaidSubstackArticle(selected) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '<button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open article record</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy article record</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
-    '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">Source-defined challenges · source + local</span><span class="print-only">Source-defined challenges · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">Source-defined challenges</h2><p class="ic-sheet-intro"><span class="screen-only">The opening passage, countercase, falsifier, and implementation passages remain separate from tab-session workflow.</span><span class="print-only">Opening, countercase, falsifier, and implementation passages. Independent research remains required.</span></p>' +
-      decisionSheetSectionMarkup(leadRow,'Opening authored passage') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase passage') + decisionSheetSectionMarkup(falsifierRow,'Author’s falsifier passage') + decisionSheetSectionMarkup(implementationRow,'Implementation passage') + checkpointSection +
+      '</section>' + (sparseRecord ? '</details>' : '') + researchThreadMarkup(selected) + '<div class="intel-actions">' + (isPaidSubstackArticle(selected) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a>') + '<button class="secondary-action" type="button" data-article-dossier="' + selected.id + '">Open article record</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy article record</button><button class="secondary-action" type="button" data-print-brief>Print / PDF</button><button class="secondary-action" type="button" data-copy-article="' + selected.id + '">Copy citation</button><span class="intel-actions-note">' + number(exactSpanCount) + ' exact source spans · ' + number(ledger.length) + ' number-bearing spans · published-source research, not independently verified or a portfolio recommendation.</span></div></article>' +
+    '<aside class="intel-side ic-sheet" aria-labelledby="decision-sheet-title"><div class="ic-sheet-inner"><div class="ic-sheet-eyebrow"><span class="screen-only">' + (sparseRecord ? 'Original publication' : 'Source-defined challenges · source + local') + '</span><span class="print-only">Source-defined challenges · published source</span></div><h2 class="ic-sheet-title" id="decision-sheet-title">' + (sparseRecord ? 'Continue at the source' : 'Source-defined challenges') + '</h2>' +
+      (sparseRecord ? '<div class="ic-source-reading"><p>' + escapeHtml(deskCaptureLabel(selected)) + '. Read the original publication for the complete argument and its context.</p><a class="primary-action" href="' + escapeHtml(safeUrl(selected.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(selected)) + '</a></div>' :
+      '<p class="ic-sheet-intro"><span class="screen-only">The opening passage, countercase, falsifier, and implementation passages remain separate from tab-session workflow.</span><span class="print-only">Opening, countercase, falsifier, and implementation passages. Independent research remains required.</span></p>' +
+      decisionSheetSectionMarkup(leadRow,'Opening authored passage') + decisionSheetSectionMarkup(countercaseRow,'Author’s countercase passage') + decisionSheetSectionMarkup(falsifierRow,'Author’s falsifier passage') + decisionSheetSectionMarkup(implementationRow,'Implementation passage') + checkpointSection) +
       '<section class="ic-sheet-section ic-sheet-local"><div class="ic-sheet-label"><span>Tab-session local review</span><span class="ic-authored">Local · this tab</span></div><div class="ic-local-count">' + number(activePackets) + '</div><p class="ic-local-caption">Active retained source-passage item' + (activePackets === 1 ? '' : 's') + ' whose captured article identity matches this article record. ' + escapeHtml(packetComparison) + ' The article record never treats them as current recommendations.</p><div class="ic-sheet-actions"><button class="secondary-action" type="button" data-view="queue">Open local review</button><button class="secondary-action" type="button" data-copy-brief="' + selected.id + '">Copy article record</button></div></section>' +
       articleReviewLauncherMarkup(selected) +
       '<p class="ic-boundary-note">Evidence boundary: exact published-source passages; not independently verified, not a live market as-of, and not a portfolio recommendation. Full source context remains controlling.</p></div></aside>' +
@@ -7415,6 +7461,11 @@ function deskNoteMarkdown(pattern, rows) {
     '\n\n---\n\nGenerated from snapshot ' + String(SNAPSHOT.data_checksum || '') +
     '. Published-research evidence only; no live holdings, pricing, sizing, P&L, or recommendation.\n';
 }
+function deskCaptureLabel(article) {
+  if (article.content_status === 'full' && Number(article.wordcount || 0) > 0) return 'Full text in archive';
+  if (Number(article.wordcount || 0) > 0 || hasIndexedMemberPreview(article)) return 'Published excerpt in archive';
+  return 'Article details only';
+}
 function deskLatestArticleMarkup(article,index) {
   const opening = boundedPromotionText(articleClaim(article),280);
   const signals = [];
@@ -7426,13 +7477,15 @@ function deskLatestArticleMarkup(article,index) {
     '" type="button" data-desk-article="' + escapeHtml(article.id) + '" aria-label="Open article record: ' +
     escapeHtml(article.title) + '"><div class="desk-latest-meta"><time datetime="' +
     escapeHtml(article.date) + '">' + escapeHtml(formatDate(article.date)) + '</time><span>' +
-    escapeHtml(sourceLabel(article.source)) + '</span></div><div class="desk-latest-copy"><h3>' +
+    escapeHtml(sourceLabel(article.source)) + '</span><span class="desk-access-label">' +
+    escapeHtml(publicationAccessLabel(article)) + '</span></div><div class="desk-latest-copy"><h3>' +
     escapeHtml(article.title) + '</h3>' +
     (index === 0 && opening ? '<p>' + escapeHtml(opening) + '</p>' : '') +
     (index === 0 && signals.length ? '<div class="desk-latest-signals">' + signals.slice(0,3).map(function (signal) {
       return '<span>' + escapeHtml(signal) + '</span>';
     }).join('') + '</div>' : '') +
-    '</div><b>Open <span aria-hidden="true">→</span></b></button>';
+    '<small class="desk-latest-boundary">' + escapeHtml(deskCaptureLabel(article)) +
+    '</small></div><b>Read <span aria-hidden="true">→</span></b></button>';
 }
 function ownerCoverageRows() {
   return Object.keys(THREADS.topics || {}).map(function (key) {
@@ -7462,10 +7515,10 @@ function deskCoverageMarkup(row) {
     escapeHtml(row.topic.kind) + '</span><h3>' + escapeHtml(row.topic.label) + '</h3><time datetime="' +
     escapeHtml(row.latest.date) + '">Latest · ' + escapeHtml(formatDate(row.latest.date)) + '</time><p>' +
     escapeHtml(row.latest.title) + '</p><div class="desk-monitor-facts"><span>' +
-    countLabel(row.articles.length,'published note') + '</span><span>' +
-    countLabel(row.boundaryCount,'captured countercase / falsifier note') +
-    '</span><span>' + countLabel(row.checkpointCount,'cited checkpoint') +
-    '</span></div><b>Open source history <span aria-hidden="true">→</span></b></button>';
+    countLabel(row.articles.length,'published note') + '</span>' +
+    (row.boundaryCount ? '<span>' + countLabel(row.boundaryCount,'captured countercase / falsifier note') + '</span>' : '') +
+    (row.checkpointCount ? '<span>' + countLabel(row.checkpointCount,'cited checkpoint') + '</span>' : '') +
+    '</div><b>Open source history <span aria-hidden="true">→</span></b></button>';
 }
 function openOwnerCoverageThread(key) {
   const row = ownerCoverageRows().find(function (entry) { return entry.key === key; });
@@ -7557,13 +7610,35 @@ function deskLandingMarkup() {
   return '<section class="desk-landing" aria-labelledby="desk-landing-title">' +
     '<header class="desk-landing-hero"><div class="desk-hero-copy">' +
     '<div class="structure-kicker">Independent markets intelligence · Navnoor Bawa</div>' +
-    '<h1 id="desk-landing-title">Research that gets you to the decision faster.</h1>' +
-    '<p>Search the thesis, verify exact published passages, track cited checkpoints, and carry the work into a private review.</p>' +
+    '<h1 id="desk-landing-title">Independent research.<br>Built for closer scrutiny.</h1>' +
+    '<p>Market structure, positioning, and trade mechanics—with the published argument and its limits in view.</p>' +
     '<div class="desk-hero-actions"><a class="primary-action" href="' + escapeHtml(SUBSCRIPTION_URL) +
-    '" target="_blank" rel="noopener noreferrer" aria-label="Get full Navnoor Research access (opens in a new tab)">Get full research access <span aria-hidden="true">↗</span></a>' +
+    '" target="_blank" rel="noopener noreferrer" aria-label="Get full Navnoor Research access (opens in a new tab)"><span class="desk-cta-full">Get full research access</span><span class="desk-cta-short">Get full access</span> <span aria-hidden="true">↗</span></a>' +
     (latest ? '<button class="secondary-action" type="button" data-desk-article="' +
-    escapeHtml(latest.id) + '">Open the latest note</button>' : '') + '</div>' +
-    '<ul class="desk-value-strip" aria-label="Research workflow strengths"><li>Source-linked passages</li><li>Release-bound provenance</li><li>Private review handoff</li></ul></div>' +
+    escapeHtml(latest.id) + '" aria-label="Open the latest note"><span class="desk-cta-full">Open the latest note</span><span class="desk-cta-short">Latest note</span></button>' : '') + '</div>' +
+    '<ul class="desk-value-strip" aria-label="Research workflow strengths"><li>Source-linked passages</li><li>Publication history</li><li>Local review</li></ul></div>' +
+    '<form class="desk-home-search" data-owner-search-form><label for="owner-search-input">Search ' + number(SNAPSHOT.catalog_count || ARTICLES.length) + ' published records</label>' +
+    '<div><input id="owner-search-input" name="owner-search" type="search" maxlength="120" autocomplete="off" spellcheck="false" placeholder="Company, market, strategy, catalyst"><button class="primary-action" type="submit">Search</button></div>' +
+    '<p>Search published passages across the archive.<br>Try a company, instrument, or market.</p>' +
+    '<p>Search stays in this browser. Local review is for non-confidential notes in this tab.</p></form></header>' +
+    '<div class="desk-landing-grid"><section class="desk-latest-panel"><div class="desk-landing-section-head">' +
+      '<div><span>Latest research</span><h2>From the research desk</h2></div>' +
+      '<button class="text-button" type="button" data-view="research" data-owner-research>View all research</button></div>' +
+      '<div class="desk-latest-list">' + latestArticles.map(deskLatestArticleMarkup).join('') + '</div></section>' +
+      '<aside class="desk-review-panel"><div class="desk-landing-section-head"><div><span>The publication</span>' +
+      '<h2>Read the complete argument</h2></div></div>' +
+      '<div class="desk-offer"><p>Evaluate the work here. Continue to the original publication for complete subscriber notes.</p>' +
+      '<ul><li><strong>Start with the source</strong>Inspect the published material available in each article record.</li>' +
+      '<li><strong>Follow the research</strong>Trace recurring subjects through earlier notes and publication dates.</li>' +
+      '<li><strong>Keep your own view</strong>Carry exact passages into a local, non-confidential review.</li></ul>' +
+      '<a href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer">View subscription plans <span aria-hidden="true">↗</span></a>' +
+      '<small>Pricing and terms are shown on Substack. Medium and Patreon access are separate.</small></div>' +
+      '<div class="desk-paths"><button type="button" data-view="research" data-owner-research><i aria-hidden="true">01</i><span>Explore the archive<small>Filter by source, date, access, and captured evidence.</small></span><strong>Open <span aria-hidden="true">→</span></strong></button>' +
+      '<button type="button" data-owner-review><i aria-hidden="true">02</i><span>Continue private diligence<small>Return to passages saved for review in this tab.</small></span><strong>Review <span aria-hidden="true">→</span></strong></button></div>' +
+      '<details class="desk-review-tools"><summary>Review baseline tools</summary><div class="desk-review-baseline"><p>' +
+      escapeHtml(baselineLabel) + '</p><button class="text-button" type="button" data-action="mark-reviewed">Mark current research reviewed</button>' +
+      (reviewBaselineUndo ? '<button class="text-button" type="button" data-action="undo-mark-reviewed">Undo</button>' : '') +
+      '</div></details></aside></div>' +
     '<aside class="desk-pulse-panel" aria-label="Research pulse"><div class="desk-pulse-head"><span>Research pulse</span><small>' +
     number(SNAPSHOT.catalog_count || ARTICLES.length) + ' records · ' + number(capturedTextRecords) + ' with captured text</small></div>' +
     '<div class="desk-pulse-grid"><button class="desk-pulse-card" type="button" data-owner-new><span>' +
@@ -7576,22 +7651,7 @@ function deskLandingMarkup() {
     '<p class="desk-pulse-note desk-hero-status"><span class="status-dot ' + escapeHtml(freshness.className) +
     '" aria-hidden="true"></span><strong>' + escapeHtml(freshness.status) + '</strong><span class="desk-research-date">Research through ' +
     escapeHtml(formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10))) + '</span><span class="desk-checked">· Checked ' +
-    escapeHtml(formatCheckedAt(SNAPSHOT.checked_at)) + '</span></p></aside></header>' +
-    '<div class="desk-landing-grid"><section class="desk-latest-panel"><div class="desk-landing-section-head">' +
-      '<div><span>Latest research</span><h2>What changed</h2></div>' +
-      '<button class="text-button" type="button" data-view="research" data-owner-research>View all research</button></div>' +
-      '<div class="desk-latest-list">' + latestArticles.map(deskLatestArticleMarkup).join('') + '</div></section>' +
-      '<aside class="desk-review-panel"><div class="desk-landing-section-head"><div><span>Research workspace</span>' +
-      '<h2>Find, verify, carry forward</h2></div></div>' +
-      '<form class="desk-home-search" data-owner-search-form><label for="owner-search-input">Search ' + number(SNAPSHOT.catalog_count || ARTICLES.length) + ' published records</label>' +
-      '<div><input id="owner-search-input" name="owner-search" type="search" maxlength="120" autocomplete="off" spellcheck="false" placeholder="Company, market, strategy, catalyst"><button class="primary-action" type="submit">Search</button></div>' +
-      '<p>Search stays in this browser. Local review notes never leave this device.</p></form>' +
-      '<div class="desk-paths"><button type="button" data-view="research" data-owner-research><i aria-hidden="true">01</i><span>Scan the article index<small>Filter every note by source, date, access, and captured evidence.</small></span><strong>Open <span aria-hidden="true">→</span></strong></button>' +
-      '<button type="button" data-owner-review><i aria-hidden="true">02</i><span>Continue private diligence<small>Return to exact passages saved for human review in this tab.</small></span><strong>Review <span aria-hidden="true">→</span></strong></button></div>' +
-      '<details class="desk-review-tools"><summary>Review baseline tools</summary><div class="desk-review-baseline"><p>' +
-      escapeHtml(baselineLabel) + '</p><button class="text-button" type="button" data-action="mark-reviewed">Mark current research reviewed</button>' +
-      (reviewBaselineUndo ? '<button class="text-button" type="button" data-action="undo-mark-reviewed">Undo</button>' : '') +
-      '</div></details></aside></div>' +
+    escapeHtml(formatCheckedAt(SNAPSHOT.checked_at)) + '</span></p></aside>' +
     (coverageRows.length ? '<section class="desk-monitor-panel" aria-labelledby="desk-monitor-title"><div class="desk-landing-section-head">' +
       '<div><span>Coverage monitor</span><h2 id="desk-monitor-title">Recurring subjects, latest first</h2></div>' +
       '<p class="desk-monitor-note">Follow the published history of a subject. Dates and counts reflect this research archive.</p></div>' +
@@ -9018,6 +9078,8 @@ document.addEventListener('click',function (event) {
   if (briefJump) {
     const target = document.getElementById(briefJump.dataset.briefJump);
     if (target) {
+      const disclosure = target.closest('.ic-capture-details');
+      if (disclosure) disclosure.open = true;
       target.scrollIntoView({behavior:'smooth',block:'start'});
       target.tabIndex = -1;
       target.focus({preventScroll:true});

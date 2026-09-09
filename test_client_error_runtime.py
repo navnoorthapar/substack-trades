@@ -94,6 +94,34 @@ const IDEAS = [observation('i1'), observation('i2', {direction:'unspecified'})];
 
 
 class ClientErrorRuntimeTests(unittest.TestCase):
+    def test_capture_disclosure_never_hides_structured_research(self):
+        script = javascript_between('function briefNeedsCaptureDisclosure(', 'function renderIntelligenceBrief(')
+        run_node(r"""
+import assert from 'node:assert/strict';
+""" + script + r"""
+assert.equal(briefNeedsCaptureDisclosure([],[],[]),true);
+assert.equal(briefNeedsCaptureDisclosure([{kinds:['lead']}],[],[]),true);
+for (const kind of ['mechanism','evidence','countercase','falsifier','implementation']) {
+  assert.equal(briefNeedsCaptureDisclosure([{kinds:['lead',kind]}],[],[]),false);
+}
+assert.equal(briefNeedsCaptureDisclosure([], [{date:'2026-09-18'}], []),false);
+assert.equal(briefNeedsCaptureDisclosure([], [], [{text:'10%'}]),false);
+""")
+
+    def test_home_capture_labels_do_not_promise_unavailable_full_text(self):
+        script = javascript_between('function deskCaptureLabel(', 'function deskLatestArticleMarkup(')
+        run_node(r"""
+import assert from 'node:assert/strict';
+function hasIndexedMemberPreview(article) { return Boolean(article.member_preview && article.member_preview.character_count); }
+""" + script + r"""
+assert.equal(deskCaptureLabel({content_status:'registry',wordcount:0}),'Article details only');
+assert.equal(deskCaptureLabel({content_status:'excerpt',wordcount:0,publication_access:'member'}),'Article details only');
+assert.equal(deskCaptureLabel({content_status:'full',wordcount:0}),'Article details only');
+assert.equal(deskCaptureLabel({content_status:'excerpt',wordcount:42}),'Published excerpt in archive');
+assert.equal(deskCaptureLabel({content_status:'excerpt',wordcount:0,member_preview:{character_count:120}}),'Published excerpt in archive');
+assert.equal(deskCaptureLabel({content_status:'full',wordcount:800}),'Full text in archive');
+""")
+
     def test_home_coverage_orders_sources_counts_evidence_and_opens_exact_thread(self):
         script = javascript_between('function ownerCoverageRows()', 'function snapshotFreshness()')
         run_node(r"""
