@@ -1,5 +1,81 @@
 [
   {
+    "source": "substack",
+    "source_id": "coinbase-and-cme-both-just-reopened",
+    "slug": "coinbase-and-cme-both-just-reopened",
+    "title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
+    "subtitle": "OneChicago died on capital cost, not on demand. Coinbase filed the day after regulators quietly reopened the question of whether that cost is about to change.",
+    "post_date": "2026-09-09T13:31:40.157Z",
+    "url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
+    "audience": "everyone",
+    "wordcount": 3976,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "95affe9a0a596e41f208fa0685df46da6439217313bf6a15fbda418c2cbfd71d",
+      "lead": {
+        "text": "Coinbase’s September 1 filings to relaunch perpetual futures on individual US stocks read as a demand story, but a capital rule window and a live federal lawsuit sit underneath it.",
+        "start": 0,
+        "end": 180,
+        "sha256": "776546aa0d298d3567316245dc4cfcc6a663d894a4e6467a4aac7ddbc6fd8211",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "mechanism",
+          "source_order": 17,
+          "heading": "The mechanism: what actually changes, and what doesn’t",
+          "heading_start": 6919,
+          "heading_end": 6973,
+          "heading_sha256": "925c744e67cc93f88baffc28895c301222f54c791e3afdbfa0b6b6a5cc584074",
+          "text": "Start with what a perpetual actually fixes. Crypto exchanges settle funding every eight hours. Coinbase’s filings do not specify a cadence for the equity product, and that’s one of the real unknowns in the paper trail. The mechanism holds regardless of frequency, though. When the perpetual trades above spot, longs pay shorts. That pulls in fresh selling and drags price back down. Below spot, the payment flows the other way. Continuous funding does the job periodic rolling used to do, only without the calendar. That much is a real fix. Margin is a separate question entirely.",
+          "start": 6975,
+          "end": 7555,
+          "sha256": "04559da37c20b5f4a53d8f3032fd0f59f2f8196ea30b41cda47825c1e0578dcd",
+          "truncated": false
+        },
+        {
+          "kind": "falsifier",
+          "source_order": 44,
+          "heading": "What would change my view",
+          "heading_start": 19657,
+          "heading_end": 19682,
+          "heading_sha256": "7adcdf4b045e21b225909f95baf945a6e7f04d451c242dd8f1eddfc832f68353",
+          "text": "The claim above is falsifiable on purpose, and three dated, public checkpoints settle it, in order of how soon each one lands. CME’s opposition brief is due October 2, 2026, and Judge Kollar-Kotelly’s eventual ruling is the nearest signal, even though it governs the Bitcoin fork directly rather than the equity one.",
+          "start": 19684,
+          "end": 20000,
+          "sha256": "c36835bc0897979df33a802086e0917a11add015c00b2cb52a0b464f7c06f493",
+          "truncated": true
+        },
+        {
+          "kind": "implementation",
+          "source_order": 46,
+          "heading": "What to watch instead of the launch date",
+          "heading_start": 20773,
+          "heading_end": 20813,
+          "heading_sha256": "884d9d9bfdc3fd70ef420072747e5a78213fd76f99d99a4b53ccaf8dcbf25819",
+          "text": "OneChicago didn’t die of low demand. It built a real, growing market across five years, then lost most of it inside twelve months, carrying both a capital cost Congress wrote into the statute on purpose and a dual registration wall that kept most brokers away entirely. The one fix regulators made to the capital side arrived after the only market for it had already closed, and stayed untested for the no expiry version of the product for six years after that. Coinbase isn’t filing into settled ground, and it isn’t filing on demand alone either.",
+          "start": 20815,
+          "end": 21363,
+          "sha256": "facecb083658e87b40a2a7f9c1dace99e90f801d7c90493550e5c87d852abe4c",
+          "truncated": true
+        }
+      ],
+      "fallback_evidence": {
+        "text": "The trade press has the demand story right, and I want to give it its full weight before I complicate it. Coinbase’s chief policy officer, Faryar Shirzad, said it plainly: “Equity perps have proven demand internationally, and we’re excited at the prospect of a regulated pathway for U.S. investors.” That’s not spin. Combined crypto perpetual futures volume rose from $4.14 trillion in January 2024 to $7.24 trillion in January 2026, per CoinGecko Research. Perpetual swaps now carry roughly three quarters of all crypto derivatives flow.",
+        "start": 446,
+        "end": 984,
+        "sha256": "0be7931dcf5b56b41fe74fc29361b3c98674d8c733bd1cfd6ded1732e6643347",
+        "truncated": true
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-09T13:33:49.039Z",
+    "observed_source_updated_at": "2026-09-09T13:33:49.039Z"
+  },
+  {
     "source": "medium",
     "source_id": "052befc03ac5",
     "slug": "ltcm-bet-1998-was-a-10-sigma-fluke-bridgewater-hedged-it-and-still-lost-052befc03ac5",

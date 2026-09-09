@@ -1,5 +1,143 @@
 [
   {
+    "article_title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
+    "article_url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
+    "article_date": "2026-09-09",
+    "trade_description": "Start with the history the demand story skips past. Single stock futures already existed in the US for nineteen years as a listed product, traded on OneChicago, an exchange CME and Cboe founded in 2001 with Interactive Brokers joining as a partner in 2006. They didn’t fail from indifference. The Commodity Futures Modernization Act of 2000 created the legal category “security futures product,” and the same statute ordered regulators to set its margin so it could never sit below the lowest margin on a comparable exchange traded option. Congress built that floor specifically to stop a future from becoming a cheap synthetic option. The SEC and CFTC implemented it in 2002 at a flat 20% of contract value.",
+    "instruments": [
+      "option",
+      "equity",
+      "futures",
+      "commodity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "a listed product, traded on OneChicago, an exchange CME and Cboe founded in 2001 with Interactive Brokers joining as a partner in 2006.",
+    "any_quant_detail": "20%, at 20",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
+    "article_url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
+    "article_date": "2026-09-09",
+    "trade_description": "The forms Coinbase actually filed confirm which regime it walked into. Form 1-N is the specific notice registration a CFTC registered designated contract market files with the SEC to become “notice registered” under Section 6(g), a simplified path Congress built only for exchanges listing security futures products. Form BD-N is the parallel registration for a broker dealer trading exclusively in them, under Section 15(b)(11). Coinbase did not invent a fresh, unregulated crypto wrapper. It filed the two forms the 2000 era regime built for this exact job.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": "crypto",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
+    "article_url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
+    "article_date": "2026-09-09",
+    "trade_description": "It filed them through entities with a live record in this kind of doorway. Coinbase Derivatives, LLC is the CFTC registered exchange Coinbase bought in 2022 as FairX, already running nano Bitcoin and Ethereum futures. Coinbase Financial Markets, Inc. separately holds a CFTC no action letter, granted May 29, 2026, letting it post customer crypto assets as margin at its affiliated foreign venue, Deribit FZE, for perpetual contracts the CFTC agreed to treat as foreign futures. That same May 29 letter cites a parallel CFTC order approving KalshiEX LLC’s BTCPERP futures contract, a second, independent perpetual futures approval moving through the Commission the same day, on an entirely different rail. I would read that as the whole apparatus around perpetual style products loosening at once.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "long",
+    "underlying": "Bitcoin; Ethereum; crypto",
+    "edge_or_thesis": "FairX, already running nano Bitcoin and Ethereum futures.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
+    "article_title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
+    "article_url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
+    "article_date": "2026-09-09",
+    "trade_description": "One more door exists already, for accounts that can reach it. FINRA Rule 4210(g), the industry’s portfolio margin framework, names “a securities futures product” among the instruments eligible for portfolio margining, alongside listed options and unlisted equity derivatives. Portfolio margin prices a whole position’s net risk instead of a flat per contract percentage, and it can push effective margin on a hedged book well under 15%. That relief isn’t hypothetical. It exists today, for sophisticated or institutional accounts, not the retail trader Coinbase’s own marketing is aimed at. The open question I’d flag here is whether the current SEC-CFTC proceeding extends anything like portfolio margin economics down to an ordinary account. That’s the only version of this product that actually",
+    "instruments": [
+      "option",
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "15%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
+    "article_title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
+    "article_url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
+    "article_date": "2026-09-09",
+    "trade_description": "There’s a fourth date that belongs beside the other three, and it’s the one that already answers part of my own earlier claim. CME itself already re entered this market once this year: it relaunched cash settled, dated single stock futures on 55 US names, SpaceX and Nvidia among them, on July 27, 2026, five weeks before Coinbase’s filing, and CME’s own product notice sets the minimum margin at 15%, the identical floor this entire piece has been discussing.",
+    "instruments": [
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "15%, at 15",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
+    "article_url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
+    "article_date": "2026-09-09",
+    "trade_description": "CME’s own August volume release breaks out interest rate, equity index, energy, agricultural, metals, FX and cryptocurrency as named lines. Single stock futures don’t get one. I read the omission as informative on its own: the product exists, is trading under the exact floor this piece is built on, and isn’t yet large enough for CME to name in its headline numbers five weeks in.",
+    "instruments": [
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
+    "article_url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
+    "article_date": "2026-09-09",
+    "trade_description": "That’s the actual trade sitting inside this filing. The funding rate engineering is real, and it solves a real problem. The demand is real too. Whether the capital and classification questions get answered in Coinbase’s favor is a question for regulators and a federal judge, not for engineers or for how big the crypto perpetuals market already is. A harmonization rule that hands security futures a genuine capital edge over listed options, combined with a classification ruling that keeps equity perpetuals out of the security based swap bucket, gives Coinbase a path OneChicago never had. Absent either one, a perpetual single stock future is a better built, better structured version of a product that already failed twice for reasons that have nothing to do with how often it rolls.",
+    "instruments": [
+      "option",
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": "crypto",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
+    "article_url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
+    "article_date": "2026-09-09",
+    "trade_description": "The same pattern shows up elsewhere in market structure right now. The CFTC rejected a special call reporting plan from the futures industry in 2011 and adopted the same plan as a transitional bridge fifteen years later, in 2026, which is the same story as a margin rule cut five weeks after the market it was meant to save had already closed. And the clearinghouse side runs the identical asymmetry in the other direction: Kalshi’s clearing members can be assessed up to 550% of what they put in, while the exchange’s own default fund carries no matching obligation to refill. Capital rules built for one product rarely retire on the same schedule as the product itself.",
+    "instruments": [
+      "futures",
+      "prediction_market"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "a margin rule cut five weeks after the market it was meant to save had already closed.",
+    "any_quant_detail": "550%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
     "article_title": "Chevron Books Zero Reserves in Venezuela. A 100-Year Lease Won't Change That Before 2027",
     "article_url": "https://navnoorbawa.substack.com/p/chevron-books-zero-reserves-in-venezuela",
     "article_date": "2026-08-29",
