@@ -1359,22 +1359,20 @@ body[data-view="queue"] .current-extraction-filter{display:none}
 }
 .preset-button:hover{background:var(--surface-3);color:var(--text);border-color:var(--control-line-hover)}
 
-.main-panel{min-width:0;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
-/* One row on the desk. Wrapping would win over shrinking, so the bar holds a
-   single line and the result summary yields width instead of pushing controls
-   onto a second row; narrow viewports restore wrapping below. */
+.main-panel{min-width:0;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;container:results / inline-size}
+/* Controls respond to the space left by the filter and evidence panes. */
 .command-bar{
   min-height:50px;display:flex;align-items:center;gap:10px;padding:7px 12px;
-  border-bottom:1px solid var(--line);background:var(--surface-1);flex-wrap:nowrap
+  border-bottom:1px solid var(--line);background:var(--surface-1);flex-wrap:wrap
 }
+.command-bar>.view-tabs,.command-bar>.command-button,.command-bar>.select-control{flex-shrink:0;max-width:100%}
 .view-tabs{display:flex;align-items:center;background:var(--surface-2);border:1px solid var(--control-line);border-radius:4px;padding:2px}
 .view-tab{
   min-height:30px;border:0;border-radius:3px;background:transparent;color:var(--text-secondary);
   padding:0 11px;cursor:pointer;font-size:11px;font-weight:600;white-space:nowrap
 }
 .view-tab.active{background:var(--surface-raised);color:var(--text);box-shadow:inset 0 -2px var(--selected-line)}
-/* The summary yields width before the bar wraps, so the toolbar keeps one
-   row across themes even though the dark theme sets a wider mono face. */
+/* Keep the result count readable when action controls need another line. */
 .result-summary{
   font:10px var(--mono);color:var(--text-muted);white-space:nowrap;
   min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis
@@ -1417,21 +1415,22 @@ body[data-view="queue"] .queue-command{display:inline-flex}
 .chip-x{color:var(--text-muted)}
 
 .context-bar{
-  min-height:42px;display:grid;grid-template-columns:auto minmax(160px,1fr) auto;align-items:center;
+  min-height:42px;display:flex;flex-wrap:wrap;align-items:center;
   gap:14px;padding:6px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)
 }
-.context-metrics{display:flex;align-items:center;gap:15px;white-space:nowrap}
+.context-metrics{display:flex;flex-wrap:wrap;align-items:center;gap:6px 15px;min-width:0}
 .context-metric{display:flex;align-items:baseline;gap:5px}
 .context-metric b{font:600 12px var(--mono);color:var(--text)}
 .context-metric span{font:10px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)}
-.direction-mix{height:6px;display:flex;overflow:hidden;border-radius:2px;background:var(--surface-3)}
+.direction-mix{height:6px;display:flex;flex:1 0 120px;overflow:hidden;border-radius:2px;background:var(--surface-3)}
 .mix-segment{height:100%;min-width:0;box-shadow:inset -1px 0 var(--bg)}
 .mix-long{background:var(--long)}
 .mix-short{background:var(--short);background-image:repeating-linear-gradient(135deg,transparent 0 2px,var(--surface-3) 2px 4px)}
 .mix-arb{background:var(--relative);background-image:repeating-linear-gradient(90deg,transparent 0 3px,var(--surface-3) 3px 5px)}
 .mix-ls{background:var(--long-short);background-image:repeating-linear-gradient(45deg,transparent 0 1px,var(--surface-3) 1px 3px)}
 .mix-unspecified{background:var(--text-muted);background-image:repeating-linear-gradient(90deg,transparent 0 1px,var(--surface-3) 1px 4px)}
-.mix-legend{font:10px var(--mono);color:var(--text-muted);white-space:nowrap}
+.mix-legend{flex:1 0 100%;font:10px/1.5 var(--mono);color:var(--text-muted);white-space:normal;overflow-wrap:anywhere}
+.context-bar [hidden]{display:none}
 
 /* Evidence-bound research structuring and diligence desk */
 .structure-shell{display:none;flex:1 1 auto;min-height:0;overflow:auto;padding:14px 18px 44px;background:var(--bg)}
@@ -2154,15 +2153,16 @@ body[data-view="briefing"] .briefing-shell{
 /* Dense master tables */
 .command-bar,.active-filters,.context-bar{flex:0 0 auto}
 .table-shell{flex:1 1 auto;min-height:0;overflow:auto;position:relative;scrollbar-width:thin;background:var(--surface-1)}
-.data-table{min-width:760px}
+.data-table{min-width:1194px}
+.data-table:has(.research-grid){min-width:1016px}
 .table-head{
   position:sticky;top:0;z-index:5;display:grid;align-items:center;min-height:34px;
   border-bottom:1px solid var(--line-strong);background:var(--surface-2);
   color:var(--text-muted);font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.06em
 }
-.idea-grid{grid-template-columns:82px 130px 118px 142px minmax(270px,1fr) 138px 76px 34px}
-.research-grid{grid-template-columns:82px 78px minmax(360px,1fr) 76px 110px 90px 34px}
-.head-cell{height:100%;display:flex;align-items:center;padding:0 9px;min-width:0}
+.idea-grid{grid-template-columns:106px 130px 118px 150px minmax(270px,1fr) 158px 120px 42px}
+.research-grid{grid-template-columns:106px 144px minmax(280px,1fr) 110px 150px 84px 42px}
+.head-cell{height:100%;display:flex;align-items:center;padding:5px 9px;min-width:0;overflow-wrap:anywhere}
 .head-sort{
   width:100%;height:100%;min-height:34px;display:flex;align-items:center;border:0;background:transparent;color:inherit;
   padding:0;text-align:left;text-transform:inherit;letter-spacing:inherit;font:inherit;cursor:pointer
@@ -2180,10 +2180,14 @@ body[data-view="briefing"] .briefing-shell{
 .data-row:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
 .data-cell{min-width:0;padding:7px 9px;overflow-wrap:anywhere}
 .cell-date{font:10px var(--mono);color:var(--text-muted);white-space:nowrap}
+.cell-date time{display:block}
+.cell-date .new-badge{display:block;margin:4px 0 0}
+.cell-source .instrument-secondary{white-space:normal;overflow-wrap:normal}
 .direction-badge,.source-badge,.coverage-badge{
   display:inline-flex;align-items:center;min-height:21px;padding:0 6px;border:1px solid;
   border-radius:3px;font:600 10px var(--mono);white-space:nowrap
 }
+.coverage-badge,.direction-badge{max-width:100%;white-space:normal}
 .dir-long{color:var(--long);border-color:var(--long-line);background:var(--long-soft)}
 .dir-short{color:var(--short);border-color:var(--short-line);background:var(--short-soft)}
 .dir-arb{color:var(--relative);border-color:var(--relative-line);background:var(--relative-soft)}
@@ -2823,6 +2827,42 @@ noscript{display:block}
 ::-webkit-scrollbar-thumb:hover{background:var(--control-line-hover)}
 *{scrollbar-color:var(--control-line) transparent}
 
+/* A wide window can still leave a narrow results pane beside the inspector. */
+@container results (max-width:1200px){
+  .data-table,.data-table:has(.research-grid){min-width:0}
+  .table-head{
+    position:absolute;width:1px;height:1px;min-height:1px;margin:-1px;padding:0;
+    overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0
+  }
+  .data-row{min-width:0;padding:12px 16px;gap:4px 12px}
+  .data-row.research-grid{
+    grid-template-columns:106px minmax(0,1fr) auto;
+    grid-template-areas:"date source open" "article article article" "count coverage read"
+  }
+  .data-row.idea-grid{
+    grid-template-columns:106px minmax(0,1fr) minmax(120px,1fr);
+    grid-template-areas:"date bias source" "idea idea idea" "market manager evidence" "open open open"
+  }
+  .data-cell{padding:4px 0}
+  .cell-date{grid-area:date}
+  .cell-bias{grid-area:bias}
+  .cell-market{grid-area:market}
+  .cell-manager{grid-area:manager}
+  .cell-idea{grid-area:idea}
+  .cell-evidence{grid-area:evidence;justify-self:end}
+  .cell-source{grid-area:source;justify-self:end}
+  .cell-open{grid-area:open;display:none}
+  .cell-article{grid-area:article}
+  .cell-count{grid-area:count;text-align:left}
+  .cell-count::after{content:" observations";font:11px var(--sans);color:var(--text-muted)}
+  .cell-coverage{grid-area:coverage}
+  .cell-read{grid-area:read;text-align:right}
+  .article-title{white-space:normal;overflow-wrap:anywhere;font-size:14px;line-height:1.45}
+  body.density-comfortable .article-title{font-size:14px}
+  .article-subtitle{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  body.density-compact .data-row,body.density-comfortable .data-row{min-height:unset}
+}
+
 @media(max-width:1240px){
   .workspace{grid-template-columns:var(--rail-w) minmax(0,1fr)}
   .inspector{
@@ -2925,16 +2965,18 @@ noscript{display:block}
   }
   .data-row{min-width:0}
   .data-row.idea-grid{
-    grid-template-columns:74px 1fr auto;
+    grid-template-columns:106px minmax(0,1fr);
     grid-template-areas:
-      "date bias source"
-      "idea idea idea"
-      "market manager evidence"
-      "open open open";
+      "date source"
+      "bias bias"
+      "idea idea"
+      "market manager"
+      "evidence evidence"
+      "open open";
     gap:0;padding:9px 8px
   }
   .data-row.research-grid{
-    grid-template-columns:74px 1fr auto;
+    grid-template-columns:106px minmax(0,1fr) auto;
     grid-template-areas:
       "date source open"
       "article article article"
@@ -5297,6 +5339,11 @@ function ariaSort(key) {
   return state.sort === 'oldest' || state.sort === 'manager' || state.sort === 'market' || state.sort === 'direction' || state.sort === 'article' || state.sort === 'title'
     ? 'ascending' : 'descending';
 }
+function syncTableSortFocus() {
+  const head = document.getElementById('table-head');
+  const tabIndex = head.getBoundingClientRect().width <= 1 ? -1 : 0;
+  head.querySelectorAll('[data-sort]').forEach(function (button) { button.tabIndex = tabIndex; });
+}
 function renderTableHead() {
   const head = document.getElementById('table-head');
   if (state.view === 'research') {
@@ -5332,9 +5379,7 @@ function renderTableHead() {
       '<div class="head-cell" role="columnheader">Channel</div>' +
       '<div class="head-cell" role="columnheader"><span class="sr-only">Open</span></div>';
   }
-  head.querySelectorAll('[data-sort]').forEach(function (button) {
-    button.tabIndex = window.innerWidth < 760 ? -1 : 0;
-  });
+  syncTableSortFocus();
   document.getElementById('data-table').setAttribute('aria-colcount',state.view === 'research' ? '7' : '8');
 }
 
@@ -5425,8 +5470,6 @@ function researchRow(article) {
     ? '<span class="coverage-badge coverage-excerpt">Metadata only</span>'
     : article.body_revision_status !== 'current'
     ? '<span class="coverage-badge coverage-revision">' + escapeHtml(bodyRevisionLabel(article)) + '</span>'
-    : article.trade_count === 0
-    ? '<span class="coverage-badge coverage-research">Research-only</span>'
     : article.content_status === 'full'
       ? '<span class="coverage-badge coverage-full">Full text</span>'
       : '<span class="coverage-badge coverage-excerpt">Excerpt</span>';
@@ -5504,6 +5547,19 @@ function renderOrphanedQueue() {
 }
 
 function renderContext(records) {
+  const catalogueOnly = state.view === 'research' && !observationsReady;
+  document.getElementById('visible-managers').parentElement.hidden = catalogueOnly;
+  document.getElementById('direction-mix').hidden = catalogueOnly;
+  document.getElementById('mix-legend').hidden = catalogueOnly;
+  if (catalogueOnly) {
+    document.getElementById('visible-primary').textContent = number(records.length);
+    document.getElementById('visible-primary-label').textContent = 'notes';
+    document.getElementById('visible-articles').textContent = number(records.reduce(function (total,article) {
+      return total + article.trade_count;
+    },0));
+    document.getElementById('visible-secondary-label').textContent = 'observations';
+    return;
+  }
   if (state.view === 'queue') {
     const tasks = records.map(function (idea) { return workflowItems.get(idea.id); }).filter(Boolean);
     const retainedNotes = new Set(tasks.map(function (item) { return item.source_snapshot.article_id; }).filter(Boolean));
@@ -6372,6 +6428,7 @@ function setPressedStates() {
   document.body.classList.toggle('density-compact',state.density === 'compact');
   document.body.classList.toggle('density-comfortable',state.density === 'comfortable');
   document.body.classList.toggle('inspector-hidden',!state.inspector);
+  syncTableSortFocus();
   document.querySelectorAll('button[data-view]').forEach(function (button) {
     const active = button.dataset.view === state.view ||
       (button.classList.contains('view-tab') && button.dataset.view === 'research' &&
@@ -6537,7 +6594,9 @@ function renderArticleInspector(article) {
       '<span class="direction-badge ' + directionClass(idea.direction) + '" title="' + escapeHtml(directionLabel(idea.direction) + '; not a verified position') + '">' + compactDirectionLabel(idea.direction) + '</span> ' +
       escapeHtml(passageText(idea)) + '</button>';
   }).join('');
-  const dossierSections = articleBriefSpans(article).map(function (row) {
+  const spans = articleBriefSpans(article);
+  const openingSpan = spans.find(function (row) { return row.kinds.includes('lead'); });
+  const dossierSections = spans.filter(function (row) { return row !== openingSpan; }).map(function (row) {
     return '<section class="article-dossier-section"><h3>' + escapeHtml(row.label) + '</h3><h4>' + escapeHtml(row.heading) + '</h4><p>' + highlightArticleNumbers(row.span.text) + '</p>' + exactPassageTail(row.span) + '</section>';
   }).join('');
   const checkpoints = (brief.checkpoints || []).map(function (checkpoint) {
@@ -6558,7 +6617,7 @@ function renderArticleInspector(article) {
   }
   if (structures.size > 1) gaps.push('Extracted passages describe mixed structures; no single article-level stance is assigned.');
   if (!brief.lead && !metadataOnlyMember) gaps.push(article.content_status === 'excerpt' ? 'An authored lead passage is not assessable from the captured excerpt.' : 'No authored lead passage was identified in the compact index; review the original for full context.');
-  const openingInspectorLabel = metadataOnlyMember ? 'Published metadata' : 'Opening authored passage';
+  const openingInspectorLabel = openingSpan ? openingSpan.label : metadataOnlyMember ? 'Published metadata' : 'Published article framing';
   const observationBoundary = metadataOnlyMember
     ? '<section class="article-dossier-section"><h3>Parser-derived observations</h3><p class="missing">None captured because this release contains no anonymous article-body preview. Metadata is not treated as an investment observation.</p></section>'
     : '<section class="article-dossier-section"><h3>Parser-derived observations</h3><p class="missing">None captured. The article record remains available because it is built from exact authored sections, not observation count.</p></section>';
@@ -6569,6 +6628,7 @@ function renderArticleInspector(article) {
     '<div class="record-eyebrow"><span class="source-badge source-' + article.source + '">' + sourceLabel(article.source) + '</span>' + accessBadgeMarkup(article) + '<time datetime="' + article.date + '">' + formatDate(article.date) + '</time><span class="record-id">' + article.id.toUpperCase() + '</span></div>' +
     '<h2 class="record-title">' + escapeHtml(article.title) + '</h2>' +
     '<div class="intel-label" style="margin-top:10px">' + escapeHtml(openingInspectorLabel) + '</div><p class="record-subtitle primary-text">' + escapeHtml(articleClaim(article)) + '</p>' +
+    (openingSpan ? exactPassageTail(openingSpan.span) : '') +
     '<div class="record-actions">' +
       (state.view === 'briefing' || isPaidSubstackArticle(article) ? '' : '<a class="primary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sourceActionLabel(article)) + '</a>') +
       (alternate ? '<a class="secondary-action" href="' + escapeHtml(safeUrl(alternate)) + '" target="_blank" rel="noopener noreferrer">Medium copy ↗</a>' : '') +
@@ -10067,9 +10127,7 @@ window.addEventListener('popstate',function () {
 window.addEventListener('resize',function () {
   if (window.innerWidth > 1240) document.body.classList.remove('inspector-open');
   if (window.innerWidth > 1020) document.body.classList.remove('filters-open');
-  document.querySelectorAll('#table-head [data-sort]').forEach(function (button) {
-    button.tabIndex = window.innerWidth < 760 ? -1 : 0;
-  });
+  syncTableSortFocus();
   syncOverlayAccessibility();
 });
 

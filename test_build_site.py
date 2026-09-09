@@ -2895,10 +2895,10 @@ for (const [url,source] of rejected) {
         # The legacy Alt+Shift chords remain bound for existing muscle memory.
         self.assertIn('if (!event.altKey || !event.shiftKey) return;', handler)
 
-    def test_command_bar_holds_one_row_on_the_desk_and_wraps_only_when_narrow(self):
-        """Wrapping beats shrinking in flex, so the desk bar must not wrap."""
+    def test_command_bar_wraps_when_evidence_pane_reduces_available_space(self):
+        """Viewport width alone cannot predict the available toolbar width."""
         bar = re.search(r'\.command-bar\{[^}]*\}', self.html).group(0)
-        self.assertIn('flex-wrap:nowrap', bar)
+        self.assertIn('flex-wrap:wrap', bar)
         narrow = self.html.index('@media(max-width:1020px)')
         narrow_block = self.html[narrow:narrow + 400]
         self.assertIn('.command-bar{flex-wrap:wrap}', narrow_block)
@@ -3826,7 +3826,8 @@ for (const [url,source] of rejected) {
         render_start = self.html.index('function renderTableHead()')
         render_end = self.html.index('\nfunction evidenceMarkup', render_start)
         render = self.html[render_start:render_end]
-        self.assertIn('button.tabIndex = window.innerWidth < 760 ? -1 : 0;', render)
+        self.assertIn('syncTableSortFocus();', render)
+        self.assertIn('head.getBoundingClientRect().width <= 1 ? -1 : 0', self.html)
         self.assertRegex(mobile, r'\.select-control,\.command-button\{min-height:44px\}')
 
 

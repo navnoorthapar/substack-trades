@@ -2373,5 +2373,56 @@ if (!toast.includes('Define a setup with primary retrieved evidence')) {
 """)
 
 
+class ResearchSummaryRuntimeTests(unittest.TestCase):
+    def test_deferred_observations_never_appear_as_a_zero_total(self):
+        context = javascript_between(
+            'function renderContext(records)', '\nconst BRIEF_KIND_LABELS',
+        )
+        run_node(r"""
+const nodes = new Map();
+const document = {getElementById(id) {
+  if (!nodes.has(id)) nodes.set(id, {
+    textContent:'', innerHTML:'', hidden:false, parentElement:{hidden:false},
+    setAttribute() {}
+  });
+  return nodes.get(id);
+}};
+const state = {view:'research'};
+let observationsReady = false;
+const number = String;
+const directionLabel = String;
+const ideaMatchesResearchFacets = idea => idea.direction === 'long';
+const records = [
+  {trade_count:8, _ideas:[]}, {trade_count:2, _ideas:[]},
+];
+""" + context + r"""
+renderContext(records);
+if (nodes.get('visible-primary').textContent !== '2' ||
+    nodes.get('visible-articles').textContent !== '10') {
+  throw new Error('catalogue totals must remain correct before observations load');
+}
+if (!nodes.get('visible-managers').parentElement.hidden ||
+    !nodes.get('direction-mix').hidden || !nodes.get('mix-legend').hidden) {
+  throw new Error('unloaded detail must not be presented as zero entities or stance');
+}
+observationsReady = true;
+records[0]._ideas = [
+  {direction:'long', manager:'Example'}, {direction:'short', manager:'Second'}
+];
+renderContext(records);
+if (nodes.get('visible-articles').textContent !== '1' ||
+    nodes.get('visible-managers').textContent !== '1' ||
+    nodes.get('visible-managers').parentElement.hidden ||
+    nodes.get('direction-mix').hidden || nodes.get('mix-legend').hidden) {
+  throw new Error('loaded observations must restore the actual filtered detail');
+}
+renderContext([]);
+if (nodes.get('visible-primary').textContent !== '0' ||
+    nodes.get('visible-articles').textContent !== '0') {
+  throw new Error('a genuinely empty result must still report zero');
+}
+""")
+
+
 if __name__ == '__main__':
     unittest.main()
