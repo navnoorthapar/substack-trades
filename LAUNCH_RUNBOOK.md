@@ -189,7 +189,7 @@ gh run list --workflow update.yml --limit 5
   bridge unusable for a future gap. Do not extend, replace, or re-date the bridge
   without a fresh direct-profile review and normal code review.
 - At least daily during launch week, inspect the latest updater log, deployment,
-  watchdog, four source counts, per-source health, and published release
+  watchdog, three source counts, per-source health, and published release
   timestamp. Fetch `/data/manifest.json` and verify its `dataset_version`,
   `generated_at`, endpoint list, and counts agree with the release; fetch
   `/data/latest.json` and open its newest canonical source link.
@@ -273,14 +273,13 @@ For Critical or High incidents:
 Before certifying a release that changes the public archive or its contract:
 
 1. Review the diff for all registry and cross-link files. Patreon rows may
-   contain only anonymous public metadata and `public`/`paid` access; FX Empire
-   updates are manual public byline records. Do not approve scraped bodies,
+   contain only anonymous public metadata and `public`/`paid` access. Do not approve scraped bodies,
    teasers, pledge data, subscriber data, revenue, or dashboard-derived fields.
-2. Confirm the master archive includes all four sources, registry entries have
+2. Confirm the master archive includes all three sources, registry entries have
    `content_status: "registry"` and `wordcount: 0`, and ambiguous twins remain
    separate unless a reviewed override explains the decision.
 3. Run Section 2 and retain the printed public-data summary. Inspect the six
-   endpoint names, schema and dataset versions, four source counts, seven family
+   endpoint names, schema and dataset versions, three source counts, seven family
    counts, endpoint bundle digest, and exact card/stub count.
 4. After deploy, fetch `/data/manifest.json` from production without a browser
    cache. Fetch every path it lists and compare the result to the tested
@@ -299,7 +298,7 @@ versioning, and privacy contract is [SCHEMA.md](SCHEMA.md).
 Certification date: **2026-07-21**
 
 This record certifies the then-current consumer-terminal baseline. It does not
-by itself certify the later four-source public-data and per-article share-asset
+by itself certify the later three-source public-data and per-article share-asset
 surfaces; those require a new successful Section 7 record for the deployed SHA.
 
 - **Protected release identity:** annotated tag `launch-2026-07-21`. Its

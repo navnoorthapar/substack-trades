@@ -16,7 +16,7 @@ from source_health import track_source_health
 
 SCHEMA_VERSION = 2
 CONTENT_SOURCES = ('substack', 'medium')
-REGISTRY_SOURCES = ('patreon', 'fxempire')
+REGISTRY_SOURCES = ('patreon',)
 SOURCES = CONTENT_SOURCES + REGISTRY_SOURCES
 SUCCESS_STATUSES = {'ok', 'degraded'}
 MEDIUM_BRIDGE_MODE = 'operator_reviewed_profile_bridge_plus_current_rss'

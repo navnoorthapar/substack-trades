@@ -51,11 +51,10 @@ anonymous proof becomes metadata-only. Collectors reject unrecognized source
 enumerations; a validated surface without an access flag remains `unknown`
 instead of being guessed.
 
-Patreon and FX Empire are metadata-only registry sources. Patreon records may
+Patreon is a metadata-only registry source. Patreon records may
 state whether an anonymous visitor sees the item as `public` or `paid`; the
 project does not persist or publish the article body, teaser, pledge amount,
-subscriber count, revenue, or creator-dashboard data. FX Empire records are
-manually reviewed public byline metadata and do not include article bodies.
+subscriber count, revenue, or creator-dashboard data.
 
 > C3. PRIVACY RULE (absolute): this is a PUBLIC repo and PUBLIC site. NEVER add private analytics — no email open rates, subscriber counts, revenue, pledges, or dashboard-derived numbers. Only content metadata and already-public information (public reaction/comment counts are acceptable ONLY if already collected; do not build new private-data collection).
 

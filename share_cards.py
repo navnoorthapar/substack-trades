@@ -36,7 +36,6 @@ SOURCE_LABELS = {
     'substack': 'SUBSTACK',
     'medium': 'MEDIUM',
     'patreon': 'PATREON',
-    'fxempire': 'FX EMPIRE',
 }
 
 

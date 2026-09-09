@@ -350,7 +350,6 @@ echo "=== Merging sources, registries, and reviewed cross-posts ==="
 SUBSTACK_POSTS="$WORK_DIR/substack.candidate.json" \
 MEDIUM_POSTS="$WORK_DIR/medium.candidate.json" \
 PATREON_REGISTRY="$WORK_DIR/patreon.candidate.json" \
-FXEMPIRE_REGISTRY="$ROOT/fxempire_registry.json" \
 REGISTRY_OVERRIDES="$ROOT/registry_crosslink_overrides.json" \
 POSTS_OUTPUT="$WORK_DIR/posts.candidate.json" \
 ARTICLES_OUTPUT="$WORK_DIR/articles.candidate.json" \

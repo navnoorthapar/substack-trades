@@ -465,6 +465,39 @@ class SnapshotManifestTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'inconsistent article_count'):
                 validate_previous_manifest(current, previous)
 
+    def test_source_retirement_accepts_old_baseline_without_weakening_current_sources(self):
+        with tempfile.TemporaryDirectory() as raw_directory:
+            _, _, current = self._fixture(Path(raw_directory))
+            previous = json.loads(json.dumps(current))
+            previous['data_checksum'] = 'a' * 64
+            previous['catalog_count'] += 11
+            previous['registry_count'] += 11
+            retired_status = dict(previous['sources']['substack'], mode='manual_registry')
+            previous['sources']['fxempire'] = retired_status
+            current['sources']['medium']['consecutive_degraded_checks'] = 2
+            validate_previous_manifest(current, previous)
+
+            current['sources']['fxempire'] = retired_status
+            with self.assertRaisesRegex(ValueError, 'current manifest sources are invalid'):
+                validate_previous_manifest(current, previous)
+            del current['sources']['fxempire']
+
+            previous['sources']['unknown'] = retired_status
+            with self.assertRaisesRegex(ValueError, 'previous manifest sources are invalid'):
+                validate_previous_manifest(current, previous)
+            del previous['sources']['unknown']
+
+            del current['sources']['medium']
+            with self.assertRaisesRegex(ValueError, 'no medium status'):
+                validate_previous_manifest(current, previous)
+
+    def test_manifest_writer_rejects_withdrawn_source(self):
+        with self.assertRaisesRegex(ValueError, 'unknown source'):
+            build_manifest(
+                sample_articles() + [{'source': 'fxempire'}],
+                sample_observations(), sample_statuses(), 'a' * 64,
+            )
+
     def test_degraded_streak_continuity_is_bound_to_the_previous_manifest(self):
         with tempfile.TemporaryDirectory() as raw_directory:
             directory = Path(raw_directory)

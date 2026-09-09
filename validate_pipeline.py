@@ -46,13 +46,16 @@ VALID_INSTRUMENTS = {
     'repo', 'swap', 'CDS', 'prediction_market', 'weather_derivative',
     'unspecified',
 }
-VALID_SOURCES = {'substack', 'medium', 'patreon', 'fxempire'}
+VALID_SOURCES = {'substack', 'medium', 'patreon'}
+# Owner-requested withdrawal: recognized only in a previous release baseline.
+# Current articles, alternate URLs, and manifests must use VALID_SOURCES.
+RETIRED_SOURCES = {'fxempire'}
 CONTENT_SOURCES = {'substack', 'medium'}
 CONTENT_SOURCE_AUDIENCES = {
     'substack': {'everyone', 'only_paid'},
     'medium': {'public', 'locked', 'unknown'},
 }
-REGISTRY_SOURCES = {'patreon', 'fxempire'}
+REGISTRY_SOURCES = {'patreon'}
 VALID_CONTENT_STATUSES = {'full', 'excerpt', 'registry'}
 VALID_FAMILIES = {
     'firm-mechanics',
@@ -310,16 +313,6 @@ def canonical_url_identity(source, url):
         if match is None:
             raise ValueError('Patreon URL has no canonical creator post ID')
         return match.group(1)
-    if source == 'fxempire':
-        require(host == 'www.fxempire.com', 'FX Empire URL has the wrong host')
-        match = re.fullmatch(
-            r'/(?:forecasts|news|education)/article/'
-            r'[A-Za-z0-9][A-Za-z0-9_-]*-([0-9]+)',
-            parsed.path,
-        )
-        if match is None:
-            raise ValueError('FX Empire URL has no canonical article ID')
-        return match.group(1)
     raise ValueError('article has an invalid source')
 
 
@@ -442,20 +435,14 @@ def validate_article_record(record, index, label):
         family = record.get('family')
         require(family in VALID_FAMILIES, f'{label} {index} has an invalid family')
         if content_status == 'registry':
-            allowed_keys = REGISTRY_ARTICLE_KEYS | {'alternate_urls'}
-            if source == 'patreon':
-                allowed_keys.add('access')
+            allowed_keys = REGISTRY_ARTICLE_KEYS | {'alternate_urls', 'access'}
             require(set(record) >= REGISTRY_ARTICLE_KEYS
                     and set(record) <= allowed_keys,
                     f'{label} {index} has fields outside the metadata-only '
                     'registry contract')
-            if source == 'patreon':
-                require(record.get('access') in {'public', 'paid'}
-                        and record.get('access') == record.get('audience'),
-                        f'{label} {index} Patreon access is missing or inconsistent')
-            else:
-                require(record.get('audience') == 'public',
-                        f'{label} {index} FX Empire metadata must be public')
+            require(record.get('access') in {'public', 'paid'}
+                    and record.get('access') == record.get('audience'),
+                    f'{label} {index} Patreon access is missing or inconsistent')
             require('brief' in record,
                     f'{label} {index} has no metadata-only brief boundary')
             validate_registry_brief(record['brief'], f'{label} {index}')
@@ -900,8 +887,12 @@ def validate_article_regression(articles, previous, minimum_ratio):
         article.get('source') for article in previous if isinstance(article, dict)
     )
     for source, previous_count in previous_counts.items():
-        require(source in VALID_SOURCES,
+        require(source in VALID_SOURCES | RETIRED_SOURCES,
                 f'previous article index has an invalid source: {source!r}')
+        if source in RETIRED_SOURCES:
+            require(not current_counts[source],
+                    f'retired source {source} cannot be republished')
+            continue
         minimum = max(1, int(previous_count * minimum_ratio))
         require(current_counts[source] >= minimum,
                 f'{source} article count collapsed from {previous_count} to '
@@ -1064,11 +1055,15 @@ def validate_previous_manifest(manifest, previous):
                     f'unchanged checksum has inconsistent {field}')
     previous_sources = previous.get('sources')
     require(isinstance(previous_sources, dict)
-            and set(previous_sources).issubset(VALID_SOURCES)
+            and set(previous_sources).issubset(VALID_SOURCES | RETIRED_SOURCES)
             and CONTENT_SOURCES.issubset(previous_sources),
             'previous manifest sources are invalid')
     current_sources = manifest.get('sources') or {}
+    require(set(current_sources).issubset(VALID_SOURCES),
+            'current manifest sources are invalid')
     for source in previous_sources:
+        if source in RETIRED_SOURCES:
+            continue
         previous_source = previous_sources.get(source)
         current_source = current_sources.get(source)
         if not isinstance(previous_source, dict) or not isinstance(current_source, dict):

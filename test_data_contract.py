@@ -55,9 +55,9 @@ def article_fixture(index):
         'audience': (
             'everyone' if source == 'substack' else 'public'
         ),
-        'wordcount': 0 if source in {'patreon', 'fxempire'} else 1_000 + index,
+        'wordcount': 0 if source == 'patreon' else 1_000 + index,
         'content_status': (
-            'registry' if source in {'patreon', 'fxempire'} else 'full'
+            'registry' if source == 'patreon' else 'full'
         ),
         'brief': {
             'schema_version': 1,
@@ -198,7 +198,7 @@ class DataContractTests(unittest.TestCase):
         self.assertEqual(self.manifest['generated_at'], CHECKED_AT)
         self.assertEqual(self.manifest['article_count'], 24)
         self.assertEqual(self.manifest['source_counts'], {
-            source: 6 for source in SOURCES
+            source: 24 // len(SOURCES) for source in SOURCES
         })
         self.assertEqual(self.manifest['endpoints'], list(DATA_ENDPOINTS))
 
@@ -665,7 +665,7 @@ class DataContractTests(unittest.TestCase):
 
         registry_index = next(
             index for index, article in enumerate(self.articles)
-            if article['source'] == 'fxempire'
+            if article['source'] == 'patreon'
         )
         self.articles[content_index] = clean
         self.articles[registry_index]['body_revision_status'] = 'current'
@@ -854,9 +854,26 @@ class DataContractTests(unittest.TestCase):
                     else:
                         os.environ[VERIFICATION_MODE_ENV] = previous
 
-    def test_all_four_sources_must_be_present(self):
+    def test_withdrawn_publication_cannot_enter_public_data_or_alternate_urls(self):
+        clean = copy.deepcopy(self.articles[0])
+        for field, value, message in (
+                ('source', 'fxempire', 'invalid source'),
+                ('alternate_urls', {'fxempire': 'https://www.fxempire.com/forecasts/article/test-1'}, 'unknown sources')):
+            with self.subTest(field=field):
+                self.articles[0] = dict(clean, **{field: value})
+                self._write_source()
+                write_data_layer(
+                    self.site, self.source, self.snapshot, self.search,
+                    self.related, self.families,
+                )
+                with self.assertRaisesRegex(ValueError, message):
+                    validate_data_layer(
+                        self.site, self.source, self.snapshot, now=VALIDATION_NOW,
+                    )
+
+    def test_every_publication_source_must_be_present(self):
         self.articles = [
-            article for article in self.articles if article['source'] != 'fxempire'
+            article for article in self.articles if article['source'] != 'patreon'
         ]
         self.snapshot['article_count'] = len(self.articles)
         self._write_source()
@@ -868,7 +885,7 @@ class DataContractTests(unittest.TestCase):
             self.related,
             self.families,
         )
-        with self.assertRaisesRegex(ValueError, 'all four sources'):
+        with self.assertRaisesRegex(ValueError, 'every publication source'):
             validate_data_layer(
                 self.site, self.source, self.snapshot, now=VALIDATION_NOW,
             )

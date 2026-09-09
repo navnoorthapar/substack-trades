@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Validate metadata-only publication registries and cross-link twins.
 
-The Patreon and FX Empire feeds represented here are deliberately sparse.
-They contain public catalogue metadata, never article bodies, excerpts,
+The Patreon registry represented here is deliberately sparse.
+It contains public catalogue metadata, never article bodies, excerpts,
 engagement counts, subscriber information, or payment data.
 """
 
@@ -21,18 +21,14 @@ from article_briefs import build_article_brief
 from research_taxonomy import classify_family
 
 
-REGISTRY_SOURCES: Tuple[str, ...] = ('patreon', 'fxempire')
+REGISTRY_SOURCES: Tuple[str, ...] = ('patreon',)
 SOURCE_PRIORITY = {
     'substack': 0,
     'medium': 1,
     'patreon': 2,
-    'fxempire': 3,
 }
 PATREON_KEYS: Set[str] = {
     'source_id', 'title', 'url', 'post_date', 'access',
-}
-FXEMPIRE_KEYS: Set[str] = {
-    'source_id', 'title', 'url', 'post_date',
 }
 OVERRIDE_KEYS: Set[str] = {
     'source', 'source_id', 'target_source', 'target_slug', 'decision', 'reason',
@@ -100,15 +96,6 @@ def _validate_https_url(value: object, source: str, source_id: str) -> str:
             and parsed.port is None
             and re.fullmatch(path_pattern, parsed.path) is not None
         )
-    elif source == 'fxempire':
-        path_pattern = (
-            rf'/(?:forecasts|news|education)/article/[a-z0-9-]+-{escaped_id}'
-        )
-        valid = (
-            parsed.hostname == 'www.fxempire.com'
-            and parsed.port is None
-            and re.fullmatch(path_pattern, parsed.path) is not None
-        )
     else:
         raise ValueError(f'unsupported registry source: {source!r}')
     if not valid:
@@ -124,7 +111,7 @@ def validate_registry(
         raise ValueError(f'unsupported registry source: {source!r}')
     if not isinstance(records, list):
         raise ValueError(f'{source} registry must be a JSON array')
-    required = PATREON_KEYS if source == 'patreon' else FXEMPIRE_KEYS
+    required = PATREON_KEYS
     seen_ids: Set[str] = set()
     seen_urls: Set[str] = set()
     result: List[Dict[str, object]] = []
@@ -349,9 +336,8 @@ def crosslink_registry(
     records = validate_registry([dict(record) for record in registry_records], source)
     decisions = list(overrides or [])
     result = [copy.deepcopy(dict(post)) for post in base_posts]
-    # Earlier/higher-priority sources may be canonical targets.  This permits
-    # Patreon-to-FX Empire links when no Substack or Medium copy exists while
-    # keeping output stable regardless of title similarity among peers.
+    # Content-bearing sources may be canonical targets, keeping output stable
+    # regardless of title similarity among registry peers.
     incoming_priority = SOURCE_PRIORITY[source]
     candidates = [
         post for post in result

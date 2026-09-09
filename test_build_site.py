@@ -761,7 +761,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             'published records',
             'Company, market, strategy, catalyst',
             'Data health &amp; coverage',
-            'Coverage across Substack, Medium, Patreon, and FX Empire',
+            'Coverage across Substack, Medium, and Patreon',
             'Open verification record',
             'Published-source research, not a recommendation or live portfolio view.',
             "const newFilterLabel = reviewBaselineExists ? 'New since last review' : 'Recent · 7 days';",
@@ -783,7 +783,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         catalogue_sources = json.loads(match.group(1))
         self.assertEqual(
             [row['source'] for row in catalogue_sources],
-            ['substack', 'medium', 'patreon', 'fxempire'],
+            ['substack', 'medium', 'patreon'],
         )
 
         def has_captured_text(row):
@@ -1047,6 +1047,7 @@ const rejected = [
   ['https://www.patreon.com/SomeoneElse/posts/test-1','patreon'],
   ['https://www.patreon.com/NavnoorBawa/posts/test-1?redirect=1','patreon'],
   ['https://www.fxempire.com/news/article/test-1','fxempire'],
+  ['https://www.fxempire.com/forecasts/article/test-1','fxempire'],
   ['https://evil.example/forecasts/article/test-1','fxempire'],
   ['javascript:alert(1)','patreon']
 ];
@@ -2975,7 +2976,7 @@ for (const [url,source] of rejected) {
         self.assertEqual(self.snapshot['observation_count'], len(self.ideas))
         self.assertEqual(
             set(self.snapshot['sources']),
-            {'substack', 'medium', 'patreon', 'fxempire'},
+            {'substack', 'medium', 'patreon'},
         )
 
         checksum = hashlib.sha256()

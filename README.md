@@ -2,7 +2,7 @@
 
 This project collects authored research from `navnoorbawa.substack.com` and
 `medium.com/@navnoorbawa`, adds privacy-safe public catalogue metadata from
-Patreon and FX Empire, extracts structured fields from source passages, and
+Patreon, extracts structured fields from source passages, and
 publishes a research archive at
 <https://navnoorthapar.github.io/substack-trades/>.
 
@@ -17,7 +17,7 @@ Scheduled Mac
   Substack API --------> all_posts.json --------\
   Medium archive -----> medium_posts.json -------+-> conservative dedupe/cross-linking
   Patreon public index -> patreon_registry.json -+                 |
-  Reviewed FX byline --> fxempire_registry.json -/                 +-> four-source articles_index.json
+  Patreon metadata --------------------------/                 +-> three-source articles_index.json
                                                                   +-> trades_extracted.json
                                                                   +-> snapshot_manifest.json
                                                                   +-> strict validation + tests
@@ -80,11 +80,11 @@ high-context eligibility, and never labeled as current full text.
 
 `all_posts.json` and `all_sources_posts.json` stay local. The tracked pipeline
 state includes `medium_posts.json`, `patreon_registry.json`,
-`fxempire_registry.json`, `registry_crosslink_overrides.json`,
+`registry_crosslink_overrides.json`,
 `articles_index.json`, `trades_extracted.json`, `snapshot_manifest.json`, and
 `.direction_cache.json`; retaining the catalogues prevents a temporary source
-failure from erasing older articles. Patreon and FX Empire records are
-metadata-only: the project does not scrape or republish their article bodies.
+failure from erasing older articles. Patreon records are metadata-only: the
+project does not scrape or republish their article bodies.
 Production builds consume the validated article and observation snapshots. The
 manifest binds exact input bytes, counts, publication freshness, and per-channel
 fetch health. Every included source check must be no more than one hour behind
@@ -97,8 +97,7 @@ or a second source of truth.
 
 The core pipeline needs Python 3.9+, Node.js for generated-script compilation,
 Git with authenticated write access to `origin`, and network access to
-Substack, Medium, Patreon, and GitHub. FX Empire is a manually reviewed byline
-registry rather than an automated scraper. The project has no third-party
+Substack, Medium, Patreon, and GitHub. The project has no third-party
 Python runtime dependencies.
 Ollama with `qwen2.5:14b` is optional; without it, refreshes preserve cached
 classifications and keep the regex-only direction for new residuals.
@@ -106,9 +105,9 @@ classifications and keep the regex-only direction for new residuals.
 ## Machine-readable data layer
 
 Each deployment publishes six static, UTF-8 JSON endpoints from the same
-validated four-source snapshot as the archive:
+validated three-source snapshot as the archive:
 
-- [`data/articles_index.json`](https://navnoorthapar.github.io/substack-trades/data/articles_index.json) — the complete Substack, Medium, Patreon, and FX Empire catalogue with bounded briefs.
+- [`data/articles_index.json`](https://navnoorthapar.github.io/substack-trades/data/articles_index.json) — the complete Substack, Medium, and Patreon catalogue with bounded briefs.
 - [`data/latest.json`](https://navnoorthapar.github.io/substack-trades/data/latest.json) — the deterministic newest-20 projection.
 - [`data/manifest.json`](https://navnoorthapar.github.io/substack-trades/data/manifest.json) — schema version, dataset identity, freshness, counts, and endpoint discovery.
 - [`data/search_index.json`](https://navnoorthapar.github.io/substack-trades/data/search_index.json) — a compact deterministic entity/topic index.
@@ -198,7 +197,7 @@ validated release and local browser state: one product promise, one primary
 subscriber path, one featured note plus three compact recent rows, a research
 pulse for new-since-review, cited checkpoints, captured countercase, and source
 health, one local archive search, progressively disclosed review tools, and
-collapsed coverage for all four publication sources. A coverage monitor shows
+collapsed coverage for all three publication sources. A coverage monitor shows
 the four most recently published recurring subjects, with exact note counts,
 captured countercase/falsifier coverage, cited checkpoint counts, and direct
 entry to each subject's source history. These counts describe the archive;

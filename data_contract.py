@@ -51,7 +51,7 @@ DATA_ENDPOINT_NAMES: Tuple[str, ...] = tuple(sorted((
 DATA_ENDPOINTS: Tuple[str, ...] = tuple(
     f'data/{name}' for name in DATA_ENDPOINT_NAMES
 )
-SOURCES: Tuple[str, ...] = ('substack', 'medium', 'patreon', 'fxempire')
+SOURCES: Tuple[str, ...] = ('substack', 'medium', 'patreon')
 FAMILIES: Tuple[str, ...] = (
     'firm-mechanics',
     'career-structure',
@@ -536,23 +536,17 @@ def _validate_articles(value: Any) -> Tuple[List[Dict[str, Any]], Dict[str, int]
             )
         content_status = article.get('content_status')
         member_access = False
-        if source in {'patreon', 'fxempire'}:
+        if source == 'patreon':
             _require(content_status == 'registry',
                      f'{label} registry source must have content_status registry')
             _require(wordcount == 0,
                      f'{label} registry source must have an empty-body wordcount')
-            allowed_keys = set(ARTICLE_REQUIRED_KEYS) | {'alternate_urls'}
-            if source == 'patreon':
-                allowed_keys.add('access')
+            allowed_keys = set(ARTICLE_REQUIRED_KEYS) | {'alternate_urls', 'access'}
             _require(set(article) <= allowed_keys,
                      f'{label} has fields outside the metadata-only registry contract')
-            if source == 'patreon':
-                _require(article.get('access') in {'public', 'paid'}
-                         and article.get('access') == article.get('audience'),
-                         f'{label} Patreon access is missing or inconsistent')
-            else:
-                _require(article.get('audience') == 'public',
-                         f'{label} FX Empire metadata must be public')
+            _require(article.get('access') in {'public', 'paid'}
+                     and article.get('access') == article.get('audience'),
+                     f'{label} Patreon access is missing or inconsistent')
         else:
             _require(content_status in {'full', 'excerpt'},
                      f'{label} publication source has an invalid content_status')
@@ -654,7 +648,7 @@ def _validate_articles(value: Any) -> Tuple[List[Dict[str, Any]], Dict[str, int]
 
     exact_source_counts = {source: source_counts[source] for source in SOURCES}
     _require(all(count > 0 for count in exact_source_counts.values()),
-             'public article index must contain at least one article from all four sources')
+             'public article index must contain at least one article from every publication source')
     exact_family_counts = {family: family_counts[family] for family in FAMILIES}
     return articles, exact_source_counts, exact_family_counts
 

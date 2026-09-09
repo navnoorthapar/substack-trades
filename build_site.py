@@ -200,7 +200,7 @@ if article_index_path.exists():
 else:
     print('Warning: articles_index.json missing; building from trade metadata only')
 
-# Metadata-only Patreon and FX Empire registry records power the public data
+# Metadata-only Patreon registry records power the public data
 # catalogue, discovery graph, share cards, and article stubs. They deliberately
 # stay out of the body-backed terminal so every existing UI flow and dossier
 # count remains unchanged.
@@ -915,7 +915,7 @@ def catalogue_row_has_captured_text(row):
 
 
 catalogue_sources = []
-for source_name in ('substack', 'medium', 'patreon', 'fxempire'):
+for source_name in ('substack', 'medium', 'patreon'):
     source_rows = [
         row for row in catalog_index if row.get('source') == source_name
     ]
@@ -1116,7 +1116,6 @@ button,input,select,textarea{font:inherit}
   --source-substack:#e5ad80;
   --source-medium:#b7c1c5;
   --source-patreon:#c5afe5;
-  --source-fxempire:#e3ca8a;
   --brick:#e3ca8a;
   --brick-soft:#30291a;
   --brick-line:#927b46;
@@ -1193,7 +1192,6 @@ html[data-theme="light"]{
   --source-substack:#9a4a23;
   --source-medium:#4e5b68;
   --source-patreon:#7449a6;
-  --source-fxempire:#7e5a13;
   --brick:#775113;
   --brick-soft:#f2e8d4;
   --brick-line:#b89c65;
@@ -2196,7 +2194,6 @@ body[data-view="briefing"] .briefing-shell{
 .source-substack::before{background:var(--source-substack)}
 .source-medium::before{background:var(--source-medium)}
 .source-patreon::before{background:var(--source-patreon)}
-.source-fxempire::before{background:var(--source-fxempire)}
 .instrument-primary{font:600 10px var(--mono);color:var(--text);text-transform:capitalize}
 .instrument-secondary{font-size:10px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .manager-name{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -4221,8 +4218,7 @@ function sourceLabel(value) {
   return ({
     substack:'Substack',
     medium:'Medium',
-    patreon:'Patreon',
-    fxempire:'FX Empire'
+    patreon:'Patreon'
   })[value] || 'Unknown source';
 }
 function sourceModeLabel(value) {
@@ -4331,9 +4327,7 @@ function safeCatalogueUrl(value,source) {
         /%(?:2f|5c)/i.test(url.pathname)) return '#';
     const patreonPath = source === 'patreon' && host === 'www.patreon.com' &&
       /^\/NavnoorBawa\/posts\/[A-Za-z0-9][A-Za-z0-9-]*-[0-9]+$/.test(url.pathname);
-    const fxEmpirePath = source === 'fxempire' && host === 'www.fxempire.com' &&
-      /^\/forecasts\/article\/[a-z0-9][a-z0-9-]*-[0-9]+$/.test(url.pathname);
-    return patreonPath || fxEmpirePath ? url.href : '#';
+    return patreonPath ? url.href : '#';
   } catch (_error) {
     return '#';
   }
@@ -7656,7 +7650,7 @@ function deskLandingMarkup() {
       '<div><span>Coverage monitor</span><h2 id="desk-monitor-title">Recurring subjects, latest first</h2></div>' +
       '<p class="desk-monitor-note">Follow the published history of a subject. Dates and counts reflect this research archive.</p></div>' +
       '<div class="desk-monitor-grid">' + coverageRows.map(deskCoverageMarkup).join('') + '</div></section>' : '') +
-    '<details class="desk-source-panel"><summary><span><strong>Data health &amp; coverage</strong><small>Coverage across Substack, Medium, Patreon, and FX Empire</small></span><b class="' +
+    '<details class="desk-source-panel"><summary><span><strong>Data health &amp; coverage</strong><small>Coverage across Substack, Medium, and Patreon</small></span><b class="' +
       escapeHtml(sourceRollupClass) + '">' +
       number(healthySources) + ' of ' + number(CATALOGUE_SOURCES.length) + ' healthy</b></summary>' +
       '<div class="desk-source-grid">' + CATALOGUE_SOURCES.map(deskSourceCoverageMarkup).join('') +
@@ -10139,7 +10133,7 @@ function renderStaticStats() {
   document.getElementById('freshness-state').textContent = freshnessStatus;
   const label = document.getElementById('freshness-label');
   label.textContent = (freshness.manifestClockInvalid || freshness.sourceClockInvalid ? 'Refresh clock invalid · ' : '') + 'Research through ' + formatDate(String(SNAPSHOT.latest_publication || MAX_DATE).slice(0,10)) + ' · checked ' + formatCheckedAt(SNAPSHOT.checked_at);
-  const healthDetail = ['substack','medium','patreon','fxempire'].map(function (source) {
+  const healthDetail = ['substack','medium','patreon'].map(function (source) {
     const info = SNAPSHOT.sources && SNAPSHOT.sources[source] || {};
     return sourceLabel(source) + ': ' + (info.status || 'unknown') + ', ' + number(info.included_count || 0) + ' included, ' + (info.mode || 'mode unknown');
   }).join(' | ');

@@ -4,10 +4,10 @@
   "latest_publication": "2026-09-08T15:03:41Z",
   "catalog_latest_publication": "2026-09-08T15:03:41Z",
   "article_count": 468,
-  "catalog_count": 625,
-  "registry_count": 157,
+  "catalog_count": 614,
+  "registry_count": 146,
   "observation_count": 115,
-  "data_checksum": "0b9e9595782949284816b4cde47515c3135f95433b4b51c89854a17a5a20158a",
+  "data_checksum": "2b7a3819e4d56289bf25322ff806d2f86443cd897621126da4b45625efd14eba",
   "sources": {
     "substack": {
       "checked_at": "2026-09-09T03:30:48Z",
@@ -39,17 +39,6 @@
       "fetched_count": 167,
       "included_count": 146,
       "newest": "2026-09-07",
-      "degraded_since": null,
-      "consecutive_degraded_checks": 0
-    },
-    "fxempire": {
-      "checked_at": "2026-09-09T03:31:34Z",
-      "status": "ok",
-      "mode": "manual_registry",
-      "published_count": 11,
-      "fetched_count": 11,
-      "included_count": 11,
-      "newest": "2026-07-20",
       "degraded_since": null,
       "consecutive_degraded_checks": 0
     }

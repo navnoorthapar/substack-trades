@@ -671,6 +671,17 @@ class DeployableSnapshotValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'medium article count collapsed'):
             validate_article_regression(current, previous, 0.5)
 
+    def test_source_retirement_only_exempts_the_withdrawn_previous_source(self):
+        current = [{'source': source} for source in ('substack', 'medium', 'patreon')]
+        previous = current + [{'source': 'fxempire'}]
+        validate_article_regression(current, previous, 0.9)
+        with self.assertRaisesRegex(ValueError, 'medium article count collapsed'):
+            validate_article_regression([current[0], current[2]], previous, 0.9)
+        with self.assertRaisesRegex(ValueError, 'invalid source'):
+            validate_article_regression(current, previous + [{'source': 'unknown'}], 0.9)
+        with self.assertRaisesRegex(ValueError, 'cannot be republished'):
+            validate_article_regression(previous, previous, 0.9)
+
     def test_trade_regression_guards_public_rows_not_removed_member_cache(self):
         public_url = 'https://navnoorbawa.substack.com/p/public'
         member_url = 'https://navnoorbawa.substack.com/p/member'

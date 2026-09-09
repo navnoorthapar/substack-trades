@@ -37,9 +37,6 @@ ARTICLES_OUTPUT = Path(os.environ.get(
 PATREON_PATH = Path(os.environ.get(
     'PATREON_REGISTRY', ROOT / 'patreon_registry.json'
 )).expanduser()
-FXEMPIRE_PATH = Path(os.environ.get(
-    'FXEMPIRE_REGISTRY', ROOT / 'fxempire_registry.json'
-)).expanduser()
 REGISTRY_OVERRIDES_PATH = Path(os.environ.get(
     'REGISTRY_OVERRIDES', ROOT / 'registry_crosslink_overrides.json'
 )).expanduser()
@@ -418,7 +415,7 @@ def article_metadata(post):
 
 def merge_sources(
         substack_posts, medium_posts, overrides=None, patreon_records=None,
-        fxempire_records=None, registry_overrides=None):
+        registry_overrides=None):
     """Return combined posts, article metadata, and an auditable match report."""
     overrides = load_overrides() if overrides is None else overrides
     substack = [_canonical_substack_post(post) for post in substack_posts]
@@ -491,9 +488,7 @@ def merge_sources(
     catalogue_posts = [copy.deepcopy(post) for post in combined]
     registry_report = []
     decisions = list(registry_overrides or [])
-    for source, records in (
-            ('patreon', list(patreon_records or [])),
-            ('fxempire', list(fxempire_records or []))):
+    for source, records in (('patreon', list(patreon_records or [])),):
         catalogue_posts, source_report = crosslink_registry(
             catalogue_posts, records, source, decisions,
         )
@@ -538,13 +533,11 @@ def main():
     substack_posts = load_list(SUBSTACK_PATH, 'Substack post snapshot')
     medium_posts = load_list(MEDIUM_PATH, 'Medium post snapshot')
     patreon_records = load_registry(PATREON_PATH, 'patreon')
-    fxempire_records = load_registry(FXEMPIRE_PATH, 'fxempire')
     registry_overrides = load_registry_overrides(REGISTRY_OVERRIDES_PATH)
     combined, articles, report = merge_sources(
         substack_posts,
         medium_posts,
         patreon_records=patreon_records,
-        fxempire_records=fxempire_records,
         registry_overrides=registry_overrides,
     )
 

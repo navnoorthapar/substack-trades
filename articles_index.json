@@ -5274,69 +5274,6 @@
     "access": "paid"
   },
   {
-    "source": "fxempire",
-    "source_id": "1611512",
-    "slug": "premium-is-golds-bull-market-over-three-reasons-the-fundamentals-say-no-1611512",
-    "title": "Is Gold’s Bull Market Over? Three Reasons the Fundamentals Say No",
-    "subtitle": "",
-    "post_date": "2026-07-20",
-    "url": "https://www.fxempire.com/forecasts/article/premium-is-golds-bull-market-over-three-reasons-the-fundamentals-say-no-1611512",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "other"
-  },
-  {
-    "source": "fxempire",
-    "source_id": "1611030",
-    "slug": "premium-the-sp-500-just-flipped-regimes-twice-here-are-the-levels-that-matter-1611030",
-    "title": "The S&P 500 Just Flipped Regimes Twice: Here Are the Levels That Matter",
-    "subtitle": "",
-    "post_date": "2026-07-17",
-    "url": "https://www.fxempire.com/forecasts/article/premium-the-sp-500-just-flipped-regimes-twice-here-are-the-levels-that-matter-1611030",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "other"
-  },
-  {
-    "source": "fxempire",
-    "source_id": "1610570",
-    "slug": "premium-natural-gas-futures-analysis-why-winter-risk-is-still-underpriced-1610570",
-    "title": "Natural Gas Futures Analysis: Why Winter Risk Is Still Underpriced",
-    "subtitle": "",
-    "post_date": "2026-07-15",
-    "url": "https://www.fxempire.com/forecasts/article/premium-natural-gas-futures-analysis-why-winter-risk-is-still-underpriced-1610570",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "other"
-  },
-  {
     "source": "substack",
     "source_id": "optiver-wrote-the-neutral-fix-for",
     "slug": "optiver-wrote-the-neutral-fix-for",
@@ -5452,27 +5389,6 @@
     }
   },
   {
-    "source": "fxempire",
-    "source_id": "1609274",
-    "slug": "premium-bitcoin-forecast-58000-holds-despite-the-falling-yen-1609274",
-    "title": "Bitcoin Forecast: $58,000 Holds Despite the Falling Yen",
-    "subtitle": "",
-    "post_date": "2026-07-09",
-    "url": "https://www.fxempire.com/forecasts/article/premium-bitcoin-forecast-58000-holds-despite-the-falling-yen-1609274",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "other"
-  },
-  {
     "source": "substack",
     "source_id": "hull-whites-mean-reversion-problem",
     "slug": "hull-whites-mean-reversion-problem",
@@ -5504,27 +5420,6 @@
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/hull-whites-mean-reversion-problem-a-smarter-model-lost-to-a-naive-guess-in-2022-80644eb567b6"
     }
-  },
-  {
-    "source": "fxempire",
-    "source_id": "1608677",
-    "slug": "premium-oil-crashed-on-mechanical-selling-a-squeeze-to-75-is-next-1608677",
-    "title": "Oil Crashed on Mechanical Selling: A Squeeze to $75 Is Next",
-    "subtitle": "",
-    "post_date": "2026-07-07",
-    "url": "https://www.fxempire.com/forecasts/article/premium-oil-crashed-on-mechanical-selling-a-squeeze-to-75-is-next-1608677",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "other"
   },
   {
     "source": "substack",
@@ -5899,27 +5794,6 @@
     }
   },
   {
-    "source": "fxempire",
-    "source_id": "1607204",
-    "slug": "premium-copper-price-analysis-why-5-50-beckons-before-the-tariff-verdict-1607204",
-    "title": "Copper Price Analysis: Why $5.50 Beckons Before the Tariff Verdict",
-    "subtitle": "",
-    "post_date": "2026-06-29",
-    "url": "https://www.fxempire.com/forecasts/article/premium-copper-price-analysis-why-5-50-beckons-before-the-tariff-verdict-1607204",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "event-reaction"
-  },
-  {
     "source": "substack",
     "source_id": "de-shaw-citadel-and-renaissance-run",
     "slug": "de-shaw-citadel-and-renaissance-run",
@@ -6153,27 +6027,6 @@
     }
   },
   {
-    "source": "fxempire",
-    "source_id": "1606550",
-    "slug": "premium-silver-falls-to-6-month-lows-why-the-68-71-setup-will-survive-1606550",
-    "title": "Silver Falls to 6-Month Lows: Why the $68–71 Setup Will Survive",
-    "subtitle": "",
-    "post_date": "2026-06-25",
-    "url": "https://www.fxempire.com/forecasts/article/premium-silver-falls-to-6-month-lows-why-the-68-71-setup-will-survive-1606550",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "other"
-  },
-  {
     "source": "substack",
     "source_id": "oils-40-sharpe-variance-trade-sat",
     "slug": "oils-40-sharpe-variance-trade-sat",
@@ -6258,27 +6111,6 @@
     },
     "family": "other",
     "access": "paid"
-  },
-  {
-    "source": "fxempire",
-    "source_id": "1605978",
-    "slug": "premium-usd-jpy-analysis-has-the-yen-carry-trade-finally-peaked-1605978",
-    "title": "USD/JPY Analysis: Has the Yen Carry Trade Finally Peaked?",
-    "subtitle": "",
-    "post_date": "2026-06-23",
-    "url": "https://www.fxempire.com/forecasts/article/premium-usd-jpy-analysis-has-the-yen-carry-trade-finally-peaked-1605978",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "other"
   },
   {
     "source": "medium",
@@ -6403,27 +6235,6 @@
       "character_count": 0,
       "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
-  },
-  {
-    "source": "fxempire",
-    "source_id": "1605422",
-    "slug": "premium-sp-500-analysis-the-fed-changed-nothing-yet-stocks-felt-the-shock-1605422",
-    "title": "S&P 500 Faces $7,150 Pullback Risk as Warsh’s Fed Turns Hawkish",
-    "subtitle": "",
-    "post_date": "2026-06-19",
-    "url": "https://www.fxempire.com/forecasts/article/premium-sp-500-analysis-the-fed-changed-nothing-yet-stocks-felt-the-shock-1605422",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "event-reaction"
   },
   {
     "source": "substack",
@@ -6776,27 +6587,6 @@
     }
   },
   {
-    "source": "fxempire",
-    "source_id": "1604320",
-    "slug": "premium-golds-war-hedge-is-failing-can-central-banks-hold-the-4000-floor-1604320",
-    "title": "Gold’s War Hedge Is Failing: Can Central Banks Hold the $4,000 Floor?",
-    "subtitle": "",
-    "post_date": "2026-06-13",
-    "url": "https://www.fxempire.com/forecasts/article/premium-golds-war-hedge-is-failing-can-central-banks-hold-the-4000-floor-1604320",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "other"
-  },
-  {
     "source": "medium",
     "source_id": "8f20af3d95cf",
     "slug": "how-vitol-made-15-billion-while-andurand-lost-37-why-even-citadel-cant-replicate-the-edge-8f20af3d95cf",
@@ -6910,27 +6700,6 @@
     },
     "family": "other",
     "access": "paid"
-  },
-  {
-    "source": "fxempire",
-    "source_id": "1603326",
-    "slug": "premium-goldmans-six-month-hedge-fund-high-hides-a-fragility-signal-1603326",
-    "title": "Goldman’s Six-Month Hedge Fund High Hides a Fragility Signal",
-    "subtitle": "",
-    "post_date": "2026-06-09",
-    "url": "https://www.fxempire.com/forecasts/article/premium-goldmans-six-month-hedge-fund-high-hides-a-fragility-signal-1603326",
-    "audience": "public",
-    "wordcount": 0,
-    "content_status": "registry",
-    "brief": {
-      "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "lead": null,
-      "sections": [],
-      "fallback_evidence": null,
-      "checkpoints": []
-    },
-    "family": "other"
   },
   {
     "source": "medium",

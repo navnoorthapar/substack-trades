@@ -91,7 +91,7 @@ JSON array in deterministic catalogue order. Every object has these fields:
 
 | Field | Type | Guarantee |
 |---|---|---|
-| `source` | string enum | Exactly `substack`, `medium`, `patreon`, or `fxempire` |
+| `source` | string enum | Exactly `substack`, `medium`, or `patreon` |
 | `source_id` | non-empty string | Source-native identifier; unique with `source` |
 | `slug` | non-empty string | Globally unique stable path key within the catalogue |
 | `title` | non-empty string | Public source title |
@@ -141,7 +141,7 @@ The following other additive fields may be present:
 | `member_preview` | object | Required only for member-access Substack/Medium rows; exact anonymous preview proof described below |
 
 Substack and Medium entries have `content_status` `full` or `excerpt`. Patreon
-and FX Empire entries are metadata-only and always have `content_status`
+entries are metadata-only and always have `content_status`
 `registry`, `wordcount` `0`, no republished body, and no body-revision
 provenance fields.
 
@@ -274,7 +274,7 @@ The manifest contains exactly:
 | `dataset_version` | SHA-256 string | Exact validated snapshot checksum |
 | `generated_at` | UTC timestamp string | Snapshot check time; validated against future skew and a 16-hour freshness policy |
 | `article_count` | non-negative integer | Equals the length of `articles_index.json` |
-| `source_counts` | object | Exact count for all four sources; every count is greater than zero in a deployable release |
+| `source_counts` | object | Exact count for all three sources; every count is greater than zero in a deployable release |
 | `family_counts` | object | Count for each of the seven allowed families |
 | `endpoints` | string array | Complete sorted list of all six project-relative `data/` paths |
 
@@ -381,11 +381,11 @@ event reaction, named-firm mechanics, then narrow context fallbacks for career,
 model critique, and market structure. Everything else is `other`. It does not
 emit a probability or confidence score and must not be interpreted as one.
 
-## Four-source archive and registry policy
+## Three-source archive and registry policy
 
 Substack and Medium provide the content-bearing archive. Cross-posts are
 collapsed conservatively and represented through `alternate_urls`. Patreon and
-FX Empire extend catalogue coverage through public metadata registries:
+Patreon extends catalogue coverage through a public metadata registry:
 
 - `patreon_registry.json` rows contain exactly `source_id`, `title`, `url`,
   `post_date`, and `access`. `access` is only `public` or `paid`, based on what
@@ -393,18 +393,12 @@ FX Empire extend catalogue coverage through public metadata registries:
   pledge threshold, engagement count, subscriber count, or revenue field. A
   failed refresh retains a previously validated complete cache; without one it
   fails closed.
-- `fxempire_registry.json` is manually maintained because it is a byline
-  registry. Rows contain exactly `source_id`, `title`, `url`, and `post_date`.
-  To update it, add the canonical FX Empire article URL, its numeric URL suffix
-  as `source_id`, the public title, and ISO publication date; keep newest-first
-  order, then run the full tests and tracked-data validation before publishing.
-
 Registry twins are matched to content-bearing entries only by normalized title
 within seven days, a strict title-similarity threshold, or an explicit reviewed
 decision in `registry_crosslink_overrides.json`. Ambiguity retains a distinct
 metadata row rather than silently merging it. Source preference is Substack,
-then Medium, Patreon, and FX Empire; displaced or unmatched records remain in
-the catalogue. No Patreon or FX Empire body is scraped or republished.
+then Medium, then Patreon; displaced or unmatched records remain in the
+catalogue. No Patreon body is scraped or republished.
 
 ## Share cards and article stubs
 

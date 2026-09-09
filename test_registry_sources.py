@@ -35,7 +35,7 @@ def base_post(slug='a-market-making-study', title='A Market-Making Study',
 
 
 class RegistrySourcesTests(unittest.TestCase):
-    def test_fx_url_sections_match_deployable_snapshot_validation(self):
+    def test_withdrawn_fx_registry_and_urls_are_rejected(self):
         for section in ('forecasts', 'news', 'education'):
             with self.subTest(section=section):
                 row = {
@@ -47,13 +47,10 @@ class RegistrySourcesTests(unittest.TestCase):
                     ),
                     'post_date': '2026-07-20',
                 }
-                validated = registry_sources.validate_registry(
-                    [row], 'fxempire',
-                )
-                self.assertEqual(
-                    canonical_url_identity('fxempire', validated[0]['url']),
-                    row['source_id'],
-                )
+                with self.assertRaisesRegex(ValueError, 'unsupported registry source'):
+                    registry_sources.validate_registry([row], 'fxempire')
+                with self.assertRaisesRegex(ValueError, 'invalid source'):
+                    canonical_url_identity('fxempire', row['url'])
 
     def test_registry_rejects_non_contract_and_noncanonical_fields(self):
         row = patreon_row()
@@ -145,7 +142,7 @@ class RegistrySourcesTests(unittest.TestCase):
             retained['alternate_urls']['substack'], canonical['url'],
         )
 
-    def test_fx_can_crosslink_to_an_earlier_patreon_registry_article(self):
+    def test_withdrawn_fx_cannot_be_crosslinked_into_owned_publications(self):
         patreon = registry_sources.registry_to_post(
             patreon_row(title='The Same Published Analysis'), 'patreon',
         )
@@ -158,12 +155,8 @@ class RegistrySourcesTests(unittest.TestCase):
             ),
             'post_date': '2026-07-20',
         }
-        merged, report = registry_sources.crosslink_registry(
-            [patreon], [fx], 'fxempire', [],
-        )
-        self.assertEqual(len(merged), 1)
-        self.assertEqual(merged[0]['alternate_urls']['fxempire'], fx['url'])
-        self.assertEqual(report[0]['target'], f"patreon:{patreon['slug']}")
+        with self.assertRaisesRegex(ValueError, 'unsupported registry source'):
+            registry_sources.crosslink_registry([patreon], [fx], 'fxempire', [])
 
     def test_override_file_is_versioned_and_validated(self):
         payload = {
