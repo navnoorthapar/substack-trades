@@ -1,5 +1,27 @@
 [
   {
+    "source": "patreon",
+    "source_id": "169113785",
+    "slug": "reading-banks-as-169113785",
+    "title": "Reading a Bank's Own Capital Math as a Risk-Appetite Signal: the Goldman VaR Screen",
+    "subtitle": "",
+    "post_date": "2026-09-10",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/reading-banks-as-169113785",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "substack",
     "source_id": "coinbase-and-cme-both-just-reopened",
     "slug": "coinbase-and-cme-both-just-reopened",
