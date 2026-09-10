@@ -1031,6 +1031,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="nrt-article-catalog-sha256" content="__ARTICLE_CATALOG_SHA256__">
 <meta name="nrt-brief-archive-sha256" content="__BRIEF_ARCHIVE_SHA256__">
 <meta name="nrt-observation-archive-sha256" content="__OBSERVATION_ARCHIVE_SHA256__">
+<link rel="preload" as="fetch" href="article_catalog.json?v=__DATA_CHECKSUM__" crossorigin="anonymous">
 <title>Navnoor Research Archive — Original Markets Research</title>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Navnoor Research Archive","url":"https://navnoorthapar.github.io/substack-trades/","description":"Original markets research with source-linked passages, publication provenance, and direct access to complete subscriber notes.","applicationCategory":"FinanceApplication","operatingSystem":"Any","isAccessibleForFree":true,"author":{"@type":"Person","name":"Navnoor Bawa","url":"https://medium.com/@navnoorbawa"}}
@@ -1230,7 +1231,7 @@ a{color:var(--accent)}
 
 /* Global command header */
 .app-header{
-  height:var(--header-h);display:grid;grid-template-columns:minmax(250px,330px) minmax(300px,680px) minmax(340px,1fr);
+  height:var(--header-h);display:grid;grid-template-columns:minmax(250px,330px) minmax(220px,1fr) auto;
   align-items:center;gap:28px;padding:0 22px;border-bottom:1px solid var(--line);
   background:var(--surface-1);position:relative;z-index:50
 }
@@ -1252,15 +1253,15 @@ a{color:var(--accent)}
 #search:focus-visible{outline:0;box-shadow:inset 0 -2px var(--focus)}
 .search-key{position:absolute;right:4px;top:50%;transform:translateY(-50%);font:10px var(--mono);color:var(--text-muted);border:1px solid var(--line-strong);border-radius:0;padding:2px 6px}
 .header-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
-.freshness{display:flex;align-items:center;gap:7px;max-width:350px;overflow:hidden;color:var(--text-secondary);font:10px var(--mono);white-space:nowrap;margin-right:4px}
+.freshness{display:flex;flex:none;align-items:center;gap:7px;max-width:350px;overflow:hidden;color:var(--text-secondary);font:10px var(--mono);white-space:nowrap;margin-right:4px}
 .freshness>span:last-child{overflow:hidden;text-overflow:ellipsis}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--text-muted);box-shadow:0 0 0 3px var(--surface-3)}
+.status-dot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--text-muted);box-shadow:0 0 0 3px var(--surface-3)}
 .status-dot.fresh{background:var(--positive);box-shadow:0 0 0 3px var(--positive-soft)}
 .status-dot.degraded{border-radius:1px;background:var(--warning);box-shadow:0 0 0 3px var(--warning-soft);transform:rotate(45deg)}
 .status-dot.stale{border-radius:1px;background:var(--negative);box-shadow:0 0 0 3px var(--negative-soft)}
 .freshness-separator{color:var(--text-muted)}
 .utility-button{
-  min-height:36px;padding:0 11px;border:1px solid var(--control-line);border-radius:0;
+  flex:none;white-space:nowrap;min-height:36px;padding:0 11px;border:1px solid var(--control-line);border-radius:0;
   background:transparent;color:var(--text-secondary);cursor:pointer
 }
 .utility-button:hover{background:var(--surface-3);color:var(--text);border-color:var(--control-line-hover)}
@@ -2863,6 +2864,10 @@ noscript{display:block}
   body.density-compact .data-row,body.density-comfortable .data-row{min-height:unset}
 }
 
+@media(max-width:1600px){
+  .freshness{width:auto;max-width:86px;justify-content:center;margin:0;overflow:visible}
+  .freshness-separator,.freshness>span:last-child{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+}
 @media(max-width:1240px){
   .workspace{grid-template-columns:var(--rail-w) minmax(0,1fr)}
   .inspector{
@@ -2874,13 +2879,14 @@ noscript{display:block}
   .inspector-hidden .workspace{grid-template-columns:var(--rail-w) minmax(0,1fr)}
   .inspector-hidden .inspector{display:block}
 }
+@media(max-width:1100px){
+  .header-library,#method-button{display:none}
+}
 @media(max-width:1020px){
   .command-bar{flex-wrap:wrap}
   .app-header{grid-template-columns:auto minmax(220px,1fr) auto;gap:10px}
   .brand{min-width:0}
   .brand-sub{display:none}
-  .freshness{display:flex;width:auto;max-width:86px;justify-content:center;margin:0;overflow:visible}
-  .freshness-separator,.freshness>span:last-child{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .header-right{min-width:0}
   .workspace{grid-template-columns:minmax(0,1fr)}
   .filter-rail{
@@ -3298,9 +3304,9 @@ noscript{display:block}
   <div class="header-right">
     <div class="freshness" id="freshness-summary"><span class="status-dot" id="freshness-dot" aria-hidden="true"></span><span id="freshness-state">Unknown</span><span class="freshness-separator" aria-hidden="true">·</span><span id="freshness-label">research status loading</span></div>
     <button class="utility-button header-library" type="button" data-view="research">Archive</button>
-    <button class="utility-button" id="palette-button" type="button" aria-label="Open command palette" aria-keyshortcuts="Control+K Meta+K">More <span class="utility-key" aria-hidden="true">⌘K</span></button>
+    <button class="utility-button" id="palette-button" type="button" aria-label="More ⌘K: open command palette" aria-keyshortcuts="Control+K Meta+K">More <span class="utility-key" aria-hidden="true">⌘K</span></button>
     <button class="utility-button" id="method-button" type="button" aria-label="Show data methodology">Method</button>
-    <button class="utility-button" id="theme-button" type="button" aria-label="Switch to dark theme">Dark mode</button>
+    <button class="utility-button" id="theme-button" type="button" aria-label="Dark mode">Dark mode</button>
     <button class="utility-button" id="shortcut-button" type="button" aria-label="Show keyboard shortcuts" aria-keyshortcuts="Alt+Shift+?">?</button>
     <button class="utility-button" id="mobile-filter-button" type="button" aria-expanded="false" aria-controls="filter-rail">Filters</button>
   </div>
@@ -4462,7 +4468,7 @@ function premiumAccessMarkup(article,context) {
     '<div class="premium-access-head"><div><div class="premium-access-kicker">' + escapeHtml(kicker) + '</div><' + headingTag + ' id="' + labelId + '">Unlock the full research</' + headingTag + '></div><span class="premium-access-state">Subscriber research</span></div>' +
     '<p class="premium-access-copy">' + escapeHtml(boundaryCopy) + '</p>' +
     framingMarkup +
-    '<div class="premium-access-actions"><a class="primary-action premium-primary" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="Get full Navnoor Research access (opens in a new tab)">Get full research access ↗</a><a class="secondary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Read the full note on Substack (opens in a new tab)">Already subscribed? Read the note ↗</a><p class="premium-access-note">Pricing and terms are shown on Substack. This archive sends no search, filter, or local-review data.</p></div></section>';
+    '<div class="premium-access-actions"><a class="primary-action premium-primary" href="' + escapeHtml(SUBSCRIPTION_URL) + '" target="_blank" rel="noopener noreferrer" aria-label="Get full research access (opens in a new tab)">Get full research access ↗</a><a class="secondary-action" href="' + escapeHtml(safeUrl(article.url)) + '" target="_blank" rel="noopener noreferrer" aria-label="Already subscribed? Read the note on Substack (opens in a new tab)">Already subscribed? Read the note ↗</a><p class="premium-access-note">Pricing and terms are shown on Substack. This archive sends no search, filter, or local-review data.</p></div></section>';
 }
 function articleEvidence(article) {
   return briefSection(article,'evidence') || (article && article.brief && article.brief.fallback_evidence) || null;
@@ -6009,7 +6015,7 @@ function threadComparisonMarkup(current,topic) {
     const loading = Boolean(threadComparisonRequest && threadComparisonRequest.articleId === prior.id && threadComparisonRequest.selectedId === current.id && threadComparisonRequest.topic === state.threadTopic);
     exactMarkup = '<div class="thread-load-boundary"' + (loading ? ' aria-busy="true"' : '') + '><div><strong>' + (loading ? 'Validating exact prior article record…' : 'Exact prior passage is deferred') + '</strong><p>' + (loading ? 'The release-bound archive is loading and its checksum and record identities will be verified before display.' : 'Load the release-bound prior article record only when you want a side-by-side passage and numeric-token comparison.') + '</p></div><button class="secondary-action" type="button" data-thread-load="' + prior.id + '"' + (loading ? ' disabled aria-busy="true"' : '') + '>' + (loading ? 'Loading exact comparison…' : prior._briefLoadFailed ? 'Retry exact prior article record' : 'Load exact passage comparison') + '</button></div>';
   }
-  return '<section class="thread-comparison" aria-labelledby="thread-comparison-title"><div class="thread-subhead"><div><span>Capture comparison with preceding indexed publication</span><h3 id="thread-comparison-title">' + escapeHtml(sameDayUnordered ? 'Adjacent same-day capture; order unavailable' : 'Prior-to-current capture comparison') + '</h3></div><b>' + number(changedCount) + ' role field' + (changedCount === 1 ? '' : 's') + ' differ</b></div><div class="thread-role-table" role="table" aria-label="Captured research roles in prior and current publications"><div class="thread-role-row head" role="row"><span role="columnheader">Research role</span><i role="columnheader">Prior</i><i role="columnheader">Current</i><b role="columnheader">Coverage comparison</b></div>' + roleRows + '</div>' + exactMarkup + '<p class="thread-boundary compact">A field difference means the extraction rules captured different research roles in two publications. It does not establish a changed view, contradiction, conviction, or portfolio action.</p></section>';
+  return '<section class="thread-comparison" aria-labelledby="thread-comparison-title"><div class="thread-subhead"><div><span>Capture comparison with preceding indexed publication</span><h3 id="thread-comparison-title">' + escapeHtml(sameDayUnordered ? 'Adjacent same-day capture; order unavailable' : 'Prior-to-current capture comparison') + '</h3></div><b>' + number(changedCount) + ' role field' + (changedCount === 1 ? ' differs' : 's differ') + '</b></div><div class="thread-role-table" role="table" aria-label="Captured research roles in prior and current publications"><div class="thread-role-row head" role="row"><span role="columnheader">Research role</span><i role="columnheader">Prior</i><i role="columnheader">Current</i><b role="columnheader">Coverage comparison</b></div>' + roleRows + '</div>' + exactMarkup + '<p class="thread-boundary compact">A field difference means the extraction rules captured different research roles in two publications. It does not establish a changed view, contradiction, conviction, or portfolio action.</p></section>';
 }
 function researchThreadMarkup(article) {
   const row = threadArticleRow(article);
@@ -7528,8 +7534,7 @@ function deskLatestArticleMarkup(article,index) {
   const checkpointCount = Number(article.brief_features && article.brief_features.checkpoint_count || 0);
   if (checkpointCount) signals.push(number(checkpointCount) + ' cited checkpoint' + (checkpointCount === 1 ? '' : 's'));
   return '<button class="desk-latest-card' + (index === 0 ? ' featured' : '') +
-    '" type="button" data-desk-article="' + escapeHtml(article.id) + '" aria-label="Open article record: ' +
-    escapeHtml(article.title) + '"><div class="desk-latest-meta"><time datetime="' +
+    '" type="button" data-desk-article="' + escapeHtml(article.id) + '"><div class="desk-latest-meta"><time datetime="' +
     escapeHtml(article.date) + '">' + escapeHtml(formatDate(article.date)) + '</time><span>' +
     escapeHtml(sourceLabel(article.source)) + '</span><span class="desk-access-label">' +
     escapeHtml(publicationAccessLabel(article)) + '</span></div><div class="desk-latest-copy"><h3>' +
@@ -7667,7 +7672,7 @@ function deskLandingMarkup() {
     '<h1 id="desk-landing-title">Independent research.<br>Built for closer scrutiny.</h1>' +
     '<p>Market structure, positioning, and trade mechanics—with the published argument and its limits in view.</p>' +
     '<div class="desk-hero-actions"><a class="primary-action" href="' + escapeHtml(SUBSCRIPTION_URL) +
-    '" target="_blank" rel="noopener noreferrer" aria-label="Get full Navnoor Research access (opens in a new tab)"><span class="desk-cta-full">Get full research access</span><span class="desk-cta-short">Get full access</span> <span aria-hidden="true">↗</span></a>' +
+    '" target="_blank" rel="noopener noreferrer"><span class="desk-cta-full">Get full research access</span><span class="desk-cta-short">Get full access</span> <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>' +
     (latest ? '<button class="secondary-action" type="button" data-desk-article="' +
     escapeHtml(latest.id) + '" aria-label="Open the latest note"><span class="desk-cta-full">Open the latest note</span><span class="desk-cta-short">Latest note</span></button>' : '') + '</div>' +
     '<ul class="desk-value-strip" aria-label="Research workflow strengths"><li>Source-linked passages</li><li>Publication history</li><li>Local review</li></ul></div>' +
@@ -9776,7 +9781,7 @@ function syncThemeButton(theme) {
   const button = document.getElementById('theme-button');
   const target = theme === 'light' ? 'dark' : 'light';
   button.textContent = target === 'dark' ? 'Dark mode' : 'Light mode';
-  button.setAttribute('aria-label','Switch to ' + target + ' theme');
+  button.setAttribute('aria-label',button.textContent);
   button.dataset.activeTheme = theme;
 }
 function applyTheme(next,persist) {

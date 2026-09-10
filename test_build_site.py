@@ -697,7 +697,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
             self.html,
         )
         self.assertIn(
-            'id="theme-button" type="button" aria-label="Switch to dark theme">Dark mode</button>',
+            'id="theme-button" type="button" aria-label="Dark mode">Dark mode</button>',
             self.html,
         )
         self.assertNotRegex(
@@ -840,7 +840,7 @@ class InstitutionalTerminalBuildTests(unittest.TestCase):
         self.assertLess(landing.index('desk-latest-panel'), landing.index('desk-pulse-panel'))
         self.assertIn('target="_blank" rel="noopener noreferrer"', landing)
         self.assertIn(
-            'aria-label="Get full Navnoor Research access (opens in a new tab)"',
+            '<span class="sr-only"> (opens in a new tab)</span>',
             landing,
         )
         self.assertNotIn('id="structure-question-input"', landing)
@@ -3187,6 +3187,12 @@ for (const [url,source] of rejected) {
         self.assertNotRegex(self.html, r'state\.limit\s*=\s*Math\.ceil\s*\(')
 
     def test_external_article_wire_payload_is_compact_and_losslessly_hydrated(self):
+        self.assertIn(
+            '<link rel="preload" as="fetch" href="article_catalog.json?v='
+            + self.article_catalog['data_checksum']
+            + '" crossorigin="anonymous">',
+            self.html,
+        )
         always_derived = {
             'date',
             'publication_precision',
@@ -3646,7 +3652,7 @@ for (const [url,source] of rejected) {
         self.assertIn("window.matchMedia('(prefers-color-scheme: dark)')", self.html)
         self.assertIn("localStorage.setItem('nrt-theme-revision',themeRevision)", self.html)
         self.assertGreaterEqual(self.html.count("getElementById('theme-color').content"), 2)
-        self.assertIn("button.setAttribute('aria-label','Switch to '", self.html)
+        self.assertIn("button.setAttribute('aria-label',button.textContent)", self.html)
         self.assertIn("explicit !== 'light' && explicit !== 'dark'", self.html)
         self.assertIn('id="freshness-dot" aria-hidden="true"', self.html)
         self.assertIn('id="freshness-state">Unknown</span>', self.html)
@@ -3658,7 +3664,7 @@ for (const [url,source] of rejected) {
         self.assertIn('const freshnessStatus = freshness.status;', self.html)
         self.assertIn("document.getElementById('freshness-state').textContent = freshnessStatus", self.html)
         self.assertIn("freshnessSummary.setAttribute('aria-label',freshnessStatus", self.html)
-        mobile_start = self.html.index('@media(max-width:1020px)')
+        mobile_start = self.html.index('@media(max-width:1600px)')
         mobile_end = self.html.index('@media(max-width:759px)', mobile_start)
         mobile_css = self.html[mobile_start:mobile_end]
         self.assertNotIn('#freshness-state', mobile_css)
