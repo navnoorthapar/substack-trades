@@ -21,6 +21,12 @@ Production: <https://navnoorthapar.github.io/substack-trades/>
 
 ## 2. Preflight gate
 
+Use the intended Python on `PATH`, or set `PYTHON_BIN` to its executable when
+running the shell entry points. Refresh, status, and the release gate honor
+that selection. They do not prefer Apple's `/usr/bin/python3` merely because
+the launcher exists; its developer-tool installation may not support the
+architecture of the calling Git process.
+
 Run from a clean `main` worktree:
 
 ```bash

@@ -97,13 +97,9 @@ else
     refresh_issue=1
 fi
 
-if [ -n "${PYTHON_BIN:-}" ]; then
-    SOURCE_HEALTH_PYTHON=$PYTHON_BIN
-elif [ -x /usr/bin/python3 ]; then
-    SOURCE_HEALTH_PYTHON=/usr/bin/python3
-else
-    SOURCE_HEALTH_PYTHON=$(command -v python3 || true)
-fi
+# Resolve the configured command through the caller's runtime environment.
+# Apple's /usr/bin launcher can exist but fail under a translated Git process.
+SOURCE_HEALTH_PYTHON=$(command -v "${PYTHON_BIN:-python3}" || true)
 if [ -z "$SOURCE_HEALTH_PYTHON" ]; then
     echo "Source health: unavailable (Python 3 not found)"
     ok=0

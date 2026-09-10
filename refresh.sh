@@ -31,13 +31,9 @@ if [ "$REFRESH_BUSY_EXIT_CODE_VALUE" != "0" ] \
     exit 64
 fi
 
-if [ -n "${PYTHON_BIN:-}" ]; then
-    PYTHON=$PYTHON_BIN
-elif [ -x /usr/bin/python3 ]; then
-    PYTHON=/usr/bin/python3
-else
-    PYTHON=$(command -v python3)
-fi
+# Match the release gate and status command instead of overriding a working
+# PATH interpreter with Apple's architecture-dependent /usr/bin launcher.
+PYTHON=$(command -v "${PYTHON_BIN:-python3}" || true)
 
 if [ ! -x "$PYTHON" ]; then
     echo "No working Python 3 interpreter found." >&2

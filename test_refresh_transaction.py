@@ -523,6 +523,22 @@ class RefreshTransactionTests(unittest.TestCase):
                     result.stderr,
                 )
 
+    def test_refresh_uses_the_path_interpreter_without_an_override(self):
+        self.environment.pop('PYTHON_BIN')
+        result = self.run_refresh('treasury')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('keeping the tracked curve', result.stderr)
+        self.assertIn('\npush origin main', '\n' + self.git_log())
+
+    def test_refresh_rejects_a_missing_explicit_interpreter_before_mutation(self):
+        self.environment['PYTHON_BIN'] = '/nonexistent/nrt-test-python'
+        result = self.run_refresh('')
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn('No working Python 3 interpreter found.', result.stderr)
+        for name, original in self.before.items():
+            self.assertEqual((self.repo / name).read_bytes(), original)
+        self.assertFalse((self.base / 'git.log').exists())
+
     def test_a_treasury_outage_keeps_the_tracked_curve_and_still_publishes(self):
         """A published rate series is not this pipeline's to produce.
 

@@ -4,6 +4,7 @@ import plistlib
 import re
 import stat
 import subprocess
+import sys
 import tempfile
 import time
 import unittest
@@ -54,6 +55,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
             watchdog_record=_UNSET,
             remote_main=_UNSET,
             source_manifest=_UNSET,
+            python_bin=None,
     ):
         if remote_main is _UNSET:
             remote_main = 'a' * 40
@@ -119,8 +121,21 @@ class DeploymentConfigurationTests(unittest.TestCase):
             )
             gh.chmod(0o755)
 
+            python = fake_bin / 'python3'
+            python.write_text(
+                '#!/bin/sh\n'
+                'printf "Status test interpreter selected\\n"\n'
+                'exec "$STATUS_TEST_PYTHON" "$@"\n',
+                encoding='utf-8',
+            )
+            python.chmod(0o755)
+
             environment = os.environ.copy()
+            environment.pop('PYTHON_BIN', None)
+            if python_bin is not None:
+                environment['PYTHON_BIN'] = python_bin
             environment.update({
+                'STATUS_TEST_PYTHON': sys.executable,
                 'FAKE_LAUNCHCTL_OUTPUT': launchctl_output,
                 'FAKE_REMOTE_MAIN': remote_main,
                 'FAKE_RUN_RECORD': run_record,
@@ -145,6 +160,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'state = not running\nruns = 3\nlast exit code = 0',
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('Status test interpreter selected', result.stdout)
         self.assertIn('Updater: loaded', result.stdout)
         self.assertIn('Updater activity: idle (not running)', result.stdout)
         self.assertIn('Updater last exit: successful', result.stdout)
@@ -156,6 +172,24 @@ class DeploymentConfigurationTests(unittest.TestCase):
             'Latest watchdog: successful for current main (run 4342)',
             result.stdout,
         )
+
+    def test_automation_status_honors_an_explicit_python_interpreter(self):
+        result = self.run_automation_status(
+            'state = not running\nruns = 3\nlast exit code = 0',
+            python_bin=sys.executable,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('Source health: all publication sources are healthy.', result.stdout)
+        self.assertNotIn('Status test interpreter selected', result.stdout)
+
+    def test_automation_status_rejects_a_missing_explicit_interpreter(self):
+        result = self.run_automation_status(
+            'state = not running\nruns = 3\nlast exit code = 0',
+            python_bin='/nonexistent/nrt-test-python',
+        )
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn('Source health: unavailable (Python 3 not found)', result.stdout)
+        self.assertNotIn('Status test interpreter selected', result.stdout)
 
     def test_automation_status_requires_a_settled_current_watchdog(self):
         current = 'a' * 40
