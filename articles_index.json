@@ -42,28 +42,22 @@
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "0769bd23615c814e4d3299cad0fe44ba6377367c0b5ae67a1b4592bce6a93ec5",
-      "lead": {
-        "text": "Four US banks, JPMorgan Chase Bank NA, Citibank NA, Bank of America NA and Goldman Sachs Bank USA, held 79.1% of the entire US banking system’s derivatives book at the end of Q1 2026, down from 87.1% a year earlier, while the total book itself exploded 42.5% to $296.5 trillion.",
-        "start": 0,
-        "end": 278,
-        "sha256": "0769bd23615c814e4d3299cad0fe44ba6377367c0b5ae67a1b4592bce6a93ec5",
-        "truncated": false
-      },
+      "body_sha256": "1bd75163441fcb6ba10d8a803321a9e8dbd534bab7692b818107d4fb755aac01",
+      "lead": null,
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T13:35:19.316Z",
-    "observed_source_updated_at": "2026-09-10T13:35:19.316Z",
+    "source_updated_at": "2026-09-12T09:22:26.399Z",
+    "observed_source_updated_at": "2026-09-12T09:22:26.399Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
-      "text": "Four US banks, JPMorgan Chase Bank NA, Citibank NA, Bank of America NA and Goldman Sachs Bank USA, held 79.1% of the entire US banking system’s derivatives book at the end of Q1 2026, down from 87.1% a year earlier, while the total book itself exploded 42.5% to $296.5 trillion.",
-      "character_count": 278,
-      "body_sha256": "0769bd23615c814e4d3299cad0fe44ba6377367c0b5ae67a1b4592bce6a93ec5"
+      "text": "Watch the video (10:54): Why Morgan Stanley’s Derivatives Book Jumped $55 Trillion. The video includes corrected bank rankings from the OCC’s Q1 2026 tables.",
+      "character_count": 157,
+      "body_sha256": "1bd75163441fcb6ba10d8a803321a9e8dbd534bab7692b818107d4fb755aac01"
     }
   },
   {
