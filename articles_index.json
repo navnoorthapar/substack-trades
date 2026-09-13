@@ -1,6 +1,36 @@
 [
   {
     "source": "medium",
+    "source_id": "6cf9dbe92562",
+    "slug": "morgan-stanley-invented-pairs-trading-in-1987-d-e-shaw-and-ed-thorp-proved-it-wasnt-the-point-6cf9dbe92562",
+    "title": "Morgan Stanley Invented Pairs Trading in 1987. D.E. Shaw and Ed Thorp Proved It Wasn’t the Point.",
+    "subtitle": "A 2006 paper found the edge fell 67 to 42 basis points a month. A 2024 Yale rerun found it hadn’t gone to zero.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-13T06:48:54Z",
+    "url": "https://medium.com/@navnoorbawa/morgan-stanley-invented-pairs-trading-in-1987-d-e-shaw-and-ed-thorp-proved-it-wasnt-the-point-6cf9dbe92562",
+    "audience": "unknown",
+    "wordcount": 28,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "13dd818c38893b6a74e570143a74a9b705c6c71030a7936a45b5a30efc0d16da",
+      "lead": {
+        "text": "A 2006 paper found the edge fell 67 to 42 basis points a month. A 2024 Yale rerun found it hadn’t gone to zero.",
+        "start": 0,
+        "end": 111,
+        "sha256": "7f153557f1025db25384c6b0fb67bb8e31fd51aed08b1c9703300db35d88d458",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-13T06:48:54Z",
+    "observed_source_updated_at": "2026-09-13T06:48:54Z"
+  },
+  {
+    "source": "medium",
     "source_id": "4d0a9e944768",
     "slug": "goldmans-quant-fund-needed-a-3b-rescue-in-2007-d-e-shaw-s-didn-t-need-one-4d0a9e944768",
     "title": "Goldman’s Quant Fund Needed a $3B Rescue in 2007. D.E. Shaw’s Didn’t Need One.",
@@ -917,9 +947,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-08-31T15:02:21Z",
-    "observed_source_updated_at": "2026-08-31T15:02:21Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
