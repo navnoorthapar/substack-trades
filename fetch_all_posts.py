@@ -505,7 +505,17 @@ def conflicting_current_list_surface(post, previous):
     if not canonical_surface:
         return ''
     if previous.get('content_status') == 'excerpt':
-        # An excerpt is covered only by the exact canonical surface. A longer
+        # A legacy capture can exceed the bounded list preview without proving
+        # full coverage. If the current HTML supplies every exact cached byte,
+        # the shorter preview does not disprove that current partial capture.
+        current_html = post.get('body_html')
+        if (
+            isinstance(current_html, str)
+            and current_html.strip()
+            and strip_html(current_html) == previous_body
+        ):
+            return ''
+        # Otherwise an excerpt needs the exact canonical surface. A longer
         # cached capture can share the canonical prefix while containing text
         # the current anonymous list no longer proves; collapse it once rather
         # than continuing to label that stale tail current.
@@ -733,6 +743,35 @@ def resolve_post_body(post, previous=None, detail_fetcher=None):
                 'fallback',
                 f"{post.get('slug', '')}: full current body could not be verified; "
                 f'preserved the prior exact body ({type(exc).__name__})',
+            )
+        if (
+            previous_excerpt(previous)
+            and isinstance(source_updated_at, str)
+            and source_updated_at
+            and previous.get('source_updated_at') != source_updated_at
+            and isinstance(body_html, str)
+            and body_html.strip()
+            and canonical_list_surface
+            and list_surfaces_compatible
+        ):
+            # An observed timestamp alone cannot relabel an older capture.
+            # Current source HTML can independently prove an exact partial
+            # capture, even when its declared word count prevents full status.
+            current_text = strip_html(body_html)
+            exact_prior_capture = current_text == previous['body_text']
+            excerpt = current_text if exact_prior_capture else canonical_list_surface
+            return (
+                post_record(
+                    post,
+                    excerpt,
+                    len(body_html) if exact_prior_capture else 0,
+                    'excerpt',
+                    'source-excerpt',
+                ),
+                'excerpt',
+                f"{post.get('slug', '')}: verified the current exact source "
+                'excerpt from list HTML without claiming full-body coverage '
+                f'({type(exc).__name__})',
             )
         if previous_excerpt(previous):
             return (

@@ -755,6 +755,61 @@ class SubstackNullableBodyTests(unittest.TestCase):
             'complete_api_degraded_body_provenance',
         )
 
+    def test_current_html_reverifies_exact_legacy_partial_capture_then_stabilizes(self):
+        for prior_revision in ('', '2026-07-26T12:00:00.000Z'):
+            with self.subTest(prior_revision=prior_revision):
+                previous = self.cached_record(source_updated_at=prior_revision)
+                previous['body_text'] += ' ' + previous['body_text']
+                previous.update({
+                    'wordcount': 0,
+                    'content_status': 'excerpt',
+                    'body_revision_status': 'prior' if prior_revision else 'unverified',
+                    'observed_source_updated_at': '2026-07-27T12:00:00.000Z',
+                })
+                self.assertGreater(len(previous['body_text']), fetch_all_posts.MAX_EXCERPT_CHARS)
+                self.write_previous([previous])
+                listed = self.list_post(
+                    body_html='<p>' + previous['body_text'] + '</p>',
+                    truncated_body_text=previous['body_text'][:100] + '…',
+                )
+                listed['wordcount'] = 500
+                self.run_fetch([listed], urllib.error.URLError('detail unavailable'))
+                stored = self.read_json(self.posts_path)[0]
+                self.assertEqual(stored['body_text'], previous['body_text'])
+                self.assertEqual(stored['source_updated_at'], listed['updated_at'])
+                self.assertEqual(stored['body_revision_status'], 'current')
+                self.assertEqual(stored['content_status'], 'excerpt')
+                self.assertEqual(stored['wordcount'], 0)
+                self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
+
+                self.write_previous([stored])
+                self.run_fetch([listed], urllib.error.URLError('detail still unavailable'))
+                stable = self.read_json(self.posts_path)[0]
+                self.assertEqual(stable['body_text'], previous['body_text'])
+                self.assertEqual(stable['content_status'], 'excerpt')
+                self.assertEqual(self.read_json(self.status_path)['status'], 'ok')
+
+    def test_current_html_cannot_relabel_a_different_prior_capture(self):
+        previous = self.cached_record(source_updated_at='')
+        previous.update({'wordcount': 0, 'content_status': 'excerpt'})
+        self.write_previous([previous])
+        current = 'Current exact authored passage. ' * 80
+        listed = self.list_post(body_html='<p>' + current + '</p>')
+        listed['wordcount'] = 5000
+        self.run_fetch([listed], urllib.error.URLError('detail unavailable'))
+        stored = self.read_json(self.posts_path)[0]
+        expected = fetch_all_posts.bounded_excerpt(current)
+        self.assertEqual(stored['body_text'], expected)
+        self.assertNotEqual(stored['body_text'], previous['body_text'])
+        self.assertEqual(stored['source_updated_at'], listed['updated_at'])
+        self.assertEqual(stored['body_revision_status'], 'current')
+        self.assertEqual(stored['content_status'], 'excerpt')
+        self.assertEqual(self.read_json(self.status_path)['status'], 'degraded')
+        self.write_previous([stored])
+        self.run_fetch([listed], urllib.error.URLError('detail unavailable'))
+        self.assertEqual(self.read_json(self.posts_path)[0]['body_text'], expected)
+        self.assertEqual(self.read_json(self.status_path)['status'], 'ok')
+
     def test_access_limited_excerpt_cache_can_avoid_public_detail_fetch(self):
         previous = self.cached_record()
         previous.update({
