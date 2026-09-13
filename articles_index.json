@@ -7519,12 +7519,12 @@
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "054a0a0fd0f343df44de5f2749882abe889320990fb9b9b6ff2f48506d72b045",
+      "body_sha256": "d31ce28c2693d12a037f707387a9c8175a9c6a27c4c45abd0b01a341e1d4f250",
       "lead": {
-        "text": "Fisher Information sets a mathematical floor on the variance of every parameter a quant fund estimates. The Cramér-Rao bound makes that floor a tradable boundary: cross it, and your reported Sharpe ratio is statistical noise, your calibrated volatility surface is unidentifiable, and (as of January 2025) the SEC will charge you ninety million dollars. Th…",
+        "text": "Fisher Information sets a mathematical floor on the variance of every parameter a quant fund estimates. The Cramér-Rao bound makes that floor a tradable boundary: cross it, and your reported Sharpe ratio is statistical noise, your calibrated volatility surface is unidentifiable, and (as of January 2025) the SEC will charge you ninety million dollars. The clearest primary-source evidence comes from the SEC’s own enforcement orders, NBER working papers, and academic-industry crossover research from Two Sigma, AlphaSimplex, Guggenheim, and Citigroup.",
         "start": 0,
-        "end": 356,
-        "sha256": "054a0a0fd0f343df44de5f2749882abe889320990fb9b9b6ff2f48506d72b045",
+        "end": 553,
+        "sha256": "55dc64a802af20895892bbdf0f908845f65a3f754359b63072d87fd9e6bedf99",
         "truncated": false
       },
       "sections": [],
@@ -7532,8 +7532,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "prior",
-    "source_updated_at": "2026-08-16T06:53:41.581Z",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:36:35.917Z",
     "observed_source_updated_at": "2026-09-10T15:36:35.917Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-cram%C3%A9r-rao-bound-killed-ltcm-its-why-the-sec-just-fined-two-sigma-90m-54e47fbb0504"
@@ -8584,8 +8584,8 @@
       "checkpoints": []
     },
     "family": "event-reaction",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:36:55.245Z",
     "observed_source_updated_at": "2026-09-10T15:36:55.245Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/indias-oil-war-market-crisis-30-day-nifty-outlook-rbi-april-2026-mpc-decision-and-emergency-5370a3f4d03e"
@@ -8757,7 +8757,7 @@
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "f678e2cb5ed153603e6175b8eaf80942be80ed4e5bf8878de0c1359752e29312",
+      "body_sha256": "22bdfff6e456b20a2630b64b48ab3864f90c192097dcbaa9561f0341a2bf4e97",
       "lead": {
         "text": "What this article covers — and why it matters now: Three questions every portfolio manager is asking in March 2026: (1) What is the 30-day market outlook given the Iran war oil shock and Hormuz closure? (2) How will markets respond to the April 28–29 FOMC — Powell’s last scheduled meeting as chair — under an unresolved Warsh succession fight and a binary dot-plot outcome? (3) If forced redemptions hit, how do you liquidate all positions quickly without triggering a feedback loop that destroys more value than the redemption itself?",
         "start": 263,
@@ -8767,17 +8767,17 @@
       },
       "sections": [],
       "fallback_evidence": {
-        "text": "The short answers: The 30-day market outlook is not an oil trade — it is a leverage unwind trade expressed through energy prices, with record hedge fund gross leverage of 292.8% (Goldman Sachs prime brokerage, December 2025) sitting on top of a supply shock that has permanently repriced rate sensitivity to oil by a factor of three. The April FOMC is a dot-plot binary: one more participant shifting to “hold through 2026” pushes the median to zero cuts and reprices the entire front end.",
+        "text": "The short answers: The 30-day market outlook is not an oil trade — it is a leverage unwind trade expressed through energy prices, with record hedge fund gross leverage of 292.8% (Goldman Sachs prime brokerage, December 2025) sitting on top of a supply shock that has permanently repriced rate sensitivity to oil by a factor of three. The April FOMC is a dot-plot binary: one more participant…",
         "start": 801,
-        "end": 1290,
-        "sha256": "42b7a4e0c51d0844d2f78588d072d8f7ae4abe330a6163b3dbf58e7d295b1913",
-        "truncated": true
+        "end": 1193,
+        "sha256": "72e7834be4ed06f1cd591e568aceb70096ddf03fdb736397fa59a4b0929044dc",
+        "truncated": false
       },
       "checkpoints": []
     },
     "family": "event-reaction",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:36:59.457Z",
     "observed_source_updated_at": "2026-09-10T15:36:59.457Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/iran-war-oil-shock-292-8-hedge-fund-leverage-and-powells-last-fomc-a-deep-macro-framework-fo-03ddbd3980a0"
@@ -8868,8 +8868,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:37:03.211Z",
     "observed_source_updated_at": "2026-09-10T15:37:03.211Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-desert-playbook-how-hedge-funds-extracted-alpha-from-dubai-aed-peg-speculation-dubai-world-9fbfab056327"
@@ -9004,8 +9004,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:37:07.379Z",
     "observed_source_updated_at": "2026-09-10T15:37:07.379Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-index-fund-toll-booth-how-hedge-funds-systematically-extract-billions-from-passive-investors-89a8c6d199ba"
@@ -9309,8 +9309,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:37:19.425Z",
     "observed_source_updated_at": "2026-09-10T15:37:19.425Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-monetise-options-time-decay-theta-harvesting-the-volatility-risk-premium-insti-f85b987f2a79"
@@ -9537,8 +9537,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:37:27.012Z",
     "observed_source_updated_at": "2026-09-10T15:37:27.012Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/securities-class-action-settlements-the-15-billion-recovery-pool-79-of-hedge-funds-are-surrend-8500a78b1ca0"
@@ -11195,8 +11195,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:38:23.348Z",
     "observed_source_updated_at": "2026-09-10T15:38:23.348Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-36-souths-long-volatility-strategy-gained-35-in-early-2020-long-dated-options-negative-b6d116d94a1c"
@@ -13522,8 +13522,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:39:53.052Z",
     "observed_source_updated_at": "2026-09-10T15:39:53.052Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-30-in-the-first-days-of-2026-on-venezuelas-distressed-debt-39dc9462b600"
@@ -13647,8 +13647,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:39:58.813Z",
     "observed_source_updated_at": "2026-09-10T15:39:58.813Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/point72-delivered-19-returns-after-returning-3-5b-to-investors-45b47cd7fe5f"
@@ -13914,8 +13914,8 @@
       "checkpoints": []
     },
     "family": "career-structure",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:40:16.602Z",
     "observed_source_updated_at": "2026-09-10T15:40:16.602Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-millennium-citadel-point72-structure-pods-team-economics-behind-428b-multi-manager-4f532f76292a"
@@ -14251,8 +14251,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:40:34.037Z",
     "observed_source_updated_at": "2026-09-10T15:40:34.037Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-julian-robertsons-22b-hedge-fund-spawned-200-firms-38-he-seeded-directly-26a87aaab5ac"
@@ -14290,8 +14290,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:40:36.063Z",
     "observed_source_updated_at": "2026-09-10T15:40:36.063Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-generated-2-62-alpha-in-2024-0094c8cb7c40"
@@ -14356,8 +14356,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:40:39.872Z",
     "observed_source_updated_at": "2026-09-10T15:40:39.872Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-1-85-trillion-arbitrage-how-hedge-funds-profit-from-forward-mispricings-7a9609b8a26a"
@@ -14463,8 +14463,8 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:40:44.081Z",
     "observed_source_updated_at": "2026-09-10T15:40:44.081Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/why-renaissances-medallion-made-76-while-their-own-rief-lost-22-6-in-2020-1ed318548100"
@@ -14502,8 +14502,8 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:40:46.006Z",
     "observed_source_updated_at": "2026-09-10T15:40:46.006Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/millennium-managements-multi-strategy-trading-architecture-four-core-strategies-behind-14-bd576cbe38a5"
@@ -14594,8 +14594,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:40:50.127Z",
     "observed_source_updated_at": "2026-09-10T15:40:50.127Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-neutral-funds-returned-7-21-in-2024-most-were-accidentally-long-momentum-bb3b5f5c44c1"
@@ -14871,8 +14871,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:41:05.917Z",
     "observed_source_updated_at": "2026-09-10T15:41:05.917Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-really-trade-the-30-trillion-treasury-market-inside-the-basis-trade-that-has-e9ea55877c59"
@@ -14910,8 +14910,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:41:07.864Z",
     "observed_source_updated_at": "2026-09-10T15:41:07.864Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-making-in-derivatives-crushes-directional-hedge-fund-trading-a-20b-revenue-gap-a1f5d78e7fc9"
@@ -15195,8 +15195,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:41:21.768Z",
     "observed_source_updated_at": "2026-09-10T15:41:21.768Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-citibanks-trading-engine-how-event-driven-fx-architecture-and-systematic-execution-drive-e0496a6a11c8"
@@ -15261,8 +15261,8 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:41:23.613Z",
     "observed_source_updated_at": "2026-09-10T15:41:23.613Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bridgewaters-alpha-beta-framework-how-risk-parity-and-portable-alpha-generate-returns-faa386a867cb"
@@ -15453,8 +15453,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:41:33.346Z",
     "observed_source_updated_at": "2026-09-10T15:41:33.346Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/two-sigmas-china-alpha-machine-52-returns-in-a-retail-dominated-market-3677decc020f"
@@ -15604,8 +15604,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:41:44.606Z",
     "observed_source_updated_at": "2026-09-10T15:41:44.606Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-extract-billions-from-volatility-mispricings-the-systematic-arbitrage-playbook-9ab90af1fa6a",
@@ -16746,8 +16746,8 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:42:35.863Z",
     "observed_source_updated_at": "2026-09-10T15:42:35.863Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/optivers-3-5b-market-making-engine-avellaneda-stoikov-inventory-optimization-at-scale-a28fede5a85a"
@@ -17165,8 +17165,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:42:57.154Z",
     "observed_source_updated_at": "2026-09-10T15:42:57.154Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-volatility-carry-trade-how-selling-vol-makes-10-until-it-can-lose-80-f0c7b064c546"
@@ -17225,8 +17225,8 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "unverified",
-    "source_updated_at": "",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-10T15:43:00.802Z",
     "observed_source_updated_at": "2026-09-10T15:43:00.802Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hidden-volatility-feedback-loops-determine-your-p-l-the-multivariate-quadratic-hawkes-f1966eff8063"

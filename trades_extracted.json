@@ -3320,146 +3320,14 @@
     "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
     "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
     "article_date": "2026-03-22",
-    "trade_description": "The short answers: The 30-day market outlook is not an oil trade — it is a leverage unwind trade expressed through energy prices, with record hedge fund gross leverage of 292.8% (Goldman Sachs prime brokerage, December 2025) sitting on top of a supply shock that has permanently repriced rate sensitivity to oil by a factor of three. The April FOMC is a dot-plot binary: one more participant shifting to “hold through 2026” pushes the median to zero cuts and reprices the entire front end. The liquidation problem fails before the first trade is placed — because 73.8% of hedge fund repo borrowing runs at zero haircut (Federal Reserve FEDS Notes, 2023), meaning the cash buffer that appears on paper has already been pledged as collateral. The mechanism for surviving this begins with repo term",
-    "instruments": [
-      "commodity",
-      "repo"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "292.8%, 73.8%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null,
-    "description_truncated": true
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "The 30-day market regime established above — leverage unwind expressed through energy prices, with the oil-equity inverse as the dominant regime signal — does not resolve itself independently. It resolves through the Fed. And the Fed, in April 2026, is not a simple policy institution. It is a three-way intersection of an oil shock, a leadership transition, and a dot-plot binary that the market has not yet fully stress-tested.",
-    "instruments": [
-      "equity",
-      "commodity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "the dominant regime signal — does not resolve itself independently.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null,
-    "description_truncated": false
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "The Q1 regime and Q2 FOMC binary described above share a common endpoint: if the moderate or tail scenario materializes — oil above $120, dot plot shifts to zero cuts, leverage forced down — redemption pressure follows. The question then is not “should we liquidate” but “how do we liquidate without making it worse.” The answer requires understanding why most forced liquidations fail before a single sell order is placed. The correct frame is: liquidate without creating a feedback loop that destroys more value than the redemption itself. The academic and regulatory literature on this is extensive, and its central finding is that most forced liquidations fail not because of bad execution — but because the fund’s funding structure breaks before a single position is sold.",
-    "instruments": [
-      "equity",
-      "commodity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "of bad execution — but because the fund’s funding structure breaks before a single position is sold.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null,
-    "description_truncated": false
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "73.8% of hedge fund repo borrowing was transacted at zero or negative haircuts — meaning the fund’s borrowing equaled or exceeded collateral value. Average balance sheet leverage at zero-haircut funds: 6.2-to-1 to 9-to-1, versus 2.1-to-1 for average qualifying hedge funds.",
-    "instruments": [
-      "repo"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "73.8%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null,
-    "description_truncated": false
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "The FSB has recommended minimum haircuts for non-bank repo borrowers. The OFR began daily reporting of non-centrally cleared bilateral repo as of July 2025 — regulators now have real-time visibility into when hedge fund repo stress is building. If they act to impose haircut floors during an active stress event, the feedback loop accelerates.",
-    "instruments": [
-      "repo"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": "of July 2025 — regulators now have real-time visibility into when hedge fund repo stress is building.",
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null,
-    "description_truncated": false
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "Off-exchange trading (including ATS dark pools and principal internalizers like Citadel Securities and Virtu) now accounts for 51.8% of all U.S. equity trading volume — true dark pools (ATS venues) specifically represent roughly 10–15% of that total: https://en.wikipedia.org/wiki/Dark_pool (citing Bloomberg’s January 2025 data). Dark pools proper still handle the majority of institutional block execution, where pre-trade anonymity is the primary objective: https://www.stonex.com/en/financial-glossary/dark-liquidity-pools/",
-    "instruments": [
-      "equity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "51.8%, 15%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": "Citadel",
-    "description_truncated": false
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "The BIS-linked SUERF paper confirms the directionality: hedge funds engage in procyclical leverage targeting — they are forced to sell into falling markets, which is exactly what an oil shock + rate repricing + crowded positioning produces. Source: https://www.suerf.org/publications/suerf-policy-notes-and-briefs/understanding-hedge-fund-leverage-targeting-and-fire-sales/",
+    "trade_description": "The short answers: The 30-day market outlook is not an oil trade — it is a leverage unwind trade expressed through energy prices, with record hedge fund gross leverage of 292.8% (Goldman Sachs prime brokerage, December 2025) sitting on top of a supply shock that has permanently repriced rate sensitivity to oil by a factor of three. The April FOMC is a dot-plot binary: one more participant…",
     "instruments": [
       "commodity"
     ],
     "direction": "unspecified",
     "underlying": null,
     "edge_or_thesis": null,
-    "any_quant_detail": null,
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null,
-    "description_truncated": false
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "The fund that survives this window has already converted overnight repo to term, reduced leverage toward 150–180% gross ahead of the FOMC binary, built cash above 8% NAV, and identified dark pool routing relationships before they are needed.",
-    "instruments": [
-      "repo"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "180%, 8%",
-    "outcome_if_mentioned": null,
-    "fund_name_if_mentioned": null,
-    "description_truncated": false
-  },
-  {
-    "article_title": "Iran War Oil Shock, 292.8% Hedge Fund Leverage, and Powell’s Last FOMC: A Deep Macro Framework for the Next 30 Days",
-    "article_url": "https://navnoorbawa.substack.com/p/iran-war-oil-shock-2928-hedge-fund",
-    "article_date": "2026-03-22",
-    "trade_description": "The medium-term recovery thesis remains intact. Morgan Stanley’s 75-year study delivers an average 8.4% S&P gain in the 12 months following geopolitical shocks: https://www.morganstanley.com/insights/articles/iran-war-oil-shock-stock-market-impacts",
-    "instruments": [
-      "equity",
-      "commodity"
-    ],
-    "direction": "unspecified",
-    "underlying": null,
-    "edge_or_thesis": null,
-    "any_quant_detail": "8.4%",
+    "any_quant_detail": "292.8%",
     "outcome_if_mentioned": null,
     "fund_name_if_mentioned": null,
     "description_truncated": false
