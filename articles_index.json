@@ -1,6 +1,36 @@
 [
   {
     "source": "medium",
+    "source_id": "33bd1c404013",
+    "slug": "aqr-bet-billions-that-value-would-pay-off-medallion-never-made-the-bet-33bd1c404013",
+    "title": "AQR Bet Billions That Value Would Pay Off. Medallion Never Made the Bet.",
+    "subtitle": "My own numbers from Kenneth French’s data: the value factor has lost money, net, since 2010. AQR staked a firm on it anyway.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-14T15:03:03Z",
+    "url": "https://medium.com/@navnoorbawa/aqr-bet-billions-that-value-would-pay-off-medallion-never-made-the-bet-33bd1c404013",
+    "audience": "unknown",
+    "wordcount": 27,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "ead0a6e9db076e6ce5961e634413778e2c50b90294bfac4a95bf1f6c16bf32dc",
+      "lead": {
+        "text": "My own numbers from Kenneth French’s data: the value factor has lost money, net, since 2010. AQR staked a firm on it anyway.",
+        "start": 0,
+        "end": 124,
+        "sha256": "5bd4cde49ee3176fdc478c51abf0eff912a2f5b344dcd271fd9a47ab2413da00",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-14T15:03:03Z",
+    "observed_source_updated_at": "2026-09-14T15:03:03Z"
+  },
+  {
+    "source": "medium",
     "source_id": "6cf9dbe92562",
     "slug": "morgan-stanley-invented-pairs-trading-in-1987-d-e-shaw-and-ed-thorp-proved-it-wasnt-the-point-6cf9dbe92562",
     "title": "Morgan Stanley Invented Pairs Trading in 1987. D.E. Shaw and Ed Thorp Proved It Wasn’t the Point.",
@@ -80,8 +110,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:23:18.434Z",
-    "observed_source_updated_at": "2026-09-14T06:23:18.434Z",
+    "source_updated_at": "2026-09-14T10:57:46.790Z",
+    "observed_source_updated_at": "2026-09-14T10:57:46.790Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -215,8 +245,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-09T13:33:49.039Z",
-    "observed_source_updated_at": "2026-09-09T13:33:49.039Z",
+    "source_updated_at": "2026-09-14T10:45:29.405Z",
+    "observed_source_updated_at": "2026-09-14T10:45:29.405Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/coinbase-and-cme-both-just-reopened-a-product-a-2020-margin-rule-killed-7e983d55141e"
     }
@@ -278,8 +308,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:30:43.725Z",
-    "observed_source_updated_at": "2026-09-14T06:30:43.725Z",
+    "source_updated_at": "2026-09-14T10:46:07.923Z",
+    "observed_source_updated_at": "2026-09-14T10:46:07.923Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -367,8 +397,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:26:17.948Z",
-    "observed_source_updated_at": "2026-09-14T06:26:17.948Z",
+    "source_updated_at": "2026-09-14T15:12:50.112Z",
+    "observed_source_updated_at": "2026-09-14T15:12:50.112Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -478,8 +508,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:29:00.918Z",
-    "observed_source_updated_at": "2026-09-14T06:29:00.918Z",
+    "source_updated_at": "2026-09-14T15:11:47.942Z",
+    "observed_source_updated_at": "2026-09-14T15:11:47.942Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -565,8 +595,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-04T13:34:28.581Z",
-    "observed_source_updated_at": "2026-09-04T13:34:28.581Z",
+    "source_updated_at": "2026-09-14T15:11:04.887Z",
+    "observed_source_updated_at": "2026-09-14T15:11:04.887Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/two-sigmas-2023-sec-warning-just-became-overdeck-s-4-9b-divorce-problem-24ee8281c01c"
     }
@@ -598,8 +628,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:30:04.195Z",
-    "observed_source_updated_at": "2026-09-14T06:30:04.195Z",
+    "source_updated_at": "2026-09-14T15:10:42.381Z",
+    "observed_source_updated_at": "2026-09-14T15:10:42.381Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -655,8 +685,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-03T13:34:58.521Z",
-    "observed_source_updated_at": "2026-09-03T13:34:58.521Z"
+    "source_updated_at": "2026-09-14T15:10:07.195Z",
+    "observed_source_updated_at": "2026-09-14T15:10:07.195Z"
   },
   {
     "source": "substack",
@@ -685,8 +715,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:33:10.737Z",
-    "observed_source_updated_at": "2026-09-14T06:33:10.737Z",
+    "source_updated_at": "2026-09-14T15:09:56.094Z",
+    "observed_source_updated_at": "2026-09-14T15:09:56.094Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -787,9 +817,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-02T17:44:12Z",
-    "observed_source_updated_at": "2026-09-02T17:44:12Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
@@ -892,8 +922,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:37:35.024Z",
-    "observed_source_updated_at": "2026-09-14T06:37:35.024Z",
+    "source_updated_at": "2026-09-14T15:09:30.471Z",
+    "observed_source_updated_at": "2026-09-14T15:09:30.471Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1041,8 +1071,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:38:33.803Z",
-    "observed_source_updated_at": "2026-09-14T06:38:33.803Z",
+    "source_updated_at": "2026-09-14T15:10:53.117Z",
+    "observed_source_updated_at": "2026-09-14T15:10:53.117Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1078,8 +1108,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:39:05.286Z",
-    "observed_source_updated_at": "2026-09-14T06:39:05.286Z",
+    "source_updated_at": "2026-09-14T15:06:55.704Z",
+    "observed_source_updated_at": "2026-09-14T15:06:55.704Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1148,8 +1178,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-29T13:03:53.740Z",
-    "observed_source_updated_at": "2026-08-29T13:03:53.740Z"
+    "source_updated_at": "2026-09-14T15:04:30.960Z",
+    "observed_source_updated_at": "2026-09-14T15:04:30.960Z"
   },
   {
     "source": "medium",
@@ -1202,8 +1232,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:39:30.091Z",
-    "observed_source_updated_at": "2026-09-14T06:39:30.091Z",
+    "source_updated_at": "2026-09-14T15:03:14.602Z",
+    "observed_source_updated_at": "2026-09-14T15:03:14.602Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1365,8 +1395,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:40:23.480Z",
-    "observed_source_updated_at": "2026-09-14T06:40:23.480Z",
+    "source_updated_at": "2026-09-14T15:02:17.195Z",
+    "observed_source_updated_at": "2026-09-14T15:02:17.195Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1402,8 +1432,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:43:32.166Z",
-    "observed_source_updated_at": "2026-09-14T06:43:32.166Z",
+    "source_updated_at": "2026-09-14T15:01:26.012Z",
+    "observed_source_updated_at": "2026-09-14T15:01:26.012Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1461,8 +1491,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:45:39.288Z",
-    "observed_source_updated_at": "2026-09-14T06:45:39.288Z",
+    "source_updated_at": "2026-09-14T15:00:39.570Z",
+    "observed_source_updated_at": "2026-09-14T15:00:39.570Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1518,8 +1548,8 @@
     },
     "family": "career-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T11:41:29.884Z",
-    "observed_source_updated_at": "2026-08-27T11:41:29.884Z",
+    "source_updated_at": "2026-09-14T15:00:25.115Z",
+    "observed_source_updated_at": "2026-09-14T15:00:25.115Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/spacex-is-hiring-a-gas-trader-with-a-p-l-meta-amazon-and-google-got-there-first-47e69e64eb72"
     }
@@ -1633,8 +1663,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:48:06.750Z",
-    "observed_source_updated_at": "2026-09-14T06:48:06.750Z",
+    "source_updated_at": "2026-09-14T14:59:36.296Z",
+    "observed_source_updated_at": "2026-09-14T14:59:36.296Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1703,8 +1733,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:02:07.450Z",
-    "observed_source_updated_at": "2026-08-27T12:02:07.450Z"
+    "source_updated_at": "2026-09-14T14:59:25.400Z",
+    "observed_source_updated_at": "2026-09-14T14:59:25.400Z"
   },
   {
     "source": "substack",
@@ -1753,8 +1783,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:02:22.407Z",
-    "observed_source_updated_at": "2026-08-27T12:02:22.407Z",
+    "source_updated_at": "2026-09-14T14:58:49.403Z",
+    "observed_source_updated_at": "2026-09-14T14:58:49.403Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/rbi-blindsided-bond-markets-and-goldman-sachs-now-sees-hikes-coming-f59dc830a6dd"
     }
@@ -1819,8 +1849,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:02:41.263Z",
-    "observed_source_updated_at": "2026-08-27T12:02:41.263Z",
+    "source_updated_at": "2026-09-14T14:58:12.865Z",
+    "observed_source_updated_at": "2026-09-14T14:58:12.865Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/goldman-warned-kevin-warshs-silence-would-backfire-the-treasury-just-proved-it-13d33f4fba18"
     }
@@ -2000,8 +2030,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:49:24.700Z",
-    "observed_source_updated_at": "2026-09-14T06:49:24.700Z",
+    "source_updated_at": "2026-09-14T14:57:35.468Z",
+    "observed_source_updated_at": "2026-09-14T14:57:35.468Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2070,8 +2100,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:03:26.623Z",
-    "observed_source_updated_at": "2026-08-27T12:03:26.623Z",
+    "source_updated_at": "2026-09-14T14:57:03.542Z",
+    "observed_source_updated_at": "2026-09-14T14:57:03.542Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bessent-doubled-the-buyback-treasurys-budget-didn-t-grow-jpmorgan-isn-t-buying-it-50993d0dca16"
     }
@@ -2157,8 +2187,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:51:35.520Z",
-    "observed_source_updated_at": "2026-09-14T06:51:35.520Z",
+    "source_updated_at": "2026-09-14T14:56:19.496Z",
+    "observed_source_updated_at": "2026-09-14T14:56:19.496Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2216,8 +2246,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:55:48.281Z",
-    "observed_source_updated_at": "2026-09-14T06:55:48.281Z",
+    "source_updated_at": "2026-09-14T14:55:36.279Z",
+    "observed_source_updated_at": "2026-09-14T14:55:36.279Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2357,8 +2387,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:05:29.283Z",
-    "observed_source_updated_at": "2026-08-27T12:05:29.283Z"
+    "source_updated_at": "2026-09-14T14:54:02.634Z",
+    "observed_source_updated_at": "2026-09-14T14:54:02.634Z"
   },
   {
     "source": "medium",
@@ -2417,8 +2447,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:58:39.404Z",
-    "observed_source_updated_at": "2026-09-14T06:58:39.404Z",
+    "source_updated_at": "2026-09-14T14:51:35.319Z",
+    "observed_source_updated_at": "2026-09-14T14:51:35.319Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2518,8 +2548,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-18T20:33:15.944Z",
-    "observed_source_updated_at": "2026-08-18T20:33:15.944Z",
+    "source_updated_at": "2026-09-14T14:49:52.635Z",
+    "observed_source_updated_at": "2026-09-14T14:49:52.635Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/chris-hohns-tci-bet-698m-on-five-hotels-gruppo-statuto-owns-every-one-2c43ab51be6f"
     }
@@ -2614,8 +2644,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:09:52.985Z",
-    "observed_source_updated_at": "2026-08-27T12:09:52.985Z",
+    "source_updated_at": "2026-09-14T14:48:57.008Z",
+    "observed_source_updated_at": "2026-09-14T14:48:57.008Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/jpmorgan-warned-of-a-fertilizer-crisis-in-april-urea-is-already-10-cheaper-than-a-year-ago-e420650f9cb3"
     }
@@ -2647,8 +2677,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:00:23.056Z",
-    "observed_source_updated_at": "2026-09-14T07:00:23.056Z",
+    "source_updated_at": "2026-09-14T14:48:05.078Z",
+    "observed_source_updated_at": "2026-09-14T14:48:05.078Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2728,8 +2758,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:02:37.070Z",
-    "observed_source_updated_at": "2026-09-14T07:02:37.070Z",
+    "source_updated_at": "2026-09-14T14:47:07.252Z",
+    "observed_source_updated_at": "2026-09-14T14:47:07.252Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2765,8 +2795,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:03:12.118Z",
-    "observed_source_updated_at": "2026-09-14T07:03:12.118Z",
+    "source_updated_at": "2026-09-14T14:46:27.520Z",
+    "observed_source_updated_at": "2026-09-14T14:46:27.520Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2822,8 +2852,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:13:21.042Z",
-    "observed_source_updated_at": "2026-08-27T12:13:21.042Z",
+    "source_updated_at": "2026-09-14T14:46:10.392Z",
+    "observed_source_updated_at": "2026-09-14T14:46:10.392Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/nvidias-credit-book-outgrew-its-cash-pile-goldman-sachs-wants-to-trade-it-aef567d5f387"
     }
@@ -2937,8 +2967,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:03:58.367Z",
-    "observed_source_updated_at": "2026-09-14T07:03:58.367Z",
+    "source_updated_at": "2026-09-14T14:45:06.686Z",
+    "observed_source_updated_at": "2026-09-14T14:45:06.686Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -2974,8 +3004,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:04:43.805Z",
-    "observed_source_updated_at": "2026-09-14T07:04:43.805Z",
+    "source_updated_at": "2026-09-14T14:44:10.997Z",
+    "observed_source_updated_at": "2026-09-14T14:44:10.997Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3011,8 +3041,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:06:21.379Z",
-    "observed_source_updated_at": "2026-09-14T07:06:21.379Z",
+    "source_updated_at": "2026-09-14T14:42:45.879Z",
+    "observed_source_updated_at": "2026-09-14T14:42:45.879Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3048,8 +3078,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:08:21.650Z",
-    "observed_source_updated_at": "2026-09-14T07:08:21.650Z",
+    "source_updated_at": "2026-09-14T14:42:04.116Z",
+    "observed_source_updated_at": "2026-09-14T14:42:04.116Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3203,8 +3233,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:12:56.886Z",
-    "observed_source_updated_at": "2026-08-27T12:12:56.886Z"
+    "source_updated_at": "2026-09-14T10:32:48.417Z",
+    "observed_source_updated_at": "2026-09-14T10:32:48.417Z"
   },
   {
     "source": "substack",
@@ -3233,8 +3263,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:10:49.325Z",
-    "observed_source_updated_at": "2026-09-14T07:10:49.325Z",
+    "source_updated_at": "2026-09-14T14:41:06.391Z",
+    "observed_source_updated_at": "2026-09-14T14:41:06.391Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3270,8 +3300,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:12:13.054Z",
-    "observed_source_updated_at": "2026-09-14T07:12:13.054Z",
+    "source_updated_at": "2026-09-14T14:40:06.898Z",
+    "observed_source_updated_at": "2026-09-14T14:40:06.898Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3313,8 +3343,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:14:13.616Z",
-    "observed_source_updated_at": "2026-08-27T12:14:13.616Z",
+    "source_updated_at": "2026-09-14T14:39:20.102Z",
+    "observed_source_updated_at": "2026-09-14T14:39:20.102Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-cftc-rejected-fias-special-call-plan-in-2011-in-2026-it-adopted-it-ffe184d9aac6"
     }
@@ -3352,8 +3382,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-15T03:21:35.698Z",
-    "observed_source_updated_at": "2026-08-15T03:21:35.698Z",
+    "source_updated_at": "2026-09-14T14:38:30.975Z",
+    "observed_source_updated_at": "2026-09-14T14:38:30.975Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/kalshis-clearing-members-can-be-assessed-550-its-own-default-capital-refills-never-8a988fdacc1c"
     }
@@ -3493,8 +3523,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:14:28.659Z",
-    "observed_source_updated_at": "2026-08-27T12:14:28.659Z",
+    "source_updated_at": "2026-09-14T14:37:39.626Z",
+    "observed_source_updated_at": "2026-09-14T14:37:39.626Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/kalshi-publishes-one-liquidity-subsidy-and-seals-the-other-polymarket-too-b59e8c9dffe8"
     }
@@ -3559,8 +3589,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:14:36.444Z",
-    "observed_source_updated_at": "2026-08-27T12:14:36.444Z",
+    "source_updated_at": "2026-09-14T14:36:53.372Z",
+    "observed_source_updated_at": "2026-09-14T14:36:53.372Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/citadel-filed-570-billion-with-the-sec-everyone-prints-71-billion-2b210ad1a553"
     }
@@ -3592,8 +3622,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:15:37.559Z",
-    "observed_source_updated_at": "2026-09-14T07:15:37.559Z",
+    "source_updated_at": "2026-09-14T14:35:47.469Z",
+    "observed_source_updated_at": "2026-09-14T14:35:47.469Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3623,8 +3653,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:17:12.765Z",
-    "observed_source_updated_at": "2026-09-14T07:17:12.765Z",
+    "source_updated_at": "2026-09-14T14:34:49.674Z",
+    "observed_source_updated_at": "2026-09-14T14:34:49.674Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3654,8 +3684,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:18:37.318Z",
-    "observed_source_updated_at": "2026-09-14T07:18:37.318Z",
+    "source_updated_at": "2026-09-14T14:33:54.374Z",
+    "observed_source_updated_at": "2026-09-14T14:33:54.374Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3899,8 +3929,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:21:03.871Z",
-    "observed_source_updated_at": "2026-09-14T07:21:03.871Z",
+    "source_updated_at": "2026-09-14T14:32:54.465Z",
+    "observed_source_updated_at": "2026-09-14T14:32:54.465Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3988,8 +4018,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:22:34.127Z",
-    "observed_source_updated_at": "2026-09-14T07:22:34.127Z",
+    "source_updated_at": "2026-09-14T14:32:10.039Z",
+    "observed_source_updated_at": "2026-09-14T14:32:10.039Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -4055,8 +4085,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:25:32.622Z",
-    "observed_source_updated_at": "2026-09-14T07:25:32.622Z",
+    "source_updated_at": "2026-09-14T14:31:32.037Z",
+    "observed_source_updated_at": "2026-09-14T14:31:32.037Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -4226,8 +4256,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:26:54.623Z",
-    "observed_source_updated_at": "2026-09-14T07:26:54.623Z",
+    "source_updated_at": "2026-09-14T14:31:12.474Z",
+    "observed_source_updated_at": "2026-09-14T14:31:12.474Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -4323,8 +4353,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:29:46.984Z",
-    "observed_source_updated_at": "2026-09-14T07:29:46.984Z",
+    "source_updated_at": "2026-09-14T14:30:18.474Z",
+    "observed_source_updated_at": "2026-09-14T14:30:18.474Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -4420,7 +4450,7 @@
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_sha256": "1ff57cbfbcbe2d632d23609be07cc9c13e59af34e4c8e37eeeeb6e0b3c92a7d6",
       "lead": null,
       "sections": [],
       "fallback_evidence": null,
@@ -4428,14 +4458,14 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T07:29:16.562Z",
-    "observed_source_updated_at": "2026-09-14T07:29:16.562Z",
+    "source_updated_at": "2026-09-14T14:28:57.882Z",
+    "observed_source_updated_at": "2026-09-14T14:28:57.882Z",
     "member_preview": {
       "schema_version": 1,
-      "surface": "metadata-only",
-      "text": "",
-      "character_count": 0,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "surface": "anonymous-substack-list",
+      "text": "The consensus, stated the way a crude desk would defend it",
+      "character_count": 58,
+      "body_sha256": "1ff57cbfbcbe2d632d23609be07cc9c13e59af34e4c8e37eeeeb6e0b3c92a7d6"
     }
   },
   {
@@ -4547,8 +4577,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:17:53.681Z",
-    "observed_source_updated_at": "2026-08-27T12:17:53.681Z",
+    "source_updated_at": "2026-09-14T14:28:26.690Z",
+    "observed_source_updated_at": "2026-09-14T14:28:26.690Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -4584,8 +4614,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:18:17.020Z",
-    "observed_source_updated_at": "2026-08-27T12:18:17.020Z",
+    "source_updated_at": "2026-09-14T14:26:59.497Z",
+    "observed_source_updated_at": "2026-09-14T14:26:59.497Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -4621,8 +4651,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:23:23.180Z",
-    "observed_source_updated_at": "2026-08-27T12:23:23.180Z",
+    "source_updated_at": "2026-09-14T14:26:12.962Z",
+    "observed_source_updated_at": "2026-09-14T14:26:12.962Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -4674,7 +4704,7 @@
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body_sha256": "e457a4feb52000b7d9814b5a9575fa3c6dce9029fa1e00785c6f3dd1716b9b93",
       "lead": null,
       "sections": [],
       "fallback_evidence": null,
@@ -4682,14 +4712,14 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:28:42.568Z",
-    "observed_source_updated_at": "2026-08-27T12:28:42.568Z",
+    "source_updated_at": "2026-09-14T14:25:29.013Z",
+    "observed_source_updated_at": "2026-09-14T14:25:29.013Z",
     "member_preview": {
       "schema_version": 1,
-      "surface": "metadata-only",
-      "text": "",
-      "character_count": 0,
-      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "surface": "anonymous-substack-list",
+      "text": "What MSCI said on 23 June, and the part of it that has not moved",
+      "character_count": 64,
+      "body_sha256": "e457a4feb52000b7d9814b5a9575fa3c6dce9029fa1e00785c6f3dd1716b9b93"
     }
   },
   {
@@ -4805,8 +4835,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:28:57.810Z",
-    "observed_source_updated_at": "2026-08-27T12:28:57.810Z",
+    "source_updated_at": "2026-09-14T14:24:31.469Z",
+    "observed_source_updated_at": "2026-09-14T14:24:31.469Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/blue-owls-credit-fundraising-fell-69-in-a-quarter-then-it-hired-a-tokyo-banker-19b21ebcd860"
     }
@@ -4912,8 +4942,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:29:31.541Z",
-    "observed_source_updated_at": "2026-08-27T12:29:31.541Z",
+    "source_updated_at": "2026-09-14T14:23:43.165Z",
+    "observed_source_updated_at": "2026-09-14T14:23:43.165Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -4987,12 +5017,12 @@
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "7bece3b724d2240abd975e73da7d130022fb3d7c6415bfdf787c0a75bcd1f459",
+      "body_sha256": "977a4c22258b22f6589dc3509813329904c87cafc79154cd7170ea1f1374753a",
       "lead": {
-        "text": "When Citadel took Situational Awareness’s entire public book in a single block before the open on 30 July, four of the AI-infrastructure names at the centre of it rallied 21–28% in a session. The consensus read that as confidence: a credible buyer had stepped in, so the selloff must have been overdone. I don’t think that reading survives the cross-section. A stock the fund never owned rallied just as hard as the ones it did. That’s the whole story.",
+        "text": "When Citadel took Situational Awareness's entire public book in a single block before the open on 30 July (WSJ), four of the AI-infrastructure names at the centre of it rallied 21–28% in a session. The consensus read that as confidence: a credible buyer had stepped in, so the selloff must have been overdone. I don't think that reading survives the cross-section. A stock the fund never owned rallied just as hard as the ones it did. That's the whole story.",
         "start": 0,
-        "end": 452,
-        "sha256": "7bece3b724d2240abd975e73da7d130022fb3d7c6415bfdf787c0a75bcd1f459",
+        "end": 458,
+        "sha256": "977a4c22258b22f6589dc3509813329904c87cafc79154cd7170ea1f1374753a",
         "truncated": false
       },
       "sections": [],
@@ -5001,14 +5031,14 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-02T06:44:53.517Z",
-    "observed_source_updated_at": "2026-08-02T06:44:53.517Z",
+    "source_updated_at": "2026-09-14T14:22:58.915Z",
+    "observed_source_updated_at": "2026-09-14T14:22:58.915Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
-      "text": "When Citadel took Situational Awareness’s entire public book in a single block before the open on 30 July, four of the AI-infrastructure names at the centre of it rallied 21–28% in a session. The consensus read that as confidence: a credible buyer had stepped in, so the selloff must have been overdone. I don’t think that reading survives the cross-section. A stock the fund never owned rallied just as hard as the ones it did. That’s the whole story.",
-      "character_count": 452,
-      "body_sha256": "7bece3b724d2240abd975e73da7d130022fb3d7c6415bfdf787c0a75bcd1f459"
+      "text": "When Citadel took Situational Awareness's entire public book in a single block before the open on 30 July (WSJ), four of the AI-infrastructure names at the centre of it rallied 21–28% in a session. The consensus read that as confidence: a credible buyer had stepped in, so the selloff must have been overdone. I don't think that reading survives the cross-section. A stock the fund never owned rallied just as hard as the ones it did. That's the whole story.",
+      "character_count": 458,
+      "body_sha256": "977a4c22258b22f6589dc3509813329904c87cafc79154cd7170ea1f1374753a"
     }
   },
   {
@@ -5090,8 +5120,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:30:06.387Z",
-    "observed_source_updated_at": "2026-08-27T12:30:06.387Z",
+    "source_updated_at": "2026-09-14T14:22:05.125Z",
+    "observed_source_updated_at": "2026-09-14T14:22:05.125Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -5149,8 +5179,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:29:51.982Z",
-    "observed_source_updated_at": "2026-08-27T12:29:51.982Z",
+    "source_updated_at": "2026-09-14T14:20:24.110Z",
+    "observed_source_updated_at": "2026-09-14T14:20:24.110Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -5216,8 +5246,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:30:59.415Z",
-    "observed_source_updated_at": "2026-08-27T12:30:59.415Z",
+    "source_updated_at": "2026-09-14T14:19:51.999Z",
+    "observed_source_updated_at": "2026-09-14T14:19:51.999Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -5327,8 +5357,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T12:31:41.487Z",
-    "observed_source_updated_at": "2026-08-27T12:31:41.487Z",
+    "source_updated_at": "2026-09-14T14:19:04.583Z",
+    "observed_source_updated_at": "2026-09-14T14:19:04.583Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -5467,8 +5497,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-08-27T16:55:38.499Z",
-    "observed_source_updated_at": "2026-08-27T16:55:38.499Z",
+    "source_updated_at": "2026-09-14T14:18:26.825Z",
+    "observed_source_updated_at": "2026-09-14T14:18:26.825Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/susquehanna-citadels-137m-insider-trading-suit-won-t-make-them-whole-bb1d94ba503a"
     }
@@ -5604,8 +5634,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-11T15:01:26.886Z",
-    "observed_source_updated_at": "2026-07-11T15:01:26.886Z",
+    "source_updated_at": "2026-09-14T14:17:27.541Z",
+    "observed_source_updated_at": "2026-09-14T14:17:27.541Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/optiver-wrote-the-neutral-fix-for-european-markets-3-out-of-its-5-ideas-would-also-enrich-optiver-78d6b0e0e380"
     }
@@ -5637,8 +5667,8 @@
     },
     "family": "model-critique",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-08T07:59:09.815Z",
-    "observed_source_updated_at": "2026-07-08T07:59:09.815Z",
+    "source_updated_at": "2026-09-14T14:16:19.195Z",
+    "observed_source_updated_at": "2026-09-14T14:16:19.195Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/hull-whites-mean-reversion-problem-a-smarter-model-lost-to-a-naive-guess-in-2022-80644eb567b6"
     }
@@ -5723,8 +5753,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-04T19:43:12.760Z",
-    "observed_source_updated_at": "2026-07-04T19:43:12.760Z",
+    "source_updated_at": "2026-09-14T14:15:58.604Z",
+    "observed_source_updated_at": "2026-09-14T14:15:58.604Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/avellaneda-stoikov-charges-up-to-48-76-of-profit-for-inventory-skew-hsbc-funded-quants-traced-why-76caece5183d"
     }
@@ -5815,8 +5845,8 @@
     },
     "family": "market-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-04T13:11:29.143Z",
-    "observed_source_updated_at": "2026-07-04T13:11:29.143Z",
+    "source_updated_at": "2026-09-14T14:16:14.344Z",
+    "observed_source_updated_at": "2026-09-14T14:16:14.344Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/mica-locked-tethers-184-billion-stablecoin-out-of-europe-circle-holds-the-rent-473af098e793"
     }
@@ -5923,8 +5953,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-07-01T22:16:53.219Z",
-    "observed_source_updated_at": "2026-07-01T22:16:53.219Z",
+    "source_updated_at": "2026-09-14T14:16:17.880Z",
+    "observed_source_updated_at": "2026-09-14T14:16:17.880Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-895x-gap-behind-volmageddon-credit-suisses-500m-question-still-isn-t-settled-19b715e4310b"
     }
@@ -6009,8 +6039,8 @@
     },
     "family": "model-critique",
     "body_revision_status": "current",
-    "source_updated_at": "2026-06-30T02:41:57.463Z",
-    "observed_source_updated_at": "2026-06-30T02:41:57.463Z",
+    "source_updated_at": "2026-09-14T14:15:44.499Z",
+    "observed_source_updated_at": "2026-09-14T14:15:44.499Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/black-scholes-delta-is-wrong-hull-whites-fix-beats-sabr-4cf02f5d62b0"
     }
@@ -6075,8 +6105,8 @@
     },
     "family": "model-critique",
     "body_revision_status": "current",
-    "source_updated_at": "2026-06-28T17:43:04.590Z",
-    "observed_source_updated_at": "2026-06-28T17:43:04.590Z",
+    "source_updated_at": "2026-09-14T14:15:19.937Z",
+    "observed_source_updated_at": "2026-09-14T14:15:19.937Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/d-e-shaw-citadel-and-renaissance-run-stat-arb-its-ols-bias-has-been-known-since-1954-55398460aa0a"
     }
@@ -6154,8 +6184,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-06-26T12:41:33.253Z",
-    "observed_source_updated_at": "2026-06-26T12:41:33.253Z",
+    "source_updated_at": "2026-09-14T14:15:18.539Z",
+    "observed_source_updated_at": "2026-09-14T14:15:18.539Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/alphabet-baillie-gifford-and-founders-fund-made-billions-from-spacex-dc23f4f70a24"
     }
@@ -6242,8 +6272,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-06-25T11:11:51.981Z",
-    "observed_source_updated_at": "2026-06-25T11:11:51.981Z",
+    "source_updated_at": "2026-09-14T14:14:27.459Z",
+    "observed_source_updated_at": "2026-09-14T14:14:27.459Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/universa-built-20b-calling-stochastic-vol-wrong-a-bis-rule-just-proved-it-eaa23bf6b356"
     }
@@ -6275,8 +6305,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-06-23T08:18:51.754Z",
-    "observed_source_updated_at": "2026-06-23T08:18:51.754Z",
+    "source_updated_at": "2026-09-14T14:14:07.973Z",
+    "observed_source_updated_at": "2026-09-14T14:14:07.973Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/oils-variance-premium-40-sharpe-zero-disclosed-track-records-81979fe01912"
     }
@@ -6531,8 +6561,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-06-18T08:48:53.085Z",
-    "observed_source_updated_at": "2026-06-18T08:48:53.085Z",
+    "source_updated_at": "2026-09-14T14:14:06.135Z",
+    "observed_source_updated_at": "2026-09-14T14:14:06.135Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/12-private-equity-funds-are-chasing-the-same-30-football-clubs-8031ee2bcf0b"
     }
@@ -6610,8 +6640,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-06-17T23:04:00.505Z",
-    "observed_source_updated_at": "2026-06-17T23:04:00.505Z",
+    "source_updated_at": "2026-09-14T14:13:17.376Z",
+    "observed_source_updated_at": "2026-09-14T14:13:17.376Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/ai-hedge-funds-now-run-0-99-beta-to-the-s-p-youre-paying-2-and-20-for-an-index-fund-f961db9519f3"
     }
@@ -6718,8 +6748,8 @@
     },
     "family": "model-critique",
     "body_revision_status": "current",
-    "source_updated_at": "2026-06-16T08:53:17.843Z",
-    "observed_source_updated_at": "2026-06-16T08:53:17.843Z",
+    "source_updated_at": "2026-09-14T14:12:44.415Z",
+    "observed_source_updated_at": "2026-09-14T14:12:44.415Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-barra-axioma-and-commercial-risk-models-missed-january-2022s-9-1-growth-equity-crash-9932ae3f2a20"
     }
@@ -6987,8 +7017,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:28.508Z",
-    "observed_source_updated_at": "2026-09-10T15:36:28.508Z",
+    "source_updated_at": "2026-09-14T14:09:49.455Z",
+    "observed_source_updated_at": "2026-09-14T14:09:49.455Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/prediction-market-alpha-the-3-14-who-win-the-federal-cases-and-the-hedge-funds-moving-in-947c6df94e33"
     }
@@ -7234,8 +7264,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:32.104Z",
-    "observed_source_updated_at": "2026-09-10T15:36:32.104Z",
+    "source_updated_at": "2026-09-14T14:08:51.448Z",
+    "observed_source_updated_at": "2026-09-14T14:08:51.448Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hrt-and-jane-street-made-22-5b-in-one-quarter-the-models-the-50-1-edge-and-the-sebi-order-82fcbcedbef9"
     }
@@ -7481,8 +7511,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:33.916Z",
-    "observed_source_updated_at": "2026-09-10T15:36:33.916Z",
+    "source_updated_at": "2026-09-14T14:07:53.593Z",
+    "observed_source_updated_at": "2026-09-14T14:07:53.593Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/a-nomura-trader-made-10-284-spoofing-400-billion-in-jgb-orders-e93d7312537c"
     }
@@ -7536,8 +7566,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:35.917Z",
-    "observed_source_updated_at": "2026-09-10T15:36:35.917Z",
+    "source_updated_at": "2026-09-14T14:06:57.222Z",
+    "observed_source_updated_at": "2026-09-14T14:06:57.222Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-cram%C3%A9r-rao-bound-killed-ltcm-its-why-the-sec-just-fined-two-sigma-90m-54e47fbb0504"
     }
@@ -7631,8 +7661,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:39.671Z",
-    "observed_source_updated_at": "2026-09-10T15:36:39.671Z",
+    "source_updated_at": "2026-09-14T14:06:54.665Z",
+    "observed_source_updated_at": "2026-09-14T14:06:54.665Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-making-alpha-how-virtu-won-1-237-days-and-why-jane-street-keeps-ending-up-in-court-6894a05cd980"
     }
@@ -7909,8 +7939,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:41.480Z",
-    "observed_source_updated_at": "2026-09-10T15:36:41.480Z"
+    "source_updated_at": "2026-09-14T14:05:33.591Z",
+    "observed_source_updated_at": "2026-09-14T14:05:33.591Z"
   },
   {
     "source": "medium",
@@ -8118,8 +8148,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:43.522Z",
-    "observed_source_updated_at": "2026-09-10T15:36:43.522Z",
+    "source_updated_at": "2026-09-14T14:04:45.281Z",
+    "observed_source_updated_at": "2026-09-14T14:04:45.281Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-billions-from-softbank-five-structural-trades-from-the-nav-discount-to-the-660a30fc7d8a"
     }
@@ -8268,8 +8298,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:45.496Z",
-    "observed_source_updated_at": "2026-09-10T15:36:45.496Z",
+    "source_updated_at": "2026-09-14T14:02:03.086Z",
+    "observed_source_updated_at": "2026-09-14T14:02:03.086Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/non-deliverable-forwards-ndfs-and-emerging-market-currency-alpha-how-hedge-funds-profit-bank-61fcd862c8c8"
     }
@@ -8374,8 +8404,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:47.442Z",
-    "observed_source_updated_at": "2026-09-10T15:36:47.442Z",
+    "source_updated_at": "2026-09-14T13:59:15.937Z",
+    "observed_source_updated_at": "2026-09-14T13:59:15.937Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-turned-defense-stocks-into-their-best-trade-of-2022-pre-invasion-ceo-signals-sec-07580eb20b19"
     }
@@ -8480,8 +8510,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:51.089Z",
-    "observed_source_updated_at": "2026-09-10T15:36:51.089Z",
+    "source_updated_at": "2026-09-14T14:04:48.945Z",
+    "observed_source_updated_at": "2026-09-14T14:04:48.945Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/iran-war-hedge-fund-alpha-map-every-winner-every-loser-and-the-complete-insider-trading-evidence-f5c0f05a0eb8"
     }
@@ -8549,8 +8579,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:53.259Z",
-    "observed_source_updated_at": "2026-09-10T15:36:53.259Z",
+    "source_updated_at": "2026-09-14T13:56:55.997Z",
+    "observed_source_updated_at": "2026-09-14T13:56:55.997Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/joint-spx-vix-calibration-follow-up-bates-svj-degenerates-on-daily-data-hmm-fails-on-novel-7b4603b52722"
     }
@@ -8588,8 +8618,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:55.245Z",
-    "observed_source_updated_at": "2026-09-10T15:36:55.245Z",
+    "source_updated_at": "2026-09-14T13:58:39.297Z",
+    "observed_source_updated_at": "2026-09-14T13:58:39.297Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/indias-oil-war-market-crisis-30-day-nifty-outlook-rbi-april-2026-mpc-decision-and-emergency-5370a3f4d03e"
     }
@@ -8666,8 +8696,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:57.391Z",
-    "observed_source_updated_at": "2026-09-10T15:36:57.391Z",
+    "source_updated_at": "2026-09-14T13:55:01.901Z",
+    "observed_source_updated_at": "2026-09-14T13:55:01.901Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-holy-grail-of-volatility-modelling-what-happens-when-you-actually-try-to-build-it-e24c370d3cd6"
     }
@@ -8780,8 +8810,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:36:59.457Z",
-    "observed_source_updated_at": "2026-09-10T15:36:59.457Z",
+    "source_updated_at": "2026-09-14T13:55:31.404Z",
+    "observed_source_updated_at": "2026-09-14T13:55:31.404Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/iran-war-oil-shock-292-8-hedge-fund-leverage-and-powells-last-fomc-a-deep-macro-framework-fo-03ddbd3980a0"
     }
@@ -8872,8 +8902,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:03.211Z",
-    "observed_source_updated_at": "2026-09-10T15:37:03.211Z",
+    "source_updated_at": "2026-09-14T13:54:39.183Z",
+    "observed_source_updated_at": "2026-09-14T13:54:39.183Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-desert-playbook-how-hedge-funds-extracted-alpha-from-dubai-aed-peg-speculation-dubai-world-9fbfab056327"
     }
@@ -8933,8 +8963,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:05.328Z",
-    "observed_source_updated_at": "2026-09-10T15:37:05.328Z",
+    "source_updated_at": "2026-09-14T13:53:44.691Z",
+    "observed_source_updated_at": "2026-09-14T13:53:44.691Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-profit-every-time-pension-funds-banks-and-ldi-managers-have-no-choice-but-to-tr-89e95a21648d"
     }
@@ -9008,8 +9038,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:07.379Z",
-    "observed_source_updated_at": "2026-09-10T15:37:07.379Z",
+    "source_updated_at": "2026-09-14T13:52:47.053Z",
+    "observed_source_updated_at": "2026-09-14T13:52:47.053Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-index-fund-toll-booth-how-hedge-funds-systematically-extract-billions-from-passive-investors-89a8c6d199ba"
     }
@@ -9069,8 +9099,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:09.522Z",
-    "observed_source_updated_at": "2026-09-10T15:37:09.522Z",
+    "source_updated_at": "2026-09-14T13:50:49.694Z",
+    "observed_source_updated_at": "2026-09-14T13:50:49.694Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-blackrocks-esg-retreat-triggered-100-billion-in-pension-exits-and-1-5-c2b800e03348"
     }
@@ -9144,8 +9174,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:11.502Z",
-    "observed_source_updated_at": "2026-09-10T15:37:11.502Z",
+    "source_updated_at": "2026-09-14T13:49:52.610Z",
+    "observed_source_updated_at": "2026-09-14T13:49:52.610Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/elliott-management-azoria-and-the-esg-forced-selling-short-how-the-anti-woke-trade-actually-b9bac652b266"
     }
@@ -9205,8 +9235,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:15.326Z",
-    "observed_source_updated_at": "2026-09-10T15:37:15.326Z",
+    "source_updated_at": "2026-09-14T13:49:33.208Z",
+    "observed_source_updated_at": "2026-09-14T13:49:33.208Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-2022-uk-gilt-market-crisis-how-hedge-funds-pre-positioned-65-billion-and-extracted-billions-50b507567f43"
     }
@@ -9260,8 +9290,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:17.427Z",
-    "observed_source_updated_at": "2026-09-10T15:37:17.427Z",
+    "source_updated_at": "2026-09-14T13:48:07.909Z",
+    "observed_source_updated_at": "2026-09-14T13:48:07.909Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/gold-65-silver-144-in-2025-how-bridgewater-crescat-greenlight-tudor-jones-and-a1c639899505"
     }
@@ -9313,8 +9343,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:19.425Z",
-    "observed_source_updated_at": "2026-09-10T15:37:19.425Z",
+    "source_updated_at": "2026-09-14T13:50:11.500Z",
+    "observed_source_updated_at": "2026-09-14T13:50:11.500Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-monetise-options-time-decay-theta-harvesting-the-volatility-risk-premium-insti-f85b987f2a79"
     }
@@ -9374,8 +9404,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:21.364Z",
-    "observed_source_updated_at": "2026-09-10T15:37:21.364Z",
+    "source_updated_at": "2026-09-14T13:46:45.658Z",
+    "observed_source_updated_at": "2026-09-14T13:46:45.658Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-trade-war-dividend-druckenmillers-exact-positions-bridgewater-s-50-year-record-34-a6231d8b0a17"
     }
@@ -9480,8 +9510,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:23.384Z",
-    "observed_source_updated_at": "2026-09-10T15:37:23.384Z",
+    "source_updated_at": "2026-09-14T13:46:22.812Z",
+    "observed_source_updated_at": "2026-09-14T13:46:22.812Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/blood-crude-capital-how-russias-energy-sanctions-generated-over-30-billion-in-documented-pr-0b62d5db850f"
     }
@@ -9541,8 +9571,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:27.012Z",
-    "observed_source_updated_at": "2026-09-10T15:37:27.012Z",
+    "source_updated_at": "2026-09-14T13:45:11.676Z",
+    "observed_source_updated_at": "2026-09-14T13:45:11.676Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/securities-class-action-settlements-the-15-billion-recovery-pool-79-of-hedge-funds-are-surrend-8500a78b1ca0"
     }
@@ -9633,8 +9663,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:28.909Z",
-    "observed_source_updated_at": "2026-09-10T15:37:28.909Z",
+    "source_updated_at": "2026-09-14T13:43:46.652Z",
+    "observed_source_updated_at": "2026-09-14T13:43:46.652Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-pre-positioned-for-the-iran-war-eight-weeks-of-oil-gold-defense-tankers-airli-bd0a426b4200"
     }
@@ -9708,8 +9738,8 @@
     },
     "family": "market-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:32.724Z",
-    "observed_source_updated_at": "2026-09-10T15:37:32.724Z",
+    "source_updated_at": "2026-09-14T13:43:15.879Z",
+    "observed_source_updated_at": "2026-09-14T13:43:15.879Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-systematically-profit-from-european-market-structure-index-rebalancing-arbitrage-25ea8c3eb1a6"
     }
@@ -9790,8 +9820,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:34.702Z",
-    "observed_source_updated_at": "2026-09-10T15:37:34.702Z",
+    "source_updated_at": "2026-09-14T13:41:56.306Z",
+    "observed_source_updated_at": "2026-09-14T13:41:56.306Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-three-trades-inside-japans-halo-position-buffett-s-yen-carry-elliott-s-governance-arbitra-56644b788d49"
     }
@@ -9865,8 +9895,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:36.763Z",
-    "observed_source_updated_at": "2026-09-10T15:37:36.763Z",
+    "source_updated_at": "2026-09-14T13:41:00.939Z",
+    "observed_source_updated_at": "2026-09-14T13:41:00.939Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/koreas-170-billion-retail-wave-broadcast-its-own-signal-the-13f-filings-goldman-research-jpmo-00379d235eb7"
     }
@@ -9925,19 +9955,50 @@
     "access": "paid"
   },
   {
+    "source": "medium",
+    "source_id": "298c359d7c5f",
+    "slug": "the-17-9-billion-loop-298c359d7c5f",
+    "title": "The $17.9 Billion Loop",
+    "subtitle": "",
+    "post_date": "2026-02-26T17:22:13.070Z",
+    "url": "https://medium.com/@navnoorbawa/the-17-9-billion-loop-298c359d7c5f",
+    "audience": "locked",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "unverified",
+    "source_updated_at": "2026-02-26T17:22:13.070Z",
+    "observed_source_updated_at": "",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "metadata-only",
+      "text": "",
+      "character_count": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
     "source": "substack",
     "source_id": "the-179-billion-loop",
     "slug": "the-179-billion-loop",
-    "title": "The $17.9 Billion Loop",
+    "title": "w Prime Brokerage Leverage, the $55B EA Merger Arb, Figma’s 250% IPO Pop, and Morgan Stanley’s Closed Derivatives Gap Co-Created Both a Record Quarter and Hedge Fund Returns Ranging from 10% to 45% in",
     "subtitle": "Prime brokerage leverage, the $55B EA merger arb, Figma's 250% IPO pop, and a closed derivatives gap — the anatomy of how Morgan Stanley's record Q4 and hedge fund returns from 10% to 45% were the sam",
     "post_date": "2026-02-26T17:19:18.094Z",
     "url": "https://navnoorbawa.substack.com/p/the-179-billion-loop",
     "audience": "everyone",
-    "wordcount": 3576,
+    "wordcount": 3580,
     "content_status": "full",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "6253bdfa7ff289cde21ae7d2e692b22b1293f43c2d01a766a9a4d796b42f6d79",
+      "body_sha256": "26e334ae8481b73edea3014c704bdedb66f36bb35c3ba40dc2c7d7656bbc6196",
       "lead": {
         "text": "How Prime Brokerage Leverage, the $55B EA Merger Arb, Figma’s 250% IPO Pop, and Morgan Stanley’s Closed Derivatives Gap Co-Created Both a Record Quarter and Hedge Fund Returns Ranging from 10% to 45% in 2025",
         "start": 0,
@@ -9948,8 +10009,8 @@
       "sections": [],
       "fallback_evidence": {
         "text": "Morgan Stanley’s $17.9 billion Q4 2025 was not an outlier. It was the inevitable output of a machine that hedge funds and banks have spent years constructing together — one where every fee line on a bank’s income statement is the cost-of-capital line on a fund’s trade sheet. Here is exactly how that machine worked, mechanism by mechanism.",
-        "start": 209,
-        "end": 549,
+        "start": 233,
+        "end": 573,
         "sha256": "24ffe0c89a60184873247880f3266bfdf1bb7f2df288ad95a354812b56d8e127",
         "truncated": false
       },
@@ -9957,11 +10018,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:38.601Z",
-    "observed_source_updated_at": "2026-09-10T15:37:38.601Z",
-    "alternate_urls": {
-      "medium": "https://medium.com/@navnoorbawa/the-17-9-billion-loop-298c359d7c5f"
-    }
+    "source_updated_at": "2026-09-14T13:40:01.606Z",
+    "observed_source_updated_at": "2026-09-14T13:40:01.606Z"
   },
   {
     "source": "patreon",
@@ -10018,8 +10076,8 @@
     },
     "family": "market-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:40.533Z",
-    "observed_source_updated_at": "2026-09-10T15:37:40.533Z",
+    "source_updated_at": "2026-09-14T13:39:01.253Z",
+    "observed_source_updated_at": "2026-09-14T13:39:01.253Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-cme-group-outage-november-2025-human-error-froze-1-trillion-in-derivatives-a-post-mortem-67cf48f85cce"
     }
@@ -10079,8 +10137,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:44.293Z",
-    "observed_source_updated_at": "2026-09-10T15:37:44.293Z",
+    "source_updated_at": "2026-09-14T13:37:55.283Z",
+    "observed_source_updated_at": "2026-09-14T13:37:55.283Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-3-6-billion-forecast-edge-how-incommodities-and-danske-commodities-built-a-systematic-advant-f543d76f97e5"
     }
@@ -10140,8 +10198,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:46.092Z",
-    "observed_source_updated_at": "2026-09-10T15:37:46.092Z",
+    "source_updated_at": "2026-09-14T13:37:12.425Z",
+    "observed_source_updated_at": "2026-09-14T13:37:12.425Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/eu-ets-alpha-andurands-30-85-eua-trade-four-hedge-fund-strategies-decoded-and-how-one-merz-e335de92149f"
     }
@@ -10179,8 +10237,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:48.060Z",
-    "observed_source_updated_at": "2026-09-10T15:37:48.060Z",
+    "source_updated_at": "2026-09-14T13:36:53.641Z",
+    "observed_source_updated_at": "2026-09-14T13:36:53.641Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-energy-trading-edge-how-hedge-funds-built-the-infrastructure-to-extract-billions-from-energy-9e2e2c16f172"
     }
@@ -10262,8 +10320,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:51.789Z",
-    "observed_source_updated_at": "2026-09-10T15:37:51.789Z",
+    "source_updated_at": "2026-09-14T13:36:14.478Z",
+    "observed_source_updated_at": "2026-09-14T13:36:14.478Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/us-investment-grade-spreads-hit-30-year-lows-as-a-400-billion-ai-bond-wave-arrives-vanguard-says-eea6e0f90a52"
     }
@@ -10354,8 +10412,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:53.694Z",
-    "observed_source_updated_at": "2026-09-10T15:37:53.694Z",
+    "source_updated_at": "2026-09-14T13:35:31.476Z",
+    "observed_source_updated_at": "2026-09-14T13:35:31.476Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/kem-one-apollos-600m-acquisition-collapsed-to-2-cents-as-china-flooded-europe-with-cheap-pvc-b29af9ce274c"
     }
@@ -10437,8 +10495,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:55.772Z",
-    "observed_source_updated_at": "2026-09-10T15:37:55.772Z",
+    "source_updated_at": "2026-09-14T13:33:52.497Z",
+    "observed_source_updated_at": "2026-09-14T13:33:52.497Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-druckenmiller-rokos-and-vista-front-ran-brazils-r-33b-institutional-flood-the-complete-d3602104387e"
     }
@@ -10476,8 +10534,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:57.642Z",
-    "observed_source_updated_at": "2026-09-10T15:37:57.642Z",
+    "source_updated_at": "2026-09-14T13:32:58.520Z",
+    "observed_source_updated_at": "2026-09-14T13:32:58.520Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-basis-traders-and-a-200m-whale-extracted-alpha-from-cryptos-19-billion-october-76f4f2732eaf"
     }
@@ -10515,8 +10573,8 @@
     },
     "family": "model-critique",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:37:59.756Z",
-    "observed_source_updated_at": "2026-09-10T15:37:59.756Z",
+    "source_updated_at": "2026-09-14T13:32:23.642Z",
+    "observed_source_updated_at": "2026-09-14T13:32:23.642Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/black-scholes-is-a-quoting-language-not-a-pricing-truth-how-citadel-universa-and-saba-turn-ev-bc638a91673c"
     }
@@ -10576,8 +10634,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:03.532Z",
-    "observed_source_updated_at": "2026-09-10T15:38:03.532Z",
+    "source_updated_at": "2026-09-14T13:31:02.115Z",
+    "observed_source_updated_at": "2026-09-14T13:31:02.115Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-costars-3-billion-homes-com-proxy-fight-third-point-d-e-shaw-and-the-10-billion-val-1b2de62c849d"
     }
@@ -10668,8 +10726,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:05.428Z",
-    "observed_source_updated_at": "2026-09-10T15:38:05.428Z",
+    "source_updated_at": "2026-09-14T13:30:00.120Z",
+    "observed_source_updated_at": "2026-09-14T13:30:00.120Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/mason-capital-management-from-ascents-bankruptcy-to-6b-continuation-fund-fight-a-playbook-for-9c7fe0644570"
     }
@@ -10743,8 +10801,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:07.415Z",
-    "observed_source_updated_at": "2026-09-10T15:38:07.415Z",
+    "source_updated_at": "2026-09-14T13:29:31.635Z",
+    "observed_source_updated_at": "2026-09-14T13:29:31.635Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/first-brands-2-3b-fraud-2025-the-complete-winners-losers-playbook-apollos-95-50-short-18d04c6f62ce"
     }
@@ -10813,8 +10871,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:09.567Z",
-    "observed_source_updated_at": "2026-09-10T15:38:09.567Z"
+    "source_updated_at": "2026-09-14T13:28:12.614Z",
+    "observed_source_updated_at": "2026-09-14T13:28:12.614Z"
   },
   {
     "source": "patreon",
@@ -10871,8 +10929,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:11.533Z",
-    "observed_source_updated_at": "2026-09-10T15:38:11.533Z",
+    "source_updated_at": "2026-09-14T13:28:07.762Z",
+    "observed_source_updated_at": "2026-09-14T13:28:07.762Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/blue-owl-capital-obdc-merger-failure-the-complete-analysis-of-nav-discount-150m-redemptions-5ca69466ba1a"
     }
@@ -10963,8 +11021,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:15.378Z",
-    "observed_source_updated_at": "2026-09-10T15:38:15.378Z",
+    "source_updated_at": "2026-09-14T13:26:36.694Z",
+    "observed_source_updated_at": "2026-09-14T13:26:36.694Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/boaz-weinsteins-5-engine-strategy-at-saba-capital-london-whale-300m-covid-trade-99-spac-73e74507ccd0"
     }
@@ -11046,8 +11104,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:17.303Z",
-    "observed_source_updated_at": "2026-09-10T15:38:17.303Z",
+    "source_updated_at": "2026-09-14T13:26:09.262Z",
+    "observed_source_updated_at": "2026-09-14T13:26:09.262Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/2025-hedge-fund-performance-analysis-complete-industry-report-on-returns-strategies-and-systemic-c2deb296ccd0"
     }
@@ -11085,8 +11143,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:19.325Z",
-    "observed_source_updated_at": "2026-09-10T15:38:19.325Z",
+    "source_updated_at": "2026-09-14T13:24:59.065Z",
+    "observed_source_updated_at": "2026-09-14T13:24:59.065Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/elliott-managements-ac-milan-investment-analysis-2017-2026-700m-deployed-1-2b-exit-120m-0f5aa1decbbe"
     }
@@ -11160,8 +11218,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:21.400Z",
-    "observed_source_updated_at": "2026-09-10T15:38:21.400Z",
+    "source_updated_at": "2026-09-14T13:23:06.585Z",
+    "observed_source_updated_at": "2026-09-14T13:23:06.585Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/alphabets-20-billion-bond-offering-spread-compression-100-year-sterling-bond-and-the-ai-infra-1239db375c1c"
     }
@@ -11199,8 +11257,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:23.348Z",
-    "observed_source_updated_at": "2026-09-10T15:38:23.348Z",
+    "source_updated_at": "2026-09-14T13:22:13.697Z",
+    "observed_source_updated_at": "2026-09-14T13:22:13.697Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-36-souths-long-volatility-strategy-gained-35-in-early-2020-long-dated-options-negative-b6d116d94a1c"
     }
@@ -11291,8 +11349,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:27.132Z",
-    "observed_source_updated_at": "2026-09-10T15:38:27.132Z",
+    "source_updated_at": "2026-09-14T12:46:12.282Z",
+    "observed_source_updated_at": "2026-09-14T12:46:12.282Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-elite-funds-made-16b-from-illiquidity-burford-blackstone-covenant-arbitrage-a4122ac254e7",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/illiquidity-how-150334689"
@@ -11345,8 +11403,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:29.114Z",
-    "observed_source_updated_at": "2026-09-10T15:38:29.114Z",
+    "source_updated_at": "2026-09-14T12:45:34.098Z",
+    "observed_source_updated_at": "2026-09-14T12:45:34.098Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/tanakas-formula-in-practice-how-hedge-funds-use-local-time-to-trade-corridor-swaps-timer-82dba7eda949"
     }
@@ -11428,8 +11486,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:32.803Z",
-    "observed_source_updated_at": "2026-09-10T15:38:32.803Z",
+    "source_updated_at": "2026-09-14T12:44:06.864Z",
+    "observed_source_updated_at": "2026-09-14T12:44:06.864Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/music-royalty-tax-arbitrage-how-institutional-buyers-engineer-returns-through-irc-section-197-050f2609cbd2",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/music-royalty-150164369"
@@ -11592,8 +11650,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:34.755Z",
-    "observed_source_updated_at": "2026-09-10T15:38:34.755Z",
+    "source_updated_at": "2026-09-14T12:43:28.132Z",
+    "observed_source_updated_at": "2026-09-14T12:43:28.132Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/leap-year-alpha-how-the-366th-day-misprices-interest-rates-retail-revenue-and-options-ca58bfafcd86"
     }
@@ -11700,8 +11758,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:36.860Z",
-    "observed_source_updated_at": "2026-09-10T15:38:36.860Z",
+    "source_updated_at": "2026-09-14T12:43:30.753Z",
+    "observed_source_updated_at": "2026-09-14T12:43:30.753Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/pharma-alpha-point72s-56-foia-requests-baker-bros-warrants-cassava-40m-martoma-s-276m-jail-a535e02750f6"
     }
@@ -11806,8 +11864,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:38.912Z",
-    "observed_source_updated_at": "2026-09-10T15:38:38.912Z",
+    "source_updated_at": "2026-09-14T12:41:55.101Z",
+    "observed_source_updated_at": "2026-09-14T12:41:55.101Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/from-soross-2b-win-to-ltcm-s-4-6b-loss-the-complete-emerging-markets-hedge-fund-playbook-b17db2be4719"
     }
@@ -11884,8 +11942,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:40.790Z",
-    "observed_source_updated_at": "2026-09-10T15:38:40.790Z",
+    "source_updated_at": "2026-09-14T12:41:32.146Z",
+    "observed_source_updated_at": "2026-09-14T12:41:32.146Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-billions-in-gaming-distressed-debt-activist-campaigns-reit-strategies-ef58e2cb24cd"
     }
@@ -11954,8 +12012,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:44.690Z",
-    "observed_source_updated_at": "2026-09-10T15:38:44.690Z",
+    "source_updated_at": "2026-09-14T12:40:32.651Z",
+    "observed_source_updated_at": "2026-09-14T12:40:32.651Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-billions-in-china-muddy-waters-11-260-hour-luckin-investigation-bridgewater-6dc079eca9c9"
     }
@@ -12015,8 +12073,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:46.690Z",
-    "observed_source_updated_at": "2026-09-10T15:38:46.690Z",
+    "source_updated_at": "2026-09-14T12:38:59.312Z",
+    "observed_source_updated_at": "2026-09-14T12:38:59.312Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/odeys-193-return-explained-how-hedge-funds-profited-from-uk-gilt-crisis-while-bank-of-england-4fae39be258d"
     }
@@ -12085,8 +12143,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:48.510Z",
-    "observed_source_updated_at": "2026-09-10T15:38:48.510Z",
+    "source_updated_at": "2026-09-14T12:38:22.327Z",
+    "observed_source_updated_at": "2026-09-14T12:38:22.327Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/6-market-mechanisms-that-generated-40m-from-legal-arbitrage-to-sec-fraud-cases-467df0bd26e7"
     }
@@ -12155,8 +12213,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:50.498Z",
-    "observed_source_updated_at": "2026-09-10T15:38:50.498Z",
+    "source_updated_at": "2026-09-14T12:38:15.937Z",
+    "observed_source_updated_at": "2026-09-14T12:38:15.937Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-250b-ipo-underpricing-system-how-hedge-funds-gained-systematic-allocation-advantages-49e4b9d83ad4"
     }
@@ -12252,8 +12310,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:52.530Z",
-    "observed_source_updated_at": "2026-09-10T15:38:52.530Z",
+    "source_updated_at": "2026-09-14T12:37:59.282Z",
+    "observed_source_updated_at": "2026-09-14T12:37:59.282Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-deutsche-banks-10b-collapse-the-trades-that-built-and-destroyed-germany-s-largest-bank-6fbab778d891"
     }
@@ -12322,8 +12380,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:56.575Z",
-    "observed_source_updated_at": "2026-09-10T15:38:56.575Z",
+    "source_updated_at": "2026-09-14T12:36:39.510Z",
+    "observed_source_updated_at": "2026-09-14T12:36:39.510Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-elite-traders-made-250b-from-commodities-2022-2023-citadels-8b-vitol-s-15b-and-the-1b4114ca6921"
     }
@@ -12361,8 +12419,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:38:58.409Z",
-    "observed_source_updated_at": "2026-09-10T15:38:58.409Z",
+    "source_updated_at": "2026-09-14T12:35:18.096Z",
+    "observed_source_updated_at": "2026-09-14T12:35:18.096Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-scott-bessents-30-return-how-elite-hedge-funds-turned-japan-s-widow-maker-trade-into-a-35a2c339b676"
     }
@@ -12408,8 +12466,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:00.317Z",
-    "observed_source_updated_at": "2026-09-10T15:39:00.317Z",
+    "source_updated_at": "2026-09-14T12:34:16.375Z",
+    "observed_source_updated_at": "2026-09-14T12:34:16.375Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-kite-lake-capitals-2b-event-driven-strategy-merger-arbitrage-mechanics-reverse-arb-9365c814c365"
     }
@@ -12447,8 +12505,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:02.214Z",
-    "observed_source_updated_at": "2026-09-10T15:39:02.214Z",
+    "source_updated_at": "2026-09-14T12:32:58.169Z",
+    "observed_source_updated_at": "2026-09-14T12:32:58.169Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/4-hidden-market-mechanisms-that-make-financial-crashes-inevitable-6ce06931ee6c"
     }
@@ -12488,7 +12546,7 @@
     "content_status": "full",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "a6c273d5478af2cfdcc9129365e41d5281a6e331b4abae969ac18dda22f55366",
+      "body_sha256": "75f5e85e41cb809c9c5c9928da58f2eb1b5b5bb728cac74682196a36ae059291",
       "lead": {
         "text": "In high-frequency trading, the difference between profit and loss is measured in nanoseconds. For years, the most sophisticated firms didn’t just optimize their code—they weaponized the exchange’s own network protocols. This is the forensic investigation into “packet splitting,” the microstructure exploit that let traders pre-position orders in CME’s RAM before market events occurred, and at least $145,000 in confirmed regulatory fines that followed.",
         "start": 0,
@@ -12499,8 +12557,8 @@
       "sections": [],
       "fallback_evidence": {
         "text": "The Load: Packet A contains roughly 99% of the message—header, symbol, price, quantity. This arrives at CME’s gateway and sits in the Kernel Receive Buffer. The gateway sees a partial message but cannot process it because the message is incomplete. Data waits in exchange RAM, parsed and ready. As one independent analysis describes it: “The nearly complete message, often 99% finished, sat at the edge of the exchange’s matching engine, awaiting the last 1% of the data.”",
-        "start": 1376,
-        "end": 1848,
+        "start": 1375,
+        "end": 1847,
         "sha256": "432358443f83d300c2789ca99fbba873f301192e4938fb186ad0d322c08ea70d",
         "truncated": false
       },
@@ -12508,8 +12566,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:04.145Z",
-    "observed_source_updated_at": "2026-09-10T15:39:04.145Z",
+    "source_updated_at": "2026-09-14T12:32:05.878Z",
+    "observed_source_updated_at": "2026-09-14T12:32:05.878Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-the-tcp-packet-splitting-exploit-how-cmes-3-microsecond-penalty-killed-hft-front-loading-0c233de22196"
     }
@@ -12547,8 +12605,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:08.121Z",
-    "observed_source_updated_at": "2026-09-10T15:39:08.121Z",
+    "source_updated_at": "2026-09-14T12:31:30.281Z",
+    "observed_source_updated_at": "2026-09-14T12:31:30.281Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/copper-tc-rcs-hit-60-why-andurand-predicts-40-000-and-currie-calls-it-his-highest-conviction-a8d21dd928a8"
     }
@@ -12622,8 +12680,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:10.007Z",
-    "observed_source_updated_at": "2026-09-10T15:39:10.007Z",
+    "source_updated_at": "2026-09-14T12:31:30.909Z",
+    "observed_source_updated_at": "2026-09-14T12:31:30.909Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/20-billion-in-3-credit-trades-how-ackman-paulson-elliott-made-history-with-exact-mechanics-a8e9444c6330"
     }
@@ -12661,8 +12719,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:13.744Z",
-    "observed_source_updated_at": "2026-09-10T15:39:13.744Z",
+    "source_updated_at": "2026-09-14T12:29:32.070Z",
+    "observed_source_updated_at": "2026-09-14T12:29:32.070Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-the-oil-trades-that-generated-15b-in-profits-during-2020-2022-bf26464df4f5"
     }
@@ -12700,8 +12758,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:15.754Z",
-    "observed_source_updated_at": "2026-09-10T15:39:15.754Z",
+    "source_updated_at": "2026-09-14T12:28:52.370Z",
+    "observed_source_updated_at": "2026-09-14T12:28:52.370Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/volatility-trading-case-studies-19-documented-hedge-fund-strategies-670ac35961d6"
     }
@@ -12761,8 +12819,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:17.671Z",
-    "observed_source_updated_at": "2026-09-10T15:39:17.671Z",
+    "source_updated_at": "2026-09-14T12:28:42.362Z",
+    "observed_source_updated_at": "2026-09-14T12:28:42.362Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/tci-fund-management-2025-inside-chris-hohns-record-18-9-billion-year-7ae37d753bb1"
     }
@@ -12800,8 +12858,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:19.584Z",
-    "observed_source_updated_at": "2026-09-10T15:39:19.584Z",
+    "source_updated_at": "2026-09-14T12:26:42.107Z",
+    "observed_source_updated_at": "2026-09-14T12:26:42.107Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/investigative-short-sellers-vs-systematic-multi-managers-075e0dc457ef"
     }
@@ -12853,8 +12911,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:21.444Z",
-    "observed_source_updated_at": "2026-09-10T15:39:21.444Z",
+    "source_updated_at": "2026-09-14T12:26:02.157Z",
+    "observed_source_updated_at": "2026-09-14T12:26:02.157Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-5b-from-sovereign-debt-argentina-greece-ukraine-case-studies-225edaf8911e"
     }
@@ -12980,8 +13038,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:25.104Z",
-    "observed_source_updated_at": "2026-09-10T15:39:25.104Z",
+    "source_updated_at": "2026-09-14T12:24:53.379Z",
+    "observed_source_updated_at": "2026-09-14T12:24:53.379Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/florida-captured-11-of-new-hedge-fund-launches-in-2024-ca1c93411693"
     }
@@ -13019,8 +13077,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:27.053Z",
-    "observed_source_updated_at": "2026-09-10T15:39:27.053Z",
+    "source_updated_at": "2026-09-14T12:24:33.837Z",
+    "observed_source_updated_at": "2026-09-14T12:24:33.837Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bobby-jains-new-hedge-fund-complete-13f-breakdown-of-21b-portfolio-e9207bd331eb"
     }
@@ -13058,8 +13116,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:30.738Z",
-    "observed_source_updated_at": "2026-09-10T15:39:30.738Z",
+    "source_updated_at": "2026-09-14T12:23:08.513Z",
+    "observed_source_updated_at": "2026-09-14T12:23:08.513Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-2-trillion-treasury-basis-trade-march-2020s-crisis-structure-returns-at-record-scale-486867fff1b6"
     }
@@ -13097,8 +13155,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:32.598Z",
-    "observed_source_updated_at": "2026-09-10T15:39:32.598Z",
+    "source_updated_at": "2026-09-14T12:23:09.200Z",
+    "observed_source_updated_at": "2026-09-14T12:23:09.200Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-nick-train-lost-16-billion-in-4-years-and-kept-buying-53d9f1c80dbc"
     }
@@ -13150,8 +13208,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:34.659Z",
-    "observed_source_updated_at": "2026-09-10T15:39:34.659Z",
+    "source_updated_at": "2026-09-14T12:21:09.758Z",
+    "observed_source_updated_at": "2026-09-14T12:21:09.758Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-prime-brokers-make-37b-revenue-models-behind-6-2t-hedge-fund-leverage-8a4305207926"
     }
@@ -13227,8 +13285,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:36.578Z",
-    "observed_source_updated_at": "2026-09-10T15:39:36.578Z",
+    "source_updated_at": "2026-09-14T13:22:45.957Z",
+    "observed_source_updated_at": "2026-09-14T13:22:45.957Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/why-one-hedge-fund-returned-21-while-another-made-0-75-in-2025-9d000b17eaab"
     }
@@ -13266,8 +13324,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:38.565Z",
-    "observed_source_updated_at": "2026-09-10T15:39:38.565Z",
+    "source_updated_at": "2026-09-14T13:36:48.924Z",
+    "observed_source_updated_at": "2026-09-14T13:36:48.924Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/i-mapped-every-entry-level-position-to-portfolio-manager-at-600-hedge-funds-verified-salaries-c0a78494706b"
     }
@@ -13305,8 +13363,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:45.251Z",
-    "observed_source_updated_at": "2026-09-10T15:39:45.251Z",
+    "source_updated_at": "2026-09-14T12:20:34.503Z",
+    "observed_source_updated_at": "2026-09-14T12:20:34.503Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-one-trader-made-1-billion-in-one-month-betting-against-the-fed-41cb3ef5d335"
     }
@@ -13366,8 +13424,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:47.051Z",
-    "observed_source_updated_at": "2026-09-10T15:39:47.051Z",
+    "source_updated_at": "2026-09-14T12:21:34.618Z",
+    "observed_source_updated_at": "2026-09-14T12:21:34.618Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/eight-banks-paid-1-3b-for-silver-manipulation-then-in-2025-silver-hit-83-and-shorts-collapsed-5483a4421c72"
     }
@@ -13399,8 +13457,8 @@
     },
     "family": "career-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:48.889Z",
-    "observed_source_updated_at": "2026-09-10T15:39:48.889Z",
+    "source_updated_at": "2026-09-14T12:18:45.557Z",
+    "observed_source_updated_at": "2026-09-14T12:18:45.557Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/i-analyzed-40-hedge-fund-billionaires-heres-the-exact-career-path-that-made-them-500b-49ea615f610d"
     }
@@ -13460,8 +13518,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:50.884Z",
-    "observed_source_updated_at": "2026-09-10T15:39:50.884Z",
+    "source_updated_at": "2026-09-14T12:18:17.164Z",
+    "observed_source_updated_at": "2026-09-14T12:18:17.164Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bluecrest-73-renaissance-14-39-october-inside-2025s-nuclear-trade-and-quant-catastrophe-200f31ca65a8"
     }
@@ -13526,8 +13584,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:53.052Z",
-    "observed_source_updated_at": "2026-09-10T15:39:53.052Z",
+    "source_updated_at": "2026-09-14T13:20:13.758Z",
+    "observed_source_updated_at": "2026-09-14T13:20:13.758Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-30-in-the-first-days-of-2026-on-venezuelas-distressed-debt-39dc9462b600"
     }
@@ -13559,8 +13617,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:54.884Z",
-    "observed_source_updated_at": "2026-09-10T15:39:54.884Z",
+    "source_updated_at": "2026-09-14T12:17:48.871Z",
+    "observed_source_updated_at": "2026-09-14T12:17:48.871Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-bluecrest-made-6-billion-shorting-bonds-the-court-documents-2e9326aab007"
     }
@@ -13612,8 +13670,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:56.744Z",
-    "observed_source_updated_at": "2026-09-10T15:39:56.744Z",
+    "source_updated_at": "2026-09-14T12:17:10.158Z",
+    "observed_source_updated_at": "2026-09-14T12:17:10.158Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bridgewaters-pure-alpha-returned-33-in-2025-here-s-the-exact-system-behind-it-f5b6355ea7ff"
     }
@@ -13651,8 +13709,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:39:58.813Z",
-    "observed_source_updated_at": "2026-09-10T15:39:58.813Z",
+    "source_updated_at": "2026-09-14T13:19:09.669Z",
+    "observed_source_updated_at": "2026-09-14T13:19:09.669Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/point72-delivered-19-returns-after-returning-3-5b-to-investors-45b47cd7fe5f"
     }
@@ -13690,8 +13748,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:02.771Z",
-    "observed_source_updated_at": "2026-09-10T15:40:02.771Z",
+    "source_updated_at": "2026-09-14T12:16:57.442Z",
+    "observed_source_updated_at": "2026-09-14T12:16:57.442Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/squarepoint-capital-teardown-statistical-arbitrage-vol-surface-arb-ml-alpha-at-182b-scale-5bef81757a20"
     }
@@ -13729,8 +13787,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:04.622Z",
-    "observed_source_updated_at": "2026-09-10T15:40:04.622Z",
+    "source_updated_at": "2026-09-14T12:16:43.109Z",
+    "observed_source_updated_at": "2026-09-14T12:16:43.109Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-founders-fund-captured-polymarkets-rise-to-9b-the-platform-economics-breakdown-15bbacbaeac3"
     }
@@ -13768,8 +13826,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:06.593Z",
-    "observed_source_updated_at": "2026-09-10T15:40:06.593Z",
+    "source_updated_at": "2026-09-14T13:18:04.746Z",
+    "observed_source_updated_at": "2026-09-14T13:18:04.746Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/what-3-000-years-of-economic-history-teaches-us-about-where-wealth-flows-next-9c0e42a3d8df"
     }
@@ -13801,8 +13859,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:08.516Z",
-    "observed_source_updated_at": "2026-09-10T15:40:08.516Z",
+    "source_updated_at": "2026-09-14T12:16:31.908Z",
+    "observed_source_updated_at": "2026-09-14T12:16:31.908Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/36-returns-how-d-e-shaw-beat-citadel-millennium-to-top-2024-8bd31bfb553b"
     }
@@ -13840,8 +13898,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:10.324Z",
-    "observed_source_updated_at": "2026-09-10T15:40:10.324Z",
+    "source_updated_at": "2026-09-14T13:17:11.112Z",
+    "observed_source_updated_at": "2026-09-14T13:17:11.112Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-the-168b-systematic-fund-making-money-while-others-lose-man-ahl-03e0997f566d"
     }
@@ -13879,8 +13937,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:13.946Z",
-    "observed_source_updated_at": "2026-09-10T15:40:13.946Z",
+    "source_updated_at": "2026-09-14T12:21:59.315Z",
+    "observed_source_updated_at": "2026-09-14T12:21:59.315Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-catastrophe-bonds-returned-19-7-while-hedge-funds-struggled-981ea5157f6f"
     }
@@ -13918,8 +13976,8 @@
     },
     "family": "career-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:16.602Z",
-    "observed_source_updated_at": "2026-09-10T15:40:16.602Z",
+    "source_updated_at": "2026-09-14T13:16:39.206Z",
+    "observed_source_updated_at": "2026-09-14T13:16:39.206Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-millennium-citadel-point72-structure-pods-team-economics-behind-428b-multi-manager-4f532f76292a"
     }
@@ -13971,8 +14029,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:18.718Z",
-    "observed_source_updated_at": "2026-09-10T15:40:18.718Z",
+    "source_updated_at": "2026-09-14T12:15:59.713Z",
+    "observed_source_updated_at": "2026-09-14T12:15:59.713Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-cliff-asnesss-35b-quarter-the-multi-factor-math-behind-micron-412-and-walmart-188-1635bf2ca1cf"
     }
@@ -14010,8 +14068,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:20.601Z",
-    "observed_source_updated_at": "2026-09-10T15:40:20.601Z",
+    "source_updated_at": "2026-09-14T12:15:35.466Z",
+    "observed_source_updated_at": "2026-09-14T12:15:35.466Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/millenniums-234b-q3-portfolio-what-330-pods-actually-trade-acf7057e4ffd"
     }
@@ -14049,8 +14107,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:22.466Z",
-    "observed_source_updated_at": "2026-09-10T15:40:22.466Z",
+    "source_updated_at": "2026-09-14T12:15:09.332Z",
+    "observed_source_updated_at": "2026-09-14T12:15:09.332Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/polymarket-prediction-system-v2-from-100-samples-to-9-862-markets-a-technical-update-23b76865bd4c"
     }
@@ -14088,8 +14146,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:26.305Z",
-    "observed_source_updated_at": "2026-09-10T15:40:26.305Z",
+    "source_updated_at": "2026-09-14T13:14:19.264Z",
+    "observed_source_updated_at": "2026-09-14T13:14:19.264Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/building-a-quantitative-prediction-system-for-polymarket-a-transparent-technical-deep-dive-be6d1dd1bea9"
     }
@@ -14141,8 +14199,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:28.148Z",
-    "observed_source_updated_at": "2026-09-10T15:40:28.148Z",
+    "source_updated_at": "2026-09-14T13:14:03.477Z",
+    "observed_source_updated_at": "2026-09-14T13:14:03.477Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-math-of-prediction-markets-binary-options-kelly-criterion-and-clob-pricing-mechanics-6dc3f579481b"
     }
@@ -14202,8 +14260,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:31.898Z",
-    "observed_source_updated_at": "2026-09-10T15:40:31.898Z",
+    "source_updated_at": "2026-09-14T12:15:03.150Z",
+    "observed_source_updated_at": "2026-09-14T12:15:03.150Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/arbitrage-evolution-from-morgan-stanleys-50m-1987-to-crypto-and-prediction-markets-cfb012023ffe"
     }
@@ -14255,8 +14313,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:34.037Z",
-    "observed_source_updated_at": "2026-09-10T15:40:34.037Z",
+    "source_updated_at": "2026-09-14T13:14:16.726Z",
+    "observed_source_updated_at": "2026-09-14T13:14:16.726Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-julian-robertsons-22b-hedge-fund-spawned-200-firms-38-he-seeded-directly-26a87aaab5ac"
     }
@@ -14294,8 +14352,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:36.063Z",
-    "observed_source_updated_at": "2026-09-10T15:40:36.063Z",
+    "source_updated_at": "2026-09-14T13:13:09.442Z",
+    "observed_source_updated_at": "2026-09-14T13:13:09.442Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-generated-2-62-alpha-in-2024-0094c8cb7c40"
     }
@@ -14360,8 +14418,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:39.872Z",
-    "observed_source_updated_at": "2026-09-10T15:40:39.872Z",
+    "source_updated_at": "2026-09-14T13:13:02.504Z",
+    "observed_source_updated_at": "2026-09-14T13:13:02.504Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-1-85-trillion-arbitrage-how-hedge-funds-profit-from-forward-mispricings-7a9609b8a26a"
     }
@@ -14413,8 +14471,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:41.770Z",
-    "observed_source_updated_at": "2026-09-10T15:40:41.770Z",
+    "source_updated_at": "2026-09-14T13:12:45.812Z",
+    "observed_source_updated_at": "2026-09-14T13:12:45.812Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-1-85-trillion-treasury-trade-that-nearly-broke-markets-in-2020-and-its-back-527077d5dc41",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/1-85-trillion-in-146205494"
@@ -14467,8 +14525,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:44.081Z",
-    "observed_source_updated_at": "2026-09-10T15:40:44.081Z",
+    "source_updated_at": "2026-09-14T13:11:57.631Z",
+    "observed_source_updated_at": "2026-09-14T13:11:57.631Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/why-renaissances-medallion-made-76-while-their-own-rief-lost-22-6-in-2020-1ed318548100"
     }
@@ -14506,8 +14564,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:46.006Z",
-    "observed_source_updated_at": "2026-09-10T15:40:46.006Z",
+    "source_updated_at": "2026-09-14T13:12:23.602Z",
+    "observed_source_updated_at": "2026-09-14T13:12:23.602Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/millennium-managements-multi-strategy-trading-architecture-four-core-strategies-behind-14-bd576cbe38a5"
     }
@@ -14545,8 +14603,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:48.168Z",
-    "observed_source_updated_at": "2026-09-10T15:40:48.168Z",
+    "source_updated_at": "2026-09-14T12:13:50.004Z",
+    "observed_source_updated_at": "2026-09-14T12:13:50.004Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/why-millennium-deployed-55b-to-100-external-hedge-fund-managers-b99702d8cd9f"
     }
@@ -14598,8 +14656,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:50.127Z",
-    "observed_source_updated_at": "2026-09-10T15:40:50.127Z",
+    "source_updated_at": "2026-09-14T13:10:06.066Z",
+    "observed_source_updated_at": "2026-09-14T13:10:06.066Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-neutral-funds-returned-7-21-in-2024-most-were-accidentally-long-momentum-bb3b5f5c44c1"
     }
@@ -14637,8 +14695,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:53.859Z",
-    "observed_source_updated_at": "2026-09-10T15:40:53.859Z",
+    "source_updated_at": "2026-09-14T12:13:22.734Z",
+    "observed_source_updated_at": "2026-09-14T12:13:22.734Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-extract-4-9-annual-fx-alpha-the-3-factor-framework-institutions-use-f235b45a7b9b"
     }
@@ -14676,8 +14734,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:55.913Z",
-    "observed_source_updated_at": "2026-09-10T15:40:55.913Z",
+    "source_updated_at": "2026-09-14T12:13:00.704Z",
+    "observed_source_updated_at": "2026-09-14T12:13:00.704Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-institutional-traders-exploit-gamma-explosion-at-options-expiration-a9ed925c67b7"
     }
@@ -14723,8 +14781,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:57.898Z",
-    "observed_source_updated_at": "2026-09-10T15:40:57.898Z",
+    "source_updated_at": "2026-09-14T13:08:55.270Z",
+    "observed_source_updated_at": "2026-09-14T13:08:55.270Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-mathematical-execution-behind-prediction-market-alpha-2d3016b04e9c"
     }
@@ -14770,8 +14828,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:40:59.851Z",
-    "observed_source_updated_at": "2026-09-10T15:40:59.851Z",
+    "source_updated_at": "2026-09-14T13:05:48.573Z",
+    "observed_source_updated_at": "2026-09-14T13:05:48.573Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-llm-sentiment-analysis-generated-355-returns-3-05-sharpe-by-fixing-the-fatal-flaw-afa81e9548c0"
     }
@@ -14809,8 +14867,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:03.819Z",
-    "observed_source_updated_at": "2026-09-10T15:41:03.819Z",
+    "source_updated_at": "2026-09-14T12:10:52.062Z",
+    "observed_source_updated_at": "2026-09-14T12:10:52.062Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-qis-products-democratized-dispersion-trading-packaging-systematic-correlation-premium-for-81ef1451a8b6"
     }
@@ -14875,8 +14933,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:05.917Z",
-    "observed_source_updated_at": "2026-09-10T15:41:05.917Z",
+    "source_updated_at": "2026-09-14T13:04:41.054Z",
+    "observed_source_updated_at": "2026-09-14T13:04:41.054Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-really-trade-the-30-trillion-treasury-market-inside-the-basis-trade-that-has-e9ea55877c59"
     }
@@ -14914,8 +14972,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:07.864Z",
-    "observed_source_updated_at": "2026-09-10T15:41:07.864Z",
+    "source_updated_at": "2026-09-14T13:03:10.043Z",
+    "observed_source_updated_at": "2026-09-14T13:03:10.043Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-making-in-derivatives-crushes-directional-hedge-fund-trading-a-20b-revenue-gap-a1f5d78e7fc9"
     }
@@ -14967,8 +15025,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:09.785Z",
-    "observed_source_updated_at": "2026-09-10T15:41:09.785Z",
+    "source_updated_at": "2026-09-14T13:02:30.951Z",
+    "observed_source_updated_at": "2026-09-14T13:02:30.951Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-profit-from-uk-budget-shorts-the-p-l-mechanics-behind-policy-driven-equity-4412c7cef0bb"
     }
@@ -15020,8 +15078,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:11.830Z",
-    "observed_source_updated_at": "2026-09-10T15:41:11.830Z",
+    "source_updated_at": "2026-09-14T13:00:38.305Z",
+    "observed_source_updated_at": "2026-09-14T13:00:38.305Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-investment-banks-profit-from-dispersion-trading-volatility-arbitrage-at-scale-513cfb5fdb0d"
     }
@@ -15073,8 +15131,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:15.577Z",
-    "observed_source_updated_at": "2026-09-10T15:41:15.577Z",
+    "source_updated_at": "2026-09-14T12:10:17.010Z",
+    "observed_source_updated_at": "2026-09-14T12:10:17.010Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/beyond-the-smile-how-hedge-funds-trade-3d-volatility-surfaces-for-spatial-arbitrage-74746cdd357e"
     }
@@ -15126,8 +15184,8 @@
     },
     "family": "market-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:17.660Z",
-    "observed_source_updated_at": "2026-09-10T15:41:17.660Z",
+    "source_updated_at": "2026-09-14T12:09:58.391Z",
+    "observed_source_updated_at": "2026-09-14T12:09:58.391Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/market-making-in-sports-betting-how-quant-firms-extract-alpha-from-exchange-microstructure-b83b47812055",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/market-making-in-145027439"
@@ -15166,8 +15224,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:19.692Z",
-    "observed_source_updated_at": "2026-09-10T15:41:19.692Z",
+    "source_updated_at": "2026-09-14T12:09:32.763Z",
+    "observed_source_updated_at": "2026-09-14T12:09:32.763Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bank-of-americas-macro-trading-desk-how-25-revenue-growth-was-engineered-in-h1-2025-9128356360aa"
     }
@@ -15199,8 +15257,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:21.768Z",
-    "observed_source_updated_at": "2026-09-10T15:41:21.768Z",
+    "source_updated_at": "2026-09-14T13:01:52.173Z",
+    "observed_source_updated_at": "2026-09-14T13:01:52.173Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-citibanks-trading-engine-how-event-driven-fx-architecture-and-systematic-execution-drive-e0496a6a11c8"
     }
@@ -15265,8 +15323,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:23.613Z",
-    "observed_source_updated_at": "2026-09-10T15:41:23.613Z",
+    "source_updated_at": "2026-09-14T12:58:52.040Z",
+    "observed_source_updated_at": "2026-09-14T12:58:52.040Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bridgewaters-alpha-beta-framework-how-risk-parity-and-portable-alpha-generate-returns-faa386a867cb"
     }
@@ -15318,8 +15376,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:27.364Z",
-    "observed_source_updated_at": "2026-09-10T15:41:27.364Z",
+    "source_updated_at": "2026-09-14T12:57:51.176Z",
+    "observed_source_updated_at": "2026-09-14T12:57:51.176Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/marshall-waces-tops-how-crowdsourcing-alpha-built-a-75-billion-systematic-edge-c20fb6314a38"
     }
@@ -15351,8 +15409,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:29.479Z",
-    "observed_source_updated_at": "2026-09-10T15:41:29.479Z",
+    "source_updated_at": "2026-09-14T12:02:00.787Z",
+    "observed_source_updated_at": "2026-09-14T12:02:00.787Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/which-hedge-funds-are-trading-prediction-markets-and-how-are-they-making-money-1a0d66810025"
     }
@@ -15404,8 +15462,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:31.318Z",
-    "observed_source_updated_at": "2026-09-10T15:41:31.318Z",
+    "source_updated_at": "2026-09-14T12:01:11.698Z",
+    "observed_source_updated_at": "2026-09-14T12:01:11.698Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-aqr-capital-management-how-multi-factor-systematic-strategies-generate-returns-34ec98d97abe"
     }
@@ -15457,8 +15515,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:33.346Z",
-    "observed_source_updated_at": "2026-09-10T15:41:33.346Z",
+    "source_updated_at": "2026-09-14T12:56:57.582Z",
+    "observed_source_updated_at": "2026-09-14T12:56:57.582Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/two-sigmas-china-alpha-machine-52-returns-in-a-retail-dominated-market-3677decc020f"
     }
@@ -15490,8 +15548,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:35.164Z",
-    "observed_source_updated_at": "2026-09-10T15:41:35.164Z",
+    "source_updated_at": "2026-09-14T11:59:46.231Z",
+    "observed_source_updated_at": "2026-09-14T11:59:46.231Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/ml-signal-extraction-6-hypotheses-with-documented-capital-deployment-65cce4a1d5d9"
     }
@@ -15529,8 +15587,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:38.991Z",
-    "observed_source_updated_at": "2026-09-10T15:41:38.991Z",
+    "source_updated_at": "2026-09-14T11:59:31.346Z",
+    "observed_source_updated_at": "2026-09-14T11:59:31.346Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/long-gamma-captures-excess-realized-volatility-the-p-l-mechanics-behind-volatility-arbitrage-3fe1e5dc0925"
     }
@@ -15568,8 +15626,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:40.740Z",
-    "observed_source_updated_at": "2026-09-10T15:41:40.740Z",
+    "source_updated_at": "2026-09-14T11:58:17.651Z",
+    "observed_source_updated_at": "2026-09-14T11:58:17.651Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/quant-discovered-vs-discretionary-trades-how-hedge-funds-actually-find-alpha-08709df2dd15",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/quant-discovered-144344878"
@@ -15608,8 +15666,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:44.606Z",
-    "observed_source_updated_at": "2026-09-10T15:41:44.606Z",
+    "source_updated_at": "2026-09-14T12:56:34.395Z",
+    "observed_source_updated_at": "2026-09-14T12:56:34.395Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-extract-billions-from-volatility-mispricings-the-systematic-arbitrage-playbook-9ab90af1fa6a",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-hedge-funds-144296075"
@@ -15662,8 +15720,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:46.606Z",
-    "observed_source_updated_at": "2026-09-10T15:41:46.606Z",
+    "source_updated_at": "2026-09-14T11:57:51.085Z",
+    "observed_source_updated_at": "2026-09-14T11:57:51.085Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-then-lost-billions-timing-220b-in-predictable-index-flows-eadc9c76c03d",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-hedge-funds-144261449"
@@ -15702,8 +15760,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:48.718Z",
-    "observed_source_updated_at": "2026-09-10T15:41:48.718Z",
+    "source_updated_at": "2026-09-14T11:57:42.331Z",
+    "observed_source_updated_at": "2026-09-14T11:57:42.331Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/i-added-transaction-costs-to-my-goldman-sachs-backtest-the-49-return-became-a-9-6-loss-b4991ffeb77d",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/i-added-costs-to-144223076"
@@ -15742,8 +15800,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:50.572Z",
-    "observed_source_updated_at": "2026-09-10T15:41:50.572Z",
+    "source_updated_at": "2026-09-14T11:57:18.954Z",
+    "observed_source_updated_at": "2026-09-14T11:57:18.954Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/goldman-sachs-claims-18-returns-on-event-driven-options-6a0335076060",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/goldman-sachs-18-144193304"
@@ -15782,8 +15840,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:52.518Z",
-    "observed_source_updated_at": "2026-09-10T15:41:52.518Z",
+    "source_updated_at": "2026-09-14T11:55:59.358Z",
+    "observed_source_updated_at": "2026-09-14T11:55:59.358Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/goldman-sachs-event-driven-options-three-strategies-with-11-18-reported-returns-07a44af8a868",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/goldman-sachs-11-144141966"
@@ -15822,8 +15880,8 @@
     },
     "family": "market-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:56.168Z",
-    "observed_source_updated_at": "2026-09-10T15:41:56.168Z",
+    "source_updated_at": "2026-09-14T11:56:07.262Z",
+    "observed_source_updated_at": "2026-09-14T11:56:07.262Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/jpmorgans-29-8b-trading-operation-machine-learning-execution-c6527a679518"
     }
@@ -15855,8 +15913,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:58.042Z",
-    "observed_source_updated_at": "2026-09-10T15:41:58.042Z",
+    "source_updated_at": "2026-09-14T12:55:45.795Z",
+    "observed_source_updated_at": "2026-09-14T12:55:45.795Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/quadeye-securities-extracting-0-5-basis-points-from-indias-hft-infrastructure-game-039f6b3effd7",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/quadeye-0-5-from-143620431"
@@ -15895,8 +15953,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:41:59.853Z",
-    "observed_source_updated_at": "2026-09-10T15:41:59.853Z",
+    "source_updated_at": "2026-09-14T12:54:58.779Z",
+    "observed_source_updated_at": "2026-09-14T12:54:58.779Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/ices-2b-polymarket-investment-the-12-month-retail-arbitrage-extinction-window-ac10d8fd4ed0"
     }
@@ -15934,8 +15992,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:03.550Z",
-    "observed_source_updated_at": "2026-09-10T15:42:03.550Z",
+    "source_updated_at": "2026-09-14T11:50:04.239Z",
+    "observed_source_updated_at": "2026-09-14T11:50:04.239Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-citadel-avoided-the-2024-steepener-massacre-ditching-pca-for-market-observables-cbc6ab28b8bc",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-citadel-2024-143472447"
@@ -15988,8 +16046,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:05.464Z",
-    "observed_source_updated_at": "2026-09-10T15:42:05.464Z",
+    "source_updated_at": "2026-09-14T11:48:41.144Z",
+    "observed_source_updated_at": "2026-09-14T11:48:41.144Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/multi-strategy-hedge-funds-face-structural-headwinds-in-private-credit-expansion-5edc72b14917",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/multi-strategy-143928379"
@@ -16028,8 +16086,8 @@
     },
     "family": "market-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:07.400Z",
-    "observed_source_updated_at": "2026-09-10T15:42:07.400Z",
+    "source_updated_at": "2026-09-14T11:47:45.441Z",
+    "observed_source_updated_at": "2026-09-14T11:47:45.441Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-major-hedge-funds-value-crypto-trading-market-structure-while-traditional-valuation-fails-400896195de5",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-major-hedge-143861276"
@@ -16068,8 +16126,8 @@
     },
     "family": "career-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:09.286Z",
-    "observed_source_updated_at": "2026-09-10T15:42:09.286Z",
+    "source_updated_at": "2026-09-14T11:47:00.373Z",
+    "observed_source_updated_at": "2026-09-14T11:47:00.373Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/point72s-multi-pod-engine-how-41-5b-delivers-19-returns-through-systematic-diversification-c174e4e25404",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/point72s-multi-143752186"
@@ -16108,8 +16166,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:11.090Z",
-    "observed_source_updated_at": "2026-09-10T15:42:11.090Z",
+    "source_updated_at": "2026-09-14T11:45:44.102Z",
+    "observed_source_updated_at": "2026-09-14T11:45:44.102Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-futures-first-generates-returns-liquidity-provision-across-global-derivatives-markets-43e247d381fb",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-futures-143621148"
@@ -16148,8 +16206,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:14.829Z",
-    "observed_source_updated_at": "2026-09-10T15:42:14.829Z",
+    "source_updated_at": "2026-09-14T11:45:09.755Z",
+    "observed_source_updated_at": "2026-09-14T11:45:09.755Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/graviton-research-capital-deconstructing-indias-largest-hft-firm-s-statistical-arbitrage-dd826a29af86",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/graviton-capital-143549251"
@@ -16232,8 +16290,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:16.795Z",
-    "observed_source_updated_at": "2026-09-10T15:42:16.795Z",
+    "source_updated_at": "2026-09-14T11:44:05.087Z",
+    "observed_source_updated_at": "2026-09-14T11:44:05.087Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/da-vinci-trading-volatility-arbitrage-and-crypto-market-making-deconstructed-507755031666",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/da-vinci-trading-143474576"
@@ -16294,8 +16352,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:20.488Z",
-    "observed_source_updated_at": "2026-09-10T15:42:20.488Z",
+    "source_updated_at": "2026-09-14T12:53:20.020Z",
+    "observed_source_updated_at": "2026-09-14T12:53:20.020Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/d-e-shaws-1998-crisis-how-a-372-million-loss-built-a-65-billion-quant-giant-b15c6bac91cd",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/d-e-shaws-1998-143468518"
@@ -16444,8 +16502,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:22.485Z",
-    "observed_source_updated_at": "2026-09-10T15:42:22.485Z",
+    "source_updated_at": "2026-09-14T11:43:02.263Z",
+    "observed_source_updated_at": "2026-09-14T11:43:02.263Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/hudson-river-trading-how-8b-in-revenue-reveals-the-death-of-latency-arbitrage-9317930dd848",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/hudson-river-how-143389328"
@@ -16498,8 +16556,8 @@
     },
     "family": "career-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:24.362Z",
-    "observed_source_updated_at": "2026-09-10T15:42:24.362Z",
+    "source_updated_at": "2026-09-14T11:42:06.156Z",
+    "observed_source_updated_at": "2026-09-14T11:42:06.156Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-qrt-built-28b-through-centralized-allocation-not-star-portfolio-managers-6de8c3ab6c9d",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/how-qrt-built-143346742"
@@ -16552,8 +16610,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:26.359Z",
-    "observed_source_updated_at": "2026-09-10T15:42:26.359Z",
+    "source_updated_at": "2026-09-14T11:41:19.860Z",
+    "observed_source_updated_at": "2026-09-14T11:41:19.860Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-volatility-arbitrage-funds-use-the-heston-model-to-extract-alpha-from-equity-options-e0a1d3bf5342"
     }
@@ -16605,8 +16663,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:28.252Z",
-    "observed_source_updated_at": "2026-09-10T15:42:28.252Z",
+    "source_updated_at": "2026-09-14T11:40:29.371Z",
+    "observed_source_updated_at": "2026-09-14T11:40:29.371Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-multi-strategy-hedge-funds-win-at-fx-carry-risk-control-over-alpha-generation-c363457c9a64"
     }
@@ -16658,8 +16716,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:32.094Z",
-    "observed_source_updated_at": "2026-09-10T15:42:32.094Z",
+    "source_updated_at": "2026-09-14T11:39:54.586Z",
+    "observed_source_updated_at": "2026-09-14T11:39:54.586Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-xtx-markets-turned-2024s-volatility-into-1-28-billion-4334810dbf2d"
     }
@@ -16697,8 +16755,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:33.885Z",
-    "observed_source_updated_at": "2026-09-10T15:42:33.885Z",
+    "source_updated_at": "2026-09-14T11:39:05.550Z",
+    "observed_source_updated_at": "2026-09-14T11:39:05.550Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-flow-traders-captured-495m-in-q1-2020-market-makings-3-543-profit-surge-bc6a1890ed27"
     }
@@ -16750,8 +16808,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:35.863Z",
-    "observed_source_updated_at": "2026-09-10T15:42:35.863Z",
+    "source_updated_at": "2026-09-14T12:52:33.446Z",
+    "observed_source_updated_at": "2026-09-14T12:52:33.446Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/optivers-3-5b-market-making-engine-avellaneda-stoikov-inventory-optimization-at-scale-a28fede5a85a"
     }
@@ -16789,8 +16847,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:39.638Z",
-    "observed_source_updated_at": "2026-09-10T15:42:39.638Z",
+    "source_updated_at": "2026-09-14T12:52:01.053Z",
+    "observed_source_updated_at": "2026-09-14T12:52:01.053Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-2m-arbitrageur-playbook-reverse-engineering-top-performer-strategies-51b75aeaaf0e"
     }
@@ -16842,8 +16900,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:41.600Z",
-    "observed_source_updated_at": "2026-09-10T15:42:41.600Z",
+    "source_updated_at": "2026-09-14T11:37:57.557Z",
+    "observed_source_updated_at": "2026-09-14T11:37:57.557Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/susquehannas-black-monday-trade-exploiting-black-scholes-model-risk-in-the-1987-crash-90ecbaf18ca9"
     }
@@ -16895,8 +16953,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:43.487Z",
-    "observed_source_updated_at": "2026-09-10T15:42:43.487Z",
+    "source_updated_at": "2026-09-14T12:50:59.821Z",
+    "observed_source_updated_at": "2026-09-14T12:50:59.821Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/negrisk-market-rebalancing-how-29m-was-extracted-from-multi-condition-prediction-markets-2f1f91644c5b"
     }
@@ -16934,8 +16992,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:45.315Z",
-    "observed_source_updated_at": "2026-09-10T15:42:45.315Z",
+    "source_updated_at": "2026-09-14T11:37:29.034Z",
+    "observed_source_updated_at": "2026-09-14T11:37:29.034Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/combinatorial-arbitrage-in-prediction-markets-why-62-of-llm-detected-dependencies-fail-to-26f614804e8d"
     }
@@ -16973,8 +17031,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:47.390Z",
-    "observed_source_updated_at": "2026-09-10T15:42:47.390Z",
+    "source_updated_at": "2026-09-14T12:49:58.269Z",
+    "observed_source_updated_at": "2026-09-14T12:49:58.269Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/building-a-prediction-market-arbitrage-bot-technical-implementation-dd6e930efc03"
     }
@@ -17052,8 +17110,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:51.123Z",
-    "observed_source_updated_at": "2026-09-10T15:42:51.123Z",
+    "source_updated_at": "2026-09-14T12:48:55.949Z",
+    "observed_source_updated_at": "2026-09-14T12:48:55.949Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/prediction-market-arbitrage-how-quants-extracted-40m-from-structural-mispricing-81ba031ab0cf"
     }
@@ -17091,8 +17149,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:53.021Z",
-    "observed_source_updated_at": "2026-09-10T15:42:53.021Z",
+    "source_updated_at": "2026-09-14T11:40:02.339Z",
+    "observed_source_updated_at": "2026-09-14T11:40:02.339Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-generated-30-returns-in-the-convertible-arbitrage-boom-of-2025-ed801a02abd2"
     }
@@ -17130,8 +17188,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:55.191Z",
-    "observed_source_updated_at": "2026-09-10T15:42:55.191Z",
+    "source_updated_at": "2026-09-14T12:47:19.167Z",
+    "observed_source_updated_at": "2026-09-14T12:47:19.167Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/one-million-options-contracts-isnt-one-million-euros-or-even-close-14f0467fea94"
     }
@@ -17169,8 +17227,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:42:57.154Z",
-    "observed_source_updated_at": "2026-09-10T15:42:57.154Z",
+    "source_updated_at": "2026-09-14T11:35:19.861Z",
+    "observed_source_updated_at": "2026-09-14T11:35:19.861Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-volatility-carry-trade-how-selling-vol-makes-10-until-it-can-lose-80-f0c7b064c546"
     }
@@ -17229,8 +17287,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:00.802Z",
-    "observed_source_updated_at": "2026-09-10T15:43:00.802Z",
+    "source_updated_at": "2026-09-14T11:35:47.597Z",
+    "observed_source_updated_at": "2026-09-14T11:35:47.597Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hidden-volatility-feedback-loops-determine-your-p-l-the-multivariate-quadratic-hawkes-f1966eff8063"
     }
@@ -17282,8 +17340,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:02.698Z",
-    "observed_source_updated_at": "2026-09-10T15:43:02.698Z",
+    "source_updated_at": "2026-09-14T11:34:26.545Z",
+    "observed_source_updated_at": "2026-09-14T11:34:26.545Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-short-sellers-extracted-127m-from-the-bdc-collapse-dissecting-a-credit-quality-arbitrage-478b4fea3377"
     }
@@ -17321,8 +17379,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:04.531Z",
-    "observed_source_updated_at": "2026-09-10T15:43:04.531Z",
+    "source_updated_at": "2026-09-14T11:34:22.763Z",
+    "observed_source_updated_at": "2026-09-14T11:34:22.763Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-multi-million-dollar-misdiagnosis-when-fx-desks-blame-brokers-for-internal-routing-failures-201eb51e6260"
     }
@@ -17360,8 +17418,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:08.374Z",
-    "observed_source_updated_at": "2026-09-10T15:43:08.374Z",
+    "source_updated_at": "2026-09-14T11:34:24.897Z",
+    "observed_source_updated_at": "2026-09-14T11:34:24.897Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-4-6-billion-lesson-why-european-options-trade-below-value-and-how-market-makers-profit-8b0afd0896fa"
     }
@@ -17420,8 +17478,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:10.310Z",
-    "observed_source_updated_at": "2026-09-10T15:43:10.310Z",
+    "source_updated_at": "2026-09-14T11:33:06.746Z",
+    "observed_source_updated_at": "2026-09-14T11:33:06.746Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-markov-processes-print-money-in-market-chaos-the-400b-strategy-that-profited-from-covids-694d50057544"
     }
@@ -17467,8 +17525,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:12.555Z",
-    "observed_source_updated_at": "2026-09-10T15:43:12.555Z",
+    "source_updated_at": "2026-09-14T11:31:15.515Z",
+    "observed_source_updated_at": "2026-09-14T11:31:15.515Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-40-year-bond-trade-how-systematic-forecast-errors-generated-excess-returns-c5418e37ea60"
     }
@@ -17506,8 +17564,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:14.372Z",
-    "observed_source_updated_at": "2026-09-10T15:43:14.372Z",
+    "source_updated_at": "2026-09-14T11:30:03.953Z",
+    "observed_source_updated_at": "2026-09-14T11:30:03.953Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-amaranth-advisors-lost-6-billion-in-20-days-a-quantitative-post-mortem-60d28b483907"
     }
@@ -17559,8 +17617,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:16.187Z",
-    "observed_source_updated_at": "2026-09-10T15:43:16.187Z",
+    "source_updated_at": "2026-09-14T11:30:54.440Z",
+    "observed_source_updated_at": "2026-09-14T11:30:54.440Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-misusing-the-sharpe-ratio-cost-hedge-funds-150-billion-twice-1a0ab2b7e1ad"
     }
@@ -17606,8 +17664,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:19.827Z",
-    "observed_source_updated_at": "2026-09-10T15:43:19.827Z",
+    "source_updated_at": "2026-09-14T11:30:06.547Z",
+    "observed_source_updated_at": "2026-09-14T11:30:06.547Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-vol-arb-desks-actually-make-money-from-correlation-the-complete-playbook-with-real-trades-63ea60e57617"
     }
@@ -17659,8 +17717,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:21.810Z",
-    "observed_source_updated_at": "2026-09-10T15:43:21.810Z",
+    "source_updated_at": "2026-09-14T11:28:28.490Z",
+    "observed_source_updated_at": "2026-09-14T11:28:28.490Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/weather-derivatives-explode-260-inside-the-25b-climate-risk-transfer-market-f8c90428fe99"
     }
@@ -17692,8 +17750,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:25.657Z",
-    "observed_source_updated_at": "2026-09-10T15:43:25.657Z",
+    "source_updated_at": "2026-09-14T11:27:07.653Z",
+    "observed_source_updated_at": "2026-09-14T11:27:07.653Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-statistical-arbitrage-desks-made-7-79-during-the-april-tariff-crash-a6aca7ce3e03"
     }
@@ -17745,8 +17803,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:27.700Z",
-    "observed_source_updated_at": "2026-09-10T15:43:27.700Z",
+    "source_updated_at": "2026-09-14T11:30:58.694Z",
+    "observed_source_updated_at": "2026-09-14T11:30:58.694Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-martingale-paradox-why-mathematically-perfect-trading-strategies-fail-in-real-markets-a4b943323a1a"
     }
@@ -17798,8 +17856,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:29.740Z",
-    "observed_source_updated_at": "2026-09-10T15:43:29.740Z",
+    "source_updated_at": "2026-09-14T12:49:34.589Z",
+    "observed_source_updated_at": "2026-09-14T12:49:34.589Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-use-machine-learning-for-derivatives-pricing-and-where-they-make-money-e5381f8674e7"
     }
@@ -17837,8 +17895,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:31.715Z",
-    "observed_source_updated_at": "2026-09-10T15:43:31.715Z",
+    "source_updated_at": "2026-09-14T11:25:36.781Z",
+    "observed_source_updated_at": "2026-09-14T11:25:36.781Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-50-returns-betting-against-microstrategy-while-buying-bitcoin-f7f6ee64d962"
     }
@@ -17876,8 +17934,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:35.429Z",
-    "observed_source_updated_at": "2026-09-10T15:43:35.429Z",
+    "source_updated_at": "2026-09-14T11:24:16.466Z",
+    "observed_source_updated_at": "2026-09-14T11:24:16.466Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-2-billion-oil-storage-trade-how-wall-street-turned-super-contango-into-historic-profits-52b4396ecc7e"
     }
@@ -17923,8 +17981,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:37.319Z",
-    "observed_source_updated_at": "2026-09-10T15:43:37.319Z",
+    "source_updated_at": "2026-09-14T11:24:01.850Z",
+    "observed_source_updated_at": "2026-09-14T11:24:01.850Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-deepseek-shock-how-systematic-hedge-funds-profited-while-fundamentals-lost-billions-3ceb3feacb6d"
     }
@@ -17976,8 +18034,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:39.177Z",
-    "observed_source_updated_at": "2026-09-10T15:43:39.177Z",
+    "source_updated_at": "2026-09-14T11:22:53.320Z",
+    "observed_source_updated_at": "2026-09-14T11:22:53.320Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/when-hedge-funds-lost-money-while-markets-hit-all-time-highs-the-october-2025-crowding-crisis-e576ccf925d7"
     }
@@ -18029,8 +18087,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:41.209Z",
-    "observed_source_updated_at": "2026-09-10T15:43:41.209Z",
+    "source_updated_at": "2026-09-14T11:21:01.751Z",
+    "observed_source_updated_at": "2026-09-14T11:21:01.751Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-multi-strategy-funds-generated-10-returns-in-2025-inside-balyasnys-pod-allocation-model-0b2479bd311b"
     }
@@ -18068,8 +18126,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:43.245Z",
-    "observed_source_updated_at": "2026-09-10T15:43:43.245Z",
+    "source_updated_at": "2026-09-14T11:19:25.121Z",
+    "observed_source_updated_at": "2026-09-14T11:19:25.121Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/anatomy-of-a-468-million-collapse-how-pierre-andurand-lost-52-in-four-months-5ab76e56f63d"
     }
@@ -18107,8 +18165,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:47.923Z",
-    "observed_source_updated_at": "2026-09-10T15:43:47.923Z",
+    "source_updated_at": "2026-09-14T11:19:56.041Z",
+    "observed_source_updated_at": "2026-09-14T11:19:56.041Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/commodity-derivatives-pricing-engine-mathematical-validation-of-forward-curves-using-real-market-b2c2364d1878"
     }
@@ -18146,8 +18204,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:49.858Z",
-    "observed_source_updated_at": "2026-09-10T15:43:49.858Z",
+    "source_updated_at": "2026-09-14T11:17:48.703Z",
+    "observed_source_updated_at": "2026-09-14T11:17:48.703Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-5-6-billion-unwind-how-trumps-tariff-shock-broke-the-quant-machine-9dae40b4c5c8"
     }
@@ -18185,8 +18243,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:51.750Z",
-    "observed_source_updated_at": "2026-09-10T15:43:51.750Z",
+    "source_updated_at": "2026-09-14T11:16:52.216Z",
+    "observed_source_updated_at": "2026-09-14T11:16:52.216Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-bridgewaters-pure-alpha-captured-26-2-returns-from-tariff-volatility-23d5b293c39a"
     }
@@ -18238,8 +18296,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:53.680Z",
-    "observed_source_updated_at": "2026-09-10T15:43:53.680Z",
+    "source_updated_at": "2026-09-14T11:16:10.272Z",
+    "observed_source_updated_at": "2026-09-14T11:16:10.272Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/statistical-arbitrage-the-quant-strategy-seeing-record-inflows-a2988c83471a"
     }
@@ -18291,8 +18349,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:57.397Z",
-    "observed_source_updated_at": "2026-09-10T15:43:57.397Z",
+    "source_updated_at": "2026-09-14T11:15:02.266Z",
+    "observed_source_updated_at": "2026-09-14T11:15:02.266Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/volatility-arbitrage-how-funds-profited-during-the-august-2024-vix-spike-d31cf0da1949"
     }
@@ -18330,8 +18388,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:43:59.281Z",
-    "observed_source_updated_at": "2026-09-10T15:43:59.281Z",
+    "source_updated_at": "2026-09-14T11:15:18.057Z",
+    "observed_source_updated_at": "2026-09-14T11:15:18.057Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-ackman-made-2-6b-installing-one-ceo-the-activist-alpha-playbook-11758162abbd"
     }
@@ -18377,8 +18435,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:01.221Z",
-    "observed_source_updated_at": "2026-09-10T15:44:01.221Z",
+    "source_updated_at": "2026-09-14T11:14:33.690Z",
+    "observed_source_updated_at": "2026-09-14T11:14:33.690Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/inside-bridgewaters-pure-alpha-how-systematic-macro-translates-economic-views-into-portfolio-29fc13aad6c6"
     }
@@ -18410,8 +18468,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:03.342Z",
-    "observed_source_updated_at": "2026-09-10T15:44:03.342Z",
+    "source_updated_at": "2026-09-14T11:15:24.895Z",
+    "observed_source_updated_at": "2026-09-14T11:15:24.895Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/long-short-equity-dissecting-robert-citrones-52-return-in-2024-fe2be00c7153"
     }
@@ -18470,8 +18528,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:06.032Z",
-    "observed_source_updated_at": "2026-09-10T15:44:06.032Z",
+    "source_updated_at": "2026-09-14T11:14:25.758Z",
+    "observed_source_updated_at": "2026-09-14T11:14:25.758Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/renaissance-technologies-the-100-billion-built-on-statistical-arbitrage-908ca7653fa2"
     }
@@ -18509,8 +18567,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:10.185Z",
-    "observed_source_updated_at": "2026-09-10T15:44:10.185Z",
+    "source_updated_at": "2026-09-14T11:12:16.227Z",
+    "observed_source_updated_at": "2026-09-14T11:12:16.227Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-pod-shop-revolution-how-multi-strategy-funds-generated-13-6-returns-while-markets-stumbled-8e090d97b68b"
     }
@@ -18548,8 +18606,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:12.103Z",
-    "observed_source_updated_at": "2026-09-10T15:44:12.103Z",
+    "source_updated_at": "2026-09-14T11:13:06.500Z",
+    "observed_source_updated_at": "2026-09-14T11:13:06.500Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-one-hedge-fund-turned-27m-into-2-6b-in-30-days-4dc515329a0a"
     }
@@ -18587,8 +18645,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:14.146Z",
-    "observed_source_updated_at": "2026-09-10T15:44:14.146Z",
+    "source_updated_at": "2026-09-14T11:08:53.707Z",
+    "observed_source_updated_at": "2026-09-14T11:08:53.707Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-4-74-trillion-inflection-point-your-complete-guide-to-launching-a-hedge-fund-in-2025s-d13ddb0a5369"
     }
@@ -18626,8 +18684,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:16.196Z",
-    "observed_source_updated_at": "2026-09-10T15:44:16.196Z",
+    "source_updated_at": "2026-09-14T11:05:43.709Z",
+    "observed_source_updated_at": "2026-09-14T11:05:43.709Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-george-weiss-collapse-how-a-46-year-hedge-fund-dynasty-died-on-zoom-59e6172d3dc2"
     }
@@ -18665,8 +18723,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:18.131Z",
-    "observed_source_updated_at": "2026-09-10T15:44:18.131Z",
+    "source_updated_at": "2026-09-14T11:05:06.916Z",
+    "observed_source_updated_at": "2026-09-14T11:05:06.916Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-242k-cross-trading-scheme-how-palmer-square-turned-cost-saving-arbitrage-into-systematic-c9383cfc5ea8"
     }
@@ -18704,8 +18762,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:21.785Z",
-    "observed_source_updated_at": "2026-09-10T15:44:21.785Z",
+    "source_updated_at": "2026-09-14T11:04:12.813Z",
+    "observed_source_updated_at": "2026-09-14T11:04:12.813Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-d-e-shaw-generated-11-1-billion-inside-the-macro-trade-that-defined-2024-ab029e5cd976"
     }
@@ -18743,8 +18801,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:23.721Z",
-    "observed_source_updated_at": "2026-09-10T15:44:23.721Z",
+    "source_updated_at": "2026-09-14T11:07:02.395Z",
+    "observed_source_updated_at": "2026-09-14T11:07:02.395Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-20-billion-meltdown-how-two-junior-traders-broke-the-worlds-oldest-metal-exchange-b7b3d6091113"
     }
@@ -18796,8 +18854,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:25.648Z",
-    "observed_source_updated_at": "2026-09-10T15:44:25.648Z",
+    "source_updated_at": "2026-09-14T11:02:13.411Z",
+    "observed_source_updated_at": "2026-09-14T11:02:13.411Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-ecor1-capital-lost-10-million-manipulating-a-cross-listed-ipo-a-quantitative-breakdown-038b65ad11de"
     }
@@ -18835,8 +18893,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:27.785Z",
-    "observed_source_updated_at": "2026-09-10T15:44:27.785Z",
+    "source_updated_at": "2026-09-14T11:00:33.989Z",
+    "observed_source_updated_at": "2026-09-14T11:00:33.989Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/weather-derivatives-market-explodes-260-inside-the-25-billion-climate-risk-transfer-revolution-2b47b424dee3"
     }
@@ -18874,8 +18932,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:32.500Z",
-    "observed_source_updated_at": "2026-09-10T15:44:32.500Z",
+    "source_updated_at": "2026-09-14T10:59:02.024Z",
+    "observed_source_updated_at": "2026-09-14T10:59:02.024Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-17-1-billion-cftc-enforcement-bonanza-why-crypto-killed-traditional-trading-cases-54a636a68ca1"
     }
@@ -18927,8 +18985,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:34.626Z",
-    "observed_source_updated_at": "2026-09-10T15:44:34.626Z",
+    "source_updated_at": "2026-09-14T10:57:09.430Z",
+    "observed_source_updated_at": "2026-09-14T10:57:09.430Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-40-trillion-reality-check-how-systematic-funds-extract-alpha-from-esg-market-maturation-fc421ebf2791"
     }
@@ -18966,8 +19024,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:36.555Z",
-    "observed_source_updated_at": "2026-09-10T15:44:36.555Z",
+    "source_updated_at": "2026-09-14T10:56:12.190Z",
+    "observed_source_updated_at": "2026-09-14T10:56:12.190Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-and-lost-millions-with-rough-volatility-models-a-deep-dive-into-modern-3af465b0ba5d"
     }
@@ -19005,8 +19063,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:38.420Z",
-    "observed_source_updated_at": "2026-09-10T15:44:38.420Z",
+    "source_updated_at": "2026-09-14T10:55:13.175Z",
+    "observed_source_updated_at": "2026-09-14T10:55:13.175Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-morgan-stanley-made-100m-through-systematic-information-arbitrage-and-paid-249m-for-it-66d890e57d7e"
     }
@@ -19058,8 +19116,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:40.315Z",
-    "observed_source_updated_at": "2026-09-10T15:44:40.315Z",
+    "source_updated_at": "2026-09-14T10:54:23.023Z",
+    "observed_source_updated_at": "2026-09-14T10:54:23.023Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-josh-resnicks-120-6-return-cracked-the-475-million-rich-list-code-95c96dfbfd89"
     }
@@ -19105,8 +19163,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:42.538Z",
-    "observed_source_updated_at": "2026-09-10T15:44:42.538Z",
+    "source_updated_at": "2026-09-14T10:53:16.415Z",
+    "observed_source_updated_at": "2026-09-14T10:53:16.415Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-jpmorgan-lost-617-million-in-2024s-perfect-compliance-storm-1f6e957ada66"
     }
@@ -19144,8 +19202,8 @@
     },
     "family": "event-reaction",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:45.561Z",
-    "observed_source_updated_at": "2026-09-10T15:44:45.561Z",
+    "source_updated_at": "2026-09-14T10:52:12.436Z",
+    "observed_source_updated_at": "2026-09-14T10:52:12.436Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/riefs-1-6-7fcf6268d787"
     }
@@ -19210,8 +19268,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-10T15:44:47.444Z",
-    "observed_source_updated_at": "2026-09-10T15:44:47.444Z",
+    "source_updated_at": "2026-09-14T10:51:27.357Z",
+    "observed_source_updated_at": "2026-09-14T10:51:27.357Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-chris-rokos-made-1-billion-in-a-single-day-deconstructing-the-trump-trade-d5462e96b38a"
     }
@@ -19276,8 +19334,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:17:37.805Z",
-    "observed_source_updated_at": "2026-09-14T06:17:37.805Z",
+    "source_updated_at": "2026-09-14T10:50:06.842Z",
+    "observed_source_updated_at": "2026-09-14T10:50:06.842Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-quants-made-4-144-returns-in-2020-while-markets-crashed-the-heston-model-edge-b1558ec7aac1"
     }
@@ -19329,8 +19387,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:17:41.336Z",
-    "observed_source_updated_at": "2026-09-14T06:17:41.336Z",
+    "source_updated_at": "2026-09-14T10:45:39.002Z",
+    "observed_source_updated_at": "2026-09-14T10:45:39.002Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hsbc-made-millions-gaming-bond-pricing-screens-a-quants-guide-to-market-manipulation-def8599b970b"
     }
@@ -19376,8 +19434,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:17:43.130Z",
-    "observed_source_updated_at": "2026-09-14T06:17:43.130Z",
+    "source_updated_at": "2026-09-14T10:53:04.387Z",
+    "observed_source_updated_at": "2026-09-14T10:53:04.387Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/pre-ipo-arbitrage-fraud-how-120m-was-stolen-through-corrupted-market-making-cd9c7e91451d"
     }
@@ -19415,8 +19473,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:17:46.683Z",
-    "observed_source_updated_at": "2026-09-14T06:17:46.683Z",
+    "source_updated_at": "2026-09-14T10:43:57.686Z",
+    "observed_source_updated_at": "2026-09-14T10:43:57.686Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-soci%C3%A9t%C3%A9-g%C3%A9n%C3%A9rales-a-3-88m-mark-the-close-strategy-exploited-war-driven-market-volatility-bf9a744c7898"
     }
@@ -19448,8 +19506,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:17:48.664Z",
-    "observed_source_updated_at": "2026-09-14T06:17:48.664Z",
+    "source_updated_at": "2026-09-14T10:56:30.248Z",
+    "observed_source_updated_at": "2026-09-14T10:56:30.248Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/singapores-8-billion-market-manipulation-how-187-trading-accounts-generated-massive-profits-e68cfeaa8524"
     }
@@ -19487,8 +19545,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:17:50.496Z",
-    "observed_source_updated_at": "2026-09-14T06:17:50.496Z",
+    "source_updated_at": "2026-09-14T10:45:56.257Z",
+    "observed_source_updated_at": "2026-09-14T10:45:56.257Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-totalenergies-lost-48m-trying-to-game-european-gasoline-markets-035870b8c206"
     }
@@ -19540,8 +19598,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:17:52.336Z",
-    "observed_source_updated_at": "2026-09-14T06:17:52.336Z",
+    "source_updated_at": "2026-09-14T10:39:58.242Z",
+    "observed_source_updated_at": "2026-09-14T10:39:58.242Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-trafigura-turned-a-100m-arbitrage-into-a-55m-fraud-deconstructing-the-usgc-singapore-fuel-205ac452010c"
     }
@@ -19579,8 +19637,8 @@
     },
     "family": "scandal-enforcement",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:17:54.104Z",
-    "observed_source_updated_at": "2026-09-14T06:17:54.104Z",
+    "source_updated_at": "2026-09-14T10:39:27.559Z",
+    "observed_source_updated_at": "2026-09-14T10:39:27.559Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-jpmorgan-made-172-million-manipulating-markets-the-spoofing-strategy-that-broke-the-system-97b5d9b13b4e"
     }
@@ -19645,8 +19703,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T06:17:57.677Z",
-    "observed_source_updated_at": "2026-09-14T06:17:57.677Z",
+    "source_updated_at": "2026-09-14T10:37:09.707Z",
+    "observed_source_updated_at": "2026-09-14T10:37:09.707Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-650m-volmageddon-collapse-how-ljms-leveraged-short-vol-strategy-imploded-in-48-hours-61ad04060f2d"
     }
