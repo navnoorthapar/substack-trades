@@ -19722,6 +19722,411 @@
     "description_truncated": false
   },
   {
+    "article_title": "How Quants Made 4,144% Returns in 2020 While Markets Crashed: The Heston Model Edge",
+    "article_url": "https://navnoorbawa.substack.com/p/how-quants-made-4144-returns-in-2020",
+    "article_date": "2025-09-14",
+    "trade_description": "On March 16, 2020, the VIX exploded to 82.69 — one of the highest readings in its history, with an even more extreme intraday peak of 85.47 reached on March 18. The S&P 500 lost one-third of its value between February 20 and March 23, 2020, while implied volatility skyrocketed to levels previously thought impossible. Most investors panicked. But quantitative researchers who truly understood the Heston model saw something else entirely: the largest volatility arbitrage opportunity in a generation.",
+    "instruments": [
+      "volatility"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": "VIX; S&P 500",
+    "edge_or_thesis": "arbitrage opportunity in a generation.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Quants Made 4,144% Returns in 2020 While Markets Crashed: The Heston Model Edge",
+    "article_url": "https://navnoorbawa.substack.com/p/how-quants-made-4144-returns-in-2020",
+    "article_date": "2025-09-14",
+    "trade_description": "The traditional Black-Scholes model assumes constant volatility — a fatal flaw that becomes glaringly obvious during market stress. The volatility smile was considered rare before the 1987 crash. However, after the crash, traders realised that out-of-the-money options, although rare, could occur. Black-Scholes simply couldn’t explain why options with identical underlying assets but different strikes traded at vastly different implied volatilities.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Quants Made 4,144% Returns in 2020 While Markets Crashed: The Heston Model Edge",
+    "article_url": "https://navnoorbawa.substack.com/p/how-quants-made-4144-returns-in-2020",
+    "article_date": "2025-09-14",
+    "trade_description": "Volatility Surface Arbitrage: The Heston model revealed mispricing across the entire options surface. Traders attempt to buy volatility when it is low and sell volatility when it is high by constructing delta-neutral portfolios that profit from volatility changes regardless of directional moves.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "mispricing across the entire options surface.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Quants Made 4,144% Returns in 2020 While Markets Crashed: The Heston Model Edge",
+    "article_url": "https://navnoorbawa.substack.com/p/how-quants-made-4144-returns-in-2020",
+    "article_date": "2025-09-14",
+    "trade_description": "Mid-March 2020: As the VIX spiked to historic levels — reaching 82.69 on March 16 and an intraday peak of 85.47 on March 18 — sophisticated traders who had positioned for increased volatility captured massive profits.",
+    "instruments": [
+      "volatility"
+    ],
+    "direction": "unspecified",
+    "underlying": "VIX",
+    "edge_or_thesis": "the VIX spiked to historic levels — reaching 82.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Quants Made 4,144% Returns in 2020 While Markets Crashed: The Heston Model Edge",
+    "article_url": "https://navnoorbawa.substack.com/p/how-quants-made-4144-returns-in-2020",
+    "article_date": "2025-09-14",
+    "trade_description": "Variance swap payoffs: If you bought a 1-month variance swap at 400 (20% annualized vol) in February, and March realized variance hit 6,400 (80% annualized), the payoff was 6,000 basis points per $1 million notional",
+    "instruments": [
+      "swap",
+      "volatility"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$1 million, 20%, 80%, 6,000 basis points, at 400",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Quants Made 4,144% Returns in 2020 While Markets Crashed: The Heston Model Edge",
+    "article_url": "https://navnoorbawa.substack.com/p/how-quants-made-4144-returns-in-2020",
+    "article_date": "2025-09-14",
+    "trade_description": "VIX futures: Front-month contracts that traded at 15 in January spiked to over 80",
+    "instruments": [
+      "futures",
+      "volatility"
+    ],
+    "direction": "unspecified",
+    "underlying": "VIX",
+    "edge_or_thesis": null,
+    "any_quant_detail": "at 15",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Quants Made 4,144% Returns in 2020 While Markets Crashed: The Heston Model Edge",
+    "article_url": "https://navnoorbawa.substack.com/p/how-quants-made-4144-returns-in-2020",
+    "article_date": "2025-09-14",
+    "trade_description": "Dispersion trading aims to profit from pricing differences between index options and options on individual stocks within the same index. The Heston model enables:",
+    "instruments": [
+      "option",
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Quants Made 4,144% Returns in 2020 While Markets Crashed: The Heston Model Edge",
+    "article_url": "https://navnoorbawa.substack.com/p/how-quants-made-4144-returns-in-2020",
+    "article_date": "2025-09-14",
+    "trade_description": "Term structure arbitrage: Exploiting mispricing between VIX futures of different maturities",
+    "instruments": [
+      "futures",
+      "volatility"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": "VIX",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Pre-IPO Arbitrage Fraud: How $120M Was Stolen Through Corrupted Market-Making",
+    "article_url": "https://navnoorbawa.substack.com/p/pre-ipo-arbitrage-fraud-how-120m",
+    "article_date": "2025-09-13",
+    "trade_description": "From October 2019 to December 2022, three individuals and their network of companies raised approximately $120 million from over 900 investors by selling interests in private funds that supposedly held pre-IPO shares. Instead of legitimate arbitrage, they operated a sophisticated fraud that generated profits through undisclosed markups averaging 21% while systematically overselling their actual holdings — creating share deficits for 18 of 27 target companies by December 2022.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$120 million, 21%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Pre-IPO Arbitrage Fraud: How $120M Was Stolen Through Corrupted Market-Making",
+    "article_url": "https://navnoorbawa.substack.com/p/pre-ipo-arbitrage-fraud-how-120m",
+    "article_date": "2025-09-13",
+    "trade_description": "What they told investors: They acquired shares directly from pre-IPO companies or employees, charged no upfront fees, and would only profit when investors profited.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Pre-IPO Arbitrage Fraud: How $120M Was Stolen Through Corrupted Market-Making",
+    "article_url": "https://navnoorbawa.substack.com/p/pre-ipo-arbitrage-fraud-how-120m",
+    "article_date": "2025-09-13",
+    "trade_description": "What they actually did: They typically purchased interests in third-party funds that claimed to own shares (not direct ownership), charged hidden markups averaging 21%, and often sold more shares than they owned.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "21%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "Pre-IPO Arbitrage Fraud: How $120M Was Stolen Through Corrupted Market-Making",
+    "article_url": "https://navnoorbawa.substack.com/p/pre-ipo-arbitrage-fraud-how-120m",
+    "article_date": "2025-09-13",
+    "trade_description": "When unable to obtain sufficient pre-IPO shares, defendants sometimes purchased shares on the open market after IPO — eliminating any arbitrage profit and contradicting their core value proposition.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Société Générale’s A$3.88M ‘Mark the Close’ Strategy Exploited War-Driven Market Volatility",
+    "article_url": "https://navnoorbawa.substack.com/p/how-societe-generales-a388m-mark",
+    "article_date": "2025-09-11",
+    "trade_description": "Net profit: $50,000 settlement gain minus $25,000 futures execution cost = $25,000",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How TotalEnergies Lost $48M Trying to Game European Gasoline Markets",
+    "article_url": "https://navnoorbawa.substack.com/p/how-totalenergies-lost-48m-trying",
+    "article_date": "2025-09-10",
+    "trade_description": "The arbitrage logic was elegant: manipulate the physical market to profit from derivatives positions. Control the benchmark, control the futures settlement.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Trafigura Turned a $100M Arbitrage into a $55M Fraud: Deconstructing the USGC-Singapore Fuel Oil Manipulation",
+    "article_url": "https://navnoorbawa.substack.com/p/how-trafigura-turned-a-100m-arbitrage",
+    "article_date": "2025-09-09",
+    "trade_description": "From January to March 2017, Trafigura developed what appeared to be a textbook commodity arbitrage: export fuel oil from the U.S. Gulf Coast to Singapore to capture price differentials between markets.",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Trafigura Turned a $100M Arbitrage into a $55M Fraud: Deconstructing the USGC-Singapore Fuel Oil Manipulation",
+    "article_url": "https://navnoorbawa.substack.com/p/how-trafigura-turned-a-100m-arbitrage",
+    "article_date": "2025-09-09",
+    "trade_description": "Trafigura structured the trade professionally: establish long derivative positions in U.S. Gulf Coast high-sulfur fuel oil as an economic hedge for anticipated physical purchases. If you're planning to buy physical fuel oil, going long on derivatives protects against price increases during your purchase period.",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "an economic hedge for anticipated physical purchases.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Trafigura Turned a $100M Arbitrage into a $55M Fraud: Deconstructing the USGC-Singapore Fuel Oil Manipulation",
+    "article_url": "https://navnoorbawa.substack.com/p/how-trafigura-turned-a-100m-arbitrage",
+    "article_date": "2025-09-09",
+    "trade_description": "Here's where Trafigura crossed the line: their long derivative position exceeded their short physical position from the fuel oil arbitrage program. This excess \"essentially constituted a long speculative bet on fuel oil prices in February 2017,\" according to the CFTC order.",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "fuel oil prices in February 2017,\" according to the CFTC order.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Trafigura Turned a $100M Arbitrage into a $55M Fraud: Deconstructing the USGC-Singapore Fuel Oil Manipulation",
+    "article_url": "https://navnoorbawa.substack.com/p/how-trafigura-turned-a-100m-arbitrage",
+    "article_date": "2025-09-09",
+    "trade_description": "Scale: Trafigura bought 80 cargoes of fuel oil (3.6 million barrels) during February 2017's benchmark assessment window—\"an amount much larger than it had ever previously purchased in the window in a single month.\"",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Trafigura Turned a $100M Arbitrage into a $55M Fraud: Deconstructing the USGC-Singapore Fuel Oil Manipulation",
+    "article_url": "https://navnoorbawa.substack.com/p/how-trafigura-turned-a-100m-arbitrage",
+    "article_date": "2025-09-09",
+    "trade_description": "1. Legitimate Arbitrage: Physical fuel oil purchases in USGC, transportation to Singapore, sale at higher Singapore prices",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Trafigura Turned a $100M Arbitrage into a $55M Fraud: Deconstructing the USGC-Singapore Fuel Oil Manipulation",
+    "article_url": "https://navnoorbawa.substack.com/p/how-trafigura-turned-a-100m-arbitrage",
+    "article_date": "2025-09-09",
+    "trade_description": "Singapore fuel oil markets regularly receive arbitrage flows from the USGC, with monthly volumes typically ranging 2.5-4+ million metric tons. Corrupting the USGC benchmark distorts global fuel oil price relationships and legitimate trading strategies.",
+    "instruments": [
+      "commodity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How JPMorgan Made $172 Million Manipulating Markets: The Spoofing Strategy That Broke the System",
+    "article_url": "https://navnoorbawa.substack.com/p/how-jpmorgan-made-172-million-manipulating",
+    "article_date": "2025-09-08",
+    "trade_description": "Coming Next: How Archegos Capital lost $20 billion in two days through total return swap leverage that created 30:1 position sizing and broke multiple prime brokerages.",
+    "instruments": [
+      "swap"
+    ],
+    "direction": "unspecified",
+    "underlying": "How Archegos Capital",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$20 billion",
+    "outcome_if_mentioned": "lost $20 billion in two days through total return swap leverage that created 30:1 position sizing and broke multiple prime brokerages.",
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "The $650M Volmageddon Collapse: How LJM's Leveraged Short Vol Strategy Imploded in 48 Hours",
+    "article_url": "https://navnoorbawa.substack.com/p/the-650m-volmageddon-collapse-how",
+    "article_date": "2025-09-07",
+    "trade_description": "LJM's strategy centered on selling naked put options on S&P 500 futures with significant leverage. Here's how the money-making engine worked:",
+    "instruments": [
+      "option",
+      "futures"
+    ],
+    "direction": "short",
+    "underlying": "S&P 500",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "The $650M Volmageddon Collapse: How LJM's Leveraged Short Vol Strategy Imploded in 48 Hours",
+    "article_url": "https://navnoorbawa.substack.com/p/the-650m-volmageddon-collapse-how",
+    "article_date": "2025-09-07",
+    "trade_description": "Volatility had been driven to an all-time low on November 3, 2017 (VIX at 9.14), boosting derivative positions across the industry. Multiple factors created the perfect environment for short volatility strategies:",
+    "instruments": [
+      "volatility"
+    ],
+    "direction": "short",
+    "underlying": "VIX",
+    "edge_or_thesis": null,
+    "any_quant_detail": "at 9.14",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "The $650M Volmageddon Collapse: How LJM's Leveraged Short Vol Strategy Imploded in 48 Hours",
+    "article_url": "https://navnoorbawa.substack.com/p/the-650m-volmageddon-collapse-how",
+    "article_date": "2025-09-07",
+    "trade_description": "Morning: Markets opened normally, with VIX around 17 Afternoon: Volatility began spiking in an unprecedented move\nClose: VIX saw its biggest spike since 1990, both in percentage terms (+53%) and points (+20)",
+    "instruments": [
+      "volatility"
+    ],
+    "direction": "unspecified",
+    "underlying": "VIX",
+    "edge_or_thesis": null,
+    "any_quant_detail": "53%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "The $650M Volmageddon Collapse: How LJM's Leveraged Short Vol Strategy Imploded in 48 Hours",
+    "article_url": "https://navnoorbawa.substack.com/p/the-650m-volmageddon-collapse-how",
+    "article_date": "2025-09-07",
+    "trade_description": "As markets fell and volatility spiked, LJM's short put positions accumulated negative gamma. Each dollar the market dropped required them to buy more futures to hedge, creating a self-reinforcing cycle of selling pressure.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "markets fell and volatility spiked, LJM's short put positions accumulated negative gamma.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
     "article_title": "Cracking the Code: How Pure Mathematics Revealed the Hidden Factors Behind Bridgewater’s $21.6B Trading Decisions",
     "article_url": "https://medium.com/@navnoorbawa/cracking-the-code-how-pure-mathematics-revealed-the-hidden-factors-behind-bridgewaters-21-6b-f65959b06cbe",
     "article_date": "2025-07-03",
