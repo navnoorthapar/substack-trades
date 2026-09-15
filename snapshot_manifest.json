@@ -1,27 +1,27 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-09-15T07:32:30Z",
-  "latest_publication": "2026-09-14T17:17:57.718Z",
-  "catalog_latest_publication": "2026-09-14T17:17:57.718Z",
-  "article_count": 476,
-  "catalog_count": 624,
-  "registry_count": 148,
-  "observation_count": 1240,
-  "data_checksum": "b277058b0d25d445e7c732adb74d7ddac0963f4f90b220cb0ef2263f1ede3be1",
+  "checked_at": "2026-09-15T16:47:52Z",
+  "latest_publication": "2026-09-15T13:32:32.741Z",
+  "catalog_latest_publication": "2026-09-15T13:32:32.741Z",
+  "article_count": 477,
+  "catalog_count": 626,
+  "registry_count": 149,
+  "observation_count": 1176,
+  "data_checksum": "275a7d62dcf0852bd07964de687645d3a17ddeefbb085285367844de098bea79",
   "sources": {
     "substack": {
-      "checked_at": "2026-09-15T07:31:06Z",
+      "checked_at": "2026-09-15T16:46:35Z",
       "status": "degraded",
       "mode": "complete_api_degraded_body_provenance",
-      "published_count": 296,
-      "fetched_count": 296,
-      "included_count": 296,
-      "newest": "2026-09-14T17:17:57.718Z",
+      "published_count": 297,
+      "fetched_count": 297,
+      "included_count": 297,
+      "newest": "2026-09-15T13:32:32.741Z",
       "degraded_since": "2026-09-15T07:31:06Z",
-      "consecutive_degraded_checks": 1
+      "consecutive_degraded_checks": 2
     },
     "medium": {
-      "checked_at": "2026-09-15T07:31:12Z",
+      "checked_at": "2026-09-15T16:46:42Z",
       "status": "ok",
       "mode": "validated_history_plus_current_rss",
       "published_count": 421,
@@ -32,13 +32,13 @@
       "consecutive_degraded_checks": 0
     },
     "patreon": {
-      "checked_at": "2026-09-15T07:31:18Z",
+      "checked_at": "2026-09-15T16:46:44Z",
       "status": "ok",
       "mode": "public_metadata_api",
-      "published_count": 169,
-      "fetched_count": 169,
-      "included_count": 148,
-      "newest": "2026-09-14",
+      "published_count": 170,
+      "fetched_count": 170,
+      "included_count": 149,
+      "newest": "2026-09-15",
       "degraded_since": null,
       "consecutive_degraded_checks": 0
     }
