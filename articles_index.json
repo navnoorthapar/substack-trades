@@ -1,5 +1,42 @@
 [
   {
+    "source": "substack",
+    "source_id": "citadel-and-schonfeld-are-betting",
+    "slug": "citadel-and-schonfeld-are-betting",
+    "title": "Citadel and Schonfeld Are Betting the Euribor-€STR Spread Widens Before Year End",
+    "subtitle": "A regulatory balance-sheet effect at calendar year end, not reserve scarcity, is the case the ECB's own economists never made",
+    "post_date": "2026-09-14T17:17:57.718Z",
+    "url": "https://navnoorbawa.substack.com/p/citadel-and-schonfeld-are-betting",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "7fada03ab6716dbe4f446f1e45c1833dad130e1e9b93555c8b988ccbc34cf4d0",
+      "lead": {
+        "text": "Citadel and Schonfeld Strategic Advisors are reportedly running a trade that, on the ECB’s own telling, sounds like a bet on nothing. Bloomberg reported on 10 September 2026, citing people familiar with the matter, that both firms are active in it. In April, five ECB staff economists published a",
+        "start": 0,
+        "end": 296,
+        "sha256": "7fada03ab6716dbe4f446f1e45c1833dad130e1e9b93555c8b988ccbc34cf4d0",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-14T17:19:34.033Z",
+    "observed_source_updated_at": "2026-09-14T17:19:34.033Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Citadel and Schonfeld Strategic Advisors are reportedly running a trade that, on the ECB’s own telling, sounds like a bet on nothing. Bloomberg reported on 10 September 2026, citing people familiar with the matter, that both firms are active in it. In April, five ECB staff economists published a",
+      "character_count": 296,
+      "body_sha256": "7fada03ab6716dbe4f446f1e45c1833dad130e1e9b93555c8b988ccbc34cf4d0"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "33bd1c404013",
     "slug": "aqr-bet-billions-that-value-would-pay-off-medallion-never-made-the-bet-33bd1c404013",
@@ -28,6 +65,28 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-09-14T15:03:03Z",
     "observed_source_updated_at": "2026-09-14T15:03:03Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "169502154",
+    "slug": "citadels-euribor-169502154",
+    "title": "Citadel's Euribor-€STR Spread: The Trade Ticket Behind a 16.5bp December Bet",
+    "subtitle": "",
+    "post_date": "2026-09-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/citadels-euribor-169502154",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
@@ -10018,8 +10077,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-14T13:40:01.606Z",
-    "observed_source_updated_at": "2026-09-14T13:40:01.606Z"
+    "source_updated_at": "2026-09-14T18:58:21.896Z",
+    "observed_source_updated_at": "2026-09-14T18:58:21.896Z"
   },
   {
     "source": "patreon",

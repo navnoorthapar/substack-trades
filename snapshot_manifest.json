@@ -1,27 +1,27 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-09-14T16:32:18Z",
-  "latest_publication": "2026-09-14T15:03:03Z",
-  "catalog_latest_publication": "2026-09-14T15:03:03Z",
-  "article_count": 475,
-  "catalog_count": 622,
-  "registry_count": 147,
+  "checked_at": "2026-09-15T03:32:19Z",
+  "latest_publication": "2026-09-14T17:17:57.718Z",
+  "catalog_latest_publication": "2026-09-14T17:17:57.718Z",
+  "article_count": 476,
+  "catalog_count": 624,
+  "registry_count": 148,
   "observation_count": 1240,
-  "data_checksum": "712418e8063924ba51df2c2afda9d0039dc97f0db11e19e1ca88cef226aaefe1",
+  "data_checksum": "8c895aec28a7cdc62da4747cee1eb29c0649a3723a90c9ce0b30b6546d34309a",
   "sources": {
     "substack": {
-      "checked_at": "2026-09-14T16:30:55Z",
-      "status": "degraded",
-      "mode": "complete_api_degraded_body_provenance",
-      "published_count": 295,
-      "fetched_count": 295,
-      "included_count": 295,
-      "newest": "2026-09-10T13:31:35.565Z",
-      "degraded_since": "2026-09-14T16:30:55Z",
-      "consecutive_degraded_checks": 1
+      "checked_at": "2026-09-15T03:30:54Z",
+      "status": "ok",
+      "mode": "complete_api",
+      "published_count": 296,
+      "fetched_count": 296,
+      "included_count": 296,
+      "newest": "2026-09-14T17:17:57.718Z",
+      "degraded_since": null,
+      "consecutive_degraded_checks": 0
     },
     "medium": {
-      "checked_at": "2026-09-14T16:31:01Z",
+      "checked_at": "2026-09-15T03:30:59Z",
       "status": "ok",
       "mode": "validated_history_plus_current_rss",
       "published_count": 421,
@@ -32,13 +32,13 @@
       "consecutive_degraded_checks": 0
     },
     "patreon": {
-      "checked_at": "2026-09-14T16:31:04Z",
+      "checked_at": "2026-09-15T03:31:03Z",
       "status": "ok",
       "mode": "public_metadata_api",
-      "published_count": 168,
-      "fetched_count": 168,
-      "included_count": 147,
-      "newest": "2026-09-10",
+      "published_count": 169,
+      "fetched_count": 169,
+      "included_count": 148,
+      "newest": "2026-09-14",
       "degraded_since": null,
       "consecutive_degraded_checks": 0
     }
