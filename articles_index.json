@@ -1,5 +1,35 @@
 [
   {
+    "source": "medium",
+    "source_id": "d20bba1def54",
+    "slug": "aqrs-momentum-factor-crashed-42-in-2009-cfm-s-category-crashed-too-d20bba1def54",
+    "title": "AQR’s momentum factor crashed 42% in 2009. CFM’s category crashed too.",
+    "subtitle": "A widely repeated 23% CFM gain turned out to be from 2011, not 2009. Man AHL really fell 16.9% that year.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-16T07:36:05Z",
+    "url": "https://medium.com/@navnoorbawa/aqrs-momentum-factor-crashed-42-in-2009-cfm-s-category-crashed-too-d20bba1def54",
+    "audience": "unknown",
+    "wordcount": 26,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "3b0df337e7e11537898ba1cb7535728bd6aceeaabebbe457ba15f2a7bf44120c",
+      "lead": {
+        "text": "A widely repeated 23% CFM gain turned out to be from 2011, not 2009. Man AHL really fell 16.9% that year.",
+        "start": 0,
+        "end": 105,
+        "sha256": "fd7cbe24f83f40aa6de173ac46efc90f2d848c9136bae596f82c096ea88fc264",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-16T07:36:05Z",
+    "observed_source_updated_at": "2026-09-16T07:36:05Z"
+  },
+  {
     "source": "substack",
     "source_id": "isda-warns-jscc-merger-could-force",
     "slug": "isda-warns-jscc-merger-could-force",
@@ -662,9 +692,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-04T15:04:19Z",
-    "observed_source_updated_at": "2026-09-04T15:04:19Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
