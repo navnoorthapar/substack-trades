@@ -121,6 +121,34 @@ launch decision or external action is required and must not be guessed.
 
 ## Publication-source recovery
 
+### LAUNCH-105 — P1 — Scheduled publisher runtime and authentication repair
+
+Monitor `35512304275` verified the exact hosted bytes but failed source-health
+and freshness checks: production still used the September 16 snapshot, 105.5
+hours old. The Mac had accumulated 31 unpublished refresh commits. Its Git
+credential helper invoked an Intel-only `gh` that failed with `bad CPU type in
+executable` on the current ARM host. Valid owner credentials remained available.
+The installed LaunchAgent also selected Apple's Python launcher; one regression
+build timed out and an interrupted attempt left a manifest timestamp change.
+The downstream `navnoor-research` deployment and monitor consequently rejected
+the same stale archive source clock.
+
+Resolution: install the official native GitHub CLI after verifying its release
+checksum, point this repository's owner-specific credential helper to that
+working executable, preserve the interrupted manifest in a named stash, and
+publish a fresh validated snapshot with all queued history intact. The installer
+now validates Python 3.9+ before changing the installed job and persists its
+absolute executable for scheduled refreshes and nested release gates. The
+installed PATH includes that Python and the user's local executable directory.
+No freshness limits, provenance checks, test timeouts, or release gates change.
+
+Verification: the 568-test archive baseline, 571-test repaired archive suite,
+and 201-test downstream baseline pass. Installer regressions cover retained
+runtime selection and rejection of missing/broken interpreters before
+installation changes. Acceptance requires
+the complete post-change checks, exact committed pre-push gate, a successful
+scheduled refresh, and exact deployment plus fresh watchdogs in both repositories.
+
 | Issue | Severity | Status | Evidence | Resolution | Verification |
 | --- | --- | --- | --- | --- | --- |
 | LAUNCH-104 | P1 | Resolved in code | Monitor `34759417658` passed exact production and freshness checks but failed because Substack had remained degraded for 57.5 hours. A two-pass catalogue audit identified 26 public excerpt captures whose body revision was old or missing, despite unchanged current source metadata and available current list HTML. The resolver always retained their old provenance, so repeated refreshes could never clear the degradation. | Independently verify current HTML when resolving a prior/unverified excerpt. Preserve the entire prior capture only when the current HTML supplies exactly the same text; otherwise take the bounded current source excerpt. Keep all such records excerpt-only with zero asserted full word count. Recognize an exact current HTML match when checking a long partial capture against a shorter list preview. A changed/unverified observation remains degraded on its first pass; only a subsequent stable verified capture clears it. Retain the 48-hour monitor policy, old-body separation when HTML is absent, detail retries, and conflict alarms. | The 566-test baseline and all 568 tests after the fix passed, including a real refreshed snapshot and its exact committed release gate (`3de9da9`). Regressions cover old and missing body revisions, exact long-capture preservation over two passes, changed source text, and the prohibition on promoting an observed timestamp alone. The recorded current catalogue moves from 26 degraded resolutions on the first corrected pass to zero on the second, with no further text changes. Live refresh reverified all 31 public excerpts and preserved 620 articles; correcting two excerpts changed extracted observations from 1223 to 1215. Data validation, generated-site checks, Ruff, mypy, syntax checks, and artifact validation passed. Release acceptance requires a second stable live refresh, successful exact deployment, and the independent source-health watchdog. |

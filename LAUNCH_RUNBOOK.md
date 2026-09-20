@@ -27,6 +27,15 @@ that selection. They do not prefer Apple's `/usr/bin/python3` merely because
 the launcher exists; its developer-tool installation may not support the
 architecture of the calling Git process.
 
+The automation installer validates the selected interpreter and persists its
+absolute path as `PYTHON_BIN` in the installed LaunchAgent. Reinstall with
+`PYTHON_BIN=/absolute/path/to/python3 ./install_automation.sh` after changing
+Python installations. The scheduled PATH includes that interpreter's directory
+and `~/.local/bin`; GitHub CLI and the credential helper must also run on the
+Mac's current architecture. Check `gh --version`, `gh auth status`, and the
+repository's credential helper when refresh commits accumulate locally without
+reaching remote `main`. Do not reset those commits or relax freshness checks.
+
 Run from a clean `main` worktree:
 
 ```bash

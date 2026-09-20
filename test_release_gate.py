@@ -1,7 +1,10 @@
 """Executable tests for the exact-revision release and pre-push gates."""
 
 import os
+import plistlib
+import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,6 +15,94 @@ RELEASE_GATE = ROOT / 'release_gate.sh'
 PRE_PUSH = ROOT / '.githooks' / 'pre-push'
 INSTALL_AUTOMATION = ROOT / 'install_automation.sh'
 ZERO_OID = '0' * 40
+
+
+class AutomationRuntimeTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.repo = self.root / 'repo'
+        self.bin = self.root / 'bin'
+        self.bin.mkdir()
+        (self.repo / '.githooks').mkdir(parents=True)
+        (self.repo / 'launchd').mkdir()
+        for name in ('install_automation.sh', 'scheduled_refresh.sh', '.githooks/pre-push',
+                     'launchd/com.navnoor.substacktrades.plist'):
+            shutil.copy2(ROOT / name, self.repo / name)
+        self.target = self.root / 'home/Library/LaunchAgents/com.navnoor.substacktrades.plist'
+        self.log = self.root / 'mutations'
+        for name in ('git', 'launchctl'):
+            self.executable(name, '#!/bin/sh\necho invoked >> "$INSTALL_TEST_LOG"\n')
+        # Portable plist editing lets the installer run on Linux CI as well as
+        # macOS, while assertions inspect its actual generated configuration.
+        self.executable('plutil', f'#!{sys.executable}\n' + '''
+import plistlib, sys
+from pathlib import Path
+args = sys.argv[1:]
+path = Path(args[-1])
+data = plistlib.loads(path.read_bytes())
+if args[0] == '-lint':
+    sys.exit(0)
+parts = args[1].split('.')
+parent = data
+try:
+    for part in parts[:-1]:
+        parent = parent[int(part)] if isinstance(parent, list) else parent[part]
+    key = int(parts[-1]) if isinstance(parent, list) else parts[-1]
+    if args[0] == '-extract':
+        print(parent[key])
+        sys.exit(0)
+    if args[0] == '-remove':
+        del parent[key]
+    elif args[0] == '-insert' and isinstance(parent, list):
+        parent.insert(key, args[3])
+    else:
+        parent[key] = args[3]
+except (KeyError, IndexError):
+    sys.exit(1)
+path.write_bytes(plistlib.dumps(data))
+''')
+
+    def executable(self, name, content):
+        path = self.bin / name
+        path.write_text(content, encoding='utf-8')
+        path.chmod(0o755)
+        return path
+
+    def install(self, python):
+        return subprocess.run(
+            ['/bin/bash', str(self.repo / 'install_automation.sh')],
+            env=dict(os.environ, HOME=str(self.root / 'home'),
+                     PATH=str(self.bin) + ':' + os.environ['PATH'],
+                     PYTHON_BIN=str(python), INSTALL_TEST_LOG=str(self.log)),
+            capture_output=True, text=True, timeout=20, check=False,
+        )
+
+    def test_installer_persists_the_working_interpreter_and_local_tool_path(self):
+        wrapper = self.executable('chosen-python', f'#!/bin/sh\nexec "{sys.executable}" "$@"\n')
+        result = self.install(wrapper)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        config = plistlib.loads(self.target.read_bytes())
+        environment = config['EnvironmentVariables']
+        self.assertEqual(environment['PYTHON_BIN'], sys.executable)
+        self.assertEqual(environment['PATH'].split(':')[:2],
+                         [str(Path(sys.executable).parent), str(self.root / 'home/.local/bin')])
+        self.assertEqual(config['ProgramArguments'],
+                         ['/bin/bash', str(self.repo / 'scheduled_refresh.sh')])
+
+    def test_missing_interpreter_does_not_change_installation(self):
+        result = self.install(self.bin / 'missing-python')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.target.exists())
+        self.assertFalse(self.log.exists())
+
+    def test_broken_interpreter_does_not_change_installation(self):
+        broken = self.executable('broken-python', '#!/bin/sh\nexit 126\n')
+        result = self.install(broken)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.target.exists())
+        self.assertFalse(self.log.exists())
 
 
 class ReleaseGateTests(unittest.TestCase):

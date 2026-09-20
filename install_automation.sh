@@ -9,6 +9,20 @@ SOURCE="$ROOT/launchd/$LABEL.plist"
 TARGET="$HOME/Library/LaunchAgents/$LABEL.plist"
 LOG_DIR="$HOME/Library/Logs/SubstackTrades"
 
+# launchd does not inherit the installer's shell environment. Resolve and run
+# the selected interpreter before changing an existing installation, then pin
+# that exact executable for refresh.sh and its nested pre-push release gate.
+PYTHON=$(command -v "${PYTHON_BIN:-python3}" || true)
+if [ ! -x "$PYTHON" ] || ! PYTHON=$("$PYTHON" -c \
+    'import sys; assert sys.version_info >= (3, 9); print(sys.executable)'); then
+    echo "Updater installation requires a working Python 3.9+ interpreter." >&2
+    exit 1
+fi
+if [[ "$PYTHON" != /* ]] || [ ! -x "$PYTHON" ]; then
+    echo "Updater Python must resolve to an absolute executable path." >&2
+    exit 1
+fi
+
 if [ ! -x "$ROOT/.githooks/pre-push" ]; then
     echo "The versioned pre-push release gate is missing or not executable." >&2
     exit 1
@@ -33,6 +47,9 @@ cp "$SOURCE" "$TARGET"
 plutil -remove ProgramArguments.1 "$TARGET"
 plutil -insert ProgramArguments.1 -string "$ROOT/scheduled_refresh.sh" "$TARGET"
 plutil -replace EnvironmentVariables.HOME -string "$HOME" "$TARGET"
+plutil -replace EnvironmentVariables.PYTHON_BIN -string "$PYTHON" "$TARGET"
+plutil -replace EnvironmentVariables.PATH -string \
+    "$(dirname "$PYTHON"):$HOME/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin:/opt/anaconda3/bin" "$TARGET"
 plutil -replace StandardOutPath -string "$LOG_DIR/refresh.log" "$TARGET"
 plutil -replace StandardErrorPath -string "$LOG_DIR/refresh-error.log" "$TARGET"
 plutil -lint "$TARGET"
