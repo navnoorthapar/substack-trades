@@ -1,5 +1,22 @@
 [
   {
+    "article_title": "Pershing Square Funded Ackman's Berkshire. Howard Hughes Holds the Call.",
+    "article_url": "https://navnoorbawa.substack.com/p/pershing-square-funded-ackmans-berkshire",
+    "article_date": "2026-09-21",
+    "trade_description": "Pershing Square Holdings put $1 billion of preferred into Howard Hughes’ $2.1 billion Vantage acquisition. On the certificate, that money is a seven-year call Howard Hughes holds against Ackman’s own fund, struck at the greater of 4% accreted or 1.5 times tangible book, first window March 1 to March 31, 2027. The first 27 days under Howard Hughes lost $36.0 million on the new equity book.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": "Pershing Square Holdings",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$1 billion, $2.1 billion, $36.0 million, 4%",
+    "outcome_if_mentioned": "lost $36.0 million on the new equity book.",
+    "fund_name_if_mentioned": "Ackman / Pershing",
+    "description_truncated": false,
+    "source_body_sha256": "bb69c9d338c95e1118727d7cbac9973aa9dbd524b67bc4115ec789ca889b393a"
+  },
+  {
     "article_title": "Coinbase and CME Both Just Reopened a Product a 2020 Margin Rule Killed",
     "article_url": "https://navnoorbawa.substack.com/p/coinbase-and-cme-both-just-reopened",
     "article_date": "2026-09-09",
