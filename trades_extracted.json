@@ -1,5 +1,71 @@
 [
   {
+    "article_title": "How to Read a Market Maker's 13F Options Line: Jane Street and Susquehanna's SpaceX Book, Ranked Against Their Own",
+    "article_url": "https://navnoorbawa.substack.com/p/how-to-read-a-market-makers-13f-options",
+    "article_date": "2026-09-22",
+    "trade_description": "The obvious read, if this data gets any attention at all, is that two of the biggest listed options market makers on earth are leaning bullish on the newest, most float constrained mega cap on the market, at the exact moment its float was thinnest. That’s a clean story and every fact in it checks out. SpaceX’s public float sat at roughly 638.9m shares, about 5% of shares outstanding, per S3 Partners’ own reporting, for the entire quarter these filings cover.",
+    "instruments": [
+      "option",
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "5%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How to Read a Market Maker's 13F Options Line: Jane Street and Susquehanna's SpaceX Book, Ranked Against Their Own",
+    "article_url": "https://navnoorbawa.substack.com/p/how-to-read-a-market-makers-13f-options",
+    "article_date": "2026-09-22",
+    "trade_description": "If a dealer absorbs client demand for SPCX calls, the dealer ends up short calls against that client, and that short leg can’t appear on this form regardless of how large the long side gets. The academic finding on this exact question is that options end users run net long and dealers sit net short as their counterparty. That’s the opposite of what a large long call line on a 13F would suggest, if you read it as the dealer’s own view.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "long/short",
+    "underlying": null,
+    "edge_or_thesis": "the dealer’s own view.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How to Read a Market Maker's 13F Options Line: Jane Street and Susquehanna's SpaceX Book, Ranked Against Their Own",
+    "article_url": "https://navnoorbawa.substack.com/p/how-to-read-a-market-makers-13f-options",
+    "article_date": "2026-09-22",
+    "trade_description": "A dealer’s reported long call position is more plausibly one leg of something else. A spread held against a short call at a different strike. The residual after netting many client trades at the position level. Calls held against a short stock position built elsewhere. The filing doesn’t disclose which, and I can’t determine it from public data. What I can say is that a large notional on this form isn’t, by itself, evidence the filer wanted the exposure. The form hides the half that would tell you. This publication’s earlier read of Jane Street’s own reported book ran into the same limit on a different name: what the filing shows and what the firm’s actual economics were doing are not always the same story.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long/short",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How to Read a Market Maker's 13F Options Line: Jane Street and Susquehanna's SpaceX Book, Ranked Against Their Own",
+    "article_url": "https://navnoorbawa.substack.com/p/how-to-read-a-market-makers-13f-options",
+    "article_date": "2026-09-22",
+    "trade_description": "Optiver’s Q2-2026 13F-HR, a third filer holding SPCX options the same quarter, shows a call line of $759,934,022 (4,447,700 share equivalents) against a put line of $390,500,530 (2,285,500 share equivalents), also net call heavy, also marked at the same $170.86 quarter-end price. It reports shared voting authority on both legs, not zero and not full. Three market makers, one instrument, one quarter, three different conventions on the same SEC field. It is a bookkeeping quirk, nothing more. A genuine conviction trade would report the identical zero this form shows for a hedge. The field can’t tell the two apart. It was never built to. Form 13F carries plenty of other quirks nobody enforces: the SEC doesn’t reconcile duplicate filings against each other either, which is its own lesson in",
+    "instruments": [
+      "option",
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "4,447,700 share, 2,285,500 share",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": true
+  },
+  {
     "article_title": "Pershing Square Funded Ackman's Berkshire. Howard Hughes Holds the Call.",
     "article_url": "https://navnoorbawa.substack.com/p/pershing-square-funded-ackmans-berkshire",
     "article_date": "2026-09-21",

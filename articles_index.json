@@ -1,5 +1,77 @@
 [
   {
+    "source": "substack",
+    "source_id": "how-to-read-a-market-makers-13f-options",
+    "slug": "how-to-read-a-market-makers-13f-options",
+    "title": "How to Read a Market Maker's 13F Options Line: Jane Street and Susquehanna's SpaceX Book, Ranked Against Their Own",
+    "subtitle": "Susquehanna ranks it 21st of 3,053, in a book where two-thirds of names lean the same way.",
+    "post_date": "2026-09-22T13:31:14.071Z",
+    "url": "https://navnoorbawa.substack.com/p/how-to-read-a-market-makers-13f-options",
+    "audience": "everyone",
+    "wordcount": 2321,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "bc5ee7b7fd71f88a71d88a8e8298fb47b419bf9f3073381d2a8b586aa91f8ee7",
+      "lead": {
+        "text": "Jane Street and Susquehanna both report net call heavy SPCX options lines in their Q2-2026 13F-HRs. Direction alone means nothing: about two-thirds of names in both firms’ books lean the same way, SPDR Gold Trust and Invesco QQQ included. Size is a different question. SPCX comes in 7th of 2,490 dual-leg names at Jane Street and 21st of 3,053 at Susquehanna, by dollar size of the net call tilt. Size beats direction here.",
+        "start": 0,
+        "end": 423,
+        "sha256": "38b6769d5baa0b59076676fe421236fca0a463ced23de409800207ce075ca352",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "falsifier",
+          "source_order": 30,
+          "heading": "What would prove this wrong, on a dated test",
+          "heading_start": 10788,
+          "heading_end": 10832,
+          "heading_sha256": "2ff1d28ec8c8cfd864508d6d70811f17f10763cba0c7b510438b8aec32e614d0",
+          "text": "This reading is falsifiable on two dated tests. First: the November 2026 13F-HR season, due on or around 14 November, will show whether SPCX’s rank in either book holds near the top, or falls back toward the pack as the float, which has grown from 638.9m shares to about 1.91bn as of 18 September, stops being scarce. A rank that falls out of each book’s top 50, or a call-to-put ratio that converges back to each firm’s own baseline, would say whatever produced this quarter’s outsized tilt was a one-quarter artifact, not a standing feature.",
+          "start": 10834,
+          "end": 11377,
+          "sha256": "1bb03190eb495daeda5216a691dd4c2684481d934db07b61f013506f767545b2",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "Optiver’s Q2-2026 13F-HR, a third filer holding SPCX options the same quarter, shows a call line of $759,934,022 (4,447,700 share equivalents) against a put line of $390,500,530 (2,285,500 share equivalents), also net call heavy, also marked at the same $170.86 quarter-end price. It reports shared voting authority on both legs, not zero and not full. Three market makers, one instrument, one quarter, three different conventions on the same SEC field. It is a bookkeeping quirk, nothing more. A genuine conviction trade would report the identical zero this form shows for a hedge. The field can’t tell the two apart.",
+        "start": 5892,
+        "end": 6510,
+        "sha256": "bd420c924fb1f866325da69c5e7147b3567fae1aff21aef1752cd14333e7f20e",
+        "truncated": true
+      },
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-22T13:34:25.123Z",
+    "observed_source_updated_at": "2026-09-22T13:34:25.123Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "170161365",
+    "slug": "three-step-check-170161365",
+    "title": "The Three-Step Check for a Market Maker's 13F Options Line: Jane Street and Susquehanna on SpaceX",
+    "subtitle": "",
+    "post_date": "2026-09-22",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/three-step-check-170161365",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
     "source": "medium",
     "source_id": "99824e5a20fc",
     "slug": "thorp-traded-black-scholes-in-1967-merton-proved-it-in-1973-bet-ltcm-on-it-99824e5a20fc",
