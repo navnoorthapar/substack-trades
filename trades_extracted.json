@@ -1,5 +1,21 @@
 [
   {
+    "article_title": "How Ed Thorp and Renaissance Actually Sized Their Bets: The Kelly Criterion Hedge Funds Still Use",
+    "article_url": "https://navnoorbawa.substack.com/p/how-ed-thorp-and-renaissance-actually",
+    "article_date": "2026-09-23",
+    "trade_description": "A few years later he moved the same logic into markets, first warrant pricing and convertible arbitrage, then in 1969 into Princeton Newport Partners, a fund he ran with Jay Regan for nineteen years. Thorp’s own account, given from memory in a 2017 interview, describes 230 months of operation with three losing months, none worse than about 1%. It compounded a little over 19% a year before fees, against a Dow that “did about half that” over the same stretch Episode #39: Ed Thorp, “If You Bet Too Much, You’ll Almost Certainly Be Ruined”.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "1%, 19%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
     "article_title": "How to Read a Market Maker's 13F Options Line: Jane Street and Susquehanna's SpaceX Book, Ranked Against Their Own",
     "article_url": "https://navnoorbawa.substack.com/p/how-to-read-a-market-makers-13f-options",
     "article_date": "2026-09-22",

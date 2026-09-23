@@ -1,6 +1,72 @@
 [
   {
     "source": "medium",
+    "source_id": "8bcc0014fb94",
+    "slug": "rao-proved-the-cramér-rao-bound-in-1945-millennium-fires-pms-inside-it-two-sigma-paid-90m-in-it-8bcc0014fb94",
+    "title": "Rao Proved the Cramér-Rao Bound in 1945. Millennium Fires PMs Inside It. Two Sigma Paid $90M in It.",
+    "subtitle": "A 1945 statistics proof says the noise on a 30-day Sharpe estimate is bigger than the skill gap multi-strategy platforms use it to judge.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-23T15:15:51Z",
+    "url": "https://medium.com/@navnoorbawa/rao-proved-the-cram%C3%A9r-rao-bound-in-1945-millennium-fires-pms-inside-it-two-sigma-paid-90m-in-it-8bcc0014fb94",
+    "audience": "unknown",
+    "wordcount": 28,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "404320a30a2e43522e7e15005f226ba9c19ad7e208c4a3a88a0aafbe81e892e9",
+      "lead": {
+        "text": "A 1945 statistics proof says the noise on a 30-day Sharpe estimate is bigger than the skill gap multi-strategy platforms use it to judge.",
+        "start": 0,
+        "end": 137,
+        "sha256": "f3fdc12daa29a68b9a4960d9679fd9f9284563bbf06c1e38aca14d8864c36644",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-23T15:15:51Z",
+    "observed_source_updated_at": "2026-09-23T15:15:51Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "how-ed-thorp-and-renaissance-actually",
+    "slug": "how-ed-thorp-and-renaissance-actually",
+    "title": "How Ed Thorp and Renaissance Actually Sized Their Bets: The Kelly Criterion Hedge Funds Still Use",
+    "subtitle": "Three separate reasons explain why real funds never run the formula at full strength, and only one of them is about nerve",
+    "post_date": "2026-09-23T13:31:09.000Z",
+    "url": "https://navnoorbawa.substack.com/p/how-ed-thorp-and-renaissance-actually",
+    "audience": "everyone",
+    "wordcount": 3374,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "3a668a320d79d61dbfafba441484c882beae33b9b3d72e39fd82601eaedf9eb3",
+      "lead": {
+        "text": "Ed Thorp ran Princeton Newport at a little over 19% a year for nineteen years, three losing months out of 230, without ever running the Kelly criterion at full strength. Neither did Renaissance after him. The standard explanation is risk aversion. Thorp and Renaissance’s own words name two more reasons stacked on top of it, and both would apply even to a fund with zero risk aversion.",
+        "start": 0,
+        "end": 386,
+        "sha256": "3fd9e667115fa624b62ec7010346816856428b2393efbcc25d220c20e9360eef",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": {
+        "text": "The commonly reported record is not a dispute between two strong figures. 1989 was Medallion’s only losing year, roughly a 4% loss, while the rebuilt system was still coming online late in the year. 1990, the system’s first full year, returned about 55.9% net. A loss immediately followed by a large gain the year the new approach ran a full cycle is a cleaner story than the one I told before. It also happens to be the one the record actually supports. The correction improves the story.",
+        "start": 8634,
+        "end": 9123,
+        "sha256": "c0d5d788e0355fcc4fa0796fba06dd242bb5c7b53df8e6026a424fd6d4ab3d42",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-23T13:34:39.231Z",
+    "observed_source_updated_at": "2026-09-23T13:34:39.231Z"
+  },
+  {
+    "source": "medium",
     "source_id": "654aaf91b9c4",
     "slug": "markowitz-said-a-d-roy-deserved-half-the-credit-bridgewater-and-aqr-run-on-the-half-roy-wrote-654aaf91b9c4",
     "title": "Markowitz Said A.D. Roy Deserved Half the Credit. Bridgewater and AQR Run on the Half Roy Wrote.",
@@ -646,9 +712,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-08T15:03:41Z",
-    "observed_source_updated_at": "2026-09-08T15:03:41Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
