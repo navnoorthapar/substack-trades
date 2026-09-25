@@ -1,6 +1,36 @@
 [
   {
     "source": "medium",
+    "source_id": "7d2517b589ff",
+    "slug": "how-quants-price-the-volatility-smile-heston-1993-dupire-1994-sabr-2002-7d2517b589ff",
+    "title": "How Quants Price the Volatility Smile: Heston 1993, Dupire 1994, SABR 2002",
+    "subtitle": "All three fit one S&P 500 smile. Their standard deltas assume a skew stickiness ratio near 2; the index measured 1.44 from 2021 to 2026.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-25T15:05:45Z",
+    "url": "https://medium.com/@navnoorbawa/how-quants-price-the-volatility-smile-heston-1993-dupire-1994-sabr-2002-7d2517b589ff",
+    "audience": "unknown",
+    "wordcount": 31,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "2b453d1932b663c7a12f3755395116151569c2fdcd79e7d5634996d2a114b198",
+      "lead": {
+        "text": "All three fit one S&P 500 smile. Their standard deltas assume a skew stickiness ratio near 2; the index measured 1.44 from 2021 to 2026.",
+        "start": 0,
+        "end": 136,
+        "sha256": "c2e484a17542c7093f2457dbf53183d215f0150eff848d533f1a3a38dec7a5d5",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-25T15:05:45Z",
+    "observed_source_updated_at": "2026-09-25T15:05:45Z"
+  },
+  {
+    "source": "medium",
     "source_id": "2356b8965cfd",
     "slug": "gauss-didnt-publish-least-squares-first-legendre-did-d-e-shaw-and-pdt-built-stat-arb-on-it-2356b8965cfd",
     "title": "Gauss Didn’t Publish Least Squares First. Legendre Did. D.E. Shaw and PDT Built Stat Arb on It.",
@@ -582,9 +612,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-13T06:48:54Z",
-    "observed_source_updated_at": "2026-09-13T06:48:54Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
