@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "checked_at": "2026-09-26T07:35:47Z",
+  "checked_at": "2026-09-26T16:33:03Z",
   "latest_publication": "2026-09-25T15:05:45Z",
   "catalog_latest_publication": "2026-09-25T15:05:45Z",
   "article_count": 488,
@@ -10,7 +10,7 @@
   "data_checksum": "f9d7276dc9686a5dc73b07347be4f08c7227fc73d3f27ee979ee9d0debfbcbc0",
   "sources": {
     "substack": {
-      "checked_at": "2026-09-26T07:34:53Z",
+      "checked_at": "2026-09-26T16:31:51Z",
       "status": "ok",
       "mode": "complete_api",
       "published_count": 301,
@@ -21,7 +21,7 @@
       "consecutive_degraded_checks": 0
     },
     "medium": {
-      "checked_at": "2026-09-26T07:34:59Z",
+      "checked_at": "2026-09-26T16:31:57Z",
       "status": "ok",
       "mode": "validated_history_plus_current_rss",
       "published_count": 429,
@@ -32,7 +32,7 @@
       "consecutive_degraded_checks": 0
     },
     "patreon": {
-      "checked_at": "2026-09-26T07:35:03Z",
+      "checked_at": "2026-09-26T16:32:03Z",
       "status": "ok",
       "mode": "public_metadata_api",
       "published_count": 173,
