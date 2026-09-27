@@ -1,5 +1,186 @@
 [
   {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "Nearly half the retail options Citadel Securities fills now expire the same day, on its own review dated 30 June 2026. In the S&P 500, the exchange’s own records show that flow mostly netting and the dealer’s hedge staying small. The growth is now in single stocks, where nobody has shown the same.",
+    "instruments": [
+      "option",
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": "S&P 500",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "On its own figures, Citadel Securities executes approximately 35% of all retail volume in US listed securities. Its first half market structure review, dated 30 June 2026, says nearly half of the retail options it fills now expire the same day, up from 13% in 2021, following the single stock Monday and Wednesday expirations launched this year. The popular story says that business is a bomb. I went through Cboe’s positioning work, the academic papers built on its records, an SEC staff study and two companies’ filings. No public data shows Citadel Securities’ own positions, so every positioning figure below covers the whole market. In the index, the money is in the spread and the hedge mostly nets. The growth isn’t in the index.",
+    "instruments": [
+      "option",
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "35%, 13%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "That is the consensus, and I want it in its strongest form, because the mechanics are sound. A same day option at the money carries enormous gamma. A dealer net short those options has to buy futures as the index rises and sell as it falls, so the hedge trades with the move. Large enough, the hedge becomes the move. Nobody serious disputes the direction of that arithmetic. I don’t either.",
+    "instruments": [
+      "option",
+      "futures"
+    ],
+    "direction": "short",
+    "underlying": null,
+    "edge_or_thesis": "the mechanics are sound.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "The view has not gone away. Citadel Securities’ own review says “options, leveraged ETFs, and systematic strategies are increasingly amplifying moves in the underlying market.” Bloomberg reported record trading revenue of $7.3 billion for the second quarter, more than triple a year earlier, crediting heightened market volatility. That figure covers the whole firm, with no options line.",
+    "instruments": [
+      "option",
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$7.3 billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "What the crash scenario needs is size and sign, meaning dealers net short in amounts that matter against a futures market that trades hundreds of billions a day. Both are empirical questions. For SPX, both now have answers in exchange data.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "short",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "Step four is the one retail pays for. Heiner Beckmeyer, Nicole Branger and Leander Gayda identified retail orders in S&P 500 options through Cboe’s retail price improvement mechanism, and their retail 0DTE study tracked them from February 2021 to September 2023. Retail lost $241,000 on an average day. On the paper’s own daily table, $184,000 of that was trading costs, 76%. After daily expirations arrived in May 2022, the loss rose to $350,000 a day, of which I make $244,000 costs. Most of it was friction.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": "S&P 500",
+    "edge_or_thesis": null,
+    "any_quant_detail": "76%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "That finding is disputed. Diego Amaya, Pedro Garcia-Ares, Neil Pearson and Aurelio Vasquez work with Cboe data, in this case under a Cboe Options Institute grant. Their 2025 paper on customer options performance argues that auction based proxies catch only 4% to 6% of S&P 500 options trading, “an implausible low estimate of retail trading.” It estimates Cboe customer auction trades made $0.34 million a day, with a t statistic of 0.29 that the authors themselves call not significant.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": "S&P 500",
+    "edge_or_thesis": null,
+    "any_quant_detail": "$0.34 million, 4%, 6%",
+    "outcome_if_mentioned": "made $0.34 million a day, with a t statistic of 0.",
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "The SPX book mostly nets because customers sell dealers nearly as many same day contracts as they buy from them. Amaya and his coauthors rebuilt market maker positions minute by minute from Cboe’s proprietary SPX trade records. On the average day from January 2020 to June 2023, in their study of dealer gamma, customers buying 0DTE options from market makers made up 14.952% of all SPX and SPXW volume. Customers selling them to market makers made up 14.062%. I make that about 94 contracts sold back to dealers for every 100 bought from them. Those customers are everyone who isn’t a market maker, institutions included, and Citadel Securities’ retail slice cannot be separated out in public data.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "customers sell dealers nearly as many same day contracts as they buy from them.",
+    "any_quant_detail": "14.952%, 14.062%, 94 contracts",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "I’d add that dealers aren’t the only other side. An SEC staff paper on 0DTE limit orders, by Lei Fu, Su Li, David Musto and Neil Pearson, finds that “a quarter of all 0DTE trades are customer MTOs and POs that got filled,” and auction trades between two customers rose from 10% to 18%. Retail trades both sides too: Xu’s full 2025 report puts 27.6% of retail 0DTE volume in vertical spreads and 7.7% in iron condors. Roundhill’s XDTE fund says in its SEC prospectus that it “generally sells out-of-the-money 0DTE call options on the S&P 500” every business day, one filed example of the other side.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": "S&P 500",
+    "edge_or_thesis": null,
+    "any_quant_detail": "10%, 18%, 27.6%, 7.7%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "Robinhood’s quarterly report gives the reason: “lower option rebate rates due to the mix of ticker symbols traded.” That is a cost to the wholesaler, so a lower rate per contract makes the raw material cheaper. It tells me nothing about the spread thinning.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "the mix of ticker symbols traded.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "article_date": "2026-09-27",
+    "trade_description": "I’d look next at the Monday expiries in single stocks, Nvidia’s among them, because that’s where Citadel Securities’ growth came from. Rubner’s own numbers describe a call heavy book: in June, retail traded about $1.9 billion of semiconductor options premium a day, “with ~75% of that activity concentrated in call options.” Call heavy isn’t the same as one way. It nets if the same customers also sell calls, and the buy and sell split is the number nobody publishes.",
+    "instruments": [
+      "option",
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "that’s where Citadel Securities’ growth came from.",
+    "any_quant_detail": "$1.9 billion, 75%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
     "article_title": "How Ed Thorp and Renaissance Actually Sized Their Bets: The Kelly Criterion Hedge Funds Still Use",
     "article_url": "https://navnoorbawa.substack.com/p/how-ed-thorp-and-renaissance-actually",
     "article_date": "2026-09-23",

@@ -1,6 +1,99 @@
 [
   {
     "source": "medium",
+    "source_id": "4532bc40b940",
+    "slug": "jim-simons-capped-medallion-at-10-billion-cfm-proved-the-law-that-forced-his-hand-4532bc40b940",
+    "title": "Jim Simons Capped Medallion at $10 Billion. CFM Proved the Law That Forced His Hand.",
+    "subtitle": "A rival quant firm proved, with real trade data, the exact law that explains why Medallion hit a hard ceiling.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-27T14:21:57Z",
+    "url": "https://medium.com/@navnoorbawa/jim-simons-capped-medallion-at-10-billion-cfm-proved-the-law-that-forced-his-hand-4532bc40b940",
+    "audience": "unknown",
+    "wordcount": 24,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e86cefd599db10f90cd427a0c6318b9907b4c65cc0411686d3d34db15fd14e18",
+      "lead": {
+        "text": "A rival quant firm proved, with real trade data, the exact law that explains why Medallion hit a hard ceiling.",
+        "start": 0,
+        "end": 110,
+        "sha256": "026464f5f2023279fa090a6777b75a480aa137995886454be22d8b04fd540f46",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-27T14:21:57Z",
+    "observed_source_updated_at": "2026-09-27T14:21:57Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "how-market-makers-like-citadel-securities",
+    "slug": "how-market-makers-like-citadel-securities",
+    "title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
+    "subtitle": "Nearly half of Citadel Securities' retail options now expire the same day. In SPX, same day flow mostly nets. Single stocks are unmeasured.",
+    "post_date": "2026-09-27T13:31:07.524Z",
+    "url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
+    "audience": "everyone",
+    "wordcount": 3693,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "7a2d10c6ea7e63b72b7eee3ef008b9d7d13178628e353a704bdf4576cc2b24da",
+      "lead": {
+        "text": "Nearly half the retail options Citadel Securities fills now expire the same day, on its own review dated 30 June 2026. In the S&P 500, the exchange’s own records show that flow mostly netting and the dealer’s hedge staying small. The growth is now in single stocks, where nobody has shown the same.",
+        "start": 0,
+        "end": 298,
+        "sha256": "98c1ca6b389de9ab12a995241485fe13107100234110f13fa874e02982a12181",
+        "truncated": false
+      },
+      "sections": [
+        {
+          "kind": "mechanism",
+          "source_order": 13,
+          "heading": "Where the money comes from: four steps from order to spread",
+          "heading_start": 4510,
+          "heading_end": 4569,
+          "heading_sha256": "0bf7f7adbb7f654d1d1505eabbd8afb08646a5d571df9abdd6bdff2b31a93fb9",
+          "text": "The money is what remains of the customer’s price after the payment for flow and the cost of the hedge. It is earned in four steps, and I set them out before any number.",
+          "start": 4571,
+          "end": 4740,
+          "sha256": "31d55a8a796ece1a8632260f229fe04800f7dfe0e9886711340bcc72df1cd38a",
+          "truncated": false
+        },
+        {
+          "kind": "falsifier",
+          "source_order": 52,
+          "heading": "What would change my view by June 2027",
+          "heading_start": 16751,
+          "heading_end": 16789,
+          "heading_sha256": "891b71231859c1b236008e0f8e4bf2ace23a268830a0d90ebc876ef77863b1d7",
+          "text": "Two public results would change my view: a short dealer book on the next 5% down day, or a 2024 to 2026 study tying dealer 0DTE gamma to everyday volatility. The first is event driven. The last day like that Cboe examined was 4 April 2025, when the S&P 500 fell 6%. On the next such day before 30 June 2027, if a Cboe or academic read shows SPX 0DTE dealers short more than $1.1 billion of gamma per 1% as the drop begins, the balanced book is wrong at today’s volumes. That bar is the 2023 lower quartile at 3:30pm. With the index about 1.74 times its August 2023 level, the same contracts carry about three times the dollar gamma, so the bar is easier to cross. I’d rather the test be harsh on me.",
+          "start": 16791,
+          "end": 17490,
+          "sha256": "7567866e6b6870cf4230759cdf19134b27726de4d2c57e2892e830718d6ba380",
+          "truncated": false
+        }
+      ],
+      "fallback_evidence": {
+        "text": "On its own figures, Citadel Securities executes approximately 35% of all retail volume in US listed securities. Its first half market structure review, dated 30 June 2026, says nearly half of the retail options it fills now expire the same day, up from 13% in 2021, following the single stock Monday and Wednesday expirations launched this year. The popular story says that business is a bomb. I went through Cboe’s positioning work, the academic papers built on its records, an SEC staff study and two companies’ filings.",
+        "start": 300,
+        "end": 822,
+        "sha256": "e3f8eea83bba0aa8548c3a3588b3b265a68079122a1fbe9ce5663a342cda9b05",
+        "truncated": true
+      },
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-27T13:34:05.060Z",
+    "observed_source_updated_at": "2026-09-27T13:34:05.060Z"
+  },
+  {
+    "source": "medium",
     "source_id": "7d2517b589ff",
     "slug": "how-quants-price-the-volatility-smile-heston-1993-dupire-1994-sabr-2002-7d2517b589ff",
     "title": "How Quants Price the Volatility Smile: Heston 1993, Dupire 1994, SABR 2002",
