@@ -1,5 +1,138 @@
 [
   {
+    "source": "substack",
+    "source_id": "how-elliott-is-long-synopsys-with",
+    "slug": "how-elliott-is-long-synopsys-with",
+    "title": "How Elliott Is Long Synopsys With Software Hedged, From Its Own 13F",
+    "subtitle": "The 13F shows Elliott's hedge and hides its stake. Read together, they give a pair that has run against Elliott since June.",
+    "post_date": "2026-09-28T16:02:20.235Z",
+    "url": "https://navnoorbawa.substack.com/p/how-elliott-is-long-synopsys-with",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "20cbad0bd65310e908af46c0d4f54fe3ca08b8a19c7900be41bf68d11046cb9a",
+      "lead": {
+        "text": "Elliott’s 13F for 30 June carries a $1.43bn put on the software ETF, in the quarter its partner Jesse Cohn joined the Synopsys board. Synopsys sits inside that ETF, and Elliott’s stake barely registers on the 13F. I dated each of Elliott’s sector puts against the campaigns it has made public. They cluster in the quarters the campaigns went public, and the software line points at Synopsys.",
+        "start": 0,
+        "end": 391,
+        "sha256": "20cbad0bd65310e908af46c0d4f54fe3ca08b8a19c7900be41bf68d11046cb9a",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-28T16:12:30.103Z",
+    "observed_source_updated_at": "2026-09-28T16:12:30.103Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Elliott’s 13F for 30 June carries a $1.43bn put on the software ETF, in the quarter its partner Jesse Cohn joined the Synopsys board. Synopsys sits inside that ETF, and Elliott’s stake barely registers on the 13F. I dated each of Elliott’s sector puts against the campaigns it has made public. They cluster in the quarters the campaigns went public, and the software line points at Synopsys.",
+      "character_count": 391,
+      "body_sha256": "20cbad0bd65310e908af46c0d4f54fe3ca08b8a19c7900be41bf68d11046cb9a"
+    }
+  },
+  {
+    "source": "medium",
+    "source_id": "ba6fdbc2fb7e",
+    "slug": "how-jim-simons-won-being-right-50-75-the-information-ratio-ltcm-got-wrong-ba6fdbc2fb7e",
+    "title": "How Jim Simons Won Being Right 50.75%: The Information Ratio LTCM Got Wrong",
+    "subtitle": "Grinold’s 1989 law turns a 50.75% hit rate into an IC of 0.015, which pays only across about 18,000 independent bets a year.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-28T15:19:16Z",
+    "url": "https://medium.com/@navnoorbawa/how-jim-simons-won-being-right-50-75-the-information-ratio-ltcm-got-wrong-ba6fdbc2fb7e",
+    "audience": "unknown",
+    "wordcount": 30,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "9f9b25ec43e25065fd52d26eb6c45ceb0d2308bbe84e04ed6ea05303e57afaca",
+      "lead": {
+        "text": "Grinold’s 1989 law turns a 50.75% hit rate into an IC of 0.015, which pays only across about 18,000 independent bets a year.",
+        "start": 0,
+        "end": 124,
+        "sha256": "dd4678d362f6c6748a924deef34ba03dd7e1b042a38a07ef7c714a2edaa27dcc",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-28T15:19:16Z",
+    "observed_source_updated_at": "2026-09-28T15:19:16Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "170324717",
+    "slug": "where-citadel-170324717",
+    "title": "Where Citadel Securities' 0DTE Growth Sits: A Morning Gamma Screen for Nvidia's Same Day Options",
+    "subtitle": "",
+    "post_date": "2026-09-28",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/where-citadel-170324717",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
+    "source": "patreon",
+    "source_id": "170185098",
+    "slug": "how-renaissance-170185098",
+    "title": "How Renaissance and Ed Thorp Actually Modeled Their Bet Sizing: The Kelly Fraction Model",
+    "subtitle": "",
+    "post_date": "2026-09-28",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/how-renaissance-170185098",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "access": "public"
+  },
+  {
+    "source": "patreon",
+    "source_id": "170803364",
+    "slug": "elliotts-hedges-170803364",
+    "title": "Elliott's Campaign Hedges in Its 13F: the Screen That Dates Every Sector Put",
+    "subtitle": "",
+    "post_date": "2026-09-28",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/elliotts-hedges-170803364",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "medium",
     "source_id": "4532bc40b940",
     "slug": "jim-simons-capped-medallion-at-10-billion-cfm-proved-the-law-that-forced-his-hand-4532bc40b940",
@@ -89,8 +222,11 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-27T13:34:05.060Z",
-    "observed_source_updated_at": "2026-09-27T13:34:05.060Z"
+    "source_updated_at": "2026-09-28T10:28:23.625Z",
+    "observed_source_updated_at": "2026-09-28T10:28:23.625Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/how-market-makers-like-citadel-securities-actually-make-money-on-0dte-options-a835b4a263ac"
+    }
   },
   {
     "source": "medium",
@@ -126,28 +262,22 @@
     "source": "medium",
     "source_id": "2356b8965cfd",
     "slug": "gauss-didnt-publish-least-squares-first-legendre-did-d-e-shaw-and-pdt-built-stat-arb-on-it-2356b8965cfd",
-    "title": "Gauss Didn’t Publish Least Squares First. Legendre Did. D.E. Shaw and PDT Built Stat Arb on It.",
-    "subtitle": "Adrien-Marie Legendre published the method of least squares in 1805. Sixteen years later, Carl Friedrich Gauss proved why it works, and…\n\nContinue reading on Medium »",
+    "title": "Gauss Didn’t Publish Least Squares First. Legendre Did. D.E. Shaw and",
+    "subtitle": "PDT Built Stat Arb on It.\n\nContinue reading on Medium »",
     "post_date": "2026-09-24T15:23:23Z",
     "url": "https://medium.com/@navnoorbawa/gauss-didnt-publish-least-squares-first-legendre-did-d-e-shaw-and-pdt-built-stat-arb-on-it-2356b8965cfd",
     "audience": "unknown",
-    "wordcount": 25,
+    "wordcount": 10,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "aac8c53fda9302e3614cbe1149afe4560358b24a9fffa07925d89c00832fd6d6",
-      "lead": {
-        "text": "Adrien-Marie Legendre published the method of least squares in 1805. Sixteen years later, Carl Friedrich Gauss proved why it works, and…",
-        "start": 0,
-        "end": 136,
-        "sha256": "6e65db349ebfb6768a4b765746fc26fe73ade454f15dc1dc7235a1d5b6c72e20",
-        "truncated": false
-      },
+      "body_sha256": "0e2571de63df377816fea37be5fee891d3dc2356059f9f81464326a3b4e01364",
+      "lead": null,
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
     },
-    "family": "firm-mechanics",
+    "family": "other",
     "body_revision_status": "current",
     "source_updated_at": "2026-09-24T15:23:23Z",
     "observed_source_updated_at": "2026-09-24T15:23:23Z"
@@ -386,23 +516,17 @@
     "source": "medium",
     "source_id": "99824e5a20fc",
     "slug": "thorp-traded-black-scholes-in-1967-merton-proved-it-in-1973-bet-ltcm-on-it-99824e5a20fc",
-    "title": "Thorp Traded Black-Scholes in 1967. Merton Proved It in 1973, Bet LTCM on It.",
-    "subtitle": "Black and Scholes derived their formula from the CAPM, a modeling choice rather than a proof; the actual proof, built on continuous time…\n\nContinue reading on Medium »",
+    "title": "Thorp Traded Black-Scholes in 1967. Merton Proved It in 1973, Bet LTCM",
+    "subtitle": "on It.\n\nContinue reading on Medium »",
     "post_date": "2026-09-21T15:04:14Z",
     "url": "https://medium.com/@navnoorbawa/thorp-traded-black-scholes-in-1967-merton-proved-it-in-1973-bet-ltcm-on-it-99824e5a20fc",
     "audience": "unknown",
-    "wordcount": 27,
+    "wordcount": 6,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "d5a0c4dfeb1c8e9f29a996f24111e06caf3d174915186213df181eed61f60f7f",
-      "lead": {
-        "text": "Black and Scholes derived their formula from the CAPM, a modeling choice rather than a proof; the actual proof, built on continuous time…",
-        "start": 0,
-        "end": 137,
-        "sha256": "11a8cb6b1327c13d5d9e4ae9e22dbc1552588334288d4eb5bd0c014f5e116968",
-        "truncated": false
-      },
+      "body_sha256": "d67d7c7394f0a0da03f67886fda7aafc36472d4ee908e7ac48e0c0e7a580976b",
+      "lead": null,
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
@@ -527,9 +651,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-16T07:36:05Z",
-    "observed_source_updated_at": "2026-09-16T07:36:05Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -653,9 +777,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-14T15:03:03Z",
-    "observed_source_updated_at": "2026-09-14T15:03:03Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -1158,8 +1282,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T18:06:20.802Z",
-    "observed_source_updated_at": "2026-09-15T18:06:20.802Z",
+    "source_updated_at": "2026-09-28T10:07:05.830Z",
+    "observed_source_updated_at": "2026-09-28T10:07:05.830Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -1721,8 +1845,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-17T16:21:09.642Z",
-    "observed_source_updated_at": "2026-09-17T16:21:09.642Z",
+    "source_updated_at": "2026-09-28T10:09:17.493Z",
+    "observed_source_updated_at": "2026-09-28T10:09:17.493Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -3445,8 +3569,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-17T15:41:57.712Z",
-    "observed_source_updated_at": "2026-09-17T15:41:57.712Z",
+    "source_updated_at": "2026-09-28T10:00:03.734Z",
+    "observed_source_updated_at": "2026-09-28T10:00:03.734Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -5227,8 +5351,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-17T14:53:02.590Z",
-    "observed_source_updated_at": "2026-09-17T14:53:02.590Z",
+    "source_updated_at": "2026-09-28T10:05:32.919Z",
+    "observed_source_updated_at": "2026-09-28T10:05:32.919Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -5896,8 +6020,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-17T14:25:13.195Z",
-    "observed_source_updated_at": "2026-09-17T14:25:13.195Z",
+    "source_updated_at": "2026-09-28T09:58:02.243Z",
+    "observed_source_updated_at": "2026-09-28T09:58:02.243Z",
     "member_preview": {
       "schema_version": 1,
       "surface": "anonymous-substack-list",
@@ -6755,8 +6879,8 @@
     },
     "family": "model-critique",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T21:20:16.429Z",
-    "observed_source_updated_at": "2026-09-15T21:20:16.429Z",
+    "source_updated_at": "2026-09-28T09:57:18.323Z",
+    "observed_source_updated_at": "2026-09-28T09:57:18.323Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/d-e-shaw-citadel-and-renaissance-run-stat-arb-its-ols-bias-has-been-known-since-1954-55398460aa0a"
     }
@@ -11741,8 +11865,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T14:36:50.168Z",
-    "observed_source_updated_at": "2026-09-15T14:36:50.168Z",
+    "source_updated_at": "2026-09-28T10:05:12.401Z",
+    "observed_source_updated_at": "2026-09-28T10:05:12.401Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/elliott-managements-ac-milan-investment-analysis-2017-2026-700m-deployed-1-2b-exit-120m-0f5aa1decbbe"
     }
@@ -12604,8 +12728,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T14:15:23.873Z",
-    "observed_source_updated_at": "2026-09-15T14:15:23.873Z",
+    "source_updated_at": "2026-09-28T09:56:27.914Z",
+    "observed_source_updated_at": "2026-09-28T09:56:27.914Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-hedge-funds-made-billions-in-china-muddy-waters-11-260-hour-luckin-investigation-bridgewater-6dc079eca9c9"
     }
@@ -14049,8 +14173,8 @@
     },
     "family": "career-structure",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T15:55:33.929Z",
-    "observed_source_updated_at": "2026-09-15T15:55:33.929Z",
+    "source_updated_at": "2026-09-28T09:56:41.759Z",
+    "observed_source_updated_at": "2026-09-28T09:56:41.759Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/i-analyzed-40-hedge-fund-billionaires-heres-the-exact-career-path-that-made-them-500b-49ea615f610d"
     }
@@ -14243,8 +14367,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T14:28:13.239Z",
-    "observed_source_updated_at": "2026-09-15T14:28:13.239Z",
+    "source_updated_at": "2026-09-28T09:53:52.234Z",
+    "observed_source_updated_at": "2026-09-28T09:53:52.234Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bridgewaters-pure-alpha-returned-33-in-2025-here-s-the-exact-system-behind-it-f5b6355ea7ff"
     }
@@ -14354,8 +14478,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T20:55:52.917Z",
-    "observed_source_updated_at": "2026-09-15T20:55:52.917Z",
+    "source_updated_at": "2026-09-28T10:08:40.650Z",
+    "observed_source_updated_at": "2026-09-28T10:08:40.650Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/how-founders-fund-captured-polymarkets-rise-to-9b-the-platform-economics-breakdown-15bbacbaeac3"
     }
@@ -15053,8 +15177,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T20:37:12.490Z",
-    "observed_source_updated_at": "2026-09-15T20:37:12.490Z",
+    "source_updated_at": "2026-09-28T10:01:42.585Z",
+    "observed_source_updated_at": "2026-09-28T10:01:42.585Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/why-renaissances-medallion-made-76-while-their-own-rief-lost-22-6-in-2020-1ed318548100"
     }
@@ -15793,8 +15917,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T13:49:35.578Z",
-    "observed_source_updated_at": "2026-09-15T13:49:35.578Z",
+    "source_updated_at": "2026-09-28T09:49:17.391Z",
+    "observed_source_updated_at": "2026-09-28T09:49:17.391Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/bridgewaters-alpha-beta-framework-how-risk-parity-and-portable-alpha-generate-returns-faa386a867cb"
     }
@@ -16076,8 +16200,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T16:28:19.336Z",
-    "observed_source_updated_at": "2026-09-15T16:28:19.336Z",
+    "source_updated_at": "2026-09-28T09:58:52.660Z",
+    "observed_source_updated_at": "2026-09-28T09:58:52.660Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/quant-discovered-vs-discretionary-trades-how-hedge-funds-actually-find-alpha-08709df2dd15",
       "patreon": "https://www.patreon.com/NavnoorBawa/posts/quant-discovered-144344878"
@@ -18931,8 +19055,8 @@
     },
     "family": "firm-mechanics",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T13:30:45.721Z",
-    "observed_source_updated_at": "2026-09-15T13:30:45.721Z",
+    "source_updated_at": "2026-09-28T10:02:00.557Z",
+    "observed_source_updated_at": "2026-09-28T10:02:00.557Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/renaissance-technologies-the-100-billion-built-on-statistical-arbitrage-908ca7653fa2"
     }
@@ -19388,8 +19512,8 @@
     },
     "family": "other",
     "body_revision_status": "current",
-    "source_updated_at": "2026-09-15T16:32:39.891Z",
-    "observed_source_updated_at": "2026-09-15T16:32:39.891Z",
+    "source_updated_at": "2026-09-28T10:09:25.883Z",
+    "observed_source_updated_at": "2026-09-28T10:09:25.883Z",
     "alternate_urls": {
       "medium": "https://medium.com/@navnoorbawa/the-40-trillion-reality-check-how-systematic-funds-extract-alpha-from-esg-market-maturation-fc421ebf2791"
     }

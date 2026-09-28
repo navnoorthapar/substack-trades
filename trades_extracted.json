@@ -1,5 +1,22 @@
 [
   {
+    "article_title": "How Elliott Is Long Synopsys With Software Hedged, From Its Own 13F",
+    "article_url": "https://navnoorbawa.substack.com/p/how-elliott-is-long-synopsys-with",
+    "article_date": "2026-09-28",
+    "trade_description": "Elliott’s 13F for 30 June carries a $1.43bn put on the software ETF, in the quarter its partner Jesse Cohn joined the Synopsys board. Synopsys sits inside that ETF, and Elliott’s stake barely registers on the 13F. I dated each of Elliott’s sector puts against the campaigns it has made public. They cluster in the quarters the campaigns went public, and the software line points at Synopsys.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$1.43bn",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false,
+    "source_body_sha256": "20cbad0bd65310e908af46c0d4f54fe3ca08b8a19c7900be41bf68d11046cb9a"
+  },
+  {
     "article_title": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options",
     "article_url": "https://navnoorbawa.substack.com/p/how-market-makers-like-citadel-securities",
     "article_date": "2026-09-27",
