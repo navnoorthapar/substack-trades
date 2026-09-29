@@ -1,5 +1,94 @@
 [
   {
+    "source": "medium",
+    "source_id": "86bb836be548",
+    "slug": "kernel-regression-is-from-1964-86bb836be548",
+    "title": "Kernel Regression Is From 1964. Simons’s Renaissance Ran It in 1988. AQR Proved a Cousin in 2024.",
+    "subtitle": "Carmona pitched kernel regression to Simons in 1987. The kernel behind AQR’s 2024 model puts 65% of its weight on the last three months.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-29T15:03:17Z",
+    "url": "https://medium.com/@navnoorbawa/kernel-regression-is-from-1964-86bb836be548",
+    "audience": "unknown",
+    "wordcount": 28,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "fc93b50e340a70597ca063124e93d2846b2b0bf54e4b177c99d73c4c00b11e91",
+      "lead": {
+        "text": "Carmona pitched kernel regression to Simons in 1987. The kernel behind AQR’s 2024 model puts 65% of its weight on the last three months.",
+        "start": 0,
+        "end": 136,
+        "sha256": "2865d4dfb6c39f82cb9c7ebbad296983f4e3f30fc93d8956fec3f2252d116cd6",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-29T15:03:17Z",
+    "observed_source_updated_at": "2026-09-29T15:03:17Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "berkshire-is-betting-on-lennar-up",
+    "slug": "berkshire-is-betting-on-lennar-up",
+    "title": "Berkshire Is Betting on Lennar Up to $82 Before Its 13F Shows the Buying",
+    "subtitle": "What a follower pays against Berkshire's filed and unfiled cost, and the pair that trades the gap against the home construction ETF.",
+    "post_date": "2026-09-29T13:30:27.066Z",
+    "url": "https://navnoorbawa.substack.com/p/berkshire-is-betting-on-lennar-up",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "48b32d61464ad2d3cd2c25bda49cb018d0c46c2d19d6fd78e9c2ef0e36a95121",
+      "lead": {
+        "text": "Berkshire’s Form 3 of 21 September hides how its Lennar stake was built: 65% of the Class A it has added since June was bought before any form reported a trade. Anyone reading the Forms 4 as the whole campaign is working from the smaller half. After",
+        "start": 0,
+        "end": 249,
+        "sha256": "48b32d61464ad2d3cd2c25bda49cb018d0c46c2d19d6fd78e9c2ef0e36a95121",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-29T13:33:12.651Z",
+    "observed_source_updated_at": "2026-09-29T13:33:12.651Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Berkshire’s Form 3 of 21 September hides how its Lennar stake was built: 65% of the Class A it has added since June was bought before any form reported a trade. Anyone reading the Forms 4 as the whole campaign is working from the smaller half. After",
+      "character_count": 249,
+      "body_sha256": "48b32d61464ad2d3cd2c25bda49cb018d0c46c2d19d6fd78e9c2ef0e36a95121"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "170891960",
+    "slug": "berkshires-hp-to-170891960",
+    "title": "Berkshire's HP Campaign, 2022 to 2024: A Reconstruction From Its Own Filings",
+    "subtitle": "",
+    "post_date": "2026-09-29",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/berkshires-hp-to-170891960",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "substack",
     "source_id": "how-elliott-is-long-synopsys-with",
     "slug": "how-elliott-is-long-synopsys-with",
@@ -262,22 +351,28 @@
     "source": "medium",
     "source_id": "2356b8965cfd",
     "slug": "gauss-didnt-publish-least-squares-first-legendre-did-d-e-shaw-and-pdt-built-stat-arb-on-it-2356b8965cfd",
-    "title": "Gauss Didn’t Publish Least Squares First. Legendre Did. D.E. Shaw and",
-    "subtitle": "PDT Built Stat Arb on It.\n\nContinue reading on Medium »",
+    "title": "Gauss Didn’t Publish Least Squares First. Legendre Did. D.E. Shaw and PDT Built Stat Arb on It.",
+    "subtitle": "Gauss-Markov never addressed the one thing that actually breaks a stat-arb hedge ratio in markets.\n\nContinue reading on Medium »",
     "post_date": "2026-09-24T15:23:23Z",
     "url": "https://medium.com/@navnoorbawa/gauss-didnt-publish-least-squares-first-legendre-did-d-e-shaw-and-pdt-built-stat-arb-on-it-2356b8965cfd",
     "audience": "unknown",
-    "wordcount": 10,
+    "wordcount": 19,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "0e2571de63df377816fea37be5fee891d3dc2356059f9f81464326a3b4e01364",
-      "lead": null,
+      "body_sha256": "33f27231237de779d8a40729741d3fdd10a1442423075809556a5561c80c4a64",
+      "lead": {
+        "text": "Gauss-Markov never addressed the one thing that actually breaks a stat-arb hedge ratio in markets.",
+        "start": 0,
+        "end": 98,
+        "sha256": "052eaa011297a6a877f72b60e3837dfea1005a9b4ec70bfdfad038c4306ec46c",
+        "truncated": false
+      },
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
     },
-    "family": "other",
+    "family": "firm-mechanics",
     "body_revision_status": "current",
     "source_updated_at": "2026-09-24T15:23:23Z",
     "observed_source_updated_at": "2026-09-24T15:23:23Z"
@@ -516,17 +611,23 @@
     "source": "medium",
     "source_id": "99824e5a20fc",
     "slug": "thorp-traded-black-scholes-in-1967-merton-proved-it-in-1973-bet-ltcm-on-it-99824e5a20fc",
-    "title": "Thorp Traded Black-Scholes in 1967. Merton Proved It in 1973, Bet LTCM",
-    "subtitle": "on It.\n\nContinue reading on Medium »",
+    "title": "Thorp Traded Black-Scholes in 1967. Merton Proved It in 1973, Bet LTCM on It.",
+    "subtitle": "Black and Scholes used equilibrium math. Merton proved it with no assumptions at all, on a paper that never names him as an author.\n\nContinue reading on Medium »",
     "post_date": "2026-09-21T15:04:14Z",
     "url": "https://medium.com/@navnoorbawa/thorp-traded-black-scholes-in-1967-merton-proved-it-in-1973-bet-ltcm-on-it-99824e5a20fc",
     "audience": "unknown",
-    "wordcount": 6,
+    "wordcount": 28,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "d67d7c7394f0a0da03f67886fda7aafc36472d4ee908e7ac48e0c0e7a580976b",
-      "lead": null,
+      "body_sha256": "f887ba37d958c875aafc61340500d8923049a6487553a52d7959ad6471289393",
+      "lead": {
+        "text": "Black and Scholes used equilibrium math. Merton proved it with no assumptions at all, on a paper that never names him as an author.",
+        "start": 0,
+        "end": 131,
+        "sha256": "5706f756e31d2f68feb23fddbd167f86201a1066154f5f736e413c4905801217",
+        "truncated": false
+      },
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
@@ -621,9 +722,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-17T15:02:43Z",
-    "observed_source_updated_at": "2026-09-17T15:02:43Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
