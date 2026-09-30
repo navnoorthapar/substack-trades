@@ -1,5 +1,21 @@
 [
   {
+    "article_title": "Most of Berkshire's Lennar Buying Since June Came Before Any Form",
+    "article_url": "https://navnoorbawa.substack.com/p/most-of-berkshires-lennar-buying",
+    "article_date": "2026-09-30",
+    "trade_description": "Berkshire’s Form 3 of 21 September hides how its Lennar stake was built: 65% of the Class A it has added since June was bought before any form reported a trade. Anyone reading the Forms 4 as the whole campaign is working from the smaller half. After my August look at its shrinking cash, I rebuilt the campaign from its June 13G, the Form 3, which lands less than one share past the 10% line, and both Forms 4.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "June was bought before any form reported a trade.",
+    "any_quant_detail": "65%, 10%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
     "article_title": "How Elliott Is Long Synopsys With Software Hedged, From Its Own 13F",
     "article_url": "https://navnoorbawa.substack.com/p/how-elliott-is-long-synopsys-with",
     "article_date": "2026-09-28",

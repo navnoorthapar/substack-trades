@@ -1,6 +1,72 @@
 [
   {
     "source": "medium",
+    "source_id": "530b3f705c87",
+    "slug": "jim-simonss-renaissance-medallion-clears-harvey-s-backtest-bar-aqr-s-fund-doesn-t-530b3f705c87",
+    "title": "Jim Simons’s Renaissance Medallion Clears Harvey’s Backtest Bar. AQR’s Fund Doesn’t.",
+    "subtitle": "Medallion clears Harvey’s 3.0 bar at t near 11.6 gross over 31 years. AQR’s Style Premia fund sits at t 1.6 after 12.7 years.\n\nContinue reading on Medium »",
+    "post_date": "2026-09-30T15:02:48Z",
+    "url": "https://medium.com/@navnoorbawa/jim-simonss-renaissance-medallion-clears-harvey-s-backtest-bar-aqr-s-fund-doesn-t-530b3f705c87",
+    "audience": "unknown",
+    "wordcount": 32,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "fa733442354c1e8693fe121db877f7facba76793a369af14feacefd73e429d3e",
+      "lead": {
+        "text": "Medallion clears Harvey’s 3.0 bar at t near 11.6 gross over 31 years. AQR’s Style Premia fund sits at t 1.6 after 12.7 years.",
+        "start": 0,
+        "end": 125,
+        "sha256": "4a64d2f5526d3539ae0e2e165abc6bf10c875619ba094ccd11933b4b57ad8671",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-30T15:02:48Z",
+    "observed_source_updated_at": "2026-09-30T15:02:48Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "most-of-berkshires-lennar-buying",
+    "slug": "most-of-berkshires-lennar-buying",
+    "title": "Most of Berkshire's Lennar Buying Since June Came Before Any Form",
+    "subtitle": "Where the 10% line falls, and what the Forms 4 leave out.",
+    "post_date": "2026-09-30T13:31:09.989Z",
+    "url": "https://navnoorbawa.substack.com/p/most-of-berkshires-lennar-buying",
+    "audience": "everyone",
+    "wordcount": 268,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "5de9f80ac996e2a72b03bd02b22e991cb92f00fc9905bda290e2471919e8cff5",
+      "lead": {
+        "text": "Berkshire’s Form 3 of 21 September hides how its Lennar stake was built: 65% of the Class A it has added since June was bought before any form reported a trade. Anyone reading the Forms 4 as the whole campaign is working from the smaller half. After my August look at its shrinking cash, I rebuilt the campaign from its June 13G, the Form 3, which lands less than one share past the 10% line, and both Forms 4.",
+        "start": 0,
+        "end": 410,
+        "sha256": "0189cfa3dc5240a500be0f022d753aa1d8e43c67ccf6aa7430790305361396e5",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": {
+        "text": "The catalyst: Berkshire’s Schedule 13G amendment, due 7 October 2026 under Rule 13d-2(c), covers a holding above 10% at the end of September. Its 13F for 30 September is due 16 November 2026.",
+        "start": 766,
+        "end": 957,
+        "sha256": "14b0b79ff853bf6e32e82f76f95188327fcc62d4ce5b8421231801684b13febe",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-09-30T13:33:05.513Z",
+    "observed_source_updated_at": "2026-09-30T13:33:05.513Z"
+  },
+  {
+    "source": "medium",
     "source_id": "86bb836be548",
     "slug": "kernel-regression-is-from-1964-86bb836be548",
     "title": "Kernel Regression Is From 1964. Simons’s Renaissance Ran It in 1988. AQR Proved a Cousin in 2024.",
@@ -633,9 +699,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-21T15:04:14Z",
-    "observed_source_updated_at": "2026-09-21T15:04:14Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
