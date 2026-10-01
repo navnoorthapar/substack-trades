@@ -1,6 +1,95 @@
 [
   {
     "source": "medium",
+    "source_id": "f6ecc09d9da3",
+    "slug": "merton-published-the-jump-model-in-1976-ltcm-never-used-it-cfm-built-33b-doubting-the-calculus-f6ecc09d9da3",
+    "title": "Merton Published the Jump Model in 1976. LTCM Never Used It. CFM Built $33B Doubting the Calculus.",
+    "subtitle": "A soldier’s 1940 manuscript, Robert Merton’s 1976 paper, and the firm betting the industry never really used either.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-01T15:01:24Z",
+    "url": "https://medium.com/@navnoorbawa/merton-published-the-jump-model-in-1976-ltcm-never-used-it-cfm-built-33b-doubting-the-calculus-f6ecc09d9da3",
+    "audience": "unknown",
+    "wordcount": 22,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "4160ffe09711f905de227cc4c1e51e1a0defbd4109c1af310805e0b89a83b0f4",
+      "lead": {
+        "text": "A soldier’s 1940 manuscript, Robert Merton’s 1976 paper, and the firm betting the industry never really used either.",
+        "start": 0,
+        "end": 116,
+        "sha256": "4e1aa36ae9bc0e2b290041c97d3bd1116467601b4a0ad00bd4fcc1c662b80db7",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-01T15:01:24Z",
+    "observed_source_updated_at": "2026-10-01T15:01:24Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "elliott-is-still-betting-on-seadrill",
+    "slug": "elliott-is-still-betting-on-seadrill",
+    "title": "Elliott Is Still Betting on Seadrill Through Swaps as It Sells the Shares",
+    "subtitle": "Elliott still has Seadrill stock to place. The filing that says it is done is the one to trade on.",
+    "post_date": "2026-10-01T13:30:54.087Z",
+    "url": "https://navnoorbawa.substack.com/p/elliott-is-still-betting-on-seadrill",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "5e762b40011a36ae160f2ecdfed8251eab71d7cbb41d2177b50fbdb6e73e7c97",
+      "lead": {
+        "text": "Elliott kept cash settled swaps on 4,042,300 Seadrill shares while it sold voting stock through September, its latest Schedule 13D amendment shows. Anyone holding SDRL trades beside a fund with 12.3% economic exposure that has sold in 2023, in 2024 and again this year. After",
+        "start": 0,
+        "end": 275,
+        "sha256": "5e762b40011a36ae160f2ecdfed8251eab71d7cbb41d2177b50fbdb6e73e7c97",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-01T13:33:22.991Z",
+    "observed_source_updated_at": "2026-10-01T13:33:22.991Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Elliott kept cash settled swaps on 4,042,300 Seadrill shares while it sold voting stock through September, its latest Schedule 13D amendment shows. Anyone holding SDRL trades beside a fund with 12.3% economic exposure that has sold in 2023, in 2024 and again this year. After",
+      "character_count": 275,
+      "body_sha256": "5e762b40011a36ae160f2ecdfed8251eab71d7cbb41d2177b50fbdb6e73e7c97"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "171043603",
+    "slug": "elliotts-round-171043603",
+    "title": "Elliott's Seadrill Round Trip, 2023 to 2025: A Case Study From Its Own Filings",
+    "subtitle": "",
+    "post_date": "2026-10-01",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/elliotts-round-171043603",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "medium",
     "source_id": "530b3f705c87",
     "slug": "jim-simonss-renaissance-medallion-clears-harvey-s-backtest-bar-aqr-s-fund-doesn-t-530b3f705c87",
     "title": "Jim Simons’s Renaissance Medallion Clears Harvey’s Backtest Bar. AQR’s Fund Doesn’t.",
@@ -594,9 +683,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-22T18:36:23Z",
-    "observed_source_updated_at": "2026-09-22T18:36:23Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",

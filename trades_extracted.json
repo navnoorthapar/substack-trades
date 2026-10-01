@@ -1,5 +1,22 @@
 [
   {
+    "article_title": "Elliott Is Still Betting on Seadrill Through Swaps as It Sells the Shares",
+    "article_url": "https://navnoorbawa.substack.com/p/elliott-is-still-betting-on-seadrill",
+    "article_date": "2026-10-01",
+    "trade_description": "Elliott kept cash settled swaps on 4,042,300 Seadrill shares while it sold voting stock through September, its latest Schedule 13D amendment shows. Anyone holding SDRL trades beside a fund with 12.3% economic exposure that has sold in 2023, in 2024 and again this year. After",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "12.3%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false,
+    "source_body_sha256": "5e762b40011a36ae160f2ecdfed8251eab71d7cbb41d2177b50fbdb6e73e7c97"
+  },
+  {
     "article_title": "Most of Berkshire's Lennar Buying Since June Came Before Any Form",
     "article_url": "https://navnoorbawa.substack.com/p/most-of-berkshires-lennar-buying",
     "article_date": "2026-09-30",
