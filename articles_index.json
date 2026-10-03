@@ -1,6 +1,58 @@
 [
   {
     "source": "medium",
+    "source_id": "0f9f7e3dc62b",
+    "slug": "how-ed-thorp-and-renaissance-actually-sized-their-bets-the-kelly-criterion-hedge-funds-still-use-0f9f7e3dc62b",
+    "title": "How Ed Thorp and Renaissance Actually Sized Their Bets: The Kelly Criterion Hedge Funds Still Use",
+    "subtitle": "Ed Thorp ran Princeton Newport at a little over 19% a year for nineteen years, three losing months out of 230, without ever running the…\n\nContinue reading on Medium »",
+    "post_date": "2026-10-02T21:38:56Z",
+    "url": "https://medium.com/@navnoorbawa/how-ed-thorp-and-renaissance-actually-sized-their-bets-the-kelly-criterion-hedge-funds-still-use-0f9f7e3dc62b",
+    "audience": "unknown",
+    "wordcount": 29,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "32433a2e89425924792fe5e2298b56ccad2ea0878bf90638dc937c78facfef49",
+      "lead": {
+        "text": "Ed Thorp ran Princeton Newport at a little over 19% a year for nineteen years, three losing months out of 230, without ever running the…",
+        "start": 0,
+        "end": 136,
+        "sha256": "de70d89c9db59092ec282d5d1b640f7455e794eaa30f06509259f9b90a39e263",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-02T21:38:56Z",
+    "observed_source_updated_at": "2026-10-02T21:38:56Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "171239798",
+    "slug": "who-finances-ai-171239798",
+    "title": "Who Finances the AI Buildout?",
+    "subtitle": "",
+    "post_date": "2026-10-02",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/who-finances-ai-171239798",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
+    "source": "medium",
     "source_id": "f6ecc09d9da3",
     "slug": "merton-published-the-jump-model-in-1976-ltcm-never-used-it-cfm-built-33b-doubting-the-calculus-f6ecc09d9da3",
     "title": "Merton Published the Jump Model in 1976. LTCM Never Used It. CFM Built $33B Doubting the Calculus.",
@@ -617,9 +669,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-23T15:15:51Z",
-    "observed_source_updated_at": "2026-09-23T15:15:51Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
