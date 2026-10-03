@@ -1,6 +1,58 @@
 [
   {
     "source": "medium",
+    "source_id": "b42e666570fb",
+    "slug": "how-quants-tell-trend-from-noise-the-hurst-exponent-born-on-the-nile-in-1951-b42e666570fb",
+    "title": "How Quants Tell Trend From Noise: The Hurst Exponent, Born on the Nile in 1951",
+    "subtitle": "The open source recipe calls 41% of coin flips trending. Since 1990 the US market reads 0.541 against 0.548 for its own shuffled returns.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-03T16:29:04Z",
+    "url": "https://medium.com/@navnoorbawa/how-quants-tell-trend-from-noise-the-hurst-exponent-born-on-the-nile-in-1951-b42e666570fb",
+    "audience": "unknown",
+    "wordcount": 30,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "019ce2cdec3868436be620eb0ec0c55dd6318dba80f41ae38b7ebf2f6a146922",
+      "lead": {
+        "text": "The open source recipe calls 41% of coin flips trending. Since 1990 the US market reads 0.541 against 0.548 for its own shuffled returns.",
+        "start": 0,
+        "end": 137,
+        "sha256": "a9cf53108a7e0c3e301f131f7649b32c40f6beaa4abecf103ecbc5a31b65c030",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-03T16:29:04Z",
+    "observed_source_updated_at": "2026-10-03T16:29:04Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "171305977",
+    "slug": "why-robinhoods-171305977",
+    "title": "Why Robinhood’s Stock Token Price Can Drift",
+    "subtitle": "",
+    "post_date": "2026-10-03",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/why-robinhoods-171305977",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
+    "source": "medium",
     "source_id": "0f9f7e3dc62b",
     "slug": "how-ed-thorp-and-renaissance-actually-sized-their-bets-the-kelly-criterion-hedge-funds-still-use-0f9f7e3dc62b",
     "title": "How Ed Thorp and Renaissance Actually Sized Their Bets: The Kelly Criterion Hedge Funds Still Use",
