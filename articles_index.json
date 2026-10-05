@@ -1,6 +1,80 @@
 [
   {
     "source": "medium",
+    "source_id": "bf231d577696",
+    "slug": "how-pdt-d-e-shaw-and-two-sigma-rebuilt-barr-rosenbergs-1975-factor-model-bf231d577696",
+    "title": "How PDT, D.E. Shaw, and Two Sigma Rebuilt Barr Rosenberg’s 1975 Factor Model",
+    "subtitle": "Barra sold Rosenberg’s 1974 risk model to every desk. On 494 stocks it was the one covariance whose risk forecast came true.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-05T15:03:23Z",
+    "url": "https://medium.com/@navnoorbawa/how-pdt-d-e-shaw-and-two-sigma-rebuilt-barr-rosenbergs-1975-factor-model-bf231d577696",
+    "audience": "unknown",
+    "wordcount": 26,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "0727afc5382223f5ddc9cd3e9929dd56f8fa0fcb27029974bdad911b6bffe5f2",
+      "lead": {
+        "text": "Barra sold Rosenberg’s 1974 risk model to every desk. On 494 stocks it was the one covariance whose risk forecast came true.",
+        "start": 0,
+        "end": 124,
+        "sha256": "959e6696d1d6282f2f9f6534041af9144cfb95abbc061b76c8115f24587566bd",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-05T15:03:23Z",
+    "observed_source_updated_at": "2026-10-05T15:03:23Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "170227567",
+    "slug": "screen-that-own-170227567",
+    "title": "The Screen That Catches a Rotation Hiding Inside Elliott's Own 13D Filings",
+    "subtitle": "",
+    "post_date": "2026-10-05",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/screen-that-own-170227567",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "patreon",
+    "source_id": "171496086",
+    "slug": "aqrs-treasury-2-171496086",
+    "title": "AQR's Treasury Short Across the Curve: The Month-End Flip Model, 2-Year to 30-Year",
+    "subtitle": "",
+    "post_date": "2026-10-05",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/aqrs-treasury-2-171496086",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "medium",
     "source_id": "b42e666570fb",
     "slug": "how-quants-tell-trend-from-noise-the-hurst-exponent-born-on-the-nile-in-1951-b42e666570fb",
     "title": "How Quants Tell Trend From Noise: The Hurst Exponent, Born on the Nile in 1951",
@@ -632,9 +706,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-24T15:23:23Z",
-    "observed_source_updated_at": "2026-09-24T15:23:23Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
