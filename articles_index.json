@@ -1,5 +1,42 @@
 [
   {
+    "source": "substack",
+    "source_id": "aqrs-managed-futures-fund-bet-against",
+    "slug": "aqrs-managed-futures-fund-bet-against",
+    "title": "AQR's Managed Futures Fund Bet Against Treasuries. AQR's Own Trend Rule Says When It Stops",
+    "subtitle": "AQR's trend rule exits on the calendar, not on a rally, and every duration short leaning on trend money inherits that clock.",
+    "post_date": "2026-10-05T17:30:50.746Z",
+    "url": "https://navnoorbawa.substack.com/p/aqrs-managed-futures-fund-bet-against",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "d47c106199cc42e35c305ef8e0df36db8dc8e95f50be0fc7eab0ab067a9d8ccc",
+      "lead": {
+        "text": "On 27 August, AQR’s $3.2bn managed futures fund reported it was short every US Treasury future on 30 June. Anyone short duration beside the trend funds, or waiting to buy what they sell, needs to know when that selling stops. I read the filing line by line and rebuilt AQR’s published trend rule on Treasury’s daily yield curve to find out.",
+        "start": 0,
+        "end": 340,
+        "sha256": "d47c106199cc42e35c305ef8e0df36db8dc8e95f50be0fc7eab0ab067a9d8ccc",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-05T17:32:41.268Z",
+    "observed_source_updated_at": "2026-10-05T17:32:41.268Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "On 27 August, AQR’s $3.2bn managed futures fund reported it was short every US Treasury future on 30 June. Anyone short duration beside the trend funds, or waiting to buy what they sell, needs to know when that selling stops. I read the filing line by line and rebuilt AQR’s published trend rule on Treasury’s daily yield curve to find out.",
+      "character_count": 340,
+      "body_sha256": "d47c106199cc42e35c305ef8e0df36db8dc8e95f50be0fc7eab0ab067a9d8ccc"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "bf231d577696",
     "slug": "how-pdt-d-e-shaw-and-two-sigma-rebuilt-barr-rosenbergs-1975-factor-model-bf231d577696",
