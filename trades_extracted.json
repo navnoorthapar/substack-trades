@@ -1,5 +1,21 @@
 [
   {
+    "article_title": "Brevan Howard's Flagship Is Not a Pod Shop",
+    "article_url": "https://navnoorbawa.substack.com/p/brevan-howards-flagship-is-not-a",
+    "article_date": "2026-10-06",
+    "trade_description": "Shareholders stayed anyway. The sterling shares traded at a discount of 6.7% to 10.6% during 2025, and the company bought back £115m of stock, after £116m in 2024. In February 2026, votes to close the share classes failed, with 96.23% of sterling votes and 99.91% of dollar votes against closure.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "£115m, £116m, 6.7%, 10.6%, 96.23%, 99.91%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Brevan Howard",
+    "description_truncated": false
+  },
+  {
     "article_title": "Elliott Is Still Betting on Seadrill Through Swaps as It Sells the Shares",
     "article_url": "https://navnoorbawa.substack.com/p/elliott-is-still-betting-on-seadrill",
     "article_date": "2026-10-01",

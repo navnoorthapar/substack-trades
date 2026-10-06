@@ -1,5 +1,93 @@
 [
   {
+    "source": "medium",
+    "source_id": "01839f55293b",
+    "slug": "jim-simons-hired-a-gchq-codebreaker-he-said-medallions-top-tool-was-high-school-math-01839f55293b",
+    "title": "Jim Simons Hired a GCHQ Codebreaker. He Said Medallion’s Top Tool Was High-School Math.",
+    "subtitle": "Nick Patterson broke codes for two decades, joined Renaissance in 1993 and named its top tool: a one variable regression.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-06T15:06:21Z",
+    "url": "https://medium.com/@navnoorbawa/jim-simons-hired-a-gchq-codebreaker-he-said-medallions-top-tool-was-high-school-math-01839f55293b",
+    "audience": "unknown",
+    "wordcount": 24,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "bf25c2834c9f9c0e6da8a10cd2b5ca919970726cdb7094b2966f9be941339039",
+      "lead": {
+        "text": "Nick Patterson broke codes for two decades, joined Renaissance in 1993 and named its top tool: a one variable regression.",
+        "start": 0,
+        "end": 121,
+        "sha256": "881ddcfe35120a09b9f81a2ba61a193d4754b0467f55fb2d5673145489f71829",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-06T15:06:21Z",
+    "observed_source_updated_at": "2026-10-06T15:06:21Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "brevan-howards-flagship-is-not-a",
+    "slug": "brevan-howards-flagship-is-not-a",
+    "title": "Brevan Howard's Flagship Is Not a Pod Shop",
+    "subtitle": "Brevan sells itself on 150-plus portfolio managers. Its flagship's own reports show a fund that rests on about ten.",
+    "post_date": "2026-10-06T13:31:49.170Z",
+    "url": "https://navnoorbawa.substack.com/p/brevan-howards-flagship-is-not-a",
+    "audience": "everyone",
+    "wordcount": 3347,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "df0a4cf943999aa9671e700bd701bf2cc8b54dd75f3f28ccfd536cb88d0de85b",
+      "lead": {
+        "text": "In January 2026 Brevan Howard made Fash Golchin lead portfolio manager of its flagship fund and gave him its largest cash allocation, Hedgeweek reported. By August the ten largest allocations in that fund held 71% of its adjusted capital.",
+        "start": 0,
+        "end": 238,
+        "sha256": "cbddf42497a05e584040050cfa5ff43f6c2d6210b701873d5a1a6681cac7e282",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": {
+        "text": "But the flagship’s own disclosure says otherwise. BH Macro Limited, the listed fund that puts nearly all its money into the Brevan Howard Master Fund, reports every month how that fund’s capital is spread. In August 2026 the three largest allocations held 41% of it, and three allocations each ran more than a tenth of the money. Brevan Howard is a 150-manager firm, but its flagship is a concentrated macro fund built on about ten allocations.",
+        "start": 585,
+        "end": 1029,
+        "sha256": "f6e2959bcd9d313c1e1877dd7f8bdaecd4a8e4a36914fcd4531ef1723b65adda",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-06T13:35:22.039Z",
+    "observed_source_updated_at": "2026-10-06T13:35:22.039Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "171533899",
+    "slug": "brevan-howards-171533899",
+    "title": "Brevan Howard's Flagship, Book by Book: The Monthly Concentration Screen",
+    "subtitle": "",
+    "post_date": "2026-10-06",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/brevan-howards-171533899",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
     "source": "substack",
     "source_id": "aqrs-managed-futures-fund-bet-against",
     "slug": "aqrs-managed-futures-fund-bet-against",
@@ -713,9 +801,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-25T15:05:45Z",
-    "observed_source_updated_at": "2026-09-25T15:05:45Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
