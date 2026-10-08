@@ -63,7 +63,10 @@
     "family": "other",
     "body_revision_status": "current",
     "source_updated_at": "2026-10-06T13:35:22.039Z",
-    "observed_source_updated_at": "2026-10-06T13:35:22.039Z"
+    "observed_source_updated_at": "2026-10-06T13:35:22.039Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/brevan-howards-flagship-is-not-a-pod-shop-3aee7eb8f716"
+    }
   },
   {
     "source": "patreon",
@@ -705,9 +708,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-27T14:21:57Z",
-    "observed_source_updated_at": "2026-09-27T14:21:57Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
