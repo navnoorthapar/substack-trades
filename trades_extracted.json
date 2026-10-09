@@ -1,5 +1,22 @@
 [
   {
+    "article_title": "Tiger Global Sold $3.7bn of Stock, and Its 13F Shows One Chip Bet Built Up: Intel",
+    "article_url": "https://navnoorbawa.substack.com/p/tiger-global-sold-37bn-of-stock-and",
+    "article_date": "2026-10-08",
+    "trade_description": "In Q2, Chase Coleman’s Tiger Global sold about $3.7bn more stock than it bought. Its 13F still showed a book that grew, because prices rose faster than Tiger sold. The selling sat outside chips; inside them, Tiger swapped names and let the rally make semiconductors a bigger share of the book. The one chip line it built in both quarters is Intel, worth owning beside Tiger only below today’s price. Anyone long Broadcom, Lam or TSMC had a large holder cutting into the rally.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "prices rose faster than Tiger sold.",
+    "any_quant_detail": "$3.7bn",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Tiger",
+    "description_truncated": false,
+    "source_body_sha256": "9dcc416ae9695ddc6ac079ac49b8c92e5020735f7f48a310c9efbe9df5b0b6cd"
+  },
+  {
     "article_title": "Brevan Howard's Flagship Is Not a Pod Shop",
     "article_url": "https://navnoorbawa.substack.com/p/brevan-howards-flagship-is-not-a",
     "article_date": "2026-10-06",

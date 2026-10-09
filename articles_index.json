@@ -1,5 +1,64 @@
 [
   {
+    "source": "substack",
+    "source_id": "tiger-global-sold-37bn-of-stock-and",
+    "slug": "tiger-global-sold-37bn-of-stock-and",
+    "title": "Tiger Global Sold $3.7bn of Stock, and Its 13F Shows One Chip Bet Built Up: Intel",
+    "subtitle": "Coleman sold Alphabet and app software, kept his chip money in chips, and built up one line worth pricing",
+    "post_date": "2026-10-08T20:05:52.293Z",
+    "url": "https://navnoorbawa.substack.com/p/tiger-global-sold-37bn-of-stock-and",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "9dcc416ae9695ddc6ac079ac49b8c92e5020735f7f48a310c9efbe9df5b0b6cd",
+      "lead": {
+        "text": "In Q2, Chase Coleman’s Tiger Global sold about $3.7bn more stock than it bought. Its 13F still showed a book that grew, because prices rose faster than Tiger sold. The selling sat outside chips; inside them, Tiger swapped names and let the rally make semiconductors a bigger share of the book. The one chip line it built in both quarters is Intel, worth owning beside Tiger only below today’s price. Anyone long Broadcom, Lam or TSMC had a large holder cutting into the rally.",
+        "start": 0,
+        "end": 476,
+        "sha256": "9dcc416ae9695ddc6ac079ac49b8c92e5020735f7f48a310c9efbe9df5b0b6cd",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-08T20:17:16.659Z",
+    "observed_source_updated_at": "2026-10-08T20:17:16.659Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "In Q2, Chase Coleman’s Tiger Global sold about $3.7bn more stock than it bought. Its 13F still showed a book that grew, because prices rose faster than Tiger sold. The selling sat outside chips; inside them, Tiger swapped names and let the rally make semiconductors a bigger share of the book. The one chip line it built in both quarters is Intel, worth owning beside Tiger only below today’s price. Anyone long Broadcom, Lam or TSMC had a large holder cutting into the rally.",
+      "character_count": 476,
+      "body_sha256": "9dcc416ae9695ddc6ac079ac49b8c92e5020735f7f48a310c9efbe9df5b0b6cd"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "171813641",
+    "slug": "tiger-globals-171813641",
+    "title": "Tiger Global's second quarter Intel buying: the 13F share column screen, rebuilt from EDGAR",
+    "subtitle": "",
+    "post_date": "2026-10-08",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/tiger-globals-171813641",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "medium",
     "source_id": "01839f55293b",
     "slug": "jim-simons-hired-a-gchq-codebreaker-he-said-medallions-top-tool-was-high-school-math-01839f55293b",
@@ -258,22 +317,16 @@
     "source_id": "0f9f7e3dc62b",
     "slug": "how-ed-thorp-and-renaissance-actually-sized-their-bets-the-kelly-criterion-hedge-funds-still-use-0f9f7e3dc62b",
     "title": "How Ed Thorp and Renaissance Actually Sized Their Bets: The Kelly Criterion Hedge Funds Still Use",
-    "subtitle": "Ed Thorp ran Princeton Newport at a little over 19% a year for nineteen years, three losing months out of 230, without ever running the…\n\nContinue reading on Medium »",
+    "subtitle": "",
     "post_date": "2026-10-02T21:38:56Z",
     "url": "https://medium.com/@navnoorbawa/how-ed-thorp-and-renaissance-actually-sized-their-bets-the-kelly-criterion-hedge-funds-still-use-0f9f7e3dc62b",
     "audience": "unknown",
-    "wordcount": 29,
+    "wordcount": 0,
     "content_status": "excerpt",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "32433a2e89425924792fe5e2298b56ccad2ea0878bf90638dc937c78facfef49",
-      "lead": {
-        "text": "Ed Thorp ran Princeton Newport at a little over 19% a year for nineteen years, three losing months out of 230, without ever running the…",
-        "start": 0,
-        "end": 136,
-        "sha256": "de70d89c9db59092ec282d5d1b640f7455e794eaa30f06509259f9b90a39e263",
-        "truncated": false
-      },
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
       "sections": [],
       "fallback_evidence": null,
       "checkpoints": []
@@ -11837,7 +11890,7 @@
     "content_status": "full",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "6e952e369a969f965835493a0a807c90a9bd836ac9354cdcb26f34eb39efb89f",
+      "body_sha256": "d9ad62cc54a190ef2996bb390122f5c74652bb269a8fe1d675d829ca9f6405cc",
       "lead": {
         "text": "The most celebrated equation in finance maps exactly where markets misprice risk. This article covers the academic proof of the Variance Risk Premium, the delta-hedging P&L mechanics every vol desk runs, and the documented trades — convertible bond arbitrage, capital structure arbitrage, tail-risk hedging, and dispersion — that five decades of the world’s best hedge fund returns are built on.",
         "start": 0,
