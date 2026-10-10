@@ -1,6 +1,36 @@
 [
   {
     "source": "medium",
+    "source_id": "e9e2f4dfb5be",
+    "slug": "fisher-could-not-prove-maximum-likelihood-morgan-stanley-and-cfm-built-models-on-it-e9e2f4dfb5be",
+    "title": "Fisher Could Not Prove Maximum Likelihood. Morgan Stanley and CFM Built Models on It.",
+    "subtitle": "Fisher published it in 1912 as an undergraduate. Abraham Wald’s 1943 proof needs conditions not known to hold for Hamilton’s regime model.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-10T15:04:02Z",
+    "url": "https://medium.com/@navnoorbawa/fisher-could-not-prove-maximum-likelihood-morgan-stanley-and-cfm-built-models-on-it-e9e2f4dfb5be",
+    "audience": "unknown",
+    "wordcount": 26,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "67114a2f97d6f831d1aabed9bcd9dde109bd0d28a1dc559a98946b25838e69a7",
+      "lead": {
+        "text": "Fisher published it in 1912 as an undergraduate. Abraham Wald’s 1943 proof needs conditions not known to hold for Hamilton’s regime model.",
+        "start": 0,
+        "end": 138,
+        "sha256": "24d205153d7b88c3838f8f4e7a3d46c86a79f2e4fb7ff11980b5fc878467f87e",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-10T15:04:02Z",
+    "observed_source_updated_at": "2026-10-10T15:04:02Z"
+  },
+  {
+    "source": "medium",
     "source_id": "a1ef38ca0638",
     "slug": "ray-dalio-never-named-risk-parity-a-panagora-quant-did-bridgewater-and-aqr-built-it-a1ef38ca0638",
     "title": "Ray Dalio Never Named Risk Parity. A PanAgora Quant Did. Bridgewater and AQR Built It.",
@@ -695,9 +725,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-28T15:19:16Z",
-    "observed_source_updated_at": "2026-09-28T15:19:16Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
