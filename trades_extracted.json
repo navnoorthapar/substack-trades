@@ -1,5 +1,218 @@
 [
   {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "Man AHL’s trend fund gets paid by a bond selloff only once the selloff becomes a trend. In 2026’s first half its bond and rate futures lost $1.05m while the fund still made money. With the 10-year Treasury yield at its highest since 2002 this month, anyone holding trend funds as a hedge against a bond rout needs to know when that hedge pays. I read the program’s SEC filings and Man’s own monthly reports against Treasury’s yield curve.",
+    "instruments": [
+      "bond",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "2002 this month, anyone holding trend funds as a hedge against a bond rout needs to know when that hedge pays.",
+    "any_quant_detail": "$1.05m",
+    "outcome_if_mentioned": "lost $1.05m while the fund still made money.",
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "The coverage credits the bond selloff. On 2 October, Hedgeweek relayed an FT report that “Computer-driven funds that seek persistent market trends have built sizeable positions against fixed income”. By that account Graham’s Tactical Trend fund was up more than 31% this year, Winton’s Diversified Macro 17.5% through late September and Aspect’s flagship about 21%, according to people familiar. The same report noted that the managers’ returns “have not been driven solely by government bond positions”. Treasury’s par curve, its daily yield for a notional bond priced at par at each exact maturity, had the 10-year at 5.31% on 5 October. On 5 October I worked through where AQR’s own trend rule turns its Treasury short off. This piece asks what the bond trade has actually paid.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "31%, 17.5%, 21%, 5.31%, at 5.31",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Winton",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "A large part of the book, then, never the whole of it. The last column is the turn in one line. At the end of February the fund was long bonds worth 61.6% of its capital in 10-year terms; a month later it was 143.8% short.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "61.6%, 143.8%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "The flagship was long bonds when this year’s selloff began, and the worked case starts at that turn. The 10-year par yield fell from 4.18% at the end of 2025 to 3.97% on 27 February, 21 basis points over January and February (a basis point is a hundredth of a percentage point). Falling yields mean rising bond prices, and the flagship went from 114.1% net short at the end of January to 61.6% net long at the end of February.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "long/short",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "4.18%, 3.97%, 114.1%, 61.6%, 21 basis points",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "Then the market turned. The 10-year rose 33bp to 4.30% by 31 March. The feeder’s first quarter 10-Q reads: “Fixed income trading proved challenging, as long bond positions detracted amid rising yields.” Positions in Italian, Canadian and French rates were among the worst; shorts in German, Australian and Korean bonds offset part of it. Man put the month’s bonds and rates contribution at −1.50%.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "long bond positions detracted amid rising yields.",
+    "any_quant_detail": "4.30%, 1.50%, 33bp",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "It flipped fast. By the end of March the flagship was 143.8% net short, and in April the second quarter 10-Q says “Fixed income trading contributed to gains, led by short ten-year Japanese Government Bond positions.” Then the trend stalled. The 10-year rose 10bp in April and 5bp in May, and slipped 1bp in June, while Australian, European and Korean bonds rallied against the book’s shorts.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "short",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "143.8%, 10bp, 5bp, 1bp",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "Interest rate futures lost $0.72m in the first quarter and $0.33m in the second. On the trading company’s $145m that is about 0.7% of capital, and the rest of the book paid for it many times over.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$0.72m, $0.33m, $145m, 0.7%",
+    "outcome_if_mentioned": "lost $0.72m in the first quarter and $0.",
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "February broke the rule. The book went into a 29bp rally net short and still made 0.19%, because, in the first quarter 10-Q’s words, “Long SONIA and SOFR positions generated profits in rates trading”. SONIA and SOFR are the overnight sterling and dollar rates, and futures on them made money while the bond shorts lost. The US 10-year is my yardstick, not the book, which trades Japanese, Australian, European and Korean bonds as much as American ones.",
+    "instruments": [
+      "bond",
+      "futures"
+    ],
+    "direction": "short",
+    "underlying": "US 10-year",
+    "edge_or_thesis": "much as American ones.",
+    "any_quant_detail": "0.19%, 29bp",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "In 2022 the bond leg was the year. The 10-year rose from 1.52% to 3.88% and the units returned 14.63%. Interest rate futures made $24.8m of the trading company’s $29.7m of net gains on derivatives, about 84%. Sized against the yield move, the two trend periods paid roughly 3% to 6% of capital per 100bp. In the third quarter of 2024 the 10-year fell 55bp, every month, and the bond leg still lost 1.9%, because the book came into the rally short. The 10-Q says fixed income lost in July, was flat in August, and that in September “The Partnership’s transition to long fixed income over the quarter was rewarded”. That is the lag, with a price on it.",
+    "instruments": [
+      "bond",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "the book came into the rally short.",
+    "any_quant_detail": "$24.8m, $29.7m, 1.52%, 3.88%, 14.63%, 84%, 3%, 100bp, 55bp",
+    "outcome_if_mentioned": "made $24.8m of the trading company’s $29. | returned 14.63%.",
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "A trend follower’s worst day is a trend that reverses at once. AHL’s own record has one. Its first quarter 2023 10-Q reads: “A decline of 61bp on 13th of March for US 2-year Treasury yields was the largest decline in over 40 years, was against the prevailing price trend, and was detrimental to a short in the instrument and indeed all other tenors of US treasuries traded by the Partnership.”",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "unspecified",
+    "underlying": "US 2-year",
+    "edge_or_thesis": null,
+    "any_quant_detail": "61bp",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "The 61bp is AHL’s market figure. Treasury’s par curve, which marks a constant 2 year maturity, shows 57bp, from 4.60% on 10 March to 4.03% on 13 March. Over three sessions from 8 March the fall was 102bp. The trading company’s interest rate futures lost $8.49m that quarter. The units lost 5.60% in the quarter and finished 2023 down 4.57%.",
+    "instruments": [
+      "bond",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$8.49m, 4.60%, 4.03%, 5.60%, 4.57%, 61bp, 57bp, 102bp",
+    "outcome_if_mentioned": "lost $8.49m that quarter.",
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "September is the month the rule has to get right, because July to September supplied the trend the first half lacked. The 10-year rose 85bp, from 4.44% on 30 June to 5.29% on 30 September, 54bp of it in September. Man’s reports already show the bond leg collecting: bonds and rates added 1.08% in July and 0.97% in August, and the flagship went into September 157.1% net short. On my reading of the table above, September should pay.",
+    "instruments": [
+      "bond"
+    ],
+    "direction": "short",
+    "underlying": null,
+    "edge_or_thesis": "July to September supplied the trend the first half lacked.",
+    "any_quant_detail": "4.44%, 5.29%, 1.08%, 0.97%, 157.1%, 85bp, 54bp",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "article_date": "2026-10-11",
+    "trade_description": "AQR’s Managed Futures Fund Bet Against Treasuries. AQR’s Own Trend Rule Says When It Stops: the same trend rule run tenor by tenor on the Treasury curve, with the yields at which it flips",
+    "instruments": [
+      "bond",
+      "futures"
+    ],
+    "direction": "short",
+    "underlying": "Managed Futures Fund",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "AQR",
+    "description_truncated": false
+  },
+  {
     "article_title": "Tiger Global Sold $3.7bn of Stock, and Its 13F Shows One Chip Bet Built Up: Intel",
     "article_url": "https://navnoorbawa.substack.com/p/tiger-global-sold-37bn-of-stock-and",
     "article_date": "2026-10-08",

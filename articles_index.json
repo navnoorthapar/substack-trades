@@ -1,5 +1,63 @@
 [
   {
+    "source": "substack",
+    "source_id": "how-man-ahls-trend-following-makes",
+    "slug": "how-man-ahls-trend-following-makes",
+    "title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
+    "subtitle": "Man AHL's flagship is 157% net short in 10-year terms. What trend following earns while yields climb, and what a turn takes back.",
+    "post_date": "2026-10-11T13:31:40.663Z",
+    "url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
+    "audience": "everyone",
+    "wordcount": 3294,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "08cff636d77c315b9ed603578efdc5dbeb6c99ec202fde48e98c5aae965ed743",
+      "lead": {
+        "text": "Man AHL’s trend fund gets paid by a bond selloff only once the selloff becomes a trend. In 2026’s first half its bond and rate futures lost $1.05m while the fund still made money. With the 10-year Treasury yield at its highest since 2002 this month, anyone holding trend funds as a hedge against a bond rout needs to know when that hedge pays. I read the program’s SEC filings and Man’s own monthly reports against Treasury’s yield curve.",
+        "start": 0,
+        "end": 438,
+        "sha256": "89134dfbe4237d3527f8704cdd303f0386cab2cdde2be075d53ffe4bdd6c68b4",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": {
+        "text": "The coverage credits the bond selloff. On 2 October, Hedgeweek relayed an FT report that “Computer-driven funds that seek persistent market trends have built sizeable positions against fixed income”. By that account Graham’s Tactical Trend fund was up more than 31% this year, Winton’s Diversified Macro 17.5% through late September and Aspect’s flagship about 21%, according to people familiar. The same report noted that the managers’ returns “have not been driven solely by government bond positions”.",
+        "start": 440,
+        "end": 944,
+        "sha256": "422f58569ca1411d578c1d396c9751b76e27de61804ac7a45bebe2441cd0e233",
+        "truncated": true
+      },
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-11T13:32:57.913Z",
+    "observed_source_updated_at": "2026-10-11T13:32:57.913Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "171561043",
+    "slug": "man-ahls-2022-by-171561043",
+    "title": "Man AHL's 2022 Bond Rout, Quarter by Quarter: The Reconstruction",
+    "subtitle": "",
+    "post_date": "2026-10-11",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/man-ahls-2022-by-171561043",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
     "source": "medium",
     "source_id": "e9e2f4dfb5be",
     "slug": "fisher-could-not-prove-maximum-likelihood-morgan-stanley-and-cfm-built-models-on-it-e9e2f4dfb5be",
