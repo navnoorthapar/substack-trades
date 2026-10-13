@@ -1,5 +1,245 @@
 [
   {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "Bridgewater Associates sold more than half its AI shares in the second quarter, its 14 August filing shows. Its chip, cloud and power stocks fell from 34.0% of its reported stock book in March to 20.8% in June, the deepest cut among the large funds I checked. It looks like a vote against AI, cast in the quarter its own research said compute would need rationing. Its own filings say otherwise: they show its AI holdings moving inside a band, and a cut like this one before, followed by buying. If you sold chips on this filing, you sold beside a fund that has bought back before.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "34.0%, 20.8%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "The reading that followed the filing was simpler: Bridgewater dumped its AI stocks, so the world’s biggest macro fund has turned on the AI trade. Coverage of the June filing read it as a cut to big tech and chips. The cut is real. The turn is missing from the record.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "a cut to big tech and chips.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "The quarter before built what June sold, and in it the research and the filing pointed the same way. The January and February notes expected more AI spending, and the book bought the stocks that sell into it.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "more AI spending, and the book bought the stocks that sell into it.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "Bridgewater raised its AI share count by about 29%, weighted by value, in a quarter when the basket’s prices rose only 0.5%. Its Nvidia shares rose between the end of 2025 and 31 March. It also sold a net $5.06bn of other single names, so the rest of the book shrank. AI reached 34.0%, the highest weight in Exhibit 2, because the firm bought AI and sold other stocks, not because prices lifted it.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "the firm bought AI and sold other stocks, not because prices lifted it.",
+    "any_quant_detail": "$5.06bn, 29%, 0.5%, 34.0%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "The second quarter’s rally would have stretched it further, and chips led that rally. The price of SOXX, a fund of chip stocks, divided by that of SPY, an S&P 500 index fund, rose from 0.505 on 31 March to 0.858 on 30 June on Nasdaq closing prices. Chips gained more than two thirds on the index in three months, and a book that held still would have let that rally decide how much AI it owned.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": "S&P 500; Nasdaq; SPY",
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "Micron, the memory maker, was the largest single sale: Bridgewater sold a net 1,359,038 shares, the gap between the two Micron counts in Exhibit 1. A 13F values each line at the quarter’s last close, and the same rule prices the sale at Micron’s 30 June close:",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "1,359,038 shares",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "I ran the same basket of 38 lines through the 13Fs of ten other large funds for the same two dates, counting equity lines only. Eight of the eleven sold AI, net, in the quarter, so selling was common. What stood out was how far each fund let its AI weight move.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "Bridgewater’s weight fell the most, by 13.2 points. Millennium and Two Sigma held theirs roughly flat while cutting their AI shares by more than a third, weighted by value, and each sold more AI stock in dollars than Bridgewater did. Weight is the fair base because it nets out the rally: a fund that sells about as fast as prices rise ends the quarter where it started, whatever its dollar sales say. Bridgewater sold far faster, so its weight is the one that fell.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "it nets out the rally: a fund that sells about as fast as prices rise ends the quarter where it started, whatever its dollar sales say.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "Point72 is the cleanest case of the rule. It sold nearly a third of its AI shares, weighted by value, and finished the quarter at the AI weight it started with, to the decimal, because the rally replaced in price what it took out in shares.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "the rally replaced in price what it took out in shares.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Point72",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "Tiger Global sold a net $2.73bn of the basket and its AI weight still rose, to 70.1%, which fits our read of Tiger’s own filing: it sold more stock than it bought while prices carried its book higher.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$2.73bn, 70.1%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Tiger",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "The case against the sizing reading rests on three facts. The first is the split inside the sale. Bridgewater cut its chip, supplier and power names harder in share terms than the hyperscalers, by about 63% against about 44%, weighted by value, which looks like a call against chips. In dollars, though, its chip exposure fell 32% and its hyperscaler exposure 37%, close to the same cut. That is what a rebalancer does: the stocks that ran fastest need the most shares sold to bring their dollars back down.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "63%, 44%, 32%, 37%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "This reading is wrong if Bridgewater’s 13F for 30 September 2026, due by 16 November 2026, shows it sold AI shares again on net, valued at 30 September prices, and AI below 18.7% of its reported stock book, the floor of the five quarter ends before it. That outcome would mean Bridgewater is leaving AI in the part of its book a 13F shows. A net purchase says the band holds, as it did after the cut in the third quarter of 2025. A net sale that leaves AI inside the band says the trimming is not finished, and the reading stays open.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "it did after the cut in the third quarter of 2025.",
+    "any_quant_detail": "18.7%, at 30",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "Until that filing lands, the verdict is the AI range: Bridgewater did not turn on AI in June; it sized its AI stocks back into the band, as it did in the third quarter of 2025, and the last time it did that it bought back.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "it did in the third quarter of 2025, and the last time it did that it bought back.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "Tiger Global Sold $3.7bn of Stock, and Its 13F Shows One Chip Bet Built Up: Intel: the same share count method, on a fund that built one chip bet",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$3.7bn",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Tiger",
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "article_date": "2026-10-13",
+    "trade_description": "Bridgewater’s Pure Alpha Returned 33% in 2025. Here’s the Exact System Behind It: the macro system behind the stock book this 13F shows",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "33%",
+    "outcome_if_mentioned": "Returned 33% in 2025.",
+    "fund_name_if_mentioned": "Bridgewater",
+    "description_truncated": false
+  },
+  {
     "article_title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
     "article_url": "https://navnoorbawa.substack.com/p/how-man-ahls-trend-following-makes",
     "article_date": "2026-10-11",

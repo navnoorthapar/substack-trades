@@ -1,6 +1,124 @@
 [
   {
     "source": "substack",
+    "source_id": "how-bridgewater-trades-ai-in-its",
+    "slug": "how-bridgewater-trades-ai-in-its",
+    "title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
+    "subtitle": "A $7bn chip sale reads like Bridgewater turning on AI. Six quarters of its 13F say it is sizing with a ceiling. The next filing tests it.",
+    "post_date": "2026-10-13T17:00:28.362Z",
+    "url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
+    "audience": "everyone",
+    "wordcount": 2431,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "939bc3cf59f273c3e1361eeed51aae50054e5542fd8505f20fa86d04d6b688ca",
+      "lead": {
+        "text": "Bridgewater Associates sold more than half its AI shares in the second quarter, its 14 August filing shows. Its chip, cloud and power stocks fell from 34.0% of its reported stock book in March to 20.8% in June, the deepest cut among the large funds I checked. It looks like a vote against AI, cast in the quarter its own research said compute would need rationing. Its own filings say otherwise: they show its AI holdings moving inside a band, and a cut like this one before, followed by buying. If you sold chips on this filing, you sold beside a fund that has bought back before.",
+        "start": 0,
+        "end": 581,
+        "sha256": "3bc8796e8aac6a935085f7c8906c90be0e9abce531cc426c46784047968e15c9",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": {
+        "text": "That list is one sleeve of a larger firm. Bridgewater’s Form ADV, signed on 18 August, reports $150.16bn of regulatory assets, a gross measure that counts borrowed money. The $24.38bn stock book in its June 13F is about a sixth of that. The second quarter’s AI sale, $7.09bn net, came to more than a quarter of that stock book.",
+        "start": 1101,
+        "end": 1428,
+        "sha256": "c937bad45e9a174233511b2823ad34b851369edb5a09f001bdde8c631ae9d2ca",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-13T17:10:47.119Z",
+    "observed_source_updated_at": "2026-10-13T17:10:47.119Z"
+  },
+  {
+    "source": "medium",
+    "source_id": "e96e590ab9a7",
+    "slug": "jim-simonss-first-stock-fund-ran-on-stat-arb-a-quant-who-left-morgan-stanley-built-it-e96e590ab9a7",
+    "title": "Jim Simons’s First Stock Fund Ran on Stat Arb. A Quant Who Left Morgan Stanley Built It.",
+    "subtitle": "Robert Frey left Morgan Stanley in 1988 to build Kepler, and Renaissance kept his prediction model when it rebuilt the fund.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-13T15:03:23Z",
+    "url": "https://medium.com/@navnoorbawa/jim-simonss-first-stock-fund-ran-on-stat-arb-a-quant-who-left-morgan-stanley-built-it-e96e590ab9a7",
+    "audience": "unknown",
+    "wordcount": 25,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "28850af9a5386bdb024c91834dc58169c81e111b7b13c14ddc9d5a48b1eb258d",
+      "lead": {
+        "text": "Robert Frey left Morgan Stanley in 1988 to build Kepler, and Renaissance kept his prediction model when it rebuilt the fund.",
+        "start": 0,
+        "end": 124,
+        "sha256": "ed378da4663a03d197c89a1a9b90fc275f32abfc65ea8ad670c7e07dd896ab9c",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-13T15:03:23Z",
+    "observed_source_updated_at": "2026-10-13T15:03:23Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "172244193",
+    "slug": "bridgewaters-ai-172244193",
+    "title": "Bridgewater's third quarter 2025 AI cut: a case study of the refill, name by name",
+    "subtitle": "",
+    "post_date": "2026-10-13",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/bridgewaters-ai-172244193",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
+    "source": "medium",
+    "source_id": "37e6775d1f58",
+    "slug": "how-quants-shrink-a-covariance-matrix-steins-1955-paradox-and-a-credit-suisse-quant-37e6775d1f58",
+    "title": "How Quants Shrink a Covariance Matrix: Stein’s 1955 Paradox and a Credit Suisse Quant",
+    "subtitle": "Pulling every estimate toward the average lowers expected total error, and it cut a textbook portfolio’s risk nearly in half.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-12T16:01:02Z",
+    "url": "https://medium.com/@navnoorbawa/how-quants-shrink-a-covariance-matrix-steins-1955-paradox-and-a-credit-suisse-quant-37e6775d1f58",
+    "audience": "unknown",
+    "wordcount": 24,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "25d5f81c6c12241dcb46838d88363a2f7653aaabe41cdad877596b4d637669f4",
+      "lead": {
+        "text": "Pulling every estimate toward the average lowers expected total error, and it cut a textbook portfolio’s risk nearly in half.",
+        "start": 0,
+        "end": 125,
+        "sha256": "5e78efe48770f2f594ca6408b2c9d97764e843080b5c60ea49502e9454cfa361",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-12T16:01:02Z",
+    "observed_source_updated_at": "2026-10-12T16:01:02Z"
+  },
+  {
+    "source": "substack",
     "source_id": "how-man-ahls-trend-following-makes",
     "slug": "how-man-ahls-trend-following-makes",
     "title": "How Man AHL's Trend Following Makes Money When Bonds Sell Off",
@@ -591,9 +709,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-30T15:02:48Z",
-    "observed_source_updated_at": "2026-09-30T15:02:48Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -657,9 +775,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-09-29T15:03:17Z",
-    "observed_source_updated_at": "2026-09-29T15:03:17Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
@@ -16669,7 +16787,7 @@
     "content_status": "full",
     "brief": {
       "schema_version": 1,
-      "body_sha256": "a03204614971bd0fc8f78f38772c0b18a93405627471cdbb1ab3b4fb83cd1b0c",
+      "body_sha256": "df7afe9a0dc7e772b16e60ddfd4c048fffa71832f750844e7bf55923f474a01e",
       "lead": {
         "text": "Marshall Wace pioneered alpha capture in 2002 with TOPS — a system that polls 5,000+ sell-side contributors for trade ideas, ranks them by simulated performance, and algorithmically optimizes the signal flow into market-neutral portfolios. The strategy manages approximately $30 billion of the firm’s ~$75 billion AUM and delivered 22.59% in 2024 (Reuters, January 2, 2025), outperforming most systematic equity peers.",
         "start": 130,
