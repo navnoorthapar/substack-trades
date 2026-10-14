@@ -1,5 +1,94 @@
 [
   {
+    "source": "medium",
+    "source_id": "bc6508de02f7",
+    "slug": "the-black-in-black-scholes-was-a-lisp-programmer-first-scholes-co-founded-ltcm-bc6508de02f7",
+    "title": "The Black in Black-Scholes Was a LISP Programmer First. Scholes Co-Founded LTCM.",
+    "subtitle": "Before Fischer Black wrote the equation behind option pricing, he wrote LISP programs that answered questions on an IBM 7090.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-14T15:04:01Z",
+    "url": "https://medium.com/@navnoorbawa/the-black-in-black-scholes-was-a-lisp-programmer-first-scholes-co-founded-ltcm-bc6508de02f7",
+    "audience": "unknown",
+    "wordcount": 24,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "09cf63ca9ebb3cd97ff2913f83be47208190b5bef7df270bf2001d86a8429a80",
+      "lead": {
+        "text": "Before Fischer Black wrote the equation behind option pricing, he wrote LISP programs that answered questions on an IBM 7090.",
+        "start": 0,
+        "end": 125,
+        "sha256": "64d9530bbb80e80052eb7780f1dddde35ee9e9804276114135673bdc0303974b",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-14T15:04:01Z",
+    "observed_source_updated_at": "2026-10-14T15:04:01Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "paul-tudor-joness-fund-is-insuring",
+    "slug": "paul-tudor-joness-fund-is-insuring",
+    "title": "Paul Tudor Jones's Fund Is Insuring AI Chips and Junk Bonds: Tudor's Own 13F, With the Position",
+    "subtitle": "A PM long Micron, TSMC and high yield bonds holds what Tudor insured. One long only the Nasdaq-100 holds what it left alone.",
+    "post_date": "2026-10-14T13:33:22.476Z",
+    "url": "https://navnoorbawa.substack.com/p/paul-tudor-joness-fund-is-insuring",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "28ab68796376949012e3e303a52d9454194694f03b8642b16427a4d0b2b81bd6",
+      "lead": {
+        "text": "On 13 October 2026, Paul Tudor Jones told CNBC he would be “short the whole year” in 2027. His firm’s 30 June filing leans against narrower targets: small caps, the AI chip leaders and junk bonds. Its junk bond puts grew 13 times from March, while its Nasdaq-100 puts and calls roughly cancel. In other words, Tudor’s new insurance sits on credit and the chip leaders. That matters to the firm, whose book reads narrower than its founder’s words, and to any PM holding the same exposures.",
+        "start": 0,
+        "end": 488,
+        "sha256": "28ab68796376949012e3e303a52d9454194694f03b8642b16427a4d0b2b81bd6",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-14T13:37:14.608Z",
+    "observed_source_updated_at": "2026-10-14T13:37:14.608Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "On 13 October 2026, Paul Tudor Jones told CNBC he would be “short the whole year” in 2027. His firm’s 30 June filing leans against narrower targets: small caps, the AI chip leaders and junk bonds. Its junk bond puts grew 13 times from March, while its Nasdaq-100 puts and calls roughly cancel. In other words, Tudor’s new insurance sits on credit and the chip leaders. That matters to the firm, whose book reads narrower than its founder’s words, and to any PM holding the same exposures.",
+      "character_count": 488,
+      "body_sha256": "28ab68796376949012e3e303a52d9454194694f03b8642b16427a4d0b2b81bd6"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "172281384",
+    "slug": "tudors-june-chip-172281384",
+    "title": "Tudor's June Chip Puts: The Second Trade That Insures a Chip Book, With Its Cost and Stop",
+    "subtitle": "",
+    "post_date": "2026-10-14",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/tudors-june-chip-172281384",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
     "source": "substack",
     "source_id": "how-bridgewater-trades-ai-in-its",
     "slug": "how-bridgewater-trades-ai-in-its",
@@ -620,9 +709,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-10-01T15:01:24Z",
-    "observed_source_updated_at": "2026-10-01T15:01:24Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
