@@ -1,6 +1,95 @@
 [
   {
     "source": "medium",
+    "source_id": "870fb605a290",
+    "slug": "cfm-and-aqr-proved-low-beta-stocks-beat-the-capm-jack-treynor-wrote-in-1962-870fb605a290",
+    "title": "CFM and AQR Proved Low-Beta Stocks Beat the CAPM Jack Treynor Wrote in 1962.",
+    "subtitle": "AQR in 2014 and CFM in 2015 proved low-beta stocks beat the CAPM; in big stocks, the standard factors take the whole edge.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-15T15:11:22Z",
+    "url": "https://medium.com/@navnoorbawa/cfm-and-aqr-proved-low-beta-stocks-beat-the-capm-jack-treynor-wrote-in-1962-870fb605a290",
+    "audience": "unknown",
+    "wordcount": 27,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "0a81324e1c3dc67859d8ad2ad11f18b49b8ee0f884ca51a4981a227cb538b353",
+      "lead": {
+        "text": "AQR in 2014 and CFM in 2015 proved low-beta stocks beat the CAPM; in big stocks, the standard factors take the whole edge.",
+        "start": 0,
+        "end": 122,
+        "sha256": "5025b9c1cbc7e42f6d94282ef2ba8e415b105e3e53d954f17ada89bbae0eee21",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-15T15:11:22Z",
+    "observed_source_updated_at": "2026-10-15T15:11:22Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "boaz-weinsteins-saba-is-betting-blackrock",
+    "slug": "boaz-weinsteins-saba-is-betting-blackrock",
+    "title": "Boaz Weinstein's Saba Is Betting BlackRock Lets Holders Out of Its Private Credit Fund",
+    "subtitle": "Whether TCPC holders ever collect the gap Pantheon exposed turns on a NAV print due 5 November, and on a route BlackRock has not named",
+    "post_date": "2026-10-15T13:31:01.085Z",
+    "url": "https://navnoorbawa.substack.com/p/boaz-weinsteins-saba-is-betting-blackrock",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "79a231cb29193ac0d7f3a816823ab180818e7cccfefc9a479c4b0c462b0553d2",
+      "lead": {
+        "text": "On 28 September Boaz Weinstein’s Saba Capital had its biggest day yet buying BlackRock’s listed private credit fund. Its Schedule 13D, filed 14 October, names BlackRock TCP Capital Corp. (TCPC), which closed that day at 69 cents per dollar of its pro forma net assets.",
+        "start": 0,
+        "end": 268,
+        "sha256": "79a231cb29193ac0d7f3a816823ab180818e7cccfefc9a479c4b0c462b0553d2",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-15T13:33:28.157Z",
+    "observed_source_updated_at": "2026-10-15T13:33:28.157Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "On 28 September Boaz Weinstein’s Saba Capital had its biggest day yet buying BlackRock’s listed private credit fund. Its Schedule 13D, filed 14 October, names BlackRock TCP Capital Corp. (TCPC), which closed that day at 69 cents per dollar of its pro forma net assets.",
+      "character_count": 268,
+      "body_sha256": "79a231cb29193ac0d7f3a816823ab180818e7cccfefc9a479c4b0c462b0553d2"
+    }
+  },
+  {
+    "source": "patreon",
+    "source_id": "172404046",
+    "slug": "sabas-2025-exits-172404046",
+    "title": "Saba's 2025 BlackRock tender exits: a case study of what those terms are worth at a BDC",
+    "subtitle": "",
+    "post_date": "2026-10-15",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/sabas-2025-exits-172404046",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "medium",
     "source_id": "bc6508de02f7",
     "slug": "the-black-in-black-scholes-was-a-lisp-programmer-first-scholes-co-founded-ltcm-bc6508de02f7",
     "title": "The Black in Black-Scholes Was a LISP Programmer First. Scholes Co-Founded LTCM.",
@@ -240,7 +329,10 @@
     "family": "other",
     "body_revision_status": "current",
     "source_updated_at": "2026-10-11T13:32:57.913Z",
-    "observed_source_updated_at": "2026-10-11T13:32:57.913Z"
+    "observed_source_updated_at": "2026-10-11T13:32:57.913Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/how-man-ahls-trend-following-makes-money-when-bonds-sell-off-8b12f09f7b40"
+    }
   },
   {
     "source": "patreon",
@@ -611,9 +703,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-10-03T16:29:04Z",
-    "observed_source_updated_at": "2026-10-03T16:29:04Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
@@ -657,9 +749,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-10-02T21:38:56Z",
-    "observed_source_updated_at": "2026-10-02T21:38:56Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
