@@ -1,6 +1,58 @@
 [
   {
     "source": "medium",
+    "source_id": "4ac5cac2e5ef",
+    "slug": "jim-simons-said-trend-following-faded-by-the-1980s-currencies-say-1993-4ac5cac2e5ef",
+    "title": "Jim Simons Said Trend Following Faded by the 1980s. Currencies Say 1993.",
+    "subtitle": "In currencies, the 20-day trend rule Jim Simons described paid every year through 1992 and stopped in 1993, a decade after his date.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-16T15:06:13Z",
+    "url": "https://medium.com/@navnoorbawa/jim-simons-said-trend-following-faded-by-the-1980s-currencies-say-1993-4ac5cac2e5ef",
+    "audience": "unknown",
+    "wordcount": 27,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "87d1bdcc12a438b3b692f63eb3d2d052bee971831d2e12d9053c380bda3afdac",
+      "lead": {
+        "text": "In currencies, the 20-day trend rule Jim Simons described paid every year through 1992 and stopped in 1993, a decade after his date.",
+        "start": 0,
+        "end": 132,
+        "sha256": "c9e159860cf3b1024255a739903df7acce9bfa8081d8819cfda3a269f73c236d",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-16T15:06:13Z",
+    "observed_source_updated_at": "2026-10-16T15:06:13Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "172490917",
+    "slug": "hrts-large-since-172490917",
+    "title": "HRT's large-holder filings since 2023: a screen that keeps its dealer off holder lists",
+    "subtitle": "",
+    "post_date": "2026-10-16",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/hrts-large-since-172490917",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
+    "source": "medium",
     "source_id": "870fb605a290",
     "slug": "cfm-and-aqr-proved-low-beta-stocks-beat-the-capm-jack-treynor-wrote-in-1962-870fb605a290",
     "title": "CFM and AQR Proved Low-Beta Stocks Beat the CAPM Jack Treynor Wrote in 1962.",
@@ -629,9 +681,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-10-05T15:03:23Z",
-    "observed_source_updated_at": "2026-10-05T15:03:23Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
