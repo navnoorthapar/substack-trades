@@ -1,5 +1,41 @@
 [
   {
+    "source": "substack",
+    "source_id": "how-hudson-river-trading-beat-goldmans",
+    "slug": "how-hudson-river-trading-beat-goldmans",
+    "title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "subtitle": "HRT's own audited balance sheets put its unhedged position at a record $2.6bn, yet at the same share of its stock as before.",
+    "post_date": "2026-10-16T16:30:47.776Z",
+    "url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "audience": "everyone",
+    "wordcount": 2731,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "d350f0c6494551c2b4e4d434d42f4c19fd1de811458779a0c1763db4b6e7b2c3",
+      "lead": {
+        "text": "Hudson River Trading made a record $11.4bn trading in the second quarter of 2026, Bloomberg reported on 19 August. In December Bloomberg said HRT was minting billions by “embracing more risk”; to see what that risk looks like, I netted the stock its US dealer owned against the stock and futures it sold, at all eight year-ends filed electronically.",
+        "start": 0,
+        "end": 349,
+        "sha256": "4bd493e3be035bcbaffdc71a28faeaceff4cfb179749422d84808cdde39ae163",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": {
+        "text": "Goldman Sachs had posted its quarter five weeks before Bloomberg’s report. Its 8-K of 14 July 2026 showed $7.4bn of equities revenue and $4.6bn from FICC, its fixed income, currencies and commodities desk. HRT’s $11.4bn is larger than either. It is also about 1.5 times the $7.5bn the two desks made from intermediation, which is buying and selling for clients, the part of a bank’s trading closest to what a market maker does.",
+        "start": 970,
+        "end": 1397,
+        "sha256": "92008243d8b6c909a687e3831c1bc16b262355216788801ee2c67088591fa570",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-16T16:33:10.933Z",
+    "observed_source_updated_at": "2026-10-16T16:33:10.933Z"
+  },
+  {
     "source": "medium",
     "source_id": "4ac5cac2e5ef",
     "slug": "jim-simons-said-trend-following-faded-by-the-1980s-currencies-say-1993-4ac5cac2e5ef",

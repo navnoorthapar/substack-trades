@@ -1,5 +1,236 @@
 [
   {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "Hudson River Trading made a record $11.4bn trading in the second quarter of 2026, Bloomberg reported on 19 August. In December Bloomberg said HRT was minting billions by “embracing more risk”; to see what that risk looks like, I netted the stock its US dealer owned against the stock and futures it sold, at all eight year-ends filed electronically.",
+    "instruments": [
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$11.4bn",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "The unit running them is Prism, which “generated more than $2 billion” in 2024, according to the same report, with “ETF arbitrage and index rebalance” its noteworthy strategies. Roughly half of profits still came from the high-frequency business HRT calls Classic.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$2 billion",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "The filings back Bloomberg on holding. HRT Financial LP, the group’s US dealer, files a Form 3 each time it becomes a 10% owner of a listed company, and it filed one in 2023, two in 2024, four in 2025 and 66 in 2026 through 16 September, nearly all for micro-caps. Adam Nunes, the dealer’s president and chief executive since May 2010, signs them. One Form 4 shows Aditxt shares bought on 18 June 2026 and sold to zero on 22 June: held four days.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "May 2010, signs them.",
+    "any_quant_detail": "10%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "So the two answers predict different balance sheets. If HRT’s extra risk is a growing directional bet, what is left after its hedges should grow faster than its book, and its share of the book should climb out of its old range. If the extra risk is a bigger book hedged the same way, the dollars should grow and the share should not.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "The test is one subtraction, repeated. From each year-end’s equities owned, take away the equities sold, not yet purchased, then the futures sold, and add back the futures bought, all as the statement prints them, futures at notional. Notional is the full value of the stock or index a contract stands for. Call what is left the residual: the dealer’s net stock position after its hedges.",
+    "instruments": [
+      "equity",
+      "futures"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": "the statement prints them, futures at notional.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "At end-2025, and at three of the four year-ends before it, short sales offset about two fifths of the stock the dealer owned, and futures sold offset most of the rest. Exhibit 3 repeats it at every year-end, and sets the residual against partners’ capital, the owners’ equity a loss reaches first.",
+    "instruments": [
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "Two things hold across the table. The residual share topped 20% once, in 2018, on a book of less than $1bn; from 2019 the dealer sold short, or sold futures against, between 83% and 97% of what it owned. And the share moves without a trend. It fell to 6.4% in 2021, when the book first passed $18bn, and to 3.0% in 2024.",
+    "instruments": [
+      "equity",
+      "futures"
+    ],
+    "direction": "short",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$1bn, $18bn, 20%, 83%, 97%, 6.4%, 3.0%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "A hedged book still carries risk: the spread between what it owns and what it sold, and whatever the futures fail to match. That is the form of “more risk” the audits show: more of that spread risk, carried on a bigger book.",
+    "instruments": [
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "The futures’ underlyings and direction are not named. Netting only the stock leaves 57% to 58% of it in 2021, 2023, 2024 and 2025, so the futures carry the claim, and this is where the case against it is strongest. Two facts fit index hedging without proving it. At end-2025 the net futures sold, $10.74bn, hedged 80% of the stock-only net of $13.37bn; what they left is the residual. And the two largest lines on the June 2026 13F are the SPDR S&P 500 and Invesco QQQ index funds. The dealer also trades Treasuries, so some futures could be on rates. From 2021 the notes do not label futures bought or sold either: this piece reads the liability-side contracts as sold, as the 2018 to 2020 notes labelled them, and 2022’s fit that reading less cleanly.",
+    "instruments": [
+      "bond",
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": "S&P 500; QQQ",
+    "edge_or_thesis": "sold, as the 2018 to 2020 notes labelled them, and 2022’s fit that reading less cleanly.",
+    "any_quant_detail": "$10.74bn, $13.37bn, 57%, 58%, 80%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "Option deltas are not disclosed. The 2025 note shows $31.6bn of options bought and $31.8bn sold, at notional,. Matched notional says the book sits on both sides. It gives no direction, and no delta is printed.",
+    "instruments": [
+      "option"
+    ],
+    "direction": "long",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "$31.6bn, $31.8bn",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "A year-end is a snapshot. The gap since the last audit is wide. The 13F’s shares and fund units rose from $24.26bn at 31 December 2025 to $39.92bn at 30 June 2026, 65% more, hedged by an amount no public filing shows. The next audit is the first look at that book.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "the last audit is wide.",
+    "any_quant_detail": "$24.26bn, $39.92bn, 65%, at 31, at 30",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "The stock it owns has changed. The long book now reaches into micro-caps, where nearly all of 2026’s Form 3s were filed, while the hedges the evidence fits are index futures and index funds. A micro-cap hedged with an index carries size, liquidity and basis risk an index holding does not, so the residual can hold near 11% of the stock owned while the risk in each dollar rises. A constant ratio is not constant risk. For now each line is small: the largest of the stocks it crossed in the second quarter sat at $255,000 in the dealer’s 30 June 13F.",
+    "instruments": [
+      "equity",
+      "futures"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": "11%, at $255,000",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "I would bet, at about 75%, that the share stays under its line, because the dealer has hedged more than four fifths of its stock at seven straight year-ends while the book grew about tenfold.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "the dealer has hedged more than four fifths of its stock at seven straight year-ends while the book grew about tenfold.",
+    "any_quant_detail": "75%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
+    "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
+    "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
+    "article_date": "2026-10-16",
+    "trade_description": "HRT’s 2026 audit lands by 1 March: a net under a fifth of the stock it owns means the bigger book stayed hedged; above it, the extra risk Bloomberg found has become a bet.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": null,
+    "description_truncated": false
+  },
+  {
     "article_title": "How Bridgewater Trades AI in Its 13F: It Sold Micron and TSMC, Kept Most of Its Nvidia",
     "article_url": "https://navnoorbawa.substack.com/p/how-bridgewater-trades-ai-in-its",
     "article_date": "2026-10-13",
