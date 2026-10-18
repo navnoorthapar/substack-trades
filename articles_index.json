@@ -1,5 +1,42 @@
 [
   {
+    "source": "substack",
+    "source_id": "coatue-bet-on-micron-in-its-13f-and",
+    "slug": "coatue-bet-on-micron-in-its-13f-and",
+    "title": "Coatue Bet on Micron in Its 13F, and Hedged It in the One Fund Whose Books Are Public",
+    "subtitle": "A copy of the filing pays Friday's price. The one printed Coatue cost is far lower, and two November documents decide what the firm kept.",
+    "post_date": "2026-10-17T18:59:22.610Z",
+    "url": "https://navnoorbawa.substack.com/p/coatue-bet-on-micron-in-its-13f-and",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "2273dcd787edce8f2692dd167312e0d69b55c112a0ff03b4e39b027e4d0ecd10",
+      "lead": {
+        "text": "On 23 June Coatue’s founder, Philippe Laffont, told CNBC he owned chip equipment makers to avoid picking the winning chip. His 30 June filing put the quarter’s biggest open market buy elsewhere: 2.98 million more Micron shares, added as Micron tripled, while the equipment lines were trimmed.",
+        "start": 0,
+        "end": 292,
+        "sha256": "2273dcd787edce8f2692dd167312e0d69b55c112a0ff03b4e39b027e4d0ecd10",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-17T19:04:22.462Z",
+    "observed_source_updated_at": "2026-10-17T19:04:22.462Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "On 23 June Coatue’s founder, Philippe Laffont, told CNBC he owned chip equipment makers to avoid picking the winning chip. His 30 June filing put the quarter’s biggest open market buy elsewhere: 2.98 million more Micron shares, added as Micron tripled, while the equipment lines were trimmed.",
+      "character_count": 292,
+      "body_sha256": "2273dcd787edce8f2692dd167312e0d69b55c112a0ff03b4e39b027e4d0ecd10"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "63f0357f6c45",
     "slug": "jim-simons-didnt-build-medallion-s-leverage-two-banks-barrier-options-did-63f0357f6c45",
@@ -28,6 +65,28 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-10-17T15:01:02Z",
     "observed_source_updated_at": "2026-10-17T15:01:02Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "172644122",
+    "slug": "coatues-june-to-172644122",
+    "title": "Coatue's June Chip Book Beside Three Tiger Cubs, Marked to 16 October: a Case Study",
+    "subtitle": "",
+    "post_date": "2026-10-17",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/coatues-june-to-172644122",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "substack",
