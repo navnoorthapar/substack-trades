@@ -1,5 +1,35 @@
 [
   {
+    "source": "medium",
+    "source_id": "6030488647f4",
+    "slug": "how-quants-forecast-volatility-garch-and-the-1979-test-of-milton-friedman-6030488647f4",
+    "title": "How Quants Forecast Volatility: GARCH and the 1979 Test of Milton Friedman",
+    "subtitle": "Robert Engle built ARCH in 1979 to test Milton Friedman on British inflation, and its heir GARCH is the volatility model quants learn.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-18T15:10:16Z",
+    "url": "https://medium.com/@navnoorbawa/how-quants-forecast-volatility-garch-and-the-1979-test-of-milton-friedman-6030488647f4",
+    "audience": "unknown",
+    "wordcount": 27,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "0e7ffc70b4b8e11b701609ee0298c51c114d28f517ef2b61b8ad7375abc2872c",
+      "lead": {
+        "text": "Robert Engle built ARCH in 1979 to test Milton Friedman on British inflation, and its heir GARCH is the volatility model quants learn.",
+        "start": 0,
+        "end": 134,
+        "sha256": "e21537984aed61cc3ea23b06be17e825c3a69d85df20c81f316a41d99e19a12d",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-18T15:10:16Z",
+    "observed_source_updated_at": "2026-10-18T15:10:16Z"
+  },
+  {
     "source": "substack",
     "source_id": "coatue-bet-on-micron-in-its-13f-and",
     "slug": "coatue-bet-on-micron-in-its-13f-and",
@@ -388,7 +418,10 @@
     "family": "firm-mechanics",
     "body_revision_status": "current",
     "source_updated_at": "2026-10-13T17:10:47.119Z",
-    "observed_source_updated_at": "2026-10-13T17:10:47.119Z"
+    "observed_source_updated_at": "2026-10-13T17:10:47.119Z",
+    "alternate_urls": {
+      "medium": "https://medium.com/@navnoorbawa/how-bridgewater-trades-ai-in-its-13f-it-sold-micron-and-tsmc-kept-most-of-its-nvidia-e574a5149291"
+    }
   },
   {
     "source": "medium",
@@ -589,9 +622,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-10-09T15:07:05Z",
-    "observed_source_updated_at": "2026-10-09T15:07:05Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
