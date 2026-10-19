@@ -1,5 +1,86 @@
 [
   {
+    "article_title": "Millennium and Balyasny's Stop-Loss: How Pod Shops Cut a Losing Trader in Stages",
+    "article_url": "https://navnoorbawa.substack.com/p/millennium-and-balyasnys-stop-loss",
+    "article_date": "2026-10-19",
+    "trade_description": "Citadel is set apart because it stood on the other side.1 Wellington, its flagship fund, gained 5.9% in July. That month Situational Awareness, an AI fund, reportedly lost 67% and sold most of its public equity book to Citadel to meet margin calls. Those calls worked as a stop with one step, set by its lenders, which takes away two things a ladder spreads out: the size of the cut and its timing.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "it stood on the other side.",
+    "any_quant_detail": "5.9%, 67%",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Millennium and Balyasny's Stop-Loss: How Pod Shops Cut a Losing Trader in Stages",
+    "article_url": "https://navnoorbawa.substack.com/p/millennium-and-balyasnys-stop-loss",
+    "article_date": "2026-10-19",
+    "trade_description": "The unwind of the yen carry trade, in which investors borrow cheaply in yen to buy assets that pay more, gives a case with names in it. Early losses in August 2024 prompted Millennium, Balyasny and BlueCrest, another firm that runs its traders in pods, “to halt the operation of at least six traders and their investment pods,” Bloomberg reported, as Hedgeweek carried it on 2 September.",
+    "instruments": [
+      "FX"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": "Hedgeweek carried it on 2 September.",
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Millennium",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Millennium and Balyasny's Stop-Loss: How Pod Shops Cut a Losing Trader in Stages",
+    "article_url": "https://navnoorbawa.substack.com/p/millennium-and-balyasnys-stop-loss",
+    "article_date": "2026-10-19",
+    "trade_description": "The report ties two exits to those losses. Ryan Fitzgibbon, who traded industrial and energy stocks for Millennium in Houston, “left the firm following losses.” BlueCrest shut Chiga Murayama’s Japanese government bond pod after losses, and he and team member Yosuke Motegi left.",
+    "instruments": [
+      "bond",
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Millennium",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Millennium and Balyasny's Stop-Loss: How Pod Shops Cut a Losing Trader in Stages",
+    "article_url": "https://navnoorbawa.substack.com/p/millennium-and-balyasnys-stop-loss",
+    "article_date": "2026-10-19",
+    "trade_description": "The IMF’s October report puts a size on crowding by all hedge funds. In quarters of market stress, the stocks most crowded relative to their daily trading volume ran about 10 percentage points more volatile and fell about 4 points further than the least crowded. Nothing I read separates the ladders’ share of that cost, so the market’s part of the bill stays the regulators’ warning.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Millennium",
+    "description_truncated": false
+  },
+  {
+    "article_title": "Millennium and Balyasny's Stop-Loss: How Pod Shops Cut a Losing Trader in Stages",
+    "article_url": "https://navnoorbawa.substack.com/p/millennium-and-balyasnys-stop-loss",
+    "article_date": "2026-10-19",
+    "trade_description": "Antoine Iskandar, a senior Millennium portfolio manager in Zug, shows the other exit. He managed “more than $600m” in equities, relative value and equity derivatives. His team “reportedly incurred losses running into tens of millions of dollars in 2026” after cumulative profits over the three prior years, Hedgeweek reported, citing Bloomberg. Balyasny is “set to hire” him. Iskandar, Millennium and Balyasny declined to comment.",
+    "instruments": [
+      "equity"
+    ],
+    "direction": "arbitrage/relative value",
+    "underlying": null,
+    "edge_or_thesis": "relative value and equity derivatives.",
+    "any_quant_detail": "$600m",
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Millennium",
+    "description_truncated": false
+  },
+  {
     "article_title": "How Hudson River Trading Beat Goldman's Desks, at What Risk",
     "article_url": "https://navnoorbawa.substack.com/p/how-hudson-river-trading-beat-goldmans",
     "article_date": "2026-10-16",

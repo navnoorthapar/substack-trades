@@ -1,6 +1,94 @@
 [
   {
     "source": "medium",
+    "source_id": "a3acb7a8a28a",
+    "slug": "claude-shannon-handed-ed-thorp-the-kelly-criterion-in-1960-thorp-built-a-hedge-fund-on-it-a3acb7a8a28a",
+    "title": "Claude Shannon Handed Ed Thorp the Kelly Criterion in 1960. Thorp Built a Hedge Fund on It.",
+    "subtitle": "At MIT in 1960, Claude Shannon handed Ed Thorp a betting rule that was Shannon’s own information rate, published by John Kelly.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-19T15:04:22Z",
+    "url": "https://medium.com/@navnoorbawa/claude-shannon-handed-ed-thorp-the-kelly-criterion-in-1960-thorp-built-a-hedge-fund-on-it-a3acb7a8a28a",
+    "audience": "unknown",
+    "wordcount": 26,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "ef1456fc90d65d1c3fd0266fb5cd9214c63c96214fd1dbdce836853fd9e36c2b",
+      "lead": {
+        "text": "At MIT in 1960, Claude Shannon handed Ed Thorp a betting rule that was Shannon’s own information rate, published by John Kelly.",
+        "start": 0,
+        "end": 127,
+        "sha256": "f31f22e5eb3e845f44d7525797b7ef067bc45e5dd53c9c6fdcfb794f87a173a9",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-19T15:04:22Z",
+    "observed_source_updated_at": "2026-10-19T15:04:22Z"
+  },
+  {
+    "source": "substack",
+    "source_id": "millennium-and-balyasnys-stop-loss",
+    "slug": "millennium-and-balyasnys-stop-loss",
+    "title": "Millennium and Balyasny's Stop-Loss: How Pod Shops Cut a Losing Trader in Stages",
+    "subtitle": "The ladder caps most pods' losses and spares the books that earn most. October's returns, due by 10 November, test it.",
+    "post_date": "2026-10-19T13:31:20.089Z",
+    "url": "https://navnoorbawa.substack.com/p/millennium-and-balyasnys-stop-loss",
+    "audience": "everyone",
+    "wordcount": 2890,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "d104872767c8315adcfeeab958775f0aaf5c3bc8555a7f5346d46776f7d6304a",
+      "lead": {
+        "text": "In July 2026, Steve Cohen’s Point72 flagship lost 3.3% while Turion, his firm’s AI fund, lost 11.4%. The flagship, like Millennium’s and Balyasny’s, spreads its capital across many traders’ teams, called pods.",
+        "start": 0,
+        "end": 209,
+        "sha256": "5036213c51471b0689585a42f667b768414b8adcb618c83ead51d9c4518eb43a",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": {
+        "text": "Business Insider’s July scorecard lists 13 platforms besides Citadel, and their median July loss was 1.5%. The four AI funds in Hedgeweek’s report on July’s biggest losers lost a median 16.6%. That is about eleven times as much.",
+        "start": 679,
+        "end": 907,
+        "sha256": "0d601b43ae0b712ea7315c54bc4934569df7cdd535d4641cf07b09fa1197c498",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-19T14:40:22.110Z",
+    "observed_source_updated_at": "2026-10-19T14:40:22.110Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "172700821",
+    "slug": "millennium-and-172700821",
+    "title": "Millennium, Point72 and Balyasny's June Chip Books Through July 2026: A Model",
+    "subtitle": "",
+    "post_date": "2026-10-19",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/millennium-and-172700821",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
+    "source": "medium",
     "source_id": "6030488647f4",
     "slug": "how-quants-forecast-volatility-garch-and-the-1979-test-of-milton-friedman-6030488647f4",
     "title": "How Quants Forecast Volatility: GARCH and the 1979 Test of Milton Friedman",
@@ -592,9 +680,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-10-10T15:04:02Z",
-    "observed_source_updated_at": "2026-10-10T15:04:02Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "medium",
