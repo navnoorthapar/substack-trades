@@ -1,6 +1,36 @@
 [
   {
     "source": "medium",
+    "source_id": "630299a08658",
+    "slug": "how-quants-bootstrap-warren-buffett-for-luck-his-partnership-passes-berkshire-since-2000-fails-630299a08658",
+    "title": "How Quants Bootstrap Warren Buffett for Luck: His Partnership Passes, Berkshire Since 2000 Fails.",
+    "subtitle": "Buffett’s partnership clears the luck test quants run on backtests; Berkshire’s stock since 2000 does not.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-20T15:05:55Z",
+    "url": "https://medium.com/@navnoorbawa/how-quants-bootstrap-warren-buffett-for-luck-his-partnership-passes-berkshire-since-2000-fails-630299a08658",
+    "audience": "unknown",
+    "wordcount": 20,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "9a8e74b475d68f3c337df63d21393d90b5a4f797327d240ab775cfb83bff8402",
+      "lead": {
+        "text": "Buffett’s partnership clears the luck test quants run on backtests; Berkshire’s stock since 2000 does not.",
+        "start": 0,
+        "end": 106,
+        "sha256": "380a3d53063f610fabec514b30e11d8ce1e94227be29934f84917391de485f25",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-20T15:05:55Z",
+    "observed_source_updated_at": "2026-10-20T15:05:55Z"
+  },
+  {
+    "source": "medium",
     "source_id": "a3acb7a8a28a",
     "slug": "claude-shannon-handed-ed-thorp-the-kelly-criterion-in-1960-thorp-built-a-hedge-fund-on-it-a3acb7a8a28a",
     "title": "Claude Shannon Handed Ed Thorp the Kelly Criterion in 1960. Thorp Built a Hedge Fund on It.",
@@ -589,9 +619,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-10-12T16:01:02Z",
-    "observed_source_updated_at": "2026-10-12T16:01:02Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
