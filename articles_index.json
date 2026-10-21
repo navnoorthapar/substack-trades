@@ -1,5 +1,42 @@
 [
   {
+    "source": "substack",
+    "source_id": "steve-cohens-point72-turion-fund",
+    "slug": "steve-cohens-point72-turion-fund",
+    "title": "Steve Cohen's Point72 Turion Fund, Measured Against His Flagship",
+    "subtitle": "Morgan Stanley's richest clients can now buy Cohen's AI fund. UBS's books show whether they get the hedged Point72 or the AI trade.",
+    "post_date": "2026-10-20T19:24:30.133Z",
+    "url": "https://navnoorbawa.substack.com/p/steve-cohens-point72-turion-fund",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "5759bbec9c3f51109ebecdd9f17e195eb8452faa81acd429beddaa8c62c12835",
+      "lead": {
+        "text": "On 15 July 2026, Michael Stanton signed the papers for a Morgan Stanley feeder into Turion, Steve Cohen’s AI fund. He signed for its general partner, an affiliate of iCapital, which became Morgan Stanley’s feeder fund service provider in 2019; HedgePremier is the name on those feeders for wealth clients. No client had bought on filing day.",
+        "start": 0,
+        "end": 341,
+        "sha256": "5759bbec9c3f51109ebecdd9f17e195eb8452faa81acd429beddaa8c62c12835",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-20T19:28:33.086Z",
+    "observed_source_updated_at": "2026-10-20T19:28:33.086Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "On 15 July 2026, Michael Stanton signed the papers for a Morgan Stanley feeder into Turion, Steve Cohen’s AI fund. He signed for its general partner, an affiliate of iCapital, which became Morgan Stanley’s feeder fund service provider in 2019; HedgePremier is the name on those feeders for wealth clients. No client had bought on filing day.",
+      "character_count": 341,
+      "body_sha256": "5759bbec9c3f51109ebecdd9f17e195eb8452faa81acd429beddaa8c62c12835"
+    }
+  },
+  {
     "source": "medium",
     "source_id": "630299a08658",
     "slug": "how-quants-bootstrap-warren-buffett-for-luck-his-partnership-passes-berkshire-since-2000-fails-630299a08658",
@@ -28,6 +65,28 @@
     "body_revision_status": "current",
     "source_updated_at": "2026-10-20T15:05:55Z",
     "observed_source_updated_at": "2026-10-20T15:05:55Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "172923139",
+    "slug": "point72s-turion-172923139",
+    "title": "Point72's Turion on UBS's June 2026 ledger: a screen for which hedge funds are equity beta",
+    "subtitle": "",
+    "post_date": "2026-10-20",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/point72s-turion-172923139",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
   },
   {
     "source": "medium",
