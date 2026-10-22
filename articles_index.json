@@ -1,6 +1,95 @@
 [
   {
     "source": "substack",
+    "source_id": "chris-rokoss-best-year-was-not-his",
+    "slug": "chris-rokoss-best-year-was-not-his",
+    "title": "Chris Rokos's Best Year Was Not His Firm's Best Payday",
+    "subtitle": "The fee Chris Rokos is raising keeps paying his firm while the fund sits below its high-water mark, and his investors pay it.",
+    "post_date": "2026-10-21T22:01:46.711Z",
+    "url": "https://navnoorbawa.substack.com/p/chris-rokoss-best-year-was-not-his",
+    "audience": "only_paid",
+    "wordcount": 0,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "2bc46e62d80ce8ba85f2ffffec3df32a46749bdfc25d820f36a7e43e8972c1dd",
+      "lead": {
+        "text": "Chris Rokos’s fund made 50.8% in 2022, its best year. In January 2024 Bloomberg’s headline read “Rokos’ Hedge Fund Paid Members £445 Million After 2022 Gains”. Yet that record year booked his London partnership 62% of the revenue his pandemic year did.",
+        "start": 0,
+        "end": 252,
+        "sha256": "2bc46e62d80ce8ba85f2ffffec3df32a46749bdfc25d820f36a7e43e8972c1dd",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-21T22:04:54.661Z",
+    "observed_source_updated_at": "2026-10-21T22:04:54.661Z",
+    "member_preview": {
+      "schema_version": 1,
+      "surface": "anonymous-substack-list",
+      "text": "Chris Rokos’s fund made 50.8% in 2022, its best year. In January 2024 Bloomberg’s headline read “Rokos’ Hedge Fund Paid Members £445 Million After 2022 Gains”. Yet that record year booked his London partnership 62% of the revenue his pandemic year did.",
+      "character_count": 252,
+      "body_sha256": "2bc46e62d80ce8ba85f2ffffec3df32a46749bdfc25d820f36a7e43e8972c1dd"
+    }
+  },
+  {
+    "source": "medium",
+    "source_id": "c8b89cfa85f3",
+    "slug": "jim-simonss-first-hire-proved-em-s-maximum-likelihood-theorem-the-1977-paper-admits-it-c8b89cfa85f3",
+    "title": "Jim Simons’s First Hire Proved EM’s Maximum Likelihood Theorem. The 1977 Paper Admits It.",
+    "subtitle": "Leonard Baum proved in 1970 that an EM pass never lowers the likelihood, and the 1977 paper that named EM said so in its own text.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-21T17:36:09Z",
+    "url": "https://medium.com/@navnoorbawa/jim-simonss-first-hire-proved-em-s-maximum-likelihood-theorem-the-1977-paper-admits-it-c8b89cfa85f3",
+    "audience": "unknown",
+    "wordcount": 30,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "1e8c4ccd81ae0615ec45333af43ee81ef037aeb2c2418b5b675e5d861196c01d",
+      "lead": {
+        "text": "Leonard Baum proved in 1970 that an EM pass never lowers the likelihood, and the 1977 paper that named EM said so in its own text.",
+        "start": 0,
+        "end": 130,
+        "sha256": "3f9d9a85e3b46a5d8dda715c67d599c9c3e219f8364f158242cc1b2ad4aed627",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-21T17:36:09Z",
+    "observed_source_updated_at": "2026-10-21T17:36:09Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "173024266",
+    "slug": "rokoss-holders-173024266",
+    "title": "Rokos's holders, 2019 to 2026: a case study of the fee saved by not selling below the mark",
+    "subtitle": "",
+    "post_date": "2026-10-21",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/rokoss-holders-173024266",
+    "audience": "paid",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "paid"
+  },
+  {
+    "source": "substack",
     "source_id": "steve-cohens-point72-turion-fund",
     "slug": "steve-cohens-point72-turion-fund",
     "title": "Steve Cohen's Point72 Turion Fund, Measured Against His Flagship",
@@ -626,9 +715,9 @@
       "checkpoints": []
     },
     "family": "firm-mechanics",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-10-13T15:03:23Z",
-    "observed_source_updated_at": "2026-10-13T15:03:23Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "patreon",
