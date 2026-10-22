@@ -1,5 +1,57 @@
 [
   {
+    "source": "medium",
+    "source_id": "af14ec633c36",
+    "slug": "warren-buffett-called-black-scholes-prices-absurd-in-2009-his-puts-proved-half-of-it-af14ec633c36",
+    "title": "Warren Buffett Called Black-Scholes Prices Absurd in 2009. His Puts Proved Half of It.",
+    "subtitle": "Buffett won his bet against Black-Scholes and lost the argument: the formula he mocked prices a hedge, and Berkshire did not hedge.\n\nContinue reading on Medium »",
+    "post_date": "2026-10-22T15:04:30Z",
+    "url": "https://medium.com/@navnoorbawa/warren-buffett-called-black-scholes-prices-absurd-in-2009-his-puts-proved-half-of-it-af14ec633c36",
+    "audience": "unknown",
+    "wordcount": 26,
+    "content_status": "excerpt",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "b4ad8a4ea19bdd87624676f2e6e7bc3c7c113d07d6771c2265322bf535eb1f0d",
+      "lead": {
+        "text": "Buffett won his bet against Black-Scholes and lost the argument: the formula he mocked prices a hedge, and Berkshire did not hedge.",
+        "start": 0,
+        "end": 131,
+        "sha256": "8b7c58f9c39775c774bdec894cca52a725d17ceed2f3c25b663dc2872b38b836",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-22T15:04:30Z",
+    "observed_source_updated_at": "2026-10-22T15:04:30Z"
+  },
+  {
+    "source": "patreon",
+    "source_id": "173083955",
+    "slug": "jane-streets-for-173083955",
+    "title": "Jane Street's 2025 London accounts: a five line screen for where the trading year shows up",
+    "subtitle": "",
+    "post_date": "2026-10-22",
+    "url": "https://www.patreon.com/NavnoorBawa/posts/jane-streets-for-173083955",
+    "audience": "public",
+    "wordcount": 0,
+    "content_status": "registry",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lead": null,
+      "sections": [],
+      "fallback_evidence": null,
+      "checkpoints": []
+    },
+    "family": "other",
+    "access": "public"
+  },
+  {
     "source": "substack",
     "source_id": "chris-rokoss-best-year-was-not-his",
     "slug": "chris-rokoss-best-year-was-not-his",
@@ -587,9 +639,9 @@
       "checkpoints": []
     },
     "family": "other",
-    "body_revision_status": "current",
+    "body_revision_status": "unverified",
     "source_updated_at": "2026-10-14T15:04:01Z",
-    "observed_source_updated_at": "2026-10-14T15:04:01Z"
+    "observed_source_updated_at": ""
   },
   {
     "source": "substack",
