@@ -1,5 +1,41 @@
 [
   {
+    "source": "substack",
+    "source_id": "how-jane-street-pays-its-london-market",
+    "slug": "how-jane-street-pays-its-london-market",
+    "title": "How Jane Street Pays Its London Market Makers Through a Partnership",
+    "subtitle": "Jane Street's steady London return hides the trading year inside a bill whose formula no filing states.",
+    "post_date": "2026-10-22T18:01:15.707Z",
+    "url": "https://navnoorbawa.substack.com/p/how-jane-street-pays-its-london-market",
+    "audience": "everyone",
+    "wordcount": 3257,
+    "content_status": "full",
+    "brief": {
+      "schema_version": 1,
+      "body_sha256": "e58ce0611527a4cfa8a150a67973586eb5a94bfe20b5c871c5baa652efc52f31",
+      "lead": {
+        "text": "In 2025, Jane Street Europe, the firm’s London trading company, nearly tripled its trading gains. Its return on capital went from 17.1% to 17.7%, by the measure its own accounts define, applied to the company alone, without its Indian and Korean subsidiaries.",
+        "start": 0,
+        "end": 259,
+        "sha256": "82e2510f5e9a72548a363825b16a75c2154a97bb56b8323b18eb03fefa8d0ab8",
+        "truncated": false
+      },
+      "sections": [],
+      "fallback_evidence": {
+        "text": "In July, Elias Ward of btw.media read the same accounts the other way. He set the 2025 falls of the London group, the company with its subsidiaries, a return on capital down from 34% to 19% among them, beside the company’s own figures. He wrote that “a lower return on capital employed shows that more capital does not automatically mean more value”. He read its independence as “a costed bet that internal control over technology and capital produces better trading outcomes than outsourced scale”.",
+        "start": 734,
+        "end": 1233,
+        "sha256": "08a0b65cd295ce46d6993eb43cd854953a7a92d30c4d488112b6c8b1994c6efb",
+        "truncated": false
+      },
+      "checkpoints": []
+    },
+    "family": "firm-mechanics",
+    "body_revision_status": "current",
+    "source_updated_at": "2026-10-22T18:04:22.581Z",
+    "observed_source_updated_at": "2026-10-22T18:04:22.581Z"
+  },
+  {
     "source": "medium",
     "source_id": "af14ec633c36",
     "slug": "warren-buffett-called-black-scholes-prices-absurd-in-2009-his-puts-proved-half-of-it-af14ec633c36",

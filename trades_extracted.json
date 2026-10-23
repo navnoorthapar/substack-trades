@@ -1,5 +1,21 @@
 [
   {
+    "article_title": "How Jane Street Pays Its London Market Makers Through a Partnership",
+    "article_url": "https://navnoorbawa.substack.com/p/how-jane-street-pays-its-london-market",
+    "article_date": "2026-10-22",
+    "trade_description": "How Market Makers Like Citadel Securities Actually Make Money on 0DTE Options: how a market maker earns on its own positions, the gains this piece follows into a bill",
+    "instruments": [
+      "option"
+    ],
+    "direction": "unspecified",
+    "underlying": null,
+    "edge_or_thesis": null,
+    "any_quant_detail": null,
+    "outcome_if_mentioned": null,
+    "fund_name_if_mentioned": "Citadel",
+    "description_truncated": false
+  },
+  {
     "article_title": "Millennium and Balyasny's Stop-Loss: How Pod Shops Cut a Losing Trader in Stages",
     "article_url": "https://navnoorbawa.substack.com/p/millennium-and-balyasnys-stop-loss",
     "article_date": "2026-10-19",
